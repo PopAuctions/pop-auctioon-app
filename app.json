@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "pop-auctioon",
     "name": "pop-auctioon-app",
     "slug": "pop-auctioon-app",
     "version": "1.0.0",
@@ -21,7 +22,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.popauctioon.popauctioonapp"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +35,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2f1d2957-9008-496f-91b7-9484d7b3d4a7"
+      }
     }
   }
 }
