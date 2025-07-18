@@ -32,14 +32,40 @@ export function useThemeColor(
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />;
+  // Siempre llamar al hook, pero usar el resultado condicionalmente
+  const themeColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    'text'
+  );
+  const shouldApplyThemeColor = lightColor || darkColor;
+  const color = shouldApplyThemeColor ? themeColor : undefined;
+
+  return (
+    <DefaultText
+      style={[color ? { color } : {}, style]}
+      {...otherProps}
+    />
+  );
 }
 
 export function View(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
-  return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+  // Siempre llamar al hook, pero usar el resultado condicionalmente
+  const themeBackgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    'background'
+  );
+  const shouldApplyThemeColor = lightColor || darkColor;
+  const backgroundColor = shouldApplyThemeColor
+    ? themeBackgroundColor
+    : undefined;
+
+  return (
+    <DefaultView
+      style={[backgroundColor ? { backgroundColor } : {}, style]}
+      {...otherProps}
+    />
+  );
 }
