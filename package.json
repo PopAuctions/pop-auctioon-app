@@ -13,7 +13,8 @@
     "lint:fix": "expo lint --fix",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "coverage:open": "npx --no-install open-cli ./coverage/lcov-report/index.html"
+    "coverage:open": "npx --no-install open-cli ./coverage/lcov-report/index.html",
+    "test:update-snapshots": "jest -u"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
