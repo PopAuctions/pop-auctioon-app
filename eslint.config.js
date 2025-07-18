@@ -1,16 +1,16 @@
-const { defineConfig } = require("eslint/config");
-const expoConfig = require("eslint-config-expo/flat");
-const prettierConfig = require("eslint-config-prettier");
+const { defineConfig } = require('eslint/config');
+const expoConfig = require('eslint-config-expo/flat');
+const prettierConfig = require('eslint-config-prettier');
 
 module.exports = defineConfig([
   expoConfig,
   prettierConfig,
   {
-    ignores: ["dist/*"],
+    ignores: ['dist/*'],
   },
   {
     rules: {
-      "react/no-unescaped-entities": "off",
+      'react/no-unescaped-entities': 'off',
     },
   },
 ]);
