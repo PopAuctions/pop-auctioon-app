@@ -1,10 +1,13 @@
 import * as React from 'react';
-import renderer from 'react-test-renderer';
-import TabOneScreen from '../../../app/(tabs)/index';
+import renderer, { act } from 'react-test-renderer';
+import TabOneScreen from '@/app/(tabs)/index';
 
 describe('TabOneScreen', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<TabOneScreen />).toJSON();
+    let tree;
+    act(() => {
+      tree = renderer.create(<TabOneScreen />).toJSON();
+    });
     expect(tree).toMatchSnapshot();
   });
 });
