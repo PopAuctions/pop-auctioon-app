@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
@@ -12,10 +11,16 @@ class LargeSecureStore {
   private async _encrypt(key: string, value: string) {
     const encryptionKey = crypto.getRandomValues(new Uint8Array(256 / 8));
 
-    const cipher = new aesjs.ModeOfOperation.ctr(encryptionKey, new aesjs.Counter(1));
+    const cipher = new aesjs.ModeOfOperation.ctr(
+      encryptionKey,
+      new aesjs.Counter(1)
+    );
     const encryptedBytes = cipher.encrypt(aesjs.utils.utf8.toBytes(value));
 
-    await SecureStore.setItemAsync(key, aesjs.utils.hex.fromBytes(encryptionKey));
+    await SecureStore.setItemAsync(
+      key,
+      aesjs.utils.hex.fromBytes(encryptionKey)
+    );
 
     return aesjs.utils.hex.fromBytes(encryptedBytes);
   }
@@ -26,7 +31,10 @@ class LargeSecureStore {
       return encryptionKeyHex;
     }
 
-    const cipher = new aesjs.ModeOfOperation.ctr(aesjs.utils.hex.toBytes(encryptionKeyHex), new aesjs.Counter(1));
+    const cipher = new aesjs.ModeOfOperation.ctr(
+      aesjs.utils.hex.toBytes(encryptionKeyHex),
+      new aesjs.Counter(1)
+    );
     const decryptedBytes = cipher.decrypt(aesjs.utils.hex.toBytes(value));
 
     return aesjs.utils.utf8.fromBytes(decryptedBytes);
@@ -34,7 +42,9 @@ class LargeSecureStore {
 
   async getItem(key: string) {
     const encrypted = await AsyncStorage.getItem(key);
-    if (!encrypted) { return encrypted; }
+    if (!encrypted) {
+      return encrypted;
+    }
 
     return await this._decrypt(key, encrypted);
   }
@@ -51,8 +61,9 @@ class LargeSecureStore {
   }
 }
 
-const supabaseUrl = 'https://xvohgpgzvxdwooerdnfb.supabase.co/'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2b2hncGd6dnhkd29vZXJkbmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4NDAwNzMsImV4cCI6MjA0NzQxNjA3M30.REN7rPMbhIJ3XlyNBfW4R04eWGAjL01udOCFtyAYx4w';
+const supabaseUrl = 'https://xvohgpgzvxdwooerdnfb.supabase.co/';
+const supabaseAnonKey =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2b2hncGd6dnhkd29vZXJkbmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4NDAwNzMsImV4cCI6MjA0NzQxNjA3M30.REN7rPMbhIJ3XlyNBfW4R04eWGAjL01udOCFtyAYx4w';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
