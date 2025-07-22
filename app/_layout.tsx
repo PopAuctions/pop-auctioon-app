@@ -17,6 +17,7 @@ import {
 import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import SplashLottie from '@/components/loading/splash-lottie';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -52,7 +53,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <SplashLottie />;
   }
 
   return <RootLayoutNav />;
