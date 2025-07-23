@@ -10,8 +10,14 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import '../global.css';
+import {
+  Poppins_400Regular,
+  Poppins_700Bold,
+} from '@expo-google-fonts/poppins';
+import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import SplashLottie from '@/components/loading/splash-lottie';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,7 +34,10 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Poppins_400Regular,
+    Poppins_700Bold,
+    Rubik_400Regular,
+    Rubik_700Bold,
     ...FontAwesome.font,
   });
 
@@ -44,7 +53,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <SplashLottie />;
   }
 
   return <RootLayoutNav />;

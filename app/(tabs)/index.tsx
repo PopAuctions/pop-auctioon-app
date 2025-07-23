@@ -6,7 +6,11 @@ import { Text, View } from '@/components/Themed';
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      <Text className='font-poppins-bold text-xl'>Tab One POPPINS</Text>
+      <Text style={{ fontFamily: 'Poppins_400Regular' }}>
+        Inter Black HELLO
+      </Text>
+
       <View
         style={styles.separator}
         lightColor='#eee'
@@ -25,7 +29,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
   },
   separator: {
     marginVertical: 30,
