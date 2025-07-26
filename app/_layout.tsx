@@ -20,9 +20,10 @@ import { useColorScheme } from '@/components/useColorScheme';
 import SplashLottie from '@/components/loading/splash-lottie';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { Session } from '@supabase/supabase-js';
-import { UserRoles } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
-import { getUser } from '@/lib/auth/get-user';
+import { getUserRole } from '@/lib/auth/get-user-role';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import ErrorLoading from '@/components/loading/error-loading';
 
 Sentry.init({
   dsn: 'https://6ae0a34d10b492672ef28a83855f994e@o4507746597994496.ingest.de.sentry.io/4509673933045840',
@@ -54,36 +55,41 @@ export default Sentry.wrap(function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [showSplash, setShowSplash] = useState(true);
+  const [fontError, setFontError] = useState<Error | null>(null);
 
   useEffect(() => {
     console.log('[RootLayout] useEffect: getSession');
     supabase.auth.getSession().then(async ({ data, error }) => {
       if (error) {
         console.error('[RootLayout] Error getting session:', error);
+        sentryErrorReport(error, '[RootLayout] Error getting session');
+        return;
       }
       setSession(data.session);
       console.log('[RootLayout] Session from getSession:', data.session);
-      if (data.session?.user) {
-        const userRerieved = await getUser({ id: data.session.user.id });
-        setRole(userRerieved.user?.role ?? null);
+      if (!data.session?.user) {
+        setRole(null);
+        return;
       }
+      const userRole = await getUserRole({ id: data.session.user.id });
+      setRole(userRole.role);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         console.log('[RootLayout] Auth state changed:', session);
         setSession(session);
-        if (session?.user) {
-          const userRerieved = await getUser({ id: session.user.id });
-          setRole(userRerieved.user?.role ?? null);
-        } else {
+        if (!session?.user) {
+          console.log('[RootLayout] Authstate changed MORE SESSION', session);
           setRole(null);
+          return;
         }
+        const userRole = await getUserRole({ id: session.user.id });
+        setRole(userRole.role ?? null);
       }
     );
 
     return () => {
-      console.log('[RootLayout] Cleanup: unsubscribing auth listener');
       listener.subscription.unsubscribe();
     };
   }, []);
@@ -91,7 +97,8 @@ export default Sentry.wrap(function RootLayout() {
   useEffect(() => {
     if (error) {
       console.error('[RootLayout] Font loading error:', error);
-      throw error;
+      sentryErrorReport(error, '[RootLayout] Font loading error');
+      setFontError(error);
     }
   }, [error]);
 
@@ -106,6 +113,12 @@ export default Sentry.wrap(function RootLayout() {
       return () => clearTimeout(timeout);
     }
   }, [loaded]);
+
+  if (fontError) {
+    return (
+      <ErrorLoading message='Error cargando fuentes. Por favor, reinicia la app.' />
+    );
+  }
 
   if (!loaded || showSplash) {
     console.log('[RootLayout] Showing SplashLottie');

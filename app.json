@@ -45,7 +45,8 @@
           "project": "expo-pop-auctioon",
           "organization": "pop-auctioon"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
