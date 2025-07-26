@@ -5,7 +5,7 @@ import { useAuth } from '@/context/auth-context';
 
 export default function AccountTab() {
   const { session, role } = useAuth();
-  console.log('[AccountTab]  role:', role);
+
   if (!session) {
     return <Login />;
   }

@@ -16,7 +16,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import SplashLottie from '@/components/loading/splash-lottie';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { Session } from '@supabase/supabase-js';

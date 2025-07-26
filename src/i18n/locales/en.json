@@ -1,0 +1,46 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "ok": "OK",
+        "cancel": "Cancel",
+        "save": "Save",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "close": "Close"
+    },
+    "auth": {
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Register",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "forgotPassword": "Forgot your password?",
+        "loginSuccess": "Login successful",
+        "loginError": "Login error",
+        "registerSuccess": "User registered successfully",
+        "registerError": "Registration error"
+    },
+    "tabs": {
+        "home": "Home",
+        "explore": "Explore",
+        "account": "Account"
+    },
+    "errorsCommon": {
+        "networkError": "Internet connection error",
+        "applicationError": "An error occurred while loading the application",
+        "defaultMessage": "Please check your internet connection and restart Expo. If the problem persists, contact support.",
+        "tryAgain": "Try again"
+    },
+    "account": {
+        "profile": "Profile",
+        "settings": "Settings",
+        "language": "Language",
+        "notifications": "Notifications",
+        "privacy": "Privacy",
+        "help": "Help",
+        "about": "About"
+    }
+}

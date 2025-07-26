@@ -18,7 +18,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.popauctioon.popauctioonapp",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
@@ -46,12 +47,21 @@
           "organization": "pop-auctioon"
         }
       ],
-      "expo-localization"
+      [
+        "expo-localization",
+        {
+          "supportedLocales": [
+            "es",
+            "en"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
+      "supportsRTL": true,
       "router": {},
       "eas": {
         "projectId": "2f1d2957-9008-496f-91b7-9484d7b3d4a7"

@@ -1,12 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function ErrorLoading({ message }: { message?: string }) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ocurrió un error al cargar la aplicación</Text>
+      <Text style={styles.title}>{t('errors.applicationError')}</Text>
       <Text style={styles.subtitle}>
-        {message ??
-          'Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.'}
+        {message ?? t('errors.defaultMessage')}
       </Text>
     </View>
   );

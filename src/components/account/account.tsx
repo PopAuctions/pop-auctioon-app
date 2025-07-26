@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, View, Alert, TextInput, Button } from 'react-native';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/utils/supabase/supabase-store';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [website, setWebsite] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (session) getProfile();
@@ -35,7 +37,7 @@ export default function Account({ session }: { session: Session }) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        Alert.alert(t('common.error'), error.message);
       }
     } finally {
       setLoading(false);
@@ -70,7 +72,7 @@ export default function Account({ session }: { session: Session }) {
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        Alert.alert(t('common.error'), error.message);
       }
     } finally {
       setLoading(false);
