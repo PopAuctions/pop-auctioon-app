@@ -24,6 +24,7 @@ import * as Sentry from '@sentry/react-native';
 import { getUserRole } from '@/lib/auth/get-user-role';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import ErrorLoading from '@/components/loading/error-loading';
+import { AuthContext } from '@/context/auth-context';
 
 Sentry.init({
   dsn: 'https://6ae0a34d10b492672ef28a83855f994e@o4507746597994496.ingest.de.sentry.io/4509673933045840',
@@ -129,23 +130,14 @@ export default Sentry.wrap(function RootLayout() {
     role
   );
   return (
-    <RootLayoutNav
-      session={session}
-      role={role}
-    />
+    <AuthContext.Provider value={{ session, role }}>
+      <RootLayoutNav />
+    </AuthContext.Provider>
   );
 });
 
-function RootLayoutNav({
-  session,
-  role,
-}: {
-  session: Session | null;
-  role: string | null;
-}) {
+function RootLayoutNav() {
   const colorScheme = useColorScheme();
-
-  console.log('[RootLayoutNav] session:', session, 'role:', role);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -153,7 +145,6 @@ function RootLayoutNav({
         <Stack.Screen
           name='(tabs)'
           options={{ headerShown: false }}
-          initialParams={{ session, role }}
         />
         <Stack.Screen
           name='modal'

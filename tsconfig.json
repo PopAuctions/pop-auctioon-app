@@ -23,7 +23,11 @@
       "@/types/*": ["./src/types/*"],
       "@/services/*": ["./src/services/*"],
       "@/stores/*": ["./src/stores/*"],
-      "@/styles/*": ["./src/styles/*"]
+      "@/styles/*": ["./src/styles/*"],
+      "@/context/*": ["./src/context/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/assets/*": ["./src/assets/*"],
+      "@/navigation/*": ["./src/navigation/*"]
     }
   },
   "include": [
