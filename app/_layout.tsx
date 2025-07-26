@@ -25,6 +25,7 @@ import { getUserRole } from '@/lib/auth/get-user-role';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import ErrorLoading from '@/components/loading/error-loading';
 import { AuthContext } from '@/context/auth-context';
+import { UserRoles } from '@/types/types';
 
 Sentry.init({
   dsn: 'https://6ae0a34d10b492672ef28a83855f994e@o4507746597994496.ingest.de.sentry.io/4509673933045840',
@@ -51,7 +52,7 @@ export default Sentry.wrap(function RootLayout() {
   });
 
   const [session, setSession] = useState<Session | null>(null);
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<UserRoles | null>(null);
   const [showSplash, setShowSplash] = useState(true);
   const [fontError, setFontError] = useState<Error | null>(null);
 

@@ -1,9 +1,10 @@
 import { createContext, useContext } from 'react';
 import { Session } from '@supabase/supabase-js';
+import { UserRoles } from '@/types/types';
 
 type AuthContextType = {
   session: Session | null;
-  role: string | null;
+  role: UserRoles | null;
 };
 
 export const AuthContext = createContext<AuthContextType>({
