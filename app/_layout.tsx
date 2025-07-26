@@ -7,7 +7,7 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import '../global.css';
 import {
@@ -18,6 +18,9 @@ import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import SplashLottie from '@/components/loading/splash-lottie';
+import { supabase } from '@/utils/supabase/supabase-store';
+import { Session } from '@supabase/supabase-js';
+import { UserRoles } from '@/types/types';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,7 +44,45 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+  const [session, setSession] = useState<Session | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      if (data.session?.user) {
+        // Adaptación de tu consulta web para obtener el usuario que no sea admin
+        supabase
+          .from('User')
+          .select('role')
+          .eq('id', data.session.user.id)
+          .single()
+          .then(({ data }) => setRole(data?.role ?? null));
+      }
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        if (session?.user) {
+          supabase
+            .from('User')
+            .select('role')
+            .eq('id', session.user.id)
+            .single()
+            .then(({ data }) => setRole(data?.role ?? null));
+        } else {
+          setRole(null);
+        }
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -49,17 +90,31 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      const timeout = setTimeout(() => setShowSplash(false), 1500);
+      return () => clearTimeout(timeout);
     }
   }, [loaded]);
 
-  if (!loaded) {
+  if (!loaded || showSplash) {
     return <SplashLottie />;
   }
 
-  return <RootLayoutNav />;
+  // Pasa session y role como props/context a las tabs
+  return (
+    <RootLayoutNav
+      session={session}
+      role={role}
+    />
+  );
 }
 
-function RootLayoutNav() {
+function RootLayoutNav({
+  session,
+  role,
+}: {
+  session: Session | null;
+  role: string | null;
+}) {
   const colorScheme = useColorScheme();
 
   return (
@@ -68,6 +123,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name='(tabs)'
           options={{ headerShown: false }}
+          initialParams={{ session, role }}
         />
         <Stack.Screen
           name='modal'
