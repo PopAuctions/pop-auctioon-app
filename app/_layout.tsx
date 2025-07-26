@@ -110,16 +110,9 @@ export default Sentry.wrap(function RootLayout() {
   }
 
   if (!loaded || showSplash) {
-    console.log('[RootLayout] Showing SplashLottie');
     return <SplashLottie />;
   }
 
-  console.log(
-    '[RootLayout] Rendering RootLayoutNav with session:',
-    session,
-    'role:',
-    role
-  );
   return (
     <AuthContext.Provider value={{ session, role }}>
       <RootLayoutNav />
