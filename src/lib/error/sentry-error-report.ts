@@ -8,5 +8,9 @@ export function sentryErrorReport(error: unknown, context?: string) {
         ? error.message
         : JSON.stringify(error);
 
-  Sentry.captureException(`[${context ?? 'Error'}] ${message}`);
+  const exception =
+    error instanceof Error
+      ? error
+      : new Error(`[${context ?? 'Error'}] ${message}`);
+  Sentry.captureException(exception);
 }

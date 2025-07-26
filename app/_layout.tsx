@@ -30,6 +30,17 @@ import { UserRoles } from '@/types/types';
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   sendDefaultPii: true,
+  beforeSend(event) {
+    // Remove sensitive data from the event
+    if (event.request) {
+      delete event.request.headers?.Authorization;
+    }
+    if (event.user) {
+      delete event.user.email;
+    }
+    return event;
+  },
+  release: process.env.EXPO_PUBLIC_SENTRY_RELEASE || 'unknown',
 });
 
 export { ErrorBoundary } from 'expo-router';

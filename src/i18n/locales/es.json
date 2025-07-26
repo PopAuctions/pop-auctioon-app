@@ -1,41 +1,41 @@
 {
-    "commonActions": {
-        "loading": "Cargando...",
-        "error": "Error",
-        "ok": "OK",
-        "cancel": "Cancelar",
-        "save": "Guardar",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "confirm": "Confirmar",
-        "close": "Cerrar"
-    },
-    "loginPage": {
-        "login": "Iniciar sesión",
-        "logout": "Cerrar sesión",
-        "register": "Registrarse",
-        "email": "Correo electrónico",
-        "password": "Contraseña",
-        "confirmPassword": "Confirmar contraseña",
-        "forgotPassword": "¿Olvidaste tu contraseña?",
-        "loginSuccess": "Sesión iniciada correctamente",
-        "loginError": "Error al iniciar sesión",
-        "registerSuccess": "Usuario registrado correctamente",
-        "registerError": "Error al registrar usuario"
-    },
-    "tabsNames": {
-        "home": "Inicio",
-        "explore": "Explorar",
-        "account": "Cuenta"
-    },
-    "commonErrors": {
-        "networkError": "Error de conexión a internet",
-        "applicationError": "Ocurrió un error al cargar la aplicación",
-        "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
-        "tryAgain": "Intentar de nuevo"
-    },
-    "errorLoading": {
-        "fontError": "Error cargando fuentes. Por favor, reinicia la app.",
-        "title": "Error"
-    }
+  "commonActions": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "ok": "OK",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "close": "Cerrar"
+  },
+  "loginPage": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginSuccess": "Sesión iniciada correctamente",
+    "loginError": "Error al iniciar sesión",
+    "registerSuccess": "Usuario registrado correctamente",
+    "registerError": "Error al registrar usuario"
+  },
+  "tabsNames": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "account": "Cuenta"
+  },
+  "commonErrors": {
+    "networkError": "Error de conexión a internet",
+    "applicationError": "Ocurrió un error al cargar la aplicación",
+    "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "errorLoading": {
+    "fontError": "Error cargando fuentes. Por favor, reinicia la app.",
+    "title": "Error"
+  }
 }
