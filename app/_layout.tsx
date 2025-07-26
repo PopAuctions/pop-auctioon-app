@@ -49,21 +49,32 @@ export default function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    console.log('[RootLayout] useEffect: getSession');
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        console.error('[RootLayout] Error getting session:', error);
+      }
       setSession(data.session);
+      console.log('[RootLayout] Session from getSession:', data.session);
       if (data.session?.user) {
-        // Adaptación de tu consulta web para obtener el usuario que no sea admin
         supabase
           .from('User')
           .select('role')
           .eq('id', data.session.user.id)
           .single()
-          .then(({ data }) => setRole(data?.role ?? null));
+          .then(({ data, error }) => {
+            if (error) {
+              console.error('[RootLayout] Error fetching role:', error);
+            }
+            console.log('[RootLayout] Role from getSession:', data?.role);
+            setRole(data?.role ?? null);
+          });
       }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        console.log('[RootLayout] Auth state changed:', session);
         setSession(session);
         if (session?.user) {
           supabase
@@ -71,7 +82,16 @@ export default function RootLayout() {
             .select('role')
             .eq('id', session.user.id)
             .single()
-            .then(({ data }) => setRole(data?.role ?? null));
+            .then(({ data, error }) => {
+              if (error) {
+                console.error(
+                  '[RootLayout] Error fetching role on auth change:',
+                  error
+                );
+              }
+              console.log('[RootLayout] Role from auth change:', data?.role);
+              setRole(data?.role ?? null);
+            });
         } else {
           setRole(null);
         }
@@ -79,27 +99,41 @@ export default function RootLayout() {
     );
 
     return () => {
+      console.log('[RootLayout] Cleanup: unsubscribing auth listener');
       listener.subscription.unsubscribe();
     };
   }, []);
 
   useEffect(() => {
-    if (error) throw error;
+    if (error) {
+      console.error('[RootLayout] Font loading error:', error);
+      throw error;
+    }
   }, [error]);
 
   useEffect(() => {
     if (loaded) {
+      console.log('[RootLayout] Fonts loaded, hiding splash');
       SplashScreen.hideAsync();
-      const timeout = setTimeout(() => setShowSplash(false), 1500);
+      const timeout = setTimeout(() => {
+        console.log('[RootLayout] Splash timeout finished');
+        setShowSplash(false);
+      }, 1500);
       return () => clearTimeout(timeout);
     }
   }, [loaded]);
 
   if (!loaded || showSplash) {
+    console.log('[RootLayout] Showing SplashLottie');
     return <SplashLottie />;
   }
 
-  // Pasa session y role como props/context a las tabs
+  console.log(
+    '[RootLayout] Rendering RootLayoutNav with session:',
+    session,
+    'role:',
+    role
+  );
   return (
     <RootLayoutNav
       session={session}
@@ -116,6 +150,8 @@ function RootLayoutNav({
   role: string | null;
 }) {
   const colorScheme = useColorScheme();
+
+  console.log('[RootLayoutNav] session:', session, 'role:', role);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

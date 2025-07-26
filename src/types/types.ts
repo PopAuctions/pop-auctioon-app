@@ -103,7 +103,7 @@ export interface CustomArticleSecondChance {
   price: number;
   status?: ArticleSecondChanceStatus;
   Article: Pick<Article, 'id' | 'images' | 'title' | 'brand'>;
-  ArticleOffer?: Array<Pick<ArticleOffer, 'id' | 'status' | 'createdAt'>>;
+  ArticleOffer?: Pick<ArticleOffer, 'id' | 'status' | 'createdAt'>[];
 }
 
 export interface CustomArticleSecondChancePayment {
@@ -134,9 +134,10 @@ export interface CustomFullArticleSecondChance {
   price: number;
   status: ArticleSecondChanceStatus;
   Article: Article;
-  ArticleOffer?: Array<
-    Pick<ArticleOffer, 'id' | 'amount' | 'expiresAt' | 'status' | 'createdAt'>
-  >;
+  ArticleOffer?: Pick<
+    ArticleOffer,
+    'id' | 'amount' | 'expiresAt' | 'status' | 'createdAt'
+  >[];
 }
 
 export type UserArticlesWon = Pick<
@@ -455,9 +456,9 @@ export interface MyOffers {
 export interface CustomArticleLiveAuto
   extends Pick<Article, 'id' | 'estimatedValue' | 'title' | 'images'> {
   ArticleBid: Pick<ArticleBid, 'currentValue' | 'available'>;
-  Bids: Array<{
+  Bids: {
     count: number;
-  }>;
+  }[];
 }
 
 export interface BiddingAmounts {
