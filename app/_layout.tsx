@@ -28,7 +28,7 @@ import { AuthContext } from '@/context/auth-context';
 import { UserRoles } from '@/types/types';
 
 Sentry.init({
-  dsn: 'https://6ae0a34d10b492672ef28a83855f994e@o4507746597994496.ingest.de.sentry.io/4509673933045840',
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   sendDefaultPii: true,
 });
 
@@ -57,15 +57,12 @@ export default Sentry.wrap(function RootLayout() {
   const [fontError, setFontError] = useState<Error | null>(null);
 
   useEffect(() => {
-    console.log('[RootLayout] useEffect: getSession');
     supabase.auth.getSession().then(async ({ data, error }) => {
       if (error) {
-        console.error('[RootLayout] Error getting session:', error);
         sentryErrorReport(error, '[RootLayout] Error getting session');
         return;
       }
       setSession(data.session);
-      console.log('[RootLayout] Session from getSession:', data.session);
       if (!data.session?.user) {
         setRole(null);
         return;
@@ -76,10 +73,8 @@ export default Sentry.wrap(function RootLayout() {
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        console.log('[RootLayout] Auth state changed:', session);
         setSession(session);
         if (!session?.user) {
-          console.log('[RootLayout] Authstate changed MORE SESSION', session);
           setRole(null);
           return;
         }
@@ -95,7 +90,6 @@ export default Sentry.wrap(function RootLayout() {
 
   useEffect(() => {
     if (error) {
-      console.error('[RootLayout] Font loading error:', error);
       sentryErrorReport(error, '[RootLayout] Font loading error');
       setFontError(error);
     }
@@ -103,10 +97,8 @@ export default Sentry.wrap(function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      console.log('[RootLayout] Fonts loaded, hiding splash');
       SplashScreen.hideAsync();
       const timeout = setTimeout(() => {
-        console.log('[RootLayout] Splash timeout finished');
         setShowSplash(false);
       }, 1500);
       return () => clearTimeout(timeout);
@@ -114,9 +106,7 @@ export default Sentry.wrap(function RootLayout() {
   }, [loaded]);
 
   if (fontError) {
-    return (
-      <ErrorLoading message='Error cargando fuentes. Por favor, reinicia la app.' />
-    );
+    return <ErrorLoading />;
   }
 
   if (!loaded || showSplash) {

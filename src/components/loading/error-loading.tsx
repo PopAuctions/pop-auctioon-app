@@ -1,15 +1,13 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from '../../hooks/useTranslation';
 
-export default function ErrorLoading({ message }: { message?: string }) {
+export default function ErrorLoading() {
   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('errors.applicationError')}</Text>
-      <Text style={styles.subtitle}>
-        {message ?? t('errors.defaultMessage')}
-      </Text>
+      <Text style={styles.title}>{t('errorLoading.title')}</Text>
+      <Text style={styles.subtitle}>{t('errorLoading.fontError')}</Text>
     </View>
   );
 }

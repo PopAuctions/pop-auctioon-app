@@ -1,5 +1,5 @@
 {
-    "common": {
+    "commonActions": {
         "loading": "Loading...",
         "error": "Error",
         "ok": "OK",
@@ -10,7 +10,7 @@
         "confirm": "Confirm",
         "close": "Close"
     },
-    "auth": {
+    "loginPage": {
         "login": "Login",
         "logout": "Logout",
         "register": "Register",
@@ -23,24 +23,19 @@
         "registerSuccess": "User registered successfully",
         "registerError": "Registration error"
     },
-    "tabs": {
+    "tabsNames": {
         "home": "Home",
         "explore": "Explore",
         "account": "Account"
     },
-    "errorsCommon": {
+    "commonErrors": {
         "networkError": "Internet connection error",
         "applicationError": "An error occurred while loading the application",
         "defaultMessage": "Please check your internet connection and restart Expo. If the problem persists, contact support.",
         "tryAgain": "Try again"
     },
-    "account": {
-        "profile": "Profile",
-        "settings": "Settings",
-        "language": "Language",
-        "notifications": "Notifications",
-        "privacy": "Privacy",
-        "help": "Help",
-        "about": "About"
+    "errorLoading": {
+        "fontError": "Error loading fonts. Please restart the app.",
+        "title": "Error"
     }
 }

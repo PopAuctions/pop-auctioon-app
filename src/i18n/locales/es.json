@@ -1,5 +1,5 @@
 {
-    "common": {
+    "commonActions": {
         "loading": "Cargando...",
         "error": "Error",
         "ok": "OK",
@@ -10,7 +10,7 @@
         "confirm": "Confirmar",
         "close": "Cerrar"
     },
-    "auth": {
+    "loginPage": {
         "login": "Iniciar sesión",
         "logout": "Cerrar sesión",
         "register": "Registrarse",
@@ -23,24 +23,19 @@
         "registerSuccess": "Usuario registrado correctamente",
         "registerError": "Error al registrar usuario"
     },
-    "tabs": {
+    "tabsNames": {
         "home": "Inicio",
         "explore": "Explorar",
         "account": "Cuenta"
     },
-    "errorsCommon": {
+    "commonErrors": {
         "networkError": "Error de conexión a internet",
         "applicationError": "Ocurrió un error al cargar la aplicación",
         "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
         "tryAgain": "Intentar de nuevo"
     },
-    "account": {
-        "profile": "Perfil",
-        "settings": "Configuración",
-        "language": "Idioma",
-        "notifications": "Notificaciones",
-        "privacy": "Privacidad",
-        "help": "Ayuda",
-        "about": "Acerca de"
+    "errorLoading": {
+        "fontError": "Error cargando fuentes. Por favor, reinicia la app.",
+        "title": "Error"
     }
 }
