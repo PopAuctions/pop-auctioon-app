@@ -37,7 +37,15 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "expo-pop-auctioon",
+          "organization": "pop-auctioon"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

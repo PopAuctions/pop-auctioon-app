@@ -21,6 +21,23 @@ import SplashLottie from '@/components/loading/splash-lottie';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { Session } from '@supabase/supabase-js';
 import { UserRoles } from '@/types/types';
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://6ae0a34d10b492672ef28a83855f994e@o4507746597994496.ingest.de.sentry.io/4509673933045840',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Configure Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  integrations: [Sentry.mobileReplayIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -35,7 +52,7 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+export default Sentry.wrap(function RootLayout() {
   const [loaded, error] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
@@ -140,7 +157,7 @@ export default function RootLayout() {
       role={role}
     />
   );
-}
+});
 
 function RootLayoutNav({
   session,
