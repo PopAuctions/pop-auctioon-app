@@ -3,12 +3,12 @@ import Login from '@/components/auth/login';
 import Account from '@/components/account/account';
 import { Session } from '@supabase/supabase-js';
 
-type SettingsTabProps = {
+type AccountTabProps = {
   session: Session | null;
   role: string | null;
 };
 
-export default function SettingsTab({ session, role }: SettingsTabProps) {
+export default function AccountTab({ session, role }: AccountTabProps) {
   if (!session) {
     return <Login />;
   }
