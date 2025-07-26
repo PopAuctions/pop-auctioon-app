@@ -22,21 +22,11 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import { Session } from '@supabase/supabase-js';
 import { UserRoles } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
+import { getUser } from '@/lib/auth/get-user';
 
 Sentry.init({
   dsn: 'https://6ae0a34d10b492672ef28a83855f994e@o4507746597994496.ingest.de.sentry.io/4509673933045840',
-
-  // Adds more context data to events (IP address, cookies, user, etc.)
-  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
   sendDefaultPii: true,
-
-  // Configure Session Replay
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1,
-  integrations: [Sentry.mobileReplayIntegration()],
-
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // spotlight: __DEV__,
 });
 
 export {
@@ -67,48 +57,25 @@ export default Sentry.wrap(function RootLayout() {
 
   useEffect(() => {
     console.log('[RootLayout] useEffect: getSession');
-    supabase.auth.getSession().then(({ data, error }) => {
+    supabase.auth.getSession().then(async ({ data, error }) => {
       if (error) {
         console.error('[RootLayout] Error getting session:', error);
       }
       setSession(data.session);
       console.log('[RootLayout] Session from getSession:', data.session);
       if (data.session?.user) {
-        supabase
-          .from('User')
-          .select('role')
-          .eq('id', data.session.user.id)
-          .single()
-          .then(({ data, error }) => {
-            if (error) {
-              console.error('[RootLayout] Error fetching role:', error);
-            }
-            console.log('[RootLayout] Role from getSession:', data?.role);
-            setRole(data?.role ?? null);
-          });
+        const userRerieved = await getUser({ id: data.session.user.id });
+        setRole(userRerieved.user?.role ?? null);
       }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         console.log('[RootLayout] Auth state changed:', session);
         setSession(session);
         if (session?.user) {
-          supabase
-            .from('User')
-            .select('role')
-            .eq('id', session.user.id)
-            .single()
-            .then(({ data, error }) => {
-              if (error) {
-                console.error(
-                  '[RootLayout] Error fetching role on auth change:',
-                  error
-                );
-              }
-              console.log('[RootLayout] Role from auth change:', data?.role);
-              setRole(data?.role ?? null);
-            });
+          const userRerieved = await getUser({ id: session.user.id });
+          setRole(userRerieved.user?.role ?? null);
         } else {
           setRole(null);
         }
