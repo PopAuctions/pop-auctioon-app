@@ -33,6 +33,28 @@
     "store": "Tienda",
     "myAuctions": "Mis Subastas"
   },
+  "screens": {
+    "home": {
+      "title": "Bienvenido a Pop Auctions",
+      "subtitle": "Descubre subastas increíbles y productos exclusivos"
+    },
+    "auctions": {
+      "title": "Subastas",
+      "subtitle": "Participa en emocionantes subastas",
+      "noAuctions": "No hay subastas disponibles en este momento"
+    },
+    "store": {
+      "title": "Tienda Online",
+      "subtitle": "Compra productos exclusivos",
+      "noProducts": "No hay productos disponibles en este momento"
+    },
+    "myAuctions": {
+      "title": "Mis Subastas",
+      "subtitle": "Gestiona tus subastas creadas",
+      "noAuctions": "Aún no has creado ninguna subasta",
+      "createAuction": "Crear Subasta"
+    }
+  },
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",

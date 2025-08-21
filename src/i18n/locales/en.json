@@ -33,6 +33,28 @@
     "store": "Store",
     "myAuctions": "My Auctions"
   },
+  "screens": {
+    "home": {
+      "title": "Welcome to Pop Auctions",
+      "subtitle": "Discover amazing auctions and exclusive products"
+    },
+    "auctions": {
+      "title": "Auctions",
+      "subtitle": "Participate in exciting auctions",
+      "noAuctions": "No auctions available at the moment"
+    },
+    "store": {
+      "title": "Online Store",
+      "subtitle": "Shop exclusive products",
+      "noProducts": "No products available at the moment"
+    },
+    "myAuctions": {
+      "title": "My Auctions",
+      "subtitle": "Manage your created auctions",
+      "noAuctions": "You haven't created any auctions yet",
+      "createAuction": "Create Auction"
+    }
+  },
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",
