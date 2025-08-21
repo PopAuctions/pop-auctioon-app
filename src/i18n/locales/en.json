@@ -41,18 +41,31 @@
     "auctions": {
       "title": "Auctions",
       "subtitle": "Participate in exciting auctions",
-      "noAuctions": "No auctions available at the moment"
+      "noAuctions": "No auctions available at the moment",
+      "detail": "Auction Details",
+      "categories": "Categories",
+      "search": "Search Auctions",
+      "calendar": "Auction Calendar",
+      "liveNow": "Live Now",
+      "upcoming": "Upcoming Auctions"
     },
     "store": {
       "title": "Online Store",
       "subtitle": "Shop exclusive products",
-      "noProducts": "No products available at the moment"
+      "noProducts": "No products available at the moment",
+      "productDetail": "Product Details",
+      "cart": "Shopping Cart",
+      "categories": "Categories",
+      "search": "Search Products"
     },
     "myAuctions": {
       "title": "My Auctions",
       "subtitle": "Manage your created auctions",
       "noAuctions": "You haven't created any auctions yet",
-      "createAuction": "Create Auction"
+      "createAuction": "Create Auction",
+      "detail": "Auction Details",
+      "edit": "Edit Auction",
+      "stats": "Statistics"
     }
   },
   "commonErrors": {

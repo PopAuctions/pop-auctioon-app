@@ -1,0 +1,57 @@
+import { Stack } from 'expo-router';
+import { useTranslation } from '@/hooks/useTranslation';
+
+export default function AuctionsLayout() {
+  const { t } = useTranslation();
+
+  return (
+    <Stack>
+      <Stack.Screen
+        name='index'
+        options={{
+          title: t('tabsNames.auctions'),
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='[id]'
+        options={{
+          title: t('screens.auctions.detail'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='categories'
+        options={{
+          title: t('screens.auctions.categories'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='search'
+        options={{
+          title: t('screens.auctions.search'),
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name='calendar'
+        options={{
+          title: 'Calendario de Subastas',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='live/[id]'
+        options={{
+          title: 'Subasta en Vivo',
+          presentation: 'fullScreenModal',
+          headerShown: true,
+          headerStyle: { backgroundColor: '#dc2626' },
+          headerTintColor: '#ffffff',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      />
+    </Stack>
+  );
+}

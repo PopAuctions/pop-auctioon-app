@@ -1,0 +1,46 @@
+import { Stack } from 'expo-router';
+import { useTranslation } from '@/hooks/useTranslation';
+
+export default function AccountLayout() {
+  const { t } = useTranslation();
+
+  return (
+    <Stack>
+      <Stack.Screen
+        name='index'
+        options={{
+          title: t('tabsNames.account'),
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='profile'
+        options={{
+          title: 'Mi Perfil',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='settings'
+        options={{
+          title: 'Configuración',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='help'
+        options={{
+          title: 'Ayuda',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='privacy'
+        options={{
+          title: 'Privacidad',
+          presentation: 'card',
+        }}
+      />
+    </Stack>
+  );
+}

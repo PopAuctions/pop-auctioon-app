@@ -41,18 +41,31 @@
     "auctions": {
       "title": "Subastas",
       "subtitle": "Participa en emocionantes subastas",
-      "noAuctions": "No hay subastas disponibles en este momento"
+      "noAuctions": "No hay subastas disponibles en este momento",
+      "detail": "Detalles de Subasta",
+      "categories": "Categorías",
+      "search": "Buscar Subastas",
+      "calendar": "Calendario de Subastas",
+      "liveNow": "En Vivo Ahora",
+      "upcoming": "Próximas Subastas"
     },
     "store": {
       "title": "Tienda Online",
       "subtitle": "Compra productos exclusivos",
-      "noProducts": "No hay productos disponibles en este momento"
+      "noProducts": "No hay productos disponibles en este momento",
+      "productDetail": "Detalles del Producto",
+      "cart": "Carrito de Compras",
+      "categories": "Categorías",
+      "search": "Buscar Productos"
     },
     "myAuctions": {
       "title": "Mis Subastas",
       "subtitle": "Gestiona tus subastas creadas",
       "noAuctions": "Aún no has creado ninguna subasta",
-      "createAuction": "Crear Subasta"
+      "createAuction": "Crear Subasta",
+      "detail": "Detalles de Subasta",
+      "edit": "Editar Subasta",
+      "stats": "Estadísticas"
     }
   },
   "commonErrors": {
