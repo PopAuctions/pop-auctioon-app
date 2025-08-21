@@ -47,7 +47,21 @@
       "search": "Search Auctions",
       "calendar": "Auction Calendar",
       "liveNow": "Live Now",
-      "upcoming": "Upcoming Auctions"
+      "upcoming": "Upcoming Auctions",
+      "articles": {
+        "title": "Articles",
+        "searchPlaceholder": "Search articles...",
+        "currentBid": "CURRENT BID",
+        "estimatedValue": "Estimated value",
+        "follow": "Follow",
+        "filters": {
+          "all": "All",
+          "bags": "Bags",
+          "accessories": "Accessories",
+          "jewelry": "Jewelry",
+          "watches": "Watches"
+        }
+      }
     },
     "store": {
       "title": "Online Store",
@@ -56,7 +70,16 @@
       "productDetail": "Product Details",
       "cart": "Shopping Cart",
       "categories": "Categories",
-      "search": "Search Products"
+      "search": "Search Products",
+      "searchPlaceholder": "Search products...",
+      "buyNow": "Buy Now",
+      "price": "PRICE",
+      "category": "Category",
+      "filters": {
+        "all": "All",
+        "bags": "Bags",
+        "jewelry": "Jewelry"
+      }
     },
     "myAuctions": {
       "title": "My Auctions",

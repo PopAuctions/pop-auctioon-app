@@ -47,7 +47,21 @@
       "search": "Buscar Subastas",
       "calendar": "Calendario de Subastas",
       "liveNow": "En Vivo Ahora",
-      "upcoming": "Próximas Subastas"
+      "upcoming": "Próximas Subastas",
+      "articles": {
+        "title": "Artículos",
+        "searchPlaceholder": "Buscar artículos...",
+        "currentBid": "OFERTA ACTUAL",
+        "estimatedValue": "Valor estimado",
+        "follow": "Seguir",
+        "filters": {
+          "all": "Todos",
+          "bags": "Bolsos",
+          "accessories": "Accesorios",
+          "jewelry": "Joyería",
+          "watches": "Relojes"
+        }
+      }
     },
     "store": {
       "title": "Tienda Online",
@@ -56,7 +70,16 @@
       "productDetail": "Detalles del Producto",
       "cart": "Carrito de Compras",
       "categories": "Categorías",
-      "search": "Buscar Productos"
+      "search": "Buscar Productos",
+      "searchPlaceholder": "Buscar productos...",
+      "buyNow": "Comprar Ahora",
+      "price": "PRECIO",
+      "category": "Categoría",
+      "filters": {
+        "all": "Todos",
+        "bags": "Bolsos",
+        "jewelry": "Joyería"
+      }
     },
     "myAuctions": {
       "title": "Mis Subastas",

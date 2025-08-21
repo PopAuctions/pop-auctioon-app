@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Productos simulados basados en popauctioon.com
 const storeProducts = [
@@ -63,10 +64,17 @@ const storeProducts = [
 
 export default function StoreScreen() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(
+    t('screens.store.filters.all')
+  );
 
-  const categories = ['All', 'Bags', 'Jewelry'];
+  const categories = [
+    t('screens.store.filters.all'),
+    t('screens.store.filters.bags'),
+    t('screens.store.filters.jewelry'),
+  ];
 
   const getProductIcon = (category: string) => {
     switch (category) {
@@ -84,8 +92,16 @@ export default function StoreScreen() {
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.brand.toLowerCase().includes(searchQuery.toLowerCase());
 
+    // Map translated categories back to English for filtering
+    const categoryMap: { [key: string]: string } = {
+      [t('screens.store.filters.all')]: 'All',
+      [t('screens.store.filters.bags')]: 'Bags',
+      [t('screens.store.filters.jewelry')]: 'Jewelry',
+    };
+
+    const englishCategory = categoryMap[selectedCategory] || selectedCategory;
     const matchesCategory =
-      selectedCategory === 'All' || product.category === selectedCategory;
+      englishCategory === 'All' || product.category === englishCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -99,7 +115,7 @@ export default function StoreScreen() {
       {/* Header */}
       <View className='border-b border-gray-200 p-4'>
         <Text className='mb-4 text-2xl font-bold text-gray-800'>
-          Online Store
+          {t('screens.store.title')}
         </Text>
 
         {/* Filter Tabs */}
@@ -134,7 +150,7 @@ export default function StoreScreen() {
         {/* Search Bar */}
         <TextInput
           className='rounded-lg border border-gray-200 bg-gray-50 p-3'
-          placeholder='Search products...'
+          placeholder={t('screens.store.searchPlaceholder')}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -169,10 +185,10 @@ export default function StoreScreen() {
                   {/* Price Info */}
                   <View className='mb-3'>
                     <Text className='text-sm text-gray-500'>
-                      PRICE: €{product.price}
+                      {t('screens.store.price')}: €{product.price}
                     </Text>
                     <Text className='text-sm text-gray-500'>
-                      Category: {product.category}
+                      {t('screens.store.category')}: {product.category}
                     </Text>
                   </View>
                 </View>
@@ -180,7 +196,7 @@ export default function StoreScreen() {
                 {/* Buy Button */}
                 <TouchableOpacity className='rounded bg-green-500 px-3 py-2'>
                   <Text className='text-center text-sm font-medium text-white'>
-                    Buy Now
+                    {t('screens.store.buyNow')}
                   </Text>
                 </TouchableOpacity>
               </View>
