@@ -14,6 +14,20 @@ export default function AuctionsLayout() {
         }}
       />
       <Stack.Screen
+        name='calendar'
+        options={{
+          title: 'Calendario de Subastas',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='articles'
+        options={{
+          title: 'All Articles',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
         name='[id]'
         options={{
           title: t('screens.auctions.detail'),
@@ -21,23 +35,9 @@ export default function AuctionsLayout() {
         }}
       />
       <Stack.Screen
-        name='categories'
+        name='article/[id]'
         options={{
-          title: t('screens.auctions.categories'),
-          presentation: 'card',
-        }}
-      />
-      <Stack.Screen
-        name='search'
-        options={{
-          title: t('screens.auctions.search'),
-          presentation: 'modal',
-        }}
-      />
-      <Stack.Screen
-        name='calendar'
-        options={{
-          title: 'Calendario de Subastas',
+          title: 'Article Detail',
           presentation: 'card',
         }}
       />
