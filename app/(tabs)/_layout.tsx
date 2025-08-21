@@ -8,7 +8,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/useTranslation';
-import { UserRoles } from '@/types/types';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
