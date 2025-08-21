@@ -5,7 +5,11 @@ export default function StoreLayout() {
   const { t } = useTranslation();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // Configuración global
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{
@@ -18,6 +22,7 @@ export default function StoreLayout() {
         options={{
           title: t('screens.store.productDetail'),
           presentation: 'card',
+          headerShown: true, // Solo en detalle de producto
         }}
       />
     </Stack>

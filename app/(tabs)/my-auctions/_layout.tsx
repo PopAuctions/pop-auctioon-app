@@ -5,7 +5,11 @@ export default function MyAuctionsLayout() {
   const { t } = useTranslation();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // Configuración global
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{
@@ -18,6 +22,7 @@ export default function MyAuctionsLayout() {
         options={{
           title: t('screens.myAuctions.createAuction'),
           presentation: 'modal',
+          headerShown: true, // Solo en pantallas secundarias
         }}
       />
       <Stack.Screen
@@ -25,6 +30,7 @@ export default function MyAuctionsLayout() {
         options={{
           title: t('screens.myAuctions.detail'),
           presentation: 'card',
+          headerShown: true,
         }}
       />
       <Stack.Screen

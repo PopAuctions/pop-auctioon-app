@@ -5,7 +5,11 @@ export default function HomeLayout() {
   const { t } = useTranslation();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // Configuración global para evitar headers
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{
@@ -19,6 +23,7 @@ export default function HomeLayout() {
         options={{
           title: 'Acceso Rápido',
           presentation: 'card',
+          headerShown: true, // Solo mostrar header en pantallas secundarias
         }}
       />
       <Stack.Screen
@@ -26,6 +31,7 @@ export default function HomeLayout() {
         options={{
           title: 'Subastas Destacadas',
           presentation: 'card',
+          headerShown: true,
         }}
       />
       <Stack.Screen

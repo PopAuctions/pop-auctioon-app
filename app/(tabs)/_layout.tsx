@@ -5,7 +5,6 @@ import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -26,6 +25,7 @@ export default function TabLayout() {
             name='index'
             options={{
               title: t('tabsNames.home'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='home'
@@ -40,6 +40,7 @@ export default function TabLayout() {
             name='auctions'
             options={{
               title: t('tabsNames.auctions'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='gavel'
@@ -54,6 +55,7 @@ export default function TabLayout() {
             name='store'
             options={{
               title: t('tabsNames.store'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='shopping-cart'
@@ -68,6 +70,7 @@ export default function TabLayout() {
             name='account'
             options={{
               title: t('tabsNames.account'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='user'
@@ -92,6 +95,7 @@ export default function TabLayout() {
             name='index'
             options={{
               title: t('tabsNames.home'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='home'
@@ -106,6 +110,7 @@ export default function TabLayout() {
             name='auctions'
             options={{
               title: t('tabsNames.auctions'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='gavel'
@@ -120,6 +125,7 @@ export default function TabLayout() {
             name='store'
             options={{
               title: t('tabsNames.store'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='shopping-cart'
@@ -134,6 +140,7 @@ export default function TabLayout() {
             name='my-auctions'
             options={{
               title: t('tabsNames.myAuctions'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='list-alt'
@@ -165,6 +172,7 @@ export default function TabLayout() {
             name='account'
             options={{
               title: t('tabsNames.account'),
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <FontAwesome
                   name='user'
@@ -187,6 +195,7 @@ export default function TabLayout() {
           name='index'
           options={{
             title: t('tabsNames.home'),
+            headerShown: false,
             tabBarIcon: ({ color }) => (
               <FontAwesome
                 name='home'
@@ -201,6 +210,7 @@ export default function TabLayout() {
           name='auctions'
           options={{
             title: t('tabsNames.auctions'),
+            headerShown: false,
             tabBarIcon: ({ color }) => (
               <FontAwesome
                 name='gavel'
@@ -215,6 +225,7 @@ export default function TabLayout() {
           name='store'
           options={{
             title: t('tabsNames.store'),
+            headerShown: false,
             tabBarIcon: ({ color }) => (
               <FontAwesome
                 name='shopping-cart'
@@ -229,6 +240,7 @@ export default function TabLayout() {
           name='account'
           options={{
             title: t('tabsNames.login'),
+            headerShown: false,
             tabBarIcon: ({ color }) => (
               <FontAwesome
                 name='sign-in'
@@ -247,7 +259,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: useClientOnlyValue(false, true),
+        headerShown: false, // Forzar que no se muestren headers en ningún tab
+        tabBarShowLabel: true, // Asegurar que se muestran las labels
+        tabBarStyle: {
+          display: 'flex', // Asegurar que el tab bar sea visible
+        },
       }}
     >
       {renderTabsByUserState()}

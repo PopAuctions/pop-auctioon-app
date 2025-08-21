@@ -5,7 +5,11 @@ export default function AuctionsLayout() {
   const { t } = useTranslation();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // Configuración global para pantalla principal
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{
@@ -18,6 +22,7 @@ export default function AuctionsLayout() {
         options={{
           title: 'Calendario de Subastas',
           presentation: 'card',
+          headerShown: true, // Solo mostrar en pantallas secundarias
         }}
       />
       <Stack.Screen
@@ -25,6 +30,7 @@ export default function AuctionsLayout() {
         options={{
           title: 'All Articles',
           presentation: 'card',
+          headerShown: true,
         }}
       />
       <Stack.Screen

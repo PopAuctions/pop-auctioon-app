@@ -5,7 +5,11 @@ export default function AccountLayout() {
   const { t } = useTranslation();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{
@@ -18,6 +22,7 @@ export default function AccountLayout() {
         options={{
           title: 'Mi Perfil',
           presentation: 'card',
+          headerShown: true, // Solo en pantallas secundarias
         }}
       />
       <Stack.Screen
@@ -25,6 +30,7 @@ export default function AccountLayout() {
         options={{
           title: 'Configuración',
           presentation: 'card',
+          headerShown: true,
         }}
       />
       <Stack.Screen

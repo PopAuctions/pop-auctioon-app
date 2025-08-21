@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
 import { router } from 'expo-router';
 
 const calendarData = [
@@ -41,8 +40,6 @@ const calendarData = [
 ];
 
 export default function AuctionCalendarScreen() {
-  const { t } = useTranslation();
-
   return (
     <ScrollView className='flex-1 bg-gray-50'>
       <View className='p-4'>
