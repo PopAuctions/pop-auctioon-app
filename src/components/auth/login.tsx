@@ -8,6 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -25,6 +26,7 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const insets = useSafeAreaInsets();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -54,37 +56,39 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TextInput
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder='email@address.com'
-          autoCapitalize={'none'}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder='Password'
-          autoCapitalize={'none'}
-        />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title='Sign in'
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          title='Sign up'
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
+    <View style={{ flex: 1, paddingTop: insets.top }}>
+      <View style={styles.container}>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+          <TextInput
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            placeholder='email@address.com'
+            autoCapitalize={'none'}
+          />
+        </View>
+        <View style={styles.verticallySpaced}>
+          <TextInput
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            secureTextEntry={true}
+            placeholder='Password'
+            autoCapitalize={'none'}
+          />
+        </View>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+          <Button
+            title='Sign in'
+            disabled={loading}
+            onPress={() => signInWithEmail()}
+          />
+        </View>
+        <View style={styles.verticallySpaced}>
+          <Button
+            title='Sign up'
+            disabled={loading}
+            onPress={() => signUpWithEmail()}
+          />
+        </View>
       </View>
     </View>
   );

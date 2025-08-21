@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Productos simulados basados en popauctioon.com
 const storeProducts = [
@@ -55,6 +56,8 @@ const storeProducts = [
 ];
 
 export default function StoreScreen() {
+  const insets = useSafeAreaInsets();
+
   const renderProduct = ({ item }: { item: (typeof storeProducts)[0] }) => (
     <TouchableOpacity
       className='mb-4 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm'
@@ -77,43 +80,48 @@ export default function StoreScreen() {
   );
 
   return (
-    <View className='flex-1 bg-gray-50'>
-      {/* Header - Similar to popauctioon.com */}
-      <View className='border-b border-gray-200 bg-white p-4'>
-        <Text className='mb-4 text-center text-2xl font-bold text-gray-800'>
-          Online Store
-        </Text>
+    <View
+      className='flex-1 bg-gray-50'
+      style={{ paddingTop: insets.top }}
+    >
+      <View className='flex-1'>
+        {/* Header - Similar to popauctioon.com */}
+        <View className='border-b border-gray-200 bg-white p-4'>
+          <Text className='mb-4 text-center text-2xl font-bold text-gray-800'>
+            Online Store
+          </Text>
 
-        {/* Filter Row */}
-        <View className='flex-row items-center justify-between'>
-          <View className='flex-row space-x-4'>
+          {/* Filter Row */}
+          <View className='flex-row items-center justify-between'>
+            <View className='flex-row space-x-4'>
+              <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
+                <Text className='text-gray-600'>Model</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
+                <Text className='text-gray-600'>Code Number</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
+                <Text className='text-gray-600'>Brand</Text>
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-              <Text className='text-gray-600'>Model</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-              <Text className='text-gray-600'>Code Number</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-              <Text className='text-gray-600'>Brand</Text>
+              <Text className='text-gray-600'>Sort by</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-            <Text className='text-gray-600'>Sort by</Text>
-          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Products Grid */}
-      <FlatList
-        data={storeProducts}
-        renderItem={renderProduct}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        contentContainerStyle={{ padding: 16 }}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
-        ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-        showsVerticalScrollIndicator={false}
-      />
+        {/* Products Grid */}
+        <FlatList
+          data={storeProducts}
+          renderItem={renderProduct}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          contentContainerStyle={{ padding: 16 }}
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
     </View>
   );
 }

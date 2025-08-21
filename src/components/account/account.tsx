@@ -4,6 +4,7 @@ import { StyleSheet, View, Alert, TextInput, Button } from 'react-native';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -11,6 +12,7 @@ export default function Account({ session }: { session: Session }) {
   const [website, setWebsite] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (session) getProfile();
@@ -80,38 +82,40 @@ export default function Account({ session }: { session: Session }) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TextInput value={session?.user?.email} />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          value={username || ''}
-          onChangeText={(text) => setUsername(text)}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          value={website || ''}
-          onChangeText={(text) => setWebsite(text)}
-        />
-      </View>
+    <View style={{ flex: 1, paddingTop: insets.top }}>
+      <View style={styles.container}>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+          <TextInput value={session?.user?.email} />
+        </View>
+        <View style={styles.verticallySpaced}>
+          <TextInput
+            value={username || ''}
+            onChangeText={(text) => setUsername(text)}
+          />
+        </View>
+        <View style={styles.verticallySpaced}>
+          <TextInput
+            value={website || ''}
+            onChangeText={(text) => setWebsite(text)}
+          />
+        </View>
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() =>
-            updateProfile({ username, website, avatar_url: avatarUrl })
-          }
-          disabled={loading}
-        />
-      </View>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+          <Button
+            title={loading ? 'Loading ...' : 'Update'}
+            onPress={() =>
+              updateProfile({ username, website, avatar_url: avatarUrl })
+            }
+            disabled={loading}
+          />
+        </View>
 
-      <View style={styles.verticallySpaced}>
-        <Button
-          title='Sign Out'
-          onPress={() => supabase.auth.signOut()}
-        />
+        <View style={styles.verticallySpaced}>
+          <Button
+            title='Sign Out'
+            onPress={() => supabase.auth.signOut()}
+          />
+        </View>
       </View>
     </View>
   );
