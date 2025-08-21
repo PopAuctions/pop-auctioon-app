@@ -6,13 +6,13 @@ export default function HomeLayout() {
 
   return (
     <Stack
-      initialRouteName='home'
+      initialRouteName='index'
       screenOptions={{
         headerShown: false, // Configuración global para evitar headers
       }}
     >
       <Stack.Screen
-        name='home'
+        name='index'
         options={{
           title: t('tabsNames.home'),
           headerShown: false,

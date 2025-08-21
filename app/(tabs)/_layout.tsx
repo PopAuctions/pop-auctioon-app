@@ -25,9 +25,10 @@ export default function TabLayout() {
     >
       {/* HOME tab - visible for all users */}
       <Tabs.Screen
-        name='index/home'
+        name='home'
         options={{
           title: t('tabsNames.home'),
+          tabBarLabel: t('tabsNames.home'),
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome
