@@ -8,7 +8,8 @@
     "edit": "Editar",
     "delete": "Eliminar",
     "confirm": "Confirmar",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "retry": "Reintentar"
   },
   "loginPage": {
     "login": "Iniciar sesión",
@@ -21,21 +22,26 @@
     "loginSuccess": "Sesión iniciada correctamente",
     "loginError": "Error al iniciar sesión",
     "registerSuccess": "Usuario registrado correctamente",
-    "registerError": "Error al registrar usuario"
+    "registerError": "Error al registrar usuario",
+    "title": "Iniciar Sesión"
   },
   "tabsNames": {
     "home": "Inicio",
-    "explore": "Explorar",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "login": "Iniciar Sesión",
+    "auctions": "Subastas",
+    "store": "Tienda",
+    "myAuctions": "Mis Subastas"
   },
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",
     "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
-    "tryAgain": "Intentar de nuevo"
+    "tryAgain": "Intentar de nuevo",
+    "generic": "Algo salió mal"
   },
   "errorLoading": {
-    "fontError": "Error cargando fuentes. Por favor, reinicia la app.",
-    "title": "Error"
+    "title": "Error de Carga",
+    "fontError": "Error al cargar las fuentes. Por favor, reinicia la aplicación."
   }
 }

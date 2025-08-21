@@ -8,7 +8,8 @@
     "edit": "Edit",
     "delete": "Delete",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "retry": "Retry"
   },
   "loginPage": {
     "login": "Login",
@@ -21,21 +22,26 @@
     "loginSuccess": "Login successful",
     "loginError": "Login error",
     "registerSuccess": "User registered successfully",
-    "registerError": "Registration error"
+    "registerError": "Registration error",
+    "title": "Sign In"
   },
   "tabsNames": {
     "home": "Home",
-    "explore": "Explore",
-    "account": "Account"
+    "account": "Account",
+    "login": "Sign In",
+    "auctions": "Auctions",
+    "store": "Store",
+    "myAuctions": "My Auctions"
   },
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",
     "defaultMessage": "Please check your internet connection and restart Expo. If the problem persists, contact support.",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "generic": "Something went wrong"
   },
   "errorLoading": {
-    "fontError": "Error loading fonts. Please restart the app.",
-    "title": "Error"
+    "title": "Loading Error",
+    "fontError": "Error loading fonts. Please restart the app."
   }
 }
