@@ -1,6 +1,6 @@
-// app/(tabs)/settings.tsx
-import Login from '@/components/auth/login';
-import Account from '@/components/account/account';
+// app/(tabs)/account/index.tsx
+import Login from '../auth/login';
+import Account from './account-user';
 import { useAuth } from '@/context/auth-context';
 
 export default function AccountTab() {
