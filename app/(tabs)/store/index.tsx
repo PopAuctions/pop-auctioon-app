@@ -1,5 +1,11 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -57,71 +63,130 @@ const storeProducts = [
 
 export default function StoreScreen() {
   const insets = useSafeAreaInsets();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const renderProduct = ({ item }: { item: (typeof storeProducts)[0] }) => (
-    <TouchableOpacity
-      className='mb-4 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm'
-      onPress={() => router.push(`/(tabs)/store/${item.id}` as any)}
-    >
-      {/* Product Image Placeholder */}
-      <View className='aspect-square items-center justify-center bg-gray-200'>
-        <Text className='text-gray-500'>📷</Text>
-      </View>
+  const categories = ['All', 'Bags', 'Jewelry'];
 
-      {/* Product Info */}
-      <View className='p-3'>
-        <Text className='mb-1 text-sm font-semibold text-gray-800'>
-          {item.name}
-        </Text>
-        <Text className='mb-2 text-xs text-red-500'>{item.brand}</Text>
-        <Text className='text-lg font-bold text-gray-900'>€{item.price}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const getProductIcon = (category: string) => {
+    switch (category) {
+      case 'Bags':
+        return '👜';
+      case 'Jewelry':
+        return '💎';
+      default:
+        return '🛍️';
+    }
+  };
+
+  const filteredProducts = storeProducts.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === 'All' || product.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <View
-      className='flex-1 bg-gray-50'
+    <ScrollView
+      className='flex-1 bg-white'
       style={{ paddingTop: insets.top }}
     >
-      <View className='flex-1'>
-        {/* Header - Similar to popauctioon.com */}
-        <View className='border-b border-gray-200 bg-white p-4'>
-          <Text className='mb-4 text-center text-2xl font-bold text-gray-800'>
-            Online Store
-          </Text>
+      {/* Header */}
+      <View className='border-b border-gray-200 p-4'>
+        <Text className='mb-4 text-2xl font-bold text-gray-800'>
+          Online Store
+        </Text>
 
-          {/* Filter Row */}
-          <View className='flex-row items-center justify-between'>
-            <View className='flex-row space-x-4'>
-              <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-                <Text className='text-gray-600'>Model</Text>
+        {/* Filter Tabs */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className='mb-4'
+        >
+          <View className='flex-row'>
+            {categories.map((category, index) => (
+              <TouchableOpacity
+                key={category}
+                className={`rounded-full px-4 py-2 ${
+                  selectedCategory === category ? 'bg-gray-800' : 'bg-gray-100'
+                } ${index > 0 ? 'ml-4' : ''}`}
+                onPress={() => setSelectedCategory(category)}
+              >
+                <Text
+                  className={`${
+                    selectedCategory === category
+                      ? 'text-white'
+                      : 'text-gray-600'
+                  }`}
+                >
+                  {category}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-                <Text className='text-gray-600'>Code Number</Text>
-              </TouchableOpacity>
-              <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-                <Text className='text-gray-600'>Brand</Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity className='rounded border border-gray-300 px-3 py-1'>
-              <Text className='text-gray-600'>Sort by</Text>
-            </TouchableOpacity>
+            ))}
           </View>
-        </View>
+        </ScrollView>
 
-        {/* Products Grid */}
-        <FlatList
-          data={storeProducts}
-          renderItem={renderProduct}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          contentContainerStyle={{ padding: 16 }}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
-          ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-          showsVerticalScrollIndicator={false}
+        {/* Search Bar */}
+        <TextInput
+          className='rounded-lg border border-gray-200 bg-gray-50 p-3'
+          placeholder='Search products...'
+          value={searchQuery}
+          onChangeText={setSearchQuery}
         />
       </View>
-    </View>
+
+      {/* Products Grid */}
+      <View className='p-4'>
+        <View className='flex-row flex-wrap justify-between'>
+          {filteredProducts.map((product) => (
+            <TouchableOpacity
+              key={product.id}
+              className='mb-6 w-[48%] overflow-hidden rounded-lg border border-gray-200 bg-white'
+              onPress={() => router.push(`/(tabs)/store/${product.id}` as any)}
+            >
+              {/* Product Image */}
+              <View className='aspect-square items-center justify-center bg-gray-50'>
+                <Text className='text-6xl'>
+                  {getProductIcon(product.category)}
+                </Text>
+              </View>
+
+              {/* Product Info */}
+              <View className='flex-1 justify-between p-4'>
+                <View>
+                  <Text className='mb-1 text-sm text-red-500'>
+                    {product.brand}
+                  </Text>
+                  <Text className='mb-2 text-lg font-light text-gray-900'>
+                    {product.name}
+                  </Text>
+
+                  {/* Price Info */}
+                  <View className='mb-3'>
+                    <Text className='text-sm text-gray-500'>
+                      PRICE: €{product.price}
+                    </Text>
+                    <Text className='text-sm text-gray-500'>
+                      Category: {product.category}
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Buy Button */}
+                <TouchableOpacity className='rounded bg-green-500 px-3 py-2'>
+                  <Text className='text-center text-sm font-medium text-white'>
+                    Buy Now
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </ScrollView>
   );
 }
