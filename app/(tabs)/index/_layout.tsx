@@ -6,18 +6,19 @@ export default function HomeLayout() {
 
   return (
     <Stack
+      initialRouteName='home'
       screenOptions={{
         headerShown: false, // Configuración global para evitar headers
       }}
     >
       <Stack.Screen
-        name='index'
+        name='home'
         options={{
           title: t('tabsNames.home'),
           headerShown: false,
         }}
       />
-      {/* Pantallas futuras para navegación desde HOME */}
+      {/* Pantallas futuras para navegación desde HOME - COMENTADAS HASTA IMPLEMENTAR
       <Stack.Screen
         name='quick-access'
         options={{
@@ -41,6 +42,7 @@ export default function HomeLayout() {
           presentation: 'card',
         }}
       />
+      */}
     </Stack>
   );
 }

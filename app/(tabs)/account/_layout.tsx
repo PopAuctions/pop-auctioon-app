@@ -17,6 +17,7 @@ export default function AccountLayout() {
           headerShown: false,
         }}
       />
+      {/* Pantallas futuras para navegación desde ACCOUNT - COMENTADAS HASTA IMPLEMENTAR
       <Stack.Screen
         name='profile'
         options={{
@@ -47,6 +48,7 @@ export default function AccountLayout() {
           presentation: 'card',
         }}
       />
+      */}
     </Stack>
   );
 }
