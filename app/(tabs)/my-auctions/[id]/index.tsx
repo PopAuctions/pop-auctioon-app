@@ -1,0 +1,88 @@
+import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { useLocalSearchParams, router } from 'expo-router';
+
+export default function MyAuctionDetailScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  return (
+    <ScrollView className='flex-1 bg-white'>
+      <View className='p-4'>
+        <Text className='mb-2 text-2xl font-bold text-gray-800'>
+          Mi Subasta #{id}
+        </Text>
+
+        {/* Estado de la subasta */}
+        <View className='mb-4 rounded-lg bg-green-100 p-4'>
+          <Text className='font-semibold text-green-800'>Estado: Activa</Text>
+          <Text className='text-green-700'>Tiempo restante: 5h 30m</Text>
+        </View>
+
+        {/* Información de la subasta */}
+        <View className='mb-4 rounded-lg bg-gray-100 p-4'>
+          <Text className='mb-2 text-lg font-semibold'>
+            Información General
+          </Text>
+          <Text className='mb-1 text-gray-600'>
+            Título: Producto de Ejemplo
+          </Text>
+          <Text className='mb-1 text-gray-600'>Precio inicial: $100.00</Text>
+          <Text className='mb-1 text-gray-600'>Puja actual: $245.00</Text>
+          <Text className='mb-1 text-gray-600'>Número de pujas: 8</Text>
+          <Text className='text-gray-600'>Visitantes: 156</Text>
+        </View>
+
+        {/* Pujas recientes */}
+        <View className='mb-6 rounded-lg bg-gray-100 p-4'>
+          <Text className='mb-2 text-lg font-semibold'>Pujas Recientes</Text>
+          <View className='space-y-2'>
+            <View className='flex-row justify-between'>
+              <Text className='text-gray-600'>Usuario123</Text>
+              <Text className='font-semibold'>$245.00</Text>
+            </View>
+            <View className='flex-row justify-between'>
+              <Text className='text-gray-600'>Comprador456</Text>
+              <Text className='font-semibold'>$230.00</Text>
+            </View>
+            <View className='flex-row justify-between'>
+              <Text className='text-gray-600'>PostorXYZ</Text>
+              <Text className='font-semibold'>$215.00</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Acciones */}
+        <View className='space-y-3'>
+          <TouchableOpacity
+            className='items-center rounded-lg bg-blue-500 p-4'
+            onPress={() => router.push(`/(tabs)/my-auctions/${id}/edit` as any)}
+          >
+            <Text className='text-lg font-semibold text-white'>
+              Editar Subasta
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className='items-center rounded-lg bg-green-500 p-4'
+            onPress={() =>
+              router.push(`/(tabs)/my-auctions/${id}/stats` as any)
+            }
+          >
+            <Text className='text-lg font-semibold text-white'>
+              Ver Estadísticas
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className='items-center rounded-lg bg-red-500 p-4'
+            onPress={() => console.log('Finalizar subasta')}
+          >
+            <Text className='text-lg font-semibold text-white'>
+              Finalizar Subasta
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}

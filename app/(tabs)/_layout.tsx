@@ -1,60 +1,38 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Tabs } from 'expo-router';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
+import { useAuth } from '@/context/auth-context';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { session, role } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: useClientOnlyValue(false, true),
+        headerShown: false,
+        tabBarShowLabel: true,
+        tabBarStyle: {
+          display: 'flex',
+        },
       }}
     >
+      {/* HOME tab - visible for all users */}
       <Tabs.Screen
-        name='index'
+        name='home'
         options={{
-          title: 'Tab One',
+          title: t('tabsNames.home'),
+          tabBarLabel: t('tabsNames.home'),
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome
-              name='code'
-              size={28}
-              style={{ marginBottom: -3 }}
-              color={color}
-            />
-          ),
-          headerRight: () => (
-            <Link
-              href='/modal'
-              asChild
-            >
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name='info-circle'
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name='two'
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome
-              name='code'
+              name='home'
               size={28}
               style={{ marginBottom: -3 }}
               color={color}
@@ -62,13 +40,87 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      {/* AUCTIONS tab - visible for all users */}
+      <Tabs.Screen
+        name='auctions'
+        options={{
+          title: t('tabsNames.auctions'),
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome
+              name='gavel'
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* STORE tab - visible for all users */}
+      <Tabs.Screen
+        name='store'
+        options={{
+          title: t('tabsNames.store'),
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome
+              name='shopping-cart'
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* MY AUCTIONS tab - only visible for AUCTIONEER */}
+      <Tabs.Screen
+        name='my-auctions'
+        options={{
+          title: t('tabsNames.myAuctions'),
+          headerShown: false,
+          href: session && role === 'AUCTIONEER' ? undefined : null,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome
+              name='list'
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* ACCOUNT tab - only visible for logged users */}
       <Tabs.Screen
         name='account'
         options={{
-          title: 'Account',
+          title: t('tabsNames.account'),
+          headerShown: false,
+          href: session ? undefined : null,
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='user'
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* AUTH tab - only visible for non-logged users */}
+      <Tabs.Screen
+        name='auth'
+        options={{
+          title: t('tabsNames.login'),
+          headerShown: false,
+          href: !session ? undefined : null,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome
+              name='sign-in'
               size={28}
               style={{ marginBottom: -3 }}
               color={color}

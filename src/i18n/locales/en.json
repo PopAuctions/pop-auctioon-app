@@ -1,41 +1,82 @@
 {
-    "commonActions": {
-        "loading": "Loading...",
-        "error": "Error",
-        "ok": "OK",
-        "cancel": "Cancel",
-        "save": "Save",
-        "edit": "Edit",
-        "delete": "Delete",
-        "confirm": "Confirm",
-        "close": "Close"
+  "commonActions": {
+    "loading": "Loading...",
+    "error": "Error",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "retry": "Retry"
+  },
+  "loginPage": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot your password?",
+    "loginSuccess": "Login successful",
+    "loginError": "Login error",
+    "registerSuccess": "User registered successfully",
+    "registerError": "Registration error",
+    "title": "Sign In"
+  },
+  "tabsNames": {
+    "home": "Home",
+    "account": "Account",
+    "login": "Sign In",
+    "auctions": "Auctions",
+    "store": "Store",
+    "myAuctions": "My Auctions"
+  },
+  "screens": {
+    "home": {
+      "title": "Welcome to Pop Auctions",
+      "subtitle": "Discover amazing auctions and exclusive products"
     },
-    "loginPage": {
-        "login": "Login",
-        "logout": "Logout",
-        "register": "Register",
-        "email": "Email",
-        "password": "Password",
-        "confirmPassword": "Confirm password",
-        "forgotPassword": "Forgot your password?",
-        "loginSuccess": "Login successful",
-        "loginError": "Login error",
-        "registerSuccess": "User registered successfully",
-        "registerError": "Registration error"
+    "auctions": {
+      "title": "Auctions",
+      "subtitle": "Participate in exciting auctions",
+      "noAuctions": "No auctions available at the moment",
+      "detail": "Auction Details",
+      "categories": "Categories",
+      "search": "Search Auctions",
+      "calendar": "Auction Calendar",
+      "liveNow": "Live Now",
+      "upcoming": "Upcoming Auctions"
     },
-    "tabsNames": {
-        "home": "Home",
-        "explore": "Explore",
-        "account": "Account"
+    "store": {
+      "title": "Online Store",
+      "subtitle": "Shop exclusive products",
+      "noProducts": "No products available at the moment",
+      "productDetail": "Product Details",
+      "cart": "Shopping Cart",
+      "categories": "Categories",
+      "search": "Search Products"
     },
-    "commonErrors": {
-        "networkError": "Internet connection error",
-        "applicationError": "An error occurred while loading the application",
-        "defaultMessage": "Please check your internet connection and restart Expo. If the problem persists, contact support.",
-        "tryAgain": "Try again"
-    },
-    "errorLoading": {
-        "fontError": "Error loading fonts. Please restart the app.",
-        "title": "Error"
+    "myAuctions": {
+      "title": "My Auctions",
+      "subtitle": "Manage your created auctions",
+      "noAuctions": "You haven't created any auctions yet",
+      "createAuction": "Create Auction",
+      "detail": "Auction Details",
+      "edit": "Edit Auction",
+      "stats": "Statistics"
     }
+  },
+  "commonErrors": {
+    "networkError": "Internet connection error",
+    "applicationError": "An error occurred while loading the application",
+    "defaultMessage": "Please check your internet connection and restart Expo. If the problem persists, contact support.",
+    "tryAgain": "Try again",
+    "generic": "Something went wrong"
+  },
+  "errorLoading": {
+    "title": "Loading Error",
+    "fontError": "Error loading fonts. Please restart the app."
+  }
 }
