@@ -94,6 +94,7 @@ export default function StoreScreen() {
     <ScrollView
       className='flex-1 bg-white'
       style={{ paddingTop: insets.top }}
+      contentContainerStyle={{ paddingBottom: 100 }}
     >
       {/* Header */}
       <View className='border-b border-gray-200 p-4'>
