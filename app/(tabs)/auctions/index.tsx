@@ -24,6 +24,32 @@ export default function AuctionsScreen() {
           </Text>
         </View>
 
+        {/* Live Auction Banner */}
+        <View className='mx-4 mt-4'>
+          <TouchableOpacity
+            className='rounded-lg bg-red-500 p-6 shadow-lg'
+            onPress={() => router.push('/(tabs)/auctions/live/123')}
+          >
+            <View className='flex-row items-center justify-center'>
+              <View className='mr-3 h-3 w-3 animate-pulse rounded-full bg-white' />
+              <Text className='mr-2 text-xl font-bold text-white'>
+                🔴 SUBASTA EN VIVO
+              </Text>
+            </View>
+            <Text className='mt-2 text-center text-white opacity-90'>
+              ¡Únete ahora a la subasta activa!
+            </Text>
+            <View className='mt-3 flex-row justify-center space-x-4'>
+              <Text className='text-sm text-white opacity-80'>
+                ⏱️ 45:20 restante
+              </Text>
+              <Text className='text-sm text-white opacity-80'>
+                👥 23 participantes
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* Main Options */}
         <View className='space-y-4 p-4'>
           {/* Auctions Calendar Option */}
