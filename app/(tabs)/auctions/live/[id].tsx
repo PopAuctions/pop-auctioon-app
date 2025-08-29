@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useAuth } from '@/context/auth-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function LiveAuctionScreen() {
   const { session } = useAuth();
+  const insets = useSafeAreaInsets();
 
   // Por ahora usamos 'totisama' como fallback, pero idealmente vendría del session
   const username = session?.user?.user_metadata?.username || 'totisama';
@@ -17,10 +19,11 @@ export default function LiveAuctionScreen() {
   const streamUrl = `http://10.0.2.2:3000/es/stream/${auctionId}?username=${username}`;
 
   return (
-    <View className='flex-1 bg-gray-900'>
-      {/* Live Header */}
-
-      {/* WebView con el stream */}
+    <View
+      className='flex-1 bg-gray-900'
+      style={{ paddingTop: 0 /* insets.top */ }}
+    >
+      {/* WebView ocupando todo el espacio disponible */}
       <WebView
         source={{ uri: streamUrl }}
         style={{ flex: 1 }}
@@ -30,9 +33,12 @@ export default function LiveAuctionScreen() {
         domStorageEnabled={true}
         startInLoadingState={true}
         scalesPageToFit={true}
+        scrollEnabled={false}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         renderLoading={() => (
-          <View className='flex-1 items-center justify-center bg-gray-100'>
-            <Text className='text-lg text-gray-600'>Cargando stream...</Text>
+          <View className='flex-1 items-center justify-center bg-gray-800'>
+            <Text className='text-lg text-white'>Cargando stream...</Text>
           </View>
         )}
         onError={(syntheticEvent) => {
