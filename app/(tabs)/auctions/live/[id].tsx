@@ -19,17 +19,6 @@ export default function LiveAuctionScreen() {
   return (
     <View className='flex-1 bg-gray-900'>
       {/* Live Header */}
-      <View className='bg-red-500 p-4'>
-        <View className='mb-2 flex-row items-center'>
-          <View className='mr-2 h-3 w-3 rounded-full bg-white' />
-          <Text className='text-lg font-bold text-white'>
-            🔴 SUBASTA EN VIVO
-          </Text>
-        </View>
-        <Text className='text-xl font-bold text-white'>
-          Subasta #{auctionId} - Usuario: {username}
-        </Text>
-      </View>
 
       {/* WebView con el stream */}
       <WebView
