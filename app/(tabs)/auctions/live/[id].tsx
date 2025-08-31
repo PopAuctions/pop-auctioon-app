@@ -19,10 +19,7 @@ export default function LiveAuctionScreen() {
   const streamUrl = `http://10.0.2.2:3000/es/stream/${auctionId}?username=${username}`;
 
   return (
-    <View
-      className='flex-1 '
-      style={{ paddingTop: insets.top }}
-    >
+    <View className='flex-1 '>
       {/* WebView ocupando todo el espacio disponible */}
       <WebView
         source={{ uri: streamUrl }}
