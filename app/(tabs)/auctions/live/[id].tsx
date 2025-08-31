@@ -20,8 +20,8 @@ export default function LiveAuctionScreen() {
 
   return (
     <View
-      className='flex-1 bg-gray-900'
-      style={{ paddingTop: 0 /* insets.top */ }}
+      className='flex-1 '
+      style={{ paddingTop: insets.top }}
     >
       {/* WebView ocupando todo el espacio disponible */}
       <WebView
@@ -36,11 +36,6 @@ export default function LiveAuctionScreen() {
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        renderLoading={() => (
-          <View className='flex-1 items-center justify-center bg-gray-800'>
-            <Text className='text-lg text-white'>Cargando stream...</Text>
-          </View>
-        )}
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
           console.warn('WebView error: ', nativeEvent);
