@@ -7,6 +7,7 @@ import {
   TextInput,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Datos simulados basados en el tercer screenshot
 const articlesData = [
@@ -67,10 +68,19 @@ const articlesData = [
 ];
 
 export default function ArticlesScreen() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(
+    t('screens.auctions.articles.filters.all')
+  );
 
-  const categories = ['All', 'Bags', 'Accessories', 'Jewelry', 'Watches'];
+  const categories = [
+    t('screens.auctions.articles.filters.all'),
+    t('screens.auctions.articles.filters.bags'),
+    t('screens.auctions.articles.filters.accessories'),
+    t('screens.auctions.articles.filters.jewelry'),
+    t('screens.auctions.articles.filters.watches'),
+  ];
 
   const filteredArticles = articlesData.filter(
     (article) =>
@@ -82,7 +92,9 @@ export default function ArticlesScreen() {
     <ScrollView className='flex-1 bg-white'>
       {/* Header */}
       <View className='border-b border-gray-200 p-4'>
-        <Text className='mb-4 text-2xl font-bold text-gray-800'>Articles</Text>
+        <Text className='mb-4 text-2xl font-bold text-gray-800'>
+          {t('screens.auctions.articles.title')}
+        </Text>
 
         {/* Filter Tabs */}
         <ScrollView
@@ -116,7 +128,7 @@ export default function ArticlesScreen() {
         {/* Search Bar */}
         <TextInput
           className='rounded-lg border border-gray-200 bg-gray-50 p-3'
-          placeholder='Search articles...'
+          placeholder={t('screens.auctions.articles.searchPlaceholder')}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -150,17 +162,19 @@ export default function ArticlesScreen() {
                 {/* Price Info */}
                 <View className='mb-3'>
                   <Text className='text-sm text-gray-500'>
-                    CURRENT BID: {article.currentBid}
+                    {t('screens.auctions.articles.currentBid')}:{' '}
+                    {article.currentBid}
                   </Text>
                   <Text className='text-sm text-gray-500'>
-                    Estimated value: {article.price}
+                    {t('screens.auctions.articles.estimatedValue')}:{' '}
+                    {article.price}
                   </Text>
                 </View>
 
                 {/* Follow Button */}
                 <TouchableOpacity className='rounded bg-red-500 px-3 py-2'>
                   <Text className='text-center text-sm font-medium text-white'>
-                    {article.status}
+                    {t('screens.auctions.articles.follow')}
                   </Text>
                 </TouchableOpacity>
               </View>

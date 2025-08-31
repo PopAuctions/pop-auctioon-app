@@ -23,6 +23,14 @@ export default function TabLayout() {
         },
       }}
     >
+      {/* INDEX redirect - hidden from tab bar */}
+      <Tabs.Screen
+        name='index'
+        options={{
+          href: null, // Hide from tab bar
+        }}
+      />
+
       {/* HOME tab - visible for all users */}
       <Tabs.Screen
         name='home'
