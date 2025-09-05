@@ -10,13 +10,13 @@ export default function AuctionsScreen() {
 
   return (
     <View
-      className='flex-1 bg-gray-50'
+      className='bg-gray-50 flex-1'
       style={{ paddingTop: insets.top }}
     >
       <ScrollView className='flex-1'>
         {/* Header */}
-        <View className='border-b border-gray-200 bg-white p-4'>
-          <Text className='mb-2 text-2xl font-bold text-gray-800'>
+        <View className='border-gray-200 border-b bg-white p-4'>
+          <Text className='text-gray-800 mb-2 text-2xl font-bold'>
             {t('screens.auctions.title')}
           </Text>
           <Text className='text-gray-600'>
@@ -54,39 +54,39 @@ export default function AuctionsScreen() {
         <View className='space-y-4 p-4'>
           {/* Auctions Calendar Option */}
           <TouchableOpacity
-            className='rounded-lg border border-gray-200 bg-white p-6 shadow-sm'
+            className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
             onPress={() => router.push('/(tabs)/auctions/calendar')}
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
               <View className='flex-1'>
-                <Text className='mb-1 text-xl font-bold text-gray-800'>
+                <Text className='text-gray-800 mb-1 text-xl font-bold'>
                   Calendario de Subastas
                 </Text>
                 <Text className='text-gray-600'>
                   Ver todas las subastas programadas por fecha
                 </Text>
               </View>
-              <Text className='text-2xl text-gray-400'>→</Text>
+              <Text className='text-gray-400 text-2xl'>→</Text>
             </View>
           </TouchableOpacity>
 
           {/* All Articles Option */}
           <TouchableOpacity
-            className='rounded-lg border border-gray-200 bg-white p-6 shadow-sm'
+            className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
             onPress={() => router.push('/(tabs)/auctions/articles')}
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>
               <View className='flex-1'>
-                <Text className='mb-1 text-xl font-bold text-gray-800'>
+                <Text className='text-gray-800 mb-1 text-xl font-bold'>
                   All Articles
                 </Text>
                 <Text className='text-gray-600'>
                   Explorar todos los artículos disponibles
                 </Text>
               </View>
-              <Text className='text-2xl text-gray-400'>→</Text>
+              <Text className='text-gray-400 text-2xl'>→</Text>
             </View>
           </TouchableOpacity>
         </View>

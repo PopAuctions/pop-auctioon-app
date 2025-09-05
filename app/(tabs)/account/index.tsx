@@ -4,7 +4,7 @@ import Account from './account-user';
 import { useAuth } from '@/context/auth-context';
 
 export default function AccountTab() {
-  const { session, role } = useAuth();
+  const { session } = useAuth();
 
   if (!session) {
     return <Login />;

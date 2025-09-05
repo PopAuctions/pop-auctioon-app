@@ -13,18 +13,18 @@ export const Input: React.FC<InputProps> = ({
   return (
     <TextInput
       className={`
-        border-silver
-        text-text-black
-        focus:border-cinnabar
         h-12
         w-full
         rounded-lg
         border
+        border-silver
         bg-white
         px-3
         py-3
         text-base
+        text-text-black
         shadow-sm
+        focus:border-cinnabar
         disabled:opacity-50
         ${className}
       `}

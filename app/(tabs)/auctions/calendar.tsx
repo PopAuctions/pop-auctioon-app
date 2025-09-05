@@ -41,9 +41,9 @@ const calendarData = [
 
 export default function AuctionCalendarScreen() {
   return (
-    <ScrollView className='flex-1 bg-gray-50'>
+    <ScrollView className='bg-gray-50 flex-1'>
       <View className='p-4'>
-        <Text className='mb-6 text-2xl font-bold text-gray-800'>
+        <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           📅 Calendario de Subastas
         </Text>
 
@@ -65,25 +65,25 @@ export default function AuctionCalendarScreen() {
             </View>
 
             {/* Auctions for that date */}
-            <View className='rounded-b-lg border-b border-l border-r border-gray-200 bg-white'>
+            <View className='border-gray-200 rounded-b-lg border-b border-l border-r bg-white'>
               {day.auctions.map((auction) => (
                 <TouchableOpacity
                   key={auction.id}
-                  className='border-b border-gray-100 p-4 last:border-b-0'
+                  className='border-gray-100 border-b p-4 last:border-b-0'
                   onPress={() =>
                     router.push(`/(tabs)/auctions/${auction.id}` as any)
                   }
                 >
                   <View className='flex-row items-center justify-between'>
                     <View className='flex-1'>
-                      <Text className='mb-1 text-lg font-semibold text-gray-800'>
+                      <Text className='text-gray-800 mb-1 text-lg font-semibold'>
                         {auction.title}
                       </Text>
                       <Text className='font-medium text-blue-600'>
                         🕒 {auction.time}
                       </Text>
-                      <View className='mt-2 self-start rounded bg-gray-100 px-2 py-1'>
-                        <Text className='text-xs font-medium text-gray-700'>
+                      <View className='bg-gray-100 mt-2 self-start rounded px-2 py-1'>
+                        <Text className='text-gray-700 text-xs font-medium'>
                           {auction.type}
                         </Text>
                       </View>

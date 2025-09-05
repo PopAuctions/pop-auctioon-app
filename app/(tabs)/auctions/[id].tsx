@@ -11,25 +11,25 @@ export default function AuctionDetailScreen() {
 
   return (
     <View
-      className='flex-1 bg-gray-50'
+      className='bg-gray-50 flex-1'
       style={{ paddingTop: insets.top }}
     >
       <ScrollView className='flex-1 bg-white'>
         <View className='p-4'>
-          <Text className='mb-2 text-2xl font-bold text-gray-800'>
+          <Text className='text-gray-800 mb-2 text-2xl font-bold'>
             {t('screens.auctions.detail')} #{id}
           </Text>
-          <Text className='mb-4 text-gray-600'>
+          <Text className='text-gray-600 mb-4'>
             Detalles de la subasta seleccionada
           </Text>
 
           {/* Placeholder para información de la subasta */}
-          <View className='mb-4 rounded-lg bg-gray-100 p-4'>
+          <View className='bg-gray-100 mb-4 rounded-lg p-4'>
             <Text className='mb-2 text-lg font-semibold'>
               Título de la Subasta
             </Text>
-            <Text className='mb-2 text-gray-600'>Precio actual: $1,250</Text>
-            <Text className='mb-2 text-gray-600'>Tiempo restante: 2h 15m</Text>
+            <Text className='text-gray-600 mb-2'>Precio actual: $1,250</Text>
+            <Text className='text-gray-600 mb-2'>Tiempo restante: 2h 15m</Text>
             <Text className='text-gray-600'>Postores: 12</Text>
           </View>
 

@@ -113,8 +113,8 @@ export default function StoreScreen() {
       contentContainerStyle={{ paddingBottom: 100 }}
     >
       {/* Header */}
-      <View className='border-b border-gray-200 p-4'>
-        <Text className='mb-4 text-2xl font-bold text-gray-800'>
+      <View className='border-gray-200 border-b p-4'>
+        <Text className='text-gray-800 mb-4 text-2xl font-bold'>
           {t('screens.store.title')}
         </Text>
 
@@ -149,7 +149,7 @@ export default function StoreScreen() {
 
         {/* Search Bar */}
         <TextInput
-          className='rounded-lg border border-gray-200 bg-gray-50 p-3'
+          className='border-gray-200 bg-gray-50 rounded-lg border p-3'
           placeholder={t('screens.store.searchPlaceholder')}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -162,11 +162,11 @@ export default function StoreScreen() {
           {filteredProducts.map((product) => (
             <TouchableOpacity
               key={product.id}
-              className='mb-6 w-[48%] overflow-hidden rounded-lg border border-gray-200 bg-white'
+              className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
               onPress={() => router.push(`/(tabs)/store/${product.id}` as any)}
             >
               {/* Product Image */}
-              <View className='aspect-square items-center justify-center bg-gray-50'>
+              <View className='bg-gray-50 aspect-square items-center justify-center'>
                 <Text className='text-6xl'>
                   {getProductIcon(product.category)}
                 </Text>
@@ -178,16 +178,16 @@ export default function StoreScreen() {
                   <Text className='mb-1 text-sm text-red-500'>
                     {product.brand}
                   </Text>
-                  <Text className='mb-2 text-lg font-light text-gray-900'>
+                  <Text className='text-gray-900 mb-2 text-lg font-light'>
                     {product.name}
                   </Text>
 
                   {/* Price Info */}
                   <View className='mb-3'>
-                    <Text className='text-sm text-gray-500'>
+                    <Text className='text-gray-500 text-sm'>
                       {t('screens.store.price')}: €{product.price}
                     </Text>
-                    <Text className='text-sm text-gray-500'>
+                    <Text className='text-gray-500 text-sm'>
                       {t('screens.store.category')}: {product.category}
                     </Text>
                   </View>

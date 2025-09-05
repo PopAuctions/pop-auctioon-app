@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useAuth } from '@/context/auth-context';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function LiveAuctionScreen() {
   const { session } = useAuth();
-  const insets = useSafeAreaInsets();
 
   // Por ahora usamos 'totisama' como fallback, pero idealmente vendría del session
   const username = session?.user?.user_metadata?.username || 'totisama';

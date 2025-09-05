@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   type TouchableOpacityProps,
 } from 'react-native';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export type ButtonMode = 'primary' | 'secondary';
 export type ButtonSize = 'small' | 'large';
@@ -43,6 +44,7 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...props
 }) => {
+  const { t } = useTranslation();
   const modeStyle = BUTTON_MODE_STYLES[mode];
   const sizeStyle = BUTTON_SIZE_STYLES[mode][size];
 
@@ -83,7 +85,7 @@ export const Button: React.FC<ButtonProps> = ({
               opacity-70
             `}
           >
-            Cargando...
+            {t('commonActions.loading')}
           </Text>
         </View>
       ) : null}

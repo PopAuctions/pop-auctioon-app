@@ -4,6 +4,7 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -22,6 +23,7 @@ export default function Auth() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -57,7 +59,7 @@ export default function Auth() {
           <Input
             onChangeText={(text: string) => setEmail(text)}
             value={email}
-            placeholder='email@address.com'
+            placeholder={t('loginPage.email')}
             autoCapitalize='none'
             keyboardType='email-address'
             autoComplete='email'
@@ -69,7 +71,7 @@ export default function Auth() {
             onChangeText={(text: string) => setPassword(text)}
             value={password}
             secureTextEntry={true}
-            placeholder='Password'
+            placeholder={t('loginPage.password')}
             autoCapitalize='none'
             autoComplete='password'
             editable={!loading}
@@ -82,7 +84,7 @@ export default function Auth() {
             disabled={loading}
             onPress={signInWithEmail}
           >
-            Sign in
+            {loading ? t('commonActions.loading') : t('loginPage.login')}
           </Button>
         </View>
         <View style={styles.verticallySpaced}>
@@ -92,7 +94,7 @@ export default function Auth() {
             disabled={loading}
             onPress={signUpWithEmail}
           >
-            Sign up
+            {t('loginPage.register')}
           </Button>
         </View>
       </View>

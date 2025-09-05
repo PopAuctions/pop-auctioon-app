@@ -8,9 +8,9 @@ export default function AuctionStatsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
-    <ScrollView className='flex-1 bg-gray-50'>
+    <ScrollView className='bg-gray-50 flex-1'>
       <View className='p-4'>
-        <Text className='mb-6 text-2xl font-bold text-gray-800'>
+        <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           Estadísticas - Subasta #{id}
         </Text>
 
@@ -53,26 +53,26 @@ export default function AuctionStatsScreen() {
         <View className='mb-4 rounded-lg bg-white p-4'>
           <Text className='mb-4 text-lg font-semibold'>Historial de Pujas</Text>
           <View className='space-y-3'>
-            <View className='flex-row items-center justify-between border-b border-gray-100 py-2'>
+            <View className='border-gray-100 flex-row items-center justify-between border-b py-2'>
               <View>
                 <Text className='font-semibold'>Usuario123</Text>
-                <Text className='text-sm text-gray-500'>hace 15 min</Text>
+                <Text className='text-gray-500 text-sm'>hace 15 min</Text>
               </View>
               <Text className='font-bold text-green-600'>$245.00</Text>
             </View>
 
-            <View className='flex-row items-center justify-between border-b border-gray-100 py-2'>
+            <View className='border-gray-100 flex-row items-center justify-between border-b py-2'>
               <View>
                 <Text className='font-semibold'>Comprador456</Text>
-                <Text className='text-sm text-gray-500'>hace 1h 30min</Text>
+                <Text className='text-gray-500 text-sm'>hace 1h 30min</Text>
               </View>
               <Text className='font-bold text-green-600'>$230.00</Text>
             </View>
 
-            <View className='flex-row items-center justify-between border-b border-gray-100 py-2'>
+            <View className='border-gray-100 flex-row items-center justify-between border-b py-2'>
               <View>
                 <Text className='font-semibold'>PostorXYZ</Text>
-                <Text className='text-sm text-gray-500'>hace 2h 15min</Text>
+                <Text className='text-gray-500 text-sm'>hace 2h 15min</Text>
               </View>
               <Text className='font-bold text-green-600'>$215.00</Text>
             </View>
