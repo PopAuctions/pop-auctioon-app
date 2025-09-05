@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, AppState, TextInput } from 'react-native';
+import { Alert, StyleSheet, View, AppState } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -53,20 +54,25 @@ export default function Auth() {
     <View style={{ flex: 1, paddingTop: insets.top }}>
       <View style={styles.container}>
         <View style={[styles.verticallySpaced, styles.mt20]}>
-          <TextInput
-            onChangeText={(text) => setEmail(text)}
+          <Input
+            onChangeText={(text: string) => setEmail(text)}
             value={email}
             placeholder='email@address.com'
-            autoCapitalize={'none'}
+            autoCapitalize='none'
+            keyboardType='email-address'
+            autoComplete='email'
+            editable={!loading}
           />
         </View>
         <View style={styles.verticallySpaced}>
-          <TextInput
-            onChangeText={(text) => setPassword(text)}
+          <Input
+            onChangeText={(text: string) => setPassword(text)}
             value={password}
             secureTextEntry={true}
             placeholder='Password'
-            autoCapitalize={'none'}
+            autoCapitalize='none'
+            autoComplete='password'
+            editable={!loading}
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>

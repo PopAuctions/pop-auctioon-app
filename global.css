@@ -13,24 +13,24 @@
     --input-text: #787878;
 
     --melon: #eb8175;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
 
-    --primary: 210 40% 96.1%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: #f8fafc;
+    --primary-foreground: #1e293b;
 
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: #f8fafc;
+    --muted-foreground: #64748b;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #0f172a;
 
     /* Typography Scale */
     --text-xs: 0.75rem; /* 12px */
