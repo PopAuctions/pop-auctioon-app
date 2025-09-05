@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  StyleSheet,
-  View,
-  AppState,
-  Button,
-  TextInput,
-} from 'react-native';
+import { Alert, StyleSheet, View, AppState, TextInput } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button } from '@/components/ui/Button';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -77,17 +71,23 @@ export default function Auth() {
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>
           <Button
-            title='Sign in'
+            mode='primary'
+            isLoading={loading}
             disabled={loading}
-            onPress={() => signInWithEmail()}
-          />
+            onPress={signInWithEmail}
+          >
+            Sign in
+          </Button>
         </View>
         <View style={styles.verticallySpaced}>
           <Button
-            title='Sign up'
+            mode='secondary'
+            isLoading={loading}
             disabled={loading}
-            onPress={() => signUpWithEmail()}
-          />
+            onPress={signUpWithEmail}
+          >
+            Sign up
+          </Button>
         </View>
       </View>
     </View>

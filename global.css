@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --light-black: rgb(17, 17, 17);
+
+    --text-black: #141414;
+    --cinnabar: #d75639;
+    --silver: #cdcdcd;
+    --gray: #4d4d4d;
+    --input-text: #787878;
+
+    --melon: #eb8175;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --primary: 210 40% 96.1%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    /* Typography Scale */
+    --text-xs: 0.75rem; /* 12px */
+    --text-sm: 0.875rem; /* 14px */
+    --text-base: 1rem; /* 16px - Base size */
+    --text-lg: 1.125rem; /* 18px - Buttons, highlights */
+    --text-xl: 1.25rem; /* 20px - Subtitles */
+    --text-2xl: 1.5rem; /* 24px - Section titles */
+    --text-3xl: 1.875rem; /* 30px - Main titles */
+    --text-4xl: 2.25rem; /* 36px - Hero titles */
+    --text-5xl: 3rem; /* 48px - Large displays */
+  }
+}
