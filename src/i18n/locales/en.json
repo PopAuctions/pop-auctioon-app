@@ -15,15 +15,17 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
+    "newAccount": "New account!",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm password",
-    "forgotPassword": "Forgot your password?",
+    "forgotPassword": "Forgot Password?",
     "loginSuccess": "Login successful",
     "loginError": "Login error",
     "registerSuccess": "User registered successfully",
     "registerError": "Registration error",
-    "title": "Sign In"
+    "title": "Sign In",
+    "logIn": "Log In"
   },
   "tabsNames": {
     "home": "Home",
