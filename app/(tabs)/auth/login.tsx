@@ -72,7 +72,7 @@ export default function Auth() {
 
   return (
     <View
-      className='flex-1 bg-gray-50'
+      className='bg-gray-50 flex-1'
       style={{ paddingTop: insets.top }}
     >
       <View className='flex-1 px-5 pt-10'>
@@ -80,7 +80,7 @@ export default function Auth() {
         <View className='mb-10 items-center'>
           <View className='h-12 w-80'>
             <PopAuctioonIcon
-              className='h-full w-full text-gray-800'
+              className='text-gray-800 h-full w-full'
               centered={true}
             />
           </View>
@@ -88,7 +88,7 @@ export default function Auth() {
         {/* Form Container */}
         <View className='rounded-2xl bg-white p-6 shadow-lg'>
           <View className='mb-5'>
-            <Text className='mb-2 text-base font-medium text-gray-700'>
+            <Text className='text-gray-700 mb-2 text-base font-medium'>
               {t('loginPage.email')}
             </Text>
             <Input
@@ -103,7 +103,7 @@ export default function Auth() {
           </View>
 
           <View className='mb-5'>
-            <Text className='mb-2 text-base font-medium text-gray-700'>
+            <Text className='text-gray-700 mb-2 text-base font-medium'>
               {t('loginPage.password')}
             </Text>
             <Input
@@ -122,7 +122,7 @@ export default function Auth() {
             className='mb-6 items-end'
             onPress={resetPassword}
           >
-            <Text className='text-cinnabar text-base'>
+            <Text className='text-base text-cinnabar'>
               {t('loginPage.forgotPassword')}
             </Text>
           </TouchableOpacity>
