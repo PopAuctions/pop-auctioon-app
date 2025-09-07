@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  View,
-  AppState,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { Alert, View, AppState, Text, TouchableOpacity } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useTranslation } from '@/hooks/useTranslation';
 import { PopAuctioonIcon } from '@/components/icons';
+import { BackgroundImage } from '@/components/ui/BackgroundImage';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -78,11 +72,7 @@ export default function Auth() {
   }
 
   return (
-    <ImageBackground
-      source={require('@/components/icons/bg-image.webp')}
-      className='flex-1'
-      resizeMode='cover'
-    >
+    <BackgroundImage source={require('@/components/icons/bg-image.webp')}>
       <View
         className='flex-1'
         style={{ paddingTop: insets.top }}
@@ -164,6 +154,6 @@ export default function Auth() {
           </View>
         </View>
       </View>
-    </ImageBackground>
+    </BackgroundImage>
   );
 }
