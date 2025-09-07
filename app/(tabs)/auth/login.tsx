@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, View, AppState, Text, TouchableOpacity } from 'react-native';
+import {
+  Alert,
+  View,
+  AppState,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+} from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -71,86 +78,92 @@ export default function Auth() {
   }
 
   return (
-    <View
-      className='bg-gray-50 flex-1'
-      style={{ paddingTop: insets.top }}
+    <ImageBackground
+      source={require('@/components/icons/bg-image.webp')}
+      className='flex-1'
+      resizeMode='cover'
     >
-      <View className='flex-1 px-5 pt-10'>
-        {/* Logo/Title Section */}
-        <View className='mb-10 items-center'>
-          <View className='h-12 w-80'>
-            <PopAuctioonIcon
-              className='text-gray-800 h-full w-full'
-              centered={true}
-            />
+      <View
+        className='flex-1'
+        style={{ paddingTop: insets.top }}
+      >
+        <View className='flex-1 px-5 pt-10'>
+          {/* Logo/Title Section */}
+          <View className='mb-10 items-center'>
+            <View className='h-12 w-80'>
+              <PopAuctioonIcon
+                className='h-full w-full text-white'
+                centered={true}
+              />
+            </View>
           </View>
-        </View>{' '}
-        {/* Form Container */}
-        <View className='rounded-2xl bg-white p-6 shadow-lg'>
-          <View className='mb-5'>
-            <Text className='text-gray-700 mb-2 text-base font-medium'>
-              {t('loginPage.email')}
-            </Text>
-            <Input
-              onChangeText={(text: string) => setEmail(text)}
-              value={email}
-              placeholder={t('loginPage.email')}
-              autoCapitalize='none'
-              keyboardType='email-address'
-              autoComplete='email'
-              editable={!loading}
-            />
-          </View>
+          {/* Form Container */}
+          <View className='rounded-2xl bg-white/95 p-6 shadow-2xl backdrop-blur-sm'>
+            <View className='mb-5'>
+              <Text className='text-gray-700 mb-2 text-base font-medium'>
+                {t('loginPage.email')}
+              </Text>
+              <Input
+                onChangeText={(text: string) => setEmail(text)}
+                value={email}
+                placeholder={t('loginPage.email')}
+                autoCapitalize='none'
+                keyboardType='email-address'
+                autoComplete='email'
+                editable={!loading}
+              />
+            </View>
 
-          <View className='mb-5'>
-            <Text className='text-gray-700 mb-2 text-base font-medium'>
-              {t('loginPage.password')}
-            </Text>
-            <Input
-              onChangeText={(text: string) => setPassword(text)}
-              value={password}
-              secureTextEntry={true}
-              placeholder={t('loginPage.password')}
-              autoCapitalize='none'
-              autoComplete='password'
-              editable={!loading}
-            />
-          </View>
+            <View className='mb-5'>
+              <Text className='text-gray-700 mb-2 text-base font-medium'>
+                {t('loginPage.password')}
+              </Text>
+              <Input
+                onChangeText={(text: string) => setPassword(text)}
+                value={password}
+                secureTextEntry={true}
+                placeholder={t('loginPage.password')}
+                autoCapitalize='none'
+                autoComplete='password'
+                editable={!loading}
+              />
+            </View>
 
-          {/* Forgot Password Link */}
-          <TouchableOpacity
-            className='mb-6 items-end'
-            onPress={resetPassword}
-          >
-            <Text className='text-base text-cinnabar'>
-              {t('loginPage.forgotPassword')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Buttons */}
-          <View className='mb-4'>
-            <Button
-              mode='primary'
-              isLoading={loading}
-              disabled={loading}
-              onPress={signInWithEmail}
+            {/* Forgot Password Link */}
+            <TouchableOpacity
+              className='mb-6 items-end'
+              onPress={resetPassword}
             >
-              {t('loginPage.logIn')}
-            </Button>
-          </View>
+              <Text className='text-base text-cinnabar'>
+                {t('loginPage.forgotPassword')}
+              </Text>
+            </TouchableOpacity>
 
-          <View className='mb-4'>
-            <Button
-              mode='secondary'
-              isLoading={loading}
-              disabled={loading}
-              onPress={signUpWithEmail}
-            >
-              {t('loginPage.newAccount')}
-            </Button>
+            {/* Buttons */}
+            <View className='mb-4'>
+              <Button
+                mode='primary'
+                isLoading={loading}
+                disabled={loading}
+                onPress={signInWithEmail}
+              >
+                {t('loginPage.logIn')}
+              </Button>
+            </View>
+
+            <View className='mb-4'>
+              <Button
+                mode='secondary'
+                isLoading={loading}
+                disabled={loading}
+                onPress={signUpWithEmail}
+              >
+                {t('loginPage.newAccount')}
+              </Button>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
