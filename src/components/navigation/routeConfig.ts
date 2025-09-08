@@ -3,7 +3,6 @@ import { UserRoles } from '@/types/types';
 export interface RouteConfig {
   requiresAuth: boolean;
   requiresRole?: UserRoles;
-  description?: string;
 }
 
 /**
@@ -20,33 +19,23 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   // Rutas que requieren LOGIN (cualquier rol)
   account: {
     requiresAuth: true,
-    description: 'Gestión de cuenta de usuario',
   },
   auctions: {
     requiresAuth: true,
-    description: 'Participar en subastas',
   },
-  store: {
-    requiresAuth: true,
-    description: 'Tienda online',
-  },
-
   // Rutas que requieren LOGIN + rol específico
   'my-auctions': {
     requiresAuth: true,
     requiresRole: 'AUCTIONEER',
-    description: 'Gestión de subastas (solo AUCTIONEER)',
   },
 
   // Ejemplo de rutas futuras:
   // 'admin-panel': {
   //   requiresAuth: true,
   //   requiresRole: 'ADMIN',
-  //   description: 'Panel de administración'
   // },
   // 'notifications': {
   //   requiresAuth: true,
-  //   description: 'Centro de notificaciones'
   // },
 };
 
