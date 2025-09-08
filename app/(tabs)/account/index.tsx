@@ -1,19 +1,22 @@
-// app/(tabs)/account/index.tsx
-import Login from '../auth/login';
 import Account from './account-user';
 import { useAuth } from '@/context/auth-context';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function AccountTab() {
   const { session } = useAuth();
 
+  useEffect(() => {
+    // Si no hay sesión, redirigir a la pantalla de auth
+    if (!session) {
+      router.replace('/(tabs)/auth');
+    }
+  }, [session]);
+
+  // Si no hay sesión, mostrar loading o null mientras redirige
   if (!session) {
-    return <Login />;
+    return null;
   }
 
-  return (
-    <Account session={session} />
-    // Aquí puedes mostrar opciones según el rol
-    // Ejemplo:
-    // {role === 'AUCTIONEER' ? <AuctioneerMenu /> : <UserMenu />}
-  );
+  return <Account session={session} />;
 }

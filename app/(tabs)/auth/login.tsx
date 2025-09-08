@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { useTranslation } from '@/hooks/useTranslation';
 import { PopAuctioonIcon } from '@/components/icons';
 import { BackgroundImage } from '@/components/ui/BackgroundImage';
+import { router } from 'expo-router';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -34,7 +35,12 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      // Login exitoso - redirigir al home y reemplazar la pantalla de login
+      router.replace('/(tabs)/home');
+    }
     setLoading(false);
   }
 
@@ -48,9 +54,14 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
-    if (!session)
+    if (error) {
+      Alert.alert(error.message);
+    } else if (!session) {
       Alert.alert('Please check your inbox for email verification!');
+    } else {
+      // Registro exitoso con sesión activa - redirigir al home y reemplazar login
+      router.replace('/(tabs)/home');
+    }
     setLoading(false);
   }
 
