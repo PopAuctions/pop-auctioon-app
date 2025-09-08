@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 const calendarData = [
   {
@@ -39,9 +39,11 @@ const calendarData = [
   },
 ];
 
-export default function AuctionCalendarScreen() {
+export default function CalendarScreen() {
+  const { navigateWithAuth } = useAuthNavigation();
+
   return (
-    <ScrollView className='bg-gray-50 flex-1'>
+    <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           📅 Calendario de Subastas
@@ -71,7 +73,7 @@ export default function AuctionCalendarScreen() {
                   key={auction.id}
                   className='border-gray-100 border-b p-4 last:border-b-0'
                   onPress={() =>
-                    router.push(`/(tabs)/auctions/${auction.id}` as any)
+                    navigateWithAuth(`/(tabs)/auctions/${auction.id}`)
                   }
                 >
                   <View className='flex-row items-center justify-between'>

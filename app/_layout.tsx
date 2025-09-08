@@ -7,6 +7,7 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import '../global.css';
@@ -26,6 +27,7 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import ErrorLoading from '@/components/loading/error-loading';
 import { AuthContext } from '@/context/auth-context';
 import { UserRoles } from '@/types/types';
+import { ProtectedRoute } from '@/components/navigation/ProtectedRoute';
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -99,6 +101,41 @@ export default Sentry.wrap(function RootLayout() {
     };
   }, []);
 
+  // Deep linking handler
+  useEffect(() => {
+    const handleDeepLink = (event: { url: string }) => {
+      const url = event.url;
+      console.log('🔗 Deep link received:', url);
+
+      // Parsear URL y manejar navegación basada en auth
+      if (url.includes('/account') && !session) {
+        console.log(
+          '🔒 Deep link to protected route without auth, redirecting to login'
+        );
+        // No redirigir aquí, dejamos que ProtectedRoute lo maneje
+      } else if (url.includes('/auth') && session) {
+        console.log(
+          '✅ Deep link to auth with existing session, redirecting to home'
+        );
+        // No redirigir aquí, dejamos que ProtectedRoute lo maneje
+      }
+    };
+
+    // Escuchar eventos de deep linking
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Manejar URL inicial (cuando la app se abre desde un link)
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
+
+    return () => {
+      subscription?.remove();
+    };
+  }, [session]);
+
   useEffect(() => {
     if (error) {
       sentryErrorReport(error, '[RootLayout] Font loading error');
@@ -126,7 +163,9 @@ export default Sentry.wrap(function RootLayout() {
 
   return (
     <AuthContext.Provider value={{ session, role }}>
-      <RootLayoutNav />
+      <ProtectedRoute>
+        <RootLayoutNav />
+      </ProtectedRoute>
     </AuthContext.Provider>
   );
 });

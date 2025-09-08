@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AuctionsScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const { navigateWithAuth } = useAuthNavigation();
 
   return (
     <View
@@ -28,7 +29,7 @@ export default function AuctionsScreen() {
         <View className='mx-4 mt-4'>
           <TouchableOpacity
             className='rounded-lg bg-red-500 p-6 shadow-lg'
-            onPress={() => router.push('/(tabs)/auctions/live/123')}
+            onPress={() => navigateWithAuth('/(tabs)/auctions/live/123')}
           >
             <View className='flex-row items-center justify-center'>
               <View className='mr-3 h-3 w-3 animate-pulse rounded-full bg-white' />
@@ -55,7 +56,7 @@ export default function AuctionsScreen() {
           {/* Auctions Calendar Option */}
           <TouchableOpacity
             className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
-            onPress={() => router.push('/(tabs)/auctions/calendar')}
+            onPress={() => navigateWithAuth('/(tabs)/auctions/calendar')}
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
@@ -74,7 +75,7 @@ export default function AuctionsScreen() {
           {/* All Articles Option */}
           <TouchableOpacity
             className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
-            onPress={() => router.push('/(tabs)/auctions/articles')}
+            onPress={() => navigateWithAuth('/(tabs)/auctions/articles')}
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>

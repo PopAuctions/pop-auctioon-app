@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 export default function MyAuctionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { navigateWithAuth } = useAuthNavigation();
 
   return (
     <ScrollView className='flex-1 bg-white'>
@@ -55,7 +57,7 @@ export default function MyAuctionDetailScreen() {
         <View className='space-y-3'>
           <TouchableOpacity
             className='items-center rounded-lg bg-blue-500 p-4'
-            onPress={() => router.push(`/(tabs)/my-auctions/${id}/edit` as any)}
+            onPress={() => navigateWithAuth(`/(tabs)/my-auctions/${id}/edit`)}
           >
             <Text className='text-lg font-semibold text-white'>
               Editar Subasta
@@ -64,9 +66,7 @@ export default function MyAuctionDetailScreen() {
 
           <TouchableOpacity
             className='items-center rounded-lg bg-green-500 p-4'
-            onPress={() =>
-              router.push(`/(tabs)/my-auctions/${id}/stats` as any)
-            }
+            onPress={() => navigateWithAuth(`/(tabs)/my-auctions/${id}/stats`)}
           >
             <Text className='text-lg font-semibold text-white'>
               Ver Estadísticas

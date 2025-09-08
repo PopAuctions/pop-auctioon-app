@@ -1,21 +1,34 @@
 import Account from './account-user';
 import { useAuth } from '@/context/auth-context';
-import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { View, ActivityIndicator } from 'react-native';
 
 export default function AccountTab() {
   const { session } = useAuth();
+  const { isNavigating } = useAuthNavigation();
 
-  useEffect(() => {
-    // Si no hay sesión, redirigir a la pantalla de auth
-    if (!session) {
-      router.replace('/(tabs)/auth');
-    }
-  }, [session]);
-
-  // Si no hay sesión, mostrar loading o null mientras redirige
+  // Si no hay sesión, mostrar loading mientras ProtectedRoute maneja la redirección
   if (!session) {
-    return null;
+    return (
+      <View className='flex-1 items-center justify-center bg-white'>
+        <ActivityIndicator
+          size='large'
+          color='#d75639'
+        />
+      </View>
+    );
+  }
+
+  // Mostrar loading si está navegando
+  if (isNavigating) {
+    return (
+      <View className='flex-1 items-center justify-center bg-white'>
+        <ActivityIndicator
+          size='large'
+          color='#d75639'
+        />
+      </View>
+    );
   }
 
   return <Account session={session} />;

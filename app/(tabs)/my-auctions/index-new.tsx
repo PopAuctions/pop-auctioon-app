@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 // Subastas del auctioneer - con diferentes estados
 const myAuctions = [
@@ -45,6 +45,7 @@ const myAuctions = [
 
 export default function MyAuctionsScreen() {
   const { t } = useTranslation();
+  const { navigateWithAuth } = useAuthNavigation();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -88,7 +89,7 @@ export default function MyAuctionsScreen() {
         </Text>
         <TouchableOpacity
           className='rounded-lg bg-blue-500 p-3'
-          onPress={() => router.push('/(tabs)/my-auctions/create' as any)}
+          onPress={() => navigateWithAuth('/(tabs)/my-auctions/create')}
         >
           <Text className='text-center font-semibold text-white'>
             ➕ {t('screens.myAuctions.createAuction')}
@@ -124,7 +125,7 @@ export default function MyAuctionsScreen() {
             key={auction.id}
             className='border-gray-200 mb-3 rounded-lg border bg-white p-4 shadow-sm'
             onPress={() =>
-              router.push(`/(tabs)/my-auctions/${auction.id}` as any)
+              navigateWithAuth(`/(tabs)/my-auctions/${auction.id}`)
             }
           >
             <View className='mb-3 flex-row items-start justify-between'>

@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 
 // Datos simulados basados en el tercer screenshot
@@ -69,6 +69,7 @@ const articlesData = [
 
 export default function ArticlesScreen() {
   const { t } = useTranslation();
+  const { navigateWithAuth } = useAuthNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(
     t('screens.auctions.articles.filters.all')
@@ -142,7 +143,7 @@ export default function ArticlesScreen() {
               key={article.id}
               className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
               onPress={() =>
-                router.push(`/(tabs)/auctions/article/${article.id}`)
+                navigateWithAuth(`/(tabs)/auctions/article/${article.id}`)
               }
             >
               {/* Article Image */}

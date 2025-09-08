@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -63,8 +63,9 @@ const storeProducts = [
 ];
 
 export default function StoreScreen() {
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
+  const { navigateWithAuth } = useAuthNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(
     t('screens.store.filters.all')
@@ -163,7 +164,7 @@ export default function StoreScreen() {
             <TouchableOpacity
               key={product.id}
               className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
-              onPress={() => router.push(`/(tabs)/store/${product.id}` as any)}
+              onPress={() => navigateWithAuth(`/(tabs)/store/${product.id}`)}
             >
               {/* Product Image */}
               <View className='bg-gray-50 aspect-square items-center justify-center'>
