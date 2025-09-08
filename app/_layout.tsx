@@ -105,6 +105,10 @@ export default Sentry.wrap(function RootLayout() {
   useEffect(() => {
     const handleDeepLink = (event: { url: string }) => {
       const url = event.url;
+      // Ignorar URLs de desarrollo
+      if (url.includes('expo-development-client')) {
+        return;
+      }
       console.log('🔗 Deep link received:', url);
 
       // Parsear URL y manejar navegación basada en auth
