@@ -48,7 +48,7 @@ export const useAuthNavigation = () => {
         setIsNavigating(false);
       }, 500);
 
-      return () => clearTimeout(timeout);
+      return true;
     },
     [session, role]
   );
