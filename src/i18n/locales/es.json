@@ -25,7 +25,7 @@
     "registerSuccess": "Usuario registrado correctamente",
     "registerError": "Error al registrar usuario",
     "title": "Iniciar Sesión",
-    "logIn": "Log In"
+    "logIn": "Iniciar Sesión"
   },
   "tabsNames": {
     "home": "Inicio",
