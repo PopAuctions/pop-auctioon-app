@@ -49,11 +49,11 @@ export default function ProductDetailScreen() {
           {Array.from({ length: product.images }).map((_, index) => (
             <View
               key={index}
-              className='items-center justify-center bg-gray-200'
+              className='bg-gray-200 items-center justify-center'
               style={{ width }}
             >
-              <Text className='text-4xl text-gray-500'>📷</Text>
-              <Text className='mt-2 text-gray-400'>Imagen {index + 1}</Text>
+              <Text className='text-gray-500 text-4xl'>📷</Text>
+              <Text className='text-gray-400 mt-2'>Imagen {index + 1}</Text>
             </View>
           ))}
         </ScrollView>
@@ -84,7 +84,7 @@ export default function ProductDetailScreen() {
         <Text className='mb-4 text-sm text-red-500'>{product.brand}</Text>
 
         {/* Product Title */}
-        <Text className='mb-6 text-3xl font-light text-gray-900'>
+        <Text className='text-gray-900 mb-6 text-3xl font-light'>
           {product.title}
         </Text>
 
@@ -95,7 +95,7 @@ export default function ProductDetailScreen() {
             <View className='mb-6'>
               <Text className='mb-2 text-lg font-semibold'>Price</Text>
               <Text className='text-4xl font-light'>€{product.price}</Text>
-              <Text className='text-sm text-gray-500'>
+              <Text className='text-gray-500 text-sm'>
                 {product.serviceCode}
               </Text>
             </View>
@@ -126,14 +126,14 @@ export default function ProductDetailScreen() {
             {/* Description */}
             <View className='mb-6'>
               <Text className='mb-3 text-lg font-semibold'>Descripción</Text>
-              <Text className='leading-6 text-gray-700'>
+              <Text className='text-gray-700 leading-6'>
                 {product.description}
               </Text>
             </View>
           </View>
 
           {/* Right Column - Make Offer */}
-          <View className='w-80 rounded-lg bg-gray-50 p-4'>
+          <View className='bg-gray-50 w-80 rounded-lg p-4'>
             <Text className='mb-4 text-xl font-semibold'>
               Make an offer to the seller!
             </Text>
@@ -141,13 +141,13 @@ export default function ProductDetailScreen() {
             {/* Offer Input */}
             <View className='mb-4'>
               <TextInput
-                className='rounded-lg border border-gray-300 px-4 py-3 text-lg'
+                className='border-gray-300 rounded-lg border px-4 py-3 text-lg'
                 placeholder='€'
                 value={offer}
                 onChangeText={setOffer}
                 keyboardType='numeric'
               />
-              <Text className='mt-1 text-sm text-gray-500'>
+              <Text className='text-gray-500 mt-1 text-sm'>
                 The minimum offer is: €693
               </Text>
             </View>
@@ -160,7 +160,7 @@ export default function ProductDetailScreen() {
             </TouchableOpacity>
 
             {/* Terms */}
-            <Text className='text-xs leading-4 text-gray-500'>
+            <Text className='text-gray-500 text-xs leading-4'>
               If your offer is accepted, you will receive an email with the next
               steps and have 24 hours to make the payment.
             </Text>

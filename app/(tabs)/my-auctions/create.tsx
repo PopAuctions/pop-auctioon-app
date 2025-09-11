@@ -38,14 +38,14 @@ export default function CreateAuctionScreen() {
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
-        <Text className='mb-6 text-2xl font-bold text-gray-800'>
+        <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           {t('screens.myAuctions.createAuction')}
         </Text>
 
         <View className='mb-4'>
           <Text className='mb-2 text-lg font-semibold'>Título</Text>
           <TextInput
-            className='rounded-lg bg-gray-100 px-4 py-3 text-gray-800'
+            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
             placeholder='Nombre de tu subasta'
             value={title}
             onChangeText={setTitle}
@@ -55,7 +55,7 @@ export default function CreateAuctionScreen() {
         <View className='mb-4'>
           <Text className='mb-2 text-lg font-semibold'>Descripción</Text>
           <TextInput
-            className='rounded-lg bg-gray-100 px-4 py-3 text-gray-800'
+            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
             placeholder='Describe tu producto...'
             value={description}
             onChangeText={setDescription}
@@ -68,7 +68,7 @@ export default function CreateAuctionScreen() {
         <View className='mb-4'>
           <Text className='mb-2 text-lg font-semibold'>Precio Inicial ($)</Text>
           <TextInput
-            className='rounded-lg bg-gray-100 px-4 py-3 text-gray-800'
+            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
             placeholder='0.00'
             value={startingPrice}
             onChangeText={setStartingPrice}
@@ -79,7 +79,7 @@ export default function CreateAuctionScreen() {
         <View className='mb-6'>
           <Text className='mb-2 text-lg font-semibold'>Duración (horas)</Text>
           <TextInput
-            className='rounded-lg bg-gray-100 px-4 py-3 text-gray-800'
+            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
             placeholder='24'
             value={duration}
             onChangeText={setDuration}
@@ -97,10 +97,10 @@ export default function CreateAuctionScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className='items-center rounded-lg bg-gray-300 p-4'
+          className='bg-gray-300 items-center rounded-lg p-4'
           onPress={() => router.back()}
         >
-          <Text className='text-lg font-semibold text-gray-700'>Cancelar</Text>
+          <Text className='text-gray-700 text-lg font-semibold'>Cancelar</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

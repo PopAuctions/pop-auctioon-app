@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 export default function MyAuctionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { navigateWithAuth } = useAuthNavigation();
 
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
-        <Text className='mb-2 text-2xl font-bold text-gray-800'>
+        <Text className='text-gray-800 mb-2 text-2xl font-bold'>
           Mi Subasta #{id}
         </Text>
 
@@ -19,21 +21,21 @@ export default function MyAuctionDetailScreen() {
         </View>
 
         {/* Información de la subasta */}
-        <View className='mb-4 rounded-lg bg-gray-100 p-4'>
+        <View className='bg-gray-100 mb-4 rounded-lg p-4'>
           <Text className='mb-2 text-lg font-semibold'>
             Información General
           </Text>
-          <Text className='mb-1 text-gray-600'>
+          <Text className='text-gray-600 mb-1'>
             Título: Producto de Ejemplo
           </Text>
-          <Text className='mb-1 text-gray-600'>Precio inicial: $100.00</Text>
-          <Text className='mb-1 text-gray-600'>Puja actual: $245.00</Text>
-          <Text className='mb-1 text-gray-600'>Número de pujas: 8</Text>
+          <Text className='text-gray-600 mb-1'>Precio inicial: $100.00</Text>
+          <Text className='text-gray-600 mb-1'>Puja actual: $245.00</Text>
+          <Text className='text-gray-600 mb-1'>Número de pujas: 8</Text>
           <Text className='text-gray-600'>Visitantes: 156</Text>
         </View>
 
         {/* Pujas recientes */}
-        <View className='mb-6 rounded-lg bg-gray-100 p-4'>
+        <View className='bg-gray-100 mb-6 rounded-lg p-4'>
           <Text className='mb-2 text-lg font-semibold'>Pujas Recientes</Text>
           <View className='space-y-2'>
             <View className='flex-row justify-between'>
@@ -55,7 +57,7 @@ export default function MyAuctionDetailScreen() {
         <View className='space-y-3'>
           <TouchableOpacity
             className='items-center rounded-lg bg-blue-500 p-4'
-            onPress={() => router.push(`/(tabs)/my-auctions/${id}/edit` as any)}
+            onPress={() => navigateWithAuth(`/(tabs)/my-auctions/${id}/edit`)}
           >
             <Text className='text-lg font-semibold text-white'>
               Editar Subasta
@@ -64,9 +66,7 @@ export default function MyAuctionDetailScreen() {
 
           <TouchableOpacity
             className='items-center rounded-lg bg-green-500 p-4'
-            onPress={() =>
-              router.push(`/(tabs)/my-auctions/${id}/stats` as any)
-            }
+            onPress={() => navigateWithAuth(`/(tabs)/my-auctions/${id}/stats`)}
           >
             <Text className='text-lg font-semibold text-white'>
               Ver Estadísticas

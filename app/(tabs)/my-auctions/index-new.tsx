@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/useTranslation';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 // Subastas del auctioneer - con diferentes estados
 const myAuctions = [
@@ -45,6 +45,7 @@ const myAuctions = [
 
 export default function MyAuctionsScreen() {
   const { t } = useTranslation();
+  const { navigateWithAuth } = useAuthNavigation();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -77,18 +78,18 @@ export default function MyAuctionsScreen() {
   };
 
   return (
-    <ScrollView className='flex-1 bg-gray-50'>
+    <ScrollView className='bg-gray-50 flex-1'>
       {/* Header */}
-      <View className='border-b border-gray-200 bg-white p-4'>
-        <Text className='mb-2 text-2xl font-bold text-gray-800'>
+      <View className='border-gray-200 border-b bg-white p-4'>
+        <Text className='text-gray-800 mb-2 text-2xl font-bold'>
           {t('screens.myAuctions.title')}
         </Text>
-        <Text className='mb-4 text-gray-600'>
+        <Text className='text-gray-600 mb-4'>
           Gestiona todas tus subastas desde aquí
         </Text>
         <TouchableOpacity
           className='rounded-lg bg-blue-500 p-3'
-          onPress={() => router.push('/(tabs)/my-auctions/create' as any)}
+          onPress={() => navigateWithAuth('/(tabs)/my-auctions/create')}
         >
           <Text className='text-center font-semibold text-white'>
             ➕ {t('screens.myAuctions.createAuction')}
@@ -98,21 +99,21 @@ export default function MyAuctionsScreen() {
 
       {/* Statistics Overview */}
       <View className='mx-4 mt-4 rounded-lg bg-white p-4 shadow-sm'>
-        <Text className='mb-3 text-lg font-semibold text-gray-800'>
+        <Text className='text-gray-800 mb-3 text-lg font-semibold'>
           📊 Resumen
         </Text>
         <View className='flex-row justify-between'>
           <View className='items-center'>
             <Text className='text-2xl font-bold text-blue-600'>4</Text>
-            <Text className='text-sm text-gray-600'>Subastas</Text>
+            <Text className='text-gray-600 text-sm'>Subastas</Text>
           </View>
           <View className='items-center'>
             <Text className='text-2xl font-bold text-green-600'>1</Text>
-            <Text className='text-sm text-gray-600'>En Vivo</Text>
+            <Text className='text-gray-600 text-sm'>En Vivo</Text>
           </View>
           <View className='items-center'>
             <Text className='text-2xl font-bold text-orange-600'>$4,545</Text>
-            <Text className='text-sm text-gray-600'>Total Ventas</Text>
+            <Text className='text-gray-600 text-sm'>Total Ventas</Text>
           </View>
         </View>
       </View>
@@ -122,14 +123,14 @@ export default function MyAuctionsScreen() {
         {myAuctions.map((auction) => (
           <TouchableOpacity
             key={auction.id}
-            className='mb-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm'
+            className='border-gray-200 mb-3 rounded-lg border bg-white p-4 shadow-sm'
             onPress={() =>
-              router.push(`/(tabs)/my-auctions/${auction.id}` as any)
+              navigateWithAuth(`/(tabs)/my-auctions/${auction.id}`)
             }
           >
             <View className='mb-3 flex-row items-start justify-between'>
               <View className='flex-1'>
-                <Text className='mb-1 text-lg font-semibold text-gray-800'>
+                <Text className='text-gray-800 mb-1 text-lg font-semibold'>
                   {auction.title}
                 </Text>
                 <Text className='text-gray-600'>

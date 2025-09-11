@@ -13,10 +13,10 @@ export default function HomeScreen() {
       style={{ paddingTop: insets.top }}
     >
       <View className='flex-1 items-center justify-center px-4'>
-        <Text className='mb-2 text-center text-3xl font-bold text-gray-800'>
+        <Text className='text-gray-800 mb-2 text-center text-3xl font-bold'>
           {t('screens.home.title')}
         </Text>
-        <Text className='text-center text-gray-600'>
+        <Text className='text-gray-600 text-center'>
           {t('screens.home.subtitle')}
         </Text>
       </View>

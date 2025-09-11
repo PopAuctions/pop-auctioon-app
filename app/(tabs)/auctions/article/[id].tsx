@@ -57,12 +57,12 @@ export default function ArticleDetailScreen() {
   return (
     <ScrollView className='flex-1 bg-white'>
       {/* Header with Auction Info */}
-      <View className='border-b border-gray-200 bg-white p-4'>
+      <View className='border-gray-200 border-b bg-white p-4'>
         <Text className='mb-2 text-sm text-red-500'>Follow auction to:</Text>
-        <Text className='mb-2 text-2xl font-light text-gray-900'>
+        <Text className='text-gray-900 mb-2 text-2xl font-light'>
           {article.title}
         </Text>
-        <Text className='text-sm text-gray-600'>
+        <Text className='text-gray-600 text-sm'>
           {article.date} · {article.time}
         </Text>
         <Text className='mt-1 text-sm text-red-500'>Lote live in 25m 33s</Text>
@@ -71,8 +71,8 @@ export default function ArticleDetailScreen() {
           <TouchableOpacity className='rounded bg-red-500 px-4 py-2'>
             <Text className='text-sm font-medium text-white'>Follow</Text>
           </TouchableOpacity>
-          <TouchableOpacity className='rounded border border-gray-300 px-4 py-2'>
-            <Text className='text-sm text-gray-700'>Share</Text>
+          <TouchableOpacity className='border-gray-300 rounded border px-4 py-2'>
+            <Text className='text-gray-700 text-sm'>Share</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -81,17 +81,17 @@ export default function ArticleDetailScreen() {
         {/* Left Side - Images */}
         <View className='w-1/2'>
           {/* Main Image */}
-          <View className='aspect-square items-center justify-center border-r border-gray-200 bg-gray-100'>
+          <View className='border-gray-200 bg-gray-100 aspect-square items-center justify-center border-r'>
             <Text className='text-8xl'>👝</Text>
           </View>
 
           {/* Image Thumbnails */}
-          <View className='flex-row border-r border-gray-200'>
+          <View className='border-gray-200 flex-row border-r'>
             {Array.from({ length: article.images }).map((_, index) => (
               <TouchableOpacity
                 key={index}
-                className={`aspect-square flex-1 items-center justify-center border-t border-gray-200 bg-gray-50 ${
-                  index > 0 ? 'border-l border-gray-200' : ''
+                className={`border-gray-200 bg-gray-50 aspect-square flex-1 items-center justify-center border-t ${
+                  index > 0 ? 'border-gray-200 border-l' : ''
                 } ${currentImageIndex === index ? 'bg-blue-50' : ''}`}
                 onPress={() => setCurrentImageIndex(index)}
               >
@@ -105,20 +105,20 @@ export default function ArticleDetailScreen() {
         <View className='w-1/2 p-4'>
           {/* Price Section */}
           <View className='mb-6'>
-            <Text className='mb-1 text-sm text-gray-600'>Highest bid</Text>
-            <Text className='text-3xl font-light text-gray-900'>
+            <Text className='text-gray-600 mb-1 text-sm'>Highest bid</Text>
+            <Text className='text-gray-900 text-3xl font-light'>
               {article.estimatedPrice}
             </Text>
-            <Text className='text-sm text-gray-500'>
+            <Text className='text-gray-500 text-sm'>
               Estimated value: €1,800
             </Text>
           </View>
 
           {/* Bid Input */}
           <View className='mb-6 rounded bg-orange-50 p-4'>
-            <Text className='mb-2 text-sm text-gray-700'>Maximum bid is:</Text>
+            <Text className='text-gray-700 mb-2 text-sm'>Maximum bid is:</Text>
             <TextInput
-              className='mb-3 rounded border border-gray-300 px-3 py-2 text-lg'
+              className='border-gray-300 mb-3 rounded border px-3 py-2 text-lg'
               placeholder='€1,100'
               value={bid}
               onChangeText={setBid}
@@ -137,10 +137,10 @@ export default function ArticleDetailScreen() {
             {Object.entries(article.details).map(([key, value]) => (
               <View
                 key={key}
-                className='flex-row justify-between border-b border-gray-100 py-2'
+                className='border-gray-100 flex-row justify-between border-b py-2'
               >
-                <Text className='text-sm text-gray-600'>{key}</Text>
-                <Text className='flex-1 text-right text-sm font-medium text-gray-900'>
+                <Text className='text-gray-600 text-sm'>{key}</Text>
+                <Text className='text-gray-900 flex-1 text-right text-sm font-medium'>
                   {String(value)}
                 </Text>
               </View>
@@ -150,14 +150,14 @@ export default function ArticleDetailScreen() {
       </View>
 
       {/* Description Section */}
-      <View className='border-t border-gray-200 p-4'>
+      <View className='border-gray-200 border-t p-4'>
         <Text className='mb-3 text-lg font-semibold'>Observations</Text>
-        <Text className='mb-4 text-sm text-gray-600'>
+        <Text className='text-gray-600 mb-4 text-sm'>
           {article.observations}
         </Text>
 
         <Text className='mb-3 text-lg font-semibold'>Description</Text>
-        <Text className='text-sm leading-6 text-gray-700'>
+        <Text className='text-gray-700 text-sm leading-6'>
           {article.description}
         </Text>
       </View>

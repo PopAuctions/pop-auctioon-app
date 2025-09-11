@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { router } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
 
 // Datos simulados basados en el tercer screenshot
@@ -69,6 +69,7 @@ const articlesData = [
 
 export default function ArticlesScreen() {
   const { t } = useTranslation();
+  const { navigateWithAuth } = useAuthNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(
     t('screens.auctions.articles.filters.all')
@@ -91,8 +92,8 @@ export default function ArticlesScreen() {
   return (
     <ScrollView className='flex-1 bg-white'>
       {/* Header */}
-      <View className='border-b border-gray-200 p-4'>
-        <Text className='mb-4 text-2xl font-bold text-gray-800'>
+      <View className='border-gray-200 border-b p-4'>
+        <Text className='text-gray-800 mb-4 text-2xl font-bold'>
           {t('screens.auctions.articles.title')}
         </Text>
 
@@ -127,7 +128,7 @@ export default function ArticlesScreen() {
 
         {/* Search Bar */}
         <TextInput
-          className='rounded-lg border border-gray-200 bg-gray-50 p-3'
+          className='border-gray-200 bg-gray-50 rounded-lg border p-3'
           placeholder={t('screens.auctions.articles.searchPlaceholder')}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -140,13 +141,13 @@ export default function ArticlesScreen() {
           {filteredArticles.map((article) => (
             <TouchableOpacity
               key={article.id}
-              className='mb-6 w-[48%] overflow-hidden rounded-lg border border-gray-200 bg-white'
+              className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
               onPress={() =>
-                router.push(`/(tabs)/auctions/article/${article.id}`)
+                navigateWithAuth(`/(tabs)/auctions/article/${article.id}`)
               }
             >
               {/* Article Image */}
-              <View className='aspect-square items-center justify-center bg-gray-50'>
+              <View className='bg-gray-50 aspect-square items-center justify-center'>
                 <Text className='text-6xl'>{article.image}</Text>
               </View>
 
@@ -155,17 +156,17 @@ export default function ArticlesScreen() {
                 <Text className='mb-1 text-sm text-red-500'>
                   {article.brand}
                 </Text>
-                <Text className='mb-2 text-lg font-light text-gray-900'>
+                <Text className='text-gray-900 mb-2 text-lg font-light'>
                   {article.title}
                 </Text>
 
                 {/* Price Info */}
                 <View className='mb-3'>
-                  <Text className='text-sm text-gray-500'>
+                  <Text className='text-gray-500 text-sm'>
                     {t('screens.auctions.articles.currentBid')}:{' '}
                     {article.currentBid}
                   </Text>
-                  <Text className='text-sm text-gray-500'>
+                  <Text className='text-gray-500 text-sm'>
                     {t('screens.auctions.articles.estimatedValue')}:{' '}
                     {article.price}
                   </Text>
