@@ -158,9 +158,13 @@ export default function ApiTestingScreen() {
     });
 
   const testProtectedReallyNotFound = () =>
-    runTest('protected-real-404', '🔍 PROTECTED Real 404 (HTML Response)', async () => {
-      return await protectedGet('/nonexistent');
-    });
+    runTest(
+      'protected-real-404',
+      '🔍 PROTECTED Real 404 (HTML Response)',
+      async () => {
+        return await protectedGet('/nonexistent');
+      }
+    );
 
   const testProtectedPost = () =>
     runTest('protected-post', '📤 PROTECTED POST', async () => {
@@ -563,7 +567,7 @@ export default function ApiTestingScreen() {
                 disabled={!!activeTest || !session}
                 style={{ opacity: !session ? 0.5 : 1 }}
               >
-                <Text className='text-center text-gray-800'>
+                <Text className='text-gray-800 text-center'>
                   🔍 404 Not Found
                 </Text>
               </TouchableOpacity>

@@ -79,17 +79,22 @@ export const useSecureApi = () => {
 
           clearTimeout(timeoutId);
 
+          // Clonar la respuesta para poder leer el body múltiples veces si es necesario
+          const responseClone = response.clone();
+
           // Intentar parsear como JSON, si falla usar texto plano
           let responseData: any;
           try {
             responseData = await response.json();
           } catch {
-            // Si no es JSON válido, obtener como texto
-            const textResponse = await response.text();
+            // Si no es JSON válido, obtener como texto usando la copia del response
+            const textResponse = await responseClone.text();
             responseData = {
               error: `Non-JSON Response (${response.status})`,
-              responseText: textResponse.substring(0, 200) + (textResponse.length > 200 ? '...' : ''),
-              contentType: response.headers.get('content-type') || 'unknown'
+              responseText:
+                textResponse.substring(0, 200) +
+                (textResponse.length > 200 ? '...' : ''),
+              contentType: response.headers.get('content-type') || 'unknown',
             };
           }
 
