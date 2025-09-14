@@ -42,14 +42,6 @@ export const useSecureApi = () => {
       throw new Error(API_ERROR_CODES.MISSING_JWT);
     }
 
-    // Log temporal para debug
-    console.log(
-      '🔑 JWT Token (primeros 50 chars):',
-      session.access_token.substring(0, 50)
-    );
-    console.log('👤 User ID:', session.user?.id);
-    console.log('📧 User Email:', session.user?.email);
-
     return {
       ...baseHeaders,
       [HEADERS_CONFIG.AUTHORIZATION_HEADER]: `Bearer ${session.access_token}`,

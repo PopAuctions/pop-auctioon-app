@@ -18,6 +18,14 @@ export default function HomeLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name='api-testing'
+        options={{
+          title: '🧪 API Testing Lab',
+          presentation: 'card',
+          headerShown: true, // Solo mostrar header en pantallas secundarias
+        }}
+      />
       {/* Pantallas futuras para navegación desde HOME - COMENTADAS HASTA IMPLEMENTAR
       <Stack.Screen
         name='quick-access'
