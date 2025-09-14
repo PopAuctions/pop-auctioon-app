@@ -117,7 +117,7 @@ export default function ApiTestingScreen() {
 
   const testProtected400 = () =>
     runTest('protected-400', '❌ PROTECTED 400 (Bad Request)', async () => {
-      return await protectedGet('/test?error=400');
+      return await protectedGet('/test?scenario=bad_request');
     });
 
   const testProtected401 = () =>
@@ -154,6 +154,11 @@ export default function ApiTestingScreen() {
 
   const testProtected404 = () =>
     runTest('protected-404', '🔍 PROTECTED 404 (Not Found)', async () => {
+      return await protectedGet('/test?scenario=not_found');
+    });
+
+  const testProtectedReallyNotFound = () =>
+    runTest('protected-real-404', '🔍 PROTECTED Real 404 (HTML Response)', async () => {
       return await protectedGet('/nonexistent');
     });
 
@@ -175,7 +180,7 @@ export default function ApiTestingScreen() {
       if (!isAuth) {
         throw new Error('No estás autenticado para usar endpoints SECURE');
       }
-      return await secureGet('/config?type=basic');
+      return await secureGet('/test');
     });
 
   const testSecure401NoJWT = () =>
@@ -224,10 +229,28 @@ export default function ApiTestingScreen() {
       if (!isAuth) {
         throw new Error('No estás autenticado para usar endpoints SECURE');
       }
-      return await securePost('/config', {
-        action: 'test-post',
-        data: { test: true, timestamp: Date.now() },
+      return await securePost('/test', {
+        operation: 'create_auction',
+        auctionData: { title: 'Test Auction', startingPrice: 100 },
       });
+    });
+
+  const testSecure400 = () =>
+    runTest('secure-400', '❌ SECURE 400 (Bad Request)', async () => {
+      const isAuth = await isAuthenticated();
+      if (!isAuth) {
+        throw new Error('No estás autenticado para usar endpoints SECURE');
+      }
+      return await secureGet('/test?scenario=bad_request');
+    });
+
+  const testSecure404 = () =>
+    runTest('secure-404', '🔍 SECURE 404 (Not Found)', async () => {
+      const isAuth = await isAuthenticated();
+      if (!isAuth) {
+        throw new Error('No estás autenticado para usar endpoints SECURE');
+      }
+      return await secureGet('/test?scenario=not_found');
     });
 
   // ========================================
@@ -258,6 +281,8 @@ export default function ApiTestingScreen() {
             await testProtected403();
             await new Promise((resolve) => setTimeout(resolve, 500));
             await testProtected404();
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            await testProtectedReallyNotFound();
             await new Promise((resolve) => setTimeout(resolve, 500));
             await testProtectedPost();
           },
@@ -290,6 +315,10 @@ export default function ApiTestingScreen() {
             await testSecure401NoJWT();
             await new Promise((resolve) => setTimeout(resolve, 500));
             await testSecure401InvalidJWT();
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            await testSecure400();
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            await testSecure404();
             await new Promise((resolve) => setTimeout(resolve, 500));
             await testSecurePost();
           },
@@ -461,6 +490,16 @@ export default function ApiTestingScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity
+                className='bg-gray-200 border-gray-400 rounded border p-2'
+                onPress={testProtectedReallyNotFound}
+                disabled={!!activeTest}
+              >
+                <Text className='text-gray-800 text-center'>
+                  🔍 Real 404 (HTML)
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 className='rounded border border-blue-300 bg-blue-100 p-2'
                 onPress={testProtectedPost}
                 disabled={!!activeTest}
@@ -504,6 +543,28 @@ export default function ApiTestingScreen() {
               >
                 <Text className='text-center text-red-800'>
                   🔑 401 Invalid JWT
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className='rounded border border-orange-300 bg-orange-100 p-2'
+                onPress={testSecure400}
+                disabled={!!activeTest || !session}
+                style={{ opacity: !session ? 0.5 : 1 }}
+              >
+                <Text className='text-center text-orange-800'>
+                  ❌ 400 Bad Request
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className='bg-gray-100 border-gray-300 rounded border p-2'
+                onPress={testSecure404}
+                disabled={!!activeTest || !session}
+                style={{ opacity: !session ? 0.5 : 1 }}
+              >
+                <Text className='text-center text-gray-800'>
+                  🔍 404 Not Found
                 </Text>
               </TouchableOpacity>
 

@@ -79,7 +79,19 @@ export const useSecureApi = () => {
 
           clearTimeout(timeoutId);
 
-          const responseData = await response.json();
+          // Intentar parsear como JSON, si falla usar texto plano
+          let responseData: any;
+          try {
+            responseData = await response.json();
+          } catch {
+            // Si no es JSON válido, obtener como texto
+            const textResponse = await response.text();
+            responseData = {
+              error: `Non-JSON Response (${response.status})`,
+              responseText: textResponse.substring(0, 200) + (textResponse.length > 200 ? '...' : ''),
+              contentType: response.headers.get('content-type') || 'unknown'
+            };
+          }
 
           // Logging para desarrollo
           if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
