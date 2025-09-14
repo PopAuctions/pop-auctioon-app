@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/utils/supabase/supabase-store';
 import {
   API_CONFIG,
   HEADERS_CONFIG,
@@ -7,11 +7,6 @@ import {
   API_ERROR_CODES,
   DEV_CONFIG,
 } from '@/config/api-config';
-
-// Configuración de Supabase
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface ApiResponse<T = any> {
   data?: T;
@@ -28,7 +23,7 @@ export const useSecureApi = () => {
   // Función auxiliar para crear headers básicos
   const createBaseHeaders = useCallback(() => {
     return {
-      [HEADERS_CONFIG.CONTENT_TYPE]: 'application/json',
+      [HEADERS_CONFIG.CONTENT_TYPE_HEADER]: HEADERS_CONFIG.CONTENT_TYPE_VALUE,
       [HEADERS_CONFIG.API_KEY_HEADER]: API_CONFIG.API_KEY,
       [HEADERS_CONFIG.TIMESTAMP_HEADER]: Date.now().toString(),
     };
@@ -43,10 +38,17 @@ export const useSecureApi = () => {
       data: { session },
       error,
     } = await supabase.auth.getSession();
-
     if (error || !session?.access_token) {
       throw new Error(API_ERROR_CODES.MISSING_JWT);
     }
+
+    // Log temporal para debug
+    console.log(
+      '🔑 JWT Token (primeros 50 chars):',
+      session.access_token.substring(0, 50)
+    );
+    console.log('👤 User ID:', session.user?.id);
+    console.log('📧 User Email:', session.user?.email);
 
     return {
       ...baseHeaders,
@@ -139,7 +141,7 @@ export const useSecureApi = () => {
       const headers = createBaseHeaders();
 
       return makeRequest<T>(
-        `/api/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
+        `/api/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
         {
           method: 'GET',
           headers,
@@ -159,7 +161,7 @@ export const useSecureApi = () => {
       const headers = createBaseHeaders();
 
       return makeRequest<T>(
-        `/api/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
+        `/api/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
         {
           method: 'POST',
           headers,
@@ -184,7 +186,7 @@ export const useSecureApi = () => {
         const headers = await createSecureHeaders();
 
         return makeRequest<T>(
-          `/api/${SECURITY_LEVELS.SECURE}${endpoint}`,
+          `/api/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`,
           {
             method: 'GET',
             headers,
@@ -211,7 +213,7 @@ export const useSecureApi = () => {
         const headers = await createSecureHeaders();
 
         return makeRequest<T>(
-          `/api/${SECURITY_LEVELS.SECURE}${endpoint}`,
+          `/api/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`,
           {
             method: 'POST',
             headers,

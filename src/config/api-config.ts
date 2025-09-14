@@ -112,7 +112,8 @@ export type SecurityLevel =
 // ========================================
 
 export const HEADERS_CONFIG = {
-  CONTENT_TYPE: 'application/json',
+  CONTENT_TYPE_HEADER: 'Content-Type',
+  CONTENT_TYPE_VALUE: 'application/json',
   API_KEY_HEADER: 'X-API-Key',
   TIMESTAMP_HEADER: 'X-Timestamp',
   AUTHORIZATION_HEADER: 'Authorization',
