@@ -83,7 +83,7 @@ export const useSecureApi = () => {
           const responseClone = response.clone();
 
           // Intentar parsear como JSON, si falla usar texto plano
-          let responseData: any;
+          let responseData: unknown;
           try {
             responseData = await response.json();
           } catch {
@@ -103,12 +103,18 @@ export const useSecureApi = () => {
             console.log(`✅ API Response: ${response.status}`, responseData);
           }
 
+          // Helper para extraer mensaje de error de forma type-safe
+          const getErrorMessage = (data: unknown): string => {
+            if (data && typeof data === 'object' && 'error' in data) {
+              return String((data as { error: unknown }).error);
+            }
+            return 'Error en la petición';
+          };
+
           return {
-            data: responseData,
+            data: responseData as T,
             status: response.status,
-            error: response.ok
-              ? undefined
-              : responseData.error || 'Error en la petición',
+            error: response.ok ? undefined : getErrorMessage(responseData),
           };
         } catch (error) {
           lastError = error as Error;
@@ -123,9 +129,15 @@ export const useSecureApi = () => {
             break;
           }
 
-          // Esperar antes del siguiente intento (exponential backoff)
+          // Esperar antes del siguiente intento (exponential backoff con cap máximo)
           await new Promise((resolve) =>
-            setTimeout(resolve, Math.pow(2, attempt) * API_CONFIG.RETRY_DELAY)
+            setTimeout(
+              resolve,
+              Math.min(
+                Math.pow(2, attempt) * API_CONFIG.RETRY_DELAY,
+                API_CONFIG.RETRY_DELAY_CAP
+              )
+            )
           );
         }
       }

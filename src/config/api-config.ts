@@ -13,6 +13,7 @@ export const API_CONFIG = {
   TIMEOUT: 10000, // 10 segundos
   MAX_RETRIES: 2,
   RETRY_DELAY: 1000, // 1 segundo base para exponential backoff
+  RETRY_DELAY_CAP: 10000, // Máximo 10 segundos de delay entre reintentos
 } as const;
 
 // ========================================
@@ -239,7 +240,7 @@ export interface ApiConfig {
   retryDelay: number;
 }
 
-// ========================================AMO
+// ========================================
 // CONSTANTES DE DESARROLLO
 // ========================================
 
