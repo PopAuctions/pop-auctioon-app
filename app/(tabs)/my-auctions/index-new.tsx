@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 // Subastas del auctioneer - con diferentes estados
 const myAuctions = [
@@ -45,7 +45,6 @@ const myAuctions = [
 
 export default function MyAuctionsScreen() {
   const { t } = useTranslation();
-  const { navigateWithAuth } = useAuthNavigation();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -87,14 +86,14 @@ export default function MyAuctionsScreen() {
         <Text className='text-gray-600 mb-4'>
           Gestiona todas tus subastas desde aquí
         </Text>
-        <TouchableOpacity
-          className='rounded-lg bg-blue-500 p-3'
-          onPress={() => navigateWithAuth('/(tabs)/my-auctions/create')}
+        <CustomLink
+          href='/(tabs)/my-auctions/create'
+          mode='primary'
         >
           <Text className='text-center font-semibold text-white'>
             ➕ {t('screens.myAuctions.createAuction')}
           </Text>
-        </TouchableOpacity>
+        </CustomLink>
       </View>
 
       {/* Statistics Overview */}
@@ -121,12 +120,11 @@ export default function MyAuctionsScreen() {
       {/* Auctions List */}
       <View className='mx-4 mb-6 mt-4'>
         {myAuctions.map((auction) => (
-          <TouchableOpacity
+          <CustomLink
             key={auction.id}
+            href={`/(tabs)/my-auctions/${auction.id}`}
+            mode='empty'
             className='border-gray-200 mb-3 rounded-lg border bg-white p-4 shadow-sm'
-            onPress={() =>
-              navigateWithAuth(`/(tabs)/my-auctions/${auction.id}`)
-            }
           >
             <View className='mb-3 flex-row items-start justify-between'>
               <View className='flex-1'>
@@ -166,7 +164,7 @@ export default function MyAuctionsScreen() {
               </View>
               <Text className='text-gray-400'>→</Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
         ))}
       </View>
     </ScrollView>

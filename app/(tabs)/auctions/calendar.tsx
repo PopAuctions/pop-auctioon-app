@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { View, Text, ScrollView } from 'react-native';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 const calendarData = [
   {
@@ -40,8 +40,6 @@ const calendarData = [
 ];
 
 export default function CalendarScreen() {
-  const { navigateWithAuth } = useAuthNavigation();
-
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
@@ -69,12 +67,11 @@ export default function CalendarScreen() {
             {/* Auctions for that date */}
             <View className='border-gray-200 rounded-b-lg border-b border-l border-r bg-white'>
               {day.auctions.map((auction) => (
-                <TouchableOpacity
+                <CustomLink
                   key={auction.id}
+                  href={`/(tabs)/auctions/${auction.id}`}
+                  mode='empty'
                   className='border-gray-100 border-b p-4 last:border-b-0'
-                  onPress={() =>
-                    navigateWithAuth(`/(tabs)/auctions/${auction.id}`)
-                  }
                 >
                   <View className='flex-row items-center justify-between'>
                     <View className='flex-1'>
@@ -92,7 +89,7 @@ export default function CalendarScreen() {
                     </View>
                     <Text className='text-gray-400'>→</Text>
                   </View>
-                </TouchableOpacity>
+                </CustomLink>
               ))}
             </View>
           </View>

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function AuctionsScreen() {
   const { t } = useTranslation();
@@ -54,9 +55,10 @@ export default function AuctionsScreen() {
         {/* Main Options */}
         <View className='space-y-4 p-4'>
           {/* Auctions Calendar Option */}
-          <TouchableOpacity
+          <CustomLink
+            href='/(tabs)/auctions/calendar'
+            mode='empty'
             className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
-            onPress={() => navigateWithAuth('/(tabs)/auctions/calendar')}
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
@@ -70,12 +72,13 @@ export default function AuctionsScreen() {
               </View>
               <Text className='text-gray-400 text-2xl'>→</Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
 
           {/* All Articles Option */}
-          <TouchableOpacity
+          <CustomLink
+            href='/(tabs)/auctions/articles'
+            mode='empty'
             className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
-            onPress={() => navigateWithAuth('/(tabs)/auctions/articles')}
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>
@@ -89,7 +92,7 @@ export default function AuctionsScreen() {
               </View>
               <Text className='text-gray-400 text-2xl'>→</Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
         </View>
 
         {/* Quick Stats */}

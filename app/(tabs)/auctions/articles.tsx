@@ -6,8 +6,8 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useTranslation } from '@/hooks/useTranslation';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 // Datos simulados basados en el tercer screenshot
 const articlesData = [
@@ -69,7 +69,6 @@ const articlesData = [
 
 export default function ArticlesScreen() {
   const { t } = useTranslation();
-  const { navigateWithAuth } = useAuthNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(
     t('screens.auctions.articles.filters.all')
@@ -139,12 +138,11 @@ export default function ArticlesScreen() {
       <View className='p-4'>
         <View className='flex-row flex-wrap justify-between'>
           {filteredArticles.map((article) => (
-            <TouchableOpacity
+            <CustomLink
               key={article.id}
+              href={`/(tabs)/auctions/article/${article.id}`}
+              mode='empty'
               className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
-              onPress={() =>
-                navigateWithAuth(`/(tabs)/auctions/article/${article.id}`)
-              }
             >
               {/* Article Image */}
               <View className='bg-gray-50 aspect-square items-center justify-center'>
@@ -179,7 +177,7 @@ export default function ArticlesScreen() {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            </CustomLink>
           ))}
         </View>
       </View>
