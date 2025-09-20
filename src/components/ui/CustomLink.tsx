@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { TouchableOpacity, Text, Linking } from 'react-native';
+import { TouchableOpacity, Text, Linking, ViewStyle } from 'react-native';
 import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { requiresAuth as checkRequiresAuth } from '@/components/navigation/routeConfig';
 
@@ -21,6 +21,7 @@ interface CustomLinkProps {
   mode?: 'empty' | 'primary' | 'secondary' | 'plainText';
   size?: 'small' | 'large';
   className?: string;
+  style?: ViewStyle;
   hoverEffect?: boolean;
   outsideRedirect?: boolean;
 }
@@ -65,6 +66,7 @@ export const CustomLink = forwardRef<
       size = 'large',
       hoverEffect = true,
       className,
+      style,
       outsideRedirect = false,
     },
     ref
@@ -121,6 +123,7 @@ export const CustomLink = forwardRef<
       <TouchableOpacity
         ref={ref}
         className={`${modeStyle} ${hoverEffects} text-center text-base font-normal ${className || ''}`}
+        style={style}
         onPress={handlePress}
       >
         <Text

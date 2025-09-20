@@ -58,6 +58,68 @@ module.exports = {
         rubik: ['Rubik_400Regular'],
         'rubik-bold': ['Rubik_700Bold'],
       },
+      boxShadow: {
+        sm: {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.18,
+          shadowRadius: 1.0,
+          elevation: 1,
+        },
+        DEFAULT: {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.23,
+          shadowRadius: 2.62,
+          elevation: 4,
+        },
+        md: {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.23,
+          shadowRadius: 2.62,
+          elevation: 4,
+        },
+        lg: {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 4.65,
+          elevation: 8,
+        },
+        xl: {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 6,
+          },
+          shadowOpacity: 0.37,
+          shadowRadius: 7.49,
+          elevation: 12,
+        },
+        '2xl': {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 12,
+          },
+          shadowOpacity: 0.58,
+          shadowRadius: 16.0,
+          elevation: 24,
+        },
+      },
     },
   },
   plugins: [],

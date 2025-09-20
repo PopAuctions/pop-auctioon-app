@@ -1,14 +1,12 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function AuctionsScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { navigateWithAuth } = useAuthNavigation();
 
   return (
     <View
@@ -28,9 +26,10 @@ export default function AuctionsScreen() {
 
         {/* Live Auction Banner */}
         <View className='mx-4 mt-4'>
-          <TouchableOpacity
+          <CustomLink
+            href='/(tabs)/auctions/live/123'
+            mode='empty'
             className='rounded-lg bg-red-500 p-6 shadow-lg'
-            onPress={() => navigateWithAuth('/(tabs)/auctions/live/123')}
           >
             <View className='flex-row items-center justify-center'>
               <View className='mr-3 h-3 w-3 animate-pulse rounded-full bg-white' />
@@ -49,7 +48,7 @@ export default function AuctionsScreen() {
                 👥 23 participantes
               </Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
         </View>
 
         {/* Main Options */}
