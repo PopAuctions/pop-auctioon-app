@@ -475,3 +475,28 @@ export interface AuctionBrand {
   title2: string;
   description: string[];
 }
+
+// Tipos para constantes adicionales
+export type Country = {
+  value: string;
+  label: string;
+};
+
+export type LocaleLabels = Record<
+  Lang,
+  { value: string; label: string; ariaLabel: string }
+>;
+
+export type LabelsByLanguage = Record<Lang, Record<string, string>>;
+
+export type ErrorMessages = Record<string, Record<Lang, string>>;
+
+export type PriceFilter = {
+  value: string;
+  label: string;
+};
+
+export type CategoryFilter = {
+  value: string;
+  label: string;
+};
