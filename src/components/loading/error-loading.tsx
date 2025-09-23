@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function ErrorLoading() {
   const { t } = useTranslation();
@@ -33,7 +33,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-
-
-

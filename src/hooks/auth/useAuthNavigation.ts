@@ -44,7 +44,7 @@ export const useAuthNavigation = () => {
       }
 
       // Reset loading state after navigation
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         setIsNavigating(false);
       }, 500);
 
@@ -70,7 +70,3 @@ export const useAuthNavigation = () => {
     userRole: role,
   };
 };
-
-
-
-

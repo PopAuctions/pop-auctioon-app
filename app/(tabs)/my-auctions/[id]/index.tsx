@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function MyAuctionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
