@@ -1,102 +1,177 @@
-import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+﻿import React from 'react';
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { CustomLink } from '@/components/ui/CustomLink';
-
-const calendarData = [
-  {
-    date: '2025-08-25',
-    auctions: [
-      {
-        id: '1',
-        title: 'Subasta de Arte Contemporáneo',
-        time: '19:00',
-        type: 'Arte',
-      },
-    ],
-  },
-  {
-    date: '2025-08-27',
-    auctions: [
-      {
-        id: '2',
-        title: 'Antigüedades Europeas',
-        time: '18:30',
-        type: 'Antigüedades',
-      },
-      { id: '3', title: 'Colección Vintage', time: '20:00', type: 'Vintage' },
-    ],
-  },
-  {
-    date: '2025-08-30',
-    auctions: [
-      {
-        id: '4',
-        title: 'Joyas y Relojes de Lujo',
-        time: '20:00',
-        type: 'Joyas',
-      },
-    ],
-  },
-];
+import { useAuctionsCalendar } from '@/hooks/useAuctionsCalendar';
+import { useCalendarMonths } from '@/hooks/useCalendarMonths';
 
 export default function CalendarScreen() {
+  const { auctions, loading, error, refetch } = useAuctionsCalendar();
+  const { thisMonth, nextMonth } = useCalendarMonths();
+
+  if (loading) {
+    return (
+      <View className='flex-1 items-center justify-center bg-white'>
+        <ActivityIndicator size='large' color='#d75639' />
+        <Text className='mt-4 text-gray-600'>Cargando subastas...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View className='flex-1 items-center justify-center bg-white p-4'>
+        <Text className='mb-4 text-center text-red-500'>
+          Error al cargar las subastas: {error}
+        </Text>
+        <TouchableOpacity
+          onPress={() => refetch()}
+          className='rounded-lg bg-cinnabar px-4 py-2'
+        >
+          <Text className='text-white'>Reintentar</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
-          📅 Calendario de Subastas
+          Calendario de Subastas
         </Text>
 
-        {calendarData.map((day, index) => (
-          <View
-            key={day.date}
-            className='mb-6'
-          >
-            {/* Date Header */}
-            <View className='rounded-t-lg bg-blue-500 p-3'>
-              <Text className='text-lg font-bold text-white'>
-                {new Date(day.date).toLocaleDateString('es-ES', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </Text>
-            </View>
+        {auctions?.this_month && auctions.this_month.length > 0 && (
+          <View className='mb-8'>
+            <Text className='text-gray-800 mb-4 text-xl font-bold'>
+              Subastas de {thisMonth.es}
+            </Text>
+            <Text className='text-gray-600 mb-4 text-sm'>
+              No te pierdas nada!
+            </Text>
 
-            {/* Auctions for that date */}
-            <View className='border-gray-200 rounded-b-lg border-b border-l border-r bg-white'>
-              {day.auctions.map((auction) => (
+            <View className='space-y-4'>
+              {auctions.this_month.map((auction) => (
                 <CustomLink
                   key={auction.id}
-                  href={`/(tabs)/auctions/${auction.id}`}
+                  href={'/(tabs)/auctions/' + auction.id}
                   mode='empty'
-                  className='border-gray-100 border-b p-4 last:border-b-0'
+                  className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm'
                 >
-                  <View className='flex-row items-center justify-between'>
+                  <View className='flex-row'>
+                    <View className='mr-4 h-20 w-16 overflow-hidden rounded-lg bg-gray-100'>
+                      {auction.image ? (
+                        <View className='flex-1 items-center justify-center'>
+                          <Text className='text-2xl'></Text>
+                        </View>
+                      ) : (
+                        <View className='flex-1 items-center justify-center'>
+                          <Text className='text-gray-400 text-xs'>Sin imagen</Text>
+                        </View>
+                      )}
+                    </View>
+
                     <View className='flex-1'>
                       <Text className='text-gray-800 mb-1 text-lg font-semibold'>
                         {auction.title}
                       </Text>
                       <Text className='font-medium text-blue-600'>
-                        🕒 {auction.time}
+                        {formatDate(auction.startDate)}
                       </Text>
-                      <View className='bg-gray-100 mt-2 self-start rounded px-2 py-1'>
-                        <Text className='text-gray-700 text-xs font-medium'>
-                          {auction.type}
-                        </Text>
-                      </View>
+                      <Text className='font-medium text-blue-600'>
+                        {formatTime(auction.startDate)}
+                      </Text>
                     </View>
-                    <Text className='text-gray-400'>→</Text>
+
+                    <Text className='text-gray-400'></Text>
                   </View>
                 </CustomLink>
               ))}
             </View>
           </View>
-        ))}
+        )}
+
+        {auctions?.next_month && auctions.next_month.length > 0 && (
+          <View className='mb-8'>
+            <Text className='text-gray-800 mb-4 text-xl font-bold'>
+              Subastas de {nextMonth.es}
+            </Text>
+            <Text className='text-gray-600 mb-4 text-sm'>
+              No te pierdas nada!
+            </Text>
+
+            <View className='space-y-4'>
+              {auctions.next_month.map((auction) => (
+                <CustomLink
+                  key={auction.id}
+                  href={'/(tabs)/auctions/' + auction.id}
+                  mode='empty'
+                  className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm'
+                >
+                  <View className='flex-row'>
+                    <View className='mr-4 h-20 w-16 overflow-hidden rounded-lg bg-gray-100'>
+                      {auction.image ? (
+                        <View className='flex-1 items-center justify-center'>
+                          <Text className='text-2xl'></Text>
+                        </View>
+                      ) : (
+                        <View className='flex-1 items-center justify-center'>
+                          <Text className='text-gray-400 text-xs'>Sin imagen</Text>
+                        </View>
+                      )}
+                    </View>
+
+                    <View className='flex-1'>
+                      <Text className='text-gray-800 mb-1 text-lg font-semibold'>
+                        {auction.title}
+                      </Text>
+                      <Text className='font-medium text-blue-600'>
+                        {formatDate(auction.startDate)}
+                      </Text>
+                      <Text className='font-medium text-blue-600'>
+                        {formatTime(auction.startDate)}
+                      </Text>
+                    </View>
+
+                    <Text className='text-gray-400'></Text>
+                  </View>
+                </CustomLink>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {(!auctions?.this_month || auctions.this_month.length === 0) &&
+          (!auctions?.next_month || auctions.next_month.length === 0) && (
+            <View className='items-center py-8'>
+              <Text className='text-cinnabar mb-2 text-lg font-semibold'>
+                No hay subastas programadas
+              </Text>
+              <Text className='text-gray-600 text-center'>
+                Mantente al tanto, nuevas subastas serán agregadas pronto.
+              </Text>
+            </View>
+          )}
 
         <View className='mt-4 rounded-lg bg-blue-50 p-4'>
-          <Text className='mb-2 font-semibold text-blue-800'>💡 Consejo</Text>
+          <Text className='mb-2 font-semibold text-blue-800'> Consejo</Text>
           <Text className='text-blue-700'>
             Configura notificaciones para no perderte ninguna subasta. Puedes
             registrarte con anticipación para participar.
