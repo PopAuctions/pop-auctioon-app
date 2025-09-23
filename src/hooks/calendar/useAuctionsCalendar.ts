@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/supabase-store';
-import * as Sentry from '@sentry/react-native';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import type { CustomAuction } from '@/types/types';
 
 interface AuctionsData {
@@ -71,8 +71,9 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
           supabaseError?.message || 'No data returned from calendar RPC';
 
         // Capturar error en Sentry
-        Sentry.captureException(
-          `[USE_AUCTIONS_CALENDAR] RPC filter_auctions_for_calendar failed | ${errorMessage}`
+        sentryErrorReport(
+          supabaseError,
+          'USE_AUCTIONS_CALENDAR - RPC filter_auctions_for_calendar failed'
         );
 
         setError(errorMessage);
@@ -85,9 +86,7 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
         err instanceof Error ? err.message : 'Unknown error occurred';
 
       // Capturar error inesperado en Sentry
-      Sentry.captureException(
-        `[USE_AUCTIONS_CALENDAR] Unexpected error | ${errorMessage}`
-      );
+      sentryErrorReport(err, 'USE_AUCTIONS_CALENDAR - Unexpected error');
 
       console.error('Unexpected error fetching auctions:', errorMessage);
       setError(errorMessage);
