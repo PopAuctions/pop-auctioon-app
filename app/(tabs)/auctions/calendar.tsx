@@ -1,8 +1,7 @@
 ﻿import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { useAuctionsCalendar } from '@/hooks/useAuctionsCalendar';
-import { useCalendarMonths } from '@/hooks/useCalendarMonths';
+import { useAuctionsCalendar, useCalendarMonths } from '@/hooks/calendar';
 
 export default function CalendarScreen() {
   const { auctions, loading, error, refetch } = useAuctionsCalendar();
