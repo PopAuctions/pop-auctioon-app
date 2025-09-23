@@ -12,7 +12,7 @@ import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function CalendarScreen() {
-  const { auctions, loading, error, refetch } = useAuctionsCalendar();
+  const { auctions, status, refetch } = useAuctionsCalendar();
   const { t } = useTranslation();
 
   // Obtener meses directamente
@@ -23,7 +23,7 @@ export default function CalendarScreen() {
   const thisMonth = monthsArray[0];
   const nextMonth = monthsArray[1];
 
-  if (loading) {
+  if (status === 'loading') {
     return (
       <View className='flex-1 items-center justify-center bg-white'>
         <ActivityIndicator
@@ -37,11 +37,11 @@ export default function CalendarScreen() {
     );
   }
 
-  if (error) {
+  if (status === 'error') {
     return (
       <View className='flex-1 items-center justify-center bg-white p-4'>
         <Text className='mb-4 text-center text-red-500'>
-          {t('screens.calendar.error')}: {error}
+          {t('screens.calendar.error')}
         </Text>
         <TouchableOpacity
           onPress={() => refetch()}
