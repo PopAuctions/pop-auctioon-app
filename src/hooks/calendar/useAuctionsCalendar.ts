@@ -28,37 +28,42 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
 
       const today = new Date();
 
-      // Start of tomorrow (midnight UTC) - pero queremos incluir hoy también
-      const tomorrow = new Date(today);
-      tomorrow.setUTCHours(0, 0, 0, 0);
-      const formattedTomorrow = tomorrow.toISOString();
+      // Inicio del mes actual (día 1 a las 00:00:00 UTC)
+      const startOfMonth = new Date(today);
+      startOfMonth.setDate(1);
+      startOfMonth.setUTCHours(0, 0, 0, 0);
+      const formattedStartOfMonth = startOfMonth.toISOString();
 
-      // Last day of the current month (end of day UTC)
+      // Final del mes actual (último día a las 23:59:59 UTC)
       const endOfMonth = new Date(today);
       endOfMonth.setMonth(endOfMonth.getMonth() + 1);
-      endOfMonth.setDate(0); // last day of current month
+      endOfMonth.setDate(0); // último día del mes actual
       endOfMonth.setUTCHours(23, 59, 59, 999);
       const formattedEndOfMonth = endOfMonth.toISOString();
 
-      // First day of the next month (midnight UTC)
+      // Inicio del próximo mes (día 1 a las 00:00:00 UTC)
       const startOfNextMonth = new Date(today);
       startOfNextMonth.setMonth(startOfNextMonth.getMonth() + 1);
       startOfNextMonth.setDate(1);
       startOfNextMonth.setUTCHours(0, 0, 0, 0);
       const formattedStartOfNextMonth = startOfNextMonth.toISOString();
 
-      // Last day of the next month (end of day UTC)
+      // Final del próximo mes (último día a las 23:59:59 UTC)
       const endOfNextMonth = new Date(startOfNextMonth);
       endOfNextMonth.setMonth(endOfNextMonth.getMonth() + 1);
-      endOfNextMonth.setDate(0); // last day of next month
+      endOfNextMonth.setDate(0); // último día del próximo mes
       endOfNextMonth.setUTCHours(23, 59, 59, 999);
       const formattedEndOfNextMonth = endOfNextMonth.toISOString();
+
+      // Para today, usamos desde ahora hacia adelante
+      const now = new Date();
+      const formattedNow = now.toISOString();
 
       const { data, error: supabaseError } = await supabase.rpc(
         'filter_auctions_for_calendar',
         {
-          today: formattedTomorrow,
-          start_of_month: formattedTomorrow,
+          today: formattedNow,
+          start_of_month: formattedStartOfMonth,
           end_of_month: formattedEndOfMonth,
           start_of_next_month: formattedStartOfNextMonth,
           end_of_next_month: formattedEndOfNextMonth,
