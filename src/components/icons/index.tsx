@@ -21,7 +21,3 @@ export const PopAuctioonIcon = ({
     />
   </View>
 );
-
-
-
-
