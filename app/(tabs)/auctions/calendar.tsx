@@ -1,7 +1,7 @@
-﻿import React from 'react';
+import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { useAuctionsCalendar } from '@/hooks/calendar';
+import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/useTranslation';
 
