@@ -170,13 +170,6 @@ export default function CalendarScreen() {
             </View>
           )}
 
-        <View className='mt-4 rounded-lg bg-blue-50 p-4'>
-          <Text className='mb-2 font-semibold text-blue-800'> Consejo</Text>
-          <Text className='text-blue-700'>
-            Configura notificaciones para no perderte ninguna subasta. Puedes
-            registrarte con anticipación para participar.
-          </Text>
-        </View>
       </View>
     </ScrollView>
   );
