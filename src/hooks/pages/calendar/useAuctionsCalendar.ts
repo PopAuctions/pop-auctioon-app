@@ -9,22 +9,21 @@ interface AuctionsData {
   next_month: CustomAuction[];
 }
 
+type Status = 'loading' | 'loaded' | 'error';
+
 interface UseAuctionsCalendarReturn {
   auctions: AuctionsData | null;
-  loading: boolean;
-  error: string | null;
+  status: Status;
   refetch: () => Promise<void>;
 }
 
 export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
   const [auctions, setAuctions] = useState<AuctionsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>('loading');
 
   const fetchAuctions = async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setStatus('loading');
 
       const today = new Date();
 
@@ -77,11 +76,11 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
 
         // Capturar error en Sentry
         sentryErrorReport(
-          supabaseError,
+          errorMessage,
           'USE_AUCTIONS_CALENDAR - RPC filter_auctions_for_calendar failed'
         );
 
-        setError(errorMessage);
+        setStatus('error');
         return;
       }
 
@@ -94,9 +93,9 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
       sentryErrorReport(err, 'USE_AUCTIONS_CALENDAR - Unexpected error');
 
       console.error('Unexpected error fetching auctions:', errorMessage);
-      setError(errorMessage);
+      setStatus('error');
     } finally {
-      setLoading(false);
+      setStatus('loaded');
     }
   };
 
@@ -106,8 +105,7 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
 
   return {
     auctions,
-    loading,
-    error,
+    status,
     refetch: fetchAuctions,
   };
 };
