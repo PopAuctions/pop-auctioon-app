@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomLink } from '@/components/ui/CustomLink';
 

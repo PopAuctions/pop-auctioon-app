@@ -1,9 +1,15 @@
-﻿import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { useAuctionsCalendar } from '@/hooks/calendar';
+import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function CalendarScreen() {
   const { auctions, loading, error, refetch } = useAuctionsCalendar();
@@ -11,15 +17,22 @@ export default function CalendarScreen() {
 
   // Obtener meses directamente
   const calendarMonths = getCalendarMonths();
-  const monthsArray = Array.from(calendarMonths.values()).filter(month => month.value !== '0');
+  const monthsArray = Array.from(calendarMonths.values()).filter(
+    (month) => month.value !== '0'
+  );
   const thisMonth = monthsArray[0];
   const nextMonth = monthsArray[1];
 
   if (loading) {
     return (
       <View className='flex-1 items-center justify-center bg-white'>
-        <ActivityIndicator size='large' color='#d75639' />
-        <Text className='mt-4 text-gray-600'>{t('screens.calendar.loading')}</Text>
+        <ActivityIndicator
+          size='large'
+          color='#d75639'
+        />
+        <Text className='text-gray-600 mt-4'>
+          {t('screens.calendar.loading')}
+        </Text>
       </View>
     );
   }
@@ -75,17 +88,19 @@ export default function CalendarScreen() {
                   key={auction.id}
                   href={'/(tabs)/auctions/' + auction.id}
                   mode='empty'
-                  className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm'
+                  className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
                 >
                   <View className='flex-row'>
-                    <View className='mr-4 h-20 w-16 overflow-hidden rounded-lg bg-gray-100'>
+                    <View className='bg-gray-100 mr-4 h-20 w-16 overflow-hidden rounded-lg'>
                       {auction.image ? (
                         <View className='flex-1 items-center justify-center'>
                           <Text className='text-2xl'></Text>
                         </View>
                       ) : (
                         <View className='flex-1 items-center justify-center'>
-                          <Text className='text-gray-400 text-xs'>{t('screens.calendar.noImage')}</Text>
+                          <Text className='text-gray-400 text-xs'>
+                            {t('screens.calendar.noImage')}
+                          </Text>
                         </View>
                       )}
                     </View>
@@ -125,17 +140,19 @@ export default function CalendarScreen() {
                   key={auction.id}
                   href={'/(tabs)/auctions/' + auction.id}
                   mode='empty'
-                  className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm'
+                  className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
                 >
                   <View className='flex-row'>
-                    <View className='mr-4 h-20 w-16 overflow-hidden rounded-lg bg-gray-100'>
+                    <View className='bg-gray-100 mr-4 h-20 w-16 overflow-hidden rounded-lg'>
                       {auction.image ? (
                         <View className='flex-1 items-center justify-center'>
                           <Text className='text-2xl'></Text>
                         </View>
                       ) : (
                         <View className='flex-1 items-center justify-center'>
-                          <Text className='text-gray-400 text-xs'>{t('screens.calendar.noImage')}</Text>
+                          <Text className='text-gray-400 text-xs'>
+                            {t('screens.calendar.noImage')}
+                          </Text>
                         </View>
                       )}
                     </View>
@@ -163,7 +180,7 @@ export default function CalendarScreen() {
         {(!auctions?.this_month || auctions.this_month.length === 0) &&
           (!auctions?.next_month || auctions.next_month.length === 0) && (
             <View className='items-center py-8'>
-              <Text className='text-cinnabar mb-2 text-lg font-semibold'>
+              <Text className='mb-2 text-lg font-semibold text-cinnabar'>
                 {t('screens.calendar.noAuctions')}
               </Text>
               <Text className='text-gray-600 text-center'>
@@ -173,7 +190,9 @@ export default function CalendarScreen() {
           )}
 
         <View className='mt-4 rounded-lg bg-blue-50 p-4'>
-          <Text className='mb-2 font-semibold text-blue-800'>{t('screens.calendar.tip')}</Text>
+          <Text className='mb-2 font-semibold text-blue-800'>
+            {t('screens.calendar.tip')}
+          </Text>
           <Text className='text-blue-700'>
             {t('screens.calendar.tipMessage')}
           </Text>

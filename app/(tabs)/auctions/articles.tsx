@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomLink } from '@/components/ui/CustomLink';
 
 // Datos simulados basados en el tercer screenshot

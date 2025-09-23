@@ -1,9 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTranslation } from '../hooks/useTranslation';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function LanguageSelector() {
-  const { t, locale, changeLanguage } = useTranslation();
+  const { t, locale, changeLanguage, isPending } = useTranslation();
 
   const languages = [
     { code: 'es', name: 'Español', flag: '🇪🇸' },
@@ -12,7 +18,16 @@ export default function LanguageSelector() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('account.language')}</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{t('account.language')}</Text>
+        {isPending && (
+          <ActivityIndicator
+            size='small'
+            color='#2196f3'
+            style={styles.loadingIndicator}
+          />
+        )}
+      </View>
       <View style={styles.languageList}>
         {languages.map((language) => (
           <TouchableOpacity
@@ -20,20 +35,29 @@ export default function LanguageSelector() {
             style={[
               styles.languageItem,
               locale === language.code && styles.selectedLanguage,
+              isPending && styles.disabledLanguageItem,
             ]}
             onPress={() => changeLanguage(language.code as 'es' | 'en')}
+            disabled={isPending}
           >
             <Text style={styles.flag}>{language.flag}</Text>
             <Text
               style={[
                 styles.languageName,
                 locale === language.code && styles.selectedLanguageName,
+                isPending && styles.disabledText,
               ]}
             >
               {language.name}
             </Text>
-            {locale === language.code && (
+            {locale === language.code && !isPending && (
               <Text style={styles.checkmark}>✓</Text>
+            )}
+            {isPending && locale === language.code && (
+              <ActivityIndicator
+                size='small'
+                color='#2196f3'
+              />
             )}
           </TouchableOpacity>
         ))}
@@ -46,11 +70,19 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
     color: '#333',
+  },
+  loadingIndicator: {
+    marginLeft: 8,
   },
   languageList: {
     gap: 8,
@@ -68,6 +100,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#e3f2fd',
     borderColor: '#2196f3',
   },
+  disabledLanguageItem: {
+    opacity: 0.6,
+    backgroundColor: '#f0f0f0',
+  },
   flag: {
     fontSize: 24,
     marginRight: 12,
@@ -80,6 +116,9 @@ const styles = StyleSheet.create({
   selectedLanguageName: {
     color: '#2196f3',
     fontWeight: '600',
+  },
+  disabledText: {
+    color: '#999',
   },
   checkmark: {
     fontSize: 18,

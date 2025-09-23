@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function AuctionsLayout() {
   const { t } = useTranslation();
