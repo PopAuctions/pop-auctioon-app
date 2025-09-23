@@ -122,7 +122,14 @@ export const CustomLink = forwardRef<
     return (
       <TouchableOpacity
         ref={ref}
-        className={`${modeStyle} ${hoverEffects} text-center text-base font-normal ${className || ''}`}
+        className={`
+        ${modeStyle}
+        ${hoverEffects}
+        text-center
+        text-base
+        font-normal
+        ${className || ''}
+      `}
         style={style}
         onPress={handlePress}
       >
