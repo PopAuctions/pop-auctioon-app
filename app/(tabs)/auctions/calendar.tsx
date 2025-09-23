@@ -1,11 +1,17 @@
 ﻿import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { useAuctionsCalendar, useCalendarMonths } from '@/hooks/calendar';
+import { useAuctionsCalendar } from '@/hooks/calendar';
+import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
 
 export default function CalendarScreen() {
   const { auctions, loading, error, refetch } = useAuctionsCalendar();
-  const { thisMonth, nextMonth } = useCalendarMonths();
+
+  // Obtener meses directamente
+  const calendarMonths = getCalendarMonths();
+  const monthsArray = Array.from(calendarMonths.values()).filter(month => month.value !== '0');
+  const thisMonth = monthsArray[0];
+  const nextMonth = monthsArray[1];
 
   if (loading) {
     return (
@@ -34,12 +40,7 @@ export default function CalendarScreen() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    return formatCalendarDate(date, 'es-ES');
   };
 
   const formatTime = (dateString: string) => {
