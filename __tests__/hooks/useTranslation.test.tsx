@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react-native';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { getCurrentLocale, changeLocale } from '@/i18n';
 import esTranslations from '@/i18n/locales/es.json';
 import enTranslations from '@/i18n/locales/en.json';

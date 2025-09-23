@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { TouchableOpacity, Text, Linking, ViewStyle } from 'react-native';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { requiresAuth as checkRequiresAuth } from '@/components/navigation/routeConfig';
 
 /**

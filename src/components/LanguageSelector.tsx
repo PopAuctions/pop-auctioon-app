@@ -1,6 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { useTranslation } from '../hooks/useTranslation';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function LanguageSelector() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
@@ -15,7 +21,11 @@ export default function LanguageSelector() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{t('account.language')}</Text>
         {isPending && (
-          <ActivityIndicator size="small" color="#2196f3" style={styles.loadingIndicator} />
+          <ActivityIndicator
+            size='small'
+            color='#2196f3'
+            style={styles.loadingIndicator}
+          />
         )}
       </View>
       <View style={styles.languageList}>
@@ -44,7 +54,10 @@ export default function LanguageSelector() {
               <Text style={styles.checkmark}>✓</Text>
             )}
             {isPending && locale === language.code && (
-              <ActivityIndicator size="small" color="#2196f3" />
+              <ActivityIndicator
+                size='small'
+                color='#2196f3'
+              />
             )}
           </TouchableOpacity>
         ))}

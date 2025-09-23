@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/auth-context';
-import { useSecureApi } from '@/hooks/useSecureApi';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { API_CONFIG } from '@/config/api-config';
 
 interface TestResult {

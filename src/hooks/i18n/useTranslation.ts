@@ -1,5 +1,5 @@
 import { useState, useTransition } from 'react';
-import i18n, { changeLocale, getCurrentLocale } from '../i18n';
+import i18n, { changeLocale, getCurrentLocale } from '../../i18n/index';
 
 export const useTranslation = () => {
   const [locale, setLocale] = useState(getCurrentLocale());

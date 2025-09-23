@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   type TouchableOpacityProps,
 } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export type ButtonMode = 'primary' | 'secondary';
 export type ButtonSize = 'small' | 'large';
@@ -106,3 +106,7 @@ export const Button: React.FC<ButtonProps> = ({
 };
 
 Button.displayName = 'Button';
+
+
+
+

@@ -4,7 +4,7 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { PopAuctioonIcon } from '@/components/icons';
 import { BackgroundImage } from '@/components/ui/BackgroundImage';
 import { router } from 'expo-router';

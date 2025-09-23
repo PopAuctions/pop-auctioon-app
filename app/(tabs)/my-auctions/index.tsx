@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Subastas del auctioneer - con diferentes estados

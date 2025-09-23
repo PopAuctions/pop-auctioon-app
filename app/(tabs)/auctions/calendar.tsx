@@ -3,7 +3,7 @@ import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'rea
 import { CustomLink } from '@/components/ui/CustomLink';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function CalendarScreen() {
   const { auctions, loading, error, refetch } = useAuctionsCalendar();

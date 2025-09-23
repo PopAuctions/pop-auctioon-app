@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomLink } from '@/components/ui/CustomLink';
 
 // Datos simulados basados en el tercer screenshot
@@ -106,17 +106,15 @@ export default function ArticlesScreen() {
             {categories.map((category) => (
               <TouchableOpacity
                 key={category}
-                className={`rounded-full px-4 py-2 ${
-                  selectedCategory === category ? 'bg-gray-800' : 'bg-gray-100'
-                }`}
+                className={`rounded-full px-4 py-2 ${selectedCategory === category ? 'bg-gray-800' : 'bg-gray-100'
+                  }`}
                 onPress={() => setSelectedCategory(category)}
               >
                 <Text
-                  className={`${
-                    selectedCategory === category
-                      ? 'text-white'
-                      : 'text-gray-600'
-                  }`}
+                  className={`${selectedCategory === category
+                    ? 'text-white'
+                    : 'text-gray-600'
+                    }`}
                 >
                   {category}
                 </Text>
