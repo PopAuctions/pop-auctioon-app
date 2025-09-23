@@ -91,6 +91,20 @@
       "detail": "Detalles de Subasta",
       "edit": "Editar Subasta",
       "stats": "Estadísticas"
+    },
+    "calendar": {
+      "title": "Calendario de Subastas",
+      "loading": "Cargando subastas...",
+      "error": "Error al cargar las subastas",
+      "retry": "Reintentar",
+      "thisMonth": "Subastas de",
+      "nextMonth": "Subastas de",
+      "subtitle": "No te pierdas nada!",
+      "noAuctions": "No hay subastas programadas",
+      "noAuctionsSubtitle": "Mantente al tanto, nuevas subastas serán agregadas pronto.",
+      "tip": "Consejo",
+      "tipMessage": "Configura notificaciones para no perderte ninguna subasta. Puedes registrarte con anticipación para participar.",
+      "noImage": "Sin imagen"
     }
   },
   "commonErrors": {

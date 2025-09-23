@@ -91,6 +91,20 @@
       "detail": "Auction Details",
       "edit": "Edit Auction",
       "stats": "Statistics"
+    },
+    "calendar": {
+      "title": "Auction Calendar",
+      "loading": "Loading auctions...",
+      "error": "Error loading auctions",
+      "retry": "Retry",
+      "thisMonth": "Auctions in",
+      "nextMonth": "Auctions in",
+      "subtitle": "Don't miss anything!",
+      "noAuctions": "No auctions scheduled",
+      "noAuctionsSubtitle": "Stay tuned, new auctions will be added soon.",
+      "tip": "Tip",
+      "tipMessage": "Set up notifications to not miss any auction. You can register in advance to participate.",
+      "noImage": "No image"
     }
   },
   "commonErrors": {

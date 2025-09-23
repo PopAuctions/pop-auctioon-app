@@ -3,9 +3,11 @@ import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'rea
 import { CustomLink } from '@/components/ui/CustomLink';
 import { useAuctionsCalendar } from '@/hooks/calendar';
 import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function CalendarScreen() {
   const { auctions, loading, error, refetch } = useAuctionsCalendar();
+  const { t } = useTranslation();
 
   // Obtener meses directamente
   const calendarMonths = getCalendarMonths();
@@ -17,7 +19,7 @@ export default function CalendarScreen() {
     return (
       <View className='flex-1 items-center justify-center bg-white'>
         <ActivityIndicator size='large' color='#d75639' />
-        <Text className='mt-4 text-gray-600'>Cargando subastas...</Text>
+        <Text className='mt-4 text-gray-600'>{t('screens.calendar.loading')}</Text>
       </View>
     );
   }
@@ -26,13 +28,13 @@ export default function CalendarScreen() {
     return (
       <View className='flex-1 items-center justify-center bg-white p-4'>
         <Text className='mb-4 text-center text-red-500'>
-          Error al cargar las subastas: {error}
+          {t('screens.calendar.error')}: {error}
         </Text>
         <TouchableOpacity
           onPress={() => refetch()}
           className='rounded-lg bg-cinnabar px-4 py-2'
         >
-          <Text className='text-white'>Reintentar</Text>
+          <Text className='text-white'>{t('screens.calendar.retry')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -55,16 +57,16 @@ export default function CalendarScreen() {
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
-          Calendario de Subastas
+          {t('screens.calendar.title')}
         </Text>
 
         {auctions?.this_month && auctions.this_month.length > 0 && (
           <View className='mb-8'>
             <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              Subastas de {thisMonth.es}
+              {t('screens.calendar.thisMonth')} {thisMonth.es}
             </Text>
             <Text className='text-gray-600 mb-4 text-sm'>
-              No te pierdas nada!
+              {t('screens.calendar.subtitle')}
             </Text>
 
             <View className='space-y-4'>
@@ -83,7 +85,7 @@ export default function CalendarScreen() {
                         </View>
                       ) : (
                         <View className='flex-1 items-center justify-center'>
-                          <Text className='text-gray-400 text-xs'>Sin imagen</Text>
+                          <Text className='text-gray-400 text-xs'>{t('screens.calendar.noImage')}</Text>
                         </View>
                       )}
                     </View>
@@ -111,10 +113,10 @@ export default function CalendarScreen() {
         {auctions?.next_month && auctions.next_month.length > 0 && (
           <View className='mb-8'>
             <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              Subastas de {nextMonth.es}
+              {t('screens.calendar.nextMonth')} {nextMonth.es}
             </Text>
             <Text className='text-gray-600 mb-4 text-sm'>
-              No te pierdas nada!
+              {t('screens.calendar.subtitle')}
             </Text>
 
             <View className='space-y-4'>
@@ -133,7 +135,7 @@ export default function CalendarScreen() {
                         </View>
                       ) : (
                         <View className='flex-1 items-center justify-center'>
-                          <Text className='text-gray-400 text-xs'>Sin imagen</Text>
+                          <Text className='text-gray-400 text-xs'>{t('screens.calendar.noImage')}</Text>
                         </View>
                       )}
                     </View>
@@ -162,14 +164,20 @@ export default function CalendarScreen() {
           (!auctions?.next_month || auctions.next_month.length === 0) && (
             <View className='items-center py-8'>
               <Text className='text-cinnabar mb-2 text-lg font-semibold'>
-                No hay subastas programadas
+                {t('screens.calendar.noAuctions')}
               </Text>
               <Text className='text-gray-600 text-center'>
-                Mantente al tanto, nuevas subastas serán agregadas pronto.
+                {t('screens.calendar.noAuctionsSubtitle')}
               </Text>
             </View>
           )}
 
+        <View className='mt-4 rounded-lg bg-blue-50 p-4'>
+          <Text className='mb-2 font-semibold text-blue-800'>{t('screens.calendar.tip')}</Text>
+          <Text className='text-blue-700'>
+            {t('screens.calendar.tipMessage')}
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );
