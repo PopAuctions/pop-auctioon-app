@@ -9,7 +9,10 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
-import 'react-native-reanimated';
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated';
 import '../global.css';
 import {
   Poppins_400Regular,
@@ -43,6 +46,11 @@ Sentry.init({
     return event;
   },
   release: process.env.EXPO_PUBLIC_SENTRY_RELEASE || 'unknown',
+});
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
 });
 
 export { ErrorBoundary } from 'expo-router';
