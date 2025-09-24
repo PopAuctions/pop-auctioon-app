@@ -1,8 +1,9 @@
 import { useState, useTransition } from 'react';
 import i18n, { changeLocale, getCurrentLocale } from '../../i18n/index';
+import { Lang } from '@/types/types';
 
 export const useTranslation = () => {
-  const [locale, setLocale] = useState(getCurrentLocale());
+  const [locale, setLocale] = useState<Lang>(getCurrentLocale());
   const [isPending, startTransition] = useTransition();
 
   const t = (key: string, options?: any) => {

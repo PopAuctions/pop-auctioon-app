@@ -1,5 +1,6 @@
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
+import { Lang } from '@/types/types';
 
 // Import translation files
 import es from './locales/es.json';
@@ -32,12 +33,12 @@ i18n.defaultLocale = 'es';
 export default i18n;
 
 // Helper function to get current locale
-export const getCurrentLocale = () => i18n.locale;
+export const getCurrentLocale = () => i18n.locale as Lang;
 
 // Helper function to change locale
-export const changeLocale = (locale: 'es' | 'en') => {
+export const changeLocale = (locale: Lang) => {
   i18n.locale = locale;
 };
 
 // Helper function to get available locales
-export const getAvailableLocales = () => ['es', 'en'];
+export const getAvailableLocales = (): Lang[] => ['es', 'en'];
