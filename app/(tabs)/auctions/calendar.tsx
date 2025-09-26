@@ -66,9 +66,6 @@ export default function CalendarScreen() {
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
-        {/* <Text className='text-gray-900 mb-6 text-center text-3xl font-bold'>
-          {t('screens.calendar.title')}
-        </Text> */}
 
         {auctions?.this_month && (
           <View className='mb-8'>
