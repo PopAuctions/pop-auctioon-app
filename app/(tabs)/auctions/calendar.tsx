@@ -69,7 +69,7 @@ export default function CalendarScreen() {
           {t('screens.calendar.title')}
         </Text> */}
 
-        {auctions?.this_month && auctions.this_month.length > 0 && (
+        {auctions?.this_month && (
           <View className='mb-8'>
             <Text className='text-center font-rubik text-4xl'>
               {t('screens.calendar.thisMonth')}{' '}
@@ -79,80 +79,88 @@ export default function CalendarScreen() {
               {t('screens.calendar.subtitle').toUpperCase()}
             </Text>
 
-            <View className='space-y-6'>
-              {auctions.this_month.map((auction) => (
-                <TouchableOpacity
-                  key={auction.id}
-                  className='overflow-hidden rounded-xl bg-white shadow-sm'
-                >
-                  <View className='min-h-[220px] flex-row py-6 '>
-                    {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
-                      {auction.image && auction.image.trim() !== '' ? (
-                        <Image
-                          source={{ uri: auction.image }}
-                          className='h-full w-full'
-                          resizeMode='cover'
-                        />
-                      ) : (
-                        <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                          <Text className='text-4xl'>🏺</Text>
-                        </View>
-                      )}
-                    </View>
+            {auctions.this_month.length > 0 ? (
+              <View className='space-y-6'>
+                {auctions.this_month.map((auction) => (
+                  <TouchableOpacity
+                    key={auction.id}
+                    className='overflow-hidden rounded-xl bg-white shadow-sm'
+                  >
+                    <View className='min-h-[220px] flex-row py-6 '>
+                      {/* Imagen grande a la izquierda */}
+                      <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
+                        {auction.image && auction.image.trim() !== '' ? (
+                          <Image
+                            source={{ uri: auction.image }}
+                            className='h-full w-full'
+                            resizeMode='cover'
+                          />
+                        ) : (
+                          <View className='bg-gray-200 h-full w-full items-center justify-center'>
+                            <Text className='text-4xl'>🏺</Text>
+                          </View>
+                        )}
+                      </View>
 
-                    {/* Grid de contenido a la derecha */}
-                    <View className='flex-1 py-2'>
-                      {/* Layout principal: Fecha y Hora */}
-                      <View className='flex-row items-start justify-between'>
-                        {/* Columna izquierda: Fecha y Título */}
-                        <View className='mr-4 flex-1'>
-                          {/* Fecha */}
-                          <View className='mb-2'>
-                            <Text className='font-poppins text-xl uppercase tracking-wide'>
-                              {getMonthName(
-                                new Date(auction.startDate).getMonth() + 1,
-                                locale
-                              ).toUpperCase()}
-                            </Text>
-                            <Text className='font-poppins text-xl '>
-                              {new Date(auction.startDate).getDate()},{' '}
-                              {new Date(auction.startDate).getFullYear()}
-                            </Text>
+                      {/* Grid de contenido a la derecha */}
+                      <View className='flex-1 py-2'>
+                        {/* Layout principal: Fecha y Hora */}
+                        <View className='flex-row items-start justify-between'>
+                          {/* Columna izquierda: Fecha y Título */}
+                          <View className='mr-4 flex-1'>
+                            {/* Fecha */}
+                            <View className='mb-2'>
+                              <Text className='font-poppins text-xl uppercase tracking-wide'>
+                                {getMonthName(
+                                  new Date(auction.startDate).getMonth() + 1,
+                                  locale
+                                ).toUpperCase()}
+                              </Text>
+                              <Text className='font-poppins text-xl '>
+                                {new Date(auction.startDate).getDate()},{' '}
+                                {new Date(auction.startDate).getFullYear()}
+                              </Text>
+                            </View>
+
+                            {/* Título justo debajo de la fecha */}
+                            <View>
+                              <Text
+                                className='font-rubik text-2xl font-bold'
+                                numberOfLines={2}
+                              >
+                                {auction.title.toUpperCase()}
+                              </Text>
+                            </View>
                           </View>
 
-                          {/* Título justo debajo de la fecha */}
+                          {/* Hora - derecha */}
                           <View>
-                            <Text
-                              className='font-rubik text-2xl font-bold'
-                              numberOfLines={2}
-                            >
-                              {auction.title.toUpperCase()}
+                            <Text className='text-2xl '>
+                              {formatTime(auction.startDate)}
                             </Text>
                           </View>
-                        </View>
-
-                        {/* Hora - derecha */}
-                        <View>
-                          <Text className='text-2xl '>
-                            {formatTime(auction.startDate)}
-                          </Text>
                         </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <Text className='py-8 text-center text-lg text-cinnabar'>
+                {t('screens.calendar.noAuctionsFound')}
+              </Text>
+            )}
           </View>
         )}
 
-        {/* Línea divisoria entre meses */}
-        <View className='mx-4 my-6'>
-          <View className='border-gray-200 w-full border-b' />
-        </View>
+        {/* Línea divisoria entre meses - solo mostrar si hay al menos una sección */}
+        {(auctions?.this_month || auctions?.next_month) && (
+          <View className='mx-4 my-6'>
+            <View className='border-gray-200 w-full border-b' />
+          </View>
+        )}
 
-        {auctions?.next_month && auctions.next_month.length > 0 && (
+        {auctions?.next_month && (
           <View className='mb-8'>
             <Text className='text-center font-rubik text-4xl'>
               {t('screens.calendar.nextMonth')}{' '}
@@ -162,96 +170,77 @@ export default function CalendarScreen() {
               {t('screens.calendar.subtitle').toUpperCase()}
             </Text>
 
-            <View className='space-y-6'>
-              {auctions.next_month.map((auction) => (
-                <TouchableOpacity
-                  key={auction.id}
-                  className='overflow-hidden rounded-xl bg-white shadow-sm'
-                >
-                  <View className='min-h-[220px] flex-row py-6 '>
-                    {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
-                      {auction.image && auction.image.trim() !== '' ? (
-                        <Image
-                          source={{ uri: auction.image }}
-                          className='h-full w-full'
-                          resizeMode='cover'
-                        />
-                      ) : (
-                        <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                          <Text className='text-4xl'>🏺</Text>
-                        </View>
-                      )}
-                    </View>
+            {auctions.next_month.length > 0 ? (
+              <View className='space-y-6'>
+                {auctions.next_month.map((auction) => (
+                  <TouchableOpacity
+                    key={auction.id}
+                    className='overflow-hidden rounded-xl bg-white shadow-sm'
+                  >
+                    <View className='min-h-[220px] flex-row py-6 '>
+                      {/* Imagen grande a la izquierda */}
+                      <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
+                        {auction.image && auction.image.trim() !== '' ? (
+                          <Image
+                            source={{ uri: auction.image }}
+                            className='h-full w-full'
+                            resizeMode='cover'
+                          />
+                        ) : (
+                          <View className='bg-gray-200 h-full w-full items-center justify-center'>
+                            <Text className='text-4xl'>🏺</Text>
+                          </View>
+                        )}
+                      </View>
 
-                    {/* Grid de contenido a la derecha */}
-                    <View className='flex-1 py-2'>
-                      {/* Layout principal: Fecha y Hora */}
-                      <View className='flex-row items-start justify-between'>
-                        {/* Columna izquierda: Fecha y Título */}
-                        <View className='mr-4 flex-1'>
-                          {/* Fecha */}
-                          <View className='mb-2'>
-                            <Text className='font-poppins text-xl uppercase tracking-wide'>
-                              {getMonthName(
-                                new Date(auction.startDate).getMonth() + 1,
-                                locale
-                              ).toUpperCase()}
-                            </Text>
-                            <Text className='font-poppins text-xl '>
-                              {new Date(auction.startDate).getDate()},{' '}
-                              {new Date(auction.startDate).getFullYear()}
-                            </Text>
+                      {/* Grid de contenido a la derecha */}
+                      <View className='flex-1 py-2'>
+                        {/* Layout principal: Fecha y Hora */}
+                        <View className='flex-row items-start justify-between'>
+                          {/* Columna izquierda: Fecha y Título */}
+                          <View className='mr-4 flex-1'>
+                            {/* Fecha */}
+                            <View className='mb-2'>
+                              <Text className='font-poppins text-xl uppercase tracking-wide'>
+                                {getMonthName(
+                                  new Date(auction.startDate).getMonth() + 1,
+                                  locale
+                                ).toUpperCase()}
+                              </Text>
+                              <Text className='font-poppins text-xl '>
+                                {new Date(auction.startDate).getDate()},{' '}
+                                {new Date(auction.startDate).getFullYear()}
+                              </Text>
+                            </View>
+
+                            {/* Título justo debajo de la fecha */}
+                            <View>
+                              <Text
+                                className='font-rubik text-2xl font-bold'
+                                numberOfLines={2}
+                              >
+                                {auction.title.toUpperCase()}
+                              </Text>
+                            </View>
                           </View>
 
-                          {/* Título justo debajo de la fecha */}
+                          {/* Hora - derecha */}
                           <View>
-                            <Text
-                              className='font-rubik text-2xl font-bold'
-                              numberOfLines={2}
-                            >
-                              {auction.title.toUpperCase()}
+                            <Text className='text-2xl'>
+                              {formatTime(auction.startDate)}
                             </Text>
                           </View>
-                        </View>
-
-                        {/* Hora - derecha */}
-                        <View>
-                          <Text className='text-2xl'>
-                            {formatTime(auction.startDate)}
-                          </Text>
                         </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {/* Mostrar mensaje cuando no hay subastas en un mes específico */}
-        {auctions?.this_month && auctions.this_month.length === 0 && (
-          <View className='mb-8'>
-            <Text className=' mb-4 text-xl font-bold'>
-              {t('screens.calendar.auctionsIn')}{' '}
-              {getMonthName(thisMonth.value, locale)}
-            </Text>
-            <Text className='py-8 text-center text-lg text-cinnabar'>
-              {t('screens.calendar.noAuctionsFound')}
-            </Text>
-          </View>
-        )}
-
-        {auctions?.next_month && auctions.next_month.length === 0 && (
-          <View className='mb-8'>
-            <Text className=' mb-4 text-xl font-bold'>
-              {t('screens.calendar.auctionsIn')}{' '}
-              {getMonthName(nextMonth.value, locale)}
-            </Text>
-            <Text className='py-8 text-center text-lg text-cinnabar'>
-              {t('screens.calendar.noAuctionsFound')}
-            </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <Text className='py-8 text-center text-lg text-cinnabar'>
+                {t('screens.calendar.noAuctionsFound')}
+              </Text>
+            )}
           </View>
         )}
 
