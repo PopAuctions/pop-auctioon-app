@@ -85,9 +85,9 @@ export default function CalendarScreen() {
                   key={auction.id}
                   className='overflow-hidden rounded-xl bg-white shadow-sm'
                 >
-                  <View className='min-h-[180px] flex-row py-6 '>
+                  <View className='min-h-[220px] flex-row py-6 '>
                     {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-6 h-56 w-44 overflow-hidden rounded-lg'>
+                    <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
                       {auction.image && auction.image.trim() !== '' ? (
                         <Image
                           source={{ uri: auction.image }}
@@ -168,9 +168,9 @@ export default function CalendarScreen() {
                   key={auction.id}
                   className='overflow-hidden rounded-xl bg-white shadow-sm'
                 >
-                  <View className='min-h-[180px] flex-row py-6 '>
+                  <View className='min-h-[220px] flex-row py-6 '>
                     {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-6 h-56 w-44 overflow-hidden rounded-lg'>
+                    <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
                       {auction.image && auction.image.trim() !== '' ? (
                         <Image
                           source={{ uri: auction.image }}
