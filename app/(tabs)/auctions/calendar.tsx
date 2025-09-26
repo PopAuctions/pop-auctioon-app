@@ -103,38 +103,41 @@ export default function CalendarScreen() {
 
                     {/* Grid de contenido a la derecha */}
                     <View className='flex-1 py-2'>
-                      {/* Fila superior: Fecha y Hora alineadas */}
-                      <View className='mb-4 flex-row items-start justify-between'>
-                        {/* Fecha en formato mes - izquierda */}
-                        <View>
-                          <Text className='text-gray-500 text-xs font-medium uppercase tracking-wide'>
-                            {getMonthName(
-                              new Date(auction.startDate).getMonth() + 1,
-                              locale
-                            ).toUpperCase()}
-                          </Text>
-                          <Text className='text-2xl font-bold'>
-                            {new Date(auction.startDate).getDate()},{' '}
-                            {new Date(auction.startDate).getFullYear()}
-                          </Text>
+                      {/* Layout principal: Fecha y Hora */}
+                      <View className='flex-row items-start justify-between'>
+                        {/* Columna izquierda: Fecha y Título */}
+                        <View className='mr-4 flex-1'>
+                          {/* Fecha */}
+                          <View className='mb-2'>
+                            <Text className='font-poppins text-xl uppercase tracking-wide'>
+                              {getMonthName(
+                                new Date(auction.startDate).getMonth() + 1,
+                                locale
+                              ).toUpperCase()}
+                            </Text>
+                            <Text className='font-poppins text-xl '>
+                              {new Date(auction.startDate).getDate()},{' '}
+                              {new Date(auction.startDate).getFullYear()}
+                            </Text>
+                          </View>
+
+                          {/* Título justo debajo de la fecha */}
+                          <View>
+                            <Text
+                              className='font-rubik text-2xl font-bold'
+                              numberOfLines={2}
+                            >
+                              {auction.title.toUpperCase()}
+                            </Text>
+                          </View>
                         </View>
 
                         {/* Hora - derecha */}
                         <View>
-                          <Text className='text-2xl font-bold'>
+                          <Text className='text-2xl '>
                             {formatTime(auction.startDate)}
                           </Text>
                         </View>
-                      </View>
-
-                      {/* Título de la subasta abajo */}
-                      <View className='flex-1 justify-end'>
-                        <Text
-                          className='text-xl font-bold'
-                          numberOfLines={2}
-                        >
-                          {auction.title}
-                        </Text>
                       </View>
                     </View>
                   </View>
@@ -165,9 +168,9 @@ export default function CalendarScreen() {
                   key={auction.id}
                   className='overflow-hidden rounded-xl bg-white shadow-sm'
                 >
-                  <View className='min-h-[180px] flex-row p-6'>
+                  <View className='min-h-[180px] flex-row py-6 '>
                     {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-6 h-40 w-36 overflow-hidden rounded-lg'>
+                    <View className='bg-gray-100 mr-6 h-56 w-44 overflow-hidden rounded-lg'>
                       {auction.image && auction.image.trim() !== '' ? (
                         <Image
                           source={{ uri: auction.image }}
@@ -183,38 +186,41 @@ export default function CalendarScreen() {
 
                     {/* Grid de contenido a la derecha */}
                     <View className='flex-1 py-2'>
-                      {/* Fila superior: Fecha y Hora alineadas */}
-                      <View className='mb-4 flex-row items-start justify-between'>
-                        {/* Fecha en formato mes - izquierda */}
-                        <View>
-                          <Text className='text-gray-500 text-xs font-medium uppercase tracking-wide'>
-                            {getMonthName(
-                              new Date(auction.startDate).getMonth() + 1,
-                              locale
-                            ).toUpperCase()}
-                          </Text>
-                          <Text className='text-2xl font-bold'>
-                            {new Date(auction.startDate).getDate()},{' '}
-                            {new Date(auction.startDate).getFullYear()}
-                          </Text>
+                      {/* Layout principal: Fecha y Hora */}
+                      <View className='flex-row items-start justify-between'>
+                        {/* Columna izquierda: Fecha y Título */}
+                        <View className='mr-4 flex-1'>
+                          {/* Fecha */}
+                          <View className='mb-2'>
+                            <Text className='font-poppins text-xl uppercase tracking-wide'>
+                              {getMonthName(
+                                new Date(auction.startDate).getMonth() + 1,
+                                locale
+                              ).toUpperCase()}
+                            </Text>
+                            <Text className='font-poppins text-xl '>
+                              {new Date(auction.startDate).getDate()},{' '}
+                              {new Date(auction.startDate).getFullYear()}
+                            </Text>
+                          </View>
+
+                          {/* Título justo debajo de la fecha */}
+                          <View>
+                            <Text
+                              className='font-rubik text-2xl font-bold'
+                              numberOfLines={2}
+                            >
+                              {auction.title.toUpperCase()}
+                            </Text>
+                          </View>
                         </View>
 
                         {/* Hora - derecha */}
                         <View>
-                          <Text className='text-2xl font-bold'>
+                          <Text className='text-2xl'>
                             {formatTime(auction.startDate)}
                           </Text>
                         </View>
-                      </View>
-
-                      {/* Título de la subasta abajo */}
-                      <View className='flex-1 justify-end'>
-                        <Text
-                          className='text-xl font-bold'
-                          numberOfLines={2}
-                        >
-                          {auction.title}
-                        </Text>
                       </View>
                     </View>
                   </View>
