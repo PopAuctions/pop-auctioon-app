@@ -88,7 +88,7 @@ export default function CalendarScreen() {
                   key={auction.id}
                   href={'/(tabs)/auctions/' + auction.id}
                   mode='empty'
-                  className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
+                  className='border-gray-200 rounded-lg border bg-white p-4 '
                 >
                   <View className='flex-row'>
                     <View className='bg-gray-100 mr-4 h-20 w-16 overflow-hidden rounded-lg'>
@@ -140,7 +140,7 @@ export default function CalendarScreen() {
                   key={auction.id}
                   href={'/(tabs)/auctions/' + auction.id}
                   mode='empty'
-                  className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
+                  className='border-gray-200 rounded-lg border bg-white p-4 '
                 >
                   <View className='flex-row'>
                     <View className='bg-gray-100 mr-4 h-20 w-16 overflow-hidden rounded-lg'>

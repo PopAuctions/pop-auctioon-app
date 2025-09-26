@@ -29,7 +29,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/live/123'
             mode='empty'
-            className='rounded-lg bg-red-500 p-6 shadow-lg'
+            className='rounded-lg bg-red-500 p-6'
           >
             <View className='flex-row items-center justify-center'>
               <View className='mr-3 h-3 w-3 animate-pulse rounded-full bg-white' />
@@ -57,7 +57,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/calendar'
             mode='empty'
-            className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
+            className='border-gray-200 rounded-lg border bg-white p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
@@ -77,7 +77,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/articles'
             mode='empty'
-            className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
+            className='border-gray-200 rounded-lg border bg-white p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>
