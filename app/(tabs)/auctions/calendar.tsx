@@ -71,12 +71,12 @@ export default function CalendarScreen() {
 
         {auctions?.this_month && auctions.this_month.length > 0 && (
           <View className='mb-8'>
-            <Text className='text-gray-900 mb-4 text-center text-2xl font-bold'>
+            <Text className=' text-center font-rubik text-4xl color-text-black'>
               {t('screens.calendar.thisMonth')}{' '}
               {getMonthName(thisMonth.value, locale)}
             </Text>
-            <Text className='text-gray-600 mb-4 text-center text-sm'>
-              {t('screens.calendar.subtitle')}
+            <Text className=' mb-4 text-center font-poppins text-2xl'>
+              {t('screens.calendar.subtitle').toUpperCase()}
             </Text>
 
             <View className='space-y-6'>
@@ -143,11 +143,17 @@ export default function CalendarScreen() {
 
         {auctions?.next_month && auctions.next_month.length > 0 && (
           <View className='mb-8'>
-            <Text className='text-gray-900 mb-4 text-2xl font-bold'>
+            <Text
+              className='text-gray-900 mb-4 text-3xl'
+              style={{ fontFamily: 'Rubik_400Regular' }}
+            >
               {t('screens.calendar.nextMonth')}{' '}
               {getMonthName(nextMonth.value, locale)}
             </Text>
-            <Text className='text-gray-600 mb-4 text-sm'>
+            <Text
+              className=' mb-4 text-sm'
+              style={{ fontFamily: 'Poppins_400Regular' }}
+            >
               {t('screens.calendar.subtitle')}
             </Text>
 
@@ -244,7 +250,7 @@ export default function CalendarScreen() {
             <Text className='mb-2 text-lg font-semibold text-cinnabar'>
               {t('screens.calendar.noAuctionsFound')}
             </Text>
-            <Text className='text-gray-600 text-center'>
+            <Text className=' text-center'>
               {t('screens.calendar.checkBackLater')}
             </Text>
           </View>

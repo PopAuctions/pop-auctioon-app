@@ -9,6 +9,9 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
+      textColor: {
+        DEFAULT: 'var(--text-black)',
+      },
       colors: {
         border: 'var(--border)',
         input: 'var(--input)',
