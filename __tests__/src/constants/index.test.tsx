@@ -30,7 +30,9 @@ describe('Constants barrel exports', () => {
 
     it('should export auctioneer register default values', () => {
       expect(Constants.AUCTIONEER_REGISTER_DEFAULT_VALUES).toBeDefined();
-      expect(typeof Constants.AUCTIONEER_REGISTER_DEFAULT_VALUES).toBe('object');
+      expect(typeof Constants.AUCTIONEER_REGISTER_DEFAULT_VALUES).toBe(
+        'object'
+      );
     });
   });
 
@@ -114,15 +116,17 @@ describe('Constants barrel exports', () => {
   describe('Barrel Export Completeness', () => {
     it('should export all major constant categories', () => {
       const exportedKeys = Object.keys(Constants);
-      
+
       // Verify essential exports are present
       expect(exportedKeys.length).toBeGreaterThan(10);
-      
+
       // Check for core categories
       expect(exportedKeys.includes('Colors')).toBeTruthy();
       expect(exportedKeys.includes('LOCALES')).toBeTruthy();
       expect(exportedKeys.includes('MONTHS')).toBeTruthy();
-      expect(exportedKeys.includes('GLOBAL_REGISTER_DEFAULT_VALUES')).toBeTruthy();
+      expect(
+        exportedKeys.includes('GLOBAL_REGISTER_DEFAULT_VALUES')
+      ).toBeTruthy();
     });
 
     it('should maintain consistent export types', () => {
