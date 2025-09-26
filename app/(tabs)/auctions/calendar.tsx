@@ -124,10 +124,7 @@ export default function CalendarScreen() {
 
                             {/* Título justo debajo de la fecha */}
                             <View>
-                              <Text
-                                className='font-rubik text-2xl font-bold'
-                                numberOfLines={2}
-                              >
+                              <Text className='font-rubik text-2xl font-bold'>
                                 {auction.title.toUpperCase()}
                               </Text>
                             </View>
@@ -155,7 +152,7 @@ export default function CalendarScreen() {
 
         {/* Línea divisoria entre meses - solo mostrar si hay al menos una sección */}
         {(auctions?.this_month || auctions?.next_month) && (
-          <View className='mx-4 my-6'>
+          <View className='mx-4 my-3'>
             <View className='border-gray-200 w-full border-b' />
           </View>
         )}
@@ -215,10 +212,7 @@ export default function CalendarScreen() {
 
                             {/* Título justo debajo de la fecha */}
                             <View>
-                              <Text
-                                className='font-rubik text-2xl font-bold'
-                                numberOfLines={2}
-                              >
+                              <Text className='font-rubik text-2xl font-bold'>
                                 {auction.title.toUpperCase()}
                               </Text>
                             </View>
