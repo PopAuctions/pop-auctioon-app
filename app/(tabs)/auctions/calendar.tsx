@@ -124,7 +124,7 @@ export default function CalendarScreen() {
 
                             {/* Título justo debajo de la fecha */}
                             <View>
-                              <Text className='font-rubik text-2xl font-bold'>
+                              <Text className='font-rubik text-2xl '>
                                 {auction.title.toUpperCase()}
                               </Text>
                             </View>
@@ -212,7 +212,7 @@ export default function CalendarScreen() {
 
                             {/* Título justo debajo de la fecha */}
                             <View>
-                              <Text className='font-rubik text-2xl font-bold'>
+                              <Text className='font-rubik text-2xl '>
                                 {auction.title.toUpperCase()}
                               </Text>
                             </View>
@@ -235,18 +235,6 @@ export default function CalendarScreen() {
                 {t('screens.calendar.noAuctionsFound')}
               </Text>
             )}
-          </View>
-        )}
-
-        {/* Mensaje general cuando no hay datos */}
-        {!auctions?.this_month && !auctions?.next_month && (
-          <View className='items-center py-8'>
-            <Text className='mb-2 text-lg font-semibold text-cinnabar'>
-              {t('screens.calendar.noAuctionsFound')}
-            </Text>
-            <Text className=' text-center'>
-              {t('screens.calendar.checkBackLater')}
-            </Text>
           </View>
         )}
       </View>
