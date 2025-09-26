@@ -71,11 +71,11 @@ export default function CalendarScreen() {
 
         {auctions?.this_month && auctions.this_month.length > 0 && (
           <View className='mb-8'>
-            <Text className=' text-center font-rubik text-4xl color-text-black'>
+            <Text className='text-center font-rubik text-4xl'>
               {t('screens.calendar.thisMonth')}{' '}
               {getMonthName(thisMonth.value, locale)}
             </Text>
-            <Text className=' mb-4 text-center font-poppins text-2xl'>
+            <Text className='mb-4 text-center font-poppins text-xl'>
               {t('screens.calendar.subtitle').toUpperCase()}
             </Text>
 
@@ -141,20 +141,19 @@ export default function CalendarScreen() {
           </View>
         )}
 
+        {/* Línea divisoria entre meses */}
+        <View className='mx-4 my-6'>
+          <View className='border-gray-200 w-full border-b' />
+        </View>
+
         {auctions?.next_month && auctions.next_month.length > 0 && (
           <View className='mb-8'>
-            <Text
-              className='text-gray-900 mb-4 text-3xl'
-              style={{ fontFamily: 'Rubik_400Regular' }}
-            >
+            <Text className='text-center font-rubik text-4xl'>
               {t('screens.calendar.nextMonth')}{' '}
               {getMonthName(nextMonth.value, locale)}
             </Text>
-            <Text
-              className=' mb-4 text-sm'
-              style={{ fontFamily: 'Poppins_400Regular' }}
-            >
-              {t('screens.calendar.subtitle')}
+            <Text className='mb-4 text-center font-poppins text-xl'>
+              {t('screens.calendar.subtitle').toUpperCase()}
             </Text>
 
             <View className='space-y-6'>
@@ -255,15 +254,6 @@ export default function CalendarScreen() {
             </Text>
           </View>
         )}
-
-        <View className='mt-4 rounded-lg bg-blue-50 p-4'>
-          <Text className='mb-2 font-semibold text-blue-800'>
-            {t('screens.calendar.tip')}
-          </Text>
-          <Text className='text-blue-700'>
-            {t('screens.calendar.tipMessage')}
-          </Text>
-        </View>
       </View>
     </ScrollView>
   );
