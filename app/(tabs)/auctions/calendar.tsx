@@ -102,32 +102,35 @@ export default function CalendarScreen() {
                     </View>
 
                     {/* Grid de contenido a la derecha */}
-                    <View className='flex-1 justify-between py-2'>
-                      {/* Hora arriba */}
-                      <View className='self-end'>
-                        <Text className='text-gray-900 text-xl font-bold'>
-                          {formatTime(auction.startDate)}
-                        </Text>
+                    <View className='flex-1 py-2'>
+                      {/* Fila superior: Fecha y Hora alineadas */}
+                      <View className='mb-4 flex-row items-start justify-between'>
+                        {/* Fecha en formato mes - izquierda */}
+                        <View>
+                          <Text className='text-gray-500 text-xs font-medium uppercase tracking-wide'>
+                            {getMonthName(
+                              new Date(auction.startDate).getMonth() + 1,
+                              locale
+                            ).toUpperCase()}
+                          </Text>
+                          <Text className='text-2xl font-bold'>
+                            {new Date(auction.startDate).getDate()},{' '}
+                            {new Date(auction.startDate).getFullYear()}
+                          </Text>
+                        </View>
+
+                        {/* Hora - derecha */}
+                        <View>
+                          <Text className='text-2xl font-bold'>
+                            {formatTime(auction.startDate)}
+                          </Text>
+                        </View>
                       </View>
 
-                      {/* Fecha en formato mes */}
-                      <View>
-                        <Text className='text-gray-700 text-sm font-medium uppercase tracking-wide'>
-                          {getMonthName(
-                            new Date(auction.startDate).getMonth() + 1,
-                            locale
-                          ).toUpperCase()}
-                        </Text>
-                        <Text className='text-gray-900 text-xl font-bold'>
-                          {new Date(auction.startDate).getDate()},{' '}
-                          {new Date(auction.startDate).getFullYear()}
-                        </Text>
-                      </View>
-
-                      {/* Título de la subasta más grande */}
-                      <View>
+                      {/* Título de la subasta abajo */}
+                      <View className='flex-1 justify-end'>
                         <Text
-                          className='text-gray-900 text-lg font-bold'
+                          className='text-xl font-bold'
                           numberOfLines={2}
                         >
                           {auction.title}
@@ -179,32 +182,35 @@ export default function CalendarScreen() {
                     </View>
 
                     {/* Grid de contenido a la derecha */}
-                    <View className='flex-1 justify-between py-2'>
-                      {/* Hora arriba */}
-                      <View className='self-end'>
-                        <Text className='text-gray-900 text-xl font-bold'>
-                          {formatTime(auction.startDate)}
-                        </Text>
+                    <View className='flex-1 py-2'>
+                      {/* Fila superior: Fecha y Hora alineadas */}
+                      <View className='mb-4 flex-row items-start justify-between'>
+                        {/* Fecha en formato mes - izquierda */}
+                        <View>
+                          <Text className='text-gray-500 text-xs font-medium uppercase tracking-wide'>
+                            {getMonthName(
+                              new Date(auction.startDate).getMonth() + 1,
+                              locale
+                            ).toUpperCase()}
+                          </Text>
+                          <Text className='text-2xl font-bold'>
+                            {new Date(auction.startDate).getDate()},{' '}
+                            {new Date(auction.startDate).getFullYear()}
+                          </Text>
+                        </View>
+
+                        {/* Hora - derecha */}
+                        <View>
+                          <Text className='text-2xl font-bold'>
+                            {formatTime(auction.startDate)}
+                          </Text>
+                        </View>
                       </View>
 
-                      {/* Fecha en formato mes */}
-                      <View>
-                        <Text className='text-gray-700 text-sm font-medium uppercase tracking-wide'>
-                          {getMonthName(
-                            new Date(auction.startDate).getMonth() + 1,
-                            locale
-                          ).toUpperCase()}
-                        </Text>
-                        <Text className='text-gray-900 text-xl font-bold'>
-                          {new Date(auction.startDate).getDate()},{' '}
-                          {new Date(auction.startDate).getFullYear()}
-                        </Text>
-                      </View>
-
-                      {/* Título de la subasta más grande */}
-                      <View>
+                      {/* Título de la subasta abajo */}
+                      <View className='flex-1 justify-end'>
                         <Text
-                          className='text-gray-900 text-lg font-bold'
+                          className='text-xl font-bold'
                           numberOfLines={2}
                         >
                           {auction.title}
@@ -221,7 +227,7 @@ export default function CalendarScreen() {
         {/* Mostrar mensaje cuando no hay subastas en un mes específico */}
         {auctions?.this_month && auctions.this_month.length === 0 && (
           <View className='mb-8'>
-            <Text className='text-gray-800 mb-4 text-xl font-bold'>
+            <Text className=' mb-4 text-xl font-bold'>
               {t('screens.calendar.auctionsIn')}{' '}
               {getMonthName(thisMonth.value, locale)}
             </Text>
@@ -233,7 +239,7 @@ export default function CalendarScreen() {
 
         {auctions?.next_month && auctions.next_month.length === 0 && (
           <View className='mb-8'>
-            <Text className='text-gray-800 mb-4 text-xl font-bold'>
+            <Text className=' mb-4 text-xl font-bold'>
               {t('screens.calendar.auctionsIn')}{' '}
               {getMonthName(nextMonth.value, locale)}
             </Text>
