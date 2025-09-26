@@ -12,7 +12,9 @@ jest.mock('@/hooks/i18n/useTranslation', () => ({
   useTranslation: jest.fn(),
 }));
 
-const mockUseTranslation = useTranslation as jest.MockedFunction<typeof useTranslation>;
+const mockUseTranslation = useTranslation as jest.MockedFunction<
+  typeof useTranslation
+>;
 
 describe('Button', () => {
   beforeEach(() => {
@@ -30,25 +32,19 @@ describe('Button', () => {
 
   describe('Basic rendering', () => {
     it('should render with children', () => {
-      const { getByText } = render(
-        <Button mode="primary">Test Button</Button>
-      );
+      const { getByText } = render(<Button mode='primary'>Test Button</Button>);
 
       expect(getByText('Test Button')).toBeTruthy();
     });
 
     it('should render with empty string children', () => {
-      const { toJSON } = render(
-        <Button mode="primary">{''}</Button>
-      );
+      const { toJSON } = render(<Button mode='primary'>{''}</Button>);
 
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should render without children', () => {
-      const { toJSON } = render(
-        <Button mode="primary">Default</Button>
-      );
+      const { toJSON } = render(<Button mode='primary'>Default</Button>);
 
       expect(toJSON()).toMatchSnapshot();
     });
@@ -56,16 +52,14 @@ describe('Button', () => {
 
   describe('Button modes', () => {
     it('should render primary mode by default', () => {
-      const { toJSON } = render(
-        <Button mode="primary">Primary Button</Button>
-      );
+      const { toJSON } = render(<Button mode='primary'>Primary Button</Button>);
 
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should render primary mode explicitly', () => {
       const { getByText, toJSON } = render(
-        <Button mode="primary">Primary Button</Button>
+        <Button mode='primary'>Primary Button</Button>
       );
 
       expect(getByText('Primary Button')).toBeTruthy();
@@ -74,7 +68,7 @@ describe('Button', () => {
 
     it('should render secondary mode', () => {
       const { getByText, toJSON } = render(
-        <Button mode="secondary">Secondary Button</Button>
+        <Button mode='secondary'>Secondary Button</Button>
       );
 
       expect(getByText('Secondary Button')).toBeTruthy();
@@ -89,16 +83,19 @@ describe('Button', () => {
 
   describe('Button sizes', () => {
     it('should render large size by default', () => {
-      const { toJSON } = render(
-        <Button mode="primary">Large Button</Button>
-      );
+      const { toJSON } = render(<Button mode='primary'>Large Button</Button>);
 
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should render small primary button', () => {
       const { toJSON } = render(
-        <Button mode="primary" size="small">Small Primary</Button>
+        <Button
+          mode='primary'
+          size='small'
+        >
+          Small Primary
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -106,7 +103,12 @@ describe('Button', () => {
 
     it('should render small secondary button', () => {
       const { toJSON } = render(
-        <Button mode="secondary" size="small">Small Secondary</Button>
+        <Button
+          mode='secondary'
+          size='small'
+        >
+          Small Secondary
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -114,7 +116,12 @@ describe('Button', () => {
 
     it('should render large primary button explicitly', () => {
       const { toJSON } = render(
-        <Button mode="primary" size="large">Large Primary</Button>
+        <Button
+          mode='primary'
+          size='large'
+        >
+          Large Primary
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -122,7 +129,12 @@ describe('Button', () => {
 
     it('should render large secondary button explicitly', () => {
       const { toJSON } = render(
-        <Button mode="secondary" size="large">Large Secondary</Button>
+        <Button
+          mode='secondary'
+          size='large'
+        >
+          Large Secondary
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -132,7 +144,12 @@ describe('Button', () => {
   describe('Loading state', () => {
     it('should show loading indicator when isLoading is true', () => {
       const { getByText, toJSON } = render(
-        <Button mode="primary" isLoading>Loading Button</Button>
+        <Button
+          mode='primary'
+          isLoading
+        >
+          Loading Button
+        </Button>
       );
 
       expect(getByText('Loading Button')).toBeTruthy();
@@ -141,7 +158,12 @@ describe('Button', () => {
 
     it('should hide loading indicator when isLoading is false', () => {
       const { getByText, toJSON } = render(
-        <Button mode="primary" isLoading={false}>Not Loading</Button>
+        <Button
+          mode='primary'
+          isLoading={false}
+        >
+          Not Loading
+        </Button>
       );
 
       expect(getByText('Not Loading')).toBeTruthy();
@@ -150,11 +172,21 @@ describe('Button', () => {
 
     it('should render loading with different modes', () => {
       const { toJSON: primaryJSON } = render(
-        <Button mode="primary" isLoading>Loading Primary</Button>
+        <Button
+          mode='primary'
+          isLoading
+        >
+          Loading Primary
+        </Button>
       );
 
       const { toJSON: secondaryJSON } = render(
-        <Button mode="secondary" isLoading>Loading Secondary</Button>
+        <Button
+          mode='secondary'
+          isLoading
+        >
+          Loading Secondary
+        </Button>
       );
 
       expect(primaryJSON()).toMatchSnapshot();
@@ -162,7 +194,9 @@ describe('Button', () => {
     });
 
     it('should use translation for loading text', () => {
-      const mockT = jest.fn((key) => key === 'commonActions.loading' ? 'Cargando...' : key);
+      const mockT = jest.fn((key) =>
+        key === 'commonActions.loading' ? 'Cargando...' : key
+      );
       mockUseTranslation.mockReturnValue({
         t: mockT,
         changeLanguage: jest.fn(),
@@ -171,7 +205,12 @@ describe('Button', () => {
       });
 
       const { getByText } = render(
-        <Button mode="primary" isLoading>Loading Button</Button>
+        <Button
+          mode='primary'
+          isLoading
+        >
+          Loading Button
+        </Button>
       );
 
       expect(mockT).toHaveBeenCalledWith('commonActions.loading');
@@ -180,7 +219,13 @@ describe('Button', () => {
 
     it('should render loading with custom size', () => {
       const { toJSON } = render(
-        <Button mode="primary" size="small" isLoading>Small Loading</Button>
+        <Button
+          mode='primary'
+          size='small'
+          isLoading
+        >
+          Small Loading
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -191,34 +236,47 @@ describe('Button', () => {
     it('should be disabled when disabled prop is true', () => {
       const mockOnPress = jest.fn();
       const { getByText } = render(
-        <Button mode="primary" disabled={true} onPress={mockOnPress}>
+        <Button
+          mode='primary'
+          disabled={true}
+          onPress={mockOnPress}
+        >
           Disabled Button
         </Button>
       );
 
       const button = getByText('Disabled Button');
       fireEvent.press(button);
-      
+
       expect(mockOnPress).not.toHaveBeenCalled();
     });
 
     it('should be disabled when isLoading is true', () => {
       const mockOnPress = jest.fn();
       const { getByText } = render(
-        <Button mode="primary" isLoading onPress={mockOnPress}>
+        <Button
+          mode='primary'
+          isLoading
+          onPress={mockOnPress}
+        >
           Loading Button
         </Button>
       );
 
       const button = getByText('Loading Button');
       fireEvent.press(button);
-      
+
       expect(mockOnPress).not.toHaveBeenCalled();
     });
 
     it('should render disabled styles', () => {
       const { toJSON } = render(
-        <Button mode="primary" disabled>Disabled Button</Button>
+        <Button
+          mode='primary'
+          disabled
+        >
+          Disabled Button
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -226,7 +284,13 @@ describe('Button', () => {
 
     it('should combine disabled and loading states', () => {
       const { toJSON } = render(
-        <Button mode="primary" disabled isLoading>Disabled Loading</Button>
+        <Button
+          mode='primary'
+          disabled
+          isLoading
+        >
+          Disabled Loading
+        </Button>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -237,35 +301,45 @@ describe('Button', () => {
     it('should call onPress when button is pressed', () => {
       const mockOnPress = jest.fn();
       const { getByText } = render(
-        <Button mode="primary" onPress={mockOnPress}>
+        <Button
+          mode='primary'
+          onPress={mockOnPress}
+        >
           Clickable Button
         </Button>
       );
 
       const button = getByText('Clickable Button');
       fireEvent.press(button);
-      
+
       expect(mockOnPress).toHaveBeenCalledTimes(1);
     });
 
     it('should not call onPress when disabled', () => {
       const mockOnPress = jest.fn();
       const { getByText } = render(
-        <Button mode="primary" onPress={mockOnPress} disabled>
+        <Button
+          mode='primary'
+          onPress={mockOnPress}
+          disabled
+        >
           Disabled Button
         </Button>
       );
 
       const button = getByText('Disabled Button');
       fireEvent.press(button);
-      
+
       expect(mockOnPress).not.toHaveBeenCalled();
     });
 
     it('should handle multiple press events', () => {
       const mockOnPress = jest.fn();
       const { getByText } = render(
-        <Button mode="primary" onPress={mockOnPress}>
+        <Button
+          mode='primary'
+          onPress={mockOnPress}
+        >
           Multi Press
         </Button>
       );
@@ -274,28 +348,29 @@ describe('Button', () => {
       fireEvent.press(button);
       fireEvent.press(button);
       fireEvent.press(button);
-      
+
       expect(mockOnPress).toHaveBeenCalledTimes(3);
     });
 
     it('should handle onPress with different modes', () => {
       const mockOnPress = jest.fn();
       const { getByText } = render(
-        <Button mode="secondary" onPress={mockOnPress}>
+        <Button
+          mode='secondary'
+          onPress={mockOnPress}
+        >
           Secondary Click
         </Button>
       );
 
       const button = getByText('Secondary Click');
       fireEvent.press(button);
-      
+
       expect(mockOnPress).toHaveBeenCalledTimes(1);
     });
 
     it('should handle undefined onPress gracefully', () => {
-      const { getByText } = render(
-        <Button mode="primary">No Handler</Button>
-      );
+      const { getByText } = render(<Button mode='primary'>No Handler</Button>);
 
       const button = getByText('No Handler');
       expect(() => fireEvent.press(button)).not.toThrow();
@@ -305,7 +380,10 @@ describe('Button', () => {
   describe('Custom styling', () => {
     it('should apply custom className', () => {
       const { toJSON } = render(
-        <Button mode="primary" className="custom-button-class">
+        <Button
+          mode='primary'
+          className='custom-button-class'
+        >
           Custom Class
         </Button>
       );
@@ -320,7 +398,10 @@ describe('Button', () => {
       };
 
       const { toJSON } = render(
-        <Button mode="primary" style={customStyle}>
+        <Button
+          mode='primary'
+          style={customStyle}
+        >
           Custom Style
         </Button>
       );
@@ -333,9 +414,9 @@ describe('Button', () => {
 
       const { toJSON } = render(
         <Button
-          className="rounded-xl"
+          className='rounded-xl'
           style={customStyle}
-          mode="secondary"
+          mode='secondary'
         >
           Combined Styling
         </Button>
@@ -346,7 +427,10 @@ describe('Button', () => {
 
     it('should handle undefined className', () => {
       const { toJSON } = render(
-        <Button mode="primary" className={undefined}>
+        <Button
+          mode='primary'
+          className={undefined}
+        >
           Undefined Class
         </Button>
       );
@@ -358,7 +442,7 @@ describe('Button', () => {
   describe('Accessibility', () => {
     it('should be accessible by default', () => {
       const { getByText } = render(
-        <Button mode="primary">Accessible Button</Button>
+        <Button mode='primary'>Accessible Button</Button>
       );
 
       expect(getByText('Accessible Button')).toBeTruthy();
@@ -366,7 +450,10 @@ describe('Button', () => {
 
     it('should be accessible when disabled', () => {
       const { getByText, toJSON } = render(
-        <Button mode="primary" disabled>
+        <Button
+          mode='primary'
+          disabled
+        >
           Disabled Accessible Button
         </Button>
       );
@@ -377,7 +464,10 @@ describe('Button', () => {
 
     it('should be accessible when loading', () => {
       const { getByText } = render(
-        <Button mode="primary" isLoading>
+        <Button
+          mode='primary'
+          isLoading
+        >
           Loading Accessible Button
         </Button>
       );
@@ -388,35 +478,25 @@ describe('Button', () => {
 
   describe('Edge cases', () => {
     it('should handle boolean children', () => {
-      const { toJSON } = render(
-        <Button mode="primary">{true}</Button>
-      );
+      const { toJSON } = render(<Button mode='primary'>{true}</Button>);
 
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle number children', () => {
-      const { getByText } = render(
-        <Button mode="primary">{42}</Button>
-      );
+      const { getByText } = render(<Button mode='primary'>{42}</Button>);
 
       expect(getByText('42')).toBeTruthy();
     });
 
     it('should handle null children gracefully', () => {
-      const { toJSON } = render(
-        <Button mode="primary">{null}</Button>
-      );
+      const { toJSON } = render(<Button mode='primary'>{null}</Button>);
 
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle complex children', () => {
-      const { getByText } = render(
-        <Button mode="primary">
-          Submit
-        </Button>
-      );
+      const { getByText } = render(<Button mode='primary'>Submit</Button>);
 
       expect(getByText('Submit')).toBeTruthy();
     });

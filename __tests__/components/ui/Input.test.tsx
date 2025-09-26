@@ -19,16 +19,14 @@ describe('Input', () => {
 
     it('should render with placeholder text', () => {
       const { getByPlaceholderText } = render(
-        <Input placeholder="Enter your name" />
+        <Input placeholder='Enter your name' />
       );
 
       expect(getByPlaceholderText('Enter your name')).toBeTruthy();
     });
 
     it('should render with initial value', () => {
-      const { getByDisplayValue } = render(
-        <Input value="Initial value" />
-      );
+      const { getByDisplayValue } = render(<Input value='Initial value' />);
 
       expect(getByDisplayValue('Initial value')).toBeTruthy();
     });
@@ -41,14 +39,12 @@ describe('Input', () => {
     });
 
     it('should apply custom className', () => {
-      const { toJSON } = render(<Input className="custom-input-class" />);
+      const { toJSON } = render(<Input className='custom-input-class' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should combine default and custom className', () => {
-      const { toJSON } = render(
-        <Input className="border-2 border-red-500" />
-      );
+      const { toJSON } = render(<Input className='border-2 border-red-500' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
@@ -67,20 +63,28 @@ describe('Input', () => {
       const customStyle = { fontSize: 18 };
 
       const { toJSON } = render(
-        <Input className="text-lg" style={customStyle} />
+        <Input
+          className='text-lg'
+          style={customStyle}
+        />
       );
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle empty className', () => {
-      const { toJSON } = render(<Input className="" />);
+      const { toJSON } = render(<Input className='' />);
       expect(toJSON()).toMatchSnapshot();
     });
   });
 
   describe('TextInput props', () => {
     it('should handle multiline input', () => {
-      const { toJSON } = render(<Input multiline numberOfLines={4} />);
+      const { toJSON } = render(
+        <Input
+          multiline
+          numberOfLines={4}
+        />
+      );
       expect(toJSON()).toMatchSnapshot();
     });
 
@@ -90,22 +94,22 @@ describe('Input', () => {
     });
 
     it('should handle keyboard type', () => {
-      const { toJSON } = render(<Input keyboardType="email-address" />);
+      const { toJSON } = render(<Input keyboardType='email-address' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle auto-complete type', () => {
-      const { toJSON } = render(<Input autoComplete="email" />);
+      const { toJSON } = render(<Input autoComplete='email' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle text content type', () => {
-      const { toJSON } = render(<Input textContentType="password" />);
+      const { toJSON } = render(<Input textContentType='password' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle return key type', () => {
-      const { toJSON } = render(<Input returnKeyType="done" />);
+      const { toJSON } = render(<Input returnKeyType='done' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
@@ -115,7 +119,7 @@ describe('Input', () => {
     });
 
     it('should handle auto-capitalize', () => {
-      const { toJSON } = render(<Input autoCapitalize="words" />);
+      const { toJSON } = render(<Input autoCapitalize='words' />);
       expect(toJSON()).toMatchSnapshot();
     });
   });
@@ -124,7 +128,10 @@ describe('Input', () => {
     it('should handle onChangeText event', () => {
       const mockOnChangeText = jest.fn();
       const { getByTestId } = render(
-        <Input testID="text-input" onChangeText={mockOnChangeText} />
+        <Input
+          testID='text-input'
+          onChangeText={mockOnChangeText}
+        />
       );
 
       const input = getByTestId('text-input');
@@ -136,7 +143,10 @@ describe('Input', () => {
     it('should handle onFocus event', () => {
       const mockOnFocus = jest.fn();
       const { getByTestId } = render(
-        <Input testID="text-input" onFocus={mockOnFocus} />
+        <Input
+          testID='text-input'
+          onFocus={mockOnFocus}
+        />
       );
 
       const input = getByTestId('text-input');
@@ -148,7 +158,10 @@ describe('Input', () => {
     it('should handle onBlur event', () => {
       const mockOnBlur = jest.fn();
       const { getByTestId } = render(
-        <Input testID="text-input" onBlur={mockOnBlur} />
+        <Input
+          testID='text-input'
+          onBlur={mockOnBlur}
+        />
       );
 
       const input = getByTestId('text-input');
@@ -160,7 +173,10 @@ describe('Input', () => {
     it('should handle onSubmitEditing event', () => {
       const mockOnSubmitEditing = jest.fn();
       const { getByTestId } = render(
-        <Input testID="text-input" onSubmitEditing={mockOnSubmitEditing} />
+        <Input
+          testID='text-input'
+          onSubmitEditing={mockOnSubmitEditing}
+        />
       );
 
       const input = getByTestId('text-input');
@@ -176,7 +192,7 @@ describe('Input', () => {
 
       const { getByTestId } = render(
         <Input
-          testID="text-input"
+          testID='text-input'
           onChangeText={mockOnChangeText}
           onFocus={mockOnFocus}
           onBlur={mockOnBlur}
@@ -197,20 +213,20 @@ describe('Input', () => {
   describe('Accessibility', () => {
     it('should handle accessibility label', () => {
       const { toJSON } = render(
-        <Input accessibilityLabel="Username input field" />
+        <Input accessibilityLabel='Username input field' />
       );
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle accessibility hint', () => {
       const { toJSON } = render(
-        <Input accessibilityHint="Enter your username here" />
+        <Input accessibilityHint='Enter your username here' />
       );
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle testID', () => {
-      const { getByTestId } = render(<Input testID="username-input" />);
+      const { getByTestId } = render(<Input testID='username-input' />);
       expect(getByTestId('username-input')).toBeTruthy();
     });
   });
@@ -219,18 +235,29 @@ describe('Input', () => {
     it('should handle controlled input', () => {
       const mockOnChangeText = jest.fn();
       const { getByDisplayValue, rerender } = render(
-        <Input value="initial" onChangeText={mockOnChangeText} />
+        <Input
+          value='initial'
+          onChangeText={mockOnChangeText}
+        />
       );
 
       expect(getByDisplayValue('initial')).toBeTruthy();
 
-      rerender(<Input value="updated" onChangeText={mockOnChangeText} />);
+      rerender(
+        <Input
+          value='updated'
+          onChangeText={mockOnChangeText}
+        />
+      );
       expect(getByDisplayValue('updated')).toBeTruthy();
     });
 
     it('should handle uncontrolled input', () => {
       const { getByTestId } = render(
-        <Input testID="uncontrolled-input" defaultValue="default text" />
+        <Input
+          testID='uncontrolled-input'
+          defaultValue='default text'
+        />
       );
 
       const input = getByTestId('uncontrolled-input');
@@ -248,27 +275,28 @@ describe('Input', () => {
 
   describe('Placeholder handling', () => {
     it('should use default placeholder text color', () => {
-      const { toJSON } = render(<Input placeholder="Test placeholder" />);
+      const { toJSON } = render(<Input placeholder='Test placeholder' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle custom placeholder text color through props', () => {
       const { toJSON } = render(
         <Input
-          placeholder="Custom color placeholder"
-          placeholderTextColor="#ff0000"
+          placeholder='Custom color placeholder'
+          placeholderTextColor='#ff0000'
         />
       );
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle empty placeholder', () => {
-      const { toJSON } = render(<Input placeholder="" />);
+      const { toJSON } = render(<Input placeholder='' />);
       expect(toJSON()).toMatchSnapshot();
     });
 
     it('should handle long placeholder text', () => {
-      const longPlaceholder = 'This is a very long placeholder text that might wrap or be truncated';
+      const longPlaceholder =
+        'This is a very long placeholder text that might wrap or be truncated';
       const { toJSON } = render(<Input placeholder={longPlaceholder} />);
       expect(toJSON()).toMatchSnapshot();
     });

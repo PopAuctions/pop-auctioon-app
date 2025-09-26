@@ -15,9 +15,7 @@ describe('BackgroundImage', () => {
   describe('Basic rendering', () => {
     it('should render with string URI source', () => {
       const { getByText, toJSON } = render(
-        <BackgroundImage source={mockImageUri}>
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage source={mockImageUri}>{mockChildren}</BackgroundImage>
       );
 
       expect(getByText('Test Content')).toBeTruthy();
@@ -57,9 +55,7 @@ describe('BackgroundImage', () => {
   describe('Overlay functionality', () => {
     it('should render overlay by default', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri}>
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage source={mockImageUri}>{mockChildren}</BackgroundImage>
       );
 
       const component = toJSON();
@@ -68,7 +64,10 @@ describe('BackgroundImage', () => {
 
     it('should not render overlay when overlay is false', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} overlay={false}>
+        <BackgroundImage
+          source={mockImageUri}
+          overlay={false}
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -79,7 +78,10 @@ describe('BackgroundImage', () => {
 
     it('should apply custom overlay opacity', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} overlayOpacity={0.7}>
+        <BackgroundImage
+          source={mockImageUri}
+          overlayOpacity={0.7}
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -90,7 +92,10 @@ describe('BackgroundImage', () => {
 
     it('should handle overlay opacity of 0', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} overlayOpacity={0}>
+        <BackgroundImage
+          source={mockImageUri}
+          overlayOpacity={0}
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -100,7 +105,10 @@ describe('BackgroundImage', () => {
 
     it('should handle overlay opacity of 1', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} overlayOpacity={1}>
+        <BackgroundImage
+          source={mockImageUri}
+          overlayOpacity={1}
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -112,9 +120,7 @@ describe('BackgroundImage', () => {
   describe('Resize modes', () => {
     it('should apply cover resize mode by default', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri}>
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage source={mockImageUri}>{mockChildren}</BackgroundImage>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -122,7 +128,10 @@ describe('BackgroundImage', () => {
 
     it('should apply contain resize mode', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} resizeMode="contain">
+        <BackgroundImage
+          source={mockImageUri}
+          resizeMode='contain'
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -132,7 +141,10 @@ describe('BackgroundImage', () => {
 
     it('should apply stretch resize mode', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} resizeMode="stretch">
+        <BackgroundImage
+          source={mockImageUri}
+          resizeMode='stretch'
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -142,7 +154,10 @@ describe('BackgroundImage', () => {
 
     it('should apply repeat resize mode', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} resizeMode="repeat">
+        <BackgroundImage
+          source={mockImageUri}
+          resizeMode='repeat'
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -152,7 +167,10 @@ describe('BackgroundImage', () => {
 
     it('should apply center resize mode', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} resizeMode="center">
+        <BackgroundImage
+          source={mockImageUri}
+          resizeMode='center'
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -164,9 +182,7 @@ describe('BackgroundImage', () => {
   describe('Styling and customization', () => {
     it('should apply default className', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri}>
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage source={mockImageUri}>{mockChildren}</BackgroundImage>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -174,7 +190,10 @@ describe('BackgroundImage', () => {
 
     it('should apply custom className', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} className="w-full h-64">
+        <BackgroundImage
+          source={mockImageUri}
+          className='h-64 w-full'
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -190,7 +209,10 @@ describe('BackgroundImage', () => {
       };
 
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} style={customStyle}>
+        <BackgroundImage
+          source={mockImageUri}
+          style={customStyle}
+        >
           {mockChildren}
         </BackgroundImage>
       );
@@ -204,7 +226,7 @@ describe('BackgroundImage', () => {
       const { toJSON } = render(
         <BackgroundImage
           source={mockImageUri}
-          className="rounded-xl"
+          className='rounded-xl'
           style={customStyle}
         >
           {mockChildren}
@@ -218,7 +240,7 @@ describe('BackgroundImage', () => {
   describe('Image source handling', () => {
     it('should handle string URI correctly', () => {
       const { toJSON } = render(
-        <BackgroundImage source="https://test.com/image.jpg">
+        <BackgroundImage source='https://test.com/image.jpg'>
           {mockChildren}
         </BackgroundImage>
       );
@@ -228,11 +250,9 @@ describe('BackgroundImage', () => {
 
     it('should handle required image source correctly', () => {
       const requiredImage = { uri: 'bundled://image.png' };
-      
+
       const { toJSON } = render(
-        <BackgroundImage source={requiredImage}>
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage source={requiredImage}>{mockChildren}</BackgroundImage>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -240,9 +260,7 @@ describe('BackgroundImage', () => {
 
     it('should handle empty string URI', () => {
       const { toJSON } = render(
-        <BackgroundImage source="">
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage source=''>{mockChildren}</BackgroundImage>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -261,9 +279,7 @@ describe('BackgroundImage', () => {
       };
 
       const { getByText, toJSON } = render(
-        <BackgroundImage {...complexConfig}>
-          {mockChildren}
-        </BackgroundImage>
+        <BackgroundImage {...complexConfig}>{mockChildren}</BackgroundImage>
       );
 
       expect(getByText('Test Content')).toBeTruthy();
@@ -275,8 +291,8 @@ describe('BackgroundImage', () => {
         <BackgroundImage
           source={mockImageUri}
           overlay={false}
-          resizeMode="stretch"
-          className="flex-1 justify-center"
+          resizeMode='stretch'
+          className='flex-1 justify-center'
         >
           {mockChildren}
         </BackgroundImage>
@@ -309,9 +325,7 @@ describe('BackgroundImage', () => {
   describe('Edge cases', () => {
     it('should handle null children gracefully', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri}>
-          {null}
-        </BackgroundImage>
+        <BackgroundImage source={mockImageUri}>{null}</BackgroundImage>
       );
 
       expect(toJSON()).toMatchSnapshot();
@@ -319,7 +333,10 @@ describe('BackgroundImage', () => {
 
     it('should handle undefined overlay opacity', () => {
       const { toJSON } = render(
-        <BackgroundImage source={mockImageUri} overlayOpacity={undefined}>
+        <BackgroundImage
+          source={mockImageUri}
+          overlayOpacity={undefined}
+        >
           {mockChildren}
         </BackgroundImage>
       );

@@ -808,7 +808,7 @@ exports[`BackgroundImage Styling and customization should apply custom className
   accessibilityIgnoresInvertColors={true}
 >
   <Image
-    className="w-full h-64"
+    className="h-64 w-full"
     resizeMode="cover"
     source={
       {
