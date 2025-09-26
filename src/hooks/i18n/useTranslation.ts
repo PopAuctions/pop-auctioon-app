@@ -1,15 +1,16 @@
 import { useState, useTransition } from 'react';
 import i18n, { changeLocale, getCurrentLocale } from '../../i18n/index';
+import { Lang } from '@/types/types';
 
 export const useTranslation = () => {
-  const [locale, setLocale] = useState<'es' | 'en'>(getCurrentLocale() as 'es' | 'en');
+  const [locale, setLocale] = useState<Lang>(getCurrentLocale());
   const [isPending, startTransition] = useTransition();
 
   const t = (key: string, options?: any) => {
     return i18n.t(key, options);
   };
 
-  const changeLanguage = (newLocale: 'es' | 'en') => {
+  const changeLanguage = (newLocale: Lang) => {
     // Cambio inmediato del locale del i18n para que las traducciones estén disponibles
     changeLocale(newLocale);
 
@@ -21,7 +22,7 @@ export const useTranslation = () => {
 
   return {
     t,
-    locale: locale as 'es' | 'en',
+    locale,
     changeLanguage,
     isPending, // Exportamos isPending para mostrar loading states
   };

@@ -4,6 +4,7 @@ import { I18n } from 'i18n-js';
 // Import translation files
 import es from './locales/es.json';
 import en from './locales/en.json';
+import { Lang } from '@/types/types';
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
@@ -32,10 +33,10 @@ i18n.defaultLocale = 'es';
 export default i18n;
 
 // Helper function to get current locale
-export const getCurrentLocale = () => i18n.locale;
+export const getCurrentLocale = () => i18n.locale as Lang;
 
 // Helper function to change locale
-export const changeLocale = (locale: 'es' | 'en') => {
+export const changeLocale = (locale: Lang) => {
   i18n.locale = locale;
 };
 
