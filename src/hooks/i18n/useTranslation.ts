@@ -2,7 +2,7 @@ import { useState, useTransition } from 'react';
 import i18n, { changeLocale, getCurrentLocale } from '../../i18n/index';
 
 export const useTranslation = () => {
-  const [locale, setLocale] = useState(getCurrentLocale());
+  const [locale, setLocale] = useState<'es' | 'en'>(getCurrentLocale() as 'es' | 'en');
   const [isPending, startTransition] = useTransition();
 
   const t = (key: string, options?: any) => {
@@ -21,7 +21,7 @@ export const useTranslation = () => {
 
   return {
     t,
-    locale,
+    locale: locale as 'es' | 'en',
     changeLanguage,
     isPending, // Exportamos isPending para mostrar loading states
   };

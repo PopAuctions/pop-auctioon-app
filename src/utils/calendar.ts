@@ -52,6 +52,21 @@ export function getCurrentMonthName(locale: 'es' | 'en' = 'es'): string {
 }
 
 /**
+ * Obtiene el nombre del mes traducido para un número de mes específico
+ *
+ * @param monthNumber - Número del mes (1-12) como string o number
+ * @param locale - Idioma para la traducción ('es' | 'en')
+ * @returns Nombre del mes traducido
+ */
+export function getMonthName(
+  monthNumber: string | number,
+  locale: 'es' | 'en' = 'es'
+): string {
+  const monthKey = monthNumber.toString() as keyof typeof MONTHS;
+  return MONTHS[monthKey] ? MONTHS[monthKey][locale] : '';
+}
+
+/**
  * Verifica si una fecha está en el mes actual
  *
  * @param date - Fecha a verificar

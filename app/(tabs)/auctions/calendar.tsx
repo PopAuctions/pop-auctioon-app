@@ -8,12 +8,12 @@ import {
   Image,
 } from 'react-native';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
-import { getCalendarMonths } from '@/utils/calendar';
+import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   // Obtener meses directamente
   const calendarMonths = getCalendarMonths();
@@ -65,28 +65,29 @@ export default function CalendarScreen() {
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
-        <Text className='text-gray-800 mb-6 text-2xl font-bold'>
+        {/* <Text className='text-gray-900 mb-6 text-center text-3xl font-bold'>
           {t('screens.calendar.title')}
-        </Text>
+        </Text> */}
 
         {auctions?.this_month && auctions.this_month.length > 0 && (
           <View className='mb-8'>
-            <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              {t('screens.calendar.thisMonth')} {thisMonth.es}
+            <Text className='text-gray-900 mb-4 text-center text-2xl font-bold'>
+              {t('screens.calendar.thisMonth')}{' '}
+              {getMonthName(thisMonth.value, locale)}
             </Text>
-            <Text className='text-gray-600 mb-4 text-sm'>
+            <Text className='text-gray-600 mb-4 text-center text-sm'>
               {t('screens.calendar.subtitle')}
             </Text>
 
-            <View className='space-y-4'>
+            <View className='space-y-6'>
               {auctions.this_month.map((auction) => (
                 <TouchableOpacity
                   key={auction.id}
-                  className='border-gray-200 overflow-hidden rounded-xl border bg-white shadow-sm'
+                  className='overflow-hidden rounded-xl bg-white shadow-sm'
                 >
-                  <View className='min-h-[120px] flex-row p-4'>
+                  <View className='min-h-[180px] flex-row p-6'>
                     {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-4 h-24 w-24 overflow-hidden rounded-lg'>
+                    <View className='bg-gray-100 mr-6 h-40 w-36 overflow-hidden rounded-lg'>
                       {auction.image && auction.image.trim() !== '' ? (
                         <Image
                           source={{ uri: auction.image }}
@@ -95,40 +96,41 @@ export default function CalendarScreen() {
                         />
                       ) : (
                         <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                          <Text className='text-3xl'>🏺</Text>
+                          <Text className='text-4xl'>🏺</Text>
                         </View>
                       )}
                     </View>
 
                     {/* Grid de contenido a la derecha */}
-                    <View className='flex-1 justify-between py-1'>
+                    <View className='flex-1 justify-between py-2'>
+                      {/* Hora arriba */}
+                      <View className='self-end'>
+                        <Text className='text-gray-900 text-xl font-bold'>
+                          {formatTime(auction.startDate)}
+                        </Text>
+                      </View>
+
                       {/* Fecha en formato mes */}
                       <View>
                         <Text className='text-gray-700 text-sm font-medium uppercase tracking-wide'>
-                          {new Date(auction.startDate)
-                            .toLocaleDateString('en-US', { month: 'long' })
-                            .toUpperCase()}
+                          {getMonthName(
+                            new Date(auction.startDate).getMonth() + 1,
+                            locale
+                          ).toUpperCase()}
                         </Text>
-                        <Text className='text-gray-900 text-lg font-bold'>
+                        <Text className='text-gray-900 text-xl font-bold'>
                           {new Date(auction.startDate).getDate()},{' '}
                           {new Date(auction.startDate).getFullYear()}
                         </Text>
                       </View>
 
-                      {/* Título de la subasta */}
+                      {/* Título de la subasta más grande */}
                       <View>
                         <Text
-                          className='text-gray-900 text-base font-semibold'
+                          className='text-gray-900 text-lg font-bold'
                           numberOfLines={2}
                         >
                           {auction.title}
-                        </Text>
-                      </View>
-
-                      {/* Hora */}
-                      <View className='self-end'>
-                        <Text className='text-gray-900 text-lg font-bold'>
-                          {formatTime(auction.startDate)}
                         </Text>
                       </View>
                     </View>
@@ -141,22 +143,23 @@ export default function CalendarScreen() {
 
         {auctions?.next_month && auctions.next_month.length > 0 && (
           <View className='mb-8'>
-            <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              {t('screens.calendar.nextMonth')} {nextMonth.es}
+            <Text className='text-gray-900 mb-4 text-2xl font-bold'>
+              {t('screens.calendar.nextMonth')}{' '}
+              {getMonthName(nextMonth.value, locale)}
             </Text>
             <Text className='text-gray-600 mb-4 text-sm'>
               {t('screens.calendar.subtitle')}
             </Text>
 
-            <View className='space-y-4'>
+            <View className='space-y-6'>
               {auctions.next_month.map((auction) => (
                 <TouchableOpacity
                   key={auction.id}
-                  className='border-gray-200 overflow-hidden rounded-xl border bg-white shadow-sm'
+                  className='overflow-hidden rounded-xl bg-white shadow-sm'
                 >
-                  <View className='min-h-[120px] flex-row p-4'>
+                  <View className='min-h-[180px] flex-row p-6'>
                     {/* Imagen grande a la izquierda */}
-                    <View className='bg-gray-100 mr-4 h-24 w-24 overflow-hidden rounded-lg'>
+                    <View className='bg-gray-100 mr-6 h-40 w-36 overflow-hidden rounded-lg'>
                       {auction.image && auction.image.trim() !== '' ? (
                         <Image
                           source={{ uri: auction.image }}
@@ -165,40 +168,41 @@ export default function CalendarScreen() {
                         />
                       ) : (
                         <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                          <Text className='text-3xl'>🏺</Text>
+                          <Text className='text-4xl'>🏺</Text>
                         </View>
                       )}
                     </View>
 
                     {/* Grid de contenido a la derecha */}
-                    <View className='flex-1 justify-between py-1'>
+                    <View className='flex-1 justify-between py-2'>
+                      {/* Hora arriba */}
+                      <View className='self-end'>
+                        <Text className='text-gray-900 text-xl font-bold'>
+                          {formatTime(auction.startDate)}
+                        </Text>
+                      </View>
+
                       {/* Fecha en formato mes */}
                       <View>
                         <Text className='text-gray-700 text-sm font-medium uppercase tracking-wide'>
-                          {new Date(auction.startDate)
-                            .toLocaleDateString('en-US', { month: 'long' })
-                            .toUpperCase()}
+                          {getMonthName(
+                            new Date(auction.startDate).getMonth() + 1,
+                            locale
+                          ).toUpperCase()}
                         </Text>
-                        <Text className='text-gray-900 text-lg font-bold'>
+                        <Text className='text-gray-900 text-xl font-bold'>
                           {new Date(auction.startDate).getDate()},{' '}
                           {new Date(auction.startDate).getFullYear()}
                         </Text>
                       </View>
 
-                      {/* Título de la subasta */}
+                      {/* Título de la subasta más grande */}
                       <View>
                         <Text
-                          className='text-gray-900 text-base font-semibold'
+                          className='text-gray-900 text-lg font-bold'
                           numberOfLines={2}
                         >
                           {auction.title}
-                        </Text>
-                      </View>
-
-                      {/* Hora */}
-                      <View className='self-end'>
-                        <Text className='text-gray-900 text-lg font-bold'>
-                          {formatTime(auction.startDate)}
                         </Text>
                       </View>
                     </View>
@@ -213,10 +217,11 @@ export default function CalendarScreen() {
         {auctions?.this_month && auctions.this_month.length === 0 && (
           <View className='mb-8'>
             <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              Auctions in {thisMonth.es}
+              {t('screens.calendar.auctionsIn')}{' '}
+              {getMonthName(thisMonth.value, locale)}
             </Text>
             <Text className='py-8 text-center text-lg text-cinnabar'>
-              No auctions found
+              {t('screens.calendar.noAuctionsFound')}
             </Text>
           </View>
         )}
@@ -224,10 +229,11 @@ export default function CalendarScreen() {
         {auctions?.next_month && auctions.next_month.length === 0 && (
           <View className='mb-8'>
             <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              Auctions in {nextMonth.es}
+              {t('screens.calendar.auctionsIn')}{' '}
+              {getMonthName(nextMonth.value, locale)}
             </Text>
             <Text className='py-8 text-center text-lg text-cinnabar'>
-              No auctions found
+              {t('screens.calendar.noAuctionsFound')}
             </Text>
           </View>
         )}
@@ -236,10 +242,10 @@ export default function CalendarScreen() {
         {!auctions?.this_month && !auctions?.next_month && (
           <View className='items-center py-8'>
             <Text className='mb-2 text-lg font-semibold text-cinnabar'>
-              No auctions found
+              {t('screens.calendar.noAuctionsFound')}
             </Text>
             <Text className='text-gray-600 text-center'>
-              Check back later for upcoming auctions
+              {t('screens.calendar.checkBackLater')}
             </Text>
           </View>
         )}
