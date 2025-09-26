@@ -133,11 +133,15 @@ export const CustomLink = forwardRef<
         style={style}
         onPress={handlePress}
       >
-        <Text
-          className={`text-center text-base font-normal ${mode === 'plainText' ? 'underline' : ''}`}
-        >
-          {children}
-        </Text>
+        {mode === 'empty' ? (
+          children
+        ) : (
+          <Text
+            className={`text-center text-base font-normal ${mode === 'plainText' ? 'underline' : ''}`}
+          >
+            {children}
+          </Text>
+        )}
       </TouchableOpacity>
     );
   }

@@ -10,6 +10,7 @@ import {
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
@@ -82,64 +83,67 @@ export default function CalendarScreen() {
             {auctions.this_month.length > 0 ? (
               <View className='space-y-6'>
                 {auctions.this_month.map((auction) => (
-                  <TouchableOpacity
+                  <CustomLink
                     key={auction.id}
-                    className='overflow-hidden rounded-xl bg-white shadow-sm'
+                    href={`/(tabs)/auctions/${auction.id}`}
+                    mode='empty'
                   >
-                    <View className='min-h-[220px] flex-row py-6 '>
-                      {/* Imagen grande a la izquierda */}
-                      <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
-                        {auction.image && auction.image.trim() !== '' ? (
-                          <Image
-                            source={{ uri: auction.image }}
-                            className='h-full w-full'
-                            resizeMode='cover'
-                          />
-                        ) : (
-                          <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                            <Text className='text-4xl'>🏺</Text>
-                          </View>
-                        )}
-                      </View>
+                    <View className='overflow-hidden rounded-xl bg-white shadow-sm'>
+                      <View className='min-h-[220px] flex-row py-6 '>
+                        {/* Imagen grande a la izquierda */}
+                        <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
+                          {auction.image && auction.image.trim() !== '' ? (
+                            <Image
+                              source={{ uri: auction.image }}
+                              className='h-full w-full'
+                              resizeMode='cover'
+                            />
+                          ) : (
+                            <View className='bg-gray-200 h-full w-full items-center justify-center'>
+                              <Text className='text-4xl'>🏺</Text>
+                            </View>
+                          )}
+                        </View>
 
-                      {/* Grid de contenido a la derecha */}
-                      <View className='flex-1 py-2'>
-                        {/* Layout principal: Fecha y Hora */}
-                        <View className='flex-row items-start justify-between'>
-                          {/* Columna izquierda: Fecha y Título */}
-                          <View className='mr-4 flex-1'>
-                            {/* Fecha */}
-                            <View className='mb-2'>
-                              <Text className='font-poppins text-xl uppercase tracking-wide'>
-                                {getMonthName(
-                                  new Date(auction.startDate).getMonth() + 1,
-                                  locale
-                                ).toUpperCase()}
-                              </Text>
-                              <Text className='font-poppins text-xl '>
-                                {new Date(auction.startDate).getDate()},{' '}
-                                {new Date(auction.startDate).getFullYear()}
-                              </Text>
+                        {/* Grid de contenido a la derecha */}
+                        <View className='flex-1 py-2'>
+                          {/* Layout principal: Fecha y Hora */}
+                          <View className='flex-row items-start justify-between'>
+                            {/* Columna izquierda: Fecha y Título */}
+                            <View className='mr-4 flex-1'>
+                              {/* Fecha */}
+                              <View className='mb-2'>
+                                <Text className='font-poppins text-xl uppercase tracking-wide'>
+                                  {getMonthName(
+                                    new Date(auction.startDate).getMonth() + 1,
+                                    locale
+                                  ).toUpperCase()}
+                                </Text>
+                                <Text className='font-poppins text-xl '>
+                                  {new Date(auction.startDate).getDate()},{' '}
+                                  {new Date(auction.startDate).getFullYear()}
+                                </Text>
+                              </View>
+
+                              {/* Título justo debajo de la fecha */}
+                              <View>
+                                <Text className='font-rubik text-2xl '>
+                                  {auction.title.toUpperCase()}
+                                </Text>
+                              </View>
                             </View>
 
-                            {/* Título justo debajo de la fecha */}
+                            {/* Hora - derecha */}
                             <View>
-                              <Text className='font-rubik text-2xl '>
-                                {auction.title.toUpperCase()}
+                              <Text className='text-2xl '>
+                                {formatTime(auction.startDate)}
                               </Text>
                             </View>
-                          </View>
-
-                          {/* Hora - derecha */}
-                          <View>
-                            <Text className='text-2xl '>
-                              {formatTime(auction.startDate)}
-                            </Text>
                           </View>
                         </View>
                       </View>
                     </View>
-                  </TouchableOpacity>
+                  </CustomLink>
                 ))}
               </View>
             ) : (
@@ -170,64 +174,67 @@ export default function CalendarScreen() {
             {auctions.next_month.length > 0 ? (
               <View className='space-y-6'>
                 {auctions.next_month.map((auction) => (
-                  <TouchableOpacity
+                  <CustomLink
                     key={auction.id}
-                    className='overflow-hidden rounded-xl bg-white shadow-sm'
+                    href={`/(tabs)/auctions/${auction.id}`}
+                    mode='empty'
                   >
-                    <View className='min-h-[220px] flex-row py-6 '>
-                      {/* Imagen grande a la izquierda */}
-                      <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
-                        {auction.image && auction.image.trim() !== '' ? (
-                          <Image
-                            source={{ uri: auction.image }}
-                            className='h-full w-full'
-                            resizeMode='cover'
-                          />
-                        ) : (
-                          <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                            <Text className='text-4xl'>🏺</Text>
-                          </View>
-                        )}
-                      </View>
+                    <View className='overflow-hidden rounded-xl bg-white shadow-sm'>
+                      <View className='min-h-[220px] flex-row py-6 '>
+                        {/* Imagen grande a la izquierda */}
+                        <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
+                          {auction.image && auction.image.trim() !== '' ? (
+                            <Image
+                              source={{ uri: auction.image }}
+                              className='h-full w-full'
+                              resizeMode='cover'
+                            />
+                          ) : (
+                            <View className='bg-gray-200 h-full w-full items-center justify-center'>
+                              <Text className='text-4xl'>🏺</Text>
+                            </View>
+                          )}
+                        </View>
 
-                      {/* Grid de contenido a la derecha */}
-                      <View className='flex-1 py-2'>
-                        {/* Layout principal: Fecha y Hora */}
-                        <View className='flex-row items-start justify-between'>
-                          {/* Columna izquierda: Fecha y Título */}
-                          <View className='mr-4 flex-1'>
-                            {/* Fecha */}
-                            <View className='mb-2'>
-                              <Text className='font-poppins text-xl uppercase tracking-wide'>
-                                {getMonthName(
-                                  new Date(auction.startDate).getMonth() + 1,
-                                  locale
-                                ).toUpperCase()}
-                              </Text>
-                              <Text className='font-poppins text-xl '>
-                                {new Date(auction.startDate).getDate()},{' '}
-                                {new Date(auction.startDate).getFullYear()}
-                              </Text>
+                        {/* Grid de contenido a la derecha */}
+                        <View className='flex-1 py-2'>
+                          {/* Layout principal: Fecha y Hora */}
+                          <View className='flex-row items-start justify-between'>
+                            {/* Columna izquierda: Fecha y Título */}
+                            <View className='mr-4 flex-1'>
+                              {/* Fecha */}
+                              <View className='mb-2'>
+                                <Text className='font-poppins text-xl uppercase tracking-wide'>
+                                  {getMonthName(
+                                    new Date(auction.startDate).getMonth() + 1,
+                                    locale
+                                  ).toUpperCase()}
+                                </Text>
+                                <Text className='font-poppins text-xl '>
+                                  {new Date(auction.startDate).getDate()},{' '}
+                                  {new Date(auction.startDate).getFullYear()}
+                                </Text>
+                              </View>
+
+                              {/* Título justo debajo de la fecha */}
+                              <View>
+                                <Text className='font-rubik text-2xl '>
+                                  {auction.title.toUpperCase()}
+                                </Text>
+                              </View>
                             </View>
 
-                            {/* Título justo debajo de la fecha */}
+                            {/* Hora - derecha */}
                             <View>
-                              <Text className='font-rubik text-2xl '>
-                                {auction.title.toUpperCase()}
+                              <Text className='text-2xl'>
+                                {formatTime(auction.startDate)}
                               </Text>
                             </View>
-                          </View>
-
-                          {/* Hora - derecha */}
-                          <View>
-                            <Text className='text-2xl'>
-                              {formatTime(auction.startDate)}
-                            </Text>
                           </View>
                         </View>
                       </View>
                     </View>
-                  </TouchableOpacity>
+                  </CustomLink>
                 ))}
               </View>
             ) : (
