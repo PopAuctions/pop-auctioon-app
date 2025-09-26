@@ -22,7 +22,7 @@ export function getCalendarMonths(): Map<string, MonthEntry> {
   const months = new Map<string, MonthEntry>();
 
   // Insert '0' for 'Today'
-  months.set('0', { es: 'Hoy', en: 'Today', value: '0' });
+  months.set('0', { es: 'Hoy', en: 'Today', value: 0 });
 
   // Iterate through the months in the order they should appear
   threeNextMonthsFromToday.forEach((month) => {

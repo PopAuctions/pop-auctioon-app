@@ -19,7 +19,7 @@ module.exports = {
   coverageProvider: 'v8',
   coveragePathIgnorePatterns: [
     '/node_modules/',
-    'src/constants/index.ts' // Excluir barrel export que causa problemas de branch coverage
+    'src/constants/index.ts', // Excluir barrel export que causa problemas de branch coverage
   ],
   coverageThreshold: {
     global: {
