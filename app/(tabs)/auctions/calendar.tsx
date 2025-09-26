@@ -146,7 +146,7 @@ export default function CalendarScreen() {
                 ))}
               </View>
             ) : (
-              <Text className='py-8 text-center text-lg text-cinnabar'>
+              <Text className='py-4 text-center font-rubik text-4xl text-cinnabar'>
                 {t('screens.calendar.noAuctionsFound')}
               </Text>
             )}
@@ -237,7 +237,7 @@ export default function CalendarScreen() {
                 ))}
               </View>
             ) : (
-              <Text className='py-8 text-center text-lg text-cinnabar'>
+              <Text className='py-4 text-center font-rubik text-4xl text-cinnabar'>
                 {t('screens.calendar.noAuctionsFound')}
               </Text>
             )}
