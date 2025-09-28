@@ -227,6 +227,9 @@ export type LangMap = Record<Lang, string>;
 export interface ActionResponse<TData = unknown> {
   data: TData;
   status: RequestStatus;
+  refetch?: () => RefetchReturn;
+  errorMessage: LangMap | null;
+  setErrorMessage: React.Dispatch<React.SetStateAction<LangMap | null>>;
 }
 
 export type RefetchReturn = Promise<{ message?: LangMap } | void>;

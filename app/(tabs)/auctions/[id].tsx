@@ -16,7 +16,11 @@ import { CustomLink } from '@/components/ui/CustomLink';
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: liveAuction, status } = useGetLiveAuction({
+  const {
+    data: liveAuction,
+    status,
+    errorMessage,
+  } = useGetLiveAuction({
     auctionId: id,
   });
   const auctionLang = t('screens.auction');
@@ -32,7 +36,7 @@ export default function AuctionDetailScreen() {
   if (status === REQUEST_STATUS.error || !liveAuction) {
     return (
       <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>ERROR</CustomText>
+        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
       </View>
     );
   }

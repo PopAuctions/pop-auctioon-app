@@ -2,8 +2,8 @@ import { AuctionStatus } from '@/constants/auctions';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
   ActionResponse,
+  LangMap,
   LiveAuction,
-  RefetchReturn,
   RequestStatus,
 } from '@/types/types';
 import { supabase } from '@/utils/supabase/supabase-store';
@@ -15,11 +15,10 @@ export const useGetLiveAuction = ({
 }: {
   auctionId: string;
   validateIsLive?: boolean;
-}): ActionResponse<LiveAuction | null> & {
-  refetch: () => RefetchReturn;
-} => {
+}): ActionResponse<LiveAuction | null> => {
   const [auction, setAuction] = useState<LiveAuction | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
 
   const fetchLiveAuction = useCallback(async () => {
     try {
@@ -31,11 +30,15 @@ export const useGetLiveAuction = ({
         .eq('auctionId', auctionId);
 
       if (error) {
-        setStatus('error');
         const errorMessage = error?.message || 'Unknown error occurred';
 
         sentryErrorReport(errorMessage, '1_USE_GET_LIVE_AUCTION');
 
+        setStatus('error');
+        setErrorMessage({
+          en: 'Error fetching auction',
+          es: 'Error al obtener la subasta',
+        });
         return {
           message: {
             en: 'Error fetching auction',
@@ -46,6 +49,10 @@ export const useGetLiveAuction = ({
 
       if (!data || data.length === 0) {
         setStatus('error');
+        setErrorMessage({
+          en: 'Auction not found',
+          es: 'Subasta no encontrada',
+        });
         return {
           message: {
             en: 'Auction not found',
@@ -61,6 +68,10 @@ export const useGetLiveAuction = ({
       if (validateIsLive) {
         if (auctionStatus === AuctionStatus.FINISHED) {
           setStatus('error');
+          setErrorMessage({
+            en: 'The auction has ended',
+            es: 'La subasta ha finalizado',
+          });
           return {
             message: {
               en: 'The auction has ended',
@@ -71,6 +82,10 @@ export const useGetLiveAuction = ({
 
         if (auctionStatus === AuctionStatus.AVAILABLE) {
           setStatus('error');
+          setErrorMessage({
+            en: 'The auction has not started yet',
+            es: 'La subasta no ha comenzado aún',
+          });
           return {
             message: {
               en: 'The auction has not started yet',
@@ -115,6 +130,7 @@ export const useGetLiveAuction = ({
   return {
     data: auction as LiveAuction | null,
     status,
-    refetch: fetchLiveAuction,
+    errorMessage,
+    setErrorMessage,
   };
 };
