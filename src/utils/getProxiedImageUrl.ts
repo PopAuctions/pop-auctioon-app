@@ -1,4 +1,7 @@
-export function getProxiedImageUrl(imageUrl: string): string {
+export function getProxiedImageUrl(
+  imageUrl: string,
+  plainUrl?: boolean
+): string {
   // Supabase base path you want to strip
   const basePath = '/storage/v1/object/public/develop/images/';
 
@@ -8,5 +11,7 @@ export function getProxiedImageUrl(imageUrl: string): string {
 
   const filename = imageUrl.slice(index + basePath.length);
 
-  return `${process.env.EXPO_PUBLIC_BASE_URL}/images/${filename}`;
+  return plainUrl
+    ? imageUrl
+    : `${process.env.EXPO_PUBLIC_BASE_URL}/images/${filename}`;
 }
