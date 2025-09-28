@@ -3,7 +3,8 @@ import * as Linking from 'expo-linking';
 import { useAuth } from '@/context/auth-context';
 
 export function DeepLinkListener() {
-  const { session, status } = useAuth();
+  const { auth } = useAuth();
+  const status = auth.state;
 
   useEffect(() => {
     const handleDeepLink = (event: { url: string }) => {
@@ -13,18 +14,11 @@ export function DeepLinkListener() {
 
       console.log('🔗 Deep link received:', url);
 
-      if (
-        url.includes('/account') &&
-        (!session || status !== 'authenticated')
-      ) {
+      if (url.includes('/account') && status !== 'authenticated') {
         console.log(
           '🔒 Deep link a cuenta sin auth, ProtectedRoute redirigirá a login'
         );
-      } else if (
-        url.includes('/auth') &&
-        session &&
-        status === 'authenticated'
-      ) {
+      } else if (url.includes('/auth') && status === 'authenticated') {
         console.log(
           '✅ Deep link a auth con sesión, ProtectedRoute redirigirá a home'
         );
@@ -38,7 +32,7 @@ export function DeepLinkListener() {
     });
 
     return () => subscription.remove();
-  }, [session, status]);
+  }, [status]);
 
   return null;
 }

@@ -8,7 +8,8 @@ import { CustomLink } from '@/components/ui/CustomLink';
 export default function HomeScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { session } = useAuth();
+  const { getSession } = useAuth();
+  const [session] = getSession();
 
   return (
     <ScrollView

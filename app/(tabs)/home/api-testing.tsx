@@ -23,7 +23,8 @@ interface TestResult {
 
 export default function ApiTestingScreen() {
   const insets = useSafeAreaInsets();
-  const { session } = useAuth();
+  const { getSession } = useAuth();
+  const [session] = getSession();
   const {
     protectedGet,
     protectedPost,
