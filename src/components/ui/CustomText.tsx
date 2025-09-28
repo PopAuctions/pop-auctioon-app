@@ -1,0 +1,44 @@
+import { Text, type TextProps as RNTextProps } from 'react-native';
+import { cn } from '@/utils/cn';
+import { type ReactNode } from 'react';
+
+type TextType =
+  | 'h1'
+  | 'subtitle'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'body'
+  | 'bloquote'
+  | 'bodysmall'
+  | 'bold';
+
+interface TextProps extends RNTextProps {
+  type: TextType;
+  className?: string;
+  children: ReactNode;
+}
+
+const TEXT_TYPE_STYLES: Record<TextType, string> = {
+  h1: 'font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px]',
+  subtitle: 'font-poppins text-base uppercase leading-[26px] tracking-[1px]',
+  h2: 'font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:font-poppins md:text-[40px] md:leading-[62px]',
+  h3: 'font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px]',
+  h4: 'font-rubik text-[22px] leading-[28px] md:font-poppins md:leading-[32px]',
+  body: 'font-rubik text-base leading-[24px] tracking-[0.1px] md:font-poppins md:leading-[27px]',
+  bloquote: 'font-rubik text-[22px] italic leading-[32px] md:font-poppins',
+  bold: 'font-rubik font-bold text-[24px] leading-[30px] md:font-poppins md:leading-[34px]',
+  bodysmall:
+    'font-rubik text-base leading-[24px] tracking-[0.1px] md:font-poppins md:text-sm md:leading-[21px]',
+};
+
+export function CustomText({ type, className, children, ...props }: TextProps) {
+  return (
+    <Text
+      className={cn(TEXT_TYPE_STYLES[type], 'text-black', className)}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+}

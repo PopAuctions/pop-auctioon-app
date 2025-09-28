@@ -65,6 +65,23 @@
         }
       }
     },
+    "auction": {
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "share": "Share",
+      "currentBid": "Current Bid",
+      "estimatedPrice": "Estimated Price",
+      "waiting1": "Auction will start soon!",
+      "waiting2": "Wait a few minutes",
+      "start": "Auction already started!",
+      "finished": "Auction finished",
+      "watchButton": "Watch live",
+      "ended": "Auction finished",
+      "timeStart": "Time to start:",
+      "auctionNotFound": "Auction not found or not longer available",
+      "noArticlesFound": "No articles found",
+      "specialMessage": "For this auction, no commission will be charged for any of the articles"
+    },
     "store": {
       "title": "Online Store",
       "subtitle": "Shop exclusive products",

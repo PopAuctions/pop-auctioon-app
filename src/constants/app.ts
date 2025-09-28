@@ -3,6 +3,8 @@
  * Incluye regex, límites, duraciones y configuraciones básicas
  */
 
+import { RequestStatus } from '@/types/types';
+
 export const LOCALE_PATTERN = /\/(?:es|en)/g;
 
 export const VALID_URL_REGEX =
@@ -49,3 +51,10 @@ export const ARTICLE_PRICE_FILTER_LIST = [
   { value: '1000-2000', label: '1000€ - 2000€' },
   { value: '>2000', label: '> 2000€' },
 ];
+
+export const REQUEST_STATUS: Record<RequestStatus, string> = {
+  idle: 'idle',
+  loading: 'loading',
+  success: 'success',
+  error: 'error',
+};
