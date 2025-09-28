@@ -5,12 +5,20 @@ import { Lang } from '@/types/types';
 // Import translation files
 import es from './locales/es.json';
 import en from './locales/en.json';
+import { Path, PathValue } from '@/types/i18n';
+
+type Translations = {
+  es: typeof es;
+  en: typeof en;
+};
+
+export type Dictionary = Translations['es'];
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
   es,
   en,
-};
+} as const satisfies Translations;
 
 // Create the i18n instance
 const i18n = new I18n(translations);
@@ -42,3 +50,10 @@ export const changeLocale = (locale: Lang) => {
 
 // Helper function to get available locales
 export const getAvailableLocales = (): Lang[] => ['es', 'en'];
+
+export function t<K extends Path<Dictionary>>(
+  key: K,
+  options?: any
+): PathValue<Dictionary, K> {
+  return i18n.t(key as string, options) as PathValue<Dictionary, K>;
+}

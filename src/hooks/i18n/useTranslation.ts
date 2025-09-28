@@ -1,14 +1,12 @@
 import { useState, useTransition } from 'react';
-import i18n, { changeLocale, getCurrentLocale } from '../../i18n/index';
+import { changeLocale, getCurrentLocale, t as translate } from '@/i18n';
 import { Lang } from '@/types/types';
 
 export const useTranslation = () => {
   const [locale, setLocale] = useState<Lang>(getCurrentLocale());
   const [isPending, startTransition] = useTransition();
 
-  const t = (key: string, options?: any) => {
-    return i18n.t(key, options);
-  };
+  const t = translate;
 
   const changeLanguage = (newLocale: 'es' | 'en') => {
     // Cambio inmediato del locale del i18n para que las traducciones estén disponibles
