@@ -38,6 +38,7 @@ export default function AuctionsLayout() {
         options={{
           title: t('screens.auctions.detail'),
           presentation: 'card',
+          headerShown: true,
         }}
       />
       <Stack.Screen
