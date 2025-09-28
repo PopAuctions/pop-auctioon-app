@@ -65,6 +65,23 @@
         }
       }
     },
+    "auction": {
+      "follow": "Seguir",
+      "unfollow": "Dejar de seguir",
+      "share": "Compartir",
+      "currentBid": "Puja Actual",
+      "estimatedPrice": "Precio Estimado",
+      "waiting1": "¡La subasta comenzará pronto!",
+      "waiting2": "Espera unos minutos",
+      "start": "La subasta ya empezo!",
+      "finished": "Subasta finalizada",
+      "watchButton": "Ver en vivo",
+      "ended": "Subasta finalizada",
+      "timeStart": "Tiempo para empezar:",
+      "auctionNotFound": "Subasta no encontrada o ya no se encuentra disponible",
+      "noArticlesFound": "No se encontraron artículos",
+      "specialMessage": "Para esta subasta, no se pagará comisión para ninguno de los artículos"
+    },
     "store": {
       "title": "Tienda Online",
       "subtitle": "Compra productos exclusivos",
