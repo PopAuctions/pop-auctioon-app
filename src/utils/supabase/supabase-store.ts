@@ -41,12 +41,22 @@ class LargeSecureStore {
   }
 
   async getItem(key: string) {
-    const encrypted = await AsyncStorage.getItem(key);
-    if (!encrypted) {
-      return encrypted;
+    try {
+      const encrypted = await AsyncStorage.getItem(key);
+      if (!encrypted) return null;
+      const value = await this._decrypt(key, encrypted);
+      // guard against empty/invalid
+      if (value == null || value === '') {
+        await this.removeItem(key);
+        return null;
+      }
+      return value;
+    } catch (e) {
+      console.log('Error in LargeSecureStore.getItem', e);
+      // if anything in SecureStore/AsyncStorage throws, nuke the item
+      await this.removeItem(key);
+      return null;
     }
-
-    return await this._decrypt(key, encrypted);
   }
 
   async removeItem(key: string) {
@@ -61,7 +71,7 @@ class LargeSecureStore {
   }
 }
 
-const supabaseUrl = 'https://xvohgpgzvxdwooerdnfb.supabase.co/';
+const supabaseUrl = 'https://xvohgpgzvxdwooerdnfb.supabase.co';
 const supabaseAnonKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2b2hncGd6dnhkd29vZXJkbmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4NDAwNzMsImV4cCI6MjA0NzQxNjA3M30.REN7rPMbhIJ3XlyNBfW4R04eWGAjL01udOCFtyAYx4w';
 

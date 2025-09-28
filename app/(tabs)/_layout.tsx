@@ -9,8 +9,9 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { session, role } = useAuth();
   const { t } = useTranslation();
+  const { getSession } = useAuth();
+  const [session, role] = getSession();
 
   return (
     <Tabs
