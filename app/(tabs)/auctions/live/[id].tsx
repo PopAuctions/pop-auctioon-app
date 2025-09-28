@@ -4,7 +4,8 @@ import { WebView } from 'react-native-webview';
 import { useAuth } from '@/context/auth-context';
 
 export default function LiveAuctionScreen() {
-  const { session } = useAuth();
+  const { getSession } = useAuth();
+  const [session] = getSession();
 
   // Por ahora usamos 'totisama' como fallback, pero idealmente vendría del session
   const username = session?.user?.user_metadata?.username || 'totisama';

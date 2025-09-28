@@ -7,7 +7,6 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
 import {
   configureReanimatedLogger,
@@ -22,15 +21,12 @@ import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
 import { useColorScheme } from '@/hooks/ui/useColorScheme';
 import SplashLottie from '@/components/loading/splash-lottie';
-import { supabase } from '@/utils/supabase/supabase-store';
-import { Session } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/react-native';
-import { getUserRole } from '@/lib/auth/get-user-role';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import ErrorLoading from '@/components/loading/error-loading';
-import { AuthContext } from '@/context/auth-context';
-import { UserRoles } from '@/types/types';
+import { AuthProvider } from '@/context/auth-context';
 import { ProtectedRoute } from '@/components/navigation/ProtectedRoute';
+import { DeepLinkListener } from '@/components/navigation/DeepLinkListener';
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -72,81 +68,8 @@ export default Sentry.wrap(function RootLayout() {
     ...FontAwesome.font,
   });
 
-  const [session, setSession] = useState<Session | null>(null);
-  const [role, setRole] = useState<UserRoles | null>(null);
   const [showSplash, setShowSplash] = useState(true);
   const [fontError, setFontError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(async ({ data, error }) => {
-      if (error) {
-        sentryErrorReport(error, '[RootLayout] Error getting session');
-        return;
-      }
-      setSession(data.session);
-      if (!data.session?.user) {
-        setRole(null);
-        return;
-      }
-      const userRole = await getUserRole({ id: data.session.user.id });
-      setRole(userRole.role);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        if (!session?.user) {
-          setRole(null);
-          return;
-        }
-        const userRole = await getUserRole({ id: session.user.id });
-        setRole(userRole.role ?? null);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
-
-  // Deep linking handler
-  useEffect(() => {
-    const handleDeepLink = (event: { url: string }) => {
-      const url = event.url;
-      // Ignorar URLs de desarrollo
-      if (url.includes('expo-development-client')) {
-        return;
-      }
-      console.log('🔗 Deep link received:', url);
-
-      // Parsear URL y manejar navegación basada en auth
-      if (url.includes('/account') && !session) {
-        console.log(
-          '🔒 Deep link to protected route without auth, redirecting to login'
-        );
-        // No redirigir aquí, dejamos que ProtectedRoute lo maneje
-      } else if (url.includes('/auth') && session) {
-        console.log(
-          '✅ Deep link to auth with existing session, redirecting to home'
-        );
-        // No redirigir aquí, dejamos que ProtectedRoute lo maneje
-      }
-    };
-
-    // Escuchar eventos de deep linking
-    const subscription = Linking.addEventListener('url', handleDeepLink);
-
-    // Manejar URL inicial (cuando la app se abre desde un link)
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleDeepLink({ url });
-      }
-    });
-
-    return () => {
-      subscription?.remove();
-    };
-  }, [session]);
 
   useEffect(() => {
     if (error) {
@@ -174,11 +97,12 @@ export default Sentry.wrap(function RootLayout() {
   }
 
   return (
-    <AuthContext.Provider value={{ session, role }}>
+    <AuthProvider>
+      <DeepLinkListener />
       <ProtectedRoute>
         <RootLayoutNav />
       </ProtectedRoute>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 });
 

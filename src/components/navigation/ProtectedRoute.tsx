@@ -8,20 +8,19 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { session, role } = useAuth();
+  const { auth } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    // Verificar si estamos en el grupo de autenticación
     const inAuthGroup = segments[0] === '(tabs)' && segments[1] === 'auth';
+    const currentRoute = segments[1] ?? '';
+    const routeConfig = PROTECTED_ROUTES[currentRoute];
 
-    const currentRoute = segments[1];
-    const routeConfig = PROTECTED_ROUTES[currentRoute || ''];
+    if (auth.state === 'loading') return;
 
     if (routeConfig) {
-      // Verificar autenticación
-      if (!session) {
+      if (auth.state !== 'authenticated') {
         console.log(
           '🔒 Redirecting to auth - No session found for protected route:',
           currentRoute
@@ -30,24 +29,33 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         return;
       }
 
-      // Verificar rol específico si es requerido
-      if (routeConfig.requiresRole && role !== routeConfig.requiresRole) {
+      // role gating (wait until role is resolved if required)
+      if (routeConfig.requiresRole && auth.role == null) {
         console.log(
-          `🚫 Access denied - Role ${role} insufficient for route ${currentRoute} (requires ${routeConfig.requiresRole})`
+          '⏳ Waiting for role before granting access to:',
+          currentRoute
+        );
+        return;
+      }
+
+      if (routeConfig.requiresRole && auth.role !== routeConfig.requiresRole) {
+        console.log(
+          `🚫 Access denied - Role ${auth.role} insufficient for route ${currentRoute} (requires ${routeConfig.requiresRole})`
         );
         router.replace('/(tabs)/home');
         return;
       }
 
-      console.log(`✅ Access granted to ${currentRoute} for ${role} user`);
+      console.log(
+        `✅ Access granted to ${currentRoute} for role=${auth.role ?? 'none'}`
+      );
     }
 
-    // Si ya está loggeado y está en auth, redirigir a home
-    if (session && inAuthGroup) {
+    if (auth.state === 'authenticated' && inAuthGroup) {
       console.log('✅ Redirecting to home - Already authenticated');
       router.replace('/(tabs)/home');
     }
-  }, [session, role, segments, router]);
+  }, [auth, segments, router]);
 
   return <>{children}</>;
 };
