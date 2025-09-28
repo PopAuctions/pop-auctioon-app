@@ -36,7 +36,7 @@ export default function HomeScreen() {
           <CustomLink
             href='/home/api-testing'
             mode='empty'
-            className='rounded-lg bg-blue-500 p-4 shadow-lg'
+            className='rounded-lg bg-blue-500 p-4'
           >
             <Text className='text-center text-lg font-semibold text-white'>
               🧪 API Testing Lab

@@ -22,7 +22,7 @@ export function getCalendarMonths(): Map<string, MonthEntry> {
   const months = new Map<string, MonthEntry>();
 
   // Insert '0' for 'Today'
-  months.set('0', { es: 'Hoy', en: 'Today', value: '0' });
+  months.set('0', { es: 'Hoy', en: 'Today', value: 0 });
 
   // Iterate through the months in the order they should appear
   threeNextMonthsFromToday.forEach((month) => {
@@ -49,6 +49,21 @@ export function getCurrentMonthName(locale: 'es' | 'en' = 'es'): string {
 
   const monthData = MONTHS[currentMonth as keyof typeof MONTHS];
   return monthData ? monthData[locale] : '';
+}
+
+/**
+ * Obtiene el nombre del mes traducido para un número de mes específico
+ *
+ * @param monthNumber - Número del mes (1-12) como string o number
+ * @param locale - Idioma para la traducción ('es' | 'en')
+ * @returns Nombre del mes traducido
+ */
+export function getMonthName(
+  monthNumber: string | number,
+  locale: 'es' | 'en' = 'es'
+): string {
+  const monthKey = monthNumber.toString() as keyof typeof MONTHS;
+  return MONTHS[monthKey] ? MONTHS[monthKey][locale] : '';
 }
 
 /**

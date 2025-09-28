@@ -5,15 +5,16 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import { CustomLink } from '@/components/ui/CustomLink';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
-import { formatCalendarDate, getCalendarMonths } from '@/utils/calendar';
+import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   // Obtener meses directamente
   const calendarMonths = getCalendarMonths();
@@ -53,150 +54,193 @@ export default function CalendarScreen() {
     );
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return formatCalendarDate(date, 'es-ES');
-  };
-
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('es-ES', {
-      hour: '2-digit',
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
       minute: '2-digit',
+      hour12: true,
     });
   };
 
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
-        <Text className='text-gray-800 mb-6 text-2xl font-bold'>
-          {t('screens.calendar.title')}
-        </Text>
 
-        {auctions?.this_month && auctions.this_month.length > 0 && (
+        {auctions?.this_month && (
           <View className='mb-8'>
-            <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              {t('screens.calendar.thisMonth')} {thisMonth.es}
+            <Text className='text-center font-rubik text-4xl'>
+              {t('screens.calendar.thisMonth')}{' '}
+              {getMonthName(thisMonth.value, locale)}
             </Text>
-            <Text className='text-gray-600 mb-4 text-sm'>
-              {t('screens.calendar.subtitle')}
+            <Text className='mb-4 text-center font-poppins text-xl'>
+              {t('screens.calendar.subtitle').toUpperCase()}
             </Text>
 
-            <View className='space-y-4'>
-              {auctions.this_month.map((auction) => (
-                <CustomLink
-                  key={auction.id}
-                  href={'/(tabs)/auctions/' + auction.id}
-                  mode='empty'
-                  className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
-                >
-                  <View className='flex-row'>
-                    <View className='bg-gray-100 mr-4 h-20 w-16 overflow-hidden rounded-lg'>
-                      {auction.image ? (
-                        <View className='flex-1 items-center justify-center'>
-                          <Text className='text-2xl'></Text>
+            {auctions.this_month.length > 0 ? (
+              <View className='space-y-6'>
+                {auctions.this_month.map((auction) => (
+                  <CustomLink
+                    key={auction.id}
+                    href={`/(tabs)/auctions/${auction.id}`}
+                    mode='empty'
+                  >
+                    <View className='overflow-hidden rounded-xl bg-white shadow-sm'>
+                      <View className='min-h-[220px] flex-row py-6 '>
+                        {/* Imagen grande a la izquierda */}
+                        <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
+                          {auction.image && auction.image.trim() !== '' ? (
+                            <Image
+                              source={{ uri: auction.image }}
+                              className='h-full w-full'
+                              resizeMode='cover'
+                            />
+                          ) : (
+                            <View className='bg-gray-200 h-full w-full items-center justify-center'>
+                              <Text className='text-4xl'>🏺</Text>
+                            </View>
+                          )}
                         </View>
-                      ) : (
-                        <View className='flex-1 items-center justify-center'>
-                          <Text className='text-gray-400 text-xs'>
-                            {t('screens.calendar.noImage')}
-                          </Text>
+
+                        {/* Grid de contenido a la derecha */}
+                        <View className='flex-1 py-2'>
+                          {/* Layout principal: Fecha y Hora */}
+                          <View className='flex-row items-start justify-between'>
+                            {/* Columna izquierda: Fecha y Título */}
+                            <View className='mr-4 flex-1'>
+                              {/* Fecha */}
+                              <View className='mb-2'>
+                                <Text className='font-poppins text-xl uppercase tracking-wide'>
+                                  {getMonthName(
+                                    new Date(auction.startDate).getMonth() + 1,
+                                    locale
+                                  ).toUpperCase()}
+                                </Text>
+                                <Text className='font-poppins text-xl '>
+                                  {new Date(auction.startDate).getDate()},{' '}
+                                  {new Date(auction.startDate).getFullYear()}
+                                </Text>
+                              </View>
+
+                              {/* Título justo debajo de la fecha */}
+                              <View>
+                                <Text className='font-rubik text-2xl '>
+                                  {auction.title.toUpperCase()}
+                                </Text>
+                              </View>
+                            </View>
+
+                            {/* Hora - derecha */}
+                            <View>
+                              <Text className='text-2xl '>
+                                {formatTime(auction.startDate)}
+                              </Text>
+                            </View>
+                          </View>
                         </View>
-                      )}
+                      </View>
                     </View>
-
-                    <View className='flex-1'>
-                      <Text className='text-gray-800 mb-1 text-lg font-semibold'>
-                        {auction.title}
-                      </Text>
-                      <Text className='font-medium text-blue-600'>
-                        {formatDate(auction.startDate)}
-                      </Text>
-                      <Text className='font-medium text-blue-600'>
-                        {formatTime(auction.startDate)}
-                      </Text>
-                    </View>
-
-                    <Text className='text-gray-400'></Text>
-                  </View>
-                </CustomLink>
-              ))}
-            </View>
+                  </CustomLink>
+                ))}
+              </View>
+            ) : (
+              <Text className='py-4 text-center font-rubik text-4xl text-cinnabar'>
+                {t('screens.calendar.noAuctionsFound')}
+              </Text>
+            )}
           </View>
         )}
 
-        {auctions?.next_month && auctions.next_month.length > 0 && (
-          <View className='mb-8'>
-            <Text className='text-gray-800 mb-4 text-xl font-bold'>
-              {t('screens.calendar.nextMonth')} {nextMonth.es}
-            </Text>
-            <Text className='text-gray-600 mb-4 text-sm'>
-              {t('screens.calendar.subtitle')}
-            </Text>
-
-            <View className='space-y-4'>
-              {auctions.next_month.map((auction) => (
-                <CustomLink
-                  key={auction.id}
-                  href={'/(tabs)/auctions/' + auction.id}
-                  mode='empty'
-                  className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
-                >
-                  <View className='flex-row'>
-                    <View className='bg-gray-100 mr-4 h-20 w-16 overflow-hidden rounded-lg'>
-                      {auction.image ? (
-                        <View className='flex-1 items-center justify-center'>
-                          <Text className='text-2xl'></Text>
-                        </View>
-                      ) : (
-                        <View className='flex-1 items-center justify-center'>
-                          <Text className='text-gray-400 text-xs'>
-                            {t('screens.calendar.noImage')}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-
-                    <View className='flex-1'>
-                      <Text className='text-gray-800 mb-1 text-lg font-semibold'>
-                        {auction.title}
-                      </Text>
-                      <Text className='font-medium text-blue-600'>
-                        {formatDate(auction.startDate)}
-                      </Text>
-                      <Text className='font-medium text-blue-600'>
-                        {formatTime(auction.startDate)}
-                      </Text>
-                    </View>
-
-                    <Text className='text-gray-400'></Text>
-                  </View>
-                </CustomLink>
-              ))}
-            </View>
+        {/* Línea divisoria entre meses - solo mostrar si hay al menos una sección */}
+        {(auctions?.this_month || auctions?.next_month) && (
+          <View className='mx-4 my-3'>
+            <View className='border-gray-200 w-full border-b' />
           </View>
         )}
 
-        {(!auctions?.this_month || auctions.this_month.length === 0) &&
-          (!auctions?.next_month || auctions.next_month.length === 0) && (
-            <View className='items-center py-8'>
-              <Text className='mb-2 text-lg font-semibold text-cinnabar'>
-                {t('screens.calendar.noAuctions')}
-              </Text>
-              <Text className='text-gray-600 text-center'>
-                {t('screens.calendar.noAuctionsSubtitle')}
-              </Text>
-            </View>
-          )}
+        {auctions?.next_month && (
+          <View className='mb-8'>
+            <Text className='text-center font-rubik text-4xl'>
+              {t('screens.calendar.nextMonth')}{' '}
+              {getMonthName(nextMonth.value, locale)}
+            </Text>
+            <Text className='mb-4 text-center font-poppins text-xl'>
+              {t('screens.calendar.subtitle').toUpperCase()}
+            </Text>
 
-        <View className='mt-4 rounded-lg bg-blue-50 p-4'>
-          <Text className='mb-2 font-semibold text-blue-800'>
-            {t('screens.calendar.tip')}
-          </Text>
-          <Text className='text-blue-700'>
-            {t('screens.calendar.tipMessage')}
-          </Text>
-        </View>
+            {auctions.next_month.length > 0 ? (
+              <View className='space-y-6'>
+                {auctions.next_month.map((auction) => (
+                  <CustomLink
+                    key={auction.id}
+                    href={`/(tabs)/auctions/${auction.id}`}
+                    mode='empty'
+                  >
+                    <View className='overflow-hidden rounded-xl bg-white shadow-sm'>
+                      <View className='min-h-[220px] flex-row py-6 '>
+                        {/* Imagen grande a la izquierda */}
+                        <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
+                          {auction.image && auction.image.trim() !== '' ? (
+                            <Image
+                              source={{ uri: auction.image }}
+                              className='h-full w-full'
+                              resizeMode='cover'
+                            />
+                          ) : (
+                            <View className='bg-gray-200 h-full w-full items-center justify-center'>
+                              <Text className='text-4xl'>🏺</Text>
+                            </View>
+                          )}
+                        </View>
+
+                        {/* Grid de contenido a la derecha */}
+                        <View className='flex-1 py-2'>
+                          {/* Layout principal: Fecha y Hora */}
+                          <View className='flex-row items-start justify-between'>
+                            {/* Columna izquierda: Fecha y Título */}
+                            <View className='mr-4 flex-1'>
+                              {/* Fecha */}
+                              <View className='mb-2'>
+                                <Text className='font-poppins text-xl uppercase tracking-wide'>
+                                  {getMonthName(
+                                    new Date(auction.startDate).getMonth() + 1,
+                                    locale
+                                  ).toUpperCase()}
+                                </Text>
+                                <Text className='font-poppins text-xl '>
+                                  {new Date(auction.startDate).getDate()},{' '}
+                                  {new Date(auction.startDate).getFullYear()}
+                                </Text>
+                              </View>
+
+                              {/* Título justo debajo de la fecha */}
+                              <View>
+                                <Text className='font-rubik text-2xl '>
+                                  {auction.title.toUpperCase()}
+                                </Text>
+                              </View>
+                            </View>
+
+                            {/* Hora - derecha */}
+                            <View>
+                              <Text className='text-2xl'>
+                                {formatTime(auction.startDate)}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  </CustomLink>
+                ))}
+              </View>
+            ) : (
+              <Text className='py-4 text-center font-rubik text-4xl text-cinnabar'>
+                {t('screens.calendar.noAuctionsFound')}
+              </Text>
+            )}
+          </View>
+        )}
       </View>
     </ScrollView>
   );

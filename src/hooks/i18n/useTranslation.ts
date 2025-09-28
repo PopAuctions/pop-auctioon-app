@@ -8,7 +8,7 @@ export const useTranslation = () => {
 
   const t = translate;
 
-  const changeLanguage = (newLocale: 'es' | 'en') => {
+  const changeLanguage = (newLocale: Lang) => {
     // Cambio inmediato del locale del i18n para que las traducciones estén disponibles
     changeLocale(newLocale);
 

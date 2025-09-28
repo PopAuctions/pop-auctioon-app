@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CalendarScreen should match snapshot - empty state 1`] = `
+<RCTScrollView
+  className="flex-1 bg-white"
+>
+  <View>
+    <View
+      className="p-4"
+    >
+      <View
+        className="mb-8"
+      >
+        <Text
+          className="text-center font-rubik text-4xl"
+        >
+          Auctions of
+           
+          September
+        </Text>
+        <Text
+          className="mb-4 text-center font-poppins text-xl"
+        >
+          DON'T MISS ANYTHING!
+        </Text>
+        <Text
+          className="py-4 text-center font-rubik text-4xl text-cinnabar"
+        >
+          No auctions found
+        </Text>
+      </View>
+      <View
+        className="mx-4 my-3"
+      >
+        <View
+          className="border-gray-200 w-full border-b"
+        />
+      </View>
+      <View
+        className="mb-8"
+      >
+        <Text
+          className="text-center font-rubik text-4xl"
+        >
+          Auctions of
+           
+          October
+        </Text>
+        <Text
+          className="mb-4 text-center font-poppins text-xl"
+        >
+          DON'T MISS ANYTHING!
+        </Text>
+        <Text
+          className="py-4 text-center font-rubik text-4xl text-cinnabar"
+        >
+          No auctions found
+        </Text>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`CalendarScreen should match snapshot - with auctions 1`] = `
+<RCTScrollView
+  className="flex-1 bg-white"
+>
+  <View>
+    <View
+      className="p-4"
+    >
+      <View
+        className="mb-8"
+      >
+        <Text
+          className="text-center font-rubik text-4xl"
+        >
+          Auctions of
+           
+          September
+        </Text>
+        <Text
+          className="mb-4 text-center font-poppins text-xl"
+        >
+          DON'T MISS ANYTHING!
+        </Text>
+        <View
+          className="space-y-6"
+        >
+          <View
+            className="overflow-hidden rounded-xl bg-white shadow-sm"
+          >
+            <View
+              className="min-h-[220px] flex-row py-6 "
+            >
+              <View
+                className="bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg"
+              >
+                <Image
+                  className="h-full w-full"
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://example.com/test.jpg",
+                    }
+                  }
+                />
+              </View>
+              <View
+                className="flex-1 py-2"
+              >
+                <View
+                  className="flex-row items-start justify-between"
+                >
+                  <View
+                    className="mr-4 flex-1"
+                  >
+                    <View
+                      className="mb-2"
+                    >
+                      <Text
+                        className="font-poppins text-xl uppercase tracking-wide"
+                      >
+                        SEPTEMBER
+                      </Text>
+                      <Text
+                        className="font-poppins text-xl "
+                      >
+                        26
+                        ,
+                         
+                        2025
+                      </Text>
+                    </View>
+                    <View>
+                      <Text
+                        className="font-rubik text-2xl "
+                      >
+                        TEST AUCTION
+                      </Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Text
+                      className="text-2xl "
+                    >
+                      6:00 AM
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        className="mx-4 my-3"
+      >
+        <View
+          className="border-gray-200 w-full border-b"
+        />
+      </View>
+      <View
+        className="mb-8"
+      >
+        <Text
+          className="text-center font-rubik text-4xl"
+        >
+          Auctions of
+           
+          October
+        </Text>
+        <Text
+          className="mb-4 text-center font-poppins text-xl"
+        >
+          DON'T MISS ANYTHING!
+        </Text>
+        <Text
+          className="py-4 text-center font-rubik text-4xl text-cinnabar"
+        >
+          No auctions found
+        </Text>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;

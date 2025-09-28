@@ -1,0 +1,988 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BackgroundImage Basic rendering should render with required image source 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "test://image.png",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Basic rendering should render with string URI source 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Complex configurations should handle all props together 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+  style={
+    {
+      "borderWidth": 2,
+    }
+  }
+>
+  <Image
+    className="custom-bg"
+    resizeMode="contain"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.5)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Complex configurations should handle no overlay with custom resize mode 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1 justify-center"
+    resizeMode="stretch"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Edge cases should handle null children gracefully 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+</View>
+`;
+
+exports[`BackgroundImage Edge cases should handle undefined overlay opacity 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Image source handling should handle empty string URI 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Image source handling should handle required image source correctly 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "bundled://image.png",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Image source handling should handle string URI correctly 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://test.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Overlay functionality should apply custom overlay opacity 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.7)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Overlay functionality should handle overlay opacity of 0 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Overlay functionality should handle overlay opacity of 1 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 1)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Overlay functionality should not render overlay when overlay is false 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Overlay functionality should render overlay by default 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Resize modes should apply center resize mode 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="center"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Resize modes should apply contain resize mode 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="contain"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Resize modes should apply cover resize mode by default 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Resize modes should apply repeat resize mode 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="repeat"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Resize modes should apply stretch resize mode 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="stretch"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Styling and customization should apply custom className 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="h-64 w-full"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Styling and customization should apply custom style 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+  style={
+    {
+      "borderRadius": 10,
+      "height": 200,
+      "width": 300,
+    }
+  }
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": 200,
+          "width": 300,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Styling and customization should apply default className 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+>
+  <Image
+    className="flex-1"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
+
+exports[`BackgroundImage Styling and customization should combine className and style 1`] = `
+<View
+  accessibilityIgnoresInvertColors={true}
+  style={
+    {
+      "opacity": 0.8,
+    }
+  }
+>
+  <Image
+    className="rounded-xl"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/image.jpg",
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "height": undefined,
+          "width": undefined,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    className="absolute inset-0"
+    style={
+      {
+        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+      }
+    }
+  />
+  <Text>
+    Test Content
+  </Text>
+</View>
+`;
