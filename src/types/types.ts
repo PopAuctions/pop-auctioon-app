@@ -4,6 +4,8 @@ export type Lang = 'es' | 'en';
 
 export type UserRoles = 'ADMIN' | 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
 
+export type RequestStatus = 'idle' | 'loading' | 'success' | 'error';
+
 export interface UserRolesTypes {
   admin: 'ADMIN';
   user: 'USER';
@@ -214,15 +216,20 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
     | 'countdownAmount'
     | 'countdownFinish'
   >;
-  Auction: Pick<Auction, 'id' | 'status' | 'title' | 'mode' | 'startDate'>;
+  Auction: Pick<
+    Auction,
+    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate'
+  >;
 };
 
 export type LangMap = Record<Lang, string>;
 
-export interface ActionResponse {
-  error: null | LangMap;
-  success: null | LangMap;
+export interface ActionResponse<TData = unknown> {
+  data: TData;
+  status: RequestStatus;
 }
+
+export type RefetchReturn = Promise<{ message?: LangMap } | void>;
 
 export type VerificationToken =
   Database['public']['Tables']['VerificationToken']['Row'];
