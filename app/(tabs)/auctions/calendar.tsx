@@ -21,8 +21,8 @@ export default function CalendarScreen() {
   const monthsArray = Array.from(calendarMonths.values()).filter(
     (month) => month.value !== '0'
   );
-  const thisMonth = monthsArray[0];
-  const nextMonth = monthsArray[1];
+  const thisMonth = monthsArray[1];
+  const nextMonth = monthsArray[2];
 
   if (status === 'loading') {
     return (
