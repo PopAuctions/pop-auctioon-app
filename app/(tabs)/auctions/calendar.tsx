@@ -116,7 +116,7 @@ export default function CalendarScreen() {
                                     locale
                                   ).toUpperCase()}
                                 </Text>
-                                <Text className='font-poppins text-xl '>
+                                <Text className='font-poppins text-xl'>
                                   {new Date(auction.startDate).getDate()},{' '}
                                   {new Date(auction.startDate).getFullYear()}
                                 </Text>
@@ -124,7 +124,7 @@ export default function CalendarScreen() {
 
                               {/* Título justo debajo de la fecha */}
                               <View>
-                                <Text className='font-rubik text-2xl '>
+                                <Text className='font-rubik text-2xl'>
                                   {auction.title.toUpperCase()}
                                 </Text>
                               </View>
@@ -207,7 +207,7 @@ export default function CalendarScreen() {
                                     locale
                                   ).toUpperCase()}
                                 </Text>
-                                <Text className='font-poppins text-xl '>
+                                <Text className='font-poppins text-xl'>
                                   {new Date(auction.startDate).getDate()},{' '}
                                   {new Date(auction.startDate).getFullYear()}
                                 </Text>
@@ -215,7 +215,7 @@ export default function CalendarScreen() {
 
                               {/* Título justo debajo de la fecha */}
                               <View>
-                                <Text className='font-rubik text-2xl '>
+                                <Text className='font-rubik text-2xl'>
                                   {auction.title.toUpperCase()}
                                 </Text>
                               </View>
