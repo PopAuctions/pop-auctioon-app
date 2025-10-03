@@ -5,12 +5,12 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomLink } from '@/components/ui/CustomLink';
+import { CustomImage } from '@/components/ui/CustomImage';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
@@ -19,7 +19,7 @@ export default function CalendarScreen() {
   // Obtener meses directamente
   const calendarMonths = getCalendarMonths();
   const monthsArray = Array.from(calendarMonths.values()).filter(
-    (month) => month.value !== '0'
+    (month) => month.value !== 0
   );
   const thisMonth = monthsArray[1];
   const nextMonth = monthsArray[2];
@@ -66,7 +66,6 @@ export default function CalendarScreen() {
   return (
     <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
-
         {auctions?.this_month && (
           <View className='mb-8'>
             <Text className='text-center font-rubik text-4xl'>
@@ -90,8 +89,9 @@ export default function CalendarScreen() {
                         {/* Imagen grande a la izquierda */}
                         <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
                           {auction.image && auction.image.trim() !== '' ? (
-                            <Image
-                              source={{ uri: auction.image }}
+                            <CustomImage
+                              src={auction.image}
+                              alt={auction.title || 'Auction image'}
                               className='h-full w-full'
                               resizeMode='cover'
                             />
@@ -181,8 +181,9 @@ export default function CalendarScreen() {
                         {/* Imagen grande a la izquierda */}
                         <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
                           {auction.image && auction.image.trim() !== '' ? (
-                            <Image
-                              source={{ uri: auction.image }}
+                            <CustomImage
+                              src={auction.image}
+                              alt={auction.title || 'Auction image'}
                               className='h-full w-full'
                               resizeMode='cover'
                             />

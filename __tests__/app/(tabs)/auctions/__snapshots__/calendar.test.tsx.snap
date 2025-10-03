@@ -98,6 +98,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                 className="bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg"
               >
                 <Image
+                  alt="Test Auction"
                   className="h-full w-full"
                   resizeMode="cover"
                   source={
@@ -125,7 +126,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                         SEPTEMBER
                       </Text>
                       <Text
-                        className="font-poppins text-xl "
+                        className="font-poppins text-xl"
                       >
                         26
                         ,
@@ -135,7 +136,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                     </View>
                     <View>
                       <Text
-                        className="font-rubik text-2xl "
+                        className="font-rubik text-2xl"
                       >
                         TEST AUCTION
                       </Text>
