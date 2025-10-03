@@ -6,9 +6,9 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 // Productos simulados basados en popauctioon.com
 const storeProducts = [

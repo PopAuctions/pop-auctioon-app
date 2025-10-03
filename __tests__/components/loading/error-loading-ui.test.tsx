@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native';
 import ErrorLoading from '@/components/loading/error-loading';
 
 // Mock simple del hook useTranslation - solo para UI testing
-jest.mock('@/hooks/useTranslation', () => ({
+jest.mock('@/hooks/i18n/useTranslation', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       // Mock simple que retorna valores conocidos para testing UI

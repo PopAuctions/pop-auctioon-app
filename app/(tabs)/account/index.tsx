@@ -1,10 +1,11 @@
 import Account from './account-user';
 import { useAuth } from '@/context/auth-context';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { View, ActivityIndicator } from 'react-native';
 
 export default function AccountTab() {
-  const { session } = useAuth();
+  const { getSession } = useAuth();
+  const [session] = getSession();
   const { isNavigating } = useAuthNavigation();
 
   // Si no hay sesión, mostrar loading mientras ProtectedRoute maneja la redirección

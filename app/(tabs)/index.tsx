@@ -6,9 +6,9 @@ import { useAuth } from '@/context/auth-context';
  * Redirects authenticated users to home, unauthenticated to auth
  */
 export default function TabsIndex() {
-  const { session } = useAuth();
+  const { auth } = useAuth();
 
-  if (!session) {
+  if (auth.state === 'unauthenticated') {
     return <Redirect href='/(tabs)/auth' />;
   }
 

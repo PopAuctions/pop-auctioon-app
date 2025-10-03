@@ -1,15 +1,15 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useAuth } from '@/context/auth-context';
-import { useRouter } from 'expo-router';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { session } = useAuth();
-  const router = useRouter();
+  const { getSession } = useAuth();
+  const [session] = getSession();
 
   return (
     <ScrollView
@@ -34,9 +34,10 @@ export default function HomeScreen() {
 
         {/* Botón para Testing API */}
         <View className='mb-6'>
-          <TouchableOpacity
-            className='rounded-lg bg-blue-500 p-4 shadow-lg'
-            onPress={() => router.push('/home/api-testing')}
+          <CustomLink
+            href='/home/api-testing'
+            mode='empty'
+            className='rounded-lg bg-blue-500 p-4'
           >
             <Text className='text-center text-lg font-semibold text-white'>
               🧪 API Testing Lab
@@ -44,7 +45,7 @@ export default function HomeScreen() {
             <Text className='mt-1 text-center text-blue-100'>
               Probar conectividad y endpoints
             </Text>
-          </TouchableOpacity>
+          </CustomLink>
         </View>
 
         {/* Información de la App */}
@@ -56,7 +57,7 @@ export default function HomeScreen() {
             <Text className='text-gray-600'>
               • 🏠 Explorar subastas en vivo
             </Text>
-            <Text className='text-gray-600'>• �️ Comprar en la tienda</Text>
+            <Text className='text-gray-600'>• 🛍️ Comprar en la tienda</Text>
             <Text className='text-gray-600'>
               • 📅 Ver calendario de eventos
             </Text>
@@ -66,6 +67,25 @@ export default function HomeScreen() {
                 • 🔨 Crear tus propias subastas
               </Text>
             )}
+          </View>
+
+          {/* Enlaces de ejemplo para probar CustomLink */}
+          <View className='mt-4 space-y-2'>
+            <Text className='text-gray-700 text-sm font-medium'>
+              Enlaces de prueba (CustomLink automático):
+            </Text>
+            <CustomLink
+              href='/(tabs)/auctions'
+              mode='plainText'
+            >
+              <Text>→ Ir a Subastas (requiere auth)</Text>
+            </CustomLink>
+            <CustomLink
+              href='/(tabs)/my-auctions'
+              mode='plainText'
+            >
+              <Text>→ Mis Subastas (requiere AUCTIONEER)</Text>
+            </CustomLink>
           </View>
         </View>
 

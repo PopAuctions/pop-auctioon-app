@@ -4,7 +4,8 @@ import { useAuth } from '@/context/auth-context';
 import { PROTECTED_ROUTES } from '@/components/navigation/routeConfig';
 
 export const useAuthNavigation = () => {
-  const { session, role } = useAuth();
+  const { getSession } = useAuth();
+  const [session, role] = getSession();
   const [isNavigating, setIsNavigating] = useState(false);
 
   const navigateWithAuth = useCallback(
@@ -44,7 +45,7 @@ export const useAuthNavigation = () => {
       }
 
       // Reset loading state after navigation
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         setIsNavigating(false);
       }, 500);
 

@@ -4,7 +4,7 @@ import { StyleSheet, View, Alert, TextInput, Button } from 'react-native';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);

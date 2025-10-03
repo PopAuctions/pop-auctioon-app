@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function AuctionsLayout() {
   const { t } = useTranslation();
@@ -38,6 +38,7 @@ export default function AuctionsLayout() {
         options={{
           title: t('screens.auctions.detail'),
           presentation: 'card',
+          headerShown: true,
         }}
       />
       <Stack.Screen

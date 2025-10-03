@@ -1,5 +1,5 @@
 import { supabase } from '@/utils/supabase/supabase-store';
-import * as Sentry from '@sentry/react-native';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { User, ActionResponse } from '@/types/types';
 
 export const getUser = async ({
@@ -14,9 +14,7 @@ export const getUser = async ({
     .single();
 
   if (error || !data) {
-    Sentry.captureException(
-      `[GET_USER] ${id} | ${error?.message ?? String(error)}`
-    );
+    sentryErrorReport(error, `GET_USER - ${id}`);
     return {
       error: {
         en: 'Error getting user',

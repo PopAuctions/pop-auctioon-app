@@ -3,14 +3,15 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 
 import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/hooks/ui/useColorScheme';
 import { useAuth } from '@/context/auth-context';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { session, role } = useAuth();
   const { t } = useTranslation();
+  const { getSession } = useAuth();
+  const [session, role] = getSession();
 
   return (
     <Tabs

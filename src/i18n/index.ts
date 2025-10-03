@@ -1,15 +1,24 @@
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
+import { Lang } from '@/types/types';
 
 // Import translation files
 import es from './locales/es.json';
 import en from './locales/en.json';
+import { Path, PathValue } from '@/types/i18n';
+
+type Translations = {
+  es: typeof es;
+  en: typeof en;
+};
+
+export type Dictionary = Translations['es'];
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
   es,
   en,
-};
+} as const satisfies Translations;
 
 // Create the i18n instance
 const i18n = new I18n(translations);
@@ -32,12 +41,19 @@ i18n.defaultLocale = 'es';
 export default i18n;
 
 // Helper function to get current locale
-export const getCurrentLocale = () => i18n.locale;
+export const getCurrentLocale = () => i18n.locale as Lang;
 
 // Helper function to change locale
-export const changeLocale = (locale: 'es' | 'en') => {
+export const changeLocale = (locale: Lang) => {
   i18n.locale = locale;
 };
 
 // Helper function to get available locales
-export const getAvailableLocales = () => ['es', 'en'];
+export const getAvailableLocales = (): Lang[] => ['es', 'en'];
+
+export function t<K extends Path<Dictionary>>(
+  key: K,
+  options?: any
+): PathValue<Dictionary, K> {
+  return i18n.t(key as string, options) as PathValue<Dictionary, K>;
+}

@@ -65,6 +65,23 @@
         }
       }
     },
+    "auction": {
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "share": "Share",
+      "currentBid": "Current Bid",
+      "estimatedPrice": "Estimated Price",
+      "waiting1": "Auction will start soon!",
+      "waiting2": "Wait a few minutes",
+      "start": "Auction already started!",
+      "finished": "Auction finished",
+      "watchButton": "Watch live",
+      "ended": "Auction finished",
+      "timeStart": "Time to start:",
+      "auctionNotFound": "Auction not found or not longer available",
+      "noArticlesFound": "No articles found",
+      "specialMessage": "For this auction, no commission will be charged for any of the articles"
+    },
     "store": {
       "title": "Online Store",
       "subtitle": "Shop exclusive products",
@@ -91,6 +108,23 @@
       "detail": "Auction Details",
       "edit": "Edit Auction",
       "stats": "Statistics"
+    },
+    "calendar": {
+      "title": "Auction Calendar",
+      "loading": "Loading auctions...",
+      "error": "Error loading auctions",
+      "retry": "Retry",
+      "thisMonth": "Auctions of",
+      "nextMonth": "Auctions of",
+      "subtitle": "Don't miss anything!",
+      "auctionsIn": "Auctions in",
+      "noAuctionsFound": "No auctions found",
+      "checkBackLater": "Check back later for new auctions",
+      "noAuctions": "No auctions scheduled",
+      "noAuctionsSubtitle": "Stay tuned, new auctions will be added soon.",
+      "tip": "Tip",
+      "tipMessage": "Set up notifications to not miss any auction. You can register in advance to participate.",
+      "noImage": "No image"
     }
   },
   "commonErrors": {

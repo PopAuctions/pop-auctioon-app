@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { View, Text, ScrollView } from 'react-native';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function AuctionsScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { navigateWithAuth } = useAuthNavigation();
 
   return (
     <View
@@ -27,9 +26,10 @@ export default function AuctionsScreen() {
 
         {/* Live Auction Banner */}
         <View className='mx-4 mt-4'>
-          <TouchableOpacity
-            className='rounded-lg bg-red-500 p-6 shadow-lg'
-            onPress={() => navigateWithAuth('/(tabs)/auctions/live/123')}
+          <CustomLink
+            href='/(tabs)/auctions/live/123'
+            mode='empty'
+            className='rounded-lg bg-red-500 p-6'
           >
             <View className='flex-row items-center justify-center'>
               <View className='mr-3 h-3 w-3 animate-pulse rounded-full bg-white' />
@@ -48,15 +48,16 @@ export default function AuctionsScreen() {
                 👥 23 participantes
               </Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
         </View>
 
         {/* Main Options */}
         <View className='space-y-4 p-4'>
           {/* Auctions Calendar Option */}
-          <TouchableOpacity
-            className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
-            onPress={() => navigateWithAuth('/(tabs)/auctions/calendar')}
+          <CustomLink
+            href='/(tabs)/auctions/calendar'
+            mode='empty'
+            className='border-gray-200 rounded-lg border bg-white p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
@@ -70,12 +71,13 @@ export default function AuctionsScreen() {
               </View>
               <Text className='text-gray-400 text-2xl'>→</Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
 
           {/* All Articles Option */}
-          <TouchableOpacity
-            className='border-gray-200 rounded-lg border bg-white p-6 shadow-sm'
-            onPress={() => navigateWithAuth('/(tabs)/auctions/articles')}
+          <CustomLink
+            href='/(tabs)/auctions/articles'
+            mode='empty'
+            className='border-gray-200 rounded-lg border bg-white p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>
@@ -89,7 +91,7 @@ export default function AuctionsScreen() {
               </View>
               <Text className='text-gray-400 text-2xl'>→</Text>
             </View>
-          </TouchableOpacity>
+          </CustomLink>
         </View>
 
         {/* Quick Stats */}
