@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, View, AppState, Text, TouchableOpacity } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -25,7 +25,6 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 
   async function signInWithEmail() {
@@ -84,9 +83,9 @@ export default function Auth() {
 
   return (
     <BackgroundImage source={require('@/components/icons/bg-image.webp')}>
-      <View
+      <SafeAreaView
         className='flex-1'
-        style={{ paddingTop: insets.top }}
+        edges={['top']}
       >
         <View className='flex-1 px-5 pt-10'>
           {/* Logo/Title Section */}
@@ -164,7 +163,7 @@ export default function Auth() {
             </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </BackgroundImage>
   );
 }

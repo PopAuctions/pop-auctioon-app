@@ -7,7 +7,7 @@ import {
   TextInput,
 } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 // Productos simulados basados en popauctioon.com
@@ -64,7 +64,6 @@ const storeProducts = [
 
 export default function StoreScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const { navigateWithAuth } = useAuthNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(
@@ -108,103 +107,109 @@ export default function StoreScreen() {
   });
 
   return (
-    <ScrollView
+    <SafeAreaView
       className='flex-1 bg-white'
-      style={{ paddingTop: insets.top }}
-      contentContainerStyle={{ paddingBottom: 100 }}
+      edges={['top']}
     >
-      {/* Header */}
-      <View className='border-gray-200 border-b p-4'>
-        <Text className='text-gray-800 mb-4 text-2xl font-bold'>
-          {t('screens.store.title')}
-        </Text>
+      <ScrollView
+        className='flex-1'
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        {/* Header */}
+        <View className='border-gray-200 border-b p-4'>
+          <Text className='text-gray-800 mb-4 text-2xl font-bold'>
+            {t('screens.store.title')}
+          </Text>
 
-        {/* Filter Tabs */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className='mb-4'
-        >
-          <View className='flex-row'>
-            {categories.map((category, index) => (
-              <TouchableOpacity
-                key={category}
-                className={`rounded-full px-4 py-2 ${
-                  selectedCategory === category ? 'bg-gray-800' : 'bg-gray-100'
-                } ${index > 0 ? 'ml-4' : ''}`}
-                onPress={() => setSelectedCategory(category)}
-              >
-                <Text
-                  className={`${
+          {/* Filter Tabs */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className='mb-4'
+          >
+            <View className='flex-row'>
+              {categories.map((category, index) => (
+                <TouchableOpacity
+                  key={category}
+                  className={`rounded-full px-4 py-2 ${
                     selectedCategory === category
-                      ? 'text-white'
-                      : 'text-gray-600'
-                  }`}
+                      ? 'bg-gray-800'
+                      : 'bg-gray-100'
+                  } ${index > 0 ? 'ml-4' : ''}`}
+                  onPress={() => setSelectedCategory(category)}
                 >
-                  {category}
-                </Text>
+                  <Text
+                    className={`${
+                      selectedCategory === category
+                        ? 'text-white'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    {category}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+
+          {/* Search Bar */}
+          <TextInput
+            className='border-gray-200 bg-gray-50 rounded-lg border p-3'
+            placeholder={t('screens.store.searchPlaceholder')}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
+        {/* Products Grid */}
+        <View className='p-4'>
+          <View className='flex-row flex-wrap justify-between'>
+            {filteredProducts.map((product) => (
+              <TouchableOpacity
+                key={product.id}
+                className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
+                onPress={() => navigateWithAuth(`/(tabs)/store/${product.id}`)}
+              >
+                {/* Product Image */}
+                <View className='bg-gray-50 aspect-square items-center justify-center'>
+                  <Text className='text-6xl'>
+                    {getProductIcon(product.category)}
+                  </Text>
+                </View>
+
+                {/* Product Info */}
+                <View className='flex-1 justify-between p-4'>
+                  <View>
+                    <Text className='mb-1 text-sm text-red-500'>
+                      {product.brand}
+                    </Text>
+                    <Text className='text-gray-900 mb-2 text-lg font-light'>
+                      {product.name}
+                    </Text>
+
+                    {/* Price Info */}
+                    <View className='mb-3'>
+                      <Text className='text-gray-500 text-sm'>
+                        {t('screens.store.price')}: €{product.price}
+                      </Text>
+                      <Text className='text-gray-500 text-sm'>
+                        {t('screens.store.category')}: {product.category}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Buy Button */}
+                  <TouchableOpacity className='rounded bg-green-500 px-3 py-2'>
+                    <Text className='text-center text-sm font-medium text-white'>
+                      {t('screens.store.buyNow')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
             ))}
           </View>
-        </ScrollView>
-
-        {/* Search Bar */}
-        <TextInput
-          className='border-gray-200 bg-gray-50 rounded-lg border p-3'
-          placeholder={t('screens.store.searchPlaceholder')}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-      </View>
-
-      {/* Products Grid */}
-      <View className='p-4'>
-        <View className='flex-row flex-wrap justify-between'>
-          {filteredProducts.map((product) => (
-            <TouchableOpacity
-              key={product.id}
-              className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
-              onPress={() => navigateWithAuth(`/(tabs)/store/${product.id}`)}
-            >
-              {/* Product Image */}
-              <View className='bg-gray-50 aspect-square items-center justify-center'>
-                <Text className='text-6xl'>
-                  {getProductIcon(product.category)}
-                </Text>
-              </View>
-
-              {/* Product Info */}
-              <View className='flex-1 justify-between p-4'>
-                <View>
-                  <Text className='mb-1 text-sm text-red-500'>
-                    {product.brand}
-                  </Text>
-                  <Text className='text-gray-900 mb-2 text-lg font-light'>
-                    {product.name}
-                  </Text>
-
-                  {/* Price Info */}
-                  <View className='mb-3'>
-                    <Text className='text-gray-500 text-sm'>
-                      {t('screens.store.price')}: €{product.price}
-                    </Text>
-                    <Text className='text-gray-500 text-sm'>
-                      {t('screens.store.category')}: {product.category}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Buy Button */}
-                <TouchableOpacity className='rounded bg-green-500 px-3 py-2'>
-                  <Text className='text-center text-sm font-medium text-white'>
-                    {t('screens.store.buyNow')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ))}
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

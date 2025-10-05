@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Subastas del auctioneer - con diferentes estados
 const myAuctions = [
@@ -46,7 +46,6 @@ const myAuctions = [
 
 export default function MyAuctionsScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const { navigateWithAuth } = useAuthNavigation();
 
   const getStatusColor = (status: string) => {
@@ -80,9 +79,9 @@ export default function MyAuctionsScreen() {
   };
 
   return (
-    <View
+    <SafeAreaView
       className='bg-gray-50 flex-1'
-      style={{ paddingTop: insets.top }}
+      edges={['top']}
     >
       <ScrollView className='flex-1'>
         {/* Header */}
@@ -176,6 +175,6 @@ export default function MyAuctionsScreen() {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

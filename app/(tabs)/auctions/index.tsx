@@ -1,17 +1,16 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function AuctionsScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
 
   return (
-    <View
+    <SafeAreaView
       className='bg-gray-50 flex-1'
-      style={{ paddingTop: insets.top }}
+      edges={['top']}
     >
       <ScrollView className='flex-1'>
         {/* Header */}
@@ -119,6 +118,6 @@ export default function AuctionsScreen() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -7,7 +7,6 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/auth-context';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { API_CONFIG } from '@/config/api-config';
@@ -22,7 +21,6 @@ interface TestResult {
 }
 
 export default function ApiTestingScreen() {
-  const insets = useSafeAreaInsets();
   const { getSession } = useAuth();
   const [session] = getSession();
   const {
@@ -347,10 +345,7 @@ export default function ApiTestingScreen() {
   };
 
   return (
-    <ScrollView
-      className='flex-1 bg-white'
-      style={{ paddingTop: insets.top }}
-    >
+    <ScrollView className='flex-1 bg-white'>
       <View className='p-4'>
         {/* Header */}
         <View className='mb-6'>
