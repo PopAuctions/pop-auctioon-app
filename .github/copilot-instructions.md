@@ -7,12 +7,12 @@ This is a **React Native/Expo** auction application with **file-based routing** 
 ### Key Tech Stack
 
 - **Expo SDK 53** with New Architecture enabled
-- **React 19** with concurrent features (useTransition in i18n)
+- **React 19** with concurrent features (`useTransition` in i18n)
 - **Expo Router v5.1+** (file-based routing with typed routes)
 - **Supabase** (auth & database with complex schema in `src/types/supabase.ts`)
 - **NativeWind v4.1+** (Tailwind CSS for React Native)
 - **i18n-js v4.5+** (Spanish/English localization)
-- **Sentry** (error tracking with PII scrubbing)
+- **Sentry** (error tracking with PII scrubbing in `app/_layout.tsx`)
 - **TypeScript** with strict configuration
 - **Volta** (Node 22.19.0, npm 11.6.0 pinning)
 
@@ -20,7 +20,7 @@ This is a **React Native/Expo** auction application with **file-based routing** 
 
 - `app/` - File-based routing (Expo Router v5.1+)
 - `src/` - Business logic, components, hooks, utilities
-- Path aliases: Extensive mapping in `tsconfig.json` and `jest.config.js`
+- **Path aliases**: Extensive mapping in `tsconfig.json` and `jest.config.js` - always use `@/` imports
 
 ## Authentication & Authorization
 
@@ -28,34 +28,55 @@ This is a **React Native/Expo** auction application with **file-based routing** 
 
 ```typescript
 // Always use AuthContext for session/role checking
-const { session, role } = useAuth();
+const { auth, getSession } = useAuth();
+const [session, role] = getSession();
 
-// Route protection via ProtectedRoute component
-// Configuration in src/components/navigation/routeConfig.ts
+// Auth state is typed union for precise handling
+type AuthState =
+  | { state: 'loading' }
+  | { state: 'unauthenticated' }
+  | { state: 'authenticated'; session: Session; role: UserRoles | null };
 ```
 
-**User Roles:**
+**User Roles** (defined in `src/types/types.ts`):
 
 - `USER`: Basic access (auctions, store, account)
 - `AUCTIONEER`: Can create/manage auctions + all USER permissions
 
-### Navigation with Auth
+### Three-Layer Protection System
 
-```typescript
-// Use useAuthNavigation for protected navigation
-const { navigateWithAuth } = useAuthNavigation();
-navigateWithAuth('/(tabs)/my-auctions'); // Auto-handles auth checking
-```
+1. **ProtectedRoute component** (`src/components/navigation/ProtectedRoute.tsx`):
+   - Wraps entire app in `app/_layout.tsx`
+   - Auto-redirects based on auth state and route requirements
+   - Handles role gating (waits for role resolution before access)
+
+2. **Route configuration** (`src/components/navigation/routeConfig.ts`):
+   - Centralized declarative config: `PROTECTED_ROUTES` object
+   - Example: `'my-auctions': { requiresAuth: true, requiresRole: 'AUCTIONEER' }`
+   - Helper functions: `requiresAuth()`, `requiresRole()`, `hasAccess()`
+
+3. **Navigation hooks** (`src/hooks/auth/useAuthNavigation.ts`):
+   ```typescript
+   const { navigateWithAuth } = useAuthNavigation();
+   navigateWithAuth('/(tabs)/my-auctions'); // Auto-handles auth checking
+   ```
+
+### Session Management Details
+
+- **LargeSecureStore** (`src/utils/supabase/supabase-store.ts`): Custom storage adapter for Supabase sessions >2048 bytes
+  - Uses AES-256 encryption with key in SecureStore, encrypted data in AsyncStorage
+  - Handles auto-refresh 30 seconds before token expiry
+- **Auth flow**: `app/_layout.tsx` initializes `AuthProvider` → loads session → validates user → fetches role → schedules refresh
 
 ## Routing Architecture
 
 ### File-Based Routing Structure
 
 ```
-app/(tabs)/           # Tab-based navigation
-├── index.tsx         # Auth-based redirect logic
-├── _layout.tsx       # Main tab configuration
-├── auth/            # Auth flow (login, etc.)
+app/(tabs)/           # Tab-based navigation (route groups)
+├── index.tsx         # Redirect logic: unauthenticated → /auth, authenticated → /home
+├── _layout.tsx       # Tab bar config with conditional visibility (see Tab Visibility)
+├── auth/            # Auth flow (login, register)
 ├── home/            # Dashboard/API testing
 ├── auctions/        # Auction browsing/calendar
 ├── my-auctions/     # AUCTIONEER-only section
@@ -63,12 +84,36 @@ app/(tabs)/           # Tab-based navigation
 └── account/         # User profile/settings
 ```
 
-**Layout Pattern**: Each section has `_layout.tsx` with Stack navigation for sub-routes.
+**Layout Pattern**: Each section has `_layout.tsx` defining Stack navigation for sub-routes.
 
 ### Dynamic Routes
 
-- `[id].tsx` for parameterized routes (e.g., `store/[id].tsx`)
-- Use `useLocalSearchParams()` from expo-router for accessing parameters
+- Use `[id].tsx` for parameterized routes (e.g., `store/[id].tsx`)
+- Access params: `const { id } = useLocalSearchParams()` from expo-router
+
+### Tab Visibility Logic
+
+Tabs are shown/hidden dynamically in `app/(tabs)/_layout.tsx`:
+
+```typescript
+const { getSession } = useAuth();
+const [session, role] = getSession();
+
+<Tabs.Screen
+  name='my-auctions'
+  options={{
+    href: session && role === 'AUCTIONEER' ? undefined : null, // null = hidden
+  }}
+/>
+```
+
+### Smart Navigation Components
+
+- **CustomLink** (`src/components/ui/CustomLink.tsx`):
+  - Auto-detects auth requirements from `routeConfig.ts` - no manual auth props needed
+  - Supports modes: `primary`, `secondary`, `plainText`, `empty`
+  - Handles external links via `outsideRedirect` prop
+  - Example: `<CustomLink href="/(tabs)/my-auctions" mode="primary">Go</CustomLink>`
 
 ## API Communication
 
@@ -79,9 +124,11 @@ Configuration in `src/config/api-config.ts`:
 ```typescript
 // Protected endpoints (API key only)
 PROTECTED_ENDPOINTS.EMAIL.SEND;
+PROTECTED_ENDPOINTS.NOTIFICATIONS.SEND;
 
 // Secure endpoints (JWT + API key)
 SECURE_ENDPOINTS.AUCTIONS.CREATE;
+SECURE_ENDPOINTS.USER.PROFILE;
 ```
 
 ### Secure API Hook Pattern
@@ -90,9 +137,22 @@ SECURE_ENDPOINTS.AUCTIONS.CREATE;
 // Always use useSecureApi for backend communication
 const { callSecure, callProtected } = useSecureApi();
 
-// Automatic JWT header management + retry logic
+// Automatic JWT header management + retry logic (max 2 retries, 10s timeout)
 const result = await callSecure('/auctions', 'POST', { data });
+
+// Headers automatically include:
+// - Content-Type: application/json
+// - x-api-key: (from env)
+// - x-timestamp: (current timestamp)
+// - Authorization: Bearer <JWT> (for callSecure only)
 ```
+
+**Key Implementation Details** (`src/hooks/api/useSecureApi.ts`):
+
+- Auto-refreshes Supabase session via `supabase.auth.getSession()`
+- Throws `MISSING_JWT` error if session invalid
+- Configurable timeout/retry via `RequestOptions`
+- Dev logging enabled via `DEV_CONFIG.ENABLE_REQUEST_LOGGING`
 
 ## Internationalization (i18n)
 
@@ -112,6 +172,18 @@ changeLanguage('en'); // Non-blocking with isPending state
 
 **Default Language**: Spanish (`es`) with English (`en`) support.
 **Device Detection**: Auto-detects device language via `expo-localization`.
+
+**Translation File Structure** (`src/i18n/locales/es.json`, `en.json`):
+
+```json
+{
+  "commonActions": { "loading": "...", "error": "..." },
+  "loginPage": { "login": "...", "email": "..." },
+  "tabsNames": { "home": "...", "auctions": "..." }
+}
+```
+
+**Implementation**: `useTranslation` wraps `i18n-js` with React 19's `useTransition` to prevent UI blocking during language switches.
 
 ## UI Components & Styling
 
@@ -215,6 +287,14 @@ const PROTECTED_ROUTES = {
 };
 ```
 
+**Auth Flow Details** (`src/context/auth-context.tsx`):
+
+1. Loads session from `LargeSecureStore` (encrypted AsyncStorage)
+2. Validates session with Supabase server via `getUser()`
+3. Fetches user role from database via `getUserRole()`
+4. Schedules token refresh 30s before expiry
+5. On error/expiry: auto-signs out and sets `unauthenticated` state
+
 ### Tab Visibility Logic
 
 ```typescript
@@ -223,6 +303,21 @@ const PROTECTED_ROUTES = {
   href={session && role === 'AUCTIONEER' ? undefined : null}
 />
 ```
+
+### Path Alias Convention
+
+**CRITICAL**: Always use `@/` imports - direct relative paths break tests and bundler:
+
+```typescript
+// ✅ CORRECT
+import { useAuth } from '@/context/auth-context';
+import { Colors } from '@/constants/Colors';
+
+// ❌ WRONG
+import { useAuth } from '../../src/context/auth-context';
+```
+
+Configured in: `tsconfig.json`, `jest.config.js`, and Metro bundler.
 
 ## Development Notes
 
