@@ -20,7 +20,34 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   account: {
     requiresAuth: true,
   },
-  auctions: {
+  'edit-profile': {
+    requiresAuth: true,
+  },
+  'reset-password': {
+    requiresAuth: true,
+  },
+  'verify-phone': {
+    requiresAuth: true,
+  },
+  addresses: {
+    requiresAuth: true,
+  },
+  'billing-info': {
+    requiresAuth: true,
+  },
+  'payments-history': {
+    requiresAuth: true,
+  },
+  'about-us': {
+    requiresAuth: true,
+  },
+  'how-it-works': {
+    requiresAuth: true,
+  },
+  faqs: {
+    requiresAuth: true,
+  },
+  'contact-us': {
     requiresAuth: true,
   },
   // Rutas que requieren LOGIN + rol específico

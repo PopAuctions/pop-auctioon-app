@@ -7,7 +7,8 @@ export default function AccountLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerBackTitle: 'Atrás',
       }}
     >
       <Stack.Screen
@@ -17,38 +18,82 @@ export default function AccountLayout() {
           headerShown: false,
         }}
       />
-      {/* Pantallas futuras para navegación desde ACCOUNT - COMENTADAS HASTA IMPLEMENTAR
       <Stack.Screen
-        name='profile'
+        name='account-user'
         options={{
-          title: 'Mi Perfil',
-          presentation: 'card',
-          headerShown: true, // Solo en pantallas secundarias
+          headerShown: false,
         }}
       />
       <Stack.Screen
-        name='settings'
+        name='edit-profile'
         options={{
-          title: 'Configuración',
-          presentation: 'card',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name='help'
-        options={{
-          title: 'Ayuda',
+          title: t('screens.account.editProfile'),
           presentation: 'card',
         }}
       />
       <Stack.Screen
-        name='privacy'
+        name='reset-password'
         options={{
-          title: 'Privacidad',
+          title: t('screens.account.resetPassword'),
           presentation: 'card',
         }}
       />
-      */}
+      <Stack.Screen
+        name='verify-phone'
+        options={{
+          title: t('screens.account.verifyPhone'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='addresses'
+        options={{
+          title: t('screens.account.addresses'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='billing-info'
+        options={{
+          title: t('screens.account.billingInfo'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='payments-history'
+        options={{
+          title: t('screens.account.paymentsHistory'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='about-us'
+        options={{
+          title: t('screens.account.aboutUs'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='how-it-works'
+        options={{
+          title: t('screens.account.howItWorks'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='faqs'
+        options={{
+          title: t('screens.account.faqs'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='contact-us'
+        options={{
+          title: t('screens.account.contactUs'),
+          presentation: 'card',
+        }}
+      />
     </Stack>
   );
 }
