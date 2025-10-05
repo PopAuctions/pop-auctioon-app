@@ -1,27 +1,22 @@
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 
 export default function ResetPasswordScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
 
   return (
-    <View
-      className='flex-1 bg-white'
-      style={{ paddingTop: insets.top }}
-    >
+    <View className='flex-1 bg-white'>
       <View className='p-6'>
         <CustomText
           type='h1'
-          className='mb-2  text-black'
+          className='mb-2 text-black'
         >
           {t('screens.resetPassword.title')}
         </CustomText>
         <CustomText
           type='subtitle'
-          className=''
+          className='text-gray-600'
         >
           {t('screens.resetPassword.subtitle')}
         </CustomText>

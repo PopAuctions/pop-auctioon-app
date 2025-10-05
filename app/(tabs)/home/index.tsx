@@ -78,7 +78,7 @@ export default function HomeScreen() {
               href='/(tabs)/auctions'
               mode='plainText'
             >
-              <Text>→ Ir a Subastas (requiere auth)</Text>
+              <Text>→ Ir a Subastas (pública)</Text>
             </CustomLink>
             <CustomLink
               href='/(tabs)/my-auctions'
