@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, View, AppState, Text, TouchableOpacity } from 'react-native';
+import { Alert, View, AppState, TouchableOpacity } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -8,6 +8,8 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { PopAuctioonIcon } from '@/components/icons';
 import { BackgroundImage } from '@/components/ui/BackgroundImage';
 import { router } from 'expo-router';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -98,11 +100,14 @@ export default function Auth() {
             </View>
           </View>
           {/* Form Container */}
-          <View className='rounded-2xl bg-white/95 p-6 shadow-2xl backdrop-blur-sm'>
+          <View className='rounded-2xl  p-6 shadow-2xl backdrop-blur-sm'>
             <View className='mb-5'>
-              <Text className='text-gray-700 mb-2 text-base font-medium'>
+              <CustomText
+                type='body'
+                className='text-gray-700 mb-2 font-medium'
+              >
                 {t('loginPage.email')}
-              </Text>
+              </CustomText>
               <Input
                 onChangeText={(text: string) => setEmail(text)}
                 value={email}
@@ -115,9 +120,12 @@ export default function Auth() {
             </View>
 
             <View className='mb-5'>
-              <Text className='text-gray-700 mb-2 text-base font-medium'>
+              <CustomText
+                type='body'
+                className='text-gray-700 mb-2 font-medium'
+              >
                 {t('loginPage.password')}
-              </Text>
+              </CustomText>
               <Input
                 onChangeText={(text: string) => setPassword(text)}
                 value={password}
@@ -134,9 +142,12 @@ export default function Auth() {
               className='mb-6 items-end'
               onPress={resetPassword}
             >
-              <Text className='text-base text-cinnabar'>
+              <CustomText
+                type='body'
+                className='text-cinnabar'
+              >
                 {t('loginPage.forgotPassword')}
-              </Text>
+              </CustomText>
             </TouchableOpacity>
 
             {/* Buttons */}
@@ -160,6 +171,74 @@ export default function Auth() {
               >
                 {t('loginPage.newAccount')}
               </Button>
+            </View>
+          </View>
+
+          {/* Footer con links */}
+          <View className='mt-6 items-center'>
+            <View className='flex-row flex-wrap justify-center gap-3'>
+              <CustomLink
+                href='/(tabs)/account/about-us'
+                mode='plainText'
+              >
+                <CustomText
+                  type='bodysmall'
+                  className='text-white'
+                >
+                  {t('screens.account.aboutUs')}
+                </CustomText>
+              </CustomLink>
+              <CustomText
+                type='bodysmall'
+                className='text-white'
+              >
+                •
+              </CustomText>
+              <CustomLink
+                href='/(tabs)/account/how-it-works'
+                mode='plainText'
+              >
+                <CustomText
+                  type='bodysmall'
+                  className='text-white'
+                >
+                  {t('screens.account.howItWorks')}
+                </CustomText>
+              </CustomLink>
+              <CustomText
+                type='bodysmall'
+                className='text-white'
+              >
+                •
+              </CustomText>
+              <CustomLink
+                href='/(tabs)/account/faqs'
+                mode='plainText'
+              >
+                <CustomText
+                  type='bodysmall'
+                  className='text-white'
+                >
+                  {t('screens.account.faqs')}
+                </CustomText>
+              </CustomLink>
+              <CustomText
+                type='bodysmall'
+                className='text-white'
+              >
+                •
+              </CustomText>
+              <CustomLink
+                href='/(tabs)/account/contact-us'
+                mode='plainText'
+              >
+                <CustomText
+                  type='bodysmall'
+                  className='text-white'
+                >
+                  {t('screens.account.contactUs')}
+                </CustomText>
+              </CustomLink>
             </View>
           </View>
         </View>

@@ -8,7 +8,7 @@ export default function AuctionStatsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
-    <ScrollView className='bg-gray-50 flex-1'>
+    <ScrollView className=' flex-1'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           Estadísticas - Subasta #{id}
@@ -50,7 +50,7 @@ export default function AuctionStatsScreen() {
         </View>
 
         {/* Historial de pujas */}
-        <View className='mb-4 rounded-lg bg-white p-4'>
+        <View className='mb-4 rounded-lg   p-4'>
           <Text className='mb-4 text-lg font-semibold'>Historial de Pujas</Text>
           <View className='space-y-3'>
             <View className='border-gray-100 flex-row items-center justify-between border-b py-2'>
@@ -80,7 +80,7 @@ export default function AuctionStatsScreen() {
         </View>
 
         {/* Rendimiento por tiempo */}
-        <View className='rounded-lg bg-white p-4'>
+        <View className='rounded-lg   p-4'>
           <Text className='mb-4 text-lg font-semibold'>
             Rendimiento por Tiempo
           </Text>

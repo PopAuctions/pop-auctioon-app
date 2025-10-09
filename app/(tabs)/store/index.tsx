@@ -108,7 +108,7 @@ export default function StoreScreen() {
 
   return (
     <SafeAreaView
-      className='flex-1 bg-white'
+      className='flex-1  '
       edges={['top']}
     >
       <ScrollView
@@ -154,7 +154,7 @@ export default function StoreScreen() {
 
           {/* Search Bar */}
           <TextInput
-            className='border-gray-200 bg-gray-50 rounded-lg border p-3'
+            className='border-gray-200  rounded-lg border p-3'
             placeholder={t('screens.store.searchPlaceholder')}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -167,11 +167,11 @@ export default function StoreScreen() {
             {filteredProducts.map((product) => (
               <TouchableOpacity
                 key={product.id}
-                className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
+                className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border  '
                 onPress={() => navigateWithAuth(`/(tabs)/store/${product.id}`)}
               >
                 {/* Product Image */}
-                <View className='bg-gray-50 aspect-square items-center justify-center'>
+                <View className=' aspect-square items-center justify-center'>
                   <Text className='text-6xl'>
                     {getProductIcon(product.category)}
                   </Text>

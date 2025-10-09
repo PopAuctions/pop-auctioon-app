@@ -37,7 +37,7 @@ export default function ProductDetailScreen() {
   const product = getProductData(id || '871');
 
   return (
-    <ScrollView className='flex-1 bg-white'>
+    <ScrollView className='flex-1  '>
       {/* Product Images Carousel */}
       <View className='relative'>
         <ScrollView
@@ -60,7 +60,7 @@ export default function ProductDetailScreen() {
 
         {/* Image Navigation Arrows */}
         <TouchableOpacity
-          className='absolute left-4 top-1/2 rounded-full bg-white/80 p-2'
+          className='absolute left-4 top-1/2 rounded-full  p-2'
           onPress={() =>
             setCurrentImageIndex(Math.max(0, currentImageIndex - 1))
           }
@@ -68,7 +68,7 @@ export default function ProductDetailScreen() {
           <Text>←</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className='absolute right-4 top-1/2 rounded-full bg-white/80 p-2'
+          className='absolute right-4 top-1/2 rounded-full  p-2'
           onPress={() =>
             setCurrentImageIndex(
               Math.min(product.images - 1, currentImageIndex + 1)
@@ -133,7 +133,7 @@ export default function ProductDetailScreen() {
           </View>
 
           {/* Right Column - Make Offer */}
-          <View className='bg-gray-50 w-80 rounded-lg p-4'>
+          <View className=' w-80 rounded-lg p-4'>
             <Text className='mb-4 text-xl font-semibold'>
               Make an offer to the seller!
             </Text>

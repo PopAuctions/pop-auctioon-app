@@ -26,7 +26,7 @@ export default function CalendarScreen() {
 
   if (status === 'loading') {
     return (
-      <View className='flex-1 items-center justify-center bg-white'>
+      <View className='flex-1 items-center justify-center  '>
         <ActivityIndicator
           size='large'
           color='#d75639'
@@ -43,7 +43,7 @@ export default function CalendarScreen() {
 
   if (status === 'error') {
     return (
-      <View className='flex-1 items-center justify-center bg-white p-4'>
+      <View className='flex-1 items-center justify-center   p-4'>
         <CustomText
           type='body'
           className='mb-4 text-center text-red-500'
@@ -70,7 +70,7 @@ export default function CalendarScreen() {
   };
 
   return (
-    <ScrollView className='flex-1 bg-white'>
+    <ScrollView className='flex-1  '>
       <View className='p-4'>
         {auctions?.this_month && (
           <View className='mb-8'>
@@ -96,7 +96,7 @@ export default function CalendarScreen() {
                     href={`/(tabs)/auctions/${auction.id}`}
                     mode='empty'
                   >
-                    <View className='overflow-hidden rounded-xl bg-white shadow-sm'>
+                    <View className='overflow-hidden rounded-xl   shadow-sm'>
                       <View className='min-h-[220px] flex-row py-6 '>
                         {/* Imagen grande a la izquierda */}
                         <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>
@@ -209,7 +209,7 @@ export default function CalendarScreen() {
                     href={`/(tabs)/auctions/${auction.id}`}
                     mode='empty'
                   >
-                    <View className='overflow-hidden rounded-xl bg-white shadow-sm'>
+                    <View className='overflow-hidden rounded-xl   shadow-sm'>
                       <View className='min-h-[220px] flex-row py-6 '>
                         {/* Imagen grande a la izquierda */}
                         <View className='bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg'>

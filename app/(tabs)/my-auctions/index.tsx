@@ -80,12 +80,12 @@ export default function MyAuctionsScreen() {
 
   return (
     <SafeAreaView
-      className='bg-gray-50 flex-1'
+      className=' flex-1'
       edges={['top']}
     >
       <ScrollView className='flex-1'>
         {/* Header */}
-        <View className='border-gray-200 border-b bg-white p-4'>
+        <View className='border-gray-200 border-b   p-4'>
           <Text className='text-gray-800 mb-2 text-2xl font-bold'>
             {t('screens.myAuctions.title')}
           </Text>
@@ -103,7 +103,7 @@ export default function MyAuctionsScreen() {
         </View>
 
         {/* Statistics Overview */}
-        <View className='mx-4 mt-4 rounded-lg bg-white p-4 shadow-sm'>
+        <View className='mx-4 mt-4 rounded-lg   p-4 shadow-sm'>
           <Text className='text-gray-800 mb-3 text-lg font-semibold'>
             📊 Resumen
           </Text>
@@ -128,7 +128,7 @@ export default function MyAuctionsScreen() {
           {myAuctions.map((auction) => (
             <TouchableOpacity
               key={auction.id}
-              className='border-gray-200 mb-3 rounded-lg border bg-white p-4 shadow-sm'
+              className='border-gray-200 mb-3 rounded-lg border   p-4 shadow-sm'
               onPress={() =>
                 navigateWithAuth(`/(tabs)/my-auctions/${auction.id}`)
               }

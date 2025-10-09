@@ -36,7 +36,7 @@ export default function CreateAuctionScreen() {
   };
 
   return (
-    <ScrollView className='flex-1 bg-white'>
+    <ScrollView className='flex-1  '>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           {t('screens.myAuctions.createAuction')}

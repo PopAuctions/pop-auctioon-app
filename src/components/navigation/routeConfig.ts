@@ -38,18 +38,6 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'payments-history': {
     requiresAuth: true,
   },
-  'about-us': {
-    requiresAuth: true,
-  },
-  'how-it-works': {
-    requiresAuth: true,
-  },
-  faqs: {
-    requiresAuth: true,
-  },
-  'contact-us': {
-    requiresAuth: true,
-  },
   // Rutas que requieren LOGIN + rol específico
   'my-auctions': {
     requiresAuth: true,

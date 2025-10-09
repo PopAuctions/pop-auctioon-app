@@ -25,12 +25,12 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <SafeAreaView
-      className='flex-1 bg-white'
+      className='flex-1 '
       edges={['top']}
     >
       <ScrollView className='flex-1'>
         {/* Header con avatar y nombre de usuario */}
-        <View className='border-gray-200 border-b bg-white px-6 pb-6 pt-4'>
+        <View className='border-gray-200 border-b  px-6 pb-6 pt-4'>
           <View className='flex-row items-center'>
             {/* Avatar circular con iniciales */}
             <View className='mr-4 h-16 w-16 items-center justify-center rounded-full bg-yellow-400'>
@@ -55,25 +55,23 @@ export default function Account({ session }: { session: Session }) {
         </View>
 
         {/* Opciones de cuenta */}
-        <View className='p-4'>
+        <View className='mx-2 p-4'>
           {/* Edit Profile */}
           <CustomLink
             href='/(tabs)/account/edit-profile'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='user'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.editProfile')}
               </CustomText>
             </View>
@@ -88,20 +86,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/reset-password'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='lock'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.resetPassword')}
               </CustomText>
             </View>
@@ -116,20 +112,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/verify-phone'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='phone'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.verifyPhone')}
               </CustomText>
             </View>
@@ -144,20 +138,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/addresses'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='map-marker'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.addresses')}
               </CustomText>
             </View>
@@ -172,20 +164,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/billing-info'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='credit-card'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.billingInfo')}
               </CustomText>
             </View>
@@ -200,20 +190,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/payments-history'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='history'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.paymentsHistory')}
               </CustomText>
             </View>
@@ -231,20 +219,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/about-us'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='info-circle'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.aboutUs')}
               </CustomText>
             </View>
@@ -259,20 +245,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/how-it-works'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='question-circle'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.howItWorks')}
               </CustomText>
             </View>
@@ -287,22 +271,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/faqs'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='comments'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
-                {t('screens.account.faqs')}
-              </CustomText>
+              <CustomText type='body'>{t('screens.account.faqs')}</CustomText>
             </View>
             <FontAwesome
               name='chevron-right'
@@ -315,20 +295,18 @@ export default function Account({ session }: { session: Session }) {
           <CustomLink
             href='/(tabs)/account/contact-us'
             mode='empty'
-            className='border-gray-200 mb-3 flex-row items-center justify-between border-b py-4'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className='bg-gray-200 mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='envelope'
                   size={20}
                   color='#4d4d4d'
                 />
               </View>
-              <CustomText
-                type='body'
-                className='text-base text-black'
-              >
+              <CustomText type='body'>
                 {t('screens.account.contactUs')}
               </CustomText>
             </View>
@@ -342,7 +320,7 @@ export default function Account({ session }: { session: Session }) {
           {/* Sign Out Button */}
           <TouchableOpacity
             onPress={handleSignOut}
-            className='mt-6 items-center rounded-lg bg-red-600 py-4'
+            className='mt-6 items-center rounded-lg bg-cinnabar py-4'
           >
             <View className='flex-row items-center'>
               <FontAwesome

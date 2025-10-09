@@ -12,7 +12,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView
-      className='flex-1 bg-white'
+      className='flex-1  '
       edges={['top']}
     >
       <ScrollView className='flex-1'>
