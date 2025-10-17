@@ -1,39 +1,8 @@
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useAuth } from '@/context/auth-context';
-import { TouchableOpacity, Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function AccountLayout() {
   const { t } = useTranslation();
-  const { getSession } = useAuth();
-  const [session] = getSession();
-
-  // Handler para el botón back de rutas públicas
-  const handlePublicRouteBack = () => {
-    if (session) {
-      // Usuario loggeado → Regresar a account
-      router.replace('/(tabs)/account');
-    } else {
-      // Usuario NO loggeado → Regresar a login
-      router.replace('/(tabs)/auth');
-    }
-  };
-
-  // Componente de botón back que siempre se muestra
-  const BackButton = () => (
-    <TouchableOpacity
-      onPress={handlePublicRouteBack}
-      className='pl-4 pr-6'
-      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-    >
-      <Ionicons
-        name={Platform.OS === 'ios' ? 'chevron-back' : 'arrow-back'}
-        size={24}
-        color='#000'
-      />
-    </TouchableOpacity>
-  );
 
   return (
     <Stack
@@ -102,7 +71,6 @@ export default function AccountLayout() {
         options={{
           title: t('screens.account.aboutUs'),
           presentation: 'card',
-          headerLeft: () => <BackButton />,
         }}
       />
       <Stack.Screen
@@ -110,7 +78,6 @@ export default function AccountLayout() {
         options={{
           title: t('screens.account.howItWorks'),
           presentation: 'card',
-          headerLeft: () => <BackButton />,
         }}
       />
       <Stack.Screen
@@ -118,7 +85,6 @@ export default function AccountLayout() {
         options={{
           title: t('screens.account.faqs'),
           presentation: 'card',
-          headerLeft: () => <BackButton />,
         }}
       />
       <Stack.Screen
@@ -126,7 +92,6 @@ export default function AccountLayout() {
         options={{
           title: t('screens.account.contactUs'),
           presentation: 'card',
-          headerLeft: () => <BackButton />,
         }}
       />
     </Stack>
