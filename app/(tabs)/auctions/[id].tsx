@@ -14,6 +14,7 @@ import { CustomLink } from '@/components/ui/CustomLink';
 import { HowAutoLiveWorksModal } from '@/components/modal/how-auto-live-works';
 import { AuctionMode } from '@/types/types';
 import { ShareButton } from '@/components/ui/ShareButton';
+import { AuctionDisplayDateTime } from '@/components/auctions/auction-display-date-time';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -78,17 +79,11 @@ export default function AuctionDetailScreen() {
               </View>
               <CustomText type='h1'>{auction.title}</CustomText>
               {auction.status !== AuctionStatus.LIVE && (
-                // <AuctionDisplayDateTime
-                //   singleLine={true}
-                //   startDate={auction.startDate}
-                //   locale={locale}
-                // />
-                <CustomText
-                  type='h4'
-                  className='text-base text-cinnabar'
-                >
-                  date-time display
-                </CustomText>
+                <AuctionDisplayDateTime
+                  singleLine={true}
+                  startDate={auction.startDate}
+                  locale={locale}
+                />
               )}
             </View>
             <View className='flex flex-col md:flex-row'>
