@@ -15,6 +15,8 @@ import { HowAutoLiveWorksModal } from '@/components/modal/how-auto-live-works';
 import { AuctionMode } from '@/types/types';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/auction-display-date-time';
+import { CountdownComponent } from '@/components/ui/countdown-component';
+import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -91,21 +93,15 @@ export default function AuctionDetailScreen() {
                 auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
                 auction.status ===
                   AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE) && (
-                // <CountdownComponent
-                //   dateString={auction.startDate}
-                //   id={id}
-                //   locale={locale}
-                //   auctionLang={auctionLang}
-                //   auctionMode={auctionMode}
-                //   auctionView={true}
-                //   minutesBefore={MINUTES_BEFORE_ENTERING}
-                // />
-                <CustomText
-                  type='h4'
-                  className='text-base text-cinnabar'
-                >
-                  Countdown
-                </CustomText>
+                <CountdownComponent
+                  dateString={auction.startDate}
+                  id={id}
+                  locale={locale}
+                  auctionLang={auctionLang}
+                  auctionMode={auctionMode}
+                  auctionView={true}
+                  minutesBefore={MINUTES_BEFORE_ENTERING}
+                />
               )}
               {auction.status === AuctionStatus.LIVE && (
                 <View className='flex flex-col items-center gap-2'>

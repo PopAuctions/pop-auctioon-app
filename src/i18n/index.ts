@@ -7,7 +7,7 @@ import es from './locales/es.json';
 import en from './locales/en.json';
 import { Path, PathValue } from '@/types/i18n';
 
-type Translations = {
+export type Translations = {
   es: typeof es;
   en: typeof en;
 };
