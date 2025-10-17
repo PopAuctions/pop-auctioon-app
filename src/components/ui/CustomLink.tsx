@@ -28,13 +28,22 @@ interface CustomLinkProps {
 
 const LINK_MODE_STYLES = {
   primary:
-    'text-white rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80',
+    'rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80',
   secondary:
-    'text-cinnabar rounded-lg flex-row gap-3 items-center justify-center bg-white border border-silver active:opacity-80',
-  plainText: 'text-cinnabar active:opacity-70',
+    'rounded-lg flex-row gap-3 items-center justify-center bg-white border border-silver active:opacity-80',
+  plainText: 'active:opacity-70',
   empty: '',
 };
 
+const TEXT_COLOR_BY_MODE: Record<
+  NonNullable<CustomLinkProps['mode']>,
+  string
+> = {
+  primary: 'text-white',
+  secondary: 'text-cinnabar',
+  plainText: 'text-cinnabar',
+  empty: '',
+};
 const LINK_SIZE_STYLES = {
   primary: {
     small: 'px-4 py-2',
@@ -126,8 +135,8 @@ export const CustomLink = forwardRef<
         ${modeStyle}
         ${hoverEffects}
         text-center
-        text-base
         font-normal
+        text-white
         ${className || ''}
       `}
         style={style}
@@ -137,7 +146,7 @@ export const CustomLink = forwardRef<
           children
         ) : (
           <Text
-            className={`text-center text-base font-normal ${mode === 'plainText' ? 'underline' : ''}`}
+            className={`text-center text-base font-normal ${TEXT_COLOR_BY_MODE[mode]} ${mode === 'plainText' ? 'underline' : ''}`}
           >
             {children}
           </Text>
