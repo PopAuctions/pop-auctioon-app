@@ -11,9 +11,11 @@ jest.mock('expo-router', () => ({
 }));
 
 // Mock de auth-context
-const mockUseAuth = jest.fn();
+const mockGetSession = jest.fn();
 jest.mock('@/context/auth-context', () => ({
-  useAuth: () => mockUseAuth(),
+  useAuth: () => ({
+    getSession: mockGetSession,
+  }),
 }));
 
 // Mock de routeConfig
@@ -39,10 +41,7 @@ describe('useAuthNavigation', () => {
   });
 
   it('should redirect to auth when no session', () => {
-    mockUseAuth.mockReturnValue({
-      session: null,
-      role: null,
-    });
+    mockGetSession.mockReturnValue([null, null]);
 
     const { result } = renderHook(() => useAuthNavigation());
 
@@ -55,10 +54,7 @@ describe('useAuthNavigation', () => {
   });
 
   it('should block navigation when user has wrong role', () => {
-    mockUseAuth.mockReturnValue({
-      session: { user: { id: '123' } },
-      role: 'USER', // No es AUCTIONEER
-    });
+    mockGetSession.mockReturnValue([{ user: { id: '123' } }, 'USER']);
 
     const { result } = renderHook(() => useAuthNavigation());
 
@@ -73,10 +69,7 @@ describe('useAuthNavigation', () => {
   });
 
   it('should allow navigation when user has correct role', () => {
-    mockUseAuth.mockReturnValue({
-      session: { user: { id: '123' } },
-      role: 'AUCTIONEER',
-    });
+    mockGetSession.mockReturnValue([{ user: { id: '123' } }, 'AUCTIONEER']);
 
     const { result } = renderHook(() => useAuthNavigation());
 
@@ -89,10 +82,7 @@ describe('useAuthNavigation', () => {
   });
 
   it('should allow navigation to routes that only require auth', () => {
-    mockUseAuth.mockReturnValue({
-      session: { user: { id: '123' } },
-      role: 'USER', // Usuario normal
-    });
+    mockGetSession.mockReturnValue([{ user: { id: '123' } }, 'USER']);
 
     const { result } = renderHook(() => useAuthNavigation());
 
@@ -105,10 +95,7 @@ describe('useAuthNavigation', () => {
   });
 
   it('should handle replace option correctly', () => {
-    mockUseAuth.mockReturnValue({
-      session: { user: { id: '123' } },
-      role: 'USER',
-    });
+    mockGetSession.mockReturnValue([{ user: { id: '123' } }, 'USER']);
 
     const { result } = renderHook(() => useAuthNavigation());
 
@@ -123,10 +110,7 @@ describe('useAuthNavigation', () => {
   });
 
   it('should block all navigation when no session (even unprotected routes)', () => {
-    mockUseAuth.mockReturnValue({
-      session: null, // Sin sesión
-      role: null,
-    });
+    mockGetSession.mockReturnValue([null, null]);
 
     const { result } = renderHook(() => useAuthNavigation());
 

@@ -9,32 +9,35 @@ let mockI18nLocale = 'es';
 
 // Mock de los módulos de i18n
 jest.mock('@/i18n', () => {
+  const mockTranslate = jest.fn((key: string) => {
+    // Importar traducciones reales dentro del mock
+    const mockEsTranslations = require('@/i18n/locales/es.json');
+    const mockEnTranslations = require('@/i18n/locales/en.json');
+
+    // Simular el comportamiento del i18n con locale actual
+    const translations =
+      mockI18nLocale === 'en' ? mockEnTranslations : mockEsTranslations;
+
+    const keys = key.split('.');
+    let value: any = translations;
+
+    for (const k of keys) {
+      value = value[k];
+      if (value === undefined) break;
+    }
+
+    return value || key;
+  });
+
   const mockI18n = {
-    t: jest.fn((key: string) => {
-      // Importar traducciones reales dentro del mock
-      const mockEsTranslations = require('@/i18n/locales/es.json');
-      const mockEnTranslations = require('@/i18n/locales/en.json');
-
-      // Simular el comportamiento del i18n con locale actual
-      const translations =
-        mockI18nLocale === 'en' ? mockEnTranslations : mockEsTranslations;
-
-      const keys = key.split('.');
-      let value: any = translations;
-
-      for (const k of keys) {
-        value = value[k];
-        if (value === undefined) break;
-      }
-
-      return value || key;
-    }),
+    t: mockTranslate,
     locale: 'es', // Valor por defecto
   };
 
   return {
     __esModule: true,
     default: mockI18n,
+    t: mockTranslate, // Exportar t directamente
     getCurrentLocale: jest.fn(() => mockI18nLocale),
     changeLocale: jest.fn((newLocale: string) => {
       mockI18nLocale = newLocale;
@@ -90,7 +93,7 @@ describe('useTranslation Hook', () => {
     it('should return the key if translation is not found', () => {
       const { result } = renderHook(() => useTranslation());
 
-      const nonExistentKey = result.current.t('nonexistent.key');
+      const nonExistentKey = result.current.t('nonexistent.key' as any);
 
       expect(nonExistentKey).toBe('nonexistent.key');
     });
@@ -98,9 +101,9 @@ describe('useTranslation Hook', () => {
     it('should handle empty or invalid keys gracefully', () => {
       const { result } = renderHook(() => useTranslation());
 
-      expect(result.current.t('')).toBe('');
-      expect(result.current.t('.')).toBe('.');
-      expect(result.current.t('...')).toBe('...');
+      expect(result.current.t('' as any)).toBe('');
+      expect(result.current.t('.' as any)).toBe('.');
+      expect(result.current.t('...' as any)).toBe('...');
     });
   });
 

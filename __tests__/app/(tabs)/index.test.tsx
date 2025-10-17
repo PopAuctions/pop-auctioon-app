@@ -19,7 +19,7 @@ describe('TabOneScreen', () => {
 
   it('redirects to auth when no session', () => {
     mockUseAuth.mockReturnValue({
-      session: null,
+      auth: { state: 'unauthenticated' },
     });
 
     render(<TabOneScreen />);
@@ -37,8 +37,11 @@ describe('TabOneScreen', () => {
 
   it('should redirect to home when session exists', () => {
     mockUseAuth.mockReturnValue({
-      session: { user: { id: '123' } }, // Con sesión
-      role: 'USER',
+      auth: {
+        state: 'authenticated',
+        session: { user: { id: '123' } },
+        role: 'USER',
+      },
     });
 
     render(<TabOneScreen />);
@@ -55,6 +58,14 @@ describe('TabOneScreen', () => {
   });
 
   it('should render without crashing', () => {
+    mockUseAuth.mockReturnValue({
+      auth: {
+        state: 'authenticated',
+        session: { user: { id: '123' } },
+        role: 'USER',
+      },
+    });
+
     // Test básico de smoke test
     expect(() => render(<TabOneScreen />)).not.toThrow();
   });
