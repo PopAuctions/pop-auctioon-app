@@ -67,31 +67,10 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
-        name='about-us'
+        name='info/[page]'
         options={{
-          title: t('screens.account.aboutUs'),
           presentation: 'card',
-        }}
-      />
-      <Stack.Screen
-        name='how-it-works'
-        options={{
-          title: t('screens.account.howItWorks'),
-          presentation: 'card',
-        }}
-      />
-      <Stack.Screen
-        name='faqs'
-        options={{
-          title: t('screens.account.faqs'),
-          presentation: 'card',
-        }}
-      />
-      <Stack.Screen
-        name='contact-us'
-        options={{
-          title: t('screens.account.contactUs'),
-          presentation: 'card',
+          // El título se establece dinámicamente desde el componente
         }}
       />
     </Stack>

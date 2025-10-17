@@ -191,7 +191,7 @@ export default function Auth() {
             <View className='mb-6 mt-6 items-center'>
               <View className='flex-row flex-wrap justify-center gap-3'>
                 <CustomLink
-                  href='/(tabs)/account/about-us'
+                  href='/(tabs)/auth/info/about-us'
                   mode='plainText'
                 >
                   <CustomText
@@ -208,7 +208,7 @@ export default function Auth() {
                   •
                 </CustomText>
                 <CustomLink
-                  href='/(tabs)/account/how-it-works'
+                  href='/(tabs)/auth/info/how-it-works'
                   mode='plainText'
                 >
                   <CustomText
@@ -225,7 +225,7 @@ export default function Auth() {
                   •
                 </CustomText>
                 <CustomLink
-                  href='/(tabs)/account/faqs'
+                  href='/(tabs)/auth/info/faqs'
                   mode='plainText'
                 >
                   <CustomText
@@ -242,7 +242,7 @@ export default function Auth() {
                   •
                 </CustomText>
                 <CustomLink
-                  href='/(tabs)/account/contact-us'
+                  href='/(tabs)/auth/info/contact-us'
                   mode='plainText'
                 >
                   <CustomText

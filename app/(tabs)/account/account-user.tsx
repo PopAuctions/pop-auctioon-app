@@ -217,7 +217,7 @@ export default function Account({ session }: { session: Session }) {
 
           {/* About Us */}
           <CustomLink
-            href='/(tabs)/account/about-us'
+            href='/(tabs)/account/info/about-us'
             mode='empty'
             hoverEffect={false}
             className='mb-3 flex-row items-center justify-between py-4'
@@ -243,7 +243,7 @@ export default function Account({ session }: { session: Session }) {
 
           {/* How it Works */}
           <CustomLink
-            href='/(tabs)/account/how-it-works'
+            href='/(tabs)/account/info/how-it-works'
             mode='empty'
             hoverEffect={false}
             className='mb-3 flex-row items-center justify-between py-4'
@@ -269,7 +269,7 @@ export default function Account({ session }: { session: Session }) {
 
           {/* FAQs */}
           <CustomLink
-            href='/(tabs)/account/faqs'
+            href='/(tabs)/account/info/faqs'
             mode='empty'
             hoverEffect={false}
             className='mb-3 flex-row items-center justify-between py-4'
@@ -293,7 +293,7 @@ export default function Account({ session }: { session: Session }) {
 
           {/* Contact Us */}
           <CustomLink
-            href='/(tabs)/account/contact-us'
+            href='/(tabs)/account/info/contact-us'
             mode='empty'
             hoverEffect={false}
             className='mb-3 flex-row items-center justify-between py-4'

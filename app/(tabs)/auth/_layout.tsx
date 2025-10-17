@@ -36,6 +36,14 @@ export default function AuthLayout() {
         }}
       />
       */}
+      <Stack.Screen
+        name='info/[page]'
+        options={{
+          presentation: 'card',
+          headerShown: true,
+          // El título se establece dinámicamente desde el componente
+        }}
+      />
     </Stack>
   );
 }
