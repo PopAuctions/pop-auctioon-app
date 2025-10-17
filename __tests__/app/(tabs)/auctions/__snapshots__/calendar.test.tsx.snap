@@ -2,7 +2,7 @@
 
 exports[`CalendarScreen should match snapshot - empty state 1`] = `
 <RCTScrollView
-  className="flex-1 bg-white"
+  className="flex-1  "
 >
   <View>
     <View
@@ -64,7 +64,7 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
 
 exports[`CalendarScreen should match snapshot - with auctions 1`] = `
 <RCTScrollView
-  className="flex-1 bg-white"
+  className="flex-1  "
 >
   <View>
     <View
@@ -89,7 +89,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
           className="space-y-6"
         >
           <View
-            className="overflow-hidden rounded-xl bg-white shadow-sm"
+            className="overflow-hidden rounded-xl   shadow-sm"
           >
             <View
               className="min-h-[220px] flex-row py-6 "
