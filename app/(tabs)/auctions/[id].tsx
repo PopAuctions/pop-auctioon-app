@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Pressable } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
@@ -11,6 +11,8 @@ import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomLink } from '@/components/ui/CustomLink';
+import { HowAutoLiveWorksModal } from '@/components/modal/how-auto-live-works';
+import { AuctionMode } from '@/types/types';
 // import { ShareButton } from '@/components/ui/ShareButton';
 
 export default function AuctionDetailScreen() {
@@ -51,27 +53,35 @@ export default function AuctionDetailScreen() {
           <View className='mt-0 flex w-full flex-col items-center justify-center gap-2 space-y-3 lg:w-1/2 lg:space-y-6'>
             <View className='flex flex-col items-center gap-2 text-center'>
               <View className='flex'>
-                <CustomText
-                  type='h4'
-                  className='text-base text-cinnabar'
-                >
-                  {AUCTION_MODE_LABEL[locale][auctionMode]}
-                </CustomText>
-
-                {/* {auctionMode === AuctionMode.AUTOMATIC && (
-                  <View className='ml-2 flex items-center hover:cursor-pointer'>
-                    <HowAutoLiveWorksModal lang={locale}>
-                      <InfoIcon className='h-4 w-4 text-cinnabar' />
-                    </HowAutoLiveWorksModal>
-                  </View>
-                )} */}
+                {auctionMode === AuctionMode.AUTOMATIC ? (
+                  <HowAutoLiveWorksModal
+                    locale={locale}
+                    trigger={(open) => (
+                      <Pressable onPress={open}>
+                        <CustomText
+                          type='h4'
+                          className='text-cinnabar underline'
+                        >
+                          {AUCTION_MODE_LABEL[locale][auctionMode]}
+                        </CustomText>
+                      </Pressable>
+                    )}
+                  />
+                ) : (
+                  <CustomText
+                    type='h4'
+                    className='text-base text-cinnabar'
+                  >
+                    {AUCTION_MODE_LABEL[locale][auctionMode]}
+                  </CustomText>
+                )}
               </View>
               <CustomText type='h1'>{auction.title}</CustomText>
               {auction.status !== AuctionStatus.LIVE && (
                 // <AuctionDisplayDateTime
                 //   singleLine={true}
                 //   startDate={auction.startDate}
-                //   lang={locale}
+                //   locale={locale}
                 // />
                 <CustomText
                   type='h4'
@@ -89,7 +99,7 @@ export default function AuctionDetailScreen() {
                 // <CountdownComponent
                 //   dateString={auction.startDate}
                 //   id={id}
-                //   lang={locale}
+                //   locale={locale}
                 //   auctionLang={auctionLang}
                 //   auctionMode={auctionMode}
                 //   auctionView={true}
@@ -147,7 +157,7 @@ export default function AuctionDetailScreen() {
                   //   id={id}
                   //   followFunction={followAuction}
                   //   unfollowFunction={unfollowAuction}
-                  //   lang={locale}
+                  //   locale={locale}
                   //   isAvailable={!isAuctionAvailable}
                   // >
                   //   {followsAuction.follows
