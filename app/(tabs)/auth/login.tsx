@@ -22,6 +22,7 @@ AppState.addEventListener('change', (state) => {
 });
 
 export default function Auth() {
+  // WIP: remove states and use useForm from react-hook-form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -59,6 +60,8 @@ export default function Auth() {
     } else if (!session) {
       Alert.alert('Please check your inbox for email verification!');
     } else {
+      setEmail('');
+      setPassword('');
       // Registro exitoso con sesión activa - redirigir al home y reemplazar login
       router.replace('/(tabs)/home');
     }
@@ -155,7 +158,6 @@ export default function Auth() {
             <View className='mb-4'>
               <Button
                 mode='secondary'
-                isLoading={loading}
                 disabled={loading}
                 onPress={signUpWithEmail}
               >
