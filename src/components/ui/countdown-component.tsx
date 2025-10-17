@@ -101,7 +101,7 @@ export function CountdownComponent({
 
         {auctionMode === AuctionMode.AUTOMATIC ? (
           <CustomLink
-            className='mt-2 w-full lg:w-fit'
+            className='mt-1 w-full'
             mode='primary'
             href={`/auction/${id}/live-auto`}
           >
@@ -136,7 +136,7 @@ export function CountdownComponent({
         hours <= 0 &&
         minutes <= minutesBefore && (
           <CustomLink
-            className='w-full lg:w-fit'
+            className='w-full'
             mode='primary'
             href={`/auction/${id}/live-auto`}
           >

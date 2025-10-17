@@ -146,7 +146,7 @@ export const CustomLink = forwardRef<
           children
         ) : (
           <Text
-            className={`text-center text-base font-normal ${TEXT_COLOR_BY_MODE[mode]} ${mode === 'plainText' ? 'underline' : ''}`}
+            className={`text-center text-lg font-normal ${TEXT_COLOR_BY_MODE[mode]} ${mode === 'plainText' ? 'underline' : ''}`}
           >
             {children}
           </Text>

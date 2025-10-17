@@ -52,9 +52,9 @@ export default function AuctionDetailScreen() {
   return (
     <View className='bg-gray-50 flex-1'>
       <ScrollView className='flex-1 bg-white'>
-        <View className='mt-5 flex w-full flex-col lg:mt-0 lg:flex-row lg:justify-center'>
-          <View className='mt-0 flex w-full flex-col items-center justify-center gap-2 space-y-3 lg:w-1/2 lg:space-y-6'>
-            <View className='flex w-full flex-col items-center gap-2 text-center'>
+        <View className='mt-5 flex w-full flex-col'>
+          <View className='mt-0 flex w-full flex-col items-center justify-center gap-4'>
+            <View className='flex w-full flex-col items-center gap-3 text-center'>
               <View className='flex'>
                 {auctionMode === AuctionMode.AUTOMATIC ? (
                   <HowAutoLiveWorksModal
@@ -79,7 +79,12 @@ export default function AuctionDetailScreen() {
                   </CustomText>
                 )}
               </View>
-              <CustomText type='h1'>{auction.title}</CustomText>
+              <CustomText
+                type='h1'
+                className='text-center'
+              >
+                {auction.title}
+              </CustomText>
               {auction.status !== AuctionStatus.LIVE && (
                 <AuctionDisplayDateTime
                   singleLine={true}
@@ -165,16 +170,8 @@ export default function AuctionDetailScreen() {
                 </ShareButton>
               </View>
             )}
-            {/* <View className='flex max-w-96 justify-center text-center'>
-                <CustomText
-                  type='body'
-                  className='text-sm text-cinnabar'
-                >
-                  {auctionLang.specialMessage}
-                </CustomText>
-              </View> */}
           </View>
-          <View className='mx-auto mt-10 aspect-[3/4] w-full max-w-80 overflow-hidden rounded-lg'>
+          <View className='rounded- mx-auto mt-10 aspect-[3/4] w-full max-w-80 overflow-hidden'>
             <CustomImage
               src={auction.image}
               alt={auction.title}

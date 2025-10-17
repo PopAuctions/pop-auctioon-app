@@ -103,13 +103,7 @@ export const Button = forwardRef<View, ButtonProps>(
           pointerEvents='none'
         >
           {typeof children === 'string' ? (
-            <Text
-              className={cn(
-                'text-base font-normal',
-                textColorForMode,
-                textClassName
-              )}
-            >
+            <Text className={cn('text-lg', textColorForMode, textClassName)}>
               {children}
             </Text>
           ) : (
