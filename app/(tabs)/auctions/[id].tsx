@@ -13,7 +13,7 @@ import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { HowAutoLiveWorksModal } from '@/components/modal/how-auto-live-works';
 import { AuctionMode } from '@/types/types';
-// import { ShareButton } from '@/components/ui/ShareButton';
+import { ShareButton } from '@/components/ui/ShareButton';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -51,7 +51,7 @@ export default function AuctionDetailScreen() {
       <ScrollView className='flex-1 bg-white'>
         <View className='mt-5 flex w-full flex-col lg:mt-0 lg:flex-row lg:justify-center'>
           <View className='mt-0 flex w-full flex-col items-center justify-center gap-2 space-y-3 lg:w-1/2 lg:space-y-6'>
-            <View className='flex flex-col items-center gap-2 text-center'>
+            <View className='flex w-full flex-col items-center gap-2 text-center'>
               <View className='flex'>
                 {auctionMode === AuctionMode.AUTOMATIC ? (
                   <HowAutoLiveWorksModal
@@ -134,24 +134,25 @@ export default function AuctionDetailScreen() {
               )}
             </View>
             {auction.status !== AuctionStatus.FINISHED && (
-              <View className='flex w-4/5 justify-center gap-5 md:w-1/2 lg:w-full'>
+              <View className='flex w-4/5 flex-row justify-center gap-5 md:w-1/2'>
                 {auction.status === AuctionStatus.LIVE ? (
                   <CustomLink
-                    className='w-full lg:w-fit'
+                    className='w-1/2'
                     mode='primary'
+                    // WIP: fix URL
                     href={`/auction/${id}${LIVE_URL[auctionMode]}`}
                   >
                     {auctionLang.watchButton}
                   </CustomLink>
                 ) : (
-                  <CustomText
-                    type='h4'
-                    className='text-base text-cinnabar'
+                  <ShareButton
+                    className='w-1/2'
+                    mode='primary'
                   >
-                    Follow button
-                  </CustomText>
+                    {auctionLang.follow}
+                  </ShareButton>
                   // <FollowButton
-                  //   className='w-full lg:w-fit'
+                  //   className='w-1/2'
                   //   mode='primary'
                   //   follows={followsAuction.follows}
                   //   id={id}
@@ -165,18 +166,12 @@ export default function AuctionDetailScreen() {
                   //     : auctionLang.follow}
                   // </FollowButton>
                 )}
-                {/* <ShareButton
-                  className='w-full lg:w-fit'
+                <ShareButton
+                  className='w-1/2'
                   mode='secondary'
                 >
                   {auctionLang.share}
-                </ShareButton> */}
-                <CustomText
-                  type='h4'
-                  className='text-base text-cinnabar'
-                >
-                  Share button
-                </CustomText>
+                </ShareButton>
               </View>
             )}
             {/* <View className='flex max-w-96 justify-center text-center'>
