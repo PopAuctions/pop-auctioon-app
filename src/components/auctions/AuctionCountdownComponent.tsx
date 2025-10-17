@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View, AppState, AppStateStatus } from 'react-native';
-import { CustomText } from './CustomText';
-import { CustomLink } from './CustomLink';
+import { CustomText } from '../ui/CustomText';
+import { CustomLink } from '../ui/CustomLink';
 import { AuctionMode, AuctionModeEnum, Lang } from '@/types/types';
 import { Translations } from '@/i18n';
 
@@ -35,7 +35,7 @@ function diffToDHMS(ms: number): RendererState {
   return { days, hours, minutes, seconds, completed: false };
 }
 
-export function CountdownComponent({
+export function AuctionCountdownComponent({
   dateString,
   id,
   locale,

@@ -11,12 +11,12 @@ import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { HowAutoLiveWorksModal } from '@/components/modal/how-auto-live-works';
+import { HowAutoLiveWorksModal } from '@/components/modal/HowAutoLiveWorks';
 import { AuctionMode } from '@/types/types';
 import { ShareButton } from '@/components/ui/ShareButton';
-import { AuctionDisplayDateTime } from '@/components/auctions/auction-display-date-time';
-import { CountdownComponent } from '@/components/ui/countdown-component';
+import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
+import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -98,7 +98,7 @@ export default function AuctionDetailScreen() {
                 auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
                 auction.status ===
                   AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE) && (
-                <CountdownComponent
+                <AuctionCountdownComponent
                   dateString={auction.startDate}
                   id={id}
                   locale={locale}

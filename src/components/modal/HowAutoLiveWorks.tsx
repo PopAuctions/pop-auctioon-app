@@ -146,7 +146,7 @@ export function HowAutoLiveWorksModal({
                   >
                     <CustomText
                       type='body'
-                      className='text-white'
+                      className='text-center text-white'
                     >
                       {texts.back}
                     </CustomText>
