@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Info Components AboutUsContent should match snapshot 1`] = `
+<View
+  className="flex-1  "
+>
+  <View
+    className="p-6"
+  >
+    <Text
+      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+    >
+      About Us
+    </Text>
+    <Text
+      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
+    >
+      Learn more about PopAuction
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Info Components ContactUsContent should match snapshot 1`] = `
+<View
+  className="flex-1  "
+>
+  <View
+    className="p-6"
+  >
+    <Text
+      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+    >
+      Contact Us
+    </Text>
+    <Text
+      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
+    >
+      Get in touch with our team
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Info Components FAQsContent should match snapshot 1`] = `
+<View
+  className="flex-1  "
+>
+  <View
+    className="p-6"
+  >
+    <Text
+      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+    >
+      Frequently Asked Questions
+    </Text>
+    <Text
+      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
+    >
+      Find answers to common questions
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Info Components HowItWorksContent should match snapshot 1`] = `
+<View
+  className="flex-1  "
+>
+  <View
+    className="p-6"
+  >
+    <Text
+      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+    >
+      How It Works
+    </Text>
+    <Text
+      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
+    >
+      Step by step guide
+    </Text>
+  </View>
+</View>
+`;
