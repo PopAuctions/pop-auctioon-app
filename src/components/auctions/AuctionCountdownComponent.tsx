@@ -4,36 +4,15 @@ import { CustomText } from '../ui/CustomText';
 import { CustomLink } from '../ui/CustomLink';
 import { AuctionMode, AuctionModeEnum, Lang } from '@/types/types';
 import { Translations } from '@/i18n';
+import { diffToDHMS, DHMS } from '@/utils/diffToDHMS';
 
 const TEXTS: Record<Lang, { left: string; enterBefore: string }> = {
   es: {
     left: 'Queda:',
-    leftAlt: 'Queda:',
     enterBefore: 'Empieza a prepararte',
-  } as any,
-  en: { left: 'Left:', enterBefore: 'Get ready for the auction' } as any,
+  },
+  en: { left: 'Left:', enterBefore: 'Get ready for the auction' },
 };
-
-type RendererState = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  completed: boolean;
-};
-
-function diffToDHMS(ms: number): RendererState {
-  if (ms <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0, completed: true };
-  }
-  const totalSeconds = Math.floor(ms / 1000);
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return { days, hours, minutes, seconds, completed: false };
-}
 
 export function AuctionCountdownComponent({
   dateString,
@@ -58,7 +37,7 @@ export function AuctionCountdownComponent({
     [dateString]
   );
 
-  const [state, setState] = useState<RendererState>(() =>
+  const [state, setState] = useState<DHMS>(() =>
     diffToDHMS(targetDate.getTime() - Date.now())
   );
 
