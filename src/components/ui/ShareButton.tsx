@@ -1,5 +1,6 @@
 import { GestureResponderEvent } from 'react-native';
-import * as Clipboard from 'expo-clipboard';
+// WIP: Clipboard functionality commented for now
+// import * as Clipboard from 'expo-clipboard';
 import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Button, ButtonMode } from './Button';
@@ -25,7 +26,8 @@ export function ShareButton({
   const copyCurrentPath = async () => {
     try {
       const fullUrl = `${baseUrl}${pathname ?? ''}`;
-      await Clipboard.setStringAsync(fullUrl);
+      console.log('Full URL to copy:', fullUrl);
+      // await Clipboard.setStringAsync(fullUrl);
 
       // callToast?.({
       //   variant: 'success',
