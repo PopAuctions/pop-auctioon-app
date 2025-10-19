@@ -23,7 +23,7 @@ export default function EditAuctionScreen() {
   };
 
   return (
-    <ScrollView className='flex-1  '>
+    <ScrollView className='flex-1'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
           Editar Subasta #{id}

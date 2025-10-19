@@ -171,7 +171,7 @@ export default function StoreScreen() {
                 onPress={() => navigateWithAuth(`/(tabs)/store/${product.id}`)}
               >
                 {/* Product Image */}
-                <View className=' aspect-square items-center justify-center'>
+                <View className='aspect-square items-center justify-center'>
                   <Text className='text-6xl'>
                     {getProductIcon(product.category)}
                   </Text>

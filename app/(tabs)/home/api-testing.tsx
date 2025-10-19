@@ -345,7 +345,7 @@ export default function ApiTestingScreen() {
   };
 
   return (
-    <ScrollView className='flex-1  '>
+    <ScrollView className='flex-1'>
       <View className='p-4'>
         {/* Header */}
         <View className='mb-6'>
@@ -415,7 +415,7 @@ export default function ApiTestingScreen() {
 
             {testResults.length > 0 && (
               <TouchableOpacity
-                className=' rounded-lg p-2'
+                className='rounded-lg p-2'
                 onPress={clearAllResults}
                 disabled={!!activeTest}
               >

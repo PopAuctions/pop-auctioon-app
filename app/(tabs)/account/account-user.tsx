@@ -64,7 +64,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='user'
                   size={20}
@@ -90,7 +90,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='lock'
                   size={20}
@@ -116,7 +116,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='phone'
                   size={20}
@@ -142,7 +142,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='map-marker'
                   size={20}
@@ -168,7 +168,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='credit-card'
                   size={20}
@@ -194,7 +194,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='history'
                   size={20}
@@ -223,7 +223,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='info-circle'
                   size={20}
@@ -249,7 +249,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='question-circle'
                   size={20}
@@ -275,7 +275,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='comments'
                   size={20}
@@ -299,7 +299,7 @@ export default function Account({ session }: { session: Session }) {
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
-              <View className=' mr-4 h-10 w-10 items-center justify-center rounded-full'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
                 <FontAwesome
                   name='envelope'
                   size={20}

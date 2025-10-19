@@ -89,7 +89,7 @@ export default function ArticlesScreen() {
   );
 
   return (
-    <ScrollView className='flex-1  '>
+    <ScrollView className='flex-1'>
       {/* Header */}
       <View className='border-gray-200 border-b p-4'>
         <Text className='text-gray-800 mb-4 text-2xl font-bold'>
@@ -145,7 +145,7 @@ export default function ArticlesScreen() {
               className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border  '
             >
               {/* Article Image */}
-              <View className=' aspect-square items-center justify-center'>
+              <View className='aspect-square items-center justify-center'>
                 <Text className='text-6xl'>{article.image}</Text>
               </View>
 

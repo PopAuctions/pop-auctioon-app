@@ -6,7 +6,7 @@ export default function ResetPasswordScreen() {
   const { t } = useTranslation();
 
   return (
-    <View className='flex-1  '>
+    <View className='flex-1'>
       <View className='p-6'>
         <CustomText
           type='h1'

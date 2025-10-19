@@ -37,7 +37,7 @@ export default function ProductDetailScreen() {
   const product = getProductData(id || '871');
 
   return (
-    <ScrollView className='flex-1  '>
+    <ScrollView className='flex-1'>
       {/* Product Images Carousel */}
       <View className='relative'>
         <ScrollView
@@ -133,7 +133,7 @@ export default function ProductDetailScreen() {
           </View>
 
           {/* Right Column - Make Offer */}
-          <View className=' w-80 rounded-lg p-4'>
+          <View className='w-80 rounded-lg p-4'>
             <Text className='mb-4 text-xl font-semibold'>
               Make an offer to the seller!
             </Text>

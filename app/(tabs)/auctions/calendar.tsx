@@ -25,7 +25,7 @@ export default function CalendarScreen() {
 
   if (status === 'loading') {
     return (
-      <View className='flex-1 items-center justify-center  '>
+      <View className='flex-1 items-center justify-center'>
         <ActivityIndicator
           size='large'
           color='#d75639'
@@ -69,7 +69,7 @@ export default function CalendarScreen() {
   };
 
   return (
-    <ScrollView className='flex-1  '>
+    <ScrollView className='flex-1'>
       <View className='p-4'>
         {auctions?.this_month && (
           <View className='mb-8'>

@@ -6,11 +6,11 @@ export function AboutUsContent() {
   const { t } = useTranslation();
 
   return (
-    <View className='flex-1  '>
+    <View className='flex-1'>
       <View className='p-6'>
         <CustomText
           type='h1'
-          className='mb-2  text-black'
+          className='mb-2 text-black'
         >
           {t('screens.aboutUs.title')}
         </CustomText>

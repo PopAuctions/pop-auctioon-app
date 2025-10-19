@@ -51,7 +51,7 @@ export function AuctionCalendarCard({
             {/* Layout principal: Fecha y Hora */}
             <View className='flex-row items-start justify-between'>
               {/* Columna izquierda: Fecha y Título */}
-              <View className=' flex-1 '>
+              <View className='flex-1 '>
                 {/* Fecha */}
                 <View className='mb-2'>
                   <CustomText

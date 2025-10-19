@@ -9,7 +9,7 @@ export default function AuctionsScreen() {
 
   return (
     <SafeAreaView
-      className=' flex-1'
+      className='flex-1'
       edges={['top']}
     >
       <ScrollView className='flex-1'>
@@ -56,7 +56,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/calendar'
             mode='empty'
-            className='border-gray-200 rounded-lg border   p-6'
+            className='border-gray-200 rounded-lg border p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
@@ -76,7 +76,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/articles'
             mode='empty'
-            className='border-gray-200 rounded-lg border   p-6'
+            className='border-gray-200 rounded-lg border p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>
