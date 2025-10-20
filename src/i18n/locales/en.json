@@ -125,6 +125,60 @@
       "tip": "Tip",
       "tipMessage": "Set up notifications to not miss any auction. You can register in advance to participate.",
       "noImage": "No image"
+    },
+    "account": {
+      "title": "My Account",
+      "editProfile": "Edit Profile Information",
+      "resetPassword": "Reset Password",
+      "verifyPhone": "Verify Phone",
+      "addresses": "Addresses",
+      "billingInfo": "Billing Information",
+      "paymentsHistory": "Payments History",
+      "aboutUs": "About Us",
+      "howItWorks": "How it Works",
+      "faqs": "FAQs",
+      "contactUs": "Contact Us",
+      "signOut": "Sign Out"
+    },
+    "editProfile": {
+      "title": "Edit Profile Information",
+      "subtitle": "Update your personal information"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Change your access password"
+    },
+    "verifyPhone": {
+      "title": "Verify Phone",
+      "subtitle": "Verify your phone number"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "subtitle": "Manage your shipping addresses"
+    },
+    "billingInfo": {
+      "title": "Billing Information",
+      "subtitle": "Manage your billing information"
+    },
+    "paymentsHistory": {
+      "title": "Payments History",
+      "subtitle": "Review your past transactions"
+    },
+    "aboutUs": {
+      "title": "About Us",
+      "subtitle": "Learn more about Pop Auctions"
+    },
+    "howItWorks": {
+      "title": "How it Works",
+      "subtitle": "Learn how to use the platform"
+    },
+    "faqs": {
+      "title": "FAQs",
+      "subtitle": "Find answers to your questions"
+    },
+    "contactUs": {
+      "title": "Contact Us",
+      "subtitle": "We're here to help"
     }
   },
   "commonErrors": {

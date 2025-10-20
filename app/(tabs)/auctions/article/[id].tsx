@@ -55,9 +55,9 @@ export default function ArticleDetailScreen() {
   const article = getArticleData(id || '400');
 
   return (
-    <ScrollView className='flex-1 bg-white'>
+    <ScrollView className='flex-1'>
       {/* Header with Auction Info */}
-      <View className='border-gray-200 border-b bg-white p-4'>
+      <View className='border-gray-200 border-b   p-4'>
         <Text className='mb-2 text-sm text-red-500'>Follow auction to:</Text>
         <Text className='text-gray-900 mb-2 text-2xl font-light'>
           {article.title}
@@ -90,7 +90,7 @@ export default function ArticleDetailScreen() {
             {Array.from({ length: article.images }).map((_, index) => (
               <TouchableOpacity
                 key={index}
-                className={`border-gray-200 bg-gray-50 aspect-square flex-1 items-center justify-center border-t ${
+                className={`border-gray-200 aspect-square flex-1 items-center justify-center border-t ${
                   index > 0 ? 'border-gray-200 border-l' : ''
                 } ${currentImageIndex === index ? 'bg-blue-50' : ''}`}
                 onPress={() => setCurrentImageIndex(index)}

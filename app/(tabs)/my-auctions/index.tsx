@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Subastas del auctioneer - con diferentes estados
 const myAuctions = [
@@ -46,7 +46,6 @@ const myAuctions = [
 
 export default function MyAuctionsScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const { navigateWithAuth } = useAuthNavigation();
 
   const getStatusColor = (status: string) => {
@@ -80,13 +79,13 @@ export default function MyAuctionsScreen() {
   };
 
   return (
-    <View
-      className='bg-gray-50 flex-1'
-      style={{ paddingTop: insets.top }}
+    <SafeAreaView
+      className='flex-1'
+      edges={['top']}
     >
       <ScrollView className='flex-1'>
         {/* Header */}
-        <View className='border-gray-200 border-b bg-white p-4'>
+        <View className='border-gray-200 border-b   p-4'>
           <Text className='text-gray-800 mb-2 text-2xl font-bold'>
             {t('screens.myAuctions.title')}
           </Text>
@@ -104,7 +103,7 @@ export default function MyAuctionsScreen() {
         </View>
 
         {/* Statistics Overview */}
-        <View className='mx-4 mt-4 rounded-lg bg-white p-4 shadow-sm'>
+        <View className='mx-4 mt-4 rounded-lg   p-4 shadow-sm'>
           <Text className='text-gray-800 mb-3 text-lg font-semibold'>
             📊 Resumen
           </Text>
@@ -129,7 +128,7 @@ export default function MyAuctionsScreen() {
           {myAuctions.map((auction) => (
             <TouchableOpacity
               key={auction.id}
-              className='border-gray-200 mb-3 rounded-lg border bg-white p-4 shadow-sm'
+              className='border-gray-200 mb-3 rounded-lg border   p-4 shadow-sm'
               onPress={() =>
                 navigateWithAuth(`/(tabs)/my-auctions/${auction.id}`)
               }
@@ -176,6 +175,6 @@ export default function MyAuctionsScreen() {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

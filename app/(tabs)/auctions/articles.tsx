@@ -89,7 +89,7 @@ export default function ArticlesScreen() {
   );
 
   return (
-    <ScrollView className='flex-1 bg-white'>
+    <ScrollView className='flex-1'>
       {/* Header */}
       <View className='border-gray-200 border-b p-4'>
         <Text className='text-gray-800 mb-4 text-2xl font-bold'>
@@ -127,7 +127,7 @@ export default function ArticlesScreen() {
 
         {/* Search Bar */}
         <TextInput
-          className='border-gray-200 bg-gray-50 rounded-lg border p-3'
+          className='border-gray-200  rounded-lg border p-3'
           placeholder={t('screens.auctions.articles.searchPlaceholder')}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -142,10 +142,10 @@ export default function ArticlesScreen() {
               key={article.id}
               href={`/(tabs)/auctions/article/${article.id}`}
               mode='empty'
-              className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border bg-white'
+              className='border-gray-200 mb-6 w-[48%] overflow-hidden rounded-lg border  '
             >
               {/* Article Image */}
-              <View className='bg-gray-50 aspect-square items-center justify-center'>
+              <View className='aspect-square items-center justify-center'>
                 <Text className='text-6xl'>{article.image}</Text>
               </View>
 

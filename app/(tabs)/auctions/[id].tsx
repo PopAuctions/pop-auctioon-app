@@ -45,8 +45,8 @@ export default function AuctionDetailScreen() {
   const auctionMode = auction.mode;
 
   return (
-    <View className='bg-gray-50 flex-1'>
-      <ScrollView className='flex-1 bg-white'>
+    <View className='flex-1'>
+      <ScrollView className='flex-1'>
         <View className='mt-5 flex w-full flex-col lg:mt-0 lg:flex-row lg:justify-center'>
           <View className='mt-0 flex w-full flex-col items-center justify-center gap-2 space-y-3 lg:w-1/2 lg:space-y-6'>
             <View className='flex flex-col items-center gap-2 text-center'>

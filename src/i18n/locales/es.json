@@ -125,6 +125,60 @@
       "tip": "Consejo",
       "tipMessage": "Configura notificaciones para no perderte ninguna subasta. Puedes registrarte con anticipación para participar.",
       "noImage": "Sin imagen"
+    },
+    "account": {
+      "title": "Mi Cuenta",
+      "editProfile": "Editar Información del Perfil",
+      "resetPassword": "Restablecer Contraseña",
+      "verifyPhone": "Verificar Teléfono",
+      "addresses": "Direcciones",
+      "billingInfo": "Información de Facturación",
+      "paymentsHistory": "Historial de Pagos",
+      "aboutUs": "Acerca de Nosotros",
+      "howItWorks": "Cómo Funciona",
+      "faqs": "Preguntas Frecuentes",
+      "contactUs": "Contáctanos",
+      "signOut": "Cerrar Sesión"
+    },
+    "editProfile": {
+      "title": "Editar Información del Perfil",
+      "subtitle": "Actualiza tu información personal"
+    },
+    "resetPassword": {
+      "title": "Restablecer Contraseña",
+      "subtitle": "Cambia tu contraseña de acceso"
+    },
+    "verifyPhone": {
+      "title": "Verificar Teléfono",
+      "subtitle": "Verifica tu número de teléfono"
+    },
+    "addresses": {
+      "title": "Direcciones",
+      "subtitle": "Gestiona tus direcciones de envío"
+    },
+    "billingInfo": {
+      "title": "Información de Facturación",
+      "subtitle": "Gestiona tu información de facturación"
+    },
+    "paymentsHistory": {
+      "title": "Historial de Pagos",
+      "subtitle": "Revisa tus transacciones anteriores"
+    },
+    "aboutUs": {
+      "title": "Acerca de Nosotros",
+      "subtitle": "Conoce más sobre Pop Auctions"
+    },
+    "howItWorks": {
+      "title": "Cómo Funciona",
+      "subtitle": "Aprende a usar la plataforma"
+    },
+    "faqs": {
+      "title": "Preguntas Frecuentes",
+      "subtitle": "Encuentra respuestas a tus dudas"
+    },
+    "contactUs": {
+      "title": "Contáctanos",
+      "subtitle": "Estamos aquí para ayudarte"
     }
   },
   "commonErrors": {

@@ -1,21 +1,20 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function AuctionsScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
 
   return (
-    <View
-      className='bg-gray-50 flex-1'
-      style={{ paddingTop: insets.top }}
+    <SafeAreaView
+      className='flex-1'
+      edges={['top']}
     >
       <ScrollView className='flex-1'>
         {/* Header */}
-        <View className='border-gray-200 border-b bg-white p-4'>
+        <View className='border-gray-200 border-b   p-4'>
           <Text className='text-gray-800 mb-2 text-2xl font-bold'>
             {t('screens.auctions.title')}
           </Text>
@@ -32,7 +31,7 @@ export default function AuctionsScreen() {
             className='rounded-lg bg-red-500 p-6'
           >
             <View className='flex-row items-center justify-center'>
-              <View className='mr-3 h-3 w-3 animate-pulse rounded-full bg-white' />
+              <View className='mr-3 h-3 w-3 animate-pulse rounded-full  ' />
               <Text className='mr-2 text-xl font-bold text-white'>
                 🔴 SUBASTA EN VIVO
               </Text>
@@ -57,7 +56,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/calendar'
             mode='empty'
-            className='border-gray-200 rounded-lg border bg-white p-6'
+            className='border-gray-200 rounded-lg border p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>📅</Text>
@@ -77,7 +76,7 @@ export default function AuctionsScreen() {
           <CustomLink
             href='/(tabs)/auctions/articles'
             mode='empty'
-            className='border-gray-200 rounded-lg border bg-white p-6'
+            className='border-gray-200 rounded-lg border p-6'
           >
             <View className='mb-3 flex-row items-center'>
               <Text className='mr-4 text-4xl'>🏷️</Text>
@@ -119,6 +118,6 @@ export default function AuctionsScreen() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

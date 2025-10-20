@@ -16,24 +16,32 @@ export const useAuthNavigation = () => {
         routeParts[routeParts.length - 1] || routeParts[routeParts.length - 2];
       const routeConfig = PROTECTED_ROUTES[routeName];
 
-      // Verificar autenticación
-      if (!session) {
-        console.log('🔒 Navigation blocked - No session, redirecting to auth');
-        router.replace('/(tabs)/auth');
-        return false;
-      }
+      // Solo verificar autenticación si la ruta realmente lo requiere
+      if (routeConfig && routeConfig.requiresAuth) {
+        // Verificar que hay sesión para rutas protegidas
+        if (!session) {
+          console.log(
+            '🔒 Navigation blocked - No session for protected route:',
+            routeName
+          );
+          router.replace('/(tabs)/auth');
+          return false;
+        }
 
-      // Verificar rol específico si es requerido
-      if (
-        routeConfig &&
-        routeConfig.requiresRole &&
-        role !== routeConfig.requiresRole
-      ) {
+        // Verificar rol específico si es requerido
+        if (routeConfig.requiresRole && role !== routeConfig.requiresRole) {
+          console.log(
+            `🚫 Navigation blocked - Role ${role} insufficient for ${routeName} (requires ${routeConfig.requiresRole})`
+          );
+          router.replace('/(tabs)/home');
+          return false;
+        }
+      } else {
+        // Ruta pública - permitir navegación sin verificaciones
         console.log(
-          `🚫 Navigation blocked - Role ${role} insufficient for ${routeName} (requires ${routeConfig.requiresRole})`
+          '🌐 Public route, navigating without auth check:',
+          routeName
         );
-        router.replace('/(tabs)/home');
-        return false;
       }
 
       setIsNavigating(true);
