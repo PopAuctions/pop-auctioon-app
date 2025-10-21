@@ -2,7 +2,7 @@ import React from 'react';
 import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import type { Session, User } from '@supabase/supabase-js';
-import type { UserRoles } from '@/types/types';
+import type { UserRoles, AsyncResponse } from '@/types/types';
 
 // Mock supabase
 const mockGetSession = jest.fn();
@@ -125,11 +125,11 @@ describe('AuthContext', () => {
         data: { user: mockUser },
         error: null,
       });
-      mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
-      });
+      const roleResponse: AsyncResponse<UserRoles> = {
+        data: 'USER',
+        success: true,
+      };
+      mockGetUserRole.mockResolvedValue(roleResponse);
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -153,9 +153,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'AUCTIONEER' as UserRoles,
+        data: 'AUCTIONEER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -178,11 +177,7 @@ describe('AuthContext', () => {
         data: { user: mockUser },
         error: null,
       });
-      mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: null,
-      });
+      mockGetUserRole.mockResolvedValue({ data: null, success: true });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -228,9 +223,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -256,9 +250,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -284,9 +277,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
       mockSignOut.mockResolvedValue({
         error: { message: 'Network error' },
@@ -325,9 +317,8 @@ describe('AuthContext', () => {
           error: null,
         });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -357,9 +348,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -389,9 +379,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -523,9 +512,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { unmount } = renderHook(() => useAuth(), { wrapper });
@@ -553,9 +541,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { unmount, result } = renderHook(() => useAuth(), { wrapper });
@@ -579,9 +566,8 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: undefined as any,
+        data: undefined as any,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -591,7 +577,7 @@ describe('AuthContext', () => {
       });
 
       if (result.current.auth.state === 'authenticated') {
-        expect(result.current.auth.role).toBeNull();
+        expect(result.current.auth.role).toBeUndefined();
       }
     });
 
@@ -610,9 +596,8 @@ describe('AuthContext', () => {
           error: null,
         });
       mockGetUserRole.mockResolvedValue({
-        error: null,
-        success: null,
-        role: 'USER' as UserRoles,
+        data: 'USER' as UserRoles,
+        success: true,
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -633,4 +618,3 @@ describe('AuthContext', () => {
     });
   });
 });
-

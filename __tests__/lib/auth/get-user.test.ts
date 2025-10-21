@@ -1,5 +1,5 @@
 import { getUser } from '@/lib/auth/get-user';
-import type { User } from '@/types/types';
+import type { User, AsyncResponse } from '@/types/types';
 import { supabase } from '@/utils/supabase/supabase-store';
 import * as sentryErrorReport from '@/lib/error/sentry-error-report';
 
@@ -64,7 +64,7 @@ describe('getUser', () => {
     it('should return user successfully', async () => {
       mockFrom.mockReturnValue(createMockChain(mockUser) as never);
 
-      const result = await getUser({ id: 'user-123' });
+      const result: AsyncResponse<User> = await getUser({ id: 'user-123' });
 
       expect(result.data).toEqual(mockUser);
       expect(result.error).toBeUndefined();

@@ -28,5 +28,6 @@ export const getUserRole = async ({
   return {
     data: data.role as UserRoles,
     success: true,
+    error: undefined,
   };
 };

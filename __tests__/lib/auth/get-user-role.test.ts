@@ -1,5 +1,5 @@
 import { getUserRole } from '@/lib/auth/get-user-role';
-import type { UserRoles } from '@/types/types';
+import type { UserRoles, AsyncResponse } from '@/types/types';
 import { supabase } from '@/utils/supabase/supabase-store';
 import * as sentryErrorReport from '@/lib/error/sentry-error-report';
 
@@ -39,7 +39,9 @@ describe('getUserRole', () => {
     it('should return USER role successfully', async () => {
       mockFrom.mockReturnValue(createMockChain('USER') as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result: AsyncResponse<UserRoles> = await getUserRole({
+        id: 'user-123',
+      });
 
       expect(result.data).toBe('USER');
       expect(result.error).toBeUndefined();
@@ -155,11 +157,16 @@ describe('getUserRole', () => {
     it('should return correct shape for successful response', async () => {
       mockFrom.mockReturnValue(createMockChain('USER') as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result: AsyncResponse<UserRoles> = await getUserRole({
+        id: 'user-123',
+      });
 
       expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('success');
+      expect(result.success).toBe(true);
       expect(result.error).toBeUndefined();
-      expect(Object.keys(result).sort()).toEqual(['data', 'success']);
+      // AsyncResponse always includes data, success, and optionally error
+      expect(Object.keys(result).sort()).toEqual(['data', 'error', 'success']);
     });
 
     it('should return correct shape for error response', async () => {
@@ -238,4 +245,3 @@ describe('getUserRole', () => {
     });
   });
 });
-
