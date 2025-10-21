@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const r = await getUserRole({ id: u.user.id });
-      const role = (r.role ?? null) as UserRoles | null;
+      const role = r.data;
       setAuth({ state: 'authenticated', session: sess, role });
 
       // Programar refresh antes de expirar
@@ -103,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Revalidar usuario y role tras refresh
         const { data: u2 } = await supabase.auth.getUser();
         const role2 = u2?.user
-          ? ((await getUserRole({ id: u2.user.id })).role ?? null)
+          ? (await getUserRole({ id: u2.user.id })).data
           : null;
 
         setAuth({
@@ -138,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
 
           const r = await getUserRole({ id: u.user.id });
-          const role = (r.role ?? null) as UserRoles | null;
+          const role = r.data;
 
           setAuth({ state: 'authenticated', session: newSession, role });
 

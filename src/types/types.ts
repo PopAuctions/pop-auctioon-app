@@ -224,12 +224,28 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
 
 export type LangMap = Record<Lang, string>;
 
+/**
+ * Response type for React hooks that manage stateful data fetching
+ * Includes React state setters and refetch capabilities
+ * Use for: useGetLiveAuction, useGetAuctions, etc.
+ */
 export interface ActionResponse<TData = unknown> {
   data: TData;
   status: RequestStatus;
   refetch?: () => RefetchReturn;
   errorMessage: LangMap | null;
   setErrorMessage: React.Dispatch<React.SetStateAction<LangMap | null>>;
+}
+
+/**
+ * Response type for async utility functions (non-hooks)
+ * Lighter version without React dependencies
+ * Use for: getUserRole, getUser, fetchArticle, etc.
+ */
+export interface AsyncResponse<TData = unknown> {
+  data: TData | null;
+  error?: LangMap;
+  success: boolean;
 }
 
 export type RefetchReturn = Promise<{ message?: LangMap } | void>;
