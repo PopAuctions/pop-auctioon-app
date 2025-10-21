@@ -165,8 +165,8 @@ describe('getUserRole', () => {
       expect(result).toHaveProperty('success');
       expect(result.success).toBe(true);
       expect(result.error).toBeUndefined();
-      // AsyncResponse always includes data, success, and optionally error
-      expect(Object.keys(result).sort()).toEqual(['data', 'error', 'success']);
+      // AsyncResponse: data and success are required, error is optional
+      expect(Object.keys(result).sort()).toEqual(['data', 'success']);
     });
 
     it('should return correct shape for error response', async () => {
