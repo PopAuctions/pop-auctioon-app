@@ -33,7 +33,7 @@ exports[`BackgroundImage Basic rendering should render with required image sourc
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -76,7 +76,7 @@ exports[`BackgroundImage Basic rendering should render with string URI source 1`
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -202,7 +202,7 @@ exports[`BackgroundImage Edge cases should handle null children gracefully 1`] =
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -242,7 +242,7 @@ exports[`BackgroundImage Edge cases should handle undefined overlay opacity 1`] 
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -285,7 +285,7 @@ exports[`BackgroundImage Image source handling should handle empty string URI 1`
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -328,7 +328,7 @@ exports[`BackgroundImage Image source handling should handle required image sour
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -371,7 +371,7 @@ exports[`BackgroundImage Image source handling should handle string URI correctl
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -578,7 +578,7 @@ exports[`BackgroundImage Overlay functionality should render overlay by default 
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -621,7 +621,7 @@ exports[`BackgroundImage Resize modes should apply center resize mode 1`] = `
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -664,7 +664,7 @@ exports[`BackgroundImage Resize modes should apply contain resize mode 1`] = `
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -707,7 +707,7 @@ exports[`BackgroundImage Resize modes should apply cover resize mode by default 
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -750,7 +750,7 @@ exports[`BackgroundImage Resize modes should apply repeat resize mode 1`] = `
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -793,7 +793,7 @@ exports[`BackgroundImage Resize modes should apply stretch resize mode 1`] = `
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -836,7 +836,7 @@ exports[`BackgroundImage Styling and customization should apply custom className
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -886,7 +886,7 @@ exports[`BackgroundImage Styling and customization should apply custom style 1`]
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -929,7 +929,7 @@ exports[`BackgroundImage Styling and customization should apply default classNam
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
@@ -977,7 +977,7 @@ exports[`BackgroundImage Styling and customization should combine className and 
     className="absolute inset-0"
     style={
       {
-        "backgroundColor": "rgba(0, 0, 0, 0.3)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
   />
