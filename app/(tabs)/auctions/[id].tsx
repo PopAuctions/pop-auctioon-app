@@ -17,6 +17,7 @@ import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
 import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
+import { Button } from '@/components/ui/Button';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -141,12 +142,12 @@ export default function AuctionDetailScreen() {
                     {auctionLang.watchButton}
                   </CustomLink>
                 ) : (
-                  <ShareButton
+                  <Button
                     className='w-1/2'
                     mode='primary'
                   >
                     {auctionLang.follow}
-                  </ShareButton>
+                  </Button>
                   // <FollowButton
                   //   className='w-1/2'
                   //   mode='primary'
