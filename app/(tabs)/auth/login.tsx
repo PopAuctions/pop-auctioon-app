@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  View,
-  AppState,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { Alert, View, AppState, ScrollView } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -72,23 +66,6 @@ export default function Auth() {
     setLoading(false);
   }
 
-  async function resetPassword() {
-    if (!email) {
-      Alert.alert('Please enter your email address first');
-      return;
-    }
-
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-
-    if (error) {
-      Alert.alert(error.message);
-    } else {
-      Alert.alert('Check your email for password reset instructions');
-    }
-    setLoading(false);
-  }
-
   return (
     <BackgroundImage source={require('@/components/icons/bg-image.webp')}>
       <SafeAreaView
@@ -102,7 +79,7 @@ export default function Auth() {
           <View className='flex-1 px-5 pt-10'>
             {/* Logo/Title Section */}
             <View className='mb-10 items-center'>
-              <View className='h-12 w-80'>
+              <View className='h-20 w-80'>
                 <PopAuctioonIcon
                   className='h-full w-full text-white'
                   centered={true}
@@ -110,7 +87,7 @@ export default function Auth() {
               </View>
             </View>
             {/* Form Container */}
-            <View className='rounded-2xl  p-6 shadow-2xl backdrop-blur-sm'>
+            <View className='rounded-2xl bg-white p-6 shadow-2xl'>
               <View className='mb-5'>
                 <CustomText
                   type='body'
@@ -148,17 +125,19 @@ export default function Auth() {
               </View>
 
               {/* Forgot Password Link */}
-              <TouchableOpacity
-                className='mb-6 items-end'
-                onPress={resetPassword}
-              >
-                <CustomText
-                  type='body'
-                  className='text-cinnabar'
+              <View className='mb-6 items-end'>
+                <CustomLink
+                  href='/(tabs)/account/reset-password'
+                  mode='plainText'
                 >
-                  {t('loginPage.forgotPassword')}
-                </CustomText>
-              </TouchableOpacity>
+                  <CustomText
+                    type='body'
+                    className='text-cinnabar'
+                  >
+                    {t('loginPage.forgotPassword')}
+                  </CustomText>
+                </CustomLink>
+              </View>
 
               {/* Buttons */}
               <View className='mb-4'>

@@ -1,15 +1,19 @@
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
+import { Button } from '@/components/ui/Button';
 import { router } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useAuth } from '@/context/auth-context';
+import { useState } from 'react';
 
 export default function Account({ session }: { session: Session }) {
+  const { signOut } = useAuth();
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
 
   // Extraer iniciales del email del usuario
   const getUserInitials = () => {
@@ -19,8 +23,10 @@ export default function Account({ session }: { session: Session }) {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    setLoading(true);
+    await signOut();
     router.replace('/(tabs)/auth');
+    setLoading(false);
   };
 
   return (
@@ -318,25 +324,16 @@ export default function Account({ session }: { session: Session }) {
           </CustomLink>
 
           {/* Sign Out Button */}
-          <TouchableOpacity
-            onPress={handleSignOut}
-            className='mt-6 items-center rounded-lg bg-cinnabar py-4'
-          >
-            <View className='flex-row items-center'>
-              <FontAwesome
-                name='sign-out'
-                size={20}
-                color='white'
-                style={{ marginRight: 8 }}
-              />
-              <CustomText
-                type='body'
-                className='text-base font-semibold text-white'
-              >
-                {t('screens.account.signOut')}
-              </CustomText>
-            </View>
-          </TouchableOpacity>
+          <View className='mt-6'>
+            <Button
+              mode='primary'
+              isLoading={loading}
+              disabled={loading}
+              onPress={handleSignOut}
+            >
+              {t('screens.account.signOut')}
+            </Button>
+          </View>
 
           {/* Espacio adicional al final */}
           <View className='h-8' />
