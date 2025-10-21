@@ -62,7 +62,8 @@
       "router": {},
       "eas": {
         "projectId": "2f1d2957-9008-496f-91b7-9484d7b3d4a7"
-      }
+      },
+      "PUBLIC_BASE_URL": "https://www.popauction.com"
     }
   }
 }
