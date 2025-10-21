@@ -284,7 +284,7 @@ npm run web          # Start web development
 // Route access controlled via PROTECTED_ROUTES in routeConfig.ts
 const PROTECTED_ROUTES = {
   'my-auctions': { requiredRole: 'AUCTIONEER' }, // Specific role
-  'account': {}, // Any authenticated user
+  account: {}, // Any authenticated user
 };
 ```
 
