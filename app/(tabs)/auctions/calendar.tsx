@@ -10,6 +10,7 @@ import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { AuctionCalendarCard } from '@/components/ui/AuctionCalendarCard';
+import { Button } from '@/components/ui/Button';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
@@ -22,6 +23,7 @@ export default function CalendarScreen() {
   );
   const thisMonth = monthsArray[0];
   const nextMonth = monthsArray[1];
+  const hasAuctionsNextMonth = auctions.next_month.length > 0;
 
   if (status === 'loading') {
     return (
@@ -32,7 +34,7 @@ export default function CalendarScreen() {
         />
         <CustomText
           type='body'
-          className='text-gray-600 mt-4'
+          className='text-gray-600 mt-4 text-center'
         >
           {t('screens.calendar.loading')}
         </CustomText>
@@ -49,12 +51,12 @@ export default function CalendarScreen() {
         >
           {t('screens.calendar.error')}
         </CustomText>
-        <TouchableOpacity
+        <Button
+          mode='primary'
           onPress={() => refetch()}
-          className='rounded-lg bg-cinnabar px-4 py-2'
         >
-          <CustomText type='body'>{t('screens.calendar.retry')}</CustomText>
-        </TouchableOpacity>
+          {t('screens.calendar.retry')}
+        </Button>
       </View>
     );
   }
@@ -71,68 +73,63 @@ export default function CalendarScreen() {
   return (
     <ScrollView className='flex-1'>
       <View className='p-4'>
-        {auctions?.this_month && (
-          <View className='mb-8'>
-            <CustomText
-              type='h1'
-              className='text-center'
-            >
-              {t('screens.calendar.thisMonth')}{' '}
-              {getMonthName(thisMonth.value, locale)}
-            </CustomText>
-            <CustomText
-              type='subtitle'
-              className='mb-4 text-center'
-            >
-              {t('screens.calendar.subtitle').toUpperCase()}
-            </CustomText>
+        <View className='mb-8'>
+          <CustomText
+            type='h1'
+            className='text-center'
+          >
+            {t('screens.calendar.thisMonth')}{' '}
+            {getMonthName(thisMonth.value, locale)}
+          </CustomText>
+          <CustomText
+            type='subtitle'
+            className='mb-4 text-center'
+          >
+            {t('screens.calendar.subtitle').toUpperCase()}
+          </CustomText>
 
-            {auctions.this_month.length > 0 ? (
-              <View className='space-y-6'>
-                {auctions.this_month.map((auction) => (
-                  <AuctionCalendarCard
-                    key={auction.id}
-                    auction={auction}
-                    locale={locale}
-                    formatTime={formatTime}
-                  />
-                ))}
-              </View>
-            ) : (
+          {auctions.this_month.length > 0 ? (
+            <View className='space-y-6'>
+              {auctions.this_month.map((auction) => (
+                <AuctionCalendarCard
+                  key={auction.id}
+                  auction={auction}
+                  locale={locale}
+                  formatTime={formatTime}
+                />
+              ))}
+            </View>
+          ) : (
+            <CustomText
+              type='h2'
+              className='py-4 text-center text-cinnabar'
+            >
+              {t('screens.calendar.noAuctionsFound')}
+            </CustomText>
+          )}
+        </View>
+
+        {hasAuctionsNextMonth && (
+          <>
+            <View className='mx-4 my-3'>
+              <View className='border-gray-200 w-full border-b' />
+            </View>
+
+            <View className='mb-8'>
               <CustomText
                 type='h1'
-                className='py-4 text-center text-cinnabar'
+                className='text-center'
               >
-                {t('screens.calendar.noAuctionsFound')}
+                {t('screens.calendar.nextMonth')}{' '}
+                {getMonthName(nextMonth.value, locale)}
               </CustomText>
-            )}
-          </View>
-        )}
+              <CustomText
+                type='subtitle'
+                className='mb-4 text-center'
+              >
+                {t('screens.calendar.subtitle').toUpperCase()}
+              </CustomText>
 
-        {/* Línea divisoria entre meses - solo mostrar si hay al menos una sección */}
-        {(auctions?.this_month || auctions?.next_month) && (
-          <View className='mx-4 my-3'>
-            <View className='border-gray-200 w-full border-b' />
-          </View>
-        )}
-
-        {auctions?.next_month && (
-          <View className='mb-8'>
-            <CustomText
-              type='h1'
-              className='text-center'
-            >
-              {t('screens.calendar.nextMonth')}{' '}
-              {getMonthName(nextMonth.value, locale)}
-            </CustomText>
-            <CustomText
-              type='subtitle'
-              className='mb-4 text-center'
-            >
-              {t('screens.calendar.subtitle').toUpperCase()}
-            </CustomText>
-
-            {auctions.next_month.length > 0 ? (
               <View className='space-y-6'>
                 {auctions.next_month.map((auction) => (
                   <AuctionCalendarCard
@@ -143,15 +140,8 @@ export default function CalendarScreen() {
                   />
                 ))}
               </View>
-            ) : (
-              <CustomText
-                type='h1'
-                className='py-4 text-center text-cinnabar'
-              >
-                {t('screens.calendar.noAuctionsFound')}
-              </CustomText>
-            )}
-          </View>
+            </View>
+          </>
         )}
       </View>
     </ScrollView>
