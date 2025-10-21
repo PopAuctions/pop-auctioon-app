@@ -2,7 +2,7 @@
 
 exports[`Info Components AboutUsContent should match snapshot 1`] = `
 <View
-  className="flex-1  "
+  className="flex-1"
 >
   <View
     className="p-6"
@@ -23,7 +23,7 @@ exports[`Info Components AboutUsContent should match snapshot 1`] = `
 
 exports[`Info Components ContactUsContent should match snapshot 1`] = `
 <View
-  className="flex-1  "
+  className="flex-1"
 >
   <View
     className="p-6"
@@ -44,7 +44,7 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
 
 exports[`Info Components FAQsContent should match snapshot 1`] = `
 <View
-  className="flex-1  "
+  className="flex-1"
 >
   <View
     className="p-6"
@@ -65,7 +65,7 @@ exports[`Info Components FAQsContent should match snapshot 1`] = `
 
 exports[`Info Components HowItWorksContent should match snapshot 1`] = `
 <View
-  className="flex-1  "
+  className="flex-1"
 >
   <View
     className="p-6"
