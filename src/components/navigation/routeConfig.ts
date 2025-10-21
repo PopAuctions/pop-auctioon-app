@@ -1,15 +1,15 @@
 import { UserRoles } from '@/types/types';
 
 export interface RouteConfig {
-  requiresAuth: boolean;
-  requiresRole?: UserRoles;
+  requiredRole?: UserRoles | null;
 }
 
 /**
  * Configuración centralizada de rutas protegidas
  *
- * - requiresAuth: true = Requiere estar loggeado
- * - requiresRole: Rol específico requerido
+ * Si una ruta está en este objeto, requiere autenticación.
+ * - requiredRole: undefined/null = Cualquier usuario autenticado
+ * - requiredRole: 'ROLE' = Solo ese rol específico
  *
  * ROLES DISPONIBLES:
  * - 'USER': Usuario regular (puede ver subastas, comprar en store, gestionar cuenta)
@@ -17,55 +17,40 @@ export interface RouteConfig {
  */
 export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   // Rutas que requieren LOGIN (cualquier rol)
-  account: {
-    requiresAuth: true,
-  },
-  'edit-profile': {
-    requiresAuth: true,
-  },
-  'reset-password': {
-    requiresAuth: true,
-  },
-  'verify-phone': {
-    requiresAuth: true,
-  },
-  addresses: {
-    requiresAuth: true,
-  },
-  'billing-info': {
-    requiresAuth: true,
-  },
-  'payments-history': {
-    requiresAuth: true,
-  },
+  account: {},
+  'edit-profile': {},
+  'reset-password': {},
+  'verify-phone': {},
+  addresses: {},
+  'billing-info': {},
+  'payments-history': {},
+
   // Rutas que requieren LOGIN + rol específico
   'my-auctions': {
-    requiresAuth: true,
-    requiresRole: 'AUCTIONEER',
+    requiredRole: 'AUCTIONEER',
   },
 
   // Ejemplo de rutas futuras:
   // 'admin-panel': {
-  //   requiresAuth: true,
-  //   requiresRole: 'ADMIN',
+  //   requiredRole: 'ADMIN',
   // },
-  // 'notifications': {
-  //   requiresAuth: true,
-  // },
+  // 'notifications': {},  // Cualquier usuario autenticado
 };
 
 /**
  * Helper para verificar si una ruta requiere autenticación
  */
 export const requiresAuth = (routeName: string): boolean => {
-  return PROTECTED_ROUTES[routeName]?.requiresAuth || false;
+  return routeName in PROTECTED_ROUTES;
 };
 
 /**
- * Helper para verificar si una ruta requiere un rol específico
+ * Helper para obtener el rol requerido de una ruta
  */
-export const requiresRole = (routeName: string): UserRoles | undefined => {
-  return PROTECTED_ROUTES[routeName]?.requiresRole;
+export const getRequiredRole = (
+  routeName: string
+): UserRoles | null | undefined => {
+  return PROTECTED_ROUTES[routeName]?.requiredRole;
 };
 
 /**
@@ -83,13 +68,13 @@ export const hasAccess = (
     return true;
   }
 
-  if (config.requiresAuth && !isAuthenticated) {
-    // Requiere auth pero no está loggeado
+  // Si está en PROTECTED_ROUTES, requiere autenticación
+  if (!isAuthenticated) {
     return false;
   }
 
-  if (config.requiresRole && userRole !== config.requiresRole) {
-    // Requiere rol específico pero no lo tiene
+  // Si requiere rol específico, verificar que coincida
+  if (config.requiredRole && userRole !== config.requiredRole) {
     return false;
   }
 

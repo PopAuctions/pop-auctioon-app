@@ -52,8 +52,8 @@ type AuthState =
 
 2. **Route configuration** (`src/components/navigation/routeConfig.ts`):
    - Centralized declarative config: `PROTECTED_ROUTES` object
-   - Example: `'my-auctions': { requiresAuth: true, requiresRole: 'AUCTIONEER' }`
-   - Helper functions: `requiresAuth()`, `requiresRole()`, `hasAccess()`
+   - Example: `'my-auctions': { requiredRole: 'AUCTIONEER' }` (empty object `{}` = any authenticated user)
+   - Helper functions: `requiresAuth()`, `getRequiredRole()`, `hasAccess()`
 
 3. **Navigation hooks** (`src/hooks/auth/useAuthNavigation.ts`):
    ```typescript
@@ -283,7 +283,8 @@ npm run web          # Start web development
 // ProtectedRoute component wraps entire app and handles redirects
 // Route access controlled via PROTECTED_ROUTES in routeConfig.ts
 const PROTECTED_ROUTES = {
-  'my-auctions': { requiresAuth: true, requiresRole: 'AUCTIONEER' },
+  'my-auctions': { requiredRole: 'AUCTIONEER' }, // Specific role
+  'account': {}, // Any authenticated user
 };
 ```
 

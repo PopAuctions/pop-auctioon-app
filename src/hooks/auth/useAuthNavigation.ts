@@ -16,8 +16,8 @@ export const useAuthNavigation = () => {
         routeParts[routeParts.length - 1] || routeParts[routeParts.length - 2];
       const routeConfig = PROTECTED_ROUTES[routeName];
 
-      // Solo verificar autenticación si la ruta realmente lo requiere
-      if (routeConfig && routeConfig.requiresAuth) {
+      // Si la ruta está en PROTECTED_ROUTES, requiere autenticación
+      if (routeConfig) {
         // Verificar que hay sesión para rutas protegidas
         if (!session) {
           console.log(
@@ -29,9 +29,9 @@ export const useAuthNavigation = () => {
         }
 
         // Verificar rol específico si es requerido
-        if (routeConfig.requiresRole && role !== routeConfig.requiresRole) {
+        if (routeConfig.requiredRole && role !== routeConfig.requiredRole) {
           console.log(
-            `🚫 Navigation blocked - Role ${role} insufficient for ${routeName} (requires ${routeConfig.requiresRole})`
+            `🚫 Navigation blocked - Role ${role} insufficient for ${routeName} (requires ${routeConfig.requiredRole})`
           );
           router.replace('/(tabs)/home');
           return false;

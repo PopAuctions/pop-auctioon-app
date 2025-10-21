@@ -22,16 +22,11 @@ jest.mock('@/context/auth-context', () => ({
 jest.mock('@/components/navigation/routeConfig', () => ({
   PROTECTED_ROUTES: {
     'my-auctions': {
-      requiresAuth: true,
-      requiresRole: 'AUCTIONEER',
+      requiredRole: 'AUCTIONEER',
     },
-    store: {
-      requiresAuth: true,
-    },
-    account: {
-      requiresAuth: true,
-    },
-    home: {}, // Ruta no protegida
+    store: {},
+    account: {},
+    // home no está aquí, es ruta pública
   },
 }));
 
