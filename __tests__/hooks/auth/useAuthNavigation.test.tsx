@@ -109,17 +109,17 @@ describe('useAuthNavigation', () => {
     expect(router.replace).toHaveBeenCalledWith('/(tabs)/account');
   });
 
-  it('should block all navigation when no session (even unprotected routes)', () => {
+  it('should allow navigation to public routes without session', () => {
     mockGetSession.mockReturnValue([null, null]);
 
     const { result } = renderHook(() => useAuthNavigation());
 
     act(() => {
       const success = result.current.navigateWithAuth('/(tabs)/home');
-      expect(success).toBe(false); // El hook bloquea TODA navegación sin session
+      expect(success).toBe(true); // Home es ruta pública, permite navegación sin sesión
     });
 
-    // Debe redirigir a auth, no navegar a home
-    expect(router.replace).toHaveBeenCalledWith('/(tabs)/auth');
+    // No debe redirigir a auth para rutas públicas
+    expect(router.replace).not.toHaveBeenCalled();
   });
 });

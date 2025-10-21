@@ -90,10 +90,11 @@ export const CustomLink = forwardRef<
     // Extraer nombre de la ruta para verificar si requiere autenticación
     const extractRouteName = (path: string): string => {
       // Casos de ejemplo:
-      // '/(tabs)/my-auctions/create' -> 'my-auctions'
-      // '/(tabs)/auctions/calendar' -> 'auctions'
-      // '/home/api-testing' -> 'home'
-      // '/(tabs)/account' -> 'account'
+      // '/(tabs)/my-auctions/create' -> 'create' (sub-ruta de my-auctions)
+      // '/(tabs)/account/about-us' -> 'about-us' (sub-ruta de account)
+      // '/(tabs)/auctions/calendar' -> 'calendar' (sub-ruta de auctions)
+      // '/(tabs)/auctions' -> 'auctions'
+      // '/home/api-testing' -> 'api-testing'
 
       // Remover parámetros de ruta y grupos de Expo Router
       const cleanPath = path.split('?')[0]; // Remover query params
@@ -101,8 +102,8 @@ export const CustomLink = forwardRef<
         .split('/')
         .filter((part) => part && !part.includes('(') && !part.includes(')'));
 
-      // Tomar la primera parte significativa de la ruta
-      return routeParts[0] || '';
+      // Tomar la ÚLTIMA parte significativa de la ruta (más específica)
+      return routeParts[routeParts.length - 1] || '';
     };
 
     const handlePress = async () => {

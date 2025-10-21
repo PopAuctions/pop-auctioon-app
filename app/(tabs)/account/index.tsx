@@ -11,7 +11,7 @@ export default function AccountTab() {
   // Si no hay sesión, mostrar loading mientras ProtectedRoute maneja la redirección
   if (!session) {
     return (
-      <View className='flex-1 items-center justify-center bg-white'>
+      <View className='flex-1 items-center justify-center'>
         <ActivityIndicator
           size='large'
           color='#d75639'
@@ -23,7 +23,7 @@ export default function AccountTab() {
   // Mostrar loading si está navegando
   if (isNavigating) {
     return (
-      <View className='flex-1 items-center justify-center bg-white'>
+      <View className='flex-1 items-center justify-center'>
         <ActivityIndicator
           size='large'
           color='#d75639'

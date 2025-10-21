@@ -14,7 +14,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const inAuthGroup = segments[0] === '(tabs)' && segments[1] === 'auth';
-    const currentRoute = segments[1] ?? '';
+
+    // Extraer la ruta más específica (último segment válido)
+    // Para '/(tabs)/account/about-us' -> 'about-us'
+    // Para '/(tabs)/account' -> 'account'
+    // Para '/(tabs)/auctions/calendar' -> 'calendar'
+    const validSegments = segments.filter(
+      (seg) => seg && !seg.includes('(') && !seg.includes(')')
+    );
+    const currentRoute = validSegments[validSegments.length - 1] ?? '';
     const routeConfig = PROTECTED_ROUTES[currentRoute];
 
     if (auth.state === 'loading') return;
@@ -49,6 +57,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       console.log(
         `✅ Access granted to ${currentRoute} for role=${auth.role ?? 'none'}`
       );
+    } else {
+      // Ruta pública - no requiere verificación
+      if (currentRoute && !inAuthGroup) {
+        console.log(
+          '🌐 Public route detected in ProtectedRoute:',
+          currentRoute
+        );
+      }
     }
 
     if (auth.state === 'authenticated' && inAuthGroup) {

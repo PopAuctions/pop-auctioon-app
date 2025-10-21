@@ -2,7 +2,7 @@
 
 exports[`CalendarScreen should match snapshot - empty state 1`] = `
 <RCTScrollView
-  className="flex-1 bg-white"
+  className="flex-1  "
 >
   <View>
     <View
@@ -64,7 +64,7 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
 
 exports[`CalendarScreen should match snapshot - with auctions 1`] = `
 <RCTScrollView
-  className="flex-1 bg-white"
+  className="flex-1  "
 >
   <View>
     <View
@@ -89,13 +89,13 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
           className="space-y-6"
         >
           <View
-            className="overflow-hidden rounded-xl bg-white shadow-sm"
+            className="overflow-hidden rounded-xl shadow-sm"
           >
             <View
-              className="min-h-[220px] flex-row py-6 "
+              className="min-h-[220px] flex-row py-6"
             >
               <View
-                className="bg-gray-100 mr-6 h-64 w-52 overflow-hidden rounded-lg"
+                className="bg-gray-100 mr-3 h-56 w-44 overflow-hidden rounded-lg"
               >
                 <Image
                   alt="Test Auction"
@@ -109,13 +109,13 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                 />
               </View>
               <View
-                className="flex-1 py-2"
+                className="flex-1 pr-2"
               >
                 <View
                   className="flex-row items-start justify-between"
                 >
                   <View
-                    className="mr-4 flex-1"
+                    className=" flex-1 "
                   >
                     <View
                       className="mb-2"
@@ -134,7 +134,9 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                         2025
                       </Text>
                     </View>
-                    <View>
+                    <View
+                      className="w-full  pr-2"
+                    >
                       <Text
                         className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black"
                       >
@@ -142,9 +144,11 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                       </Text>
                     </View>
                   </View>
-                  <View>
+                  <View
+                    className="min-w-[50px] max-w-[100px]"
+                  >
                     <Text
-                      className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black"
+                      className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black text-right"
                     >
                       6:00 AM
                     </Text>
