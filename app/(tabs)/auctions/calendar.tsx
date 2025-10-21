@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-} from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
