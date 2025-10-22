@@ -74,11 +74,15 @@ export default function Auth() {
       >
         <ScrollView
           className='flex-1'
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <View className='flex-1 px-5 pt-10'>
+          <View className='flex-1 pt-10'>
             {/* Logo/Title Section */}
-            <View className='mb-10 items-center'>
+            <View className='items-center'>
               <View className='h-20 w-80'>
                 <PopAuctioonIcon
                   className='h-full w-full text-white'
@@ -106,7 +110,7 @@ export default function Auth() {
                 />
               </View>
 
-              <View className='mb-5'>
+              <View>
                 <CustomText
                   type='body'
                   className='text-gray-700 mb-2 font-medium'
@@ -125,7 +129,7 @@ export default function Auth() {
               </View>
 
               {/* Forgot Password Link */}
-              <View className='mb-6 items-end'>
+              <View className='mb-4 items-end'>
                 <CustomLink
                   href='/(tabs)/account/reset-password'
                   mode='plainText'
@@ -167,7 +171,7 @@ export default function Auth() {
             <View className='flex-1' />
 
             {/* Footer con links */}
-            <View className='mb-6 mt-6 items-center'>
+            <View className='mb-6 mt-6 items-center rounded-lg bg-white/60 px-4 py-2 backdrop-blur-3xl'>
               <View className='flex-row flex-wrap justify-center gap-3'>
                 <CustomLink
                   href='/(tabs)/auth/info/about-us'
@@ -175,14 +179,14 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.aboutUs')}
                   </CustomText>
                 </CustomLink>
                 <CustomText
                   type='bodysmall'
-                  className='text-white'
+                  className='text-cinnabar'
                 >
                   •
                 </CustomText>
@@ -192,14 +196,14 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.howItWorks')}
                   </CustomText>
                 </CustomLink>
                 <CustomText
                   type='bodysmall'
-                  className='text-white'
+                  className='text-cinnabar'
                 >
                   •
                 </CustomText>
@@ -209,14 +213,14 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.faqs')}
                   </CustomText>
                 </CustomLink>
                 <CustomText
                   type='bodysmall'
-                  className='text-white'
+                  className='text-cinnabar'
                 >
                   •
                 </CustomText>
@@ -226,7 +230,7 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.contactUs')}
                   </CustomText>
