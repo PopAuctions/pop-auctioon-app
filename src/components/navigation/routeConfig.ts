@@ -24,6 +24,7 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   addresses: {},
   'billing-info': {},
   'payments-history': {},
+  'articles-won': {},
 
   // Rutas que requieren LOGIN + rol específico
   'my-auctions': {

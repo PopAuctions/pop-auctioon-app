@@ -218,6 +218,32 @@ export default function Account({ session }: { session: Session }) {
             />
           </CustomLink>
 
+          {/* Articles Won */}
+          <CustomLink
+            href='/(tabs)/account/articles-won'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesome
+                  name='trophy'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.articlesWon')}
+              </CustomText>
+            </View>
+            <FontAwesome
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
           {/* Línea divisoria */}
           <View className='border-gray-300 my-4 border-t' />
 

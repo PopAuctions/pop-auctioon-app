@@ -134,6 +134,7 @@
       "addresses": "Addresses",
       "billingInfo": "Billing Information",
       "paymentsHistory": "Payments History",
+      "articlesWon": "Articles Won",
       "aboutUs": "About Us",
       "howItWorks": "How it Works",
       "faqs": "FAQs",
@@ -163,6 +164,10 @@
     "paymentsHistory": {
       "title": "Payments History",
       "subtitle": "Review your past transactions"
+    },
+    "articlesWon": {
+      "title": "Articles Won",
+      "subtitle": "View the articles you have won in auctions"
     },
     "aboutUs": {
       "title": "About Us",

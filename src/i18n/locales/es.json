@@ -134,6 +134,7 @@
       "addresses": "Direcciones",
       "billingInfo": "Información de Facturación",
       "paymentsHistory": "Historial de Pagos",
+      "articlesWon": "Artículos Ganados",
       "aboutUs": "Acerca de Nosotros",
       "howItWorks": "Cómo Funciona",
       "faqs": "Preguntas Frecuentes",
@@ -163,6 +164,10 @@
     "paymentsHistory": {
       "title": "Historial de Pagos",
       "subtitle": "Revisa tus transacciones anteriores"
+    },
+    "articlesWon": {
+      "title": "Artículos Ganados",
+      "subtitle": "Visualiza los artículos que has ganado en las subastas"
     },
     "aboutUs": {
       "title": "Acerca de Nosotros",
