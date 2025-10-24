@@ -6,7 +6,7 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
 >
   <View>
     <View
-      className="p-4"
+      className="p-2"
     >
       <View
         className="mb-8"
@@ -68,7 +68,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
 >
   <View>
     <View
-      className="p-4"
+      className="p-2"
     >
       <View
         className="mb-8"
@@ -112,47 +112,39 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                 className="flex-1 pr-2"
               >
                 <View
-                  className="flex-row items-start justify-between"
+                  className="mb-4 flex-row items-end  gap-2"
                 >
-                  <View
-                    className="flex-1 "
-                  >
-                    <View
-                      className="mb-2"
+                  <View>
+                    <Text
+                      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
                     >
-                      <Text
-                        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
-                      >
-                        SEPTEMBER
-                      </Text>
-                      <Text
-                        className="font-rubik text-[22px] leading-[28px] md:font-poppins md:leading-[32px] text-black"
-                      >
-                        26
-                        ,
-                         
-                        2025
-                      </Text>
-                    </View>
-                    <View
-                      className="w-full  pr-2"
+                      SEPTEMBER
+                    </Text>
+                    <Text
+                      className="font-rubik text-[22px] leading-[28px] md:font-poppins md:leading-[32px] text-black"
                     >
-                      <Text
-                        className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black"
-                      >
-                        TEST AUCTION
-                      </Text>
-                    </View>
+                      26
+                      ,
+                       
+                      2025
+                    </Text>
                   </View>
-                  <View
-                    className="min-w-[50px] max-w-[100px]"
-                  >
+                  <View>
                     <Text
                       className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black text-right"
                     >
                       6:00 AM
                     </Text>
                   </View>
+                </View>
+                <View
+                  className=" pr-2"
+                >
+                  <Text
+                    className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black"
+                  >
+                    TEST AUCTION
+                  </Text>
                 </View>
               </View>
             </View>

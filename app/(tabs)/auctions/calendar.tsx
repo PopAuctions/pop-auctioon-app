@@ -70,7 +70,7 @@ export default function CalendarScreen() {
 
   return (
     <ScrollView className='flex-1'>
-      <View className='p-4'>
+      <View className='p-2'>
         {auctions?.this_month && (
           <View className='mb-8'>
             <CustomText

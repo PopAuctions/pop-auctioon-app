@@ -48,43 +48,29 @@ export function AuctionCalendarCard({
 
           {/* Grid de contenido a la derecha */}
           <View className='flex-1 pr-2'>
-            {/* Layout principal: Fecha y Hora */}
-            <View className='flex-row items-start justify-between'>
-              {/* Columna izquierda: Fecha y Título */}
-              <View className='flex-1 '>
-                {/* Fecha */}
-                <View className='mb-2'>
-                  <CustomText
-                    type='subtitle'
-                    className=''
-                  >
-                    {getMonthName(
-                      new Date(auction.startDate).getMonth() + 1,
-                      locale
-                    ).toUpperCase()}
-                  </CustomText>
-                  <CustomText
-                    type='h4'
-                    className=''
-                  >
-                    {new Date(auction.startDate).getDate()},{' '}
-                    {new Date(auction.startDate).getFullYear()}
-                  </CustomText>
-                </View>
-
-                {/* Título justo debajo de la fecha */}
-                <View className='w-full  pr-2'>
-                  <CustomText
-                    type='h3'
-                    className=''
-                  >
-                    {auction.title.toUpperCase()}
-                  </CustomText>
-                </View>
+            {/* Fila superior: Fecha y Hora con espacio entre ellas */}
+            <View className='mb-4 flex-row items-end  gap-2'>
+              {/* Fecha a la izquierda */}
+              <View>
+                <CustomText
+                  type='subtitle'
+                  className=''
+                >
+                  {getMonthName(
+                    new Date(auction.startDate).getMonth() + 1,
+                    locale
+                  ).toUpperCase()}
+                </CustomText>
+                <CustomText
+                  type='h4'
+                  className=''
+                >
+                  {new Date(auction.startDate).getDate()},{' '}
+                  {new Date(auction.startDate).getFullYear()}
+                </CustomText>
               </View>
-
-              {/* Hora - derecha con más ancho */}
-              <View className='min-w-[50px] max-w-[100px]'>
+              {/* Hora a la derecha */}
+              <View>
                 <CustomText
                   type='h3'
                   className='text-right'
@@ -92,6 +78,16 @@ export function AuctionCalendarCard({
                   {formatTime(auction.startDate)}
                 </CustomText>
               </View>
+            </View>
+
+            {/* Título de la subasta abajo */}
+            <View className=' pr-2'>
+              <CustomText
+                type='h3'
+                className=''
+              >
+                {auction.title.toUpperCase()}
+              </CustomText>
             </View>
           </View>
         </View>
