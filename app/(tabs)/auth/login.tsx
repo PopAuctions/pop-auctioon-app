@@ -46,28 +46,28 @@ export default function Auth() {
     setLoading(false);
   }
 
-  async function signUpWithEmail() {
-    setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
+  // async function signUpWithEmail() {
+  //   setLoading(true);
+  //   const {
+  //     data: { session },
+  //     error,
+  //   } = await supabase.auth.signUp({
+  //     email: email,
+  //     password: password,
+  //   });
 
-    if (error) {
-      Alert.alert(error.message);
-    } else if (!session) {
-      Alert.alert('Please check your inbox for email verification!');
-    } else {
-      setEmail('');
-      setPassword('');
-      // Registro exitoso con sesión activa - redirigir al home y reemplazar login
-      router.replace('/(tabs)/home');
-    }
-    setLoading(false);
-  }
+  //   if (error) {
+  //     Alert.alert(error.message);
+  //   } else if (!session) {
+  //     Alert.alert('Please check your inbox for email verification!');
+  //   } else {
+  //     setEmail('');
+  //     setPassword('');
+  //     // Registro exitoso con sesión activa - redirigir al home y reemplazar login
+  //     router.replace('/(tabs)/home');
+  //   }
+  //   setLoading(false);
+  // }
 
   return (
     <BackgroundImage source={require('@/components/icons/bg-image.webp')}>
@@ -159,14 +159,12 @@ export default function Auth() {
               </View>
 
               <View className='mb-4'>
-                <Button
+                <CustomLink
                   mode='secondary'
-                  isLoading={loading}
-                  disabled={loading}
-                  onPress={signUpWithEmail}
+                  href='/(tabs)/auth/register'
                 >
                   {t('loginPage.newAccount')}
-                </Button>
+                </CustomLink>
               </View>
             </View>
 
