@@ -65,10 +65,7 @@
       "router": {},
       "eas": {
         "projectId": "2f1d2957-9008-496f-91b7-9484d7b3d4a7"
-      },
-      "PUBLIC_BASE_URL": "https://www.popauction.com",
-      "S_URL": "https://xvohgpgzvxdwooerdnfb.supabase.co",
-      "S_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2b2hncGd6dnhkd29vZXJkbmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4NDAwNzMsImV4cCI6MjA0NzQxNjA3M30.REN7rPMbhIJ3XlyNBfW4R04eWGAjL01udOCFtyAYx4w"
+      }
     }
   }
 }
