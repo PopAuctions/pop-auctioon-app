@@ -1,11 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import {
-  AboutUsContent,
-  HowItWorksContent,
-  FAQsContent,
-  ContactUsContent,
-} from '@/components/info';
+import { AboutUsContent } from '@/components/info/AboutUsContent';
+import { HowItWorksContent } from '@/components/info/HowItWorksContent';
+import { FAQsContent } from '@/components/info/FAQsContent';
+import { ContactUsContent } from '@/components/info/ContactUsContent';
 
 // Mock translation hook
 jest.mock('@/hooks/i18n/useTranslation', () => ({

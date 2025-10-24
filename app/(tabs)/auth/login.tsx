@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  View,
-  AppState,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { Alert, View, AppState, ScrollView } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -72,23 +66,6 @@ export default function Auth() {
     setLoading(false);
   }
 
-  async function resetPassword() {
-    if (!email) {
-      Alert.alert('Please enter your email address first');
-      return;
-    }
-
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-
-    if (error) {
-      Alert.alert(error.message);
-    } else {
-      Alert.alert('Check your email for password reset instructions');
-    }
-    setLoading(false);
-  }
-
   return (
     <BackgroundImage source={require('@/components/icons/bg-image.webp')}>
       <SafeAreaView
@@ -97,12 +74,16 @@ export default function Auth() {
       >
         <ScrollView
           className='flex-1'
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <View className='flex-1 px-5 pt-10'>
+          <View className='flex-1 pt-10'>
             {/* Logo/Title Section */}
-            <View className='mb-10 items-center'>
-              <View className='h-12 w-80'>
+            <View className='items-center'>
+              <View className='h-20 w-80'>
                 <PopAuctioonIcon
                   className='h-full w-full text-white'
                   centered={true}
@@ -110,7 +91,7 @@ export default function Auth() {
               </View>
             </View>
             {/* Form Container */}
-            <View className='rounded-2xl  p-6 shadow-2xl backdrop-blur-sm'>
+            <View className='rounded-2xl bg-white p-6 shadow-2xl'>
               <View className='mb-5'>
                 <CustomText
                   type='body'
@@ -129,7 +110,7 @@ export default function Auth() {
                 />
               </View>
 
-              <View className='mb-5'>
+              <View>
                 <CustomText
                   type='body'
                   className='text-gray-700 mb-2 font-medium'
@@ -148,17 +129,19 @@ export default function Auth() {
               </View>
 
               {/* Forgot Password Link */}
-              <TouchableOpacity
-                className='mb-6 items-end'
-                onPress={resetPassword}
-              >
-                <CustomText
-                  type='body'
-                  className='text-cinnabar'
+              <View className='mb-4 items-end'>
+                <CustomLink
+                  href='/(tabs)/account/reset-password'
+                  mode='plainText'
                 >
-                  {t('loginPage.forgotPassword')}
-                </CustomText>
-              </TouchableOpacity>
+                  <CustomText
+                    type='body'
+                    className='text-cinnabar'
+                  >
+                    {t('loginPage.forgotPassword')}
+                  </CustomText>
+                </CustomLink>
+              </View>
 
               {/* Buttons */}
               <View className='mb-4'>
@@ -188,7 +171,7 @@ export default function Auth() {
             <View className='flex-1' />
 
             {/* Footer con links */}
-            <View className='mb-6 mt-6 items-center'>
+            <View className='mb-6 mt-6 items-center rounded-lg bg-white/60 px-4 py-2 backdrop-blur-3xl'>
               <View className='flex-row flex-wrap justify-center gap-3'>
                 <CustomLink
                   href='/(tabs)/auth/info/about-us'
@@ -196,14 +179,14 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.aboutUs')}
                   </CustomText>
                 </CustomLink>
                 <CustomText
                   type='bodysmall'
-                  className='text-white'
+                  className='text-cinnabar'
                 >
                   •
                 </CustomText>
@@ -213,14 +196,14 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.howItWorks')}
                   </CustomText>
                 </CustomLink>
                 <CustomText
                   type='bodysmall'
-                  className='text-white'
+                  className='text-cinnabar'
                 >
                   •
                 </CustomText>
@@ -230,14 +213,14 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.faqs')}
                   </CustomText>
                 </CustomLink>
                 <CustomText
                   type='bodysmall'
-                  className='text-white'
+                  className='text-cinnabar'
                 >
                   •
                 </CustomText>
@@ -247,7 +230,7 @@ export default function Auth() {
                 >
                   <CustomText
                     type='bodysmall'
-                    className='text-white'
+                    className='text-cinnabar'
                   >
                     {t('screens.account.contactUs')}
                   </CustomText>

@@ -38,7 +38,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       }
 
       // role gating (wait until role is resolved if required)
-      if (routeConfig.requiresRole && auth.role == null) {
+      if (routeConfig.requiredRole && auth.role == null) {
         console.log(
           '⏳ Waiting for role before granting access to:',
           currentRoute
@@ -46,9 +46,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         return;
       }
 
-      if (routeConfig.requiresRole && auth.role !== routeConfig.requiresRole) {
+      if (routeConfig.requiredRole && auth.role !== routeConfig.requiredRole) {
         console.log(
-          `🚫 Access denied - Role ${auth.role} insufficient for route ${currentRoute} (requires ${routeConfig.requiresRole})`
+          `🚫 Access denied - Role ${auth.role} insufficient for route ${currentRoute} (requires ${routeConfig.requiredRole})`
         );
         router.replace('/(tabs)/home');
         return;

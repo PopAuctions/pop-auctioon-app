@@ -1,12 +1,10 @@
 import { View } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import {
-  AboutUsContent,
-  HowItWorksContent,
-  FAQsContent,
-  ContactUsContent,
-} from '@/components/info';
+import { AboutUsContent } from '@/components/info/AboutUsContent';
+import { HowItWorksContent } from '@/components/info/HowItWorksContent';
+import { FAQsContent } from '@/components/info/FAQsContent';
+import { ContactUsContent } from '@/components/info/ContactUsContent';
 
 export default function InfoScreen() {
   const { page } = useLocalSearchParams<{ page: string }>();
