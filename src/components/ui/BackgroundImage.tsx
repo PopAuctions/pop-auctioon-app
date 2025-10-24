@@ -15,7 +15,7 @@ export const BackgroundImage: React.FC<BackgroundImageProps> = ({
   children,
   source,
   overlay = true,
-  overlayOpacity = 0.3,
+  overlayOpacity = 0,
   resizeMode = 'cover',
   className = 'flex-1',
   style,

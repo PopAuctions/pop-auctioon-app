@@ -1,12 +1,12 @@
 import { supabase } from '@/utils/supabase/supabase-store';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import { ActionResponse, UserRoles } from '@/types/types';
+import { UserRoles, AsyncResponse } from '@/types/types';
 
 export const getUserRole = async ({
   id,
 }: {
   id: string;
-}): Promise<ActionResponse & { role: UserRoles | null }> => {
+}): Promise<AsyncResponse<UserRoles>> => {
   const { data, error } = await supabase
     .from('User')
     .select('role')
@@ -16,18 +16,17 @@ export const getUserRole = async ({
   if (error || !data) {
     sentryErrorReport(error, `GET_ROLE - ${id}`);
     return {
+      data: null,
+      success: false,
       error: {
         en: 'Error getting role',
         es: 'Error obteniendo el rol',
       },
-      success: null,
-      role: null,
     };
   }
 
   return {
-    error: null,
-    success: null,
-    role: data.role as UserRoles,
+    data: data.role as UserRoles,
+    success: true,
   };
 };

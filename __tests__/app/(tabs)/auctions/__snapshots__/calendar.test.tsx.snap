@@ -2,7 +2,7 @@
 
 exports[`CalendarScreen should match snapshot - empty state 1`] = `
 <RCTScrollView
-  className="flex-1  "
+  className="flex-1"
 >
   <View>
     <View
@@ -64,7 +64,7 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
 
 exports[`CalendarScreen should match snapshot - with auctions 1`] = `
 <RCTScrollView
-  className="flex-1  "
+  className="flex-1"
 >
   <View>
     <View
@@ -115,7 +115,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                   className="flex-row items-start justify-between"
                 >
                   <View
-                    className=" flex-1 "
+                    className="flex-1 "
                   >
                     <View
                       className="mb-2"

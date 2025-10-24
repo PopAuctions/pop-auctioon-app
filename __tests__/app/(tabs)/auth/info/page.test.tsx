@@ -18,14 +18,35 @@ jest.mock('@/hooks/i18n/useTranslation', () => ({
   }),
 }));
 
-jest.mock('@/components/info', () => {
+jest.mock('@/components/info/AboutUsContent', () => {
   const React = jest.requireActual('react');
   const RN = jest.requireActual('react-native');
   return {
     AboutUsContent: () => React.createElement(RN.Text, {}, 'AboutUsContent'),
+  };
+});
+
+jest.mock('@/components/info/HowItWorksContent', () => {
+  const React = jest.requireActual('react');
+  const RN = jest.requireActual('react-native');
+  return {
     HowItWorksContent: () =>
       React.createElement(RN.Text, {}, 'HowItWorksContent'),
+  };
+});
+
+jest.mock('@/components/info/FAQsContent', () => {
+  const React = jest.requireActual('react');
+  const RN = jest.requireActual('react-native');
+  return {
     FAQsContent: () => React.createElement(RN.Text, {}, 'FAQsContent'),
+  };
+});
+
+jest.mock('@/components/info/ContactUsContent', () => {
+  const React = jest.requireActual('react');
+  const RN = jest.requireActual('react-native');
+  return {
     ContactUsContent: () =>
       React.createElement(RN.Text, {}, 'ContactUsContent'),
   };
