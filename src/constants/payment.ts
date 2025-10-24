@@ -1,0 +1,1 @@
+export const LOW_COMMISSION_AMOUNT = 0.125;

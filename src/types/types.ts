@@ -47,6 +47,13 @@ export type Article = Database['public']['Tables']['Article']['Row'] & {
   >;
 };
 
+export type SimpleArticle = Pick<
+  Article,
+  'id' | 'images' | 'title' | 'brand' | 'sold' | 'auctionId'
+> & { ArticleBid: Pick<ArticleBid, 'currentValue'> } & {
+  whenInAuction?: Date | null;
+};
+
 export type BlogArticle = Database['public']['Tables']['BlogArticle']['Row'];
 
 export interface BlogArticleJson {

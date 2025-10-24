@@ -1,4 +1,4 @@
-import { View, ScrollView, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
@@ -18,6 +18,7 @@ import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDate
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
 import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
 import { Button } from '@/components/ui/Button';
+import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -50,137 +51,151 @@ export default function AuctionDetailScreen() {
   const { Auction: auction } = liveAuction;
   const auctionMode = auction.mode;
 
-  return (
-    <View className='flex-1'>
-      <ScrollView className='flex-1'>
-        <View className='mt-5 flex w-full flex-col'>
-          <View className='mt-0 flex w-full flex-col items-center justify-center gap-4'>
-            <View className='flex w-full flex-col items-center gap-3 text-center'>
-              <View className='flex'>
-                {auctionMode === AuctionMode.AUTOMATIC ? (
-                  <HowAutoLiveWorksModal
-                    locale={locale}
-                    trigger={(open) => (
-                      <Pressable onPress={open}>
-                        <CustomText
-                          type='h4'
-                          className='text-cinnabar underline'
-                        >
-                          {AUCTION_MODE_LABEL[locale][auctionMode]}
-                        </CustomText>
-                      </Pressable>
-                    )}
-                  />
-                ) : (
-                  <CustomText
-                    type='h4'
-                    className='text-base text-cinnabar'
-                  >
-                    {AUCTION_MODE_LABEL[locale][auctionMode]}
-                  </CustomText>
-                )}
-              </View>
-              <CustomText
-                type='h1'
-                className='text-center'
-              >
-                {auction.title}
-              </CustomText>
-              {auction.status !== AuctionStatus.LIVE && (
-                <AuctionDisplayDateTime
-                  singleLine={true}
-                  startDate={auction.startDate}
+  function renderAuctionHeader() {
+    return (
+      <View className='mt-5 flex w-full flex-col'>
+        <View className='mt-0 flex w-full flex-col items-center justify-center gap-4'>
+          <View className='flex w-full flex-col items-center gap-3 text-center'>
+            <View className='flex'>
+              {auctionMode === AuctionMode.AUTOMATIC ? (
+                <HowAutoLiveWorksModal
                   locale={locale}
+                  trigger={(open) => (
+                    <Pressable onPress={open}>
+                      <CustomText
+                        type='h4'
+                        className='text-cinnabar underline'
+                      >
+                        {AUCTION_MODE_LABEL[locale][auctionMode]}
+                      </CustomText>
+                    </Pressable>
+                  )}
                 />
-              )}
-            </View>
-            <View className='flex flex-col md:flex-row'>
-              {(auction.status === AuctionStatus.AVAILABLE ||
-                auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
-                auction.status ===
-                  AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE) && (
-                <AuctionCountdownComponent
-                  dateString={auction.startDate}
-                  id={id}
-                  locale={locale}
-                  auctionLang={auctionLang}
-                  auctionMode={auctionMode}
-                  auctionView={true}
-                  minutesBefore={MINUTES_BEFORE_ENTERING}
-                />
-              )}
-              {auction.status === AuctionStatus.LIVE && (
-                <View className='flex flex-col items-center gap-2'>
-                  <CustomText
-                    type='h4'
-                    className='text-cinnabar'
-                  >
-                    {auctionLang.start}
-                  </CustomText>
-                </View>
-              )}
-              {auction.status === AuctionStatus.FINISHED && (
-                <View className='flex flex-col items-center gap-2'>
-                  <CustomText
-                    type='h3'
-                    className='text-cinnabar'
-                  >
-                    {auctionLang.finished}
-                  </CustomText>
-                </View>
-              )}
-            </View>
-            {auction.status !== AuctionStatus.FINISHED && (
-              <View className='flex w-4/5 flex-row justify-center gap-5 md:w-1/2'>
-                {auction.status === AuctionStatus.LIVE ? (
-                  <CustomLink
-                    className='w-1/2'
-                    mode='primary'
-                    // WIP: fix URL
-                    href={`/auction/${id}${LIVE_URL[auctionMode]}`}
-                  >
-                    {auctionLang.watchButton}
-                  </CustomLink>
-                ) : (
-                  <Button
-                    className='w-1/2'
-                    mode='primary'
-                  >
-                    {auctionLang.follow}
-                  </Button>
-                  // <FollowButton
-                  //   className='w-1/2'
-                  //   mode='primary'
-                  //   follows={followsAuction.follows}
-                  //   id={id}
-                  //   followFunction={followAuction}
-                  //   unfollowFunction={unfollowAuction}
-                  //   locale={locale}
-                  //   isAvailable={!isAuctionAvailable}
-                  // >
-                  //   {followsAuction.follows
-                  //     ? auctionLang.unfollow
-                  //     : auctionLang.follow}
-                  // </FollowButton>
-                )}
-                <ShareButton
-                  className='w-1/2'
-                  mode='secondary'
+              ) : (
+                <CustomText
+                  type='h4'
+                  className='text-base text-cinnabar'
                 >
-                  {auctionLang.share}
-                </ShareButton>
+                  {AUCTION_MODE_LABEL[locale][auctionMode]}
+                </CustomText>
+              )}
+            </View>
+
+            <CustomText
+              type='h1'
+              className='text-center'
+            >
+              {auction.title}
+            </CustomText>
+
+            {auction.status !== AuctionStatus.LIVE && (
+              <AuctionDisplayDateTime
+                singleLine={true}
+                startDate={auction.startDate}
+                locale={locale}
+              />
+            )}
+          </View>
+
+          <View className='flex flex-col md:flex-row'>
+            {(auction.status === AuctionStatus.AVAILABLE ||
+              auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
+              auction.status ===
+                AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE) && (
+              <AuctionCountdownComponent
+                dateString={auction.startDate}
+                id={id}
+                locale={locale}
+                auctionLang={auctionLang}
+                auctionMode={auctionMode}
+                auctionView={true}
+                minutesBefore={MINUTES_BEFORE_ENTERING}
+              />
+            )}
+
+            {auction.status === AuctionStatus.LIVE && (
+              <View className='flex flex-col items-center gap-2'>
+                <CustomText
+                  type='h4'
+                  className='text-cinnabar'
+                >
+                  {auctionLang.start}
+                </CustomText>
+              </View>
+            )}
+
+            {auction.status === AuctionStatus.FINISHED && (
+              <View className='flex flex-col items-center gap-2'>
+                <CustomText
+                  type='h3'
+                  className='text-cinnabar'
+                >
+                  {auctionLang.finished}
+                </CustomText>
               </View>
             )}
           </View>
-          <View className='rounded- mx-auto mt-10 aspect-[3/4] w-full max-w-80 overflow-hidden'>
-            <CustomImage
-              src={auction.image}
-              alt={auction.title}
-              className='h-2/3 w-full'
-            />
-          </View>
+
+          {auction.status !== AuctionStatus.FINISHED && (
+            <View className='flex w-4/5 flex-row justify-center gap-5 md:w-1/2'>
+              {auction.status === AuctionStatus.LIVE ? (
+                <CustomLink
+                  className='w-1/2'
+                  mode='primary'
+                  href={`/auction/${id}${LIVE_URL[auctionMode]}`}
+                >
+                  {auctionLang.watchButton}
+                </CustomLink>
+              ) : (
+                <Button
+                  className='w-1/2'
+                  mode='primary'
+                >
+                  {auctionLang.follow}
+                </Button>
+              )}
+
+              <ShareButton
+                className='w-1/2'
+                mode='secondary'
+              >
+                {auctionLang.share}
+              </ShareButton>
+            </View>
+          )}
         </View>
-      </ScrollView>
+
+        <View className='mx-auto mt-5 h-[400px] w-full max-w-80 overflow-hidden rounded-xl'>
+          <CustomImage
+            src={auction.image}
+            alt={auction.title}
+            className='h-full w-full'
+          />
+        </View>
+
+        <View className='mt-5 px-5'>
+          <CustomText
+            type='subtitle'
+            className='text-center text-3xl text-cinnabar'
+          >
+            {auctionLang.articles}
+          </CustomText>
+        </View>
+
+        {/* <Filters ... /> */}
+      </View>
+    );
+  }
+
+  return (
+    <View className='flex-1'>
+      <ArticlesInfiniteScroll
+        lang={locale}
+        auctionId={id}
+        ListHeaderComponent={renderAuctionHeader()}
+        // When there is a filter, the order is not applied
+        order={liveAuction?.articlesOrder}
+      />
     </View>
   );
 }

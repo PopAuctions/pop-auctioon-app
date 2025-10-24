@@ -3,6 +3,7 @@ import { AppState, AppStateStatus } from 'react-native';
 import { DHMS, diffToDHMS } from '@/utils/diffToDHMS';
 import { CustomText } from './CustomText';
 import { Lang } from '@/types/types';
+
 export function SimpleCountdown({
   dateString,
   locale,
