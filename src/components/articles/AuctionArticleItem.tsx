@@ -7,6 +7,7 @@ import { ARTICLE_BRANDS_LABELS } from '@/constants';
 import { CustomImage } from '../ui/CustomImage';
 import { SimpleCountdown } from '../ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
+import { Button } from '../ui/Button';
 
 // These should be mobile-friendly functions that hit your API / Supabase
 // import { followArticle } from '@/lib/articles/follow-article';
@@ -49,64 +50,78 @@ export function ArticleItem({
   }
 
   return (
-    <View className='flex w-full flex-row gap-5 bg-[#f4f4f4] px-4 py-6'>
+    <View className='w-full gap-2'>
       <CustomLink
+        className='flex w-full flex-row gap-5'
         href={`/(tabs)/auctions/${article.auctionId}`}
         mode='empty'
       >
-        <Pressable className='flex-[0.6]'>
-          <View className='aspect-square w-full items-center justify-center rounded-xl bg-white p-3 shadow-sm'>
+        <Pressable className='w-1/2 items-center'>
+          <View className='aspect-square w-full overflow-hidden rounded-xl'>
             <CustomImage
               src={article.images[0]}
               alt={article.title}
               className='h-full w-full'
-              resizeMode='contain'
+              resizeMode='cover'
             />
           </View>
         </Pressable>
-      </CustomLink>
 
-      {/* TEXT COLUMN */}
-      <View className='flex-[0.4] flex-col justify-between'>
-        <View className='flex flex-col'>
-          {article.whenInAuction && (
-            <SimpleCountdown
-              dateString={article.whenInAuction.toUTCString()}
-              locale={lang}
-              texts={{
-                completed: { es: 'Ya comenzó', en: 'Already started' },
-              }}
-            />
-          )}
+        <View className='w-1/2 flex-col items-start justify-between'>
+          <View className='flex flex-col pr-2'>
+            {article.whenInAuction && (
+              <SimpleCountdown
+                dateString={article.whenInAuction.toUTCString()}
+                locale={lang}
+                texts={{
+                  completed: { es: 'Ya comenzó', en: 'Already started' },
+                }}
+              />
+            )}
 
-          <CustomText
-            type='subtitle'
-            className='text-xs uppercase tracking-wide text-black'
+            <CustomText type='subtitle'>
+              {`${auctionLang.currentBid} ${formatter.format(commissionedPrice)}`}
+            </CustomText>
+
+            <CustomText
+              type='h4'
+              className='text-black'
+            >
+              {article.title}
+            </CustomText>
+
+            <CustomText
+              type='body'
+              className='text-cinnabar'
+            >
+              {ARTICLE_BRANDS_LABELS[
+                article.brand as keyof typeof ARTICLE_BRANDS_LABELS
+              ] ??
+                article.brand ??
+                ''}
+            </CustomText>
+          </View>
+
+          <Button mode='primary'>Seguir</Button>
+
+          {/* Follow button will fit here later */}
+          {/* {showFollowButton && (
+          <FollowButton
+            mode='primary'
+            size='normal' // make sure this gives you that tall pill style
+            follows={userFollows}
+            id={String(article.id)}
+            followFunction={followArticle}
+            unfollowFunction={unfollowArticle}
+            lang={lang}
+            isAvailable={article.sold}
+            className='mt-6 w-full rounded-xl'
           >
-            {`${auctionLang.currentBid} ${formatter.format(commissionedPrice)}`}
-          </CustomText>
-
-          <CustomText
-            type='h4'
-            className='text-black'
-          >
-            {article.title}
-          </CustomText>
-
-          <CustomText
-            type='body'
-            className='text-cinnabar'
-          >
-            {ARTICLE_BRANDS_LABELS[
-              article.brand as keyof typeof ARTICLE_BRANDS_LABELS
-            ] ??
-              article.brand ??
-              ''}
-          </CustomText>
+            {userFollows ? auctionLang.unfollow : auctionLang.follow}
+          </FollowButton>
+        )} */}
         </View>
-
-        {/* follow button can live here later */}
-      </View>
+      </CustomLink>
     </View>
   );
 }
