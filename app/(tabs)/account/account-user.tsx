@@ -62,6 +62,32 @@ export default function Account({ session }: { session: Session }) {
 
         {/* Opciones de cuenta */}
         <View className='mx-2 p-4'>
+          {/* Articles Won */}
+          <CustomLink
+            href='/(tabs)/account/articles-won'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesome
+                  name='trophy'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.articlesWon')}
+              </CustomText>
+            </View>
+            <FontAwesome
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
           {/* Edit Profile */}
           <CustomLink
             href='/(tabs)/account/edit-profile'
@@ -131,6 +157,58 @@ export default function Account({ session }: { session: Session }) {
               </View>
               <CustomText type='body'>
                 {t('screens.account.verifyPhone')}
+              </CustomText>
+            </View>
+            <FontAwesome
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
+          {/* Followed Auctions */}
+          <CustomLink
+            href='/(tabs)/account/followed-auctions'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesome
+                  name='gavel'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.followedAuctions')}
+              </CustomText>
+            </View>
+            <FontAwesome
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
+          {/* Followed Articles */}
+          <CustomLink
+            href='/(tabs)/account/followed-articles'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesome
+                  name='shopping-bag'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.followedArticles')}
               </CustomText>
             </View>
             <FontAwesome

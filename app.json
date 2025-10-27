@@ -55,6 +55,13 @@
             "en"
           ]
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos so you can share them.",
+          "cameraPermission": "The app accesses your camera to take profile pictures."
+        }
       ]
     ],
     "experiments": {

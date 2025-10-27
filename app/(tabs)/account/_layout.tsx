@@ -27,7 +27,21 @@ export default function AccountLayout() {
       <Stack.Screen
         name='edit-profile'
         options={{
-          title: t('screens.account.editProfile'),
+          title: '', //t('screens.account.editProfile'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='followed-auctions'
+        options={{
+          title: '', //t('screens.account.followedAuctions'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='followed-articles'
+        options={{
+          title: '', //t('screens.account.followedArticles'),
           presentation: 'card',
         }}
       />
@@ -63,6 +77,13 @@ export default function AccountLayout() {
         name='payments-history'
         options={{
           title: t('screens.account.paymentsHistory'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='articles-won'
+        options={{
+          title: t('screens.account.articlesWon'),
           presentation: 'card',
         }}
       />

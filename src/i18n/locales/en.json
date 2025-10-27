@@ -132,9 +132,12 @@
       "editProfile": "Edit Profile Information",
       "resetPassword": "Reset Password",
       "verifyPhone": "Verify Phone",
+      "followedAuctions": "Subastas Seguidas",
+      "followedArticles": "Artículos Seguidos",
       "addresses": "Addresses",
       "billingInfo": "Billing Information",
       "paymentsHistory": "Payments History",
+      "articlesWon": "Articles Won",
       "aboutUs": "About Us",
       "howItWorks": "How it Works",
       "faqs": "FAQs",
@@ -143,7 +146,25 @@
     },
     "editProfile": {
       "title": "Edit Profile Information",
-      "subtitle": "Update your personal information"
+      "subtitle": "Update your personal information",
+      "name": "Name",
+      "lastName": "Last Name",
+      "username": "Username",
+      "phoneNumber": "Phone Number",
+      "phoneHint": "With country code",
+      "uploadImage": "Upload image",
+      "uploadImageButton": "Upload image",
+      "changeImageText": "Change image",
+      "addMoreImages": "Add more images",
+      "imageSelected": "Image selected",
+      "imagesSelected": "images selected",
+      "supportedFormats": "Supported formats: png, jpg, jpeg, webp (Max 1MB)",
+      "permissionRequired": "Permission Required",
+      "permissionMessage": "We need access to your gallery to select an image.",
+      "imageTooLarge": "Image too large",
+      "imageTooLargeMessage": "The selected image is larger than 1MB. It will be compressed automatically.",
+      "update": "Update",
+      "back": "Back"
     },
     "resetPassword": {
       "title": "Reset Password",
@@ -164,6 +185,10 @@
     "paymentsHistory": {
       "title": "Payments History",
       "subtitle": "Review your past transactions"
+    },
+    "articlesWon": {
+      "title": "Articles Won",
+      "subtitle": "View the articles you have won in auctions"
     },
     "aboutUs": {
       "title": "About Us",

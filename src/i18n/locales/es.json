@@ -132,9 +132,12 @@
       "editProfile": "Editar Información del Perfil",
       "resetPassword": "Restablecer Contraseña",
       "verifyPhone": "Verificar Teléfono",
+      "followedAuctions": "Subastas Seguidas",
+      "followedArticles": "Artículos Seguidos",
       "addresses": "Direcciones",
       "billingInfo": "Información de Facturación",
       "paymentsHistory": "Historial de Pagos",
+      "articlesWon": "Artículos Ganados",
       "aboutUs": "Acerca de Nosotros",
       "howItWorks": "Cómo Funciona",
       "faqs": "Preguntas Frecuentes",
@@ -143,7 +146,25 @@
     },
     "editProfile": {
       "title": "Editar Información del Perfil",
-      "subtitle": "Actualiza tu información personal"
+      "subtitle": "Actualiza tu información personal",
+      "name": "Nombre",
+      "lastName": "Apellido",
+      "username": "Nombre de usuario",
+      "phoneNumber": "Número de teléfono",
+      "phoneHint": "Con código de país",
+      "uploadImage": "Subir imagen",
+      "uploadImageButton": "Subir imagen",
+      "changeImageText": "Cambiar imagen",
+      "addMoreImages": "Agregar más imágenes",
+      "imageSelected": "Imagen seleccionada",
+      "imagesSelected": "imágenes seleccionadas",
+      "supportedFormats": "Formatos soportados: png, jpg, jpeg, webp (Máx 1MB)",
+      "permissionRequired": "Permiso Requerido",
+      "permissionMessage": "Necesitamos acceso a tu galería para seleccionar una imagen.",
+      "imageTooLarge": "Imagen muy grande",
+      "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
+      "update": "Actualizar",
+      "back": "Volver"
     },
     "resetPassword": {
       "title": "Restablecer Contraseña",
@@ -164,6 +185,10 @@
     "paymentsHistory": {
       "title": "Historial de Pagos",
       "subtitle": "Revisa tus transacciones anteriores"
+    },
+    "articlesWon": {
+      "title": "Artículos Ganados",
+      "subtitle": "Visualiza los artículos que has ganado en las subastas"
     },
     "aboutUs": {
       "title": "Acerca de Nosotros",

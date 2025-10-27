@@ -11,7 +11,8 @@ type TextType =
   | 'body'
   | 'bloquote'
   | 'bodysmall'
-  | 'bold';
+  | 'bold'
+  | 'error';
 
 interface TextProps extends RNTextProps {
   type: TextType;
@@ -30,13 +31,16 @@ const TEXT_TYPE_STYLES: Record<TextType, string> = {
     'grow font-rubik text-[22px] italic leading-[32px] md:grow-0 md:font-poppins',
   bold: 'grow-0 self-stretch font-rubik font-bold text-[24px] leading-[30px] md:self-auto md:font-poppins md:leading-[34px]',
   bodysmall:
-    'grow-0 self-stretch font-rubik text-base leading-[24px] tracking-[0.1px] md:self-auto md:font-poppins md:text-sm md:leading-[21px]',
+    'font-rubik text-base leading-[24px] tracking-[0.1px] md:font-poppins md:text-sm md:leading-[21px]',
+  error: 'font-rubik text-sm leading-[21px] tracking-[0.1px] text-red-500',
 };
 
 export function CustomText({ type, className, children, ...props }: TextProps) {
+  const baseColor = type === 'error' ? '' : 'text-black';
+
   return (
     <Text
-      className={cn(TEXT_TYPE_STYLES[type], 'text-black', className)}
+      className={cn(TEXT_TYPE_STYLES[type], baseColor, className)}
       {...props}
     >
       {children}

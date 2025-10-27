@@ -484,3 +484,5 @@ export const ARTICLE_CATEGORIES_FILTER_LIST: Record<string, CategoryFilter[]> =
       { value: 'ART', label: 'Art' },
     ],
   };
+
+export const ARTICLE_IMAGES_MAX = 10;
