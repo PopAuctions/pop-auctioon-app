@@ -29,6 +29,8 @@ export const MIN_USERNAME_LENGTH = 3;
 
 export const MAX_USERNAME_LENGTH = 10;
 
+export const ARTICLE_IMAGES_MAX = 10;
+
 export const ACCEPTED_FILE_TYPES = [
   'image/jpg',
   'image/jpeg',

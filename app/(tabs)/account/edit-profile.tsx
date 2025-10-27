@@ -204,6 +204,7 @@ export default function EditProfileScreen() {
             <ImageUploadButton
               selectedImage={selectedImage}
               onImageSelected={setSelectedImage}
+              onImageRemoved={() => setSelectedImage(null)}
               disabled={loading}
             />
           </View>
