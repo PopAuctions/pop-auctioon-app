@@ -533,3 +533,5 @@ export type CategoryFilter = {
   value: string;
   label: string;
 };
+
+export type ApiEndpoint = `/${string}`;

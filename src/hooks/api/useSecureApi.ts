@@ -6,7 +6,10 @@ import {
   SECURITY_LEVELS,
   API_ERROR_CODES,
   DEV_CONFIG,
+  buildProtectedUrl,
+  buildSecureUrl,
 } from '@/config/api-config';
+import { ApiEndpoint } from '@/types/types';
 
 interface ApiResponse<T = any> {
   data?: T;
@@ -71,8 +74,8 @@ export const useSecureApi = () => {
               `🚀 API Request: ${options.method} ${API_CONFIG.BASE_URL}${url}`
             );
           }
-
-          const response = await fetch(`${API_CONFIG.BASE_URL}${url}`, {
+          console.log('Request URL:', url);
+          const response = await fetch(url, {
             ...options,
             signal: controller.signal,
           });
@@ -156,13 +159,15 @@ export const useSecureApi = () => {
 
   const protectedGet = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       options: RequestOptions = {}
     ): Promise<ApiResponse<T>> => {
       const headers = createBaseHeaders();
+      const url = buildProtectedUrl(endpoint);
+      console.log('Protected API URL:', url);
 
       return makeRequest<T>(
-        `/api/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
+        url,
         {
           method: 'GET',
           headers,
@@ -175,14 +180,15 @@ export const useSecureApi = () => {
 
   const protectedPost = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       data: any,
       options: RequestOptions = {}
     ): Promise<ApiResponse<T>> => {
       const headers = createBaseHeaders();
+      const url = buildProtectedUrl(endpoint);
 
       return makeRequest<T>(
-        `/api/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
+        url,
         {
           method: 'POST',
           headers,
@@ -200,14 +206,15 @@ export const useSecureApi = () => {
 
   const secureGet = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       options: RequestOptions = {}
     ): Promise<ApiResponse<T>> => {
       try {
         const headers = await createSecureHeaders();
+        const url = buildSecureUrl(endpoint);
 
         return makeRequest<T>(
-          `/api/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`,
+          url,
           {
             method: 'GET',
             headers,
@@ -226,15 +233,16 @@ export const useSecureApi = () => {
 
   const securePost = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       data: any,
       options: RequestOptions = {}
     ): Promise<ApiResponse<T>> => {
       try {
         const headers = await createSecureHeaders();
+        const url = buildSecureUrl(endpoint);
 
         return makeRequest<T>(
-          `/api/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`,
+          url,
           {
             method: 'POST',
             headers,
