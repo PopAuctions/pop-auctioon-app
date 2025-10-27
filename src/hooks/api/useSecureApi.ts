@@ -10,17 +10,12 @@ import {
 } from '@/config/api-config';
 import { ApiEndpoint } from '@/types/types';
 
-interface ApiEndpointReponse<T = any> {
+interface ApiResponse<T = any> {
   data: T;
   error: string;
   responseText: string;
-  contentType: string;
-}
-
-interface ApiResponse<T = any> {
-  data?: T;
-  error?: string;
   status: number;
+  contentType: string;
 }
 
 interface RequestOptions {
@@ -63,7 +58,7 @@ export const useSecureApi = () => {
       url: string,
       options: RequestInit,
       requestOptions: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       const { timeout = API_CONFIG.TIMEOUT, retries = API_CONFIG.MAX_RETRIES } =
         requestOptions;
 
@@ -91,7 +86,7 @@ export const useSecureApi = () => {
           const responseClone = response.clone();
 
           // Intentar parsear como JSON, si falla usar texto plano
-          let responseData: Partial<ApiEndpointReponse<T>>;
+          let responseData: Partial<ApiResponse<T>>;
           try {
             responseData = await response.json();
           } catch {
@@ -166,7 +161,7 @@ export const useSecureApi = () => {
     async <T>(
       endpoint: ApiEndpoint,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
@@ -187,7 +182,7 @@ export const useSecureApi = () => {
       endpoint: ApiEndpoint,
       data: any,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
@@ -212,7 +207,7 @@ export const useSecureApi = () => {
     async <T>(
       endpoint: ApiEndpoint,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
@@ -240,7 +235,7 @@ export const useSecureApi = () => {
       endpoint: ApiEndpoint,
       data: any,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
