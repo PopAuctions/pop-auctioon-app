@@ -14,7 +14,6 @@ import { EditProfileSchema, type EditProfileSchemaType } from '@/utils/schemas';
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const [loading, setLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // React Hook Form con validación Zod
   const {
@@ -35,9 +34,8 @@ export default function EditProfileScreen() {
   const onSubmit = async (data: EditProfileSchemaType) => {
     setLoading(true);
     console.log('Form data:', data);
-    console.log('Selected image:', selectedImage);
     // TODO: Implementar lógica de actualización con la imagen
-    // Si selectedImage existe, subirla al servidor
+    // Si data.profilePicture existe, subirla al servidor
     setTimeout(() => {
       setLoading(false);
       router.back();
@@ -201,12 +199,27 @@ export default function EditProfileScreen() {
               {t('screens.editProfile.uploadImage')}
             </CustomText>
 
-            <ImageUploadButton
-              selectedImage={selectedImage}
-              onImageSelected={setSelectedImage}
-              onImageRemoved={() => setSelectedImage(null)}
-              disabled={loading}
+            <Controller
+              control={control}
+              name='profilePicture'
+              render={({ field: { onChange, value } }) => (
+                <ImageUploadButton
+                  selectedImage={value || null}
+                  onImageSelected={onChange}
+                  onImageRemoved={() => onChange('')}
+                  disabled={loading}
+                />
+              )}
             />
+            {errors.profilePicture && (
+              <CustomText
+                type='error'
+                className='mt-1'
+              >
+                {JSON.parse(errors.profilePicture.message || '{}')[locale] ||
+                  errors.profilePicture.message}
+              </CustomText>
+            )}
           </View>
 
           {/* Update Button */}
