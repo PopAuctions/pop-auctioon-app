@@ -3,13 +3,19 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import {
   API_CONFIG,
   HEADERS_CONFIG,
-  SECURITY_LEVELS,
   API_ERROR_CODES,
   DEV_CONFIG,
   buildProtectedUrl,
   buildSecureUrl,
 } from '@/config/api-config';
 import { ApiEndpoint } from '@/types/types';
+
+interface ApiEndpointReponse<T = any> {
+  data: T;
+  error: string;
+  responseText: string;
+  contentType: string;
+}
 
 interface ApiResponse<T = any> {
   data?: T;
@@ -74,7 +80,6 @@ export const useSecureApi = () => {
               `🚀 API Request: ${options.method} ${API_CONFIG.BASE_URL}${url}`
             );
           }
-          console.log('Request URL:', url);
           const response = await fetch(url, {
             ...options,
             signal: controller.signal,
@@ -86,7 +91,7 @@ export const useSecureApi = () => {
           const responseClone = response.clone();
 
           // Intentar parsear como JSON, si falla usar texto plano
-          let responseData: unknown;
+          let responseData: Partial<ApiEndpointReponse<T>>;
           try {
             responseData = await response.json();
           } catch {
@@ -115,7 +120,7 @@ export const useSecureApi = () => {
           };
 
           return {
-            data: responseData as T,
+            data: responseData.data as T | undefined,
             status: response.status,
             error: response.ok ? undefined : getErrorMessage(responseData),
           };
@@ -164,7 +169,6 @@ export const useSecureApi = () => {
     ): Promise<ApiResponse<T>> => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
-      console.log('Protected API URL:', url);
 
       return makeRequest<T>(
         url,

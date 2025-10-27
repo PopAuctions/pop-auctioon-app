@@ -190,21 +190,21 @@ export const API_ERROR_CODES = {
  * Construye una URL completa para un endpoint protegido
  */
 export const buildProtectedUrl = (endpoint: ApiEndpoint): string => {
-  return `${API_CONFIG.BASE_URL}/mobile/protected${endpoint}`;
+  return `${API_CONFIG.BASE_URL}/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`;
 };
 
 /**
  * Construye una URL completa para un endpoint seguro
  */
 export const buildSecureUrl = (endpoint: ApiEndpoint): string => {
-  return `${API_CONFIG.BASE_URL}/mobile/secure${endpoint}`;
+  return `${API_CONFIG.BASE_URL}/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`;
 };
 
 /**
  * Construye una URL de proxy para acceder a endpoints existentes de forma segura
  */
 export const buildProxyUrl = (originalPath: ApiEndpoint): string => {
-  return `${API_CONFIG.BASE_URL}/mobile/secure/proxy${originalPath}`;
+  return `${API_CONFIG.BASE_URL}/mobile/${SECURITY_LEVELS.SECURE}/proxy${originalPath}`;
 };
 
 // ========================================
