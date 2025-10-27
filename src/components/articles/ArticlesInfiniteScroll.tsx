@@ -2,10 +2,10 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { ArticleItem } from './AuctionArticleItem';
 import { euroFormatter } from '@/utils/euroFormatter';
-import { fetchAuctionArticles } from '@/lib/api/fetch-auction-articles';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
+import { useFetchAuctionArticlesInfinite } from '@/hooks/components/useFetchAuctionArticlesInifinte';
 
 const ITEMS_PER_PAGE = 1;
 const TEXTS = {
@@ -26,6 +26,7 @@ export const ArticlesInfiniteScroll = ({
   ListHeaderComponent: React.ReactElement;
   order?: number[];
 }) => {
+  const { fetchArticles } = useFetchAuctionArticlesInfinite();
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,12 +46,19 @@ export const ArticlesInfiniteScroll = ({
   const loadInitial = useCallback(async () => {
     try {
       setIsLoading(true);
-      const data = await fetchAuctionArticles({
+      const response = await fetchArticles({
         auctionId,
         offset: 0,
         limit: ITEMS_PER_PAGE,
         orderedIds: order,
       });
+      const data = response?.data;
+
+      if (!data) {
+        setHasMore(false);
+        return;
+      }
+
       setArticles(data);
       setOffset(data.length);
       if (data.length < ITEMS_PER_PAGE) setHasMore(false);
@@ -59,19 +67,26 @@ export const ArticlesInfiniteScroll = ({
     } finally {
       setIsLoading(false);
     }
-  }, [auctionId, order]);
+  }, [auctionId, order, fetchArticles]);
 
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
 
     try {
-      const newData = await fetchAuctionArticles({
+      const response = await fetchArticles({
         auctionId,
         offset,
         limit: ITEMS_PER_PAGE,
         orderedIds: order,
       });
+      const newData = response.data;
+
+      if (!newData) {
+        setHasMore(false);
+        return;
+      }
+
       if (newData.length === 0) {
         setHasMore(false);
       } else {
@@ -90,7 +105,7 @@ export const ArticlesInfiniteScroll = ({
     } finally {
       setIsLoading(false);
     }
-  }, [offset, isLoading, hasMore, auctionId, order]);
+  }, [offset, isLoading, hasMore, auctionId, order, fetchArticles]);
 
   useEffect(() => {
     loadInitial();
