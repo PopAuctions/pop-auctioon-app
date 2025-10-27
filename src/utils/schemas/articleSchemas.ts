@@ -140,7 +140,7 @@ export const NewArticleSchemaBags = commonSchema
     }
   );
 
-export const NewArticleSchemaJewrly = commonSchema.extend({
+export const NewArticleSchemaJewelry = commonSchema.extend({
   material: z.string().min(1, {
     message: JSON.stringify({
       en: 'Required',
@@ -260,7 +260,7 @@ export const DEFAULT_VALUES_MAP = {
     width: '',
     height: '',
   },
-  JEWERLY: {
+  JEWELRY: {
     ...defaultCommonValues,
     material: '',
     brand: '',

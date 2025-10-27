@@ -417,15 +417,15 @@ export const NewAuctionSchema = z.object({
   video: z.string(),
 });
 
-export const EditAuctionchema = z.object({
+export const EditAuctionSchema = z.object({
   title: z
     .string()
     .min(1, { message: 'Required' })
     .max(20, { message: 'Title too long (Max. 20)' }),
   startDate: z.string().min(1, { message: 'Required' }),
   startTime: z.string().min(1, { message: 'Required' }),
-  commingImage: z.string().optional(),
-  commingVideo: z.string().optional(),
+  comingImage: z.string().optional(),
+  comingVideo: z.string().optional(),
   newImage: z.string().optional(),
   newVideo: z.string().optional(),
 });
