@@ -25,7 +25,7 @@ export const useGetLiveAuction = ({
       const { data, error } = await supabase
         .from('LiveAuction')
         .select(
-          'id, auctionId, currentArticleBidId, articlesOrder, ArticleBid ( articleId, highestBidderUsername, highestBidderImage, available, countdownActive, countdownAmount ), Auction ( id, status, title, mode, image )'
+          'id, auctionId, currentArticleBidId, articlesOrder, ArticleBid ( articleId, highestBidderUsername, highestBidderImage, available, countdownActive, countdownAmount ), Auction ( id, status, startDate, title, mode, image )'
         )
         .eq('auctionId', auctionId);
 

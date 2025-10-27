@@ -3,15 +3,19 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import {
   API_CONFIG,
   HEADERS_CONFIG,
-  SECURITY_LEVELS,
   API_ERROR_CODES,
   DEV_CONFIG,
+  buildProtectedUrl,
+  buildSecureUrl,
 } from '@/config/api-config';
+import { ApiEndpoint } from '@/types/types';
 
 interface ApiResponse<T = any> {
-  data?: T;
-  error?: string;
+  data: T;
+  error: string;
+  responseText: string;
   status: number;
+  contentType: string;
 }
 
 interface RequestOptions {
@@ -54,7 +58,7 @@ export const useSecureApi = () => {
       url: string,
       options: RequestInit,
       requestOptions: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       const { timeout = API_CONFIG.TIMEOUT, retries = API_CONFIG.MAX_RETRIES } =
         requestOptions;
 
@@ -71,8 +75,7 @@ export const useSecureApi = () => {
               `🚀 API Request: ${options.method} ${API_CONFIG.BASE_URL}${url}`
             );
           }
-
-          const response = await fetch(`${API_CONFIG.BASE_URL}${url}`, {
+          const response = await fetch(url, {
             ...options,
             signal: controller.signal,
           });
@@ -83,7 +86,7 @@ export const useSecureApi = () => {
           const responseClone = response.clone();
 
           // Intentar parsear como JSON, si falla usar texto plano
-          let responseData: unknown;
+          let responseData: Partial<ApiResponse<T>>;
           try {
             responseData = await response.json();
           } catch {
@@ -112,7 +115,7 @@ export const useSecureApi = () => {
           };
 
           return {
-            data: responseData as T,
+            data: responseData.data as T | undefined,
             status: response.status,
             error: response.ok ? undefined : getErrorMessage(responseData),
           };
@@ -156,13 +159,14 @@ export const useSecureApi = () => {
 
   const protectedGet = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       const headers = createBaseHeaders();
+      const url = buildProtectedUrl(endpoint);
 
       return makeRequest<T>(
-        `/api/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
+        url,
         {
           method: 'GET',
           headers,
@@ -175,14 +179,15 @@ export const useSecureApi = () => {
 
   const protectedPost = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       data: any,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       const headers = createBaseHeaders();
+      const url = buildProtectedUrl(endpoint);
 
       return makeRequest<T>(
-        `/api/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`,
+        url,
         {
           method: 'POST',
           headers,
@@ -200,14 +205,15 @@ export const useSecureApi = () => {
 
   const secureGet = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
+        const url = buildSecureUrl(endpoint);
 
         return makeRequest<T>(
-          `/api/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`,
+          url,
           {
             method: 'GET',
             headers,
@@ -226,15 +232,16 @@ export const useSecureApi = () => {
 
   const securePost = useCallback(
     async <T>(
-      endpoint: string,
+      endpoint: ApiEndpoint,
       data: any,
       options: RequestOptions = {}
-    ): Promise<ApiResponse<T>> => {
+    ): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
+        const url = buildSecureUrl(endpoint);
 
         return makeRequest<T>(
-          `/api/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`,
+          url,
           {
             method: 'POST',
             headers,

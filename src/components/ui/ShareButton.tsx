@@ -3,20 +3,21 @@ import * as Clipboard from 'expo-clipboard';
 import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Button, ButtonMode } from './Button';
+import Constants from 'expo-constants';
 // import { useToast } from '@/hooks/useToast'; // <-- not used yet (commented)
 
 interface ShareButtonProps {
   children: ReactNode;
   mode: ButtonMode;
   className?: string;
-  baseUrl?: string;
 }
+
+const baseUrl = Constants.expoConfig?.extra?.PUBLIC_BASE_URL as string;
 
 export function ShareButton({
   children,
   mode = 'primary',
   className,
-  baseUrl,
 }: ShareButtonProps) {
   const pathname = usePathname();
 
@@ -26,12 +27,13 @@ export function ShareButton({
     try {
       const fullUrl = `${baseUrl}${pathname ?? ''}`;
       await Clipboard.setStringAsync(fullUrl);
-
+      console.log('Copied URL:', fullUrl);
       // callToast?.({
       //   variant: 'success',
       //   description: { es: '¡Enlace copiado!', en: 'Link copied!' },
       // });
-    } catch {
+    } catch (error) {
+      console.error('Error copying URL', error);
       // callToast?.({
       //   variant: 'error',
       //   description: {
