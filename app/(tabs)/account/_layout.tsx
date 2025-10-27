@@ -27,7 +27,7 @@ export default function AccountLayout() {
       <Stack.Screen
         name='edit-profile'
         options={{
-          title: t('screens.account.editProfile'),
+          title: '', //t('screens.account.editProfile'),
           presentation: 'card',
         }}
       />
