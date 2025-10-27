@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { ArticleItem } from './AuctionArticleItem';
 import { euroFormatter } from '@/utils/euroFormatter';
-import { fetchAuctionArticles } from '@/lib/api/fetchAuctionArticles';
+import { fetchAuctionArticles } from '@/lib/api/fetch-auction-articles';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
