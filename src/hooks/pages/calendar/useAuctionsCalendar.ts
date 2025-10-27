@@ -12,13 +12,17 @@ interface AuctionsData {
 type Status = 'loading' | 'loaded' | 'error';
 
 interface UseAuctionsCalendarReturn {
-  auctions: AuctionsData | null;
+  auctions: AuctionsData;
   status: Status;
   refetch: () => Promise<void>;
 }
 
 export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
-  const [auctions, setAuctions] = useState<AuctionsData | null>(null);
+  const [auctions, setAuctions] = useState<AuctionsData>({
+    today: [],
+    this_month: [],
+    next_month: [],
+  });
   const [status, setStatus] = useState<Status>('loading');
 
   const fetchAuctions = async () => {
@@ -85,6 +89,7 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
       }
 
       setAuctions(data as AuctionsData);
+      setStatus('loaded');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Unknown error occurred';
@@ -94,8 +99,6 @@ export const useAuctionsCalendar = (): UseAuctionsCalendarReturn => {
 
       console.error('Unexpected error fetching auctions:', errorMessage);
       setStatus('error');
-    } finally {
-      setStatus('loaded');
     }
   };
 

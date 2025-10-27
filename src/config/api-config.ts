@@ -3,6 +3,8 @@
  * Contiene endpoints, constantes y configuraciones para la comunicación con Next.js
  */
 
+import { ApiEndpoint } from '@/types/types';
+
 // ========================================
 // CONFIGURACIÓN BASE
 // ========================================
@@ -187,22 +189,22 @@ export const API_ERROR_CODES = {
 /**
  * Construye una URL completa para un endpoint protegido
  */
-export const buildProtectedUrl = (endpoint: string): string => {
-  return `${API_CONFIG.BASE_URL}/api/protected${endpoint}`;
+export const buildProtectedUrl = (endpoint: ApiEndpoint): string => {
+  return `${API_CONFIG.BASE_URL}/mobile/${SECURITY_LEVELS.PROTECTED}${endpoint}`;
 };
 
 /**
  * Construye una URL completa para un endpoint seguro
  */
-export const buildSecureUrl = (endpoint: string): string => {
-  return `${API_CONFIG.BASE_URL}/api/secure${endpoint}`;
+export const buildSecureUrl = (endpoint: ApiEndpoint): string => {
+  return `${API_CONFIG.BASE_URL}/mobile/${SECURITY_LEVELS.SECURE}${endpoint}`;
 };
 
 /**
  * Construye una URL de proxy para acceder a endpoints existentes de forma segura
  */
-export const buildProxyUrl = (originalPath: string): string => {
-  return `${API_CONFIG.BASE_URL}/api/secure/proxy${originalPath}`;
+export const buildProxyUrl = (originalPath: ApiEndpoint): string => {
+  return `${API_CONFIG.BASE_URL}/mobile/${SECURITY_LEVELS.SECURE}/proxy${originalPath}`;
 };
 
 // ========================================
@@ -225,20 +227,20 @@ export const VALIDATION_CONFIG = {
 // TIPOS EXPORTADOS
 // ========================================
 
-export interface ApiEndpoint {
-  url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  securityLevel: SecurityLevel;
-  timeout?: number;
-}
+// export interface ApiEndpoint {
+//   url: string;
+//   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+//   securityLevel: SecurityLevel;
+//   timeout?: number;
+// }
 
-export interface ApiConfig {
-  baseUrl: string;
-  apiKey: string;
-  timeout: number;
-  maxRetries: number;
-  retryDelay: number;
-}
+// export interface ApiConfig {
+//   baseUrl: string;
+//   apiKey: string;
+//   timeout: number;
+//   maxRetries: number;
+//   retryDelay: number;
+// }
 
 // ========================================
 // CONSTANTES DE DESARROLLO
