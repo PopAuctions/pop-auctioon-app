@@ -34,7 +34,6 @@
     "aes-js": "^3.1.2",
     "clsx": "^2.1.1",
     "expo": "53.0.22",
-    "expo-clipboard": "~7.1.5",
     "expo-constants": "~17.1.7",
     "expo-dev-client": "~5.2.4",
     "expo-font": "~13.3.2",
@@ -63,7 +62,7 @@
     "react-native-webview": "13.13.5",
     "tailwind-merge": "^3.3.1",
     "expo-clipboard": "~7.1.5",
-    "react-native-svg": "15.11.2"
+    "react-native-svg": "15.11.2",
     "zod": "^4.1.12"
   },
   "devDependencies": {
