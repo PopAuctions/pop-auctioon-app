@@ -79,6 +79,51 @@ export const AddressSchema = z.object({
 
 export type AddressSchemaType = z.infer<typeof AddressSchema>;
 
+// Edit Profile Schema
+export const EditProfileSchema = z.object({
+  name: z.string().min(1, {
+    message: JSON.stringify({
+      en: 'Required',
+      es: 'Requerido',
+    }),
+  }),
+  lastName: z.string().min(1, {
+    message: JSON.stringify({
+      en: 'Required',
+      es: 'Requerido',
+    }),
+  }),
+  username: z
+    .string()
+    .min(MIN_USERNAME_LENGTH, {
+      message: JSON.stringify({
+        en: `Required (Min. ${MIN_USERNAME_LENGTH} characters)`,
+        es: `Requerido (Mín. ${MIN_USERNAME_LENGTH} caracteres)`,
+      }),
+    })
+    .max(MAX_USERNAME_LENGTH, {
+      message: JSON.stringify({
+        en: `Max. ${MAX_USERNAME_LENGTH} characters`,
+        es: `Máx. ${MAX_USERNAME_LENGTH} caracteres`,
+      }),
+    })
+    .refine((val) => !val.includes(' '), {
+      message: JSON.stringify({
+        en: 'No spaces allowed',
+        es: 'No se permiten espacios',
+      }),
+    }),
+  phoneNumber: z.string().min(5, {
+    message: JSON.stringify({
+      en: 'Required (Min. 5 characters)',
+      es: 'Requerido (Mín. 5 caracteres)',
+    }),
+  }),
+  profilePicture: z.string().optional(),
+});
+
+export type EditProfileSchemaType = z.infer<typeof EditProfileSchema>;
+
 export const UserRegisterSchema = z
   .object({
     name: z.string().min(1, { message: 'Required' }),

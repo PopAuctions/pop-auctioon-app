@@ -143,7 +143,22 @@
     },
     "editProfile": {
       "title": "Edit Profile Information",
-      "subtitle": "Update your personal information"
+      "subtitle": "Update your personal information",
+      "name": "Name",
+      "lastName": "Last Name",
+      "username": "Username",
+      "phoneNumber": "Phone Number",
+      "phoneHint": "With country code",
+      "uploadImage": "Upload image",
+      "uploadImageButton": "Upload image",
+      "changeImageText": "Change image",
+      "supportedFormats": "Supported formats: png, jpg, jpeg, webp (Max 1MB)",
+      "permissionRequired": "Permission Required",
+      "permissionMessage": "We need access to your gallery to select an image.",
+      "imageTooLarge": "Image too large",
+      "imageTooLargeMessage": "The selected image is larger than 1MB. It will be compressed automatically.",
+      "update": "Update",
+      "back": "Back"
     },
     "resetPassword": {
       "title": "Reset Password",

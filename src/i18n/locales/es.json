@@ -143,7 +143,22 @@
     },
     "editProfile": {
       "title": "Editar Información del Perfil",
-      "subtitle": "Actualiza tu información personal"
+      "subtitle": "Actualiza tu información personal",
+      "name": "Nombre",
+      "lastName": "Apellido",
+      "username": "Nombre de usuario",
+      "phoneNumber": "Número de teléfono",
+      "phoneHint": "Con código de país",
+      "uploadImage": "Subir imagen",
+      "uploadImageButton": "Subir imagen",
+      "changeImageText": "Cambiar imagen",
+      "supportedFormats": "Formatos soportados: png, jpg, jpeg, webp (Máx 1MB)",
+      "permissionRequired": "Permiso Requerido",
+      "permissionMessage": "Necesitamos acceso a tu galería para seleccionar una imagen.",
+      "imageTooLarge": "Imagen muy grande",
+      "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
+      "update": "Actualizar",
+      "back": "Volver"
     },
     "resetPassword": {
       "title": "Restablecer Contraseña",
