@@ -251,6 +251,16 @@
       "subtitle": "Estamos aquí para ayudarte"
     }
   },
+  "components": {
+    "bid": {
+      "sendBid": "Enviar puja",
+      "bid": "Puja",
+      "bidAmount": "Monto a pujar",
+      "anyBidAmount": "O puja lo que quieras",
+      "minBid": "La puja mínima es de:",
+      "maxBid": "La puja máxima es de:"
+    }
+  },
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",

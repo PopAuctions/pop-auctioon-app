@@ -251,6 +251,16 @@
       "subtitle": "We're here to help"
     }
   },
+  "components": {
+    "bid": {
+      "sendBid": "Send bid",
+      "bid": "Bid",
+      "bidAmount": "Bid amount",
+      "anyBidAmount": "Or enter any bid amount",
+      "minBid": "Minimum bid is:",
+      "maxBid": "Maximum bid is:"
+    }
+  },
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",
