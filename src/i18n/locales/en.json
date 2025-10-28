@@ -32,8 +32,10 @@
     "account": "Account",
     "login": "Sign In",
     "auctions": "Auctions",
+    "articleDetails": "Article Details",
     "store": "Store",
-    "myAuctions": "My Auctions"
+    "myAuctions": "My Auctions",
+    "back": "Back"
   },
   "screens": {
     "home": {

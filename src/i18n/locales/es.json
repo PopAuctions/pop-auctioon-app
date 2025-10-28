@@ -32,8 +32,10 @@
     "account": "Cuenta",
     "login": "Iniciar Sesión",
     "auctions": "Subastas",
+    "articleDetails": "Detalles del Artículo",
     "store": "Tienda",
-    "myAuctions": "Mis Subastas"
+    "myAuctions": "Mis Subastas",
+    "back": "Atrás"
   },
   "screens": {
     "home": {

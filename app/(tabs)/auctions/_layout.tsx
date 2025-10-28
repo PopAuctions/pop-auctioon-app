@@ -23,6 +23,7 @@ export default function AuctionsLayout() {
           title: 'Calendario de Subastas',
           presentation: 'card',
           headerShown: true, // Solo mostrar en pantallas secundarias
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
@@ -31,6 +32,7 @@ export default function AuctionsLayout() {
           title: 'All Articles',
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
@@ -39,13 +41,16 @@ export default function AuctionsLayout() {
           title: t('screens.auctions.detail'),
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
         name='article/[id]'
         options={{
-          title: 'Article Detail',
+          title: t('tabsNames.articleDetails'),
           presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
