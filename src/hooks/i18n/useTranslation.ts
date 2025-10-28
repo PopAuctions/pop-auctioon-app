@@ -25,5 +25,3 @@ export const useTranslation = () => {
     isPending, // Exportamos isPending para mostrar loading states
   };
 };
-
-export default useTranslation;
