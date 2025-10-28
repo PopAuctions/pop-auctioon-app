@@ -15,6 +15,7 @@ import {
   ARTICLE_COLORS_LABELS,
   ARTICLE_MATERIALS_LABELS,
   ARTICLE_SMELL_LABELS,
+  ARTICLE_STATE_DESCRIPTION,
   ARTICLE_STATE_LABELS,
   BOX_MATERIALS_LABELS,
   STRAP_MATERIALS_LABELS,
@@ -22,6 +23,7 @@ import {
 } from '@/constants';
 import { formatMeasures } from '@/utils/formatMeasures';
 import { isRecognizedBrand } from '@/utils/isRecognizedBrand';
+import { Tooltip } from '../ui/Tooltip';
 
 type ArticleSpecificationsSectionProps = {
   article: Article;
@@ -45,6 +47,11 @@ export function ArticleSpecificationsSection({
   });
 
   const recognizedBrand = isRecognizedBrand(article.brand ?? '');
+  const conditionDescription = article.state
+    ? ARTICLE_STATE_DESCRIPTION[lang]?.[
+        article.state as keyof (typeof ARTICLE_STATE_DESCRIPTION)['es']
+      ]
+    : undefined;
 
   return (
     <View className={liveAuctoView ? 'w-full px-0' : 'w-full px-0'}>
@@ -96,23 +103,11 @@ export function ArticleSpecificationsSection({
           value={
             article.state ? ARTICLE_STATE_LABELS[lang][article.state] : '-'
           }
-          // tooltip on web:
-          // tooltip={
-          //   <ToolTip
-          //     trigger={
-          //       <InfoIcon className="ml-1 h-4 w-4 text-cinnabar" />
-          //     }
-          //   >
-          //     {
-          //       ARTICLE_STATE_DESCRIPTION[lang][
-          //         article.state as keyof (typeof ARTICLE_STATE_DESCRIPTION)['es']
-          //       ]
-          //     }
-          //   </ToolTip>
-          // }
-          //
-          // On mobile, you'll likely show an (i) button that opens a modal with
-          // ARTICLE_STATE_DESCRIPTION[lang][article.state] like we did with price breakdown.
+          tooltip={
+            conditionDescription ? (
+              <Tooltip text={conditionDescription} />
+            ) : null
+          }
         />
       </View>
 

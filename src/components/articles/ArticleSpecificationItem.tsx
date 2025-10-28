@@ -1,18 +1,19 @@
 import { View } from 'react-native';
-import type { ReactNode } from 'react';
-import { Divider } from '../ui/Divider';
 import { CustomText } from '../ui/CustomText';
+import { Divider } from '../ui/Divider';
 
-type ArticleSpecificationItemProps = {
+export type ArticleSpecificationItemProps = {
   label: string;
   value: string;
-  tooltip?: ReactNode;
+  tooltip?: React.ReactNode;
+  showDivider?: boolean;
 };
 
 export function ArticleSpecificationItem({
   label,
   value,
   tooltip = null,
+  showDivider = true,
 }: ArticleSpecificationItemProps) {
   return (
     <View className='w-full'>
@@ -21,13 +22,13 @@ export function ArticleSpecificationItem({
           <CustomText type='bodysmall'>{label}</CustomText>
         </View>
 
-        <View className='w-1/2 flex-row items-center justify-start'>
+        <View className='w-1/2 flex-row flex-wrap items-center justify-start'>
           <CustomText type='bodysmall'>{value || '-'}</CustomText>
-          {tooltip && <View className='ml-1'>{tooltip}</View>}
+          {tooltip ? <View className='ml-1'>{tooltip}</View> : null}
         </View>
       </View>
 
-      <Divider className='my-2' />
+      {showDivider && <Divider className='my-2' />}
     </View>
   );
 }
