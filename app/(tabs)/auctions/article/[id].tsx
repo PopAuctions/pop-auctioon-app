@@ -1,11 +1,4 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
 import { ARTICLE_BRANDS_LABELS, REQUEST_STATUS } from '@/constants';
@@ -22,12 +15,15 @@ import { ImagesCarousel } from '@/components/ui/ImagesCarousel';
 import { CurrentBidInfoArticlePage } from '@/components/articles/CurrentBidInfoArticlePage';
 import { ArticleSpecificationsSection } from '@/components/articles/ArticleSpecificationsSection';
 import { formatTextToParagraph } from '@/utils/formatTextToParagraph';
+import { SendBid } from '@/components/bids/SendBid';
+import { MAX_BID_OFFSET } from '@/constants/bid';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const auctionLang = t('screens.auction');
   const articleLang = t('screens.article');
+  const bidsLang = t('components.bid');
   const {
     data: article,
     status,
@@ -53,8 +49,8 @@ export default function ArticleDetailScreen() {
     );
   }
   const auction = article.Auction;
-  const previousArticleId = true;
-  const nextArticleId = true;
+  const previousArticleId = false;
+  const nextArticleId = false;
 
   return (
     <>
@@ -262,29 +258,19 @@ export default function ArticleDetailScreen() {
                 AuctionStatus.LIVE,
               ].includes(auction.status) && (
                 <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
-                  {/* <SendBid
-                    lang={lang}
-                    bidLang={dictionary.bid}
-                    articleId={id}
+                  <SendBid
+                    bidLang={bidsLang}
+                    lang={locale}
+                    biddingAmounts={{
+                      maxAmountWithoutToast: 470,
+                      minBid: 10,
+                      tenPercent: 10,
+                      twentyFivePercent: 210,
+                      fiftyPercent: 320,
+                    }}
                     maxBidOffset={MAX_BID_OFFSET}
                     commissionPercentage={LOW_COMMISSION_AMOUNT}
-                    articleServerState={{
-                      currentValue: article.ArticleBid.currentValue,
-                      highestBidder: '',
-                      highestBidderImage: '',
-                      available: article.ArticleBid.available,
-                    }}
-                    biddingAmounts={biddingAmounts}
-                  /> */}
-                  <View className='rounded-md border border-neutral-300 p-4'>
-                    <Text className='text-base font-bold'>
-                      {articleLang.bid}
-                    </Text>
-                    <Text className='text-sm text-neutral-600'>
-                      current: {article?.ArticleBid?.currentValue} / max
-                      offset:{' '}
-                    </Text>
-                  </View>
+                  />
                 </View>
               )}
             </View>

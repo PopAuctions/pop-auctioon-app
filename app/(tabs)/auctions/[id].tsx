@@ -144,6 +144,7 @@ export default function AuctionDetailScreen() {
                   {auctionLang.watchButton}
                 </CustomLink>
               ) : (
+                // WIP: Follow button
                 <Button
                   className='w-1/2'
                   mode='primary'
