@@ -1,9 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-// WIP: use correct svg
-// import { DotIcon } from '@/icons/DotIcon';
 import { Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface AuctionDisplayDateTimeProps {
   startDate: string;
@@ -41,11 +40,12 @@ export const AuctionDisplayDateTime = ({
         <CustomText type='subtitle'>{dateString}</CustomText>
         {displayTime && (
           <>
-            {/* <DotIcon
-              size={10}
-              color='#555'
-            /> */}
-            <CustomText type='subtitle'>- {timeString}</CustomText>
+            <FontAwesome
+              name='circle'
+              size={5}
+              color='#000'
+            />
+            <CustomText type='subtitle'>{timeString}</CustomText>
           </>
         )}
       </View>
