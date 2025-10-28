@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { View, Pressable } from 'react-native';
+import { View } from 'react-native';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { CustomLink } from '../ui/CustomLink';
@@ -53,19 +53,17 @@ export function ArticleItem({
     <View className='w-full gap-2'>
       <CustomLink
         className='flex w-full flex-row gap-5'
-        href={`/(tabs)/auctions/${article.auctionId}`}
+        href={`/(tabs)/auctions/article/${article.id}`}
         mode='empty'
       >
-        <Pressable className='w-1/2 items-center'>
-          <View className='aspect-square w-full overflow-hidden rounded-xl'>
-            <CustomImage
-              src={article.images[0]}
-              alt={article.title}
-              className='h-full w-full'
-              resizeMode='cover'
-            />
-          </View>
-        </Pressable>
+        <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl'>
+          <CustomImage
+            src={article.images[0]}
+            alt={article.title}
+            className='h-full w-full'
+            resizeMode='cover'
+          />
+        </View>
 
         <View className='w-1/2 flex-col items-start justify-between'>
           <View className='flex flex-col pr-2'>
