@@ -10,7 +10,7 @@ type NormalIconProps = {
   variant?: 'normal';
   name: FA4Props['name'];
   size?: FA4Props['size'];
-  color?: FA4Props['color'];
+  color?: FA4Props['color'] | 'cinnabar';
   style?: StyleProp<TextStyle>;
 };
 
@@ -18,7 +18,7 @@ type LightIconProps = {
   variant: 'light';
   name: FA5Props['name'];
   size?: FA5Props['size'];
-  color?: FA5Props['color'];
+  color?: FA5Props['color'] | 'cinnabar';
   style?: StyleProp<TextStyle>;
 };
 
@@ -26,22 +26,30 @@ type BoldIconProps = {
   variant: 'bold';
   name: FA6Props['name'];
   size?: FA6Props['size'];
-  color?: FA6Props['color'];
+  color?: FA6Props['color'] | 'cinnabar';
   style?: StyleProp<TextStyle>;
 };
 
 type FontAwesomeIconProps = NormalIconProps | LightIconProps | BoldIconProps;
 
+/**
+ * A wrapper component for FontAwesome icons that supports different variants.
+ * Check https://icons.expo.fyi/Index for available icons.
+ *
+ * @param props - The properties for the FontAwesomeIcon component.
+ * @returns A FontAwesome icon component.
+ */
 export function FontAwesomeIcon(props: FontAwesomeIconProps) {
   const { size, color, style } = props;
   const variant = props.variant ?? 'normal';
+  const finalColor = color === 'cinnabar' ? '#d75639' : color;
 
   if (variant === 'light') {
     return (
       <FontAwesome6
         name={props.name as FA5Props['name']}
         size={size}
-        color={color}
+        color={finalColor}
         style={style}
       />
     );
@@ -52,7 +60,7 @@ export function FontAwesomeIcon(props: FontAwesomeIconProps) {
       <FontAwesome
         name={props.name as FA6Props['name']}
         size={size}
-        color={color}
+        color={finalColor}
         style={style}
       />
     );
@@ -62,7 +70,7 @@ export function FontAwesomeIcon(props: FontAwesomeIconProps) {
     <FontAwesome5
       name={props.name as FA4Props['name']}
       size={size}
-      color={color}
+      color={finalColor}
       style={style}
     />
   );
