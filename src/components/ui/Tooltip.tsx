@@ -3,7 +3,7 @@ import { View, Text, Pressable, Modal } from 'react-native';
 import { FontAwesomeIcon } from './FontAwesomeIcon';
 
 type InfoTooltipProps = {
-  text: string; // the explanatory text
+  text: string;
 };
 
 export function Tooltip({ text }: InfoTooltipProps) {
