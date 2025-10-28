@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { PriceBreakdownModal } from './PriceBreakdownModal';
+import { PriceBreakdownModal } from '../modal/PriceBreakdownModal';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { Lang } from '@/types/types';

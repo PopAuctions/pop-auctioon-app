@@ -38,7 +38,6 @@ export function ArticleSpecificationsSection({
   articleCategory,
   liveAuctoView = false,
 }: ArticleSpecificationsSectionProps) {
-  // build "12 x 5 x 3" style measures
   const measures = formatMeasures({
     width: article.width,
     height: article.height,
