@@ -1,0 +1,28 @@
+import { Lang } from '@/types/types';
+import { View } from '../Themed';
+import { CustomText } from './CustomText';
+import { ActivityIndicator } from 'react-native';
+
+const TEXTS = {
+  loading: {
+    en: 'Loading...',
+    es: 'Cargando...',
+  },
+};
+
+export const Loading = ({ locale }: { locale: Lang }) => {
+  return (
+    <View className='flex-1 items-center justify-center'>
+      <ActivityIndicator
+        size='large'
+        color='#d75639'
+      />
+      <CustomText
+        type='body'
+        className='text-gray-600 mt-4 text-center'
+      >
+        {TEXTS.loading?.[locale] ?? 'Loading...'}
+      </CustomText>
+    </View>
+  );
+};

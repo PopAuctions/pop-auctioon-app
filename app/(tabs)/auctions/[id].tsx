@@ -19,6 +19,7 @@ import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
 import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
 import { Button } from '@/components/ui/Button';
 import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
+import { Loading } from '@/components/ui/Loading';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -33,11 +34,7 @@ export default function AuctionDetailScreen() {
   const auctionLang = t('screens.auction');
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
-    return (
-      <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>loading</CustomText>
-      </View>
-    );
+    return <Loading locale={locale} />;
   }
 
   if (status === REQUEST_STATUS.error || !liveAuction) {

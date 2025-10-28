@@ -6,6 +6,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { AuctionCalendarCard } from '@/components/ui/AuctionCalendarCard';
 import { Button } from '@/components/ui/Button';
+import { Loading } from '@/components/ui/Loading';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
@@ -21,25 +22,12 @@ export default function CalendarScreen() {
   const hasAuctionsNextMonth = auctions.next_month.length > 0;
 
   if (status === 'loading') {
-    return (
-      <View className='flex-1 items-center justify-center'>
-        <ActivityIndicator
-          size='large'
-          color='#d75639'
-        />
-        <CustomText
-          type='body'
-          className='text-gray-600 mt-4 text-center'
-        >
-          {t('screens.calendar.loading')}
-        </CustomText>
-      </View>
-    );
+    return <Loading locale={locale} />;
   }
 
   if (status === 'error') {
     return (
-      <View className='flex-1 items-center justify-center   p-4'>
+      <View className='flex-1 items-center justify-center p-4'>
         <CustomText
           type='body'
           className='mb-4 text-center text-red-500'
