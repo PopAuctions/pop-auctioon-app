@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 
 interface AuctionDisplayDateTimeProps {
   startDate: string;
@@ -40,7 +41,8 @@ export const AuctionDisplayDateTime = ({
         <CustomText type='subtitle'>{dateString}</CustomText>
         {displayTime && (
           <>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='circle'
               size={5}
               color='#000'
