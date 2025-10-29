@@ -18,7 +18,7 @@ export default function CalendarScreen() {
   );
   const thisMonth = monthsArray[0];
   const nextMonth = monthsArray[1];
-  const hasAuctionsNextMonth = auctions.next_month.length > 0;
+  const hasAuctionsNextMonth = auctions?.next_month?.length > 0 || false;
 
   if (status === 'loading') {
     return (
@@ -83,7 +83,7 @@ export default function CalendarScreen() {
             {t('screens.calendar.subtitle').toUpperCase()}
           </CustomText>
 
-          {auctions.this_month.length > 0 ? (
+          {auctions?.this_month && auctions.this_month.length > 0 ? (
             <View className='space-y-6'>
               {auctions.this_month.map((auction) => (
                 <AuctionCalendarCard
@@ -126,14 +126,15 @@ export default function CalendarScreen() {
               </CustomText>
 
               <View className='space-y-6'>
-                {auctions.next_month.map((auction) => (
-                  <AuctionCalendarCard
-                    key={auction.id}
-                    auction={auction}
-                    locale={locale}
-                    formatTime={formatTime}
-                  />
-                ))}
+                {auctions?.next_month &&
+                  auctions.next_month.map((auction) => (
+                    <AuctionCalendarCard
+                      key={auction.id}
+                      auction={auction}
+                      locale={locale}
+                      formatTime={formatTime}
+                    />
+                  ))}
               </View>
             </View>
           </>
