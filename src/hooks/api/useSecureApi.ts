@@ -71,9 +71,7 @@ export const useSecureApi = () => {
 
           // Logging para desarrollo
           if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
-            console.log(
-              `🚀 API Request: ${options.method} ${API_CONFIG.BASE_URL}${url}`
-            );
+            console.log(`🚀 API Request: ${options.method} ${url}`);
           }
           const response = await fetch(url, {
             ...options,
