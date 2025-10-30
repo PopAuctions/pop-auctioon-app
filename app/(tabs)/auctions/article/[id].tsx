@@ -17,6 +17,8 @@ import { ArticleSpecificationsSection } from '@/components/articles/ArticleSpeci
 import { formatTextToParagraph } from '@/utils/formatTextToParagraph';
 import { SendBid } from '@/components/bids/SendBid';
 import { MAX_BID_OFFSET } from '@/constants/bid';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
@@ -34,6 +36,19 @@ export default function ArticleDetailScreen() {
     publishedArticle: true,
     getAuctionData: true,
   });
+  const { data: articlePageData, status: articlePageStatus } =
+    useGetArticlePageData({
+      articleId: Number(id),
+      auctionId: article?.Auction.id || 0,
+      currentPrice: article?.ArticleBid?.currentValue || 0,
+      startingPrice: article?.startingPrice || 0,
+    });
+
+  const [
+    { follows = false } = {},
+    { previousArticleId, nextArticleId } = {},
+    biddingAmounts,
+  ] = (articlePageData ?? []) as any[];
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     if (status === 'loading') {
@@ -49,11 +64,9 @@ export default function ArticleDetailScreen() {
     );
   }
   const auction = article.Auction;
-  const previousArticleId = false;
-  const nextArticleId = false;
 
   return (
-    <>
+    <HighestBidderProvider>
       <ScrollView className='w-full'>
         <View className='mx-auto w-full max-w-[672px] px-5 md:max-w-[896px]'>
           <View className='mt-2 w-full flex-row justify-end'>
@@ -67,32 +80,22 @@ export default function ArticleDetailScreen() {
                   />
                 </View>
               ) : (
-                <>
-                  {/* <CustomLink
-                    lang={lang}
-                    mode="plainText"
-                    href={`/auction/article/${previousArticleId}`}
-                    className="hover:scale-110"
-                  >
-                    <ArrowLeftIcon className="h-10 w-10" />
-                  </CustomLink> */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      // navigate to /auction/article/${previousArticleId}
-                    }}
-                    className='h-10 w-10 items-center justify-center'
+                <View className='h-10 w-10 items-center justify-center'>
+                  <CustomLink
+                    mode='empty'
+                    href={`/(tabs)/auctions/article/${previousArticleId}`}
+                    className='hover:scale-110'
                   >
                     <FontAwesomeIcon
                       name='arrow-left'
                       size={20}
                       color='#4d4d4d'
                     />
-                  </TouchableOpacity>
-                </>
+                  </CustomLink>
+                </View>
               )}
 
               {!nextArticleId ? (
-                // <ArrowRightIcon className="h-10 w-10 opacity-50" />
                 <View className='h-10 w-10 items-center justify-center opacity-50'>
                   <FontAwesomeIcon
                     name='arrow-right'
@@ -101,28 +104,19 @@ export default function ArticleDetailScreen() {
                   />
                 </View>
               ) : (
-                <>
-                  {/* <CustomLink
-                    lang={lang}
-                    mode="plainText"
-                    href={`/auction/article/${nextArticleId}`}
-                    className="hover:scale-110"
-                  >
-                    <ArrowRightIcon className="h-10 w-10" />
-                  </CustomLink> */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      // navigate to /auction/article/${nextArticleId}
-                    }}
-                    className='h-10 w-10 items-center justify-center'
+                <View className='h-10 w-10 items-center justify-center'>
+                  <CustomLink
+                    mode='empty'
+                    href={`/(tabs)/auctions/article/${nextArticleId}`}
+                    className='hover:scale-110'
                   >
                     <FontAwesomeIcon
                       name='arrow-right'
                       size={20}
                       color='#4d4d4d'
                     />
-                  </TouchableOpacity>
-                </>
+                  </CustomLink>
+                </View>
               )}
             </View>
           </View>
@@ -199,7 +193,7 @@ export default function ArticleDetailScreen() {
                       className='w-2/3'
                       mode='primary'
                     >
-                      {auctionLang.follow}
+                      {follows ? articleLang.unfollow : articleLang.follow}
                     </Button>
                   </>
                 )}
@@ -330,6 +324,6 @@ export default function ArticleDetailScreen() {
 
       {/* <NotifyModal lang={lang} /> */}
       {/* <TrackArticleView articleId={Number(id)} /> */}
-    </>
+    </HighestBidderProvider>
   );
 }
