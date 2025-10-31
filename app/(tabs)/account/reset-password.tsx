@@ -9,7 +9,6 @@ import { ResetSchema } from '@/utils/schemas';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { supabase } from '@/utils/supabase/supabase-store';
 import type * as z from 'zod';
 
 export default function ResetPasswordScreen() {
@@ -31,20 +30,11 @@ export default function ResetPasswordScreen() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        values.email,
-        {
-          redirectTo: 'popauctioonapp://reset-password', // Deep link para cuando hagan clic en el email
-        }
-      );
+      // TODO: Implementar llamada al backend para enviar email de reset
+      console.log('Reset password for email:', values.email);
 
-      if (error) {
-        Alert.alert(
-          t('commonActions.error'),
-          t('screens.resetPassword.errorMessage')
-        );
-        return;
-      }
+      // Simular delay de red
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       Alert.alert(
         t('commonActions.ok'),
