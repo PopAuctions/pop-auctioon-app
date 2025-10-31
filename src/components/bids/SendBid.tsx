@@ -8,22 +8,26 @@ import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
-// import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
 // import * as Sentry from '@sentry/react-native'; // RN version
 // import { useToast } from '@/hooks/useToast';
-// import { createBid } from '@/lib/bid/create-bid'; // you'll need a mobile-safe version (API call)
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
-type SendBidProps = {
+interface SendBidProps {
   articleServerState: HighestBidderState;
-  articleId: string;
+  articleId: number;
   bidLang: DictionaryTypeBid;
   lang: Lang;
   biddingAmounts: BiddingAmounts;
   maxBidOffset: number;
   commissionPercentage: number;
-};
+}
+
+interface BidResponse {
+  error: string | null;
+  success: string;
+}
 
 export function SendBid({
   articleId,
@@ -34,7 +38,7 @@ export function SendBid({
   maxBidOffset,
   commissionPercentage,
 }: SendBidProps) {
-  // const { securePost } = useSecureApi();
+  const { securePost } = useSecureApi();
   const [isPending, setIsPending] = useState(false);
   const [bidAmount, setBidAmount] = useState<string>('');
 
@@ -86,7 +90,6 @@ export function SendBid({
   };
 
   const sendBid = async () => {
-    // enforce min
     if (parseInt(bidAmount) < computedMinBid) {
       const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
       console.log(message);
@@ -116,16 +119,27 @@ export function SendBid({
     try {
       setIsPending(true);
 
-      // const data = await createBid(articleId, Number(bidAmount), currentValue);
+      const response = await securePost<BidResponse>(`/bids`, {
+        articleId,
+        amount: bidAmount,
+        clientCurrentAmount: currentValue,
+      });
 
-      // if (data.error !== null) {
-      //   console.log('ERROR_CREATE_BID', data.error);
-      //   // callToast({ variant: 'error', description: data.error });
-      //   return;
-      // }
+      const payload = response?.data;
 
-      // callToast({ variant: 'success', description: data.success });
-      // console.log('SUCCESS_CREATE_BID', data.success);
+      if (!payload) {
+        console.log('ERROR_CREATE_BID', 'No response payload');
+        return;
+      }
+
+      if (payload.error) {
+        console.log('ERROR_CREATE_BID', payload.error);
+        // callToast({ variant: 'error', description: payload.error });
+        return;
+      }
+
+      // callToast({ variant: 'success', description: payload.success });
+      console.log('SUCCESS_CREATE_BID', payload.success);
       setBidAmount('');
     } catch (e: any) {
       console.log('CATCH_CREATE_BID', e?.message);
@@ -203,7 +217,6 @@ export function SendBid({
           </View>
         </View>
 
-        {/* manual bid input */}
         <View className='w-full'>
           <CustomText
             type='bodysmall'
@@ -243,7 +256,6 @@ export function SendBid({
         </View>
       </View>
 
-      {/* submit button */}
       <SubmitBidButton
         isPending={isPending}
         bidAmount={bidAmount}

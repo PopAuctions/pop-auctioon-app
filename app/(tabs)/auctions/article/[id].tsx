@@ -130,7 +130,7 @@ export default function ArticleDetailScreen() {
           {/* MAIN */}
           <View className='w-full flex-col items-center pb-16'>
             {/* SECTION: Header */}
-            <View className='mt-10 w-full flex-col items-center justify-center gap-2'>
+            <View className='w-full flex-col items-center justify-center gap-2'>
               <View className='items-center'>
                 <CustomText
                   type='body'
@@ -259,7 +259,7 @@ export default function ArticleDetailScreen() {
               ].includes(auction.status) && (
                 <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
                   <SendBid
-                    articleId={String(article.id)}
+                    articleId={article.id}
                     articleServerState={{
                       currentValue: articleBid.currentValue,
                       highestBidder: '',
