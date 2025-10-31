@@ -19,7 +19,7 @@ const mockUseTranslation = useTranslation as jest.MockedFunction<
 describe('Button', () => {
   beforeEach(() => {
     mockUseTranslation.mockReturnValue({
-      t: jest.fn((key) => key),
+      t: jest.fn((key: any) => key) as any,
       changeLanguage: jest.fn(),
       locale: 'es',
       isPending: false,
