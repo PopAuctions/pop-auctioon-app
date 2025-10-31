@@ -64,12 +64,10 @@ export const useGetArticlePageData = ({
     }
 
     const data = res.data;
-
     if (!data) {
       fetchData();
       return;
     }
-    console.log('ARTICLE_PAGE_DATA', data);
 
     setData(data || null);
     setStatus('success');

@@ -1,23 +1,23 @@
 import { useMemo, useState } from 'react';
-import { View, TextInput, Text } from 'react-native';
-
-import { ONLY_INTEGERS_REGEX } from '@/constants'; // note: check your RN path, you renamed some consts already
+import { View, TextInput } from 'react-native';
+import { ONLY_INTEGERS_REGEX } from '@/constants';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { BiddingAmounts, HighestBidderState, Lang } from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
+import { useHighestBidderContext } from '@/context/highest-bidder-context';
+// import { useSecureApi } from '@/hooks/api/useSecureApi';
 // import * as Sentry from '@sentry/react-native'; // RN version
 // import { useToast } from '@/hooks/useToast';
 // import { createBid } from '@/lib/bid/create-bid'; // you'll need a mobile-safe version (API call)
-// import { useHighestBidderContext } from '@/context/highest-bidder-context';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
 type SendBidProps = {
-  articleServerState?: HighestBidderState;
-  articleId?: string;
+  articleServerState: HighestBidderState;
+  articleId: string;
   bidLang: DictionaryTypeBid;
   lang: Lang;
   biddingAmounts: BiddingAmounts;
@@ -30,10 +30,11 @@ export function SendBid({
   bidLang,
   articleServerState,
   lang,
-  biddingAmounts,
+  biddingAmounts = {} as BiddingAmounts,
   maxBidOffset,
   commissionPercentage,
 }: SendBidProps) {
+  // const { securePost } = useSecureApi();
   const [isPending, setIsPending] = useState(false);
   const [bidAmount, setBidAmount] = useState<string>('');
 
@@ -43,38 +44,33 @@ export function SendBid({
   const { minBid, tenPercent, twentyFivePercent, fiftyPercent } =
     biddingAmounts;
 
-  // pull live auction state (currentValue, available) from context
-  // const { state } = useHighestBidderContext({
-  //   initialValue: articleServerState,
-  // });
-  const state = { currentValue: 2160, available: true }; // IGNORE
+  const { state } = useHighestBidderContext({
+    initialValue: articleServerState,
+  });
   const { currentValue, available: articleAvailable } = state;
 
-  // computedMinBid = (currentValue + minBid) including commission
   const computedMinBid = useMemo(
     () => toTotal(minBid + currentValue, commissionPercentage),
     [minBid, currentValue, commissionPercentage]
   );
-
-  // computedMaxBid = (currentValue + fiftyPercent + maxBidOffset) including commission
   const computedMaxBid = useMemo(
     () =>
       toTotal(fiftyPercent + currentValue + maxBidOffset, commissionPercentage),
     [fiftyPercent, currentValue, maxBidOffset, commissionPercentage]
   );
 
-  // tap the preset buttons like "10%", "25%", "50%"
+  const isTooLow = parseInt(bidAmount) < computedMinBid;
+  const isTooHigh = parseInt(bidAmount) > computedMaxBid;
+
   const setAmountToBid = (amountBase: number) => {
     const finalBase = amountBase + currentValue;
     const total = toTotal(finalBase, commissionPercentage);
     setBidAmount(String(total));
   };
 
-  // manual input handler
   const handleInputChange = (value: string) => {
     const numericValue = Number(value);
 
-    // reject negatives / non-integers
     if (
       value !== '' &&
       (numericValue <= 0 ||
@@ -84,13 +80,11 @@ export function SendBid({
       return;
     }
 
-    // allow "" or positive integers
     if (value === '' || ONLY_INTEGERS_REGEX.test(value)) {
       setBidAmount(value);
     }
   };
 
-  // main submit
   const sendBid = async () => {
     // enforce min
     if (parseInt(bidAmount) < computedMinBid) {
@@ -148,10 +142,6 @@ export function SendBid({
       setIsPending(false);
     }
   };
-
-  const isTooLow = parseInt(bidAmount) < computedMinBid;
-  const isTooHigh = parseInt(bidAmount) > computedMaxBid;
-  const isWithinRange = !isTooLow && !isTooHigh;
 
   return (
     <View className='w-full rounded-xl border border-neutral-200 bg-white p-4'>
@@ -222,7 +212,6 @@ export function SendBid({
             {bidLang.anyBidAmount}
           </CustomText>
 
-          {/* TextInput instead of <Input /> */}
           <TextInput
             keyboardType='number-pad'
             value={bidAmount}
@@ -230,15 +219,14 @@ export function SendBid({
             editable={articleAvailable}
             onChangeText={handleInputChange}
             className={`mt-2 h-10 rounded-md border px-3 text-base text-black ${
-              isTooLow ? 'border-red-500' : 'border-neutral-300'
+              isTooLow || isTooHigh ? 'border-red-500' : 'border-neutral-300'
             }`}
           />
 
-          {/* helper / error text under input */}
-          {isWithinRange ? (
+          {Number(bidAmount) <= computedMaxBid ? (
             <CustomText
               type='bodysmall'
-              className={isTooLow ? 'text-red-500' : 'text-[#787878]'}
+              className={`${isTooLow ? 'text-red-500' : 'text-[#787878]'}`}
             >
               {currentValue === 0
                 ? bidLang.minBid
@@ -247,7 +235,7 @@ export function SendBid({
           ) : (
             <CustomText
               type='bodysmall'
-              className='text-red-500'
+              className={'text-red-500'}
             >
               {bidLang.maxBid} {formatter.format(computedMaxBid)}
             </CustomText>

@@ -49,6 +49,7 @@ export default function ArticleDetailScreen() {
     { previousArticleId, nextArticleId } = {},
     biddingAmounts,
   ] = (articlePageData ?? []) as any[];
+  const extraDataIsLoaded = articlePageStatus === REQUEST_STATUS.success;
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     if (status === 'loading') {
@@ -64,56 +65,61 @@ export default function ArticleDetailScreen() {
     );
   }
   const auction = article.Auction;
+  const articleBid = article.ArticleBid;
 
   return (
     <HighestBidderProvider>
       <ScrollView className='w-full'>
         <View className='mx-auto w-full max-w-[672px] px-5 md:max-w-[896px]'>
           <View className='mt-2 w-full flex-row justify-end'>
-            <View className='flex flex-row gap-2'>
+            <View className='flex flex-row gap-6'>
               {!previousArticleId ? (
-                <View className='h-10 w-10 items-center justify-center opacity-50'>
+                <View className='items-center justify-center opacity-50'>
                   <FontAwesomeIcon
+                    variant='light'
                     name='arrow-left'
-                    size={20}
+                    size={25}
                     color='#4d4d4d'
                   />
                 </View>
               ) : (
-                <View className='h-10 w-10 items-center justify-center'>
+                <View className='items-center justify-center'>
                   <CustomLink
                     mode='empty'
                     href={`/(tabs)/auctions/article/${previousArticleId}`}
                     className='hover:scale-110'
                   >
                     <FontAwesomeIcon
+                      variant='light'
                       name='arrow-left'
-                      size={20}
-                      color='#4d4d4d'
+                      size={25}
+                      color='cinnabar'
                     />
                   </CustomLink>
                 </View>
               )}
 
               {!nextArticleId ? (
-                <View className='h-10 w-10 items-center justify-center opacity-50'>
+                <View className='items-center justify-center opacity-50'>
                   <FontAwesomeIcon
+                    variant='light'
                     name='arrow-right'
-                    size={20}
+                    size={25}
                     color='#4d4d4d'
                   />
                 </View>
               ) : (
-                <View className='h-10 w-10 items-center justify-center'>
+                <View className='items-center justify-center'>
                   <CustomLink
                     mode='empty'
                     href={`/(tabs)/auctions/article/${nextArticleId}`}
                     className='hover:scale-110'
                   >
                     <FontAwesomeIcon
+                      variant='light'
                       name='arrow-right'
-                      size={20}
-                      color='#4d4d4d'
+                      size={25}
+                      color='cinnabar'
                     />
                   </CustomLink>
                 </View>
@@ -232,7 +238,7 @@ export default function ArticleDetailScreen() {
             <View className='mx-auto mt-10 w-full flex-col justify-around gap-5 md:w-4/5 md:flex-row'>
               <CurrentBidInfoArticlePage
                 lang={locale}
-                currentValue={article.ArticleBid.currentValue}
+                currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
                 commissionValue={LOW_COMMISSION_AMOUNT}
@@ -253,15 +259,16 @@ export default function ArticleDetailScreen() {
               ].includes(auction.status) && (
                 <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
                   <SendBid
+                    articleId={String(article.id)}
+                    articleServerState={{
+                      currentValue: articleBid.currentValue,
+                      highestBidder: '',
+                      highestBidderImage: '',
+                      available: articleBid.available,
+                    }}
                     bidLang={bidsLang}
                     lang={locale}
-                    biddingAmounts={{
-                      maxAmountWithoutToast: 470,
-                      minBid: 10,
-                      tenPercent: 10,
-                      twentyFivePercent: 210,
-                      fiftyPercent: 320,
-                    }}
+                    biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
                     maxBidOffset={MAX_BID_OFFSET}
                     commissionPercentage={LOW_COMMISSION_AMOUNT}
                   />
