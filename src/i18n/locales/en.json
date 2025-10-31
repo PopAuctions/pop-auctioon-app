@@ -167,8 +167,14 @@
       "back": "Back"
     },
     "resetPassword": {
-      "title": "Reset Password",
-      "subtitle": "Change your access password"
+      "title": "Reset password",
+      "subtitle": "Change your access password",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "sendResetLink": "Send reset link",
+      "back": "Back",
+      "successMessage": "A reset link has been sent to your email",
+      "errorMessage": "Error sending reset link"
     },
     "verifyPhone": {
       "title": "Verify Phone",
