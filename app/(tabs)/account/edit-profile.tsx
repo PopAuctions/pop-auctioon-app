@@ -11,6 +11,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
 import { useAuth } from '@/context/auth-context';
+import { getErrorMessage } from '@/utils/form-errors';
 import type * as z from 'zod';
 
 export default function EditProfileScreen() {
@@ -46,8 +47,8 @@ export default function EditProfileScreen() {
         province: '',
         country: '',
         postalCode: '',
-        webPage: '',
-        socialMedia: '',
+        webPage: 'https://example.com',
+        socialMedia: 'https://example.com',
         storeName: '',
       }),
     },
@@ -114,8 +115,7 @@ export default function EditProfileScreen() {
                   type='error'
                   className='mt-1'
                 >
-                  {JSON.parse(errors.name.message || '{}')[locale] ||
-                    errors.name.message}
+                  {getErrorMessage(errors.name.message, locale)}
                 </CustomText>
               )}
             </View>
@@ -146,8 +146,7 @@ export default function EditProfileScreen() {
                   type='error'
                   className='mt-1'
                 >
-                  {JSON.parse(errors.lastName.message || '{}')[locale] ||
-                    errors.lastName.message}
+                  {getErrorMessage(errors.lastName.message, locale)}
                 </CustomText>
               )}
             </View>
@@ -179,8 +178,7 @@ export default function EditProfileScreen() {
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.username.message || '{}')[locale] ||
-                  errors.username.message}
+                {getErrorMessage(errors.username.message, locale)}
               </CustomText>
             )}
           </View>
@@ -212,8 +210,7 @@ export default function EditProfileScreen() {
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.phoneNumber.message || '{}')[locale] ||
-                  errors.phoneNumber.message}
+                {getErrorMessage(errors.phoneNumber.message, locale)}
               </CustomText>
             )}
           </View>
@@ -247,7 +244,7 @@ export default function EditProfileScreen() {
                     type='error'
                     className='mt-1'
                   >
-                    {errors.storeName.message}
+                    {getErrorMessage(errors.storeName.message, locale)}
                   </CustomText>
                 )}
               </View>
@@ -286,7 +283,7 @@ export default function EditProfileScreen() {
                     type='error'
                     className='mt-1'
                   >
-                    {errors.webPage.message}
+                    {getErrorMessage(errors.webPage.message, locale)}
                   </CustomText>
                 )}
               </View>
@@ -325,7 +322,7 @@ export default function EditProfileScreen() {
                     type='error'
                     className='mt-1'
                   >
-                    {errors.socialMedia.message}
+                    {getErrorMessage(errors.socialMedia.message, locale)}
                   </CustomText>
                 )}
               </View>
@@ -356,7 +353,7 @@ export default function EditProfileScreen() {
                     type='error'
                     className='mt-1'
                   >
-                    {errors.address.message}
+                    {getErrorMessage(errors.address.message, locale)}
                   </CustomText>
                 )}
               </View>
@@ -389,7 +386,7 @@ export default function EditProfileScreen() {
                       type='error'
                       className='mt-1'
                     >
-                      {errors.town.message}
+                      {getErrorMessage(errors.town.message, locale)}
                     </CustomText>
                   )}
                 </View>
@@ -420,7 +417,7 @@ export default function EditProfileScreen() {
                       type='error'
                       className='mt-1'
                     >
-                      {errors.province.message}
+                      {getErrorMessage(errors.province.message, locale)}
                     </CustomText>
                   )}
                 </View>
@@ -454,7 +451,7 @@ export default function EditProfileScreen() {
                       type='error'
                       className='mt-1'
                     >
-                      {errors.country.message}
+                      {getErrorMessage(errors.country.message, locale)}
                     </CustomText>
                   )}
                 </View>
@@ -485,7 +482,7 @@ export default function EditProfileScreen() {
                       type='error'
                       className='mt-1'
                     >
-                      {errors.postalCode.message}
+                      {getErrorMessage(errors.postalCode.message, locale)}
                     </CustomText>
                   )}
                 </View>
@@ -519,13 +516,12 @@ export default function EditProfileScreen() {
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.profilePicture.message || '{}')[locale] ||
-                  errors.profilePicture.message}
+                {getErrorMessage(errors.profilePicture.message, locale)}
               </CustomText>
             )}
           </View>
 
-          {/* Update Button */}
+          {/* Action Buttons */}
           <View className='mb-4'>
             <Button
               mode='primary'

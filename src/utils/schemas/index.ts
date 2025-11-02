@@ -314,15 +314,15 @@ export const AuctioneerEditSchema = z
       }),
     // dni: z.string().min(1, { message: 'Required' }),
     profilePicture: z.string().optional(),
-    phoneNumber: z.string().min(5, { message: 'Required' }),
-    address: z.string().min(1, { message: 'Required' }),
-    town: z.string().min(1, { message: 'Required' }),
-    province: z.string().min(1, { message: 'Required' }),
-    country: z.string().min(1, { message: 'Required' }),
-    postalCode: z.string().min(1, { message: 'Required' }),
-    webPage: z.string().url().min(1, { message: 'Required' }),
-    socialMedia: z.string().url().min(1, { message: 'Required' }),
-    storeName: z.string().min(1, { message: 'Required' }),
+    phoneNumber: z.string(),
+    address: z.string(),
+    town: z.string(),
+    province: z.string(),
+    country: z.string(),
+    postalCode: z.string(),
+    webPage: z.string(),
+    socialMedia: z.string(),
+    storeName: z.string(),
   })
   .refine(
     (data) => {
@@ -334,7 +334,151 @@ export const AuctioneerEditSchema = z
       path: ['username'],
       message: 'No spaces allowed.',
     }
-  );
+  )
+  .superRefine((data, ctx) => {
+    // Validar phoneNumber
+    if (!data.phoneNumber || data.phoneNumber.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['phoneNumber'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    } else if (data.phoneNumber.length < 5) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['phoneNumber'],
+        message: JSON.stringify({
+          en: 'Min. 5 characters',
+          es: 'Mín. 5 caracteres',
+        }),
+      });
+    }
+
+    // Validar address
+    if (!data.address || data.address.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['address'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+
+    // Validar town
+    if (!data.town || data.town.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['town'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+
+    // Validar province
+    if (!data.province || data.province.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['province'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+
+    // Validar country
+    if (!data.country || data.country.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['country'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+
+    // Validar postalCode
+    if (!data.postalCode || data.postalCode.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['postalCode'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+
+    // Validar webPage
+    if (!data.webPage || data.webPage.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['webPage'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    } else {
+      try {
+        new URL(data.webPage);
+      } catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['webPage'],
+          message: JSON.stringify({
+            en: 'Invalid URL',
+            es: 'URL inválida',
+          }),
+        });
+      }
+    }
+
+    // Validar socialMedia
+    if (!data.socialMedia || data.socialMedia.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['socialMedia'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    } else {
+      try {
+        new URL(data.socialMedia);
+      } catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['socialMedia'],
+          message: JSON.stringify({
+            en: 'Invalid URL',
+            es: 'URL inválida',
+          }),
+        });
+      }
+    }
+
+    // Validar storeName
+    if (!data.storeName || data.storeName.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['storeName'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+  });
 
 export const HostAuctioneerEditSchema = z
   .object({
