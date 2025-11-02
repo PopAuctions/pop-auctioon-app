@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
@@ -12,11 +12,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
 import { useAuth } from '@/context/auth-context';
 import { getErrorMessage } from '@/utils/form-errors';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
 import type * as z from 'zod';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
+  const { securePost } = useSecureApi();
   const [loading, setLoading] = useState(false);
 
   // Determinar el rol del usuario (por defecto USER)
@@ -24,6 +26,25 @@ export default function EditProfileScreen() {
     auth.state === 'authenticated' && auth.role ? auth.role : 'USER';
   const schema =
     userRole === 'AUCTIONEER' ? AuctioneerEditSchema : UserEditSchema;
+
+  // TODO: Obtener datos reales del usuario desde Supabase
+  const currentUser = {
+    name: 'Rodrigo',
+    lastName: 'Samayoa',
+    username: 'rodsamayoa',
+    phoneNumber: '+34647312818',
+    profilePicture: '',
+    ...(userRole === 'AUCTIONEER' && {
+      address: 'zona 16',
+      town: 'guatemala',
+      province: 'Guate',
+      country: 'Guatemala',
+      postalCode: '01016',
+      webPage: 'https://rod.com',
+      socialMedia: 'https://rod.com',
+      storeName: 'Rod Store',
+    }),
+  };
 
   // React Hook Form con schema dinámico según el rol
   const {
@@ -34,38 +55,124 @@ export default function EditProfileScreen() {
     z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
   >({
     resolver: zodResolver(schema),
-    defaultValues: {
-      name: 'Rodrigo',
-      lastName: 'Samayoa',
-      username: 'rodsamayoa',
-      phoneNumber: '+34647312818',
-      profilePicture: '',
-      // Campos adicionales para AUCTIONEER
-      ...(userRole === 'AUCTIONEER' && {
-        address: 'zona 16',
-        town: 'guatemala',
-        province: 'Guate',
-        country: 'Guatemala',
-        postalCode: '01016',
-        webPage: 'https://rod.com',
-        socialMedia: 'https://rod.com',
-        storeName: 'Rod Store',
-      }),
-    },
+    defaultValues: currentUser,
   });
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
   ) => {
     setLoading(true);
-    console.log('Form data:', data);
 
-    // TODO: Implementar lógica de actualización con la imagen
-    // Si data.profilePicture existe, subirla al servidor
-    setTimeout(() => {
+    try {
+      // Si hay imagen, usar FormData, si no, usar JSON
+      const hasImage = data.profilePicture && data.profilePicture !== '';
+
+      if (hasImage) {
+        // Preparar FormData con todos los campos
+        const formData = new FormData();
+
+        formData.append('username', data.username);
+        formData.append('name', data.name);
+        formData.append('lastName', data.lastName);
+        formData.append('phoneNumber', data.phoneNumber || '');
+
+        // Campos específicos para AUCTIONEER
+        if ('storeName' in data) {
+          formData.append('storeName', data.storeName || '');
+          formData.append('webPage', data.webPage || '');
+          formData.append('socialMedia', data.socialMedia || '');
+          formData.append('address', data.address || '');
+          formData.append('town', data.town || '');
+          formData.append('province', data.province || '');
+          formData.append('country', data.country || '');
+          formData.append('postalCode', data.postalCode || '');
+        }
+
+        formData.append('oldProfilePicture', currentUser.profilePicture || '');
+        formData.append('oldPhoneNumber', currentUser.phoneNumber || '');
+
+        // Agregar imagen si existe
+        if (data.profilePicture) {
+          // Extraer información de la URI de la imagen
+          const uriParts = data.profilePicture.split('.');
+          const fileType = uriParts[uriParts.length - 1];
+
+          formData.append('profilePicture', {
+            uri: data.profilePicture,
+            name: `profile.${fileType}`,
+            type: `image/${fileType}`,
+          } as any);
+        }
+
+        // Llamar endpoint con FormData
+        const response = await securePost('/edit-user-info', formData, {
+          timeout: 30000, // 30 segundos para subir imagen
+        });
+
+        if (response.data) {
+          Alert.alert(
+            t('commonActions.ok'),
+            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
+          );
+          router.back();
+        } else {
+          Alert.alert(
+            t('commonActions.error'),
+            response.error ||
+              (locale === 'es'
+                ? 'Error actualizando perfil'
+                : 'Error updating profile')
+          );
+        }
+      } else {
+        // Enviar JSON simple (sin imagen)
+        const payload = {
+          username: data.username,
+          name: data.name,
+          lastName: data.lastName,
+          phoneNumber: data.phoneNumber || '',
+          oldProfilePicture: currentUser.profilePicture || '',
+          oldPhoneNumber: currentUser.phoneNumber || '',
+          // Campos específicos para AUCTIONEER
+          ...('storeName' in data && {
+            storeName: data.storeName || '',
+            webPage: data.webPage || '',
+            socialMedia: data.socialMedia || '',
+            address: data.address || '',
+            town: data.town || '',
+            province: data.province || '',
+            country: data.country || '',
+            postalCode: data.postalCode || '',
+          }),
+        };
+
+        const response = await securePost('/edit-user-info', payload);
+
+        if (response.data) {
+          Alert.alert(
+            t('commonActions.ok'),
+            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
+          );
+          router.back();
+        } else {
+          Alert.alert(
+            t('commonActions.error'),
+            response.error ||
+              (locale === 'es'
+                ? 'Error actualizando perfil'
+                : 'Error updating profile')
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      Alert.alert(
+        t('commonActions.error'),
+        locale === 'es' ? 'Error actualizando perfil' : 'Error updating profile'
+      );
+    } finally {
       setLoading(false);
-      router.back();
-    }, 1500);
+    }
   };
 
   const handleBack = () => {

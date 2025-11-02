@@ -238,12 +238,25 @@ export const useSecureApi = () => {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
 
+        // Detectar si data es FormData
+        const isFormData = data instanceof FormData;
+
+        // Si es FormData, no agregar Content-Type (fetch lo establece automáticamente)
+        // y no usar JSON.stringify
+        const requestHeaders = isFormData
+          ? Object.fromEntries(
+              Object.entries(headers).filter(
+                ([key]) => key !== HEADERS_CONFIG.CONTENT_TYPE_HEADER
+              )
+            )
+          : headers;
+
         return makeRequest<T>(
           url,
           {
             method: 'POST',
-            headers,
-            body: JSON.stringify(data),
+            headers: requestHeaders,
+            body: isFormData ? data : JSON.stringify(data),
           },
           options
         );
