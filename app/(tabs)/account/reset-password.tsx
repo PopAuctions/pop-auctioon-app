@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/Button';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResetSchema } from '@/utils/schemas';
+import { getErrorMessage } from '@/utils/form-errors';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type * as z from 'zod';
 
 export default function ResetPasswordScreen() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -107,7 +108,7 @@ export default function ResetPasswordScreen() {
                 type='error'
                 className='mt-1'
               >
-                {errors.email.message}
+                {getErrorMessage(errors.email.message, locale)}
               </CustomText>
             )}
           </View>
