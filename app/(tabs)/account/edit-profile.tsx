@@ -170,6 +170,7 @@ export default function EditProfileScreen() {
         t('commonActions.error'),
         locale === 'es' ? 'Error actualizando perfil' : 'Error updating profile'
       );
+      // Sentry.captureException('CATCH_UPDATE_PROFILE' + error?.message);
     } finally {
       setLoading(false);
     }

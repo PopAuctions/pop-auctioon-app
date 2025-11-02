@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
 import { ARTICLE_BRANDS_LABELS, REQUEST_STATUS } from '@/constants';
