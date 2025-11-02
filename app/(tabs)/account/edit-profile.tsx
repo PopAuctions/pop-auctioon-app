@@ -29,7 +29,9 @@ export default function EditProfileScreen() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<
+    z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
+  >({
     resolver: zodResolver(schema),
     defaultValues: {
       name: 'Alejandro',
@@ -51,7 +53,9 @@ export default function EditProfileScreen() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof schema>) => {
+  const onSubmit = async (
+    data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
+  ) => {
     setLoading(true);
     console.log('Form data:', data);
 
@@ -227,7 +231,7 @@ export default function EditProfileScreen() {
                 </CustomText>
                 <Controller
                   control={control}
-                  name={'storeName' as any}
+                  name='storeName'
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
                       value={value || ''}
@@ -238,12 +242,12 @@ export default function EditProfileScreen() {
                     />
                   )}
                 />
-                {(errors as any).storeName && (
+                {'storeName' in errors && errors.storeName && (
                   <CustomText
                     type='error'
                     className='mt-1'
                   >
-                    {(errors as any).storeName.message}
+                    {errors.storeName.message}
                   </CustomText>
                 )}
               </View>
@@ -258,7 +262,7 @@ export default function EditProfileScreen() {
                 </CustomText>
                 <Controller
                   control={control}
-                  name={'webPage' as any}
+                  name='webPage'
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
                       value={value || ''}
@@ -277,12 +281,12 @@ export default function EditProfileScreen() {
                 >
                   {t('screens.editProfile.keepUrlProtocol')}
                 </CustomText>
-                {(errors as any).webPage && (
+                {'webPage' in errors && errors.webPage && (
                   <CustomText
                     type='error'
                     className='mt-1'
                   >
-                    {(errors as any).webPage.message}
+                    {errors.webPage.message}
                   </CustomText>
                 )}
               </View>
@@ -297,7 +301,7 @@ export default function EditProfileScreen() {
                 </CustomText>
                 <Controller
                   control={control}
-                  name={'socialMedia' as any}
+                  name='socialMedia'
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
                       value={value || ''}
@@ -316,12 +320,12 @@ export default function EditProfileScreen() {
                 >
                   {t('screens.editProfile.keepUrlProtocol')}
                 </CustomText>
-                {(errors as any).socialMedia && (
+                {'socialMedia' in errors && errors.socialMedia && (
                   <CustomText
                     type='error'
                     className='mt-1'
                   >
-                    {(errors as any).socialMedia.message}
+                    {errors.socialMedia.message}
                   </CustomText>
                 )}
               </View>
@@ -336,7 +340,7 @@ export default function EditProfileScreen() {
                 </CustomText>
                 <Controller
                   control={control}
-                  name={'address' as any}
+                  name='address'
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
                       value={value || ''}
@@ -347,12 +351,12 @@ export default function EditProfileScreen() {
                     />
                   )}
                 />
-                {(errors as any).address && (
+                {'address' in errors && errors.address && (
                   <CustomText
                     type='error'
                     className='mt-1'
                   >
-                    {(errors as any).address.message}
+                    {errors.address.message}
                   </CustomText>
                 )}
               </View>
@@ -369,7 +373,7 @@ export default function EditProfileScreen() {
                   </CustomText>
                   <Controller
                     control={control}
-                    name={'town' as any}
+                    name='town'
                     render={({ field: { onChange, onBlur, value } }) => (
                       <Input
                         value={value || ''}
@@ -380,12 +384,12 @@ export default function EditProfileScreen() {
                       />
                     )}
                   />
-                  {(errors as any).town && (
+                  {'town' in errors && errors.town && (
                     <CustomText
                       type='error'
                       className='mt-1'
                     >
-                      {(errors as any).town.message}
+                      {errors.town.message}
                     </CustomText>
                   )}
                 </View>
@@ -400,7 +404,7 @@ export default function EditProfileScreen() {
                   </CustomText>
                   <Controller
                     control={control}
-                    name={'province' as any}
+                    name='province'
                     render={({ field: { onChange, onBlur, value } }) => (
                       <Input
                         value={value || ''}
@@ -411,12 +415,12 @@ export default function EditProfileScreen() {
                       />
                     )}
                   />
-                  {(errors as any).province && (
+                  {'province' in errors && errors.province && (
                     <CustomText
                       type='error'
                       className='mt-1'
                     >
-                      {(errors as any).province.message}
+                      {errors.province.message}
                     </CustomText>
                   )}
                 </View>
@@ -434,7 +438,7 @@ export default function EditProfileScreen() {
                   </CustomText>
                   <Controller
                     control={control}
-                    name={'country' as any}
+                    name='country'
                     render={({ field: { onChange, onBlur, value } }) => (
                       <Input
                         value={value || ''}
@@ -445,12 +449,12 @@ export default function EditProfileScreen() {
                       />
                     )}
                   />
-                  {(errors as any).country && (
+                  {'country' in errors && errors.country && (
                     <CustomText
                       type='error'
                       className='mt-1'
                     >
-                      {(errors as any).country.message}
+                      {errors.country.message}
                     </CustomText>
                   )}
                 </View>
@@ -465,7 +469,7 @@ export default function EditProfileScreen() {
                   </CustomText>
                   <Controller
                     control={control}
-                    name={'postalCode' as any}
+                    name='postalCode'
                     render={({ field: { onChange, onBlur, value } }) => (
                       <Input
                         value={value || ''}
@@ -476,12 +480,12 @@ export default function EditProfileScreen() {
                       />
                     )}
                   />
-                  {(errors as any).postalCode && (
+                  {'postalCode' in errors && errors.postalCode && (
                     <CustomText
                       type='error'
                       className='mt-1'
                     >
-                      {(errors as any).postalCode.message}
+                      {errors.postalCode.message}
                     </CustomText>
                   )}
                 </View>
