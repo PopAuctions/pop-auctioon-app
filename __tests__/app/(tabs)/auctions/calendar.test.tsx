@@ -80,7 +80,8 @@ describe('CalendarScreen', () => {
     });
 
     const { getByText } = render(<CalendarScreen />);
-    expect(getByText('Loading auctions...')).toBeTruthy();
+    // El componente Loading muestra "Loading..." no "Loading auctions..."
+    expect(getByText('Loading...')).toBeTruthy();
   });
 
   it('renders error state correctly', () => {
