@@ -211,8 +211,14 @@
       "back": "Volver"
     },
     "resetPassword": {
-      "title": "Restablecer Contraseña",
-      "subtitle": "Cambia tu contraseña de acceso"
+      "title": "Restablecer contraseña",
+      "subtitle": "Cambia tu contraseña de acceso",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Ingresa tu email",
+      "sendResetLink": "Enviar enlace de restablecimiento",
+      "back": "Volver",
+      "successMessage": "Se ha enviado un enlace a tu correo",
+      "errorMessage": "Error al enviar el enlace"
     },
     "verifyPhone": {
       "title": "Verificar Teléfono",
