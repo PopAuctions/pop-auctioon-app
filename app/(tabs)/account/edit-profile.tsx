@@ -35,21 +35,21 @@ export default function EditProfileScreen() {
   >({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: 'Alejandro',
-      lastName: 'Tejada',
-      username: 'tejon17584',
-      phoneNumber: '',
+      name: 'Rodrigo',
+      lastName: 'Samayoa',
+      username: 'rodsamayoa',
+      phoneNumber: '+34647312818',
       profilePicture: '',
       // Campos adicionales para AUCTIONEER
       ...(userRole === 'AUCTIONEER' && {
-        address: '',
-        town: '',
-        province: '',
-        country: '',
-        postalCode: '',
-        webPage: 'https://example.com',
-        socialMedia: 'https://example.com',
-        storeName: '',
+        address: 'zona 16',
+        town: 'guatemala',
+        province: 'Guate',
+        country: 'Guatemala',
+        postalCode: '01016',
+        webPage: 'https://rod.com',
+        socialMedia: 'https://rod.com',
+        storeName: 'Rod Store',
       }),
     },
   });
