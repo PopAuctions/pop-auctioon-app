@@ -113,12 +113,7 @@ export const EditProfileSchema = z.object({
         es: 'No se permiten espacios',
       }),
     }),
-  phoneNumber: z.string().min(5, {
-    message: JSON.stringify({
-      en: 'Required (Min. 5 characters)',
-      es: 'Requerido (Mín. 5 caracteres)',
-    }),
-  }),
+  phoneNumber: z.string().optional(),
   profilePicture: z.string().optional(),
 });
 
