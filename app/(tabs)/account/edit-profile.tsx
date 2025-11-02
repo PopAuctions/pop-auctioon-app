@@ -82,68 +82,71 @@ export default function EditProfileScreen() {
             {t('screens.editProfile.title')}
           </CustomText>
 
-          {/* Name Input */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2 '
-            >
-              {t('screens.editProfile.name')}*
-            </CustomText>
-            <Controller
-              control={control}
-              name='name'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.editProfile.name')}
-                  editable={!loading}
-                />
-              )}
-            />
-            {errors.name && (
+          {/* Name and Last Name Row */}
+          <View className='mb-4 flex-row gap-3'>
+            {/* Name Input */}
+            <View className='flex-1'>
               <CustomText
-                type='error'
-                className='mt-1'
+                type='body'
+                className='mb-2 '
               >
-                {JSON.parse(errors.name.message || '{}')[locale] ||
-                  errors.name.message}
+                {t('screens.editProfile.name')}*
               </CustomText>
-            )}
-          </View>
+              <Controller
+                control={control}
+                name='name'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('screens.editProfile.name')}
+                    editable={!loading}
+                  />
+                )}
+              />
+              {errors.name && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {JSON.parse(errors.name.message || '{}')[locale] ||
+                    errors.name.message}
+                </CustomText>
+              )}
+            </View>
 
-          {/* Last Name Input */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2 '
-            >
-              {t('screens.editProfile.lastName')}*
-            </CustomText>
-            <Controller
-              control={control}
-              name='lastName'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.editProfile.lastName')}
-                  editable={!loading}
-                />
-              )}
-            />
-            {errors.lastName && (
+            {/* Last Name Input */}
+            <View className='flex-1'>
               <CustomText
-                type='error'
-                className='mt-1'
+                type='body'
+                className='mb-2 '
               >
-                {JSON.parse(errors.lastName.message || '{}')[locale] ||
-                  errors.lastName.message}
+                {t('screens.editProfile.lastName')}*
               </CustomText>
-            )}
+              <Controller
+                control={control}
+                name='lastName'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('screens.editProfile.lastName')}
+                    editable={!loading}
+                  />
+                )}
+              />
+              {errors.lastName && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {JSON.parse(errors.lastName.message || '{}')[locale] ||
+                    errors.lastName.message}
+                </CustomText>
+              )}
+            </View>
           </View>
 
           {/* Username Input */}
@@ -354,128 +357,134 @@ export default function EditProfileScreen() {
                 )}
               </View>
 
-              {/* Country Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.country')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name={'country' as any}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.country')}
-                      editable={!loading}
-                    />
-                  )}
-                />
-                {(errors as any).country && (
+              {/* Town and Province Row */}
+              <View className='mb-4 flex-row gap-3'>
+                {/* Town Input */}
+                <View className='flex-1'>
                   <CustomText
-                    type='error'
-                    className='mt-1'
+                    type='body'
+                    className='mb-2 '
                   >
-                    {(errors as any).country.message}
+                    {t('screens.editProfile.town')}*
                   </CustomText>
-                )}
+                  <Controller
+                    control={control}
+                    name={'town' as any}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.town')}
+                        editable={!loading}
+                      />
+                    )}
+                  />
+                  {(errors as any).town && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {(errors as any).town.message}
+                    </CustomText>
+                  )}
+                </View>
+
+                {/* Province Input */}
+                <View className='flex-1'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.province')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name={'province' as any}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.province')}
+                        editable={!loading}
+                      />
+                    )}
+                  />
+                  {(errors as any).province && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {(errors as any).province.message}
+                    </CustomText>
+                  )}
+                </View>
               </View>
 
-              {/* Town Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.town')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name={'town' as any}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.town')}
-                      editable={!loading}
-                    />
-                  )}
-                />
-                {(errors as any).town && (
+              {/* Country and Postal Code Row */}
+              <View className='mb-4 flex-row gap-3'>
+                {/* Country Input */}
+                <View className='flex-1'>
                   <CustomText
-                    type='error'
-                    className='mt-1'
+                    type='body'
+                    className='mb-2 '
                   >
-                    {(errors as any).town.message}
+                    {t('screens.editProfile.country')}*
                   </CustomText>
-                )}
-              </View>
+                  <Controller
+                    control={control}
+                    name={'country' as any}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.country')}
+                        editable={!loading}
+                      />
+                    )}
+                  />
+                  {(errors as any).country && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {(errors as any).country.message}
+                    </CustomText>
+                  )}
+                </View>
 
-              {/* Province Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.province')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name={'province' as any}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.province')}
-                      editable={!loading}
-                    />
-                  )}
-                />
-                {(errors as any).province && (
+                {/* Postal Code Input */}
+                <View className='flex-1'>
                   <CustomText
-                    type='error'
-                    className='mt-1'
+                    type='body'
+                    className='mb-2 '
                   >
-                    {(errors as any).province.message}
+                    {t('screens.editProfile.postalCode')}*
                   </CustomText>
-                )}
-              </View>
-
-              {/* Postal Code Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.postalCode')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name={'postalCode' as any}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.postalCode')}
-                      editable={!loading}
-                    />
+                  <Controller
+                    control={control}
+                    name={'postalCode' as any}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.postalCode')}
+                        editable={!loading}
+                      />
+                    )}
+                  />
+                  {(errors as any).postalCode && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {(errors as any).postalCode.message}
+                    </CustomText>
                   )}
-                />
-                {(errors as any).postalCode && (
-                  <CustomText
-                    type='error'
-                    className='mt-1'
-                  >
-                    {(errors as any).postalCode.message}
-                  </CustomText>
-                )}
+                </View>
               </View>
             </>
           )}
