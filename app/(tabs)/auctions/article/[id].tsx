@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
 import { ARTICLE_BRANDS_LABELS, REQUEST_STATUS } from '@/constants';
@@ -19,6 +19,7 @@ import { SendBid } from '@/components/bids/SendBid';
 import { MAX_BID_OFFSET } from '@/constants/bid';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
+import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
@@ -26,16 +27,19 @@ export default function ArticleDetailScreen() {
   const auctionLang = t('screens.auction');
   const articleLang = t('screens.article');
   const bidsLang = t('components.bid');
+  const articleId = Number(id);
+
   const {
     data: article,
     status,
     errorMessage,
   } = useGetArticle({
-    articleId: Number(id),
+    articleId,
     validateAuctionStatus: true,
     publishedArticle: true,
     getAuctionData: true,
   });
+
   const { data: articlePageData, status: articlePageStatus } =
     useGetArticlePageData({
       articleId: Number(id),
@@ -315,17 +319,7 @@ export default function ArticleDetailScreen() {
             table="ArticleBid"
             filter={`articleId=eq.${id}`}
           /> */}
-        </>
-      )}
-
-      {auction.status === AuctionStatus.AVAILABLE && (
-        <>
-          {/* <AuctionStatusSubscribe
-            channel={`auction_${auction.id}`}
-            table={'Auction'}
-            filter={`id=eq.${auction.id}`}
-            compareTo={AuctionStatus.LIVE}
-          /> */}
+          <ArticleBidSubscriber articleId={article.id} />
         </>
       )}
 
