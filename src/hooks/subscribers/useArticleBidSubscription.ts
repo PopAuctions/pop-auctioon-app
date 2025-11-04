@@ -7,7 +7,7 @@ type Options = {
   table: string;
   articleId: string | number;
   filter?: string; // e.g. "articleId=eq.123"
-  onFirstBid?: () => void;
+  onFirstBid: (currentValue: number) => void;
   enabled?: boolean;
 };
 
@@ -89,7 +89,7 @@ export const useArticleBidSubscription = ({
         });
 
         if (!oldData.highestBidderId && newData.highestBidderId) {
-          onFirstBidRef.current?.();
+          onFirstBidRef.current?.(newData.currentValue ?? 0);
         }
       }
     ).subscribe((status: SubscribeStatus) => {

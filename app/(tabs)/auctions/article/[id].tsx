@@ -40,13 +40,16 @@ export default function ArticleDetailScreen() {
     getAuctionData: true,
   });
 
-  const { data: articlePageData, status: articlePageStatus } =
-    useGetArticlePageData({
-      articleId: Number(id),
-      auctionId: article?.Auction.id || 0,
-      currentPrice: article?.ArticleBid?.currentValue || 0,
-      startingPrice: article?.startingPrice || 0,
-    });
+  const {
+    data: articlePageData,
+    status: articlePageStatus,
+    refetch,
+  } = useGetArticlePageData({
+    articleId: Number(id),
+    auctionId: article?.Auction.id || 0,
+    currentPrice: article?.ArticleBid?.currentValue || 0,
+    startingPrice: article?.startingPrice || 0,
+  });
 
   const [
     { follows = false } = {},
@@ -319,7 +322,10 @@ export default function ArticleDetailScreen() {
             table="ArticleBid"
             filter={`articleId=eq.${id}`}
           /> */}
-          <ArticleBidSubscriber articleId={article.id} />
+          <ArticleBidSubscriber
+            articleId={article.id}
+            onFirstBid={refetch}
+          />
         </>
       )}
 
