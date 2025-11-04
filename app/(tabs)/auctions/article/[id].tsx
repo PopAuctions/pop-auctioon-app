@@ -20,6 +20,7 @@ import { MAX_BID_OFFSET } from '@/constants/bid';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
 import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
@@ -33,6 +34,7 @@ export default function ArticleDetailScreen() {
     data: article,
     status,
     errorMessage,
+    refetch: refetchArticle,
   } = useGetArticle({
     articleId,
     validateAuctionStatus: true,
@@ -317,11 +319,10 @@ export default function ArticleDetailScreen() {
       {(auction.status === AuctionStatus.AVAILABLE ||
         auction.status === AuctionStatus.LIVE) && (
         <>
-          {/* <ArticleBidUserSubscribe
-            channel={`article_${id}`}
-            table="ArticleBid"
-            filter={`articleId=eq.${id}`}
-          /> */}
+          <AuctionSubscriber
+            auctionId={auction.id}
+            refetch={refetchArticle}
+          />
           <ArticleBidSubscriber
             articleId={article.id}
             onFirstBid={refetch}
