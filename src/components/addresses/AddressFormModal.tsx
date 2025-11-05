@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  FlatList,
-} from 'react-native';
+import { View, Modal, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AddressSchema, type AddressSchemaType } from '@/utils/schemas';
@@ -17,7 +10,8 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { getErrorMessage } from '@/utils/form-errors';
-import { COUNTRIES_MAP, type CountryObject } from '@/constants/countries';
+import { COUNTRIES_MAP } from '@/constants/payment';
+import type { CountryObject } from '@/types/types';
 
 interface AddressFormModalProps {
   visible: boolean;
@@ -37,7 +31,7 @@ export function AddressFormModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
 
-  const countries: CountryObject[] = COUNTRIES_MAP[locale];
+  const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
 
   const {
     control,
@@ -93,7 +87,8 @@ export function AddressFormModal({
       reset();
       onSuccess();
       onClose();
-    } catch (_error) {
+    } catch (error) {
+      console.error('Error saving address:', error);
       Alert.alert(t('commonActions.error'), t('screens.addresses.error'));
     } finally {
       setIsSubmitting(false);
