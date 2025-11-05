@@ -234,8 +234,25 @@
       "subtitle": "Verifica tu número de teléfono"
     },
     "addresses": {
-      "title": "Direcciones",
-      "subtitle": "Gestiona tus direcciones de envío"
+      "title": "Mis Direcciones",
+      "subtitle": "Gestiona tus direcciones de envío",
+      "noAddressesYet": "No tienes direcciones guardadas",
+      "addNew": "Agregar nueva dirección",
+      "primaryAddress": "Principal",
+      "form": {
+        "title": "Dirección",
+        "nameAddress": "Nombre de la dirección",
+        "address": "Dirección",
+        "city": "Ciudad",
+        "state": "Estado/Provincia",
+        "country": "País",
+        "postalCode": "Código postal",
+        "setPrimary": "Establecer como dirección principal",
+        "submit": "Guardar dirección",
+        "cancel": "Cancelar"
+      },
+      "success": "Dirección guardada correctamente",
+      "error": "Error al guardar la dirección"
     },
     "billingInfo": {
       "title": "Información de Facturación",

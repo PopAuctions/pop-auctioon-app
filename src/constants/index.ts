@@ -16,5 +16,8 @@ export * from './errors';
 // Meses y calendario
 export { MONTHS } from './months';
 
+// Países
+export * from './countries';
+
 // Colores del tema
 export { default as Colors } from './Colors';

@@ -83,6 +83,8 @@ export const SECURE_ENDPOINTS = {
     PREFERENCES: '/user/preferences',
     HISTORY: '/user/history',
     FAVORITES: '/user/favorites',
+    ADDRESSES: '/user/addresses',
+    CREATE_ADDRESS: '/user/addresses/create',
   },
 
   // Server Actions y operaciones complejas

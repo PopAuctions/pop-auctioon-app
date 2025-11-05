@@ -234,8 +234,25 @@
       "subtitle": "Verify your phone number"
     },
     "addresses": {
-      "title": "Addresses",
-      "subtitle": "Manage your shipping addresses"
+      "title": "My Addresses",
+      "subtitle": "Manage your shipping addresses",
+      "noAddressesYet": "You don't have any saved addresses",
+      "addNew": "Add new address",
+      "primaryAddress": "Primary",
+      "form": {
+        "title": "Address",
+        "nameAddress": "Address name",
+        "address": "Address",
+        "city": "City",
+        "state": "State/Province",
+        "country": "Country",
+        "postalCode": "Postal Code",
+        "setPrimary": "Set as primary address",
+        "submit": "Save address",
+        "cancel": "Cancel"
+      },
+      "success": "Address saved successfully",
+      "error": "Error saving address"
     },
     "billingInfo": {
       "title": "Billing Information",
