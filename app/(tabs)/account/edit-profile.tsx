@@ -114,13 +114,7 @@ export default function EditProfileScreen() {
           }
         );
 
-        if (response.data) {
-          Alert.alert(
-            t('commonActions.ok'),
-            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
-          );
-          router.back();
-        } else {
+        if (response.error) {
           Alert.alert(
             t('commonActions.error'),
             response.error ||
@@ -128,6 +122,15 @@ export default function EditProfileScreen() {
                 ? 'Error actualizando perfil'
                 : 'Error updating profile')
           );
+          return;
+        }
+
+        if (response.data) {
+          Alert.alert(
+            t('commonActions.ok'),
+            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
+          );
+          router.back();
         }
       } else {
         // Enviar JSON simple (sin imagen)
@@ -156,13 +159,7 @@ export default function EditProfileScreen() {
           payload
         );
 
-        if (response.data) {
-          Alert.alert(
-            t('commonActions.ok'),
-            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
-          );
-          router.back();
-        } else {
+        if (response.error) {
           Alert.alert(
             t('commonActions.error'),
             response.error ||
@@ -170,6 +167,15 @@ export default function EditProfileScreen() {
                 ? 'Error actualizando perfil'
                 : 'Error updating profile')
           );
+          return;
+        }
+
+        if (response.data) {
+          Alert.alert(
+            t('commonActions.ok'),
+            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
+          );
+          router.back();
         }
       }
     } catch (error) {

@@ -1,14 +1,10 @@
-import {
-  View,
-  ScrollView,
-  RefreshControl,
-  TouchableOpacity,
-} from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { useState, useCallback, useEffect } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
@@ -25,15 +21,22 @@ export default function AddressesScreen() {
 
   const loadAddresses = useCallback(async () => {
     try {
-      const response = await secureGet<{ addresses: UserAddress[] }>(
-        '/user/addresses'
+      const response = await secureGet<UserAddress[]>(
+        SECURE_ENDPOINTS.USER.ADDRESSES
       );
 
-      if (response.data?.addresses) {
-        setAddresses(response.data.addresses);
+      if (response.error) {
+        console.error('❌ Error from API:', response.error);
+        // TODO: Mostrar toast con el error
+        return;
+      }
+
+      if (response.data && Array.isArray(response.data)) {
+        setAddresses(response.data);
       }
     } catch (error) {
-      console.error('Error loading addresses:', error);
+      console.error('❌ Network error loading addresses:', error);
+      // TODO: Mostrar toast genérico
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -93,6 +96,7 @@ export default function AddressesScreen() {
           <Button
             mode='primary'
             onPress={handleAddAddress}
+            disabled={refreshing}
           >
             {t('screens.addresses.addNew')}
           </Button>
@@ -118,28 +122,19 @@ export default function AddressesScreen() {
         <View className='p-6'>
           {/* Header */}
           <View className='mb-6 flex-row items-center justify-between'>
-            <View className='flex-1'>
-              <CustomText
-                type='h1'
-                className='mb-1 text-black'
-              >
-                {t('screens.addresses.title')}
-              </CustomText>
-              <CustomText type='subtitle'>
-                {t('screens.addresses.subtitle')}
-              </CustomText>
-            </View>
-            <TouchableOpacity
-              onPress={handleAddAddress}
-              className='ml-4'
+            <CustomText
+              type='h1'
+              className='flex-1 text-cinnabar'
             >
-              <FontAwesomeIcon
-                name='plus'
-                size={24}
-                color='#E63946'
-                variant='bold'
-              />
-            </TouchableOpacity>
+              {t('screens.addresses.title')}
+            </CustomText>
+            <Button
+              mode='primary'
+              onPress={handleAddAddress}
+              disabled={refreshing}
+            >
+              {t('screens.addresses.addNew')}
+            </Button>
           </View>
 
           {/* Addresses Grid */}
@@ -147,37 +142,108 @@ export default function AddressesScreen() {
             {addresses.map((address) => (
               <View
                 key={address.id}
-                className='border-gray-200 rounded-lg border bg-white p-4 shadow-sm'
+                className='border-gray-200 rounded-3xl border bg-white p-4 shadow-sm'
               >
                 {/* Header with name and primary badge */}
                 <View className='mb-3 flex-row items-start justify-between'>
                   <CustomText
-                    type='subtitle'
+                    type='h3'
                     className='flex-1 font-bold text-black'
                   >
-                    {address.nameAddress}
+                    {address.nameAddress ||
+                      (locale === 'es' ? 'Sin nombre' : 'No name')}
                   </CustomText>
                   {address.primaryAddress && (
-                    <View className='ml-2 rounded bg-cinnabar px-2 py-1'>
-                      <CustomText
-                        type='bodysmall'
-                        className='font-bold text-white'
-                      >
-                        {t('screens.addresses.primaryAddress')}
-                      </CustomText>
-                    </View>
+                    <CustomText
+                      type='bold'
+                      className='ml-2 text-xl'
+                    >
+                      {t('screens.addresses.primaryAddress')}
+                    </CustomText>
                   )}
                 </View>
 
-                {/* Address details */}
-                <View className='gap-1'>
-                  <CustomText type='body'>{address.address}</CustomText>
-                  <CustomText type='body'>
-                    {address.city}, {address.state} {address.postalCode}
-                  </CustomText>
-                  <CustomText type='body'>
-                    {getCountryLabel(address.country)}
-                  </CustomText>
+                {/* Address details with labels */}
+                <View className='gap-2'>
+                  {/* Address */}
+                  <View>
+                    <CustomText
+                      type='body'
+                      className='font-bold text-black'
+                    >
+                      {t('screens.addresses.form.address')}:{' '}
+                      <CustomText
+                        type='body'
+                        className='font-normal'
+                      >
+                        {address.address}
+                      </CustomText>
+                    </CustomText>
+                  </View>
+
+                  {/* City */}
+                  <View>
+                    <CustomText
+                      type='body'
+                      className='font-bold text-black'
+                    >
+                      {t('screens.addresses.form.city')}:{' '}
+                      <CustomText
+                        type='body'
+                        className='font-normal'
+                      >
+                        {address.city}
+                      </CustomText>
+                    </CustomText>
+                  </View>
+
+                  {/* State/Province */}
+                  <View>
+                    <CustomText
+                      type='body'
+                      className='font-bold text-black'
+                    >
+                      {t('screens.addresses.form.state')}:{' '}
+                      <CustomText
+                        type='body'
+                        className='font-normal'
+                      >
+                        {address.state}
+                      </CustomText>
+                    </CustomText>
+                  </View>
+
+                  {/* Postal Code */}
+                  <View>
+                    <CustomText
+                      type='body'
+                      className='font-bold text-black'
+                    >
+                      {t('screens.addresses.form.postalCode')}:{' '}
+                      <CustomText
+                        type='body'
+                        className='font-normal'
+                      >
+                        {address.postalCode}
+                      </CustomText>
+                    </CustomText>
+                  </View>
+
+                  {/* Country */}
+                  <View>
+                    <CustomText
+                      type='body'
+                      className='font-bold text-black'
+                    >
+                      {t('screens.addresses.form.country')}:{' '}
+                      <CustomText
+                        type='body'
+                        className='font-normal'
+                      >
+                        {getCountryLabel(address.country)}
+                      </CustomText>
+                    </CustomText>
+                  </View>
                 </View>
               </View>
             ))}
@@ -188,6 +254,7 @@ export default function AddressesScreen() {
             <Button
               mode='secondary'
               onPress={handleAddAddress}
+              disabled={refreshing}
             >
               {t('screens.addresses.addNew')}
             </Button>
