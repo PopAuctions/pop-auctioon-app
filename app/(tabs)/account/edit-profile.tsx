@@ -13,6 +13,7 @@ import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
 import { useAuth } from '@/context/auth-context';
 import { getErrorMessage } from '@/utils/form-errors';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type * as z from 'zod';
 
 export default function EditProfileScreen() {
@@ -105,9 +106,13 @@ export default function EditProfileScreen() {
         }
 
         // Llamar endpoint con FormData
-        const response = await securePost('/edit-user-info', formData, {
-          timeout: 30000, // 30 segundos para subir imagen
-        });
+        const response = await securePost(
+          SECURE_ENDPOINTS.USER.EDIT_INFO,
+          formData,
+          {
+            timeout: 30000, // 30 segundos para subir imagen
+          }
+        );
 
         if (response.data) {
           Alert.alert(
@@ -146,7 +151,10 @@ export default function EditProfileScreen() {
           }),
         };
 
-        const response = await securePost('/edit-user-info', payload);
+        const response = await securePost(
+          SECURE_ENDPOINTS.USER.EDIT_INFO,
+          payload
+        );
 
         if (response.data) {
           Alert.alert(
