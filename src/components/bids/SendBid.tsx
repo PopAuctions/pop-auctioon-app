@@ -2,7 +2,12 @@ import { useMemo, useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { ONLY_INTEGERS_REGEX } from '@/constants';
 import { euroFormatter } from '@/utils/euroFormatter';
-import type { BiddingAmounts, HighestBidderState, Lang } from '@/types/types';
+import type {
+  BiddingAmounts,
+  HighestBidderState,
+  Lang,
+  LangMap,
+} from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
@@ -25,8 +30,8 @@ interface SendBidProps {
 }
 
 interface BidResponse {
-  error: string | null;
-  success: string;
+  error: LangMap | null;
+  data: LangMap | null;
 }
 
 export function SendBid({
@@ -125,21 +130,16 @@ export function SendBid({
         clientCurrentAmount: currentValue,
       });
 
-      const payload = response?.data;
+      const data = response?.data;
 
-      if (!payload) {
-        console.log('ERROR_CREATE_BID', 'No response payload');
+      if (response.error) {
+        console.log('ERROR_CREATE_BID', response.error);
+        // callToast({ variant: 'error', description: response.error });
         return;
       }
 
-      if (payload.error) {
-        console.log('ERROR_CREATE_BID', payload.error);
-        // callToast({ variant: 'error', description: payload.error });
-        return;
-      }
-
-      // callToast({ variant: 'success', description: payload.success });
-      console.log('SUCCESS_CREATE_BID', payload.success);
+      // callToast({ variant: 'success', description: data });
+      console.log('SUCCESS_CREATE_BID', data);
       setBidAmount('');
     } catch (e: any) {
       console.log('CATCH_CREATE_BID', e?.message);
