@@ -177,14 +177,25 @@ export const useSecureApi = () => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
-      return makeRequest<T>(
-        url,
-        {
-          method: 'GET',
-          headers,
-        },
-        options
-      );
+      try {
+        return makeRequest<T>(
+          url,
+          {
+            method: 'GET',
+            headers,
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - protectedGet failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          },
+        };
+      }
     },
     [createBaseHeaders, makeRequest]
   );
@@ -198,15 +209,26 @@ export const useSecureApi = () => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
-      return makeRequest<T>(
-        url,
-        {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(data),
-        },
-        options
-      );
+      try {
+        return makeRequest<T>(
+          url,
+          {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - protectedPost failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          },
+        };
+      }
     },
     [createBaseHeaders, makeRequest]
   );
