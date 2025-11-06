@@ -48,9 +48,9 @@ export const useGetArticle = ({
       params.append('publishedArticle', String(publishedArticle));
     if (getAuctionData) params.append('getAuctionData', String(getAuctionData));
 
-    const res = await protectedGet<ArticleWithAuction>(
-      `/articles/${articleId}?${params}`
-    );
+    const res = await protectedGet<ArticleWithAuction>({
+      endpoint: `/articles/${articleId}?${params}`,
+    });
 
     if (res.error) {
       setStatus('error');
@@ -93,9 +93,9 @@ export const useGetArticle = ({
       params.append('publishedArticle', String(publishedArticle));
     if (getAuctionData) params.append('getAuctionData', String(getAuctionData));
 
-    const res = await protectedGet<ArticleWithAuction>(
-      `/articles/${articleId}?${params}`
-    );
+    const res = await protectedGet<ArticleWithAuction>({
+      endpoint: `/articles/${articleId}?${params}`,
+    });
 
     if (res.error) {
       return {

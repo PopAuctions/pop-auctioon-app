@@ -124,10 +124,13 @@ export function SendBid({
     try {
       setIsPending(true);
 
-      const response = await securePost<BidResponse>(`/bids`, {
-        articleId,
-        amount: bidAmount,
-        clientCurrentAmount: currentValue,
+      const response = await securePost<BidResponse>({
+        endpoint: '/bids',
+        data: {
+          articleId,
+          amount: bidAmount,
+          clientCurrentAmount: currentValue,
+        },
       });
 
       const data = response?.data;

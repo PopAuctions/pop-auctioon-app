@@ -47,9 +47,10 @@ export const useGetArticlePageData = ({
     if (currentPrice) params.append('currentPrice', String(currentPrice));
     if (startingPrice) params.append('startingPrice', String(startingPrice));
 
-    const res = await protectedGet<ArticlePageData>(
-      `/articles/article-page-info?${params}`
-    );
+    const res = await protectedGet<ArticlePageData>({
+      endpoint: `/articles/article-page-info?${params}`,
+      secureHeader: true,
+    });
 
     if (res.error) {
       setStatus('error');
@@ -89,9 +90,9 @@ export const useGetArticlePageData = ({
 
     params.append('currentPrice', String(currentPrice));
 
-    const res = await protectedGet<BiddingAmounts>(
-      `/bids/bidding-amounts?${params}`
-    );
+    const res = await protectedGet<BiddingAmounts>({
+      endpoint: `/bids/bidding-amounts?${params}`,
+    });
 
     if (res.error) {
       setErrorMessage({

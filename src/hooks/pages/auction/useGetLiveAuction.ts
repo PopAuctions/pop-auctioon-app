@@ -25,9 +25,9 @@ export const useGetLiveAuction = ({
       const params = new URLSearchParams();
       params.append('validateIsLive', String(validateIsLive));
 
-      const res = await protectedGet<LiveAuction>(
-        `/auctions/${auctionId}?${params}`
-      );
+      const res = await protectedGet<LiveAuction>({
+        endpoint: `/auctions/${auctionId}?${params}`,
+      });
 
       if (res.error) {
         console.log('error', res.error);
