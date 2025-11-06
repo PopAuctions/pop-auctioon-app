@@ -17,11 +17,12 @@ import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
 import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
-import { Button } from '@/components/ui/Button';
 import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
 import { Loading } from '@/components/ui/Loading';
 import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { FollowButton } from '@/components/ui/FollowButton';
+import { useGetUserFollowsAuction } from '@/hooks/pages/auction/useGetUserFollowsAuction';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -34,6 +35,10 @@ export default function AuctionDetailScreen() {
   } = useGetLiveAuction({
     auctionId: id,
   });
+  const { data: userFollows, status: userFollowsStatus } =
+    useGetUserFollowsAuction({
+      auctionId: id,
+    });
   const auctionLang = t('screens.auction');
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
@@ -51,6 +56,10 @@ export default function AuctionDetailScreen() {
   const { Auction: auction } = liveAuction;
   const auctionMode = auction.mode;
 
+  const isAuctionAvailable =
+    auction.status === AuctionStatus.AVAILABLE ||
+    auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
+    auction.status === AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE;
   function renderAuctionHeader() {
     return (
       <View className='mt-5 flex w-full flex-col'>
@@ -155,13 +164,19 @@ export default function AuctionDetailScreen() {
                   {auctionLang.watchButton}
                 </CustomLink>
               ) : (
-                // WIP: Follow button
-                <Button
-                  className='w-1/2'
+                <FollowButton
+                  className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
                   mode='primary'
-                >
-                  {auctionLang.follow}
-                </Button>
+                  size='large'
+                  follows={userFollows}
+                  followEndpoint={`/auctions/${id}/follow`}
+                  unfollowEndpoint={`/auctions/${id}/unfollow`}
+                  lang={locale}
+                  isAvailable={!isAuctionAvailable}
+                  extraDataIsLoaded={
+                    userFollowsStatus === REQUEST_STATUS.success
+                  }
+                />
               )}
 
               <ShareButton

@@ -21,6 +21,7 @@ import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
 import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
 import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { FollowButton } from '@/components/ui/FollowButton';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
@@ -187,30 +188,18 @@ export default function ArticleDetailScreen() {
               {/* ACTION BUTTONS ROW */}
               <View className='w-full flex-col items-center justify-center gap-2 md:w-2/3 md:flex-row md:gap-5 lg:w-1/3'>
                 {auction.status === AuctionStatus.AVAILABLE && (
-                  <>
-                    {/* <FollowButton
-                      className="w-2/3 enabled:hover:cursor-pointer disabled:opacity-50"
-                      mode="primary"
-                      size="small"
-                      follows={followsArticle.follows}
-                      id={id}
-                      followFunction={followArticle}
-                      unfollowFunction={unfollowArticle}
-                      lang={lang}
-                      isAvailable={article.sold}
-                    >
-                      {followsArticle.follows
-                        ? articleLang.unfollow
-                        : articleLang.follow}
-                    </FollowButton> */}
-                    {/* WIP: Follow button */}
-                    <Button
-                      className='w-2/3'
-                      mode='primary'
-                    >
-                      {follows ? articleLang.unfollow : articleLang.follow}
-                    </Button>
-                  </>
+                  <FollowButton
+                    key={follows}
+                    className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
+                    mode='primary'
+                    size='large'
+                    follows={follows}
+                    followEndpoint={`/articles/${id}/follow`}
+                    unfollowEndpoint={`/articles/${id}/unfollow`}
+                    lang={locale}
+                    isAvailable={article.sold}
+                    extraDataIsLoaded={extraDataIsLoaded}
+                  />
                 )}
 
                 {auction.status === AuctionStatus.LIVE && (
