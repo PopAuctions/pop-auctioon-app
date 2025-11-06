@@ -170,11 +170,18 @@ export const useSecureApi = () => {
   // ========================================
 
   const protectedGet = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
-      const headers = createBaseHeaders();
+    async <T>({
+      endpoint,
+      options = {},
+      secureHeader = false,
+    }: {
+      endpoint: ApiEndpoint;
+      options?: RequestOptions;
+      secureHeader?: boolean;
+    }): Promise<Partial<ApiResponse<T>>> => {
+      const headers = secureHeader
+        ? await createSecureHeaders()
+        : createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
       try {
@@ -197,15 +204,19 @@ export const useSecureApi = () => {
         };
       }
     },
-    [createBaseHeaders, makeRequest]
+    [createBaseHeaders, makeRequest, createSecureHeaders]
   );
 
   const protectedPost = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      data: any,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
+    async <T>({
+      endpoint,
+      data = {},
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      data?: any;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
@@ -238,10 +249,13 @@ export const useSecureApi = () => {
   // ========================================
 
   const secureGet = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
+    async <T>({
+      endpoint,
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
@@ -269,11 +283,15 @@ export const useSecureApi = () => {
   );
 
   const securePost = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      data: any,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
+    async <T>({
+      endpoint,
+      data = {},
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      data?: any;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
