@@ -81,7 +81,7 @@ export const Button = forwardRef<View, ButtonProps>(
         className={cn(
           'relative flex-row items-center justify-center gap-3 rounded-lg',
           'transition-all duration-200 ease-out',
-          'web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-cinnabar',
+          'active:scale-95',
           (disabled || isLoading) && 'opacity-50',
           modeStyle,
           sizeStyle,
