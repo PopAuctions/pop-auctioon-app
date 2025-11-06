@@ -20,6 +20,8 @@ import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdow
 import { Button } from '@/components/ui/Button';
 import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
 import { Loading } from '@/components/ui/Loading';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -28,6 +30,7 @@ export default function AuctionDetailScreen() {
     data: liveAuction,
     status,
     errorMessage,
+    refetch: refetchAuction,
   } = useGetLiveAuction({
     auctionId: id,
   });
@@ -58,13 +61,21 @@ export default function AuctionDetailScreen() {
                 <HowAutoLiveWorksModal
                   locale={locale}
                   trigger={(open) => (
-                    <Pressable onPress={open}>
+                    <Pressable
+                      onPress={open}
+                      className='flex flex-row items-center justify-center gap-2'
+                    >
                       <CustomText
                         type='h4'
                         className='text-cinnabar underline'
                       >
                         {AUCTION_MODE_LABEL[locale][auctionMode]}
                       </CustomText>
+                      <FontAwesomeIcon
+                        name='info-circle'
+                        size={16}
+                        color='cinnabar'
+                      />
                     </Pressable>
                   )}
                 />
@@ -186,14 +197,20 @@ export default function AuctionDetailScreen() {
   }
 
   return (
-    <View className='flex-1'>
-      <ArticlesInfiniteScroll
-        lang={locale}
-        auctionId={id}
-        ListHeaderComponent={renderAuctionHeader()}
-        // When there is a filter, the order is not applied
-        order={liveAuction?.articlesOrder}
+    <>
+      <View className='flex-1'>
+        <ArticlesInfiniteScroll
+          lang={locale}
+          auctionId={id}
+          ListHeaderComponent={renderAuctionHeader()}
+          // When there is a filter, the order is not applied
+          order={liveAuction?.articlesOrder}
+        />
+      </View>
+      <AuctionSubscriber
+        auctionId={auction.id}
+        refetch={refetchAuction}
       />
-    </View>
+    </>
   );
 }
