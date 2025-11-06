@@ -79,7 +79,7 @@ export const SECURE_ENDPOINTS = {
   USER: {
     PROFILE: '/user/profile',
     UPDATE_PROFILE: '/user/update-profile',
-    EDIT_INFO: '/user/edit-info',
+    EDIT_INFO: '/user/edit-user-info',
     PREFERENCES: '/user/preferences',
     HISTORY: '/user/history',
     FAVORITES: '/user/favorites',
