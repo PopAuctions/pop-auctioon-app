@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Modal, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AddressSchema, type AddressSchemaType } from '@/utils/schemas';
@@ -29,7 +30,6 @@ export function AddressFormModal({
   const { t, locale } = useTranslation();
   const { securePost } = useSecureApi();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showCountryPicker, setShowCountryPicker] = useState(false);
 
   const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
 
@@ -38,7 +38,6 @@ export function AddressFormModal({
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<AddressSchemaType>({
     resolver: zodResolver(AddressSchema),
     defaultValues: addressToEdit || {
@@ -52,11 +51,6 @@ export function AddressFormModal({
     },
   });
 
-  const selectedCountry = watch('country');
-  const selectedCountryLabel =
-    countries.find((c) => c.value === selectedCountry)?.label ||
-    t('screens.addresses.form.country');
-
   const onSubmit = async (data: AddressSchemaType) => {
     setIsSubmitting(true);
 
@@ -67,27 +61,17 @@ export function AddressFormModal({
       );
 
       if (response.error) {
-        // TODO: Mostrar toast con el error
         console.error('ERROR_CREATE_ADDRESS', response.error);
         return;
       }
 
-      // TODO mostrar toast de éxito
-      const successMessage =
-        typeof response.data === 'object' && response.data !== null
-          ? (response.data as { success?: string }).success
-          : undefined;
-
-      Alert.alert(
-        t('commonActions.ok'),
-        successMessage || t('screens.addresses.success')
-      );
+      // ✅ Éxito temporal - TODO: Reemplazar con toast que muestre response.data.success[locale]
+      Alert.alert(t('commonActions.ok'), t('screens.addresses.success'));
 
       reset();
       onSuccess();
       onClose();
     } catch (error) {
-      // TODO: Mostrar toast con el error
       console.error('ERROR_CREATE_ADDRESS_CATCH', error);
     } finally {
       setIsSubmitting(false);
@@ -254,70 +238,29 @@ export function AddressFormModal({
               control={control}
               name='country'
               render={({ field: { onChange, value } }) => (
-                <>
-                  <TouchableOpacity
-                    className='border-gray-300 min-h-[50px] justify-center rounded-lg border bg-white px-4 py-3'
-                    onPress={() => setShowCountryPicker(true)}
-                    disabled={isSubmitting}
+                <View className='border-gray-300 overflow-hidden rounded-lg border bg-white'>
+                  <Picker
+                    selectedValue={value}
+                    onValueChange={onChange}
+                    enabled={!isSubmitting}
+                    style={{
+                      height: 50,
+                    }}
                   >
-                    <CustomText
-                      type='body'
-                      className={!value ? 'text-gray-400' : ''}
-                    >
-                      {selectedCountryLabel}
-                    </CustomText>
-                  </TouchableOpacity>
-
-                  {/* Country Picker Modal */}
-                  <Modal
-                    visible={showCountryPicker}
-                    animationType='slide'
-                    presentationStyle='pageSheet'
-                    onRequestClose={() => setShowCountryPicker(false)}
-                  >
-                    <View className='flex-1 bg-white'>
-                      <View className='border-gray-200 border-b px-4 pb-4 pt-12'>
-                        <CustomText
-                          type='h3'
-                          className='text-center'
-                        >
-                          {t('screens.addresses.form.country')}
-                        </CustomText>
-                      </View>
-                      <ScrollView className='flex-1'>
-                        {countries.map((country) => (
-                          <TouchableOpacity
-                            key={country.value}
-                            className='border-gray-100 border-b px-6 py-4'
-                            onPress={() => {
-                              onChange(country.value);
-                              setShowCountryPicker(false);
-                            }}
-                          >
-                            <CustomText
-                              type='body'
-                              className={
-                                value === country.value
-                                  ? 'font-bold text-cinnabar'
-                                  : ''
-                              }
-                            >
-                              {country.label}
-                            </CustomText>
-                          </TouchableOpacity>
-                        ))}
-                      </ScrollView>
-                      <View className='border-gray-200 border-t px-4 py-4'>
-                        <Button
-                          mode='secondary'
-                          onPress={() => setShowCountryPicker(false)}
-                        >
-                          {t('commonActions.cancel')}
-                        </Button>
-                      </View>
-                    </View>
-                  </Modal>
-                </>
+                    <Picker.Item
+                      label={t('screens.addresses.form.country')}
+                      value=''
+                      enabled={false}
+                    />
+                    {countries.map((country) => (
+                      <Picker.Item
+                        key={country.value}
+                        label={country.label}
+                        value={country.value}
+                      />
+                    ))}
+                  </Picker>
+                </View>
               )}
             />
             {errors.country && (
