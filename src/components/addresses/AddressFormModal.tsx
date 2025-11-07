@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Modal, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Modal, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { Checkbox } from 'expo-checkbox';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AddressSchema, type AddressSchemaType } from '@/utils/schemas';
@@ -305,39 +306,26 @@ export function AddressFormModal({
           </View>
 
           {/* Primary Address Checkbox */}
-          <View className='mb-6'>
+          <View className='mb-6 flex-row items-center'>
             <Controller
               control={control}
               name='primaryAddress'
               render={({ field: { onChange, value } }) => (
-                <TouchableOpacity
-                  className='flex-row items-center'
-                  onPress={() => onChange(!value)}
+                <Checkbox
+                  value={value}
+                  onValueChange={onChange}
                   disabled={isSubmitting}
-                >
-                  <View
-                    className={`mr-3 h-6 w-6 items-center justify-center rounded border-2 ${
-                      value ? 'border-cinnabar bg-cinnabar' : 'border-gray-400'
-                    }`}
-                  >
-                    {value && (
-                      <CustomText
-                        type='body'
-                        className='text-white'
-                      >
-                        ✓
-                      </CustomText>
-                    )}
-                  </View>
-                  <CustomText
-                    type='body'
-                    className='flex-1'
-                  >
-                    {t('screens.addresses.form.setPrimary')}
-                  </CustomText>
-                </TouchableOpacity>
+                  color={value ? '#C1463D' : undefined}
+                  className='mr-3'
+                />
               )}
             />
+            <CustomText
+              type='body'
+              className='flex-1'
+            >
+              {t('screens.addresses.form.setPrimary')}
+            </CustomText>
           </View>
         </ScrollView>
 
