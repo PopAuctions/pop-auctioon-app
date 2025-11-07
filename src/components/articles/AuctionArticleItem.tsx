@@ -7,13 +7,7 @@ import { ARTICLE_BRANDS_LABELS } from '@/constants';
 import { CustomImage } from '../ui/CustomImage';
 import { SimpleCountdown } from '../ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
-import { Button } from '../ui/Button';
-
-// These should be mobile-friendly functions that hit your API / Supabase
-// import { followArticle } from '@/lib/articles/follow-article';
-// import { unfollowArticle } from '@/lib/articles/unfollow-article';
-
-// import { FollowButton } from '@/components/follow-button'; // RN version
+import { FollowButton } from '../ui/FollowButton';
 
 type ArticleItemProps = {
   article: SimpleArticle;
@@ -38,6 +32,7 @@ export function ArticleItem({
   commissionValue,
   showFollowButton = true,
 }: ArticleItemProps) {
+  const articleId = article.id;
   const price = article.ArticleBid.currentValue;
 
   const commissionedPrice = useMemo(
@@ -100,24 +95,19 @@ export function ArticleItem({
             </CustomText>
           </View>
 
-          <Button mode='primary'>Seguir</Button>
-
-          {/* Follow button will fit here later */}
-          {/* {showFollowButton && (
-          <FollowButton
-            mode='primary'
-            size='normal' // make sure this gives you that tall pill style
-            follows={userFollows}
-            id={String(article.id)}
-            followFunction={followArticle}
-            unfollowFunction={unfollowArticle}
-            lang={lang}
-            isAvailable={article.sold}
-            className='mt-6 w-full rounded-xl'
-          >
-            {userFollows ? auctionLang.unfollow : auctionLang.follow}
-          </FollowButton>
-        )} */}
+          {showFollowButton && (
+            <FollowButton
+              className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
+              mode='primary'
+              size='large'
+              follows={userFollows}
+              followEndpoint={`/articles/${articleId}/follow`}
+              unfollowEndpoint={`/articles/${articleId}/unfollow`}
+              lang={lang}
+              isAvailable={article.sold}
+              extraDataIsLoaded={true}
+            />
+          )}
         </View>
       </CustomLink>
     </View>

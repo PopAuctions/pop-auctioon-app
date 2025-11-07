@@ -23,6 +23,7 @@ import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { FollowButton } from '@/components/ui/FollowButton';
 import { useGetUserFollowsAuction } from '@/hooks/pages/auction/useGetUserFollowsAuction';
+import { useGetArticlesUserFollows } from '@/hooks/pages/article/useGetArticlesUserFollows';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -39,6 +40,7 @@ export default function AuctionDetailScreen() {
     useGetUserFollowsAuction({
       auctionId: id,
     });
+  const { data: userArticlesFollowed } = useGetArticlesUserFollows();
   const auctionLang = t('screens.auction');
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
@@ -218,6 +220,7 @@ export default function AuctionDetailScreen() {
           lang={locale}
           auctionId={id}
           ListHeaderComponent={renderAuctionHeader()}
+          articlesFollowed={userArticlesFollowed || []}
           // When there is a filter, the order is not applied
           order={liveAuction?.articlesOrder}
         />
