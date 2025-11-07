@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
@@ -14,13 +14,17 @@ import { useAuth } from '@/context/auth-context';
 import { getErrorMessage } from '@/utils/form-errors';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { Loading } from '@/components/ui/Loading';
+import type { User } from '@/types/types';
 import type * as z from 'zod';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
-  const { securePost } = useSecureApi();
+  const { securePost, secureGet } = useSecureApi();
   const [loading, setLoading] = useState(false);
+  const [fetchingUser, setFetchingUser] = useState(true);
+  const [currentUserData, setCurrentUserData] = useState<User | null>(null);
 
   // Determinar el rol del usuario (por defecto USER)
   const userRole =
@@ -28,36 +32,93 @@ export default function EditProfileScreen() {
   const schema =
     userRole === 'AUCTIONEER' ? AuctioneerEditSchema : UserEditSchema;
 
-  // TODO: Obtener datos reales del usuario desde Supabase
-  const currentUser = {
-    name: 'Rodrigo',
-    lastName: 'Samayoa',
-    username: 'rodsamayoa',
-    phoneNumber: '+34647312818',
-    profilePicture: '',
-    ...(userRole === 'AUCTIONEER' && {
-      address: 'zona 16',
-      town: 'guatemala',
-      province: 'Guate',
-      country: 'Guatemala',
-      postalCode: '01016',
-      webPage: 'https://rod.com',
-      socialMedia: 'https://rod.com',
-      storeName: 'Rod Store',
-    }),
-  };
-
   // React Hook Form con schema dinámico según el rol
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<
     z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
   >({
     resolver: zodResolver(schema),
-    defaultValues: currentUser,
+    defaultValues: {
+      name: '',
+      lastName: '',
+      username: '',
+      phoneNumber: '',
+      profilePicture: '',
+      ...(userRole === 'AUCTIONEER' && {
+        address: '',
+        town: '',
+        province: '',
+        country: '',
+        postalCode: '',
+        webPage: '',
+        socialMedia: '',
+        storeName: '',
+      }),
+    },
   });
+
+  // Cargar datos del usuario desde el endpoint /user/profile
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const response = await secureGet<User>({
+          endpoint: SECURE_ENDPOINTS.USER.PROFILE,
+        });
+
+        if (response.error) {
+          console.error('ERROR_LOAD_USER_DATA', response.error);
+          // TODO: Mostrar toast de error
+          router.back();
+          return;
+        }
+
+        // Si no hay datos, no permitir editar y regresar
+        if (!response.data) {
+          console.error('ERROR_NO_USER_DATA_RECEIVED');
+          // TODO: Mostrar toast de error
+          router.back();
+          return;
+        }
+
+        const userData = response.data;
+        setCurrentUserData(userData);
+
+        const formData: any = {
+          name: userData.name || '',
+          lastName: userData.lastName || '',
+          username: userData.username || '',
+          phoneNumber: userData.phoneNumber || '',
+          profilePicture: userData.profilePicture || '',
+        };
+
+        // Agregar campos de AUCTIONEER si aplica
+        if (userRole === 'AUCTIONEER') {
+          formData.address = userData.address || '';
+          formData.town = userData.town || '';
+          formData.province = userData.province || '';
+          formData.country = userData.country || '';
+          formData.postalCode = userData.postalCode || '';
+          formData.webPage = userData.webPage || '';
+          formData.socialMedia = userData.socialMedia || '';
+          formData.storeName = userData.storeName || '';
+        }
+
+        reset(formData);
+      } catch (error) {
+        console.error('ERROR_LOAD_USER_DATA_CATCH', error);
+        // TODO: Mostrar toast de error
+        router.back();
+      } finally {
+        setFetchingUser(false);
+      }
+    };
+
+    loadUserData();
+  }, [userRole, reset, secureGet, t, locale]);
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
@@ -89,8 +150,11 @@ export default function EditProfileScreen() {
           formData.append('postalCode', data.postalCode || '');
         }
 
-        formData.append('oldProfilePicture', currentUser.profilePicture || '');
-        formData.append('oldPhoneNumber', currentUser.phoneNumber || '');
+        formData.append(
+          'oldProfilePicture',
+          currentUserData?.profilePicture || ''
+        );
+        formData.append('oldPhoneNumber', currentUserData?.phoneNumber || '');
 
         // Agregar imagen si existe
         if (data.profilePicture) {
@@ -134,8 +198,8 @@ export default function EditProfileScreen() {
           name: data.name,
           lastName: data.lastName,
           phoneNumber: data.phoneNumber || '',
-          oldProfilePicture: currentUser.profilePicture || '',
-          oldPhoneNumber: currentUser.phoneNumber || '',
+          oldProfilePicture: currentUserData?.profilePicture || '',
+          oldPhoneNumber: currentUserData?.phoneNumber || '',
           // Campos específicos para AUCTIONEER
           ...('storeName' in data && {
             storeName: data.storeName || '',
@@ -181,6 +245,11 @@ export default function EditProfileScreen() {
   const handleBack = () => {
     router.back();
   };
+
+  // Show loading while fetching user data
+  if (fetchingUser) {
+    return <Loading locale={locale} />;
+  }
 
   return (
     <SafeAreaView
