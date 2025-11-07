@@ -150,7 +150,10 @@ describe('useSecureApi - Simple Tests', () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(response).toEqual({
       status: 0,
-      error: 'Network error',
+      error: {
+        es: 'Error al conectar con el servidor',
+        en: 'Error connecting to server',
+      },
     });
   });
 
@@ -175,7 +178,10 @@ describe('useSecureApi - Simple Tests', () => {
     expect(response).toEqual({
       data: undefined,
       status: 400,
-      error: 'Bad request',
+      error: {
+        es: 'Bad request',
+        en: 'Bad request',
+      },
     });
   });
 
@@ -506,7 +512,10 @@ describe('useSecureApi - Simple Tests', () => {
       const response = await result.current.protectedGet({ endpoint: '/test' });
 
       expect(response.status).toBe(0);
-      expect(response.error).toBe('Network error occurred');
+      expect(response.error).toEqual({
+        es: 'Error al conectar con el servidor',
+        en: 'Error connecting to server',
+      });
     });
   });
 });

@@ -21,9 +21,9 @@ export default function AddressesScreen() {
 
   const loadAddresses = useCallback(async () => {
     try {
-      const response = await secureGet<UserAddress[]>(
-        SECURE_ENDPOINTS.USER.ADDRESSES
-      );
+      const response = await secureGet<UserAddress[]>({
+        endpoint: SECURE_ENDPOINTS.USER.ADDRESSES,
+      });
 
       if (response.error) {
         console.error('❌ Error from API:', response.error);

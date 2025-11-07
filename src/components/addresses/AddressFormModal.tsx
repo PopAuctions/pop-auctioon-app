@@ -56,10 +56,10 @@ export function AddressFormModal({
     setIsSubmitting(true);
 
     try {
-      const response = await securePost(
-        SECURE_ENDPOINTS.USER.CREATE_ADDRESS,
-        data
-      );
+      const response = await securePost({
+        endpoint: SECURE_ENDPOINTS.USER.CREATE_ADDRESS,
+        data,
+      });
 
       if (response.error) {
         console.error('ERROR_CREATE_ADDRESS', response.error);

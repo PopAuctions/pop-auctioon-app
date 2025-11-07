@@ -106,13 +106,13 @@ export default function EditProfileScreen() {
         }
 
         // Llamar endpoint con FormData
-        const response = await securePost(
-          SECURE_ENDPOINTS.USER.EDIT_INFO,
-          formData,
-          {
+        const response = await securePost({
+          endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
+          data: formData,
+          options: {
             timeout: 30000, // 30 segundos para subir imagen
-          }
-        );
+          },
+        });
 
         if (response.error) {
           // TODO AGREGAR TOAST de ERROR
@@ -149,10 +149,10 @@ export default function EditProfileScreen() {
           }),
         };
 
-        const response = await securePost(
-          SECURE_ENDPOINTS.USER.EDIT_INFO,
-          payload
-        );
+        const response = await securePost({
+          endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
+          data: payload,
+        });
 
         if (response.error) {
           // TODO AGREGAR TOAST de ERROR
