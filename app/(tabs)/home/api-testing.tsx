@@ -111,12 +111,12 @@ export default function ApiTestingScreen() {
 
   const testProtectedSuccess = () =>
     runTest('protected-success', '✅ PROTECTED Success', async () => {
-      return await protectedGet('/test');
+      return await protectedGet({ endpoint: '/test' });
     });
 
   const testProtected400 = () =>
     runTest('protected-400', '❌ PROTECTED 400 (Bad Request)', async () => {
-      return await protectedGet('/test?scenario=bad_request');
+      return await protectedGet({ endpoint: '/test?scenario=bad_request' });
     });
 
   const testProtected401 = () =>
@@ -153,7 +153,7 @@ export default function ApiTestingScreen() {
 
   const testProtected404 = () =>
     runTest('protected-404', '🔍 PROTECTED 404 (Not Found)', async () => {
-      return await protectedGet('/test?scenario=not_found');
+      return await protectedGet({ endpoint: '/test?scenario=not_found' });
     });
 
   const testProtectedReallyNotFound = () =>
@@ -161,15 +161,18 @@ export default function ApiTestingScreen() {
       'protected-real-404',
       '🔍 PROTECTED Real 404 (HTML Response)',
       async () => {
-        return await protectedGet('/nonexistent');
+        return await protectedGet({ endpoint: '/nonexistent' });
       }
     );
 
   const testProtectedPost = () =>
     runTest('protected-post', '📤 PROTECTED POST', async () => {
-      return await protectedPost('/test', {
-        message: 'Test POST data',
-        timestamp: Date.now(),
+      return await protectedPost({
+        endpoint: '/test',
+        data: {
+          message: 'Test POST data',
+          timestamp: Date.now(),
+        },
       });
     });
 
@@ -183,7 +186,7 @@ export default function ApiTestingScreen() {
       if (!isAuth) {
         throw new Error('No estás autenticado para usar endpoints SECURE');
       }
-      return await secureGet('/test');
+      return await secureGet({ endpoint: '/test' });
     });
 
   const testSecure401NoJWT = () =>
@@ -232,9 +235,12 @@ export default function ApiTestingScreen() {
       if (!isAuth) {
         throw new Error('No estás autenticado para usar endpoints SECURE');
       }
-      return await securePost('/test', {
-        operation: 'create_auction',
-        auctionData: { title: 'Test Auction', startingPrice: 100 },
+      return await securePost({
+        endpoint: '/test',
+        data: {
+          operation: 'create_auction',
+          auctionData: { title: 'Test Auction', startingPrice: 100 },
+        },
       });
     });
 
@@ -244,7 +250,7 @@ export default function ApiTestingScreen() {
       if (!isAuth) {
         throw new Error('No estás autenticado para usar endpoints SECURE');
       }
-      return await secureGet('/test?scenario=bad_request');
+      return await secureGet({ endpoint: '/test?scenario=bad_request' });
     });
 
   const testSecure404 = () =>
@@ -253,7 +259,7 @@ export default function ApiTestingScreen() {
       if (!isAuth) {
         throw new Error('No estás autenticado para usar endpoints SECURE');
       }
-      return await secureGet('/test?scenario=not_found');
+      return await secureGet({ endpoint: '/test?scenario=not_found' });
     });
 
   // ========================================

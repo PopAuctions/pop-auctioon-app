@@ -31,9 +31,9 @@ export const useFetchAuctionArticlesInfinite = () => {
       if (price) params.append('price', price);
       if (orderedIds) params.append('orderedIds', JSON.stringify(orderedIds));
 
-      const res = await protectedGet<SimpleArticle[]>(
-        `/articles/infinite?${params}`
-      );
+      const res = await protectedGet<SimpleArticle[]>({
+        endpoint: `/articles/infinite?${params}`,
+      });
 
       return res;
     },

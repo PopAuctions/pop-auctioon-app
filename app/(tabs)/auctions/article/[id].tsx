@@ -8,7 +8,6 @@ import { Loading } from '@/components/ui/Loading';
 import { AuctionStatus } from '@/constants/auctions';
 import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
-import { Button } from '@/components/ui/Button';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { ImagesCarousel } from '@/components/ui/ImagesCarousel';
@@ -19,6 +18,11 @@ import { SendBid } from '@/components/bids/SendBid';
 import { MAX_BID_OFFSET } from '@/constants/bid';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
+import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { FollowButton } from '@/components/ui/FollowButton';
+import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
+import { parseNumber } from '@/utils/parse-number';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
@@ -26,23 +30,30 @@ export default function ArticleDetailScreen() {
   const auctionLang = t('screens.auction');
   const articleLang = t('screens.article');
   const bidsLang = t('components.bid');
+  const articleId = Number(id);
+
   const {
     data: article,
     status,
     errorMessage,
+    refetch: refetchArticle,
   } = useGetArticle({
-    articleId: Number(id),
+    articleId,
     validateAuctionStatus: true,
     publishedArticle: true,
     getAuctionData: true,
   });
-  const { data: articlePageData, status: articlePageStatus } =
-    useGetArticlePageData({
-      articleId: Number(id),
-      auctionId: article?.Auction.id || 0,
-      currentPrice: article?.ArticleBid?.currentValue || 0,
-      startingPrice: article?.startingPrice || 0,
-    });
+
+  const {
+    data: articlePageData,
+    status: articlePageStatus,
+    refetch,
+  } = useGetArticlePageData({
+    articleId: Number(id),
+    auctionId: article?.Auction.id || 0,
+    currentPrice: article?.ArticleBid?.currentValue || 0,
+    startingPrice: article?.startingPrice || 0,
+  });
 
   const [
     { follows = false } = {},
@@ -178,30 +189,18 @@ export default function ArticleDetailScreen() {
               {/* ACTION BUTTONS ROW */}
               <View className='w-full flex-col items-center justify-center gap-2 md:w-2/3 md:flex-row md:gap-5 lg:w-1/3'>
                 {auction.status === AuctionStatus.AVAILABLE && (
-                  <>
-                    {/* <FollowButton
-                      className="w-2/3 enabled:hover:cursor-pointer disabled:opacity-50"
-                      mode="primary"
-                      size="small"
-                      follows={followsArticle.follows}
-                      id={id}
-                      followFunction={followArticle}
-                      unfollowFunction={unfollowArticle}
-                      lang={lang}
-                      isAvailable={article.sold}
-                    >
-                      {followsArticle.follows
-                        ? articleLang.unfollow
-                        : articleLang.follow}
-                    </FollowButton> */}
-                    {/* WIP: Follow button */}
-                    <Button
-                      className='w-2/3'
-                      mode='primary'
-                    >
-                      {follows ? articleLang.unfollow : articleLang.follow}
-                    </Button>
-                  </>
+                  <FollowButton
+                    key={follows}
+                    className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
+                    mode='primary'
+                    size='large'
+                    follows={follows}
+                    followEndpoint={`/articles/${id}/follow`}
+                    unfollowEndpoint={`/articles/${id}/unfollow`}
+                    lang={locale}
+                    isAvailable={article.sold}
+                    extraDataIsLoaded={extraDataIsLoaded}
+                  />
                 )}
 
                 {auction.status === AuctionStatus.LIVE && (
@@ -217,13 +216,11 @@ export default function ArticleDetailScreen() {
                 )}
 
                 {auction.status !== AuctionStatus.FINISHED && (
-                  // Open modal with bid history
-                  <Button
-                    className='w-2/3'
-                    mode='secondary'
-                  >
-                    {articleLang.bidsHistory}
-                  </Button>
+                  <ArticleBidsRecord
+                    articleId={parseNumber(id)}
+                    lang={locale}
+                    initialPrice={article.startingPrice}
+                  />
                 )}
               </View>
             </View>
@@ -310,22 +307,14 @@ export default function ArticleDetailScreen() {
       {(auction.status === AuctionStatus.AVAILABLE ||
         auction.status === AuctionStatus.LIVE) && (
         <>
-          {/* <ArticleBidUserSubscribe
-            channel={`article_${id}`}
-            table="ArticleBid"
-            filter={`articleId=eq.${id}`}
-          /> */}
-        </>
-      )}
-
-      {auction.status === AuctionStatus.AVAILABLE && (
-        <>
-          {/* <AuctionStatusSubscribe
-            channel={`auction_${auction.id}`}
-            table={'Auction'}
-            filter={`id=eq.${auction.id}`}
-            compareTo={AuctionStatus.LIVE}
-          /> */}
+          <AuctionSubscriber
+            auctionId={auction.id}
+            refetch={refetchArticle}
+          />
+          <ArticleBidSubscriber
+            articleId={article.id}
+            onFirstBid={refetch}
+          />
         </>
       )}
 

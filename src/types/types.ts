@@ -540,3 +540,9 @@ export type CategoryFilter = {
 };
 
 export type ApiEndpoint = `/${string}`;
+
+export type SubscribeStatus =
+  | 'SUBSCRIBED'
+  | 'TIMED_OUT'
+  | 'CLOSED'
+  | 'CHANNEL_ERROR';

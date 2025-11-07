@@ -48,9 +48,9 @@ export const useGetArticle = ({
       params.append('publishedArticle', String(publishedArticle));
     if (getAuctionData) params.append('getAuctionData', String(getAuctionData));
 
-    const res = await protectedGet<ArticleWithAuction>(
-      `/articles/${articleId}?${params}`
-    );
+    const res = await protectedGet<ArticleWithAuction>({
+      endpoint: `/articles/${articleId}?${params}`,
+    });
 
     if (res.error) {
       setStatus('error');
@@ -60,8 +60,8 @@ export const useGetArticle = ({
       });
       return {
         message: {
-          en: 'Error fetching auction',
-          es: 'Error al obtener la subasta',
+          en: 'Error fetching article',
+          es: 'Error al obtener el artículo',
         },
       };
     }
@@ -83,9 +83,47 @@ export const useGetArticle = ({
     validateAuctionStatus,
   ]);
 
+  const refetch = async () => {
+    const params = new URLSearchParams();
+
+    if (validateAuctionStatus)
+      params.append('validateAuctionStatus', String(validateAuctionStatus));
+    if (getStatus) params.append('getStatus', String(getStatus));
+    if (publishedArticle)
+      params.append('publishedArticle', String(publishedArticle));
+    if (getAuctionData) params.append('getAuctionData', String(getAuctionData));
+
+    const res = await protectedGet<ArticleWithAuction>({
+      endpoint: `/articles/${articleId}?${params}`,
+    });
+
+    if (res.error) {
+      return {
+        message: {
+          en: 'Error fetching article',
+          es: 'Error al obtener el artículo',
+        },
+      };
+    }
+
+    setArticle(res.data || null);
+
+    return {
+      error: null,
+      success: null,
+      res,
+    };
+  };
+
   useEffect(() => {
     fetchArticle();
   }, [articleId, fetchArticle]);
 
-  return { data: article, status, errorMessage, setErrorMessage };
+  return {
+    data: article,
+    status,
+    errorMessage,
+    setErrorMessage,
+    refetch,
+  };
 };

@@ -20,12 +20,14 @@ const TEXTS = {
 export const ArticlesInfiniteScroll = ({
   lang,
   auctionId,
+  articlesFollowed,
   ListHeaderComponent,
   order,
 }: {
   lang: Lang;
   auctionId: string | number;
   ListHeaderComponent: React.ReactElement;
+  articlesFollowed: number[];
   order?: number[];
 }) => {
   const { locale } = useTranslation();
@@ -148,8 +150,7 @@ export const ArticlesInfiniteScroll = ({
           }}
           formatter={formatter}
           lang={lang}
-          // WIP: pass correct user follow status
-          userFollows={false}
+          userFollows={articlesFollowed.includes(Number(item.id))}
           commissionValue={LOW_COMMISSION_AMOUNT}
         />
       )}

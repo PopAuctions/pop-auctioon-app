@@ -5,7 +5,7 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import { Divider } from '../ui/Divider';
 import { CustomText } from '../ui/CustomText';
 import { ArticlePriceBreakdown } from './ArticlePriceBreakdown';
-// import { useHighestBidderContext } from '@/context/highest-bidder-context';
+import { useHighestBidderContext } from '@/context/highest-bidder-context';
 
 type CurrentBidInfoArticlePageProps = {
   lang: Lang;
@@ -31,16 +31,12 @@ export function CurrentBidInfoArticlePage({
   commissionValue,
   texts,
 }: CurrentBidInfoArticlePageProps) {
-  // If you already have this context ported to RN, uncomment:
-  // const { state } = useHighestBidderContext({
-  //   initialValue: {
-  //     currentValue,
-  //   },
-  // });
-  // const price = state.currentValue;
-
-  // Temporary fallback without context:
-  const price = currentValue;
+  const { state } = useHighestBidderContext({
+    initialValue: {
+      currentValue,
+    },
+  });
+  const price = state.currentValue;
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   return (
