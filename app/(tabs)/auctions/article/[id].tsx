@@ -8,7 +8,6 @@ import { Loading } from '@/components/ui/Loading';
 import { AuctionStatus } from '@/constants/auctions';
 import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
-import { Button } from '@/components/ui/Button';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { ImagesCarousel } from '@/components/ui/ImagesCarousel';
@@ -22,6 +21,8 @@ import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageDa
 import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
 import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { FollowButton } from '@/components/ui/FollowButton';
+import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
+import { parseNumber } from '@/utils/parse-number';
 
 export default function ArticleDetailScreen() {
   const { t, locale } = useTranslation();
@@ -215,13 +216,11 @@ export default function ArticleDetailScreen() {
                 )}
 
                 {auction.status !== AuctionStatus.FINISHED && (
-                  // Open modal with bid history
-                  <Button
-                    className='w-2/3'
-                    mode='secondary'
-                  >
-                    {articleLang.bidsHistory}
-                  </Button>
+                  <ArticleBidsRecord
+                    articleId={parseNumber(id)}
+                    lang={locale}
+                    initialPrice={article.startingPrice}
+                  />
                 )}
               </View>
             </View>
