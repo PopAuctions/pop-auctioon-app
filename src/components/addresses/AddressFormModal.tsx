@@ -67,13 +67,12 @@ export function AddressFormModal({
       );
 
       if (response.error) {
-        Alert.alert(
-          t('commonActions.error'),
-          response.error || t('screens.addresses.error')
-        );
+        // TODO: Mostrar toast con el error
+        console.error('ERROR_CREATE_ADDRESS', response.error);
         return;
       }
 
+      // TODO mostrar toast de éxito
       const successMessage =
         typeof response.data === 'object' && response.data !== null
           ? (response.data as { success?: string }).success
@@ -88,8 +87,8 @@ export function AddressFormModal({
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('Error saving address:', error);
-      Alert.alert(t('commonActions.error'), t('screens.addresses.error'));
+      // TODO: Mostrar toast con el error
+      console.error('ERROR_CREATE_ADDRESS_CATCH', error);
     } finally {
       setIsSubmitting(false);
     }

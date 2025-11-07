@@ -115,13 +115,8 @@ export default function EditProfileScreen() {
         );
 
         if (response.error) {
-          Alert.alert(
-            t('commonActions.error'),
-            response.error ||
-              (locale === 'es'
-                ? 'Error actualizando perfil'
-                : 'Error updating profile')
-          );
+          // TODO AGREGAR TOAST de ERROR
+          console.error('ERROR_UPDATE_PROFILE', response.error);
           return;
         }
 
@@ -160,17 +155,13 @@ export default function EditProfileScreen() {
         );
 
         if (response.error) {
-          Alert.alert(
-            t('commonActions.error'),
-            response.error ||
-              (locale === 'es'
-                ? 'Error actualizando perfil'
-                : 'Error updating profile')
-          );
+          // TODO AGREGAR TOAST de ERROR
+          console.error('ERROR_UPDATE_PROFILE', response.error);
           return;
         }
 
         if (response.data) {
+          // TODO AGREGAR TOAST de EXITO
           Alert.alert(
             t('commonActions.ok'),
             locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
@@ -179,11 +170,8 @@ export default function EditProfileScreen() {
         }
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
-      Alert.alert(
-        t('commonActions.error'),
-        locale === 'es' ? 'Error actualizando perfil' : 'Error updating profile'
-      );
+      // TODO AGREGAR TOAST de ERROR
+      console.error('ERROR_UPDATE_PROFILE_CATCH', error);
       // Sentry.captureException('CATCH_UPDATE_PROFILE' + error?.message);
     } finally {
       setLoading(false);
