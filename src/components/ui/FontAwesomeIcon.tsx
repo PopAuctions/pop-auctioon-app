@@ -10,7 +10,7 @@ type NormalIconProps = {
   variant?: 'normal';
   name: FA4Props['name'];
   size?: FA4Props['size'];
-  color?: FA4Props['color'] | 'cinnabar';
+  color?: `#${string}` | 'cinnabar';
   style?: StyleProp<TextStyle>;
 };
 
@@ -18,7 +18,7 @@ type LightIconProps = {
   variant: 'light';
   name: FA5Props['name'];
   size?: FA5Props['size'];
-  color?: FA5Props['color'] | 'cinnabar';
+  color?: `#${string}` | 'cinnabar';
   style?: StyleProp<TextStyle>;
 };
 
@@ -26,7 +26,7 @@ type BoldIconProps = {
   variant: 'bold';
   name: FA6Props['name'];
   size?: FA6Props['size'];
-  color?: FA6Props['color'] | 'cinnabar';
+  color?: `#${string}` | 'cinnabar';
   style?: StyleProp<TextStyle>;
 };
 
