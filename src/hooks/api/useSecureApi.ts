@@ -8,11 +8,12 @@ import {
   buildProtectedUrl,
   buildSecureUrl,
 } from '@/config/api-config';
-import { ApiEndpoint } from '@/types/types';
+import { ApiEndpoint, LangMap } from '@/types/types';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 interface ApiResponse<T = any> {
   data: T;
-  error: string;
+  error: LangMap;
   responseText: string;
   status: number;
   contentType: string;
@@ -62,8 +63,6 @@ export const useSecureApi = () => {
       const { timeout = API_CONFIG.TIMEOUT, retries = API_CONFIG.MAX_RETRIES } =
         requestOptions;
 
-      let lastError: Error | null = null;
-
       for (let attempt = 0; attempt <= retries; attempt++) {
         try {
           const controller = new AbortController();
@@ -71,9 +70,7 @@ export const useSecureApi = () => {
 
           // Logging para desarrollo
           if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
-            console.log(
-              `🚀 API Request: ${options.method} ${API_CONFIG.BASE_URL}${url}`
-            );
+            console.log(`🚀 API Request: ${options.method} ${url}`);
           }
           const response = await fetch(url, {
             ...options,
@@ -93,7 +90,10 @@ export const useSecureApi = () => {
             // Si no es JSON válido, obtener como texto usando la copia del response
             const textResponse = await responseClone.text();
             responseData = {
-              error: `Non-JSON Response (${response.status})`,
+              error: {
+                es: 'Error al obtener información',
+                en: 'Error getting information',
+              },
               responseText:
                 textResponse.substring(0, 200) +
                 (textResponse.length > 200 ? '...' : ''),
@@ -107,11 +107,22 @@ export const useSecureApi = () => {
           }
 
           // Helper para extraer mensaje de error de forma type-safe
-          const getErrorMessage = (data: unknown): string => {
+          const getErrorMessage = (data: unknown): LangMap => {
             if (data && typeof data === 'object' && 'error' in data) {
-              return String((data as { error: unknown }).error);
+              if (typeof data.error === 'object') {
+                return data.error as LangMap;
+              }
+
+              return {
+                en: data.error as string,
+                es: data.error as string,
+              };
             }
-            return 'Error en la petición';
+
+            return {
+              es: 'Error al obtener información',
+              en: 'Error getting information',
+            };
           };
 
           return {
@@ -120,8 +131,6 @@ export const useSecureApi = () => {
             error: response.ok ? undefined : getErrorMessage(responseData),
           };
         } catch (error) {
-          lastError = error as Error;
-
           // Logging de errores
           if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
             console.error(`❌ API Error (attempt ${attempt + 1}):`, error);
@@ -147,7 +156,10 @@ export const useSecureApi = () => {
 
       return {
         status: 0,
-        error: lastError?.message || API_ERROR_CODES.NETWORK_ERROR,
+        error: {
+          es: 'Error al conectar con el servidor',
+          en: 'Error connecting to server',
+        },
       };
     },
     []
@@ -158,43 +170,76 @@ export const useSecureApi = () => {
   // ========================================
 
   const protectedGet = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
-      const headers = createBaseHeaders();
+    async <T>({
+      endpoint,
+      options = {},
+      secureHeader = false,
+    }: {
+      endpoint: ApiEndpoint;
+      options?: RequestOptions;
+      secureHeader?: boolean;
+    }): Promise<Partial<ApiResponse<T>>> => {
+      const headers = secureHeader
+        ? await createSecureHeaders()
+        : createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
-      return makeRequest<T>(
-        url,
-        {
-          method: 'GET',
-          headers,
-        },
-        options
-      );
+      try {
+        return makeRequest<T>(
+          url,
+          {
+            method: 'GET',
+            headers,
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - protectedGet failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          },
+        };
+      }
     },
-    [createBaseHeaders, makeRequest]
+    [createBaseHeaders, makeRequest, createSecureHeaders]
   );
 
   const protectedPost = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      data: any,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
+    async <T>({
+      endpoint,
+      data = {},
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      data?: any;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
       const headers = createBaseHeaders();
       const url = buildProtectedUrl(endpoint);
 
-      return makeRequest<T>(
-        url,
-        {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(data),
-        },
-        options
-      );
+      try {
+        return makeRequest<T>(
+          url,
+          {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - protectedPost failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          },
+        };
+      }
     },
     [createBaseHeaders, makeRequest]
   );
@@ -204,10 +249,13 @@ export const useSecureApi = () => {
   // ========================================
 
   const secureGet = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
+    async <T>({
+      endpoint,
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
@@ -221,9 +269,13 @@ export const useSecureApi = () => {
           options
         );
       } catch (error) {
+        sentryErrorReport(error, `${endpoint} - secureGet failed`);
         return {
-          status: 401,
-          error: (error as Error).message,
+          status: 400,
+          error: {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          },
         };
       }
     },
@@ -231,11 +283,15 @@ export const useSecureApi = () => {
   );
 
   const securePost = useCallback(
-    async <T>(
-      endpoint: ApiEndpoint,
-      data: any,
-      options: RequestOptions = {}
-    ): Promise<Partial<ApiResponse<T>>> => {
+    async <T>({
+      endpoint,
+      data = {},
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      data?: any;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
         const url = buildSecureUrl(endpoint);
@@ -250,9 +306,13 @@ export const useSecureApi = () => {
           options
         );
       } catch (error) {
+        sentryErrorReport(error, `${endpoint} - securePost failed`);
         return {
-          status: 401,
-          error: (error as Error).message,
+          status: 400,
+          error: {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          },
         };
       }
     },

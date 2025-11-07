@@ -3,7 +3,6 @@ import * as Clipboard from 'expo-clipboard';
 import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Button, ButtonMode } from './Button';
-import Constants from 'expo-constants';
 // import { useToast } from '@/hooks/useToast'; // <-- not used yet (commented)
 
 interface ShareButtonProps {
@@ -12,7 +11,7 @@ interface ShareButtonProps {
   className?: string;
 }
 
-const baseUrl = Constants.expoConfig?.extra?.PUBLIC_BASE_URL as string;
+const baseUrl = process.env.EXPO_PUBLIC_BASE_URL as string;
 
 export function ShareButton({
   children,

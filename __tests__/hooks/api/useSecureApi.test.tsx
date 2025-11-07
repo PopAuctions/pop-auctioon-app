@@ -80,7 +80,9 @@ describe('useSecureApi - Simple Tests', () => {
   it('should make protected GET request successfully', async () => {
     const { result } = renderHook(() => useSecureApi());
 
-    const response = await result.current.protectedGet('/test-endpoint');
+    const response = await result.current.protectedGet({
+      endpoint: '/test-endpoint',
+    });
 
     expect(global.fetch).toHaveBeenCalledWith(
       'https://test.com/api/mobile/protected/test-endpoint',
@@ -104,10 +106,10 @@ describe('useSecureApi - Simple Tests', () => {
     const { result } = renderHook(() => useSecureApi());
     const testData = { title: 'Test', content: 'Body' };
 
-    const response = await result.current.protectedPost(
-      '/test-endpoint',
-      testData
-    );
+    const response = await result.current.protectedPost({
+      endpoint: '/test-endpoint',
+      data: testData,
+    });
 
     expect(global.fetch).toHaveBeenCalledWith(
       'https://test.com/api/mobile/protected/test-endpoint',
@@ -136,7 +138,9 @@ describe('useSecureApi - Simple Tests', () => {
 
     const { result } = renderHook(() => useSecureApi());
 
-    const response = await result.current.protectedGet('/test-endpoint');
+    const response = await result.current.protectedGet({
+      endpoint: '/test-endpoint',
+    });
 
     // Should retry once and fail
     expect(global.fetch).toHaveBeenCalledTimes(2);
@@ -160,7 +164,9 @@ describe('useSecureApi - Simple Tests', () => {
 
     const { result } = renderHook(() => useSecureApi());
 
-    const response = await result.current.protectedGet('/test-endpoint');
+    const response = await result.current.protectedGet({
+      endpoint: '/test-endpoint',
+    });
 
     expect(response).toEqual({
       data: { error: 'Bad request' },
@@ -183,7 +189,9 @@ describe('useSecureApi - Simple Tests', () => {
 
     const { result } = renderHook(() => useSecureApi());
 
-    const response = await result.current.protectedGet('/test-endpoint');
+    const response = await result.current.protectedGet({
+      endpoint: '/test-endpoint',
+    });
 
     expect(response.status).toBe(200);
     expect(response.data).toEqual({
@@ -208,7 +216,9 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.secureGet('/user-profile');
+      const response = await result.current.secureGet({
+        endpoint: '/user-profile',
+      });
 
       expect(global.fetch).toHaveBeenCalledWith(
         'https://test.com/api/mobile/secure/user-profile',
@@ -237,10 +247,10 @@ describe('useSecureApi - Simple Tests', () => {
       const { result } = renderHook(() => useSecureApi());
       const testData = { name: 'Test User' };
 
-      const response = await result.current.securePost(
-        '/update-profile',
-        testData
-      );
+      const response = await result.current.securePost({
+        endpoint: '/update-profile',
+        data: testData,
+      });
 
       expect(global.fetch).toHaveBeenCalledWith(
         'https://test.com/api/mobile/secure/update-profile',
@@ -267,7 +277,9 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.secureGet('/user-profile');
+      const response = await result.current.secureGet({
+        endpoint: '/user-profile',
+      });
 
       expect(response).toEqual({
         status: 401,
@@ -285,7 +297,10 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.securePost('/update-profile', {});
+      const response = await result.current.securePost({
+        endpoint: '/update-profile',
+        data: {},
+      });
 
       expect(response).toEqual({
         status: 401,
@@ -396,7 +411,10 @@ describe('useSecureApi - Simple Tests', () => {
     it('should handle custom timeout', async () => {
       const { result } = renderHook(() => useSecureApi());
 
-      await result.current.protectedGet('/test', { timeout: 5000 });
+      await result.current.protectedGet({
+        endpoint: '/test',
+        options: { timeout: 5000 },
+      });
 
       expect(global.fetch).toHaveBeenCalled();
     });
@@ -417,8 +435,11 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.protectedGet('/test', {
-        retries: 1,
+      const response = await result.current.protectedGet({
+        endpoint: '/test',
+        options: {
+          retries: 1,
+        },
       });
 
       expect(global.fetch).toHaveBeenCalledTimes(2);
@@ -437,9 +458,12 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.protectedGet('/test', {
-        timeout: 50,
-        retries: 0,
+      const response = await result.current.protectedGet({
+        endpoint: '/test',
+        options: {
+          timeout: 50,
+          retries: 0,
+        },
       });
 
       expect(response.status).toBe(0);
@@ -460,7 +484,7 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.protectedGet('/test');
+      const response = await result.current.protectedGet({ endpoint: '/test' });
 
       expect(response.data).toHaveProperty('responseText');
       const responseText = (response.data as any).responseText;
@@ -473,7 +497,7 @@ describe('useSecureApi - Simple Tests', () => {
 
       const { result } = renderHook(() => useSecureApi());
 
-      const response = await result.current.protectedGet('/test');
+      const response = await result.current.protectedGet({ endpoint: '/test' });
 
       expect(response.status).toBe(0);
       expect(response.error).toBe('Network error occurred');

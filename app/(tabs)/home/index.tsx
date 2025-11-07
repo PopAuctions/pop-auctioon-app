@@ -100,6 +100,13 @@ export default function HomeScreen() {
               </Text>
             )}
           </View>
+          <CustomLink
+            href='/(tabs)/auctions/article/81'
+            mode='primary'
+            className='mt-2'
+          >
+            <Text className='underline'>Ir a pantalla</Text>
+          </CustomLink>
         </View>
       </ScrollView>
     </SafeAreaView>

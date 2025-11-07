@@ -17,8 +17,13 @@ import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
 import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
-import { Button } from '@/components/ui/Button';
 import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
+import { Loading } from '@/components/ui/Loading';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { FollowButton } from '@/components/ui/FollowButton';
+import { useGetUserFollowsAuction } from '@/hooks/pages/auction/useGetUserFollowsAuction';
+import { useGetArticlesUserFollows } from '@/hooks/pages/article/useGetArticlesUserFollows';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -27,17 +32,19 @@ export default function AuctionDetailScreen() {
     data: liveAuction,
     status,
     errorMessage,
+    refetch: refetchAuction,
   } = useGetLiveAuction({
     auctionId: id,
   });
+  const { data: userFollows, status: userFollowsStatus } =
+    useGetUserFollowsAuction({
+      auctionId: id,
+    });
+  const { data: userArticlesFollowed } = useGetArticlesUserFollows();
   const auctionLang = t('screens.auction');
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
-    return (
-      <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>loading</CustomText>
-      </View>
-    );
+    return <Loading locale={locale} />;
   }
 
   if (status === REQUEST_STATUS.error || !liveAuction) {
@@ -51,6 +58,10 @@ export default function AuctionDetailScreen() {
   const { Auction: auction } = liveAuction;
   const auctionMode = auction.mode;
 
+  const isAuctionAvailable =
+    auction.status === AuctionStatus.AVAILABLE ||
+    auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
+    auction.status === AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE;
   function renderAuctionHeader() {
     return (
       <View className='mt-5 flex w-full flex-col'>
@@ -61,13 +72,21 @@ export default function AuctionDetailScreen() {
                 <HowAutoLiveWorksModal
                   locale={locale}
                   trigger={(open) => (
-                    <Pressable onPress={open}>
+                    <Pressable
+                      onPress={open}
+                      className='flex flex-row items-center justify-center gap-2'
+                    >
                       <CustomText
                         type='h4'
                         className='text-cinnabar underline'
                       >
                         {AUCTION_MODE_LABEL[locale][auctionMode]}
                       </CustomText>
+                      <FontAwesomeIcon
+                        name='info-circle'
+                        size={16}
+                        color='cinnabar'
+                      />
                     </Pressable>
                   )}
                 />
@@ -147,12 +166,19 @@ export default function AuctionDetailScreen() {
                   {auctionLang.watchButton}
                 </CustomLink>
               ) : (
-                <Button
-                  className='w-1/2'
+                <FollowButton
+                  className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
                   mode='primary'
-                >
-                  {auctionLang.follow}
-                </Button>
+                  size='large'
+                  follows={userFollows}
+                  followEndpoint={`/auctions/${id}/follow`}
+                  unfollowEndpoint={`/auctions/${id}/unfollow`}
+                  lang={locale}
+                  isAvailable={!isAuctionAvailable}
+                  extraDataIsLoaded={
+                    userFollowsStatus === REQUEST_STATUS.success
+                  }
+                />
               )}
 
               <ShareButton
@@ -188,14 +214,21 @@ export default function AuctionDetailScreen() {
   }
 
   return (
-    <View className='flex-1'>
-      <ArticlesInfiniteScroll
-        lang={locale}
-        auctionId={id}
-        ListHeaderComponent={renderAuctionHeader()}
-        // When there is a filter, the order is not applied
-        order={liveAuction?.articlesOrder}
+    <>
+      <View className='flex-1'>
+        <ArticlesInfiniteScroll
+          lang={locale}
+          auctionId={id}
+          ListHeaderComponent={renderAuctionHeader()}
+          articlesFollowed={userArticlesFollowed || []}
+          // When there is a filter, the order is not applied
+          order={liveAuction?.articlesOrder}
+        />
+      </View>
+      <AuctionSubscriber
+        auctionId={auction.id}
+        refetch={refetchAuction}
       />
-    </View>
+    </>
   );
 }

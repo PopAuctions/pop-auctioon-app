@@ -32,8 +32,10 @@
     "account": "Account",
     "login": "Sign In",
     "auctions": "Auctions",
+    "articleDetails": "Article Details",
     "store": "Store",
-    "myAuctions": "My Auctions"
+    "myAuctions": "My Auctions",
+    "back": "Back"
   },
   "screens": {
     "home": {
@@ -82,6 +84,48 @@
       "auctionNotFound": "Auction not found or not longer available",
       "noArticlesFound": "No articles found",
       "specialMessage": "For this auction, no commission will be charged for any of the articles"
+    },
+    "article": {
+      "title": "Auction ",
+      "auctionDate": "Auction date",
+      "estimatedValue": "Estimated value",
+      "reservePrice": "Reserve price",
+      "hasReservePrice": "Has reserve price",
+      "commission": "Commission (VAT included)",
+      "shippingCosts": "Shipping costs will be added at checkout",
+      "price": "Price",
+      "actualBid": "Actual bid",
+      "highestBid": "Highest bid",
+      "startingPrice": "Starting price",
+      "bid": "Bid",
+      "description": "Description",
+      "observations": "Observations",
+      "measures": "Measures",
+      "material": "Material",
+      "color": "Color",
+      "smell": "Smell",
+      "size": "Size",
+      "documentation": "Has documentation",
+      "box": "Box included",
+      "model": "Model",
+      "yes": "Yes",
+      "no": "No",
+      "brand": "Brand",
+      "faceDiameter": "Face diameter",
+      "strapMaterial": "Strap material",
+      "boxMaterial": "Box material",
+      "movement": "Movement",
+      "year": "Year of manufacture",
+      "artType": "Type",
+      "weight": "Weight",
+      "codeNumber": "Code number",
+      "condition": "Condition",
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "questions": "Questions?",
+      "articleNotFound": "Article not found",
+      "bidsHistory": "Bids record",
+      "comments": "Comments"
     },
     "store": {
       "title": "Online Store",
@@ -205,6 +249,16 @@
     "contactUs": {
       "title": "Contact Us",
       "subtitle": "We're here to help"
+    }
+  },
+  "components": {
+    "bid": {
+      "sendBid": "Send bid",
+      "bid": "Bid",
+      "bidAmount": "Bid amount",
+      "anyBidAmount": "Or enter any bid amount",
+      "minBid": "Minimum bid is:",
+      "maxBid": "Maximum bid is:"
     }
   },
   "commonErrors": {

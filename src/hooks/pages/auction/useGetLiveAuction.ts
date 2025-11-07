@@ -1,4 +1,4 @@
-import { AuctionStatus } from '@/constants/auctions';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
   ActionResponse,
@@ -6,7 +6,6 @@ import {
   LiveAuction,
   RequestStatus,
 } from '@/types/types';
-import { supabase } from '@/utils/supabase/supabase-store';
 import { useCallback, useEffect, useState } from 'react';
 
 export const useGetLiveAuction = ({
@@ -19,26 +18,21 @@ export const useGetLiveAuction = ({
   const [auction, setAuction] = useState<LiveAuction | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const { protectedGet } = useSecureApi();
 
   const fetchLiveAuction = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('LiveAuction')
-        .select(
-          'id, auctionId, currentArticleBidId, articlesOrder, ArticleBid ( articleId, highestBidderUsername, highestBidderImage, available, countdownActive, countdownAmount ), Auction ( id, status, startDate, title, mode, image )'
-        )
-        .eq('auctionId', auctionId);
+      const params = new URLSearchParams();
+      params.append('validateIsLive', String(validateIsLive));
 
-      if (error) {
-        const errorMessage = error?.message || 'Unknown error occurred';
+      const res = await protectedGet<LiveAuction>({
+        endpoint: `/auctions/${auctionId}?${params}`,
+      });
 
-        sentryErrorReport(errorMessage, '1_USE_GET_LIVE_AUCTION');
-
+      if (res.error) {
+        console.log('error', res.error);
         setStatus('error');
-        setErrorMessage({
-          en: 'Error fetching auction',
-          es: 'Error al obtener la subasta',
-        });
+        setErrorMessage(res.error);
         return {
           message: {
             en: 'Error fetching auction',
@@ -47,7 +41,7 @@ export const useGetLiveAuction = ({
         };
       }
 
-      if (!data || data.length === 0) {
+      if (!res.data) {
         setStatus('error');
         setErrorMessage({
           en: 'Auction not found',
@@ -61,39 +55,7 @@ export const useGetLiveAuction = ({
         };
       }
 
-      const liveAuction = data[0] as unknown as LiveAuction;
-      const auction = liveAuction.Auction;
-      const auctionStatus = auction.status as AuctionStatus;
-
-      if (validateIsLive) {
-        if (auctionStatus === AuctionStatus.FINISHED) {
-          setStatus('error');
-          setErrorMessage({
-            en: 'The auction has ended',
-            es: 'La subasta ha finalizado',
-          });
-          return {
-            message: {
-              en: 'The auction has ended',
-              es: 'La subasta ha finalizado',
-            },
-          };
-        }
-
-        if (auctionStatus === AuctionStatus.AVAILABLE) {
-          setStatus('error');
-          setErrorMessage({
-            en: 'The auction has not started yet',
-            es: 'La subasta no ha comenzado aún',
-          });
-          return {
-            message: {
-              en: 'The auction has not started yet',
-              es: 'La subasta no ha comenzado aún',
-            },
-          };
-        }
-      }
+      const liveAuction = res.data;
 
       setStatus('success');
       setAuction(liveAuction);
@@ -121,7 +83,7 @@ export const useGetLiveAuction = ({
         },
       };
     }
-  }, [auctionId, validateIsLive]);
+  }, [auctionId, validateIsLive, protectedGet]);
 
   useEffect(() => {
     fetchLiveAuction();

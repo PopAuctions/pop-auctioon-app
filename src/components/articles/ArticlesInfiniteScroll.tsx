@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { ArticleItem } from './AuctionArticleItem';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { useFetchAuctionArticlesInfinite } from '@/hooks/components/useFetchAuctionArticlesInifinte';
+import { Loading } from '../ui/Loading';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 const ITEMS_PER_PAGE = 1;
 const TEXTS = {
@@ -18,14 +20,17 @@ const TEXTS = {
 export const ArticlesInfiniteScroll = ({
   lang,
   auctionId,
+  articlesFollowed,
   ListHeaderComponent,
   order,
 }: {
   lang: Lang;
   auctionId: string | number;
   ListHeaderComponent: React.ReactElement;
+  articlesFollowed: number[];
   order?: number[];
 }) => {
+  const { locale } = useTranslation();
   const { fetchArticles } = useFetchAuctionArticlesInfinite();
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
   const [offset, setOffset] = useState(0);
@@ -113,11 +118,7 @@ export const ArticlesInfiniteScroll = ({
 
   const renderFooter = useCallback(() => {
     if (isLoading && hasMore) {
-      return (
-        <View className='items-center justify-center py-4'>
-          <ActivityIndicator />
-        </View>
-      );
+      return <Loading locale={locale} />;
     }
     if (!hasMore) {
       return (
@@ -132,7 +133,7 @@ export const ArticlesInfiniteScroll = ({
       );
     }
     return null;
-  }, [isLoading, hasMore, lang]);
+  }, [isLoading, hasMore, lang, locale]);
 
   return (
     <FlatList
@@ -149,8 +150,7 @@ export const ArticlesInfiniteScroll = ({
           }}
           formatter={formatter}
           lang={lang}
-          // WIP: pass correct user follow status
-          userFollows={false}
+          userFollows={articlesFollowed.includes(Number(item.id))}
           commissionValue={LOW_COMMISSION_AMOUNT}
         />
       )}

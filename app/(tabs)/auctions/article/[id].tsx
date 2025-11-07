@@ -1,166 +1,325 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-
-// Datos simulados basados en el cuarto screenshot (Goya bag)
-const getArticleData = (id: string) => {
-  const articles: any = {
-    '400': {
-      title: 'Goya',
-      brand: 'Loewe',
-      date: 'AUGUST 31, 2025',
-      time: '6:00 PM',
-      estimatedPrice: '€1,300',
-      images: 4,
-      details: {
-        Model: 'Goya',
-        Brand: 'Loewe',
-        Material: 'Leather',
-        Condition: 'Very Good/Excelente',
-        Size: 'Medium',
-        Color: 'Blue',
-        'Code Internal': 'G23-4567',
-      },
-      description: `Bolso Goya en cuero azul marino con logotipo dorado.
-      
-Magnifica extraordinaria, el bolso Goya es uno de los modelos mas emblemáticos de la firma española. Confeccionado en cuero azul con su característico anagrama dorado que hace referencia a las vanguardias artísticas como una oda al arte pictórico Velazquez y en especial Goya.
-
-Piezas muy apreciadas en el mundo de los bolsos de segunda mano.
-Material: Cuero napa
-Forro: Suave textil natural
-Color: azul marino/dorado 
-Tamaño: Mediano
-
-Producto: EM STOCK - LISTOS PARA SUBASTA
-Referencia: 95765-90948
-Ultima posesion es ejercicio de bolsos valorado mas en el uso del articulo.
-Una pieza esencial si no queremos perdemos el ejercicio de bolsos para subastarmos.Tenemos para quadrarremos inmedia.`,
-      observations: 'NO OBSERVATIONS',
-    },
-  };
-  return articles[id] || articles['400'];
-};
+import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
+import { ARTICLE_BRANDS_LABELS, REQUEST_STATUS } from '@/constants';
+import { CustomText } from '@/components/ui/CustomText';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { Loading } from '@/components/ui/Loading';
+import { AuctionStatus } from '@/constants/auctions';
+import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
+import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { CustomLink } from '@/components/ui/CustomLink';
+import { ImagesCarousel } from '@/components/ui/ImagesCarousel';
+import { CurrentBidInfoArticlePage } from '@/components/articles/CurrentBidInfoArticlePage';
+import { ArticleSpecificationsSection } from '@/components/articles/ArticleSpecificationsSection';
+import { formatTextToParagraph } from '@/utils/formatTextToParagraph';
+import { SendBid } from '@/components/bids/SendBid';
+import { MAX_BID_OFFSET } from '@/constants/bid';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
+import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { FollowButton } from '@/components/ui/FollowButton';
+import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
+import { parseNumber } from '@/utils/parse-number';
 
 export default function ArticleDetailScreen() {
+  const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [bid, setBid] = useState('');
+  const auctionLang = t('screens.auction');
+  const articleLang = t('screens.article');
+  const bidsLang = t('components.bid');
+  const articleId = Number(id);
 
-  const article = getArticleData(id || '400');
+  const {
+    data: article,
+    status,
+    errorMessage,
+    refetch: refetchArticle,
+  } = useGetArticle({
+    articleId,
+    validateAuctionStatus: true,
+    publishedArticle: true,
+    getAuctionData: true,
+  });
+
+  const {
+    data: articlePageData,
+    status: articlePageStatus,
+    refetch,
+  } = useGetArticlePageData({
+    articleId: Number(id),
+    auctionId: article?.Auction.id || 0,
+    currentPrice: article?.ArticleBid?.currentValue || 0,
+    startingPrice: article?.startingPrice || 0,
+  });
+
+  const [
+    { follows = false } = {},
+    { previousArticleId, nextArticleId } = {},
+    biddingAmounts,
+  ] = (articlePageData ?? []) as any[];
+  const extraDataIsLoaded = articlePageStatus === REQUEST_STATUS.success;
+
+  if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
+    if (status === 'loading') {
+      return <Loading locale={locale} />;
+    }
+  }
+
+  if (status === REQUEST_STATUS.error || !article || !article?.images) {
+    return (
+      <View className='flex-1 items-center justify-center'>
+        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
+      </View>
+    );
+  }
+  const auction = article.Auction;
+  const articleBid = article.ArticleBid;
 
   return (
-    <ScrollView className='flex-1'>
-      {/* Header with Auction Info */}
-      <View className='border-gray-200 border-b   p-4'>
-        <Text className='mb-2 text-sm text-red-500'>Follow auction to:</Text>
-        <Text className='text-gray-900 mb-2 text-2xl font-light'>
-          {article.title}
-        </Text>
-        <Text className='text-gray-600 text-sm'>
-          {article.date} · {article.time}
-        </Text>
-        <Text className='mt-1 text-sm text-red-500'>Lote live in 25m 33s</Text>
+    <HighestBidderProvider>
+      <ScrollView className='w-full'>
+        <View className='mx-auto w-full max-w-[672px] px-5 md:max-w-[896px]'>
+          <View className='mt-2 w-full flex-row justify-end'>
+            <View className='flex flex-row gap-6'>
+              {!previousArticleId ? (
+                <View className='items-center justify-center opacity-50'>
+                  <FontAwesomeIcon
+                    variant='light'
+                    name='arrow-left'
+                    size={25}
+                    color='#4d4d4d'
+                  />
+                </View>
+              ) : (
+                <View className='items-center justify-center'>
+                  <CustomLink
+                    mode='empty'
+                    href={`/(tabs)/auctions/article/${previousArticleId}`}
+                    className='hover:scale-110'
+                  >
+                    <FontAwesomeIcon
+                      variant='light'
+                      name='arrow-left'
+                      size={25}
+                      color='cinnabar'
+                    />
+                  </CustomLink>
+                </View>
+              )}
 
-        <View className='mt-4 flex-row space-x-2'>
-          <TouchableOpacity className='rounded bg-red-500 px-4 py-2'>
-            <Text className='text-sm font-medium text-white'>Follow</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className='border-gray-300 rounded border px-4 py-2'>
-            <Text className='text-gray-700 text-sm'>Share</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View className='flex-row'>
-        {/* Left Side - Images */}
-        <View className='w-1/2'>
-          {/* Main Image */}
-          <View className='border-gray-200 bg-gray-100 aspect-square items-center justify-center border-r'>
-            <Text className='text-8xl'>👝</Text>
+              {!nextArticleId ? (
+                <View className='items-center justify-center opacity-50'>
+                  <FontAwesomeIcon
+                    variant='light'
+                    name='arrow-right'
+                    size={25}
+                    color='#4d4d4d'
+                  />
+                </View>
+              ) : (
+                <View className='items-center justify-center'>
+                  <CustomLink
+                    mode='empty'
+                    href={`/(tabs)/auctions/article/${nextArticleId}`}
+                    className='hover:scale-110'
+                  >
+                    <FontAwesomeIcon
+                      variant='light'
+                      name='arrow-right'
+                      size={25}
+                      color='cinnabar'
+                    />
+                  </CustomLink>
+                </View>
+              )}
+            </View>
           </View>
 
-          {/* Image Thumbnails */}
-          <View className='border-gray-200 flex-row border-r'>
-            {Array.from({ length: article.images }).map((_, index) => (
-              <TouchableOpacity
-                key={index}
-                className={`border-gray-200 aspect-square flex-1 items-center justify-center border-t ${
-                  index > 0 ? 'border-gray-200 border-l' : ''
-                } ${currentImageIndex === index ? 'bg-blue-50' : ''}`}
-                onPress={() => setCurrentImageIndex(index)}
-              >
-                <Text className='text-2xl'>👝</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+          {/* MAIN */}
+          <View className='w-full flex-col items-center pb-16'>
+            {/* SECTION: Header */}
+            <View className='w-full flex-col items-center justify-center gap-2'>
+              <View className='items-center'>
+                <CustomText
+                  type='body'
+                  className='text-center text-cinnabar'
+                >
+                  {ARTICLE_BRANDS_LABELS[
+                    article.brand as keyof typeof ARTICLE_BRANDS_LABELS
+                  ] ??
+                    article.brand ??
+                    ''}
+                </CustomText>
 
-        {/* Right Side - Details */}
-        <View className='w-1/2 p-4'>
-          {/* Price Section */}
-          <View className='mb-6'>
-            <Text className='text-gray-600 mb-1 text-sm'>Highest bid</Text>
-            <Text className='text-gray-900 text-3xl font-light'>
-              {article.estimatedPrice}
-            </Text>
-            <Text className='text-gray-500 text-sm'>
-              Estimated value: €1,800
-            </Text>
-          </View>
-
-          {/* Bid Input */}
-          <View className='mb-6 rounded bg-orange-50 p-4'>
-            <Text className='text-gray-700 mb-2 text-sm'>Maximum bid is:</Text>
-            <TextInput
-              className='border-gray-300 mb-3 rounded border px-3 py-2 text-lg'
-              placeholder='€1,100'
-              value={bid}
-              onChangeText={setBid}
-              keyboardType='numeric'
-            />
-            <TouchableOpacity className='rounded bg-orange-500 py-2'>
-              <Text className='text-center font-medium text-white'>
-                LIVE BID
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Product Details Table */}
-          <View className='mb-6'>
-            <Text className='mb-3 text-lg font-semibold'>Details</Text>
-            {Object.entries(article.details).map(([key, value]) => (
-              <View
-                key={key}
-                className='border-gray-100 flex-row justify-between border-b py-2'
-              >
-                <Text className='text-gray-600 text-sm'>{key}</Text>
-                <Text className='text-gray-900 flex-1 text-right text-sm font-medium'>
-                  {String(value)}
-                </Text>
+                <CustomText
+                  type='h1'
+                  className='text-center'
+                >
+                  {article?.title}
+                </CustomText>
               </View>
-            ))}
+
+              {auction.status === AuctionStatus.LIVE && (
+                <CustomText
+                  type='h4'
+                  className='text-center text-cinnabar'
+                >
+                  {auctionLang.start}
+                </CustomText>
+              )}
+              {auction.status === AuctionStatus.AVAILABLE && (
+                <AuctionDisplayDateTime
+                  startDate={auction.startDate}
+                  locale={locale}
+                  singleLine={true}
+                />
+              )}
+              {auction.status === AuctionStatus.FINISHED && (
+                <CustomText
+                  type='h4'
+                  className='text-center text-cinnabar'
+                >
+                  {auctionLang.ended}
+                </CustomText>
+              )}
+
+              {/* ACTION BUTTONS ROW */}
+              <View className='w-full flex-col items-center justify-center gap-2 md:w-2/3 md:flex-row md:gap-5 lg:w-1/3'>
+                {auction.status === AuctionStatus.AVAILABLE && (
+                  <FollowButton
+                    key={follows}
+                    className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
+                    mode='primary'
+                    size='large'
+                    follows={follows}
+                    followEndpoint={`/articles/${id}/follow`}
+                    unfollowEndpoint={`/articles/${id}/unfollow`}
+                    lang={locale}
+                    isAvailable={article.sold}
+                    extraDataIsLoaded={extraDataIsLoaded}
+                  />
+                )}
+
+                {auction.status === AuctionStatus.LIVE && (
+                  <CustomLink
+                    mode='primary'
+                    href={`/auctions/live/${auction.id}`}
+                    className='w-2/3'
+                  >
+                    <Text className='text-base text-white'>
+                      {auctionLang.watchButton}
+                    </Text>
+                  </CustomLink>
+                )}
+
+                {auction.status !== AuctionStatus.FINISHED && (
+                  <ArticleBidsRecord
+                    articleId={parseNumber(id)}
+                    lang={locale}
+                    initialPrice={article.startingPrice}
+                  />
+                )}
+              </View>
+            </View>
+
+            {/* SECTION: Image slider */}
+            <View className='mt-10 w-full flex-row justify-center gap-10 px-5 md:px-0'>
+              {/* <ArticleImagesSlider images={article.images} /> */}
+              <ImagesCarousel images={article.images} />
+            </View>
+
+            {/* SECTION: Bidding */}
+            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5 md:w-4/5 md:flex-row'>
+              <CurrentBidInfoArticlePage
+                lang={locale}
+                currentValue={articleBid.currentValue}
+                estimatedValue={article.estimatedValue}
+                reservePrice={article.reservePrice}
+                commissionValue={LOW_COMMISSION_AMOUNT}
+                texts={{
+                  highestBid: articleLang.highestBid,
+                  estimatedValue: articleLang.estimatedValue,
+                  reservePrice: articleLang.hasReservePrice,
+                  commission: articleLang.commission,
+                  shipping: articleLang.shippingCosts,
+                  price: articleLang.price,
+                }}
+              />
+              {[
+                AuctionStatus.PARTIALLY_AVAILABLE,
+                AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE,
+                AuctionStatus.AVAILABLE,
+                AuctionStatus.LIVE,
+              ].includes(auction.status) && (
+                <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
+                  <SendBid
+                    articleId={article.id}
+                    articleServerState={{
+                      currentValue: articleBid.currentValue,
+                      highestBidder: '',
+                      highestBidderImage: '',
+                      available: articleBid.available,
+                    }}
+                    bidLang={bidsLang}
+                    lang={locale}
+                    biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
+                    maxBidOffset={MAX_BID_OFFSET}
+                    commissionPercentage={LOW_COMMISSION_AMOUNT}
+                  />
+                </View>
+              )}
+            </View>
+
+            {/* SECTION: Specifications & Description & Observations */}
+            <View className='mt-10 w-full flex-col gap-3 md:flex-row md:gap-5'>
+              <ArticleSpecificationsSection
+                article={article}
+                articleLang={articleLang}
+                lang={locale}
+                articleCategory={article.category}
+              />
+
+              {!!article?.observations && (
+                <View className='w-full rounded-md border border-neutral-300 p-4 md:flex-1'>
+                  <>
+                    <Text className='text-2xl font-bold'>
+                      {articleLang.observations}
+                    </Text>
+                    {formatTextToParagraph(article.observations)}
+                  </>
+                </View>
+              )}
+              <View className='w-full rounded-md border border-neutral-300 p-4 md:flex-1'>
+                <Text className='text-2xl font-bold'>
+                  {articleLang.description}
+                </Text>
+                {formatTextToParagraph(article.description ?? '')}
+              </View>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
-      {/* Description Section */}
-      <View className='border-gray-200 border-t p-4'>
-        <Text className='mb-3 text-lg font-semibold'>Observations</Text>
-        <Text className='text-gray-600 mb-4 text-sm'>
-          {article.observations}
-        </Text>
+      {/* LIVE SUBSCRIPTIONS / MODALS / TRACKING */}
+      {(auction.status === AuctionStatus.AVAILABLE ||
+        auction.status === AuctionStatus.LIVE) && (
+        <>
+          <AuctionSubscriber
+            auctionId={auction.id}
+            refetch={refetchArticle}
+          />
+          <ArticleBidSubscriber
+            articleId={article.id}
+            onFirstBid={refetch}
+          />
+        </>
+      )}
 
-        <Text className='mb-3 text-lg font-semibold'>Description</Text>
-        <Text className='text-gray-700 text-sm leading-6'>
-          {article.description}
-        </Text>
-      </View>
-    </ScrollView>
+      {/* <NotifyModal lang={lang} /> */}
+      {/* <TrackArticleView articleId={Number(id)} /> */}
+    </HighestBidderProvider>
   );
 }
