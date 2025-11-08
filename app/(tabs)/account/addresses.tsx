@@ -68,7 +68,7 @@ export default function AddressesScreen() {
   }
 
   // Empty state
-  if (!loading && addresses.length === 0) {
+  if (addresses.length === 0) {
     return (
       <SafeAreaView
         className='flex-1 bg-white'
