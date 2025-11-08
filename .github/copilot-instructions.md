@@ -134,25 +134,133 @@ SECURE_ENDPOINTS.USER.PROFILE;
 ### Secure API Hook Pattern
 
 ```typescript
-// Always use useSecureApi for backend communication
-const { callSecure, callProtected } = useSecureApi();
+// Always use useSecureApi for backend communication with NEW object-based signature
+const { securePost, secureGet, protectedPost, protectedGet } = useSecureApi();
 
-// Automatic JWT header management + retry logic (max 2 retries, 10s timeout)
-const result = await callSecure('/auctions', 'POST', { data });
+// NEW SIGNATURE: All methods use object parameters (required since merge from develop)
+// ✅ CORRECT - Object-based parameters
+const response = await secureGet<User>({
+  endpoint: SECURE_ENDPOINTS.USER.PROFILE,
+  options: { timeout: 15000 }, // Optional
+});
+
+const response = await securePost({
+  endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
+  data: formData,
+  options: { timeout: 30000 },
+});
+
+// ❌ WRONG - Old signature (deprecated)
+const result = await callSecure('/auctions', 'POST', { data }); // Don't use this
 
 // Headers automatically include:
-// - Content-Type: application/json
+// - Content-Type: application/json (or multipart/form-data for FormData)
 // - x-api-key: (from env)
 // - x-timestamp: (current timestamp)
-// - Authorization: Bearer <JWT> (for callSecure only)
+// - Authorization: Bearer <JWT> (for secure methods only)
 ```
 
 **Key Implementation Details** (`src/hooks/api/useSecureApi.ts`):
 
+- **New signature**: Object parameters `{ endpoint, data?, options? }`
 - Auto-refreshes Supabase session via `supabase.auth.getSession()`
 - Throws `MISSING_JWT` error if session invalid
 - Configurable timeout/retry via `RequestOptions`
 - Dev logging enabled via `DEV_CONFIG.ENABLE_REQUEST_LOGGING`
+- **Error format**: Returns `LangMap` object `{ es: string, en: string }` instead of plain string
+
+**Common API Patterns**:
+
+```typescript
+// Pattern 1: GET with type safety
+const { secureGet } = useSecureApi();
+const response = await secureGet<User>({
+  endpoint: SECURE_ENDPOINTS.USER.PROFILE,
+});
+
+if (response.error) {
+  console.error('ERROR_LOAD_USER', response.error);
+  // TODO: Show toast with response.error[locale]
+  return;
+}
+
+if (response.data) {
+  setUserData(response.data);
+}
+
+// Pattern 2: POST with data validation
+const { securePost } = useSecureApi();
+const response = await securePost({
+  endpoint: SECURE_ENDPOINTS.USER.CREATE_ADDRESS,
+  data: addressData,
+});
+
+if (response.error) {
+  console.error('ERROR_CREATE_ADDRESS', response.error);
+  // TODO: Show toast
+  return;
+}
+
+// Pattern 3: POST with FormData (file upload)
+const formData = new FormData();
+formData.append('file', fileData);
+formData.append('userId', userId);
+
+const response = await securePost({
+  endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
+  data: formData,
+  options: { timeout: 30000 }, // Longer timeout for uploads
+});
+
+// Pattern 4: Loading user data on mount with safety checks
+useEffect(() => {
+  const loadData = async () => {
+    const response = await secureGet<DataType>({
+      endpoint: SECURE_ENDPOINTS.SOME.ENDPOINT,
+    });
+
+    if (response.error) {
+      console.error('ERROR_LOAD_DATA', response.error);
+      // TODO: Show toast
+      router.back(); // Navigate away if data is critical
+      return;
+    }
+
+    if (!response.data) {
+      console.error('ERROR_NO_DATA_RECEIVED');
+      // TODO: Show toast
+      router.back(); // Don't allow screen to render without data
+      return;
+    }
+
+    setData(response.data);
+  };
+
+  loadData();
+}, []);
+```
+
+**Error Handling Convention**:
+
+- **NO Alert.alert** - Use console.error + TODO comment for future toast implementation
+- **Pattern**: `console.error('ERROR_DESCRIPTION', error)` + `// TODO: Show toast`
+- **Navigate back** on critical errors: `router.back()` after logging error
+- **Error messages** are LangMap: `response.error[locale]` or `response.error.es/en`
+
+```typescript
+// ✅ CORRECT error handling
+if (response.error) {
+  console.error('ERROR_LOAD_USER_DATA', response.error);
+  // TODO: Show toast with response.error[locale]
+  router.back();
+  return;
+}
+
+// ❌ WRONG - Don't use Alert
+if (response.error) {
+  Alert.alert('Error', response.error[locale]);
+}
+```
 
 ## Internationalization (i18n)
 
@@ -259,8 +367,84 @@ npm run web          # Start web development
 - `useAuth()`: Session and role management
 - `useTranslation()`: i18n with React 19 transitions
 - `useAuthNavigation()`: Protected route navigation
-- `useSecureApi()`: Backend API communication
+- `useSecureApi()`: Backend API communication (object-based signature)
 - `useColorScheme()`: Theme-aware styling
+
+### React Hook Form Patterns
+
+**Pattern 1: Form with dynamic data loading**
+
+```typescript
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+  reset, // Use reset() to populate form with loaded data
+} = useForm<FormType>({
+  resolver: zodResolver(schema),
+  defaultValues: {
+    field1: '',
+    field2: '',
+  },
+});
+
+// Load data and populate form
+useEffect(() => {
+  const loadData = async () => {
+    const response = await secureGet<DataType>({ endpoint: '...' });
+
+    if (response.data) {
+      // Use reset() to fill form with server data
+      reset({
+        field1: response.data.field1 || '',
+        field2: response.data.field2 || '',
+      });
+    }
+  };
+
+  loadData();
+}, [reset]);
+
+// reset() does NOT clear the form - it SETS new default values
+// The form stays populated and marks it as "pristine" (no changes)
+```
+
+**Pattern 2: Submit with navigation**
+
+```typescript
+const onSubmit = async (data: FormType) => {
+  setLoading(true);
+
+  try {
+    const response = await securePost({
+      endpoint: SECURE_ENDPOINTS.SOME.ENDPOINT,
+      data,
+    });
+
+    if (response.error) {
+      console.error('ERROR_SUBMIT', response.error);
+      // TODO: Show toast
+      return;
+    }
+
+    if (response.data) {
+      // Success - navigate away (no need to reset form, we're leaving)
+      router.back();
+    }
+  } catch (error) {
+    console.error('ERROR_SUBMIT_CATCH', error);
+    // TODO: Show toast
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Note: No need to reset() after successful submit if using router.back()
+// The form will reload fresh data when user returns via useEffect
+```
 
 ### Smart Navigation Components
 

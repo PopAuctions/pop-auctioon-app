@@ -66,7 +66,7 @@ export default function EditProfileScreen() {
     const loadUserData = async () => {
       try {
         const response = await secureGet<User>({
-          endpoint: SECURE_ENDPOINTS.USER.PROFILE,
+          endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
         });
 
         if (response.error) {
