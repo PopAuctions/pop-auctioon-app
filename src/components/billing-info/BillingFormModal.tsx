@@ -129,7 +129,7 @@ export function BillingFormModal({
           {/* Etiqueta de identificación */}
           <View className='mb-4'>
             <CustomText
-              type='subtitle'
+              type='body'
               className='mb-2'
             >
               {t('screens.billingInfo.label')} *
@@ -161,7 +161,7 @@ export function BillingFormModal({
           {/* Nombre o razón social */}
           <View className='mb-4'>
             <CustomText
-              type='subtitle'
+              type='body'
               className='mb-2'
             >
               {t('screens.billingInfo.billingName')} *
@@ -193,7 +193,7 @@ export function BillingFormModal({
           {/* Dirección de facturación */}
           <View className='mb-4'>
             <CustomText
-              type='subtitle'
+              type='body'
               className='mb-2'
             >
               {t('screens.billingInfo.billingAddress')} *
@@ -229,7 +229,7 @@ export function BillingFormModal({
           {/* Número de identificación fiscal */}
           <View className='mb-4'>
             <CustomText
-              type='subtitle'
+              type='body'
               className='mb-2'
             >
               {t('screens.billingInfo.vatNumber')} *

@@ -275,7 +275,7 @@
       "confirmDelete": "Delete billing information?",
       "confirmDeleteMessage": "This action cannot be undone",
       "formTitle": "Billing Information",
-      "label": "Label",
+      "label": "Title for billing data",
       "labelPlaceholder": "E.g: Company, Personal, etc.",
       "billingName": "Name or company name",
       "billingNamePlaceholder": "Full name or company",
