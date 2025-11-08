@@ -1,22 +1,14 @@
 import { View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
-import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import type { UserAddress } from '@/types/types';
 
 interface AddressCardProps {
   address: UserAddress;
   countryLabel: string;
-  onDelete: (address: UserAddress) => void;
-  disabled?: boolean;
 }
 
-export function AddressCard({
-  address,
-  countryLabel,
-  onDelete,
-  disabled = false,
-}: AddressCardProps) {
+export function AddressCard({ address, countryLabel }: AddressCardProps) {
   const { t } = useTranslation();
 
   return (
@@ -30,14 +22,12 @@ export function AddressCard({
           {address.nameAddress}
         </CustomText>
         {address.primaryAddress && (
-          <View className='rounded-full bg-primary px-3 py-1'>
-            <CustomText
-              type='body'
-              className='text-xs font-semibold text-white'
-            >
-              {t('screens.addresses.primary')}
-            </CustomText>
-          </View>
+          <CustomText
+            type='bold'
+            className='text-2xl text-black'
+          >
+            {t('screens.addresses.primary')}
+          </CustomText>
         )}
       </View>
 
@@ -106,17 +96,6 @@ export function AddressCard({
             </CustomText>
           </CustomText>
         </View>
-      </View>
-
-      {/* Delete button (NO EDIT) */}
-      <View className='mt-4'>
-        <Button
-          mode='secondary'
-          onPress={() => onDelete(address)}
-          disabled={disabled}
-        >
-          {t('screens.addresses.delete')}
-        </Button>
       </View>
     </View>
   );

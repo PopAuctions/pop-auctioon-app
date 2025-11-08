@@ -5,6 +5,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { Button } from '@/components/ui/Button';
+import { CustomText } from '@/components/ui/CustomText';
 import { Loading } from '@/components/ui/Loading';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
@@ -53,15 +54,6 @@ export default function AddressesScreen() {
 
   const handleAddAddress = () => {
     setModalVisible(true);
-  };
-
-  const handleDelete = (address: UserAddress) => {
-    console.log('Delete address request:', address.id);
-    console.log('Data:', address.nameAddress, '-', address.address);
-
-    setAddresses((prev) => prev.filter((a) => a.id !== address.id));
-
-    console.log('Address deleted successfully');
   };
 
   const handleModalClose = () => {
@@ -118,7 +110,14 @@ export default function AddressesScreen() {
         }
       >
         <View className='p-6'>
-          <View className='mb-6'>
+          {/* Header */}
+          <View className='mb-6 flex-row items-center justify-between'>
+            <CustomText
+              type='h1'
+              className='flex-1 text-cinnabar'
+            >
+              {t('screens.addresses.title')}
+            </CustomText>
             <Button
               mode='primary'
               onPress={handleAddAddress}
@@ -128,14 +127,13 @@ export default function AddressesScreen() {
             </Button>
           </View>
 
+          {/* Addresses List */}
           <View className='gap-4'>
             {addresses.map((address) => (
               <AddressCard
                 key={address.id}
                 address={address}
                 countryLabel={getCountryLabel(address.country)}
-                onDelete={handleDelete}
-                disabled={refreshing}
               />
             ))}
           </View>
