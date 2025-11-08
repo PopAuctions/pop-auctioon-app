@@ -256,7 +256,25 @@
     },
     "billingInfo": {
       "title": "Billing Information",
-      "subtitle": "Manage your billing information"
+      "subtitle": "Manage your billing information",
+      "noBillingYet": "You don't have billing information yet",
+      "noBillingSubtitle": "Add your billing information to facilitate your purchases",
+      "addNew": "New Record",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete billing information?",
+      "confirmDeleteMessage": "This action cannot be undone",
+      "formTitle": "Billing Information",
+      "label": "Label",
+      "labelPlaceholder": "E.g: Company, Personal, etc.",
+      "billingName": "Name or company name",
+      "billingNamePlaceholder": "Full name or company",
+      "billingAddress": "Billing address",
+      "billingAddressPlaceholder": "Complete address",
+      "vatNumber": "Tax ID / VAT number",
+      "vatNumberPlaceholder": "RFC, NIT, RUT, etc.",
+      "success": "Information saved successfully",
+      "error": "Error saving information"
     },
     "paymentsHistory": {
       "title": "Payments History",

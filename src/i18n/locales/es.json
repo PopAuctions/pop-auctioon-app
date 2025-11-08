@@ -256,7 +256,25 @@
     },
     "billingInfo": {
       "title": "Información de Facturación",
-      "subtitle": "Gestiona tu información de facturación"
+      "subtitle": "Gestiona tu información de facturación",
+      "noBillingYet": "Aún no tienes información de facturación",
+      "noBillingSubtitle": "Agrega tu información de facturación para facilitar tus compras",
+      "addNew": "Nueva Información",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "confirmDelete": "¿Eliminar información de facturación?",
+      "confirmDeleteMessage": "Esta acción no se puede deshacer",
+      "formTitle": "Información de Facturación",
+      "label": "Etiqueta de identificación",
+      "labelPlaceholder": "Ej: Empresa, Personal, etc.",
+      "billingName": "Nombre o razón social",
+      "billingNamePlaceholder": "Nombre completo o empresa",
+      "billingAddress": "Dirección de facturación",
+      "billingAddressPlaceholder": "Dirección completa",
+      "vatNumber": "Número de identificación fiscal / NIT",
+      "vatNumberPlaceholder": "RFC, NIT, RUT, etc.",
+      "success": "Información guardada correctamente",
+      "error": "Error al guardar la información"
     },
     "paymentsHistory": {
       "title": "Historial de Pagos",

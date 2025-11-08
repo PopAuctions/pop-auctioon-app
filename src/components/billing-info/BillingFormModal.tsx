@@ -1,0 +1,251 @@
+import { useState } from 'react';
+import { View, ScrollView } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CustomText } from '@/components/ui/CustomText';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import {
+  BillingSchema,
+  type BillingSchemaType,
+} from '@/utils/schemas/billingSchemas';
+
+interface BillingFormModalProps {
+  onClose: () => void;
+  onSuccess: () => void;
+  billingToEdit?: (BillingSchemaType & { id?: string }) | null;
+}
+
+export function BillingFormModal({
+  onClose,
+  onSuccess,
+  billingToEdit,
+}: BillingFormModalProps) {
+  const { t, locale } = useTranslation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<BillingSchemaType>({
+    resolver: zodResolver(BillingSchema),
+    defaultValues: billingToEdit || {
+      label: '',
+      billingName: '',
+      billingAddress: '',
+      vatNumber: '',
+    },
+  });
+
+  const onSubmit = async (data: BillingSchemaType) => {
+    setIsSubmitting(true);
+
+    try {
+      // TODO: Conectar con API endpoint SECURE_ENDPOINTS.BILLING.CREATE o UPDATE
+      console.log('💾 Guardando billing info:', data);
+
+      if (billingToEdit?.id) {
+        console.log('📝 Modo EDITAR - ID:', billingToEdit.id);
+        // TODO: await securePost({ endpoint: SECURE_ENDPOINTS.BILLING.UPDATE, data: { ...data, id: billingToEdit.id } })
+      } else {
+        console.log('➕ Modo CREAR NUEVO');
+        // TODO: await securePost({ endpoint: SECURE_ENDPOINTS.BILLING.CREATE, data })
+      }
+
+      // Simular respuesta exitosa
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // ✅ Éxito temporal - TODO: Reemplazar con toast
+      console.log(
+        '✅',
+        billingToEdit?.id
+          ? locale === 'es'
+            ? 'Información actualizada'
+            : 'Information updated'
+          : t('screens.billingInfo.success')
+      );
+
+      reset();
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error('❌ ERROR_SAVE_BILLING', error);
+      // TODO: Mostrar toast con error
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
+  return (
+    <View className='flex-1 bg-white'>
+      {/* Header */}
+      <View className='border-gray-200 border-b px-4 pb-4 pt-12'>
+        <CustomText
+          type='h2'
+          className='text-center'
+        >
+          {t('screens.billingInfo.formTitle')}
+        </CustomText>
+      </View>
+
+      <ScrollView className='flex-1 px-4 py-6'>
+        {/* Etiqueta de identificación */}
+        <View className='mb-4'>
+          <CustomText
+            type='subtitle'
+            className='mb-2'
+          >
+            {t('screens.billingInfo.label')} *
+          </CustomText>
+          <Controller
+            control={control}
+            name='label'
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder={t('screens.billingInfo.labelPlaceholder')}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize='words'
+              />
+            )}
+          />
+          {errors.label && (
+            <CustomText
+              type='error'
+              className='mt-1'
+            >
+              {JSON.parse(errors.label.message || '{}')[locale] ||
+                errors.label.message}
+            </CustomText>
+          )}
+        </View>
+
+        {/* Nombre o razón social */}
+        <View className='mb-4'>
+          <CustomText
+            type='subtitle'
+            className='mb-2'
+          >
+            {t('screens.billingInfo.billingName')} *
+          </CustomText>
+          <Controller
+            control={control}
+            name='billingName'
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder={t('screens.billingInfo.billingNamePlaceholder')}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize='words'
+              />
+            )}
+          />
+          {errors.billingName && (
+            <CustomText
+              type='error'
+              className='mt-1'
+            >
+              {JSON.parse(errors.billingName.message || '{}')[locale] ||
+                errors.billingName.message}
+            </CustomText>
+          )}
+        </View>
+
+        {/* Dirección de facturación */}
+        <View className='mb-4'>
+          <CustomText
+            type='subtitle'
+            className='mb-2'
+          >
+            {t('screens.billingInfo.billingAddress')} *
+          </CustomText>
+          <Controller
+            control={control}
+            name='billingAddress'
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder={t('screens.billingInfo.billingAddressPlaceholder')}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize='words'
+                multiline
+                numberOfLines={3}
+              />
+            )}
+          />
+          {errors.billingAddress && (
+            <CustomText
+              type='error'
+              className='mt-1'
+            >
+              {JSON.parse(errors.billingAddress.message || '{}')[locale] ||
+                errors.billingAddress.message}
+            </CustomText>
+          )}
+        </View>
+
+        {/* Número de identificación fiscal */}
+        <View className='mb-4'>
+          <CustomText
+            type='subtitle'
+            className='mb-2'
+          >
+            {t('screens.billingInfo.vatNumber')} *
+          </CustomText>
+          <Controller
+            control={control}
+            name='vatNumber'
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder={t('screens.billingInfo.vatNumberPlaceholder')}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize='characters'
+              />
+            )}
+          />
+          {errors.vatNumber && (
+            <CustomText
+              type='error'
+              className='mt-1'
+            >
+              {JSON.parse(errors.vatNumber.message || '{}')[locale] ||
+                errors.vatNumber.message}
+            </CustomText>
+          )}
+        </View>
+      </ScrollView>
+
+      {/* Footer con botones */}
+      <View className='border-gray-200 border-t px-4 py-4'>
+        <Button
+          mode='primary'
+          onPress={handleSubmit(onSubmit)}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? t('commonActions.loading') : t('commonActions.save')}
+        </Button>
+        <Button
+          mode='secondary'
+          onPress={handleClose}
+          disabled={isSubmitting}
+          className='mt-2'
+        >
+          {t('commonActions.cancel')}
+        </Button>
+      </View>
+    </View>
+  );
+}
