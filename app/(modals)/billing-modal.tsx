@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { View } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Platform } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
 import type { UserBillingInfo } from '@/types/types';
 import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
 
-export default function BillingModal() {
+export default function BillingFormScreen() {
   const params = useLocalSearchParams<{ billingData?: string }>();
   const [billingToEdit, setBillingToEdit] = useState<
     (BillingSchemaType & { id?: string }) | undefined
@@ -32,26 +32,31 @@ export default function BillingModal() {
   }, [params.billingData]);
 
   const handleClose = () => {
-    router.back();
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)/account/billing-info');
+    }
   };
 
   const handleSuccess = () => {
-    router.back();
-    // TODO: Refrescar lista de billing info en la pantalla anterior
+    // Cerrar modal y refrescar lista
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)/account/billing-info');
+    }
   };
 
   return (
-    <SafeAreaView
-      className='flex-1 bg-white'
-      edges={['bottom']}
-    >
-      <View className='flex-1'>
-        <BillingFormModal
-          onClose={handleClose}
-          onSuccess={handleSuccess}
-          billingToEdit={billingToEdit}
-        />
-      </View>
-    </SafeAreaView>
+    <View className='flex-1 bg-white'>
+      <BillingFormModal
+        visible={true}
+        onClose={handleClose}
+        onSuccess={handleSuccess}
+        billingToEdit={billingToEdit}
+      />
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    </View>
   );
 }

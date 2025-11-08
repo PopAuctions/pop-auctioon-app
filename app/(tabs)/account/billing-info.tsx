@@ -1,24 +1,25 @@
 import { useState, useCallback, useEffect } from 'react';
-import {
-  View,
-  ScrollView,
-  RefreshControl,
-  TouchableOpacity,
-} from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { EmptyBillingState } from '@/components/billing-info/EmptyBillingState';
+import { BillingCard } from '@/components/billing-info/BillingCard';
+import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
 import type { UserBillingInfo } from '@/types/types';
+import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
 
 export default function BillingInfoScreen() {
   const { t, locale } = useTranslation();
   const [billingRecords, setBillingRecords] = useState<UserBillingInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [billingToEdit, setBillingToEdit] = useState<
+    (BillingSchemaType & { id?: string }) | undefined
+  >(undefined);
 
   const loadBillingInfo = useCallback(async () => {
     try {
@@ -66,19 +67,22 @@ export default function BillingInfoScreen() {
   }, [loadBillingInfo]);
 
   const handleAddBilling = () => {
-    router.push('/(modals)/billing-modal');
+    setBillingToEdit(undefined);
+    setModalVisible(true);
   };
 
   const handleEdit = (billing: UserBillingInfo) => {
     console.log('✏️ Editar billing:', billing.id);
 
-    // Navegar al modal con datos para editar
-    router.push({
-      pathname: '/(modals)/billing-modal',
-      params: {
-        billingData: JSON.stringify(billing),
-      },
+    // Convert UserBillingInfo to BillingSchemaType format
+    setBillingToEdit({
+      id: billing.id,
+      label: billing.label || '',
+      billingName: billing.billingName,
+      billingAddress: billing.billingAddress,
+      vatNumber: billing.vatNumber || '',
     });
+    setModalVisible(true);
   };
 
   const handleDelete = (billing: UserBillingInfo) => {
@@ -100,6 +104,17 @@ export default function BillingInfoScreen() {
     );
   };
 
+  const handleModalClose = () => {
+    setModalVisible(false);
+    setBillingToEdit(undefined);
+  };
+
+  const handleModalSuccess = () => {
+    setModalVisible(false);
+    setBillingToEdit(undefined);
+    loadBillingInfo(); // Refresh list
+  };
+
   // Loading state
   if (loading) {
     return <Loading locale={locale} />;
@@ -112,33 +127,10 @@ export default function BillingInfoScreen() {
         className='flex-1 bg-white'
         edges={['bottom']}
       >
-        <View className='flex-1 items-center justify-center p-6'>
-          <FontAwesomeIcon
-            name='file-invoice-dollar'
-            size={64}
-            color='#CCC'
-            variant='light'
-          />
-          <CustomText
-            type='h2'
-            className='mb-2 mt-6 text-center text-black'
-          >
-            {t('screens.billingInfo.noBillingYet')}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='mb-8 text-center'
-          >
-            {t('screens.billingInfo.noBillingSubtitle')}
-          </CustomText>
-          <Button
-            mode='primary'
-            onPress={handleAddBilling}
-            disabled={refreshing}
-          >
-            {t('screens.billingInfo.addNew')}
-          </Button>
-        </View>
+        <EmptyBillingState
+          onAddNew={handleAddBilling}
+          disabled={refreshing}
+        />
       </SafeAreaView>
     );
   }
@@ -178,109 +170,25 @@ export default function BillingInfoScreen() {
           {/* Billing Records Grid */}
           <View className='gap-4'>
             {billingRecords.map((billing) => (
-              <View
+              <BillingCard
                 key={billing.id}
-                className='border-gray-200 rounded-lg border-2 bg-white p-4'
-              >
-                {/* Header con label */}
-                <View className='mb-3 flex-row items-center justify-between'>
-                  <View className='flex-row items-center gap-2'>
-                    <FontAwesomeIcon
-                      name='file-invoice'
-                      size={20}
-                      color='#d75639'
-                      variant='light'
-                    />
-                    <CustomText
-                      type='h3'
-                      className='text-cinnabar'
-                    >
-                      {billing.label}
-                    </CustomText>
-                  </View>
-                </View>
-
-                {/* Información */}
-                <View className='space-y-2'>
-                  <View>
-                    <CustomText
-                      type='subtitle'
-                      className='text-gray-500'
-                    >
-                      {t('screens.billingInfo.billingName')}:
-                    </CustomText>
-                    <CustomText
-                      type='body'
-                      className='text-black'
-                    >
-                      {billing.billingName}
-                    </CustomText>
-                  </View>
-
-                  <View>
-                    <CustomText
-                      type='subtitle'
-                      className='text-gray-500'
-                    >
-                      {t('screens.billingInfo.billingAddress')}:
-                    </CustomText>
-                    <CustomText
-                      type='body'
-                      className='text-black'
-                    >
-                      {billing.billingAddress}
-                    </CustomText>
-                  </View>
-
-                  <View>
-                    <CustomText
-                      type='subtitle'
-                      className='text-gray-500'
-                    >
-                      {t('screens.billingInfo.vatNumber')}:
-                    </CustomText>
-                    <CustomText
-                      type='body'
-                      className='text-black'
-                    >
-                      {billing.vatNumber}
-                    </CustomText>
-                  </View>
-                </View>
-
-                {/* Botones de acción */}
-                <View className='mt-4 flex-row gap-2'>
-                  <TouchableOpacity
-                    onPress={() => handleEdit(billing)}
-                    className='flex-1 items-center rounded-lg bg-blue-500 py-3'
-                    disabled={refreshing}
-                  >
-                    <CustomText
-                      type='body'
-                      className='font-semibold text-white'
-                    >
-                      {t('screens.billingInfo.edit')}
-                    </CustomText>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => handleDelete(billing)}
-                    className='flex-1 items-center rounded-lg bg-red-500 py-3'
-                    disabled={refreshing}
-                  >
-                    <CustomText
-                      type='body'
-                      className='font-semibold text-white'
-                    >
-                      {t('screens.billingInfo.delete')}
-                    </CustomText>
-                  </TouchableOpacity>
-                </View>
-              </View>
+                billing={billing}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                disabled={refreshing}
+              />
             ))}
           </View>
         </View>
       </ScrollView>
+
+      {/* Modal */}
+      <BillingFormModal
+        visible={modalVisible}
+        onClose={handleModalClose}
+        onSuccess={handleModalSuccess}
+        billingToEdit={billingToEdit}
+      />
     </SafeAreaView>
   );
 }
