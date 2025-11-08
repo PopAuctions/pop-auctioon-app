@@ -265,10 +265,9 @@ export function BillingFormModal({
             mode='primary'
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
+            isLoading={isSubmitting}
           >
-            {isSubmitting
-              ? t('commonActions.loading')
-              : t('commonActions.save')}
+            {t('commonActions.save')}
           </Button>
           <Button
             mode='secondary'

@@ -333,6 +333,7 @@ export function AddressFormModal({
             mode='primary'
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
+            isLoading={isSubmitting}
             className='mb-3'
           >
             {t('screens.addresses.form.submit')}
