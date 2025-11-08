@@ -19,14 +19,12 @@ interface AddressFormModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  addressToEdit?: (AddressSchemaType & { id?: string }) | null;
 }
 
 export function AddressFormModal({
   visible,
   onClose,
   onSuccess,
-  addressToEdit,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
   const { securePost } = useSecureApi();
@@ -41,7 +39,7 @@ export function AddressFormModal({
     reset,
   } = useForm<AddressSchemaType>({
     resolver: zodResolver(AddressSchema),
-    defaultValues: addressToEdit || {
+    defaultValues: {
       nameAddress: '',
       address: '',
       city: '',
