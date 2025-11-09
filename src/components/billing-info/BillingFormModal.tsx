@@ -157,6 +157,7 @@ export function BillingFormModal({
                   onChangeText={onChange}
                   value={value}
                   autoCapitalize='words'
+                  editable={!isSubmitting}
                 />
               )}
             />
@@ -189,6 +190,7 @@ export function BillingFormModal({
                   onChangeText={onChange}
                   value={value}
                   autoCapitalize='words'
+                  editable={!isSubmitting}
                 />
               )}
             />
@@ -225,6 +227,7 @@ export function BillingFormModal({
                   autoCapitalize='words'
                   multiline
                   numberOfLines={3}
+                  editable={!isSubmitting}
                 />
               )}
             />
@@ -257,6 +260,7 @@ export function BillingFormModal({
                   onChangeText={onChange}
                   value={value}
                   autoCapitalize='characters'
+                  editable={!isSubmitting}
                 />
               )}
             />
