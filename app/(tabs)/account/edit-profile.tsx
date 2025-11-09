@@ -1,4 +1,4 @@
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
@@ -6,26 +6,33 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { router } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
 import { useAuth } from '@/context/auth-context';
 import { getErrorMessage } from '@/utils/form-errors';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { useUpdateProfile } from '@/hooks/pages/user/useUpdateProfile';
 import { Loading } from '@/components/ui/Loading';
 import { APP_USER_ROLES } from '@/constants/user';
-import type { User } from '@/types/types';
 import type * as z from 'zod';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
-  const { securePost, secureGet } = useSecureApi();
-  const [loading, setLoading] = useState(false);
-  const [fetchingUser, setFetchingUser] = useState(true);
-  const [currentUserData, setCurrentUserData] = useState<User | null>(null);
+
+  // Usar los nuevos hooks
+  const {
+    data: currentUserData,
+    status: fetchStatus,
+    errorMessage: fetchError,
+  } = useGetCurrentUser();
+  const {
+    updateProfile,
+    status: updateStatus,
+    errorMessage: updateError,
+  } = useUpdateProfile();
 
   // Determinar el rol del usuario (por defecto USER)
   const userRole =
@@ -66,184 +73,65 @@ export default function EditProfileScreen() {
     },
   });
 
-  // Cargar datos del usuario desde el endpoint /user/profile
+  // Auto-populate form with user data from hook
   useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const response = await secureGet<User>({
-          endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
-        });
+    if (currentUserData) {
+      const formData: any = {
+        name: currentUserData.name || '',
+        lastName: currentUserData.lastName || '',
+        username: currentUserData.username || '',
+        phoneNumber: currentUserData.phoneNumber || '',
+        profilePicture: currentUserData.profilePicture || '',
+      };
 
-        if (response.error) {
-          console.error('ERROR_LOAD_USER_DATA', response.error);
-          // TODO: Mostrar toast de error
-          router.back();
-          return;
-        }
-
-        // Si no hay datos, no permitir editar y regresar
-        if (!response.data) {
-          console.error('ERROR_NO_USER_DATA_RECEIVED');
-          // TODO: Mostrar toast de error
-          router.back();
-          return;
-        }
-
-        const userData = response.data;
-        setCurrentUserData(userData);
-
-        const formData: any = {
-          name: userData.name || '',
-          lastName: userData.lastName || '',
-          username: userData.username || '',
-          phoneNumber: userData.phoneNumber || '',
-          profilePicture: userData.profilePicture || '',
-        };
-
-        // Agregar campos de AUCTIONEER si aplica
-        if (userRole === 'AUCTIONEER') {
-          formData.address = userData.address || '';
-          formData.town = userData.town || '';
-          formData.province = userData.province || '';
-          formData.country = userData.country || '';
-          formData.postalCode = userData.postalCode || '';
-          formData.webPage = userData.webPage || '';
-          formData.socialMedia = userData.socialMedia || '';
-          formData.storeName = userData.storeName || '';
-        }
-
-        reset(formData);
-      } catch (error) {
-        console.error('ERROR_LOAD_USER_DATA_CATCH', error);
-        // TODO: Mostrar toast de error
-        router.back();
-      } finally {
-        setFetchingUser(false);
+      // Agregar campos de AUCTIONEER si aplica
+      if (userRole === 'AUCTIONEER') {
+        formData.address = currentUserData.address || '';
+        formData.town = currentUserData.town || '';
+        formData.province = currentUserData.province || '';
+        formData.country = currentUserData.country || '';
+        formData.postalCode = currentUserData.postalCode || '';
+        formData.webPage = currentUserData.webPage || '';
+        formData.socialMedia = currentUserData.socialMedia || '';
+        formData.storeName = currentUserData.storeName || '';
       }
-    };
 
-    loadUserData();
-  }, [userRole, reset, secureGet, t, locale]);
+      reset(formData);
+    }
+  }, [currentUserData, userRole, reset]);
+
+  // Handle fetch errors
+  useEffect(() => {
+    if (fetchStatus === 'error') {
+      console.error('ERROR_LOAD_USER_DATA', fetchError);
+      // TODO: Show toast with fetchError[locale]
+      router.back();
+    }
+  }, [fetchStatus, fetchError, locale]);
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
   ) => {
-    setLoading(true);
+    // Call updateProfile with oldProfilePicture and oldPhoneNumber
+    await updateProfile({
+      ...data,
+      oldProfilePicture: currentUserData?.profilePicture || '',
+      oldPhoneNumber: currentUserData?.phoneNumber || '',
+    });
 
-    try {
-      // Si hay imagen, usar FormData, si no, usar JSON
-      const hasImage = data.profilePicture && data.profilePicture !== '';
+    // Navigate back regardless of success or error
+    router.back();
 
-      if (hasImage) {
-        // Preparar FormData con todos los campos
-        const formData = new FormData();
+    // Show success message if update was successful
+    if (updateStatus === 'success') {
+      // TODO: Show success toast
+      console.log('SUCCESS_UPDATE_PROFILE');
+    }
 
-        formData.append('username', data.username);
-        formData.append('name', data.name);
-        formData.append('lastName', data.lastName);
-        formData.append('phoneNumber', data.phoneNumber || '');
-
-        // Campos específicos para AUCTIONEER
-        if ('storeName' in data) {
-          formData.append('storeName', data.storeName || '');
-          formData.append('webPage', data.webPage || '');
-          formData.append('socialMedia', data.socialMedia || '');
-          formData.append('address', data.address || '');
-          formData.append('town', data.town || '');
-          formData.append('province', data.province || '');
-          formData.append('country', data.country || '');
-          formData.append('postalCode', data.postalCode || '');
-        }
-
-        formData.append(
-          'oldProfilePicture',
-          currentUserData?.profilePicture || ''
-        );
-        formData.append('oldPhoneNumber', currentUserData?.phoneNumber || '');
-
-        // Agregar imagen si existe
-        if (data.profilePicture) {
-          // Extraer información de la URI de la imagen
-          const uriParts = data.profilePicture.split('.');
-          const fileType = uriParts[uriParts.length - 1];
-
-          formData.append('profilePicture', {
-            uri: data.profilePicture,
-            name: `profile.${fileType}`,
-            type: `image/${fileType}`,
-          } as any);
-        }
-
-        // Llamar endpoint con FormData
-        const response = await securePost({
-          endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
-          data: formData,
-          options: {
-            timeout: 30000, // 30 segundos para subir imagen
-          },
-        });
-
-        if (response.error) {
-          // TODO AGREGAR TOAST de ERROR
-          console.error('ERROR_UPDATE_PROFILE', response.error);
-          return;
-        }
-
-        if (response.data) {
-          Alert.alert(
-            t('commonActions.ok'),
-            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
-          );
-          router.back();
-        }
-      } else {
-        // Enviar JSON simple (sin imagen)
-        const payload = {
-          username: data.username,
-          name: data.name,
-          lastName: data.lastName,
-          phoneNumber: data.phoneNumber || '',
-          oldProfilePicture: currentUserData?.profilePicture || '',
-          oldPhoneNumber: currentUserData?.phoneNumber || '',
-          // Campos específicos para AUCTIONEER
-          ...('storeName' in data && {
-            storeName: data.storeName || '',
-            webPage: data.webPage || '',
-            socialMedia: data.socialMedia || '',
-            address: data.address || '',
-            town: data.town || '',
-            province: data.province || '',
-            country: data.country || '',
-            postalCode: data.postalCode || '',
-          }),
-        };
-
-        const response = await securePost({
-          endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
-          data: payload,
-        });
-
-        if (response.error) {
-          // TODO AGREGAR TOAST de ERROR
-          console.error('ERROR_UPDATE_PROFILE', response.error);
-          return;
-        }
-
-        if (response.data) {
-          // TODO AGREGAR TOAST de EXITO
-          Alert.alert(
-            t('commonActions.ok'),
-            locale === 'es' ? 'Perfil actualizado' : 'Profile updated'
-          );
-          router.back();
-        }
-      }
-    } catch (error) {
-      // TODO AGREGAR TOAST de ERROR
-      console.error('ERROR_UPDATE_PROFILE_CATCH', error);
-      // Sentry.captureException('CATCH_UPDATE_PROFILE' + error?.message);
-    } finally {
-      setLoading(false);
+    // Error handling - logs are in the hook
+    if (updateStatus === 'error' && updateError) {
+      console.error('ERROR_UPDATE_PROFILE', updateError);
+      // TODO: Show error toast with updateError[locale]
     }
   };
 
@@ -252,9 +140,12 @@ export default function EditProfileScreen() {
   };
 
   // Show loading while fetching user data
-  if (fetchingUser) {
+  if (fetchStatus === 'loading') {
     return <Loading locale={locale} />;
   }
+
+  // Compute loading state for form controls
+  const isLoading = updateStatus === 'loading';
 
   return (
     <SafeAreaView
@@ -266,7 +157,7 @@ export default function EditProfileScreen() {
           {/* Header */}
           <CustomText
             type='h1'
-            className='mb-4 text-center '
+            className='mb-4 text-center text-cinnabar'
           >
             {t('screens.editProfile.title')}
           </CustomText>
@@ -290,7 +181,7 @@ export default function EditProfileScreen() {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     placeholder={t('screens.editProfile.name')}
-                    editable={!loading}
+                    editable={!isLoading}
                   />
                 )}
               />
@@ -321,7 +212,7 @@ export default function EditProfileScreen() {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     placeholder={t('screens.editProfile.lastName')}
-                    editable={!loading}
+                    editable={!isLoading}
                   />
                 )}
               />
@@ -353,7 +244,7 @@ export default function EditProfileScreen() {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   placeholder={t('screens.editProfile.username')}
-                  editable={!loading}
+                  editable={!isLoading}
                 />
               )}
             />
@@ -385,7 +276,7 @@ export default function EditProfileScreen() {
                   onBlur={onBlur}
                   placeholder={t('screens.editProfile.phoneNumber')}
                   keyboardType='phone-pad'
-                  editable={!loading}
+                  editable={!isLoading}
                 />
               )}
             />
@@ -419,7 +310,7 @@ export default function EditProfileScreen() {
                       onChangeText={onChange}
                       onBlur={onBlur}
                       placeholder={t('screens.editProfile.storeName')}
-                      editable={!loading}
+                      editable={!isLoading}
                     />
                   )}
                 />
@@ -452,7 +343,7 @@ export default function EditProfileScreen() {
                       placeholder={t('screens.editProfile.webPage')}
                       keyboardType='url'
                       autoCapitalize='none'
-                      editable={!loading}
+                      editable={!isLoading}
                     />
                   )}
                 />
@@ -491,7 +382,7 @@ export default function EditProfileScreen() {
                       placeholder={t('screens.editProfile.socialMedia')}
                       keyboardType='url'
                       autoCapitalize='none'
-                      editable={!loading}
+                      editable={!isLoading}
                     />
                   )}
                 />
@@ -528,7 +419,7 @@ export default function EditProfileScreen() {
                       onChangeText={onChange}
                       onBlur={onBlur}
                       placeholder={t('screens.editProfile.address')}
-                      editable={!loading}
+                      editable={!isLoading}
                     />
                   )}
                 />
@@ -561,7 +452,7 @@ export default function EditProfileScreen() {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         placeholder={t('screens.editProfile.town')}
-                        editable={!loading}
+                        editable={!isLoading}
                       />
                     )}
                   />
@@ -592,7 +483,7 @@ export default function EditProfileScreen() {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         placeholder={t('screens.editProfile.province')}
-                        editable={!loading}
+                        editable={!isLoading}
                       />
                     )}
                   />
@@ -626,7 +517,7 @@ export default function EditProfileScreen() {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         placeholder={t('screens.editProfile.country')}
-                        editable={!loading}
+                        editable={!isLoading}
                       />
                     )}
                   />
@@ -657,7 +548,7 @@ export default function EditProfileScreen() {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         placeholder={t('screens.editProfile.postalCode')}
-                        editable={!loading}
+                        editable={!isLoading}
                       />
                     )}
                   />
@@ -691,7 +582,7 @@ export default function EditProfileScreen() {
                   selectedImage={value || null}
                   onImageSelected={onChange}
                   onImageRemoved={() => onChange('')}
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               )}
             />
@@ -710,8 +601,8 @@ export default function EditProfileScreen() {
             <Button
               mode='primary'
               onPress={handleSubmit(onSubmit)}
-              isLoading={loading}
-              disabled={loading}
+              isLoading={isLoading}
+              disabled={isLoading}
             >
               {t('screens.editProfile.update')}
             </Button>
@@ -722,7 +613,7 @@ export default function EditProfileScreen() {
             <Button
               mode='secondary'
               onPress={handleBack}
-              disabled={loading}
+              disabled={isLoading}
             >
               {t('screens.editProfile.back')}
             </Button>
