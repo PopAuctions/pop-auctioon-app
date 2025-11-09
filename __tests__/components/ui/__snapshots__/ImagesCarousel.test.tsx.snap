@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImagesCarousel renders with multiple images 1`] = `
+<View
+  className="w-full items-center"
+  onLayout={[Function]}
+/>
+`;
+
+exports[`ImagesCarousel renders with no images 1`] = `
+<View
+  className="w-full items-center"
+  onLayout={[Function]}
+/>
+`;
