@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Modal, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
@@ -28,7 +28,8 @@ export function AddressFormModal({
   addressToEdit,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
-  const { createAddress, status } = useCreateAddress();
+  const { createAddress, status, errorMessage } = useCreateAddress();
+  const isSubmittingRef = useRef(false);
 
   const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
 
@@ -52,32 +53,27 @@ export function AddressFormModal({
 
   const isSubmitting = status === 'loading';
 
-  const onSubmit = async (data: AddressSchemaType) => {
-    try {
-      const result = await createAddress(data);
+  // React to status changes only after a submit attempt
+  useEffect(() => {
+    if (!isSubmittingRef.current) return;
 
-      if (!result.success) {
-        console.error(
-          'ERROR_CREATE_ADDRESS',
-          result.message ? result.message[locale] : 'Unknown error'
-        );
-        // TODO: Mostrar toast con result.message[locale]
-        return;
-      }
-
-      // TODO: Mostrar toast de éxito con result.message[locale]
-      console.log(
-        'SUCCESS_CREATE_ADDRESS',
-        result.message ? result.message[locale] : 'Address created'
-      );
-
+    if (status === 'success') {
+      console.log('SUCCESS_CREATE_ADDRESS');
+      // TODO: Mostrar toast de éxito
       reset();
       onSuccess();
       onClose();
-    } catch (error) {
-      console.error('ERROR_CREATE_ADDRESS_CATCH', error);
-      // TODO: Mostrar toast de error
+      isSubmittingRef.current = false;
+    } else if (status === 'error' && errorMessage) {
+      console.error('ERROR_CREATE_ADDRESS', errorMessage);
+      // TODO: Mostrar toast con errorMessage[locale]
+      isSubmittingRef.current = false;
     }
+  }, [status, errorMessage, locale, reset, onSuccess, onClose]);
+
+  const onSubmit = async (data: AddressSchemaType) => {
+    isSubmittingRef.current = true;
+    await createAddress(data);
   };
 
   const handleClose = () => {
@@ -336,6 +332,7 @@ export function AddressFormModal({
             mode='primary'
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
+            isLoading={isSubmitting}
             className='mb-3'
           >
             {t('screens.addresses.form.submit')}

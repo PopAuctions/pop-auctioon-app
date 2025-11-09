@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react-native';
+import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import type { AddressSchemaType } from '@/utils/schemas';
@@ -39,19 +39,21 @@ describe('useCreateAddress', () => {
     const { result } = renderHook(() => useCreateAddress());
 
     expect(result.current.status).toBe('idle');
+    expect(result.current.errorMessage).toBeNull();
 
-    const response = await result.current.createAddress(mockAddressData);
+    await act(async () => {
+      await result.current.createAddress(mockAddressData);
+    });
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
     });
 
-    expect(response.success).toBe(true);
-    expect(response.message).toEqual({
-      en: 'Address created successfully',
-      es: 'Dirección creada exitosamente',
-    });
     expect(result.current.errorMessage).toBeNull();
+    expect(mockSecurePost).toHaveBeenCalledWith({
+      endpoint: expect.any(String),
+      data: mockAddressData,
+    });
   });
 
   it('should handle API error when creating address', async () => {
@@ -67,14 +69,14 @@ describe('useCreateAddress', () => {
 
     const { result } = renderHook(() => useCreateAddress());
 
-    const response = await result.current.createAddress(mockAddressData);
+    await act(async () => {
+      await result.current.createAddress(mockAddressData);
+    });
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(response.success).toBe(false);
-    expect(response.message).toEqual(mockError);
     expect(result.current.errorMessage).toEqual(mockError);
   });
 
@@ -83,17 +85,14 @@ describe('useCreateAddress', () => {
 
     const { result } = renderHook(() => useCreateAddress());
 
-    const response = await result.current.createAddress(mockAddressData);
+    await act(async () => {
+      await result.current.createAddress(mockAddressData);
+    });
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(response.success).toBe(false);
-    expect(response.message).toEqual({
-      en: 'Error creating address',
-      es: 'Error al crear la dirección',
-    });
     expect(result.current.errorMessage).toEqual({
       en: 'Error creating address',
       es: 'Error al crear la dirección',
@@ -146,13 +145,13 @@ describe('useCreateAddress', () => {
 
     const { result } = renderHook(() => useCreateAddress());
 
-    const firstResponse = await result.current.createAddress(mockAddressData);
+    await act(async () => {
+      await result.current.createAddress(mockAddressData);
+    });
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
     });
-
-    expect(firstResponse.success).toBe(true);
 
     const secondAddressData: AddressSchemaType = {
       ...mockAddressData,
@@ -160,14 +159,14 @@ describe('useCreateAddress', () => {
       primaryAddress: false,
     };
 
-    const secondResponse =
+    await act(async () => {
       await result.current.createAddress(secondAddressData);
+    });
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
     });
 
-    expect(secondResponse.success).toBe(true);
     expect(mockSecurePost).toHaveBeenCalledTimes(2);
   });
 });
