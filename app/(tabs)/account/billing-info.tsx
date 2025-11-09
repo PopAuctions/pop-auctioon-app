@@ -15,7 +15,7 @@ import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
 
 export default function BillingInfoScreen() {
   const { t, locale } = useTranslation();
-  const { secureGet, securePost } = useSecureApi();
+  const { secureGet, secureDelete } = useSecureApi();
   const [billingRecords, setBillingRecords] = useState<UserBillingInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -82,9 +82,8 @@ export default function BillingInfoScreen() {
     // TODO: Show confirmation modal
     setDeletingId(billing.id);
     try {
-      const response = await securePost({
-        endpoint: SECURE_ENDPOINTS.USER.BILLING_DELETE,
-        data: { id: billing.id },
+      const response = await secureDelete({
+        endpoint: SECURE_ENDPOINTS.USER.BILLING_BY_ID(billing.id),
       });
 
       if (response.error) {

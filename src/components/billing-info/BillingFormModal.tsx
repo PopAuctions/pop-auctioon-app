@@ -27,7 +27,7 @@ export function BillingFormModal({
   billingToEdit,
 }: BillingFormModalProps) {
   const { t, locale } = useTranslation();
-  const { securePost } = useSecureApi();
+  const { securePost, securePatch } = useSecureApi();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -71,34 +71,37 @@ export function BillingFormModal({
 
     try {
       const isEditMode = billingToEdit?.id !== undefined;
-      const endpoint = isEditMode
-        ? SECURE_ENDPOINTS.USER.BILLING_UPDATE
-        : SECURE_ENDPOINTS.USER.BILLING_CREATE;
-
-      const payload = isEditMode
-        ? {
-            id: billingToEdit.id,
-            label: data.label,
-            billingName: data.billingName,
-            billingAddress: data.billingAddress,
-            vatNumber: data.vatNumber,
-          }
-        : {
-            label: data.label,
-            billingName: data.billingName,
-            billingAddress: data.billingAddress,
-            vatNumber: data.vatNumber,
-          };
 
       console.log(
         `💾 ${isEditMode ? 'Actualizando' : 'Creando'} billing info:`,
-        payload
+        data
       );
 
-      const response = await securePost({
-        endpoint,
-        data: payload,
-      });
+      let response;
+
+      if (isEditMode && billingToEdit.id) {
+        // UPDATE - Use PATCH
+        response = await securePatch({
+          endpoint: SECURE_ENDPOINTS.USER.BILLING_BY_ID(billingToEdit.id),
+          data: {
+            label: data.label,
+            billingName: data.billingName,
+            billingAddress: data.billingAddress,
+            vatNumber: data.vatNumber,
+          },
+        });
+      } else {
+        // CREATE - Use POST
+        response = await securePost({
+          endpoint: SECURE_ENDPOINTS.USER.BILLING,
+          data: {
+            label: data.label,
+            billingName: data.billingName,
+            billingAddress: data.billingAddress,
+            vatNumber: data.vatNumber,
+          },
+        });
+      }
 
       if (response.error) {
         console.error('❌ ERROR_SAVE_BILLING:', response.error);
