@@ -2,6 +2,17 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 
+// Mock Supabase to avoid ESM import errors
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: jest.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+    },
+  },
+}));
+
 describe('AddressFormModal', () => {
   it('renders modal when visible', () => {
     const { getByText } = render(
@@ -11,8 +22,8 @@ describe('AddressFormModal', () => {
         onSuccess={() => {}}
       />
     );
-    // The translation key is 'screens.addresses.form.title', but we check for any text
-    expect(getByText(/address/i)).toBeTruthy();
+    // Check for specific form field label that's unique
+    expect(getByText('Save address')).toBeTruthy();
   });
 
   it('does not render modal when not visible', () => {
@@ -23,6 +34,6 @@ describe('AddressFormModal', () => {
         onSuccess={() => {}}
       />
     );
-    expect(queryByText(/address/i)).toBeNull();
+    expect(queryByText('Save address')).toBeNull();
   });
 });

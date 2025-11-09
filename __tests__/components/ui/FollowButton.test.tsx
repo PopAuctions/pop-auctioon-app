@@ -2,6 +2,17 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { FollowButton } from '@/components/ui/FollowButton';
 
+// Mock Supabase to avoid ESM import errors
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: jest.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+    },
+  },
+}));
+
 describe('FollowButton', () => {
   it('renders follow label when not following', () => {
     const { getByText } = render(
