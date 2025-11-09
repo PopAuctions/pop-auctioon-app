@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { View, ScrollView, Modal } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,8 +6,10 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import {
+  useCreateBilling,
+  useUpdateBilling,
+} from '@/hooks/pages/billing/useBilling';
 import {
   BillingSchema,
   type BillingSchemaType,
@@ -27,8 +29,13 @@ export function BillingFormModal({
   billingToEdit,
 }: BillingFormModalProps) {
   const { t, locale } = useTranslation();
-  const { securePost, securePatch } = useSecureApi();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createBilling, status: createStatus } = useCreateBilling();
+  const { updateBilling, status: updateStatus } = useUpdateBilling();
+  const isSubmittingRef = useRef(false);
+
+  const isEditMode = billingToEdit?.id !== undefined;
+  const currentStatus = isEditMode ? updateStatus : createStatus;
+  const isSubmitting = currentStatus === 'loading';
 
   const {
     control,
@@ -44,6 +51,23 @@ export function BillingFormModal({
       vatNumber: '',
     },
   });
+
+  // Handle success/error from hooks
+  useEffect(() => {
+    if (!visible) return;
+
+    if (currentStatus === 'success' && isSubmittingRef.current) {
+      console.log(`✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING`);
+      // TODO: Show success toast
+      isSubmittingRef.current = false;
+      reset();
+      onSuccess();
+    } else if (currentStatus === 'error' && isSubmittingRef.current) {
+      console.error('❌ ERROR_SAVE_BILLING');
+      // TODO: Show error toast
+      isSubmittingRef.current = false;
+    }
+  }, [currentStatus, visible, isEditMode, reset, onSuccess]);
 
   // Populate form when billingToEdit changes
   useEffect(() => {
@@ -67,7 +91,7 @@ export function BillingFormModal({
   }, [billingToEdit, reset]);
 
   const onSubmit = async (data: BillingSchemaType) => {
-    setIsSubmitting(true);
+    isSubmittingRef.current = true;
 
     try {
       const isEditMode = billingToEdit?.id !== undefined;
@@ -77,52 +101,17 @@ export function BillingFormModal({
         data
       );
 
-      let response;
-
       if (isEditMode && billingToEdit.id) {
         // UPDATE - Use PATCH
-        response = await securePatch({
-          endpoint: SECURE_ENDPOINTS.USER.BILLING_BY_ID(billingToEdit.id),
-          data: {
-            label: data.label,
-            billingName: data.billingName,
-            billingAddress: data.billingAddress,
-            vatNumber: data.vatNumber,
-          },
-        });
+        await updateBilling(billingToEdit.id, data);
       } else {
         // CREATE - Use POST
-        response = await securePost({
-          endpoint: SECURE_ENDPOINTS.USER.BILLING,
-          data: {
-            label: data.label,
-            billingName: data.billingName,
-            billingAddress: data.billingAddress,
-            vatNumber: data.vatNumber,
-          },
-        });
+        await createBilling(data);
       }
-
-      if (response.error) {
-        console.error('❌ ERROR_SAVE_BILLING:', response.error);
-        // TODO: Show toast with response.error[locale]
-        return;
-      }
-
-      console.log(
-        `✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING:`,
-        response.data
-      );
-      // TODO: Show success toast
-
-      reset();
-      onSuccess();
-      onClose();
     } catch (error) {
       console.error('❌ ERROR_SAVE_BILLING_CATCH:', error);
+      isSubmittingRef.current = false;
       // TODO: Mostrar toast con error
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

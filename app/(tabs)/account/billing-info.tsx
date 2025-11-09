@@ -1,9 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import {
+  useGetBilling,
+  useDeleteBilling,
+} from '@/hooks/pages/billing/useBilling';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
@@ -15,9 +17,8 @@ import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
 
 export default function BillingInfoScreen() {
   const { t, locale } = useTranslation();
-  const { secureGet, secureDelete } = useSecureApi();
-  const [billingRecords, setBillingRecords] = useState<UserBillingInfo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: billingRecords, status, refetch } = useGetBilling();
+  const { deleteBilling, status: deleteStatus } = useDeleteBilling();
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,39 +26,36 @@ export default function BillingInfoScreen() {
     (BillingSchemaType & { id?: string }) | undefined
   >(undefined);
 
-  const loadBillingInfo = useCallback(async () => {
-    try {
-      const response = await secureGet<UserBillingInfo[]>({
-        endpoint: SECURE_ENDPOINTS.USER.BILLING,
-      });
+  // Track previous delete status to avoid loop
+  const prevDeleteStatusRef = useRef<typeof deleteStatus>('idle');
 
-      if (response.error) {
-        console.error('❌ ERROR_LOAD_BILLING:', response.error);
-        // TODO: Show toast with response.error[locale]
-        return;
-      }
-
-      if (response.data && Array.isArray(response.data)) {
-        setBillingRecords(response.data);
-        console.log('✅ Billing info loaded:', response.data.length, 'records');
-      }
-    } catch (error) {
-      console.error('❌ ERROR_LOAD_BILLING_CATCH:', error);
-      // TODO: Show toast with generic error
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [secureGet]);
-
+  // Handle delete success
   useEffect(() => {
-    loadBillingInfo();
-  }, [loadBillingInfo]);
+    // Only refetch when status changes from loading to success
+    if (
+      deleteStatus === 'success' &&
+      prevDeleteStatusRef.current === 'loading'
+    ) {
+      console.log('✅ Billing deleted successfully');
+      // TODO: Show success toast
+      setDeletingId(null);
+      refetch(); // Refresh list after delete
+    } else if (
+      deleteStatus === 'error' &&
+      prevDeleteStatusRef.current === 'loading'
+    ) {
+      console.error('❌ Delete billing failed');
+      // TODO: Show error toast
+      setDeletingId(null);
+    }
+
+    prevDeleteStatusRef.current = deleteStatus;
+  }, [deleteStatus, refetch]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    loadBillingInfo();
-  }, [loadBillingInfo]);
+    refetch().finally(() => setRefreshing(false));
+  }, [refetch]);
 
   const handleAddBilling = () => {
     setBillingToEdit(undefined);
@@ -81,27 +79,7 @@ export default function BillingInfoScreen() {
   const handleDelete = async (billing: UserBillingInfo) => {
     // TODO: Show confirmation modal
     setDeletingId(billing.id);
-    try {
-      const response = await secureDelete({
-        endpoint: SECURE_ENDPOINTS.USER.BILLING_BY_ID(billing.id),
-      });
-
-      if (response.error) {
-        console.error('❌ ERROR_DELETE_BILLING:', response.error);
-        // TODO: Show toast with response.error[locale]
-        return;
-      }
-
-      // Success - remove from local state
-      setBillingRecords((prev) => prev.filter((b) => b.id !== billing.id));
-      console.log('✅ Billing deleted successfully');
-      // TODO: Show success toast
-    } catch (error) {
-      console.error('❌ ERROR_DELETE_BILLING_CATCH:', error);
-      // TODO: Show toast with generic error
-    } finally {
-      setDeletingId(null);
-    }
+    await deleteBilling(billing.id);
   };
 
   const handleModalClose = () => {
@@ -112,10 +90,12 @@ export default function BillingInfoScreen() {
   const handleModalSuccess = () => {
     setModalVisible(false);
     setBillingToEdit(undefined);
-    loadBillingInfo(); // Refresh list
+    refetch(); // Refresh list
   };
 
   // Loading state
+  const loading = status === 'loading';
+
   if (loading) {
     return <Loading locale={locale} />;
   }
@@ -175,7 +155,7 @@ export default function BillingInfoScreen() {
                 billing={billing}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
-                disabled={refreshing}
+                disabled={refreshing || deleteStatus === 'loading'}
                 isDeleting={deletingId === billing.id}
               />
             ))}
