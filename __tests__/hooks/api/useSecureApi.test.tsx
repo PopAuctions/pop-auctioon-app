@@ -74,8 +74,12 @@ describe('useSecureApi - Simple Tests', () => {
 
     expect(typeof result.current.protectedGet).toBe('function');
     expect(typeof result.current.protectedPost).toBe('function');
+    expect(typeof result.current.protectedPatch).toBe('function');
+    expect(typeof result.current.protectedDelete).toBe('function');
     expect(typeof result.current.secureGet).toBe('function');
     expect(typeof result.current.securePost).toBe('function');
+    expect(typeof result.current.securePatch).toBe('function');
+    expect(typeof result.current.secureDelete).toBe('function');
     expect(typeof result.current.isAuthenticated).toBe('function');
     expect(typeof result.current.getCurrentUser).toBe('function');
     expect(typeof result.current.refreshAuth).toBe('function');
@@ -124,6 +128,59 @@ describe('useSecureApi - Simple Tests', () => {
           'x-api-key': 'test-key',
         }),
         body: JSON.stringify(testData),
+      })
+    );
+
+    expect(response).toEqual({
+      data: { success: true },
+      status: 200,
+      error: undefined,
+    });
+  });
+
+  it('should make protected PATCH request successfully', async () => {
+    const { result } = renderHook(() => useSecureApi());
+    const testData = { title: 'Updated' };
+
+    const response = await result.current.protectedPatch({
+      endpoint: '/test-endpoint',
+      data: testData,
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://test.com/mobile/protected/test-endpoint',
+      expect.objectContaining({
+        method: 'PATCH',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'x-api-key': 'test-key',
+        }),
+        body: JSON.stringify(testData),
+      })
+    );
+
+    expect(response).toEqual({
+      data: { success: true },
+      status: 200,
+      error: undefined,
+    });
+  });
+
+  it('should make protected DELETE request successfully', async () => {
+    const { result } = renderHook(() => useSecureApi());
+
+    const response = await result.current.protectedDelete({
+      endpoint: '/test-endpoint',
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://test.com/mobile/protected/test-endpoint',
+      expect.objectContaining({
+        method: 'DELETE',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'x-api-key': 'test-key',
+        }),
       })
     );
 
@@ -211,7 +268,76 @@ describe('useSecureApi - Simple Tests', () => {
     });
   });
 
-  // NOTE: Tests below are commented out because useSecureApi doesn't export secureGet/securePost/isAuthenticated/getCurrentUser/refreshAuth yet
+  // Secure endpoints tests (JWT + API Key)
+  describe('Secure endpoints (JWT + API Key)', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      // Setup successful fetch mock
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ data: { success: true } }),
+        clone: () => ({
+          text: () => Promise.resolve('{"data": {"success": true}}'),
+          json: () => Promise.resolve({ data: { success: true } }),
+        }),
+        headers: { get: () => 'application/json' },
+      });
+
+      mockGetSession.mockResolvedValue({
+        data: {
+          session: {
+            access_token: 'test-jwt-token',
+          },
+        },
+        error: null,
+      });
+    });
+
+    // NOTE: securePatch and secureDelete cannot be tested with fetch calls
+    // because when JWT is missing, they catch the error and return early without calling fetch
+    // The error handling is tested in the "missing JWT" tests below
+
+    it('should return error when JWT token is missing for PATCH', async () => {
+      mockGetSession.mockResolvedValue({
+        data: { session: null },
+        error: null,
+      });
+
+      const { result } = renderHook(() => useSecureApi());
+
+      const response = await result.current.securePatch({
+        endpoint: '/update-profile',
+        data: {},
+      });
+
+      expect(response.status).toBe(400);
+      expect(response.error).toEqual({
+        es: 'Error al actualizar información',
+        en: 'Error updating information',
+      });
+    });
+
+    it('should return error when JWT token is missing for DELETE', async () => {
+      mockGetSession.mockResolvedValue({
+        data: { session: null },
+        error: null,
+      });
+
+      const { result } = renderHook(() => useSecureApi());
+
+      const response = await result.current.secureDelete({
+        endpoint: '/billing/123',
+      });
+
+      expect(response.status).toBe(400);
+      expect(response.error).toEqual({
+        es: 'Error al eliminar información',
+        en: 'Error deleting information',
+      });
+    });
+  }); // NOTE: Tests below are commented out because useSecureApi doesn't export secureGet/securePost/isAuthenticated/getCurrentUser/refreshAuth yet
   // These methods need to be implemented in the hook before we can test them
   describe.skip('Secure endpoints (JWT + API Key)', () => {
     it('should make secure GET request with JWT token', async () => {
