@@ -275,7 +275,7 @@
       "confirmDelete": "¿Eliminar información de facturación?",
       "confirmDeleteMessage": "Esta acción no se puede deshacer",
       "formTitle": "Información de Facturación",
-      "label": "Titulo para datos de facturación",
+      "label": "Título para datos de facturación",
       "labelPlaceholder": "Ej: Empresa, Personal, etc.",
       "billingName": "Nombre o razón social",
       "billingNamePlaceholder": "Nombre completo o empresa",

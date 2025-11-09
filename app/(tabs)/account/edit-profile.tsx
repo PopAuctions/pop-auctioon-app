@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
@@ -21,6 +21,7 @@ import type * as z from 'zod';
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
+  const isSubmittingRef = useRef(false);
 
   // Usar los nuevos hooks
   const {
@@ -109,30 +110,34 @@ export default function EditProfileScreen() {
     }
   }, [fetchStatus, fetchError, locale]);
 
+  // Handle update result (success or error)
+  useEffect(() => {
+    if (!isSubmittingRef.current) return;
+
+    if (updateStatus === 'success') {
+      console.log('SUCCESS_UPDATE_PROFILE');
+      // TODO: Show success toast
+      router.back();
+      isSubmittingRef.current = false;
+    } else if (updateStatus === 'error' && updateError) {
+      console.error('ERROR_UPDATE_PROFILE', updateError);
+      // TODO: Show error toast with updateError[locale]
+      router.back();
+      isSubmittingRef.current = false;
+    }
+  }, [updateStatus, updateError, locale]);
+
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
   ) => {
+    isSubmittingRef.current = true;
+
     // Call updateProfile with oldProfilePicture and oldPhoneNumber
     await updateProfile({
       ...data,
       oldProfilePicture: currentUserData?.profilePicture || '',
       oldPhoneNumber: currentUserData?.phoneNumber || '',
     });
-
-    // Navigate back regardless of success or error
-    router.back();
-
-    // Show success message if update was successful
-    if (updateStatus === 'success') {
-      // TODO: Show success toast
-      console.log('SUCCESS_UPDATE_PROFILE');
-    }
-
-    // Error handling - logs are in the hook
-    if (updateStatus === 'error' && updateError) {
-      console.error('ERROR_UPDATE_PROFILE', updateError);
-      // TODO: Show error toast with updateError[locale]
-    }
   };
 
   const handleBack = () => {
