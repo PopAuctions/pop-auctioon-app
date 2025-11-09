@@ -1,17 +1,17 @@
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { useState, useCallback } from 'react';
-import { router, useFocusEffect } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
-import { CustomText } from '@/components/ui/CustomText';
 import { Loading } from '@/components/ui/Loading';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
 import { AddressCard } from '@/components/addresses/AddressCard';
 import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
@@ -43,7 +43,7 @@ export default function AddressesScreen() {
 
   const handleModalSuccess = () => {
     setModalVisible(false);
-    loadAddresses();
+    refetch(); // Refrescar direcciones después de crear una nueva
   };
 
   const getCountryLabel = (countryValue: string) => {
@@ -98,7 +98,7 @@ export default function AddressesScreen() {
   }
 
   // Empty state
-  if (addresses.length === 0) {
+  if (!addresses || addresses.length === 0) {
     return (
       <SafeAreaView
         className='flex-1 bg-white'
