@@ -1,17 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { AddressFormModal } from '@/components/addresses/AddressFormModal';
+import { mockSupabase } from '@/__tests__/setup/mocks.mock';
 
-// Mock Supabase to avoid ESM import errors
-jest.mock('@/utils/supabase/supabase-store', () => ({
-  supabase: {
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null })
-      ),
-    },
-  },
-}));
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
+
+import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 
 describe('AddressFormModal', () => {
   it('renders modal when visible', () => {

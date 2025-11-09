@@ -1,17 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { mockSupabase } from '../../setup/mocks.mock';
+
 import { AuctionCountdownComponent } from '@/components/auctions/AuctionCountdownComponent';
 
-// Mock Supabase to avoid ESM import errors
-jest.mock('@/utils/supabase/supabase-store', () => ({
-  supabase: {
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null })
-      ),
-    },
-  },
-}));
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
 describe('AuctionCountdownComponent', () => {
   it('renders without crashing', () => {

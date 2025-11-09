@@ -1,18 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
+import { mockSupabase } from '../../setup/mocks.mock';
 
-// Mock Supabase to avoid ESM import errors
-jest.mock('@/utils/supabase/supabase-store', () => ({
-  supabase: {
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null })
-      ),
-    },
-  },
-}));
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
+
+import { ArticlesInfiniteScroll } from '@/components/articles/ArticlesInfiniteScroll';
 
 describe('ArticlesInfiniteScroll', () => {
   it('renders without crashing', () => {

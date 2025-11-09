@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
+import { mockSecureApi } from '@/__tests__/setup/mocks.mock';
 
+import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 const mockSecurePost = jest.fn();

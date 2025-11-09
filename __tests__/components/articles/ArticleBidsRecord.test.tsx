@@ -1,17 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
+import { mockSupabase } from '../../setup/mocks.mock';
 
-// Mock Supabase to avoid ESM import errors
-jest.mock('@/utils/supabase/supabase-store', () => ({
-  supabase: {
-    auth: {
-      getSession: jest.fn(() =>
-        Promise.resolve({ data: { session: null }, error: null })
-      ),
-    },
-  },
-}));
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
+
+import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 
 describe('ArticleBidsRecord', () => {
   it('renders without crashing', () => {
