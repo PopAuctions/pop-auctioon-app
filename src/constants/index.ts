@@ -1,6 +1,9 @@
 // Configuración general de la aplicación
 export * from './app';
 
+// Usuarios y roles
+export * from './user';
+
 // Formularios y validaciones
 export * from './forms';
 

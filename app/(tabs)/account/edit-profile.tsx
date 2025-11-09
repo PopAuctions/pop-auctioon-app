@@ -15,6 +15,7 @@ import { getErrorMessage } from '@/utils/form-errors';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { Loading } from '@/components/ui/Loading';
+import { APP_USER_ROLES } from '@/constants/user';
 import type { User } from '@/types/types';
 import type * as z from 'zod';
 
@@ -28,9 +29,13 @@ export default function EditProfileScreen() {
 
   // Determinar el rol del usuario (por defecto USER)
   const userRole =
-    auth.state === 'authenticated' && auth.role ? auth.role : 'USER';
+    auth.state === 'authenticated' && auth.role
+      ? auth.role
+      : APP_USER_ROLES.USER;
   const schema =
-    userRole === 'AUCTIONEER' ? AuctioneerEditSchema : UserEditSchema;
+    userRole === APP_USER_ROLES.AUCTIONEER
+      ? AuctioneerEditSchema
+      : UserEditSchema;
 
   // React Hook Form con schema dinámico según el rol
   const {
