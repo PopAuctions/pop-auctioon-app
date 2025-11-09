@@ -9,6 +9,7 @@ interface BillingCardProps {
   onEdit: (billing: UserBillingInfo) => void;
   onDelete: (billing: UserBillingInfo) => void;
   disabled?: boolean;
+  isDeleting?: boolean;
 }
 
 export function BillingCard({
@@ -16,6 +17,7 @@ export function BillingCard({
   onEdit,
   onDelete,
   disabled = false,
+  isDeleting = false,
 }: BillingCardProps) {
   const { t } = useTranslation();
 
@@ -88,7 +90,7 @@ export function BillingCard({
           <Button
             mode='primary'
             onPress={() => onEdit(billing)}
-            disabled={disabled}
+            disabled={disabled || isDeleting}
           >
             {t('screens.billingInfo.edit')}
           </Button>
@@ -98,7 +100,8 @@ export function BillingCard({
           <Button
             mode='secondary'
             onPress={() => onDelete(billing)}
-            disabled={disabled}
+            disabled={disabled || isDeleting}
+            isLoading={isDeleting}
           >
             {t('screens.billingInfo.delete')}
           </Button>

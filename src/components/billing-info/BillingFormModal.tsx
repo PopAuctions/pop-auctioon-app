@@ -6,6 +6,8 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 import {
   BillingSchema,
   type BillingSchemaType,
@@ -25,6 +27,7 @@ export function BillingFormModal({
   billingToEdit,
 }: BillingFormModalProps) {
   const { t, locale } = useTranslation();
+  const { securePost } = useSecureApi();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -67,35 +70,53 @@ export function BillingFormModal({
     setIsSubmitting(true);
 
     try {
-      // TODO: Conectar con API endpoint SECURE_ENDPOINTS.BILLING.CREATE o UPDATE
-      console.log('💾 Guardando billing info:', data);
+      const isEditMode = billingToEdit?.id !== undefined;
+      const endpoint = isEditMode
+        ? SECURE_ENDPOINTS.USER.BILLING_UPDATE
+        : SECURE_ENDPOINTS.USER.BILLING_CREATE;
 
-      if (billingToEdit?.id) {
-        console.log('📝 Modo EDITAR - ID:', billingToEdit.id);
-        // TODO: await securePost({ endpoint: SECURE_ENDPOINTS.BILLING.UPDATE, data: { ...data, id: billingToEdit.id } })
-      } else {
-        console.log('➕ Modo CREAR NUEVO');
-        // TODO: await securePost({ endpoint: SECURE_ENDPOINTS.BILLING.CREATE, data })
+      const payload = isEditMode
+        ? {
+            id: billingToEdit.id,
+            label: data.label,
+            billingName: data.billingName,
+            billingAddress: data.billingAddress,
+            vatNumber: data.vatNumber,
+          }
+        : {
+            label: data.label,
+            billingName: data.billingName,
+            billingAddress: data.billingAddress,
+            vatNumber: data.vatNumber,
+          };
+
+      console.log(
+        `💾 ${isEditMode ? 'Actualizando' : 'Creando'} billing info:`,
+        payload
+      );
+
+      const response = await securePost({
+        endpoint,
+        data: payload,
+      });
+
+      if (response.error) {
+        console.error('❌ ERROR_SAVE_BILLING:', response.error);
+        // TODO: Show toast with response.error[locale]
+        return;
       }
 
-      // Simular respuesta exitosa
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // ✅ Éxito temporal - TODO: Reemplazar con toast
       console.log(
-        '✅',
-        billingToEdit?.id
-          ? locale === 'es'
-            ? 'Información actualizada'
-            : 'Information updated'
-          : t('screens.billingInfo.success')
+        `✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING:`,
+        response.data
       );
+      // TODO: Show success toast
 
       reset();
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('❌ ERROR_SAVE_BILLING', error);
+      console.error('❌ ERROR_SAVE_BILLING_CATCH:', error);
       // TODO: Mostrar toast con error
     } finally {
       setIsSubmitting(false);

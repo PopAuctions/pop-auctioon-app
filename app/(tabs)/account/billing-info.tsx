@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
@@ -13,9 +15,11 @@ import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
 
 export default function BillingInfoScreen() {
   const { t, locale } = useTranslation();
+  const { secureGet, securePost } = useSecureApi();
   const [billingRecords, setBillingRecords] = useState<UserBillingInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [billingToEdit, setBillingToEdit] = useState<
     (BillingSchemaType & { id?: string }) | undefined
@@ -23,39 +27,28 @@ export default function BillingInfoScreen() {
 
   const loadBillingInfo = useCallback(async () => {
     try {
-      // TODO: Conectar con API endpoint SECURE_ENDPOINTS.BILLING.LIST
-      console.log('📋 Cargando billing information...');
+      const response = await secureGet<UserBillingInfo[]>({
+        endpoint: SECURE_ENDPOINTS.USER.BILLING,
+      });
 
-      // Simular carga de datos
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (response.error) {
+        console.error('❌ ERROR_LOAD_BILLING:', response.error);
+        // TODO: Show toast with response.error[locale]
+        return;
+      }
 
-      // TODO: const response = await secureGet<UserBillingInfo[]>({ endpoint: SECURE_ENDPOINTS.BILLING.LIST });
-
-      // Datos de ejemplo mientras conectamos la API
-      const mockData: UserBillingInfo[] = [
-        {
-          id: '1',
-          userId: 'user123',
-          label: 'Empresa Principal',
-          billingName: 'Tech Solutions SA de CV',
-          billingAddress: 'Av. Reforma 123, Col. Centro, CDMX',
-          vatNumber: 'TSO123456ABC',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-      ];
-
-      setBillingRecords(mockData);
-
-      console.log('✅ Billing info cargada:', mockData.length, 'registros');
+      if (response.data && Array.isArray(response.data)) {
+        setBillingRecords(response.data);
+        console.log('✅ Billing info loaded:', response.data.length, 'records');
+      }
     } catch (error) {
-      console.error('❌ Error cargando billing info:', error);
-      // TODO: Mostrar toast con error
+      console.error('❌ ERROR_LOAD_BILLING_CATCH:', error);
+      // TODO: Show toast with generic error
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [secureGet]);
 
   useEffect(() => {
     loadBillingInfo();
@@ -85,23 +78,31 @@ export default function BillingInfoScreen() {
     setModalVisible(true);
   };
 
-  const handleDelete = (billing: UserBillingInfo) => {
-    console.log('🗑️ Solicitud de eliminar billing:', billing.id);
-    console.log('📋 Datos:', billing.label, '-', billing.billingName);
-    // TODO: Mostrar confirmación con modal personalizado
+  const handleDelete = async (billing: UserBillingInfo) => {
+    // TODO: Show confirmation modal
+    setDeletingId(billing.id);
+    try {
+      const response = await securePost({
+        endpoint: SECURE_ENDPOINTS.USER.BILLING_DELETE,
+        data: { id: billing.id },
+      });
 
-    // Simular eliminación directa por ahora
-    console.log('⚠️ Eliminando billing:', billing.id);
-    // TODO: Conectar con API endpoint SECURE_ENDPOINTS.BILLING.DELETE
-    // const response = await securePost({ endpoint: SECURE_ENDPOINTS.BILLING.DELETE, data: { id: billing.id } });
+      if (response.error) {
+        console.error('❌ ERROR_DELETE_BILLING:', response.error);
+        // TODO: Show toast with response.error[locale]
+        return;
+      }
 
-    // Simular eliminación
-    setBillingRecords((prev) => prev.filter((b) => b.id !== billing.id));
-
-    console.log(
-      '✅',
-      locale === 'es' ? 'Información eliminada' : 'Information deleted'
-    );
+      // Success - remove from local state
+      setBillingRecords((prev) => prev.filter((b) => b.id !== billing.id));
+      console.log('✅ Billing deleted successfully');
+      // TODO: Show success toast
+    } catch (error) {
+      console.error('❌ ERROR_DELETE_BILLING_CATCH:', error);
+      // TODO: Show toast with generic error
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleModalClose = () => {
@@ -176,6 +177,7 @@ export default function BillingInfoScreen() {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 disabled={refreshing}
+                isDeleting={deletingId === billing.id}
               />
             ))}
           </View>

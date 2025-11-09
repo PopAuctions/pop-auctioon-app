@@ -86,6 +86,10 @@ export const SECURE_ENDPOINTS = {
     ADDRESSES: '/user/addresses',
     CREATE_ADDRESS: '/user/addresses/create',
     CURRENT_USER: '/user/current',
+    BILLING: '/user/billing',
+    BILLING_CREATE: '/user/billing/create',
+    BILLING_UPDATE: '/user/billing/update',
+    BILLING_DELETE: '/user/billing/delete',
   },
 
   // Server Actions y operaciones complejas
