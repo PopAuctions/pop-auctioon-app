@@ -3,22 +3,18 @@
  * Tests basic functionality and error handling
  */
 import { renderHook, waitFor } from '@testing-library/react-native';
+import { mockSupabase } from '../../../setup/mocks.mock';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
-// Mock dependencies
-jest.mock('@/utils/supabase/supabase-store', () => ({
-  supabase: {
-    rpc: jest.fn(),
-  },
-}));
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
 jest.mock('@/lib/error/sentry-error-report', () => ({
   sentryErrorReport: jest.fn(),
 }));
 
-const mockSupabase = supabase as any;
+const mockSupabaseInternal = supabase as any;
 const mockSentryErrorReport = sentryErrorReport as jest.MockedFunction<
   typeof sentryErrorReport
 >;
@@ -54,6 +50,8 @@ describe('useAuctionsCalendar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    // Add jest.fn() to rpc method for tracking calls
+    mockSupabaseInternal.rpc = jest.fn();
   });
 
   afterEach(() => {
@@ -62,7 +60,7 @@ describe('useAuctionsCalendar', () => {
 
   describe('Initial state and basic functionality', () => {
     it('should initialize with correct default state', () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -83,7 +81,7 @@ describe('useAuctionsCalendar', () => {
     });
 
     it('should provide refetch function', async () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -103,7 +101,7 @@ describe('useAuctionsCalendar', () => {
 
   describe('Successful data fetching', () => {
     it('should successfully fetch and return auctions data', async () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -122,7 +120,7 @@ describe('useAuctionsCalendar', () => {
     });
 
     it('should call RPC with correct function name and parameters', async () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -133,10 +131,10 @@ describe('useAuctionsCalendar', () => {
       renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(mockSupabase.rpc).toHaveBeenCalledTimes(1);
+        expect(mockSupabaseInternal.rpc).toHaveBeenCalledTimes(1);
       });
 
-      expect(mockSupabase.rpc).toHaveBeenCalledWith(
+      expect(mockSupabaseInternal.rpc).toHaveBeenCalledWith(
         'filter_auctions_for_calendar',
         expect.objectContaining({
           today: expect.any(String),
@@ -152,7 +150,7 @@ describe('useAuctionsCalendar', () => {
 
   describe('Refetch functionality', () => {
     it('should handle refetch correctly', async () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -167,18 +165,18 @@ describe('useAuctionsCalendar', () => {
       });
 
       // Clear previous calls
-      mockSupabase.rpc.mockClear();
+      mockSupabaseInternal.rpc.mockClear();
 
       // Call refetch
       await result.current.refetch();
 
-      expect(mockSupabase.rpc).toHaveBeenCalledTimes(1);
+      expect(mockSupabaseInternal.rpc).toHaveBeenCalledTimes(1);
       expect(result.current.status).toBe('loaded');
     });
 
     it('should handle refetch errors', async () => {
       // Initial successful load
-      mockSupabase.rpc.mockResolvedValueOnce({
+      mockSupabaseInternal.rpc.mockResolvedValueOnce({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -193,7 +191,7 @@ describe('useAuctionsCalendar', () => {
       });
 
       // Mock error for refetch
-      mockSupabase.rpc.mockRejectedValueOnce(new Error('Refetch failed'));
+      mockSupabaseInternal.rpc.mockRejectedValueOnce(new Error('Refetch failed'));
 
       await result.current.refetch();
 
@@ -207,7 +205,7 @@ describe('useAuctionsCalendar', () => {
   describe('Error handling', () => {
     it('should handle Supabase RPC errors properly', async () => {
       const mockError = { message: 'RPC function failed' };
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: null,
         error: mockError,
         count: null,
@@ -233,7 +231,7 @@ describe('useAuctionsCalendar', () => {
     });
 
     it('should handle null data response', async () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: null,
         error: null,
         count: null,
@@ -260,7 +258,7 @@ describe('useAuctionsCalendar', () => {
 
     it('should handle network errors during fetch', async () => {
       const mockError = new Error('Network error');
-      mockSupabase.rpc.mockRejectedValue(mockError);
+      mockSupabaseInternal.rpc.mockRejectedValue(mockError);
 
       const { result } = renderHook(() => useAuctionsCalendar());
 
@@ -285,7 +283,7 @@ describe('useAuctionsCalendar', () => {
 
     it('should handle non-Error objects in catch block', async () => {
       const mockError = 'String error message';
-      mockSupabase.rpc.mockRejectedValue(mockError);
+      mockSupabaseInternal.rpc.mockRejectedValue(mockError);
 
       const { result } = renderHook(() => useAuctionsCalendar());
 
@@ -311,7 +309,7 @@ describe('useAuctionsCalendar', () => {
 
   describe('Date parameter validation', () => {
     it('should call RPC with properly formatted ISO date strings', async () => {
-      mockSupabase.rpc.mockResolvedValue({
+      mockSupabaseInternal.rpc.mockResolvedValue({
         data: mockAuctionsData,
         error: null,
         count: null,
@@ -322,10 +320,10 @@ describe('useAuctionsCalendar', () => {
       renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(mockSupabase.rpc).toHaveBeenCalled();
+        expect(mockSupabaseInternal.rpc).toHaveBeenCalled();
       });
 
-      const rpcCall = mockSupabase.rpc.mock.calls[0];
+      const rpcCall = mockSupabaseInternal.rpc.mock.calls[0];
       const params = rpcCall[1];
 
       // Verify ISO date format
@@ -360,7 +358,7 @@ describe('useAuctionsCalendar', () => {
         }, 100);
       });
 
-      mockSupabase.rpc.mockReturnValue(slowResolve);
+      mockSupabaseInternal.rpc.mockReturnValue(slowResolve);
 
       const { result } = renderHook(() => useAuctionsCalendar());
 
@@ -381,3 +379,4 @@ describe('useAuctionsCalendar', () => {
     });
   });
 });
+

@@ -8,8 +8,12 @@
  * Use this in tests that interact with Supabase (auth, subscriptions, etc.)
  *
  * @example
- * import { mockSupabase } from '@/__tests__/setup/mocks.mock';
+ * import { mockSupabase } from '../../setup/mocks.mock';
  * jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
+ *
+ * // In your test, add jest.fn() if you need to track calls:
+ * const mockSupabaseInternal = supabase as any;
+ * mockSupabaseInternal.rpc = jest.fn();
  */
 export const mockSupabase = {
   supabase: {
@@ -19,6 +23,8 @@ export const mockSupabase = {
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),
       signOut: () => Promise.resolve({ error: null }),
     },
+    // RPC method for database function calls
+    rpc: () => Promise.resolve({ data: null, error: null }),
     // Realtime subscription methods for components that use channels
     getChannels: () => [],
     channel: () => ({
