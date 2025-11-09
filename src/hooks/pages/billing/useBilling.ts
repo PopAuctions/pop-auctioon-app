@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
@@ -21,7 +21,7 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureGet } = useSecureApi();
 
-  const fetchBilling = async (): Promise<void> => {
+  const fetchBilling = useCallback(async (): Promise<void> => {
     try {
       setStatus('loading');
       setErrorMessage(null);
@@ -66,19 +66,18 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
       setStatus('error');
       setErrorMessage(message);
     }
-  };
+  }, [secureGet]); // Stable dependency
 
   useEffect(() => {
     fetchBilling();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchBilling]); // fetchBilling is now stable
 
   return {
     data,
     status,
     errorMessage,
     setErrorMessage,
-    refetch: fetchBilling,
+    refetch: fetchBilling, // Return the stable callback
   };
 };
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -26,30 +26,18 @@ export default function BillingInfoScreen() {
     (BillingSchemaType & { id?: string }) | undefined
   >(undefined);
 
-  // Track previous delete status to avoid loop
-  const prevDeleteStatusRef = useRef<typeof deleteStatus>('idle');
-
-  // Handle delete success
+  // Handle delete success - refetch is now stable, no loop
   useEffect(() => {
-    // Only refetch when status changes from loading to success
-    if (
-      deleteStatus === 'success' &&
-      prevDeleteStatusRef.current === 'loading'
-    ) {
+    if (deleteStatus === 'success') {
       console.log('✅ Billing deleted successfully');
       // TODO: Show success toast
       setDeletingId(null);
       refetch(); // Refresh list after delete
-    } else if (
-      deleteStatus === 'error' &&
-      prevDeleteStatusRef.current === 'loading'
-    ) {
+    } else if (deleteStatus === 'error') {
       console.error('❌ Delete billing failed');
       // TODO: Show error toast
       setDeletingId(null);
     }
-
-    prevDeleteStatusRef.current = deleteStatus;
   }, [deleteStatus, refetch]);
 
   const onRefresh = useCallback(() => {
