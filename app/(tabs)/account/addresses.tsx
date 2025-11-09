@@ -1,9 +1,10 @@
 import { View, ScrollView, RefreshControl } from 'react-native';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
+import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { Loading } from '@/components/ui/Loading';
@@ -11,46 +12,26 @@ import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
 import { AddressCard } from '@/components/addresses/AddressCard';
 import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
-import type { UserAddress, CountryValue } from '@/types/types';
+import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
   const { t, locale } = useTranslation();
-  const { secureGet } = useSecureApi();
-  const [addresses, setAddresses] = useState<UserAddress[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: addresses, status, refetch } = useGetAddresses();
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const loadAddresses = useCallback(async () => {
-    try {
-      const response = await secureGet<UserAddress[]>({
-        endpoint: SECURE_ENDPOINTS.USER.ADDRESSES,
-      });
+  // Refrescar cuando el screen vuelva al foco (ej: después de crear una dirección)
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
-      if (response.error) {
-        console.error('Error from API:', response.error);
-        return;
-      }
-
-      if (response.data && Array.isArray(response.data)) {
-        setAddresses(response.data);
-      }
-    } catch (error) {
-      console.error('Network error loading addresses:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [secureGet]);
-
-  useEffect(() => {
-    loadAddresses();
-  }, [loadAddresses]);
-
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    loadAddresses();
-  }, [loadAddresses]);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
   const handleAddAddress = () => {
     setModalVisible(true);
@@ -71,10 +52,52 @@ export default function AddressesScreen() {
     );
   };
 
-  if (loading) {
+  // Loading state
+  if (status === 'loading' || status === 'idle') {
     return <Loading locale={locale} />;
   }
 
+  // Error state (show error but allow retry)
+  if (status === 'error') {
+    return (
+      <SafeAreaView
+        className='flex-1 bg-white'
+        edges={['bottom']}
+      >
+        <View className='flex-1 items-center justify-center p-6'>
+          <FontAwesomeIcon
+            name='exclamation-triangle'
+            size={64}
+            color='#C1463D'
+            variant='light'
+          />
+          <CustomText
+            type='h2'
+            className='mb-2 mt-6 text-center text-cinnabar'
+          >
+            {locale === 'es' ? 'Error al cargar' : 'Error loading'}
+          </CustomText>
+          <CustomText
+            type='body'
+            className='mb-8 text-center'
+          >
+            {locale === 'es'
+              ? 'No se pudieron cargar las direcciones'
+              : 'Could not load addresses'}
+          </CustomText>
+          <Button
+            mode='primary'
+            onPress={onRefresh}
+            disabled={refreshing}
+          >
+            {locale === 'es' ? 'Reintentar' : 'Retry'}
+          </Button>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Empty state
   if (addresses.length === 0) {
     return (
       <SafeAreaView

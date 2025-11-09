@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Modal, ScrollView, Alert } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Modal, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
 import { useForm, Controller } from 'react-hook-form';
@@ -9,8 +9,7 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
 import { COUNTRIES_MAP } from '@/constants/payment';
 import type { CountryObject } from '@/types/types';
@@ -27,8 +26,8 @@ export function AddressFormModal({
   onSuccess,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
-  const { securePost } = useSecureApi();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createAddress, status, errorMessage } = useCreateAddress();
+  const isSubmittingRef = useRef(false);
 
   const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
 
@@ -50,31 +49,29 @@ export function AddressFormModal({
     },
   });
 
-  const onSubmit = async (data: AddressSchemaType) => {
-    setIsSubmitting(true);
+  const isSubmitting = status === 'loading';
 
-    try {
-      const response = await securePost({
-        endpoint: SECURE_ENDPOINTS.USER.CREATE_ADDRESS,
-        data,
-      });
+  // React to status changes only after a submit attempt
+  useEffect(() => {
+    if (!isSubmittingRef.current) return;
 
-      if (response.error) {
-        console.error('ERROR_CREATE_ADDRESS', response.error);
-        return;
-      }
-
-      // ✅ Éxito temporal - TODO: Reemplazar con toast que muestre response.data.success[locale]
-      Alert.alert(t('commonActions.ok'), t('screens.addresses.success'));
-
+    if (status === 'success') {
+      console.log('SUCCESS_CREATE_ADDRESS');
+      // TODO: Mostrar toast de éxito
       reset();
       onSuccess();
       onClose();
-    } catch (error) {
-      console.error('ERROR_CREATE_ADDRESS_CATCH', error);
-    } finally {
-      setIsSubmitting(false);
+      isSubmittingRef.current = false;
+    } else if (status === 'error' && errorMessage) {
+      console.error('ERROR_CREATE_ADDRESS', errorMessage);
+      // TODO: Mostrar toast con errorMessage[locale]
+      isSubmittingRef.current = false;
     }
+  }, [status, errorMessage, locale, reset, onSuccess, onClose]);
+
+  const onSubmit = async (data: AddressSchemaType) => {
+    isSubmittingRef.current = true;
+    await createAddress(data);
   };
 
   const handleClose = () => {
