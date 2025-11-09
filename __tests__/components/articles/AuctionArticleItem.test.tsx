@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { AuctionArticleItem } from '@/components/articles/AuctionArticleItem';
+import { View } from 'react-native';
+import { ArticleItem } from '@/components/articles/AuctionArticleItem';
 
 // Mock Supabase to avoid ESM import errors
 jest.mock('@/utils/supabase/supabase-store', () => ({
@@ -13,27 +14,22 @@ jest.mock('@/utils/supabase/supabase-store', () => ({
   },
 }));
 
-// Mock SafeAreaProvider more robustly
-jest.mock('react-native-safe-area-context', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  
-  const SafeAreaProvider = ({ children }: any) => React.createElement(View, {}, children);
-  SafeAreaProvider.displayName = 'SafeAreaProvider';
-  
-  const SafeAreaView = ({ children }: any) => React.createElement(View, {}, children);
-  SafeAreaView.displayName = 'SafeAreaView';
-  
-  return {
-    SafeAreaProvider,
-    SafeAreaView,
-    useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
-    initialWindowMetrics: {
-      frame: { x: 0, y: 0, width: 0, height: 0 },
-      insets: { top: 0, left: 0, right: 0, bottom: 0 },
-    },
-  };
-});
+// Mock SafeAreaProvider with displayName
+const mockSafeAreaProvider = ({ children }: any) => <View>{children}</View>;
+mockSafeAreaProvider.displayName = 'SafeAreaProvider';
+
+const mockSafeAreaView = ({ children }: any) => <View>{children}</View>;
+mockSafeAreaView.displayName = 'SafeAreaView';
+
+jest.mock('react-native-safe-area-context', () => ({
+  SafeAreaProvider: mockSafeAreaProvider,
+  SafeAreaView: mockSafeAreaView,
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+  initialWindowMetrics: {
+    frame: { x: 0, y: 0, width: 0, height: 0 },
+    insets: { top: 0, left: 0, right: 0, bottom: 0 },
+  },
+}));
 
 describe('AuctionArticleItem', () => {
   it('renders with complete props', () => {
@@ -60,7 +56,7 @@ describe('AuctionArticleItem', () => {
     });
 
     render(
-      <AuctionArticleItem
+      <ArticleItem
         article={mockArticle as any}
         auctionLang={mockAuctionLang}
         formatter={formatter}
