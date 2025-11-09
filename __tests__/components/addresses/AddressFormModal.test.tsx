@@ -13,8 +13,18 @@ jest.mock('@react-native-picker/picker', () => {
   const { View } = require('react-native');
   return {
     Picker: Object.assign(
-      ({ children, onValueChange, selectedValue }: any) => {
-        return <View testID='picker'>{children}</View>;
+      ({ children, onValueChange, selectedValue, testID }: any) => {
+        // Create a testable element that can trigger onValueChange
+        return (
+          <View
+            testID={testID || 'picker'}
+            accessibilityRole='combobox'
+            // @ts-ignore - custom prop for testing
+            onValueChange={onValueChange}
+          >
+            {children}
+          </View>
+        );
       },
       {
         Item: ({ label, value }: any) => null,
@@ -124,7 +134,7 @@ describe('AddressFormModal', () => {
     it('calls securePost with CREATE_ADDRESS endpoint on successful submission', async () => {
       mockSecurePost.mockResolvedValueOnce({ data: { success: true } });
 
-      const { getByText, getAllByDisplayValue } = render(
+      const { getByText, getAllByDisplayValue, getByTestId } = render(
         <AddressFormModal
           visible={true}
           onClose={mockOnClose}
@@ -141,6 +151,10 @@ describe('AddressFormModal', () => {
       fireEvent.changeText(inputs[3], 'NY');
       fireEvent.changeText(inputs[4], '10001');
 
+      // Set country via Picker
+      const picker = getByTestId('picker');
+      fireEvent(picker, 'onValueChange', 'US');
+
       const submitButton = getByText('screens.addresses.form.submit');
       fireEvent.press(submitButton);
 
@@ -152,6 +166,7 @@ describe('AddressFormModal', () => {
             address: '123 Main Street',
             city: 'New York',
             state: 'NY',
+            country: 'US',
             postalCode: '10001',
             primaryAddress: false,
           }),
@@ -166,11 +181,11 @@ describe('AddressFormModal', () => {
       mockSecurePost.mockResolvedValueOnce({
         error: {
           en: 'Failed to create address',
-          es: 'Error al crear direcci�n',
+          es: 'Error al crear dirección',
         },
       });
 
-      const { getByText, getAllByDisplayValue } = render(
+      const { getByText, getAllByDisplayValue, getByTestId } = render(
         <AddressFormModal
           visible={true}
           onClose={mockOnClose}
@@ -184,6 +199,10 @@ describe('AddressFormModal', () => {
       fireEvent.changeText(inputs[2], 'New York');
       fireEvent.changeText(inputs[3], 'NY');
       fireEvent.changeText(inputs[4], '10001');
+
+      // Set country via Picker
+      const picker = getByTestId('picker');
+      fireEvent(picker, 'onValueChange', 'US');
 
       const submitButton = getByText('screens.addresses.form.submit');
       fireEvent.press(submitButton);
@@ -199,13 +218,14 @@ describe('AddressFormModal', () => {
     it('includes primaryAddress flag when checkbox is checked', async () => {
       mockSecurePost.mockResolvedValueOnce({ data: { success: true } });
 
-      const { getByText, getAllByDisplayValue, getByRole } = render(
-        <AddressFormModal
-          visible={true}
-          onClose={mockOnClose}
-          onSuccess={mockOnSuccess}
-        />
-      );
+      const { getByText, getAllByDisplayValue, getByTestId, getByRole } =
+        render(
+          <AddressFormModal
+            visible={true}
+            onClose={mockOnClose}
+            onSuccess={mockOnSuccess}
+          />
+        );
 
       const inputs = getAllByDisplayValue('');
       fireEvent.changeText(inputs[0], 'Home Address');
@@ -214,6 +234,11 @@ describe('AddressFormModal', () => {
       fireEvent.changeText(inputs[3], 'NY');
       fireEvent.changeText(inputs[4], '10001');
 
+      // Set country via Picker
+      const picker = getByTestId('picker');
+      fireEvent(picker, 'onValueChange', 'US');
+
+      // Set primary address checkbox (role checkbox)
       const checkbox = getByRole('checkbox');
       fireEvent(checkbox, 'onValueChange', true);
 
@@ -225,6 +250,7 @@ describe('AddressFormModal', () => {
           endpoint: SECURE_ENDPOINTS.USER.CREATE_ADDRESS,
           data: expect.objectContaining({
             primaryAddress: true,
+            country: 'US',
           }),
         });
       });
