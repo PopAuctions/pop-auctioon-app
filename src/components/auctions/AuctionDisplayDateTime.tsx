@@ -2,7 +2,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
-import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 
 interface AuctionDisplayDateTimeProps {

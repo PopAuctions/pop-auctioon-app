@@ -196,6 +196,15 @@
       "username": "Nombre de usuario",
       "phoneNumber": "Número de teléfono",
       "phoneHint": "Con código de país",
+      "storeName": "Nombre de la tienda",
+      "webPage": "Página web",
+      "socialMedia": "Redes sociales",
+      "address": "Dirección",
+      "country": "País",
+      "town": "Ciudad",
+      "province": "Provincia",
+      "postalCode": "Código postal",
+      "keepUrlProtocol": "Mantén el protocolo en la URL (http:// o https://)",
       "uploadImage": "Subir imagen",
       "uploadImageButton": "Subir imagen",
       "changeImageText": "Cambiar imagen",
@@ -211,16 +220,39 @@
       "back": "Volver"
     },
     "resetPassword": {
-      "title": "Restablecer Contraseña",
-      "subtitle": "Cambia tu contraseña de acceso"
+      "title": "Restablecer contraseña",
+      "subtitle": "Cambia tu contraseña de acceso",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Ingresa tu email",
+      "sendResetLink": "Enviar enlace de restablecimiento",
+      "back": "Volver",
+      "successMessage": "Se ha enviado un enlace a tu correo",
+      "errorMessage": "Error al enviar el enlace"
     },
     "verifyPhone": {
       "title": "Verificar Teléfono",
       "subtitle": "Verifica tu número de teléfono"
     },
     "addresses": {
-      "title": "Direcciones",
-      "subtitle": "Gestiona tus direcciones de envío"
+      "title": "Mis Direcciones",
+      "subtitle": "Gestiona tus direcciones de envío",
+      "noAddressesYet": "No tienes direcciones guardadas",
+      "addNew": "Agregar nueva dirección",
+      "primaryAddress": "Principal",
+      "form": {
+        "title": "Dirección",
+        "nameAddress": "Nombre de la dirección",
+        "address": "Dirección",
+        "city": "Ciudad",
+        "state": "Estado/Provincia",
+        "country": "País",
+        "postalCode": "Código postal",
+        "setPrimary": "Establecer como dirección principal",
+        "submit": "Guardar dirección",
+        "cancel": "Cancelar"
+      },
+      "success": "Dirección guardada correctamente",
+      "error": "Error al guardar la dirección"
     },
     "billingInfo": {
       "title": "Información de Facturación",

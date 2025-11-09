@@ -6,13 +6,13 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
 >
   <View>
     <View
-      className="p-2"
+      className="p-4"
     >
       <View
         className="mb-8"
       >
         <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
+          className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
         >
           Auctions of
            
@@ -24,35 +24,7 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
           DON'T MISS ANYTHING!
         </Text>
         <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] py-4 text-center text-cinnabar"
-        >
-          No auctions found
-        </Text>
-      </View>
-      <View
-        className="mx-4 my-3"
-      >
-        <View
-          className="border-gray-200 w-full border-b"
-        />
-      </View>
-      <View
-        className="mb-8"
-      >
-        <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
-        >
-          Auctions of
-           
-          October
-        </Text>
-        <Text
-          className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black mb-4 text-center"
-        >
-          DON'T MISS ANYTHING!
-        </Text>
-        <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] py-4 text-center text-cinnabar"
+          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[40px] md:leading-[62px] py-4 text-center text-cinnabar"
         >
           No auctions found
         </Text>
@@ -68,13 +40,13 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
 >
   <View>
     <View
-      className="p-2"
+      className="p-4"
     >
       <View
         className="mb-8"
       >
         <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
+          className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
         >
           Auctions of
            
@@ -121,7 +93,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                       SEPTEMBER
                     </Text>
                     <Text
-                      className="font-rubik text-[22px] leading-[28px] md:font-poppins md:leading-[32px] text-black"
+                      className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px] text-black"
                     >
                       26
                       ,
@@ -131,7 +103,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                   </View>
                   <View>
                     <Text
-                      className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black text-right"
+                      className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[30px] md:leading-[40px] text-black text-right"
                     >
                       6:00 AM
                     </Text>
@@ -141,7 +113,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                   className=" pr-2"
                 >
                   <Text
-                    className="font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:font-poppins md:text-[30px] md:leading-[40px] text-black"
+                    className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[30px] md:leading-[40px] text-black"
                   >
                     TEST AUCTION
                   </Text>
@@ -150,34 +122,6 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
             </View>
           </View>
         </View>
-      </View>
-      <View
-        className="mx-4 my-3"
-      >
-        <View
-          className="border-gray-200 w-full border-b"
-        />
-      </View>
-      <View
-        className="mb-8"
-      >
-        <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
-        >
-          Auctions of
-           
-          October
-        </Text>
-        <Text
-          className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black mb-4 text-center"
-        >
-          DON'T MISS ANYTHING!
-        </Text>
-        <Text
-          className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] py-4 text-center text-cinnabar"
-        >
-          No auctions found
-        </Text>
       </View>
     </View>
   </View>

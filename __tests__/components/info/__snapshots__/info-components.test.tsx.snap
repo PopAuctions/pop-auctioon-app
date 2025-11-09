@@ -8,7 +8,7 @@ exports[`Info Components AboutUsContent should match snapshot 1`] = `
     className="p-6"
   >
     <Text
-      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+      className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
     >
       About Us
     </Text>
@@ -29,7 +29,7 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
     className="p-6"
   >
     <Text
-      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+      className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
     >
       Contact Us
     </Text>
@@ -50,7 +50,7 @@ exports[`Info Components FAQsContent should match snapshot 1`] = `
     className="p-6"
   >
     <Text
-      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+      className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
     >
       Frequently Asked Questions
     </Text>
@@ -71,7 +71,7 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
     className="p-6"
   >
     <Text
-      className="font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+      className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
     >
       How It Works
     </Text>

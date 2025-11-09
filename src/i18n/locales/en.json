@@ -196,6 +196,15 @@
       "username": "Username",
       "phoneNumber": "Phone Number",
       "phoneHint": "With country code",
+      "storeName": "Store Name",
+      "webPage": "Web Page",
+      "socialMedia": "Social Media",
+      "address": "Address",
+      "country": "Country",
+      "town": "Town",
+      "province": "Province",
+      "postalCode": "Postal Code",
+      "keepUrlProtocol": "Keep the protocol in the URL (http:// or https://)",
       "uploadImage": "Upload image",
       "uploadImageButton": "Upload image",
       "changeImageText": "Change image",
@@ -211,16 +220,39 @@
       "back": "Back"
     },
     "resetPassword": {
-      "title": "Reset Password",
-      "subtitle": "Change your access password"
+      "title": "Reset password",
+      "subtitle": "Change your access password",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "sendResetLink": "Send reset link",
+      "back": "Back",
+      "successMessage": "A reset link has been sent to your email",
+      "errorMessage": "Error sending reset link"
     },
     "verifyPhone": {
       "title": "Verify Phone",
       "subtitle": "Verify your phone number"
     },
     "addresses": {
-      "title": "Addresses",
-      "subtitle": "Manage your shipping addresses"
+      "title": "My Addresses",
+      "subtitle": "Manage your shipping addresses",
+      "noAddressesYet": "You don't have any saved addresses",
+      "addNew": "Add new address",
+      "primaryAddress": "Primary",
+      "form": {
+        "title": "Address",
+        "nameAddress": "Address name",
+        "address": "Address",
+        "city": "City",
+        "state": "State/Province",
+        "country": "Country",
+        "postalCode": "Postal Code",
+        "setPrimary": "Set as primary address",
+        "submit": "Save address",
+        "cancel": "Cancel"
+      },
+      "success": "Address saved successfully",
+      "error": "Error saving address"
     },
     "billingInfo": {
       "title": "Billing Information",

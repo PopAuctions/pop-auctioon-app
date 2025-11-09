@@ -13,6 +13,11 @@ export interface UserRolesTypes {
   hostAuctioneer: 'HOST_AUCTIONEER';
 }
 
+export interface ApiResponse {
+  error: string | null;
+  success: string;
+}
+
 export type User = Database['public']['Tables']['User']['Row'];
 
 export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
