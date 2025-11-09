@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { mockSupabase } from '@/__tests__/setup/mocks.mock';
+import { mockSupabase } from '../../setup/mocks.mock';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 

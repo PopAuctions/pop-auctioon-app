@@ -1,10 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { mockSupabase } from '@/__tests__/setup/mocks.mock';
+import { mockSupabase } from '../../setup/mocks.mock';
+import { FollowButton } from '@/components/ui/FollowButton';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
-
-import { FollowButton } from '@/components/ui/FollowButton';
 
 describe('FollowButton', () => {
   it('renders follow label when not following', () => {
