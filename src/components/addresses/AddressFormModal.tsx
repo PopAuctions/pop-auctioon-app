@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Modal, ScrollView, Alert } from 'react-native';
+import React from 'react';
+import { View, Modal, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
 import { useForm, Controller } from 'react-hook-form';
@@ -9,8 +9,7 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
 import { COUNTRIES_MAP } from '@/constants/payment';
 import type { CountryObject } from '@/types/types';
@@ -29,8 +28,7 @@ export function AddressFormModal({
   addressToEdit,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
-  const { securePost } = useSecureApi();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createAddress, status } = useCreateAddress();
 
   const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
 
@@ -52,30 +50,33 @@ export function AddressFormModal({
     },
   });
 
+  const isSubmitting = status === 'loading';
+
   const onSubmit = async (data: AddressSchemaType) => {
-    setIsSubmitting(true);
-
     try {
-      const response = await securePost({
-        endpoint: SECURE_ENDPOINTS.USER.CREATE_ADDRESS,
-        data,
-      });
+      const result = await createAddress(data);
 
-      if (response.error) {
-        console.error('ERROR_CREATE_ADDRESS', response.error);
+      if (!result.success) {
+        console.error(
+          'ERROR_CREATE_ADDRESS',
+          result.message ? result.message[locale] : 'Unknown error'
+        );
+        // TODO: Mostrar toast con result.message[locale]
         return;
       }
 
-      // ✅ Éxito temporal - TODO: Reemplazar con toast que muestre response.data.success[locale]
-      Alert.alert(t('commonActions.ok'), t('screens.addresses.success'));
+      // TODO: Mostrar toast de éxito con result.message[locale]
+      console.log(
+        'SUCCESS_CREATE_ADDRESS',
+        result.message ? result.message[locale] : 'Address created'
+      );
 
       reset();
       onSuccess();
       onClose();
     } catch (error) {
       console.error('ERROR_CREATE_ADDRESS_CATCH', error);
-    } finally {
-      setIsSubmitting(false);
+      // TODO: Mostrar toast de error
     }
   };
 
