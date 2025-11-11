@@ -9,7 +9,7 @@ import {
   type PressableProps,
 } from 'react-native';
 
-export type ButtonMode = 'primary' | 'secondary';
+export type ButtonMode = 'primary' | 'secondary' | 'empty';
 export type ButtonSize = 'small' | 'large';
 
 interface ButtonProps extends Omit<PressableProps, 'children'> {
@@ -25,6 +25,7 @@ interface ButtonProps extends Omit<PressableProps, 'children'> {
 export const BUTTON_MODE_STYLES: Record<ButtonMode, string> = {
   primary: 'bg-cinnabar text-white',
   secondary: 'bg-white border border-silver text-cinnabar',
+  empty: 'bg-transparent text-black',
 };
 
 export const BUTTON_SIZE_STYLES: Record<
@@ -38,6 +39,10 @@ export const BUTTON_SIZE_STYLES: Record<
   secondary: {
     small: 'px-[15px] py-[7px]',
     large: 'px-[27px] py-[11px]',
+  },
+  empty: {
+    small: 'px-2 py-1',
+    large: 'px-4 py-2',
   },
 };
 
