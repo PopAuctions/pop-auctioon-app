@@ -14,6 +14,8 @@ interface Props {
   isSearchable?: boolean;
   isClearable?: boolean;
   isDisabled?: boolean;
+  formField?: boolean;
+  onChange?: (value: string | null) => void;
 }
 
 export function SelectField({
@@ -24,6 +26,8 @@ export function SelectField({
   isClearable = false,
   isDisabled = false,
   placeholder,
+  formField = false,
+  onChange,
 }: Props) {
   const setParam = (val?: string) => {
     router.setParams({ [name]: (val as any) ?? (undefined as any) });
@@ -31,15 +35,28 @@ export function SelectField({
 
   const handleSelect = (item: any) => {
     const nextVal: string = item?.value ?? '';
-    if (nextVal) {
-      setParam(nextVal);
+
+    if (formField && onChange) {
+      // Form mode: call the provided onChange handler
+      onChange(nextVal || null);
     } else {
-      setParam(undefined);
+      // Query params mode: use router.setParams
+      if (nextVal) {
+        setParam(nextVal);
+      } else {
+        setParam(undefined);
+      }
     }
   };
 
   const handleClear = () => {
-    setParam(undefined);
+    if (formField && onChange) {
+      // Form mode: call the provided onChange handler with null
+      onChange(null);
+    } else {
+      // Query params mode: use router.setParams
+      setParam(undefined);
+    }
   };
 
   return (

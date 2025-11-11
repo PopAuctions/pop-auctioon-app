@@ -15,6 +15,7 @@ export function Tooltip({ text }: InfoTooltipProps) {
         onPress={() => setOpen(true)}
         hitSlop={10}
         className='h-4 w-4 items-center justify-center rounded-full bg-black/5'
+        testID='tooltip-pressable'
       >
         <FontAwesomeIcon
           name='info-circle'

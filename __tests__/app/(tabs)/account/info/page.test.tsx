@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { mockTranslation } from '../../../../setup/mocks.mock';
 import InfoScreen from '@/app/(tabs)/account/info/[page]';
 
 const mockUseLocalSearchParams = jest.fn();
@@ -12,10 +13,7 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('@/hooks/i18n/useTranslation', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    locale: 'en',
-  }),
+  useTranslation: () => mockTranslation,
 }));
 
 jest.mock('@/components/info/AboutUsContent', () => {

@@ -1,5 +1,4 @@
 import { View, ScrollView } from 'react-native';
-import { Session } from '@supabase/supabase-js';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
@@ -8,19 +7,19 @@ import { Button } from '@/components/ui/Button';
 import { router } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useAuth } from '@/context/auth-context';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { User } from '@/types/types';
+import { Divider } from '@/components/ui/Divider';
+import { CustomImage } from '@/components/ui/CustomImage';
 
-export default function Account({ session }: { session: Session }) {
+export default function Account({ currentUser }: { currentUser: User }) {
   const { signOut } = useAuth();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  // Extraer iniciales del email del usuario
-  const getUserInitials = () => {
-    const email = session?.user?.email || '';
-    const username = email.split('@')[0];
-    return username.substring(0, 2).toUpperCase();
-  };
+  const userInitials = useMemo(() => {
+    return currentUser.username.substring(0, 2).toUpperCase();
+  }, [currentUser.username]);
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -36,29 +35,46 @@ export default function Account({ session }: { session: Session }) {
     >
       <ScrollView className='flex-1'>
         {/* Header con avatar y nombre de usuario */}
-        <View className='border-gray-200 border-b  px-6 pb-6 pt-4'>
-          <View className='flex-row items-center'>
-            {/* Avatar circular con iniciales */}
-            <View className='mr-4 h-16 w-16 items-center justify-center rounded-full bg-yellow-400'>
+        <View className='flex-row items-center px-6 pb-6 pt-4'>
+          {/* Avatar circular con iniciales */}
+          {currentUser.profilePicture ? (
+            <View className='mr-4 h-20 w-20 overflow-hidden rounded-full bg-neutral-200'>
+              <CustomImage
+                src={currentUser.profilePicture}
+                alt={`${currentUser.username} ${currentUser.lastName} Image`}
+                className='h-full w-full'
+                resizeMode='cover'
+              />
+            </View>
+          ) : (
+            <View className='mr-4 h-20 w-20 items-center justify-center rounded-full bg-cinnabar'>
               <CustomText
                 type='h1'
-                className='text-2xl font-bold text-black'
+                className='text-center text-2xl font-bold text-white'
               >
-                {getUserInitials()}
+                {userInitials}
               </CustomText>
             </View>
+          )}
 
-            {/* Nombre de usuario */}
-            <View className='flex-1'>
-              <CustomText
-                type='h2'
-                className='text-xl font-bold text-black'
-              >
-                {session?.user?.email?.split('@')[0] || 'Usuario'}
-              </CustomText>
-            </View>
+          {/* Nombre de usuario */}
+          <View className='flex-1 gap-2'>
+            <CustomText
+              type='h2'
+              className='text-xl'
+            >
+              {`${currentUser.name} ${currentUser.lastName}`}
+            </CustomText>
+            <CustomText
+              type='h2'
+              className='text-base'
+            >
+              {currentUser.email}
+            </CustomText>
           </View>
         </View>
+
+        <Divider />
 
         {/* Opciones de cuenta */}
         <View className='mx-2 p-4'>
@@ -297,7 +313,7 @@ export default function Account({ session }: { session: Session }) {
           </CustomLink>
 
           {/* Línea divisoria */}
-          <View className='border-gray-300 my-4 border-t' />
+          <Divider className='my-2' />
 
           {/* About Us */}
           <CustomLink

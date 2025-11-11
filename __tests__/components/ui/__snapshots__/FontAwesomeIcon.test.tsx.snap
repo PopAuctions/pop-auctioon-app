@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FontAwesomeIcon renders bold variant (FontAwesome) 1`] = `<Text />`;
+
+exports[`FontAwesomeIcon renders light variant (FontAwesome6) 1`] = `<Text />`;
+
+exports[`FontAwesomeIcon renders normal variant (FontAwesome5) 1`] = `<Text />`;
+
+exports[`FontAwesomeIcon renders with cinnabar color 1`] = `
+<Text
+  allowFontScaling={false}
+  selectable={false}
+  style={
+    [
+      {
+        "color": "#d75639",
+        "fontSize": 24,
+      },
+      undefined,
+      {
+        "fontFamily": "FontAwesome5Free-Regular",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+      },
+      {
+        "fontWeight": "400",
+      },
+    ]
+  }
+>
+  
+</Text>
+`;

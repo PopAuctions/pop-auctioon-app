@@ -244,6 +244,77 @@ export const useSecureApi = () => {
     [createBaseHeaders, makeRequest]
   );
 
+  const protectedPatch = useCallback(
+    async <T>({
+      endpoint,
+      data = {},
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      data?: any;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
+      const headers = createBaseHeaders();
+      const url = buildProtectedUrl(endpoint);
+
+      try {
+        return makeRequest<T>(
+          url,
+          {
+            method: 'PATCH',
+            headers,
+            body: JSON.stringify(data),
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - protectedPatch failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al actualizar información',
+            en: 'Error updating information',
+          },
+        };
+      }
+    },
+    [createBaseHeaders, makeRequest]
+  );
+
+  const protectedDelete = useCallback(
+    async <T>({
+      endpoint,
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
+      const headers = createBaseHeaders();
+      const url = buildProtectedUrl(endpoint);
+
+      try {
+        return makeRequest<T>(
+          url,
+          {
+            method: 'DELETE',
+            headers,
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - protectedDelete failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al eliminar información',
+            en: 'Error deleting information',
+          },
+        };
+      }
+    },
+    [createBaseHeaders, makeRequest]
+  );
+
   // ========================================
   // MÉTODOS SEGUROS (JWT + API Key)
   // ========================================
@@ -332,6 +403,90 @@ export const useSecureApi = () => {
     [createSecureHeaders, makeRequest]
   );
 
+  const securePatch = useCallback(
+    async <T>({
+      endpoint,
+      data = {},
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      data?: any;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
+      try {
+        const headers = await createSecureHeaders();
+        const url = buildSecureUrl(endpoint);
+
+        // Detectar si data es FormData
+        const isFormData = data instanceof FormData;
+
+        // Si es FormData, no agregar Content-Type (fetch lo establece automáticamente)
+        // y no usar JSON.stringify
+        const requestHeaders = isFormData
+          ? Object.fromEntries(
+              Object.entries(headers).filter(
+                ([key]) => key !== HEADERS_CONFIG.CONTENT_TYPE_HEADER
+              )
+            )
+          : headers;
+
+        return makeRequest<T>(
+          url,
+          {
+            method: 'PATCH',
+            headers: requestHeaders,
+            body: isFormData ? data : JSON.stringify(data),
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - securePatch failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al actualizar información',
+            en: 'Error updating information',
+          },
+        };
+      }
+    },
+    [createSecureHeaders, makeRequest]
+  );
+
+  const secureDelete = useCallback(
+    async <T>({
+      endpoint,
+      options = {},
+    }: {
+      endpoint: ApiEndpoint;
+      options?: RequestOptions;
+    }): Promise<Partial<ApiResponse<T>>> => {
+      try {
+        const headers = await createSecureHeaders();
+        const url = buildSecureUrl(endpoint);
+
+        return makeRequest<T>(
+          url,
+          {
+            method: 'DELETE',
+            headers,
+          },
+          options
+        );
+      } catch (error) {
+        sentryErrorReport(error, `${endpoint} - secureDelete failed`);
+        return {
+          status: 400,
+          error: {
+            es: 'Error al eliminar información',
+            en: 'Error deleting information',
+          },
+        };
+      }
+    },
+    [createSecureHeaders, makeRequest]
+  );
+
   // ========================================
   // MÉTODOS DE UTILIDAD
   // ========================================
@@ -363,8 +518,12 @@ export const useSecureApi = () => {
     // Métodos principales
     protectedGet,
     protectedPost,
+    protectedPatch,
+    protectedDelete,
     secureGet,
     securePost,
+    securePatch,
+    secureDelete,
 
     // Utilidades
     isAuthenticated,
@@ -386,25 +545,47 @@ export type { ApiResponse, RequestOptions };
 /*
 // Ejemplo 1: Enviar email (PROTECTED - solo API Key)
 const { protectedPost } = useSecureApi();
-const result = await protectedPost('/email/send', {
-  to: 'user@example.com',
-  subject: 'Bienvenido',
-  template: 'welcome'
+const result = await protectedPost({
+  endpoint: '/email/send',
+  data: {
+    to: 'user@example.com',
+    subject: 'Bienvenido',
+    template: 'welcome'
+  }
 });
 
 // Ejemplo 2: Obtener variables de entorno (SECURE - JWT + API Key)
 const { secureGet } = useSecureApi();
-const envVars = await secureGet('/config/variables');
+const envVars = await secureGet({ endpoint: '/config/variables' });
 
 // Ejemplo 3: Crear subasta (SECURE - JWT + API Key)
 const { securePost } = useSecureApi();
-const newAuction = await securePost('/auctions/create', {
-  title: 'Nueva Subasta',
-  startingPrice: 100,
-  duration: '24h'
+const newAuction = await securePost({
+  endpoint: '/auctions/create',
+  data: {
+    title: 'Nueva Subasta',
+    startingPrice: 100,
+    duration: '24h'
+  }
 });
 
-// Ejemplo 4: Verificar autenticación
+// Ejemplo 4: Actualizar billing address (SECURE PATCH - JWT + API Key)
+const { securePatch } = useSecureApi();
+const updated = await securePatch({
+  endpoint: '/user/billing/123',
+  data: {
+    address: '456 New St',
+    city: 'New City'
+  }
+});
+
+// Ejemplo 5: Eliminar billing address (SECURE DELETE - JWT + API Key)
+const { secureDelete } = useSecureApi();
+const deleted = await secureDelete({
+  endpoint: '/user/billing/123'
+});
+
+// Ejemplo 6: Verificar autenticación
 const { isAuthenticated } = useSecureApi();
 const isLoggedIn = await isAuthenticated();
 */

@@ -38,7 +38,7 @@ describe('useGetAddresses', () => {
 
     mockSecureGet.mockResolvedValueOnce({
       data: mockAddresses,
-      error: null,
+      error: undefined,
     });
 
     const { result } = renderHook(() => useGetAddresses());
@@ -59,7 +59,7 @@ describe('useGetAddresses', () => {
     };
 
     mockSecureGet.mockResolvedValueOnce({
-      data: null,
+      data: undefined,
       error: mockError,
     });
 
@@ -76,7 +76,7 @@ describe('useGetAddresses', () => {
   it('should handle empty array response', async () => {
     mockSecureGet.mockResolvedValueOnce({
       data: [],
-      error: null,
+      error: undefined,
     });
 
     const { result } = renderHook(() => useGetAddresses());
@@ -107,7 +107,7 @@ describe('useGetAddresses', () => {
 
     mockSecureGet.mockResolvedValueOnce({
       data: mockAddresses,
-      error: null,
+      error: undefined,
     });
 
     const { result } = renderHook(() => useGetAddresses());
@@ -135,7 +135,7 @@ describe('useGetAddresses', () => {
 
     mockSecureGet.mockResolvedValueOnce({
       data: updatedAddresses,
-      error: null,
+      error: undefined,
     });
 
     // Call refetch

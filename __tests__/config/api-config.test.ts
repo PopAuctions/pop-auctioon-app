@@ -44,7 +44,9 @@ describe('API Config - User Endpoints', () => {
 
   describe('Endpoint Consistency', () => {
     it('should prefix all user endpoints with /user/', () => {
-      const userEndpoints = Object.values(SECURE_ENDPOINTS.USER);
+      const userEndpoints = Object.values(SECURE_ENDPOINTS.USER).filter(
+        (endpoint) => typeof endpoint === 'string'
+      );
 
       userEndpoints.forEach((endpoint) => {
         expect(endpoint).toMatch(/^\/user\//);
