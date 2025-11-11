@@ -4,28 +4,15 @@
  */
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import { mockTranslation } from '../../setup/mocks.mock';
 import { Button, BUTTON_MODE_STYLES } from '@/components/ui/Button';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 // Mock translation hook
 jest.mock('@/hooks/i18n/useTranslation', () => ({
-  useTranslation: jest.fn(),
+  useTranslation: () => mockTranslation,
 }));
 
-const mockUseTranslation = useTranslation as jest.MockedFunction<
-  typeof useTranslation
->;
-
 describe('Button', () => {
-  beforeEach(() => {
-    mockUseTranslation.mockReturnValue({
-      t: jest.fn((key: any) => key) as any,
-      changeLanguage: jest.fn(),
-      locale: 'es',
-      isPending: false,
-    });
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });

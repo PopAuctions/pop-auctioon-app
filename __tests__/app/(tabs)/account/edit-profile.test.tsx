@@ -1,25 +1,24 @@
+import {
+  mockSupabase,
+  mockAuth,
+  mockSecureApi,
+  mockTranslation,
+} from '../../../setup/mocks.mock';
 import { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
 
 // Mock de Supabase para evitar errores de importación
-jest.mock('@/utils/supabase/supabase-store', () => ({
-  supabase: {
-    auth: {
-      getSession: jest.fn(),
-      getUser: jest.fn(),
-    },
-  },
-}));
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
 jest.mock('@/context/auth-context', () => ({
-  useAuth: jest.fn(),
+  useAuth: () => mockAuth,
 }));
 
 jest.mock('@/hooks/api/useSecureApi', () => ({
-  useSecureApi: jest.fn(),
+  useSecureApi: () => mockSecureApi,
 }));
 
 jest.mock('@/hooks/i18n/useTranslation', () => ({
-  useTranslation: jest.fn(),
+  useTranslation: () => mockTranslation,
 }));
 
 jest.mock('expo-router', () => ({

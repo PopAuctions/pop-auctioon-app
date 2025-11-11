@@ -33,7 +33,7 @@ describe('useCreateAddress', () => {
   it('should create address successfully', async () => {
     mockSecurePost.mockResolvedValueOnce({
       data: { success: true },
-      error: null,
+      error: undefined,
     });
 
     const { result } = renderHook(() => useCreateAddress());
@@ -63,7 +63,7 @@ describe('useCreateAddress', () => {
     };
 
     mockSecurePost.mockResolvedValueOnce({
-      data: null,
+      data: undefined,
       error: mockError,
     });
 
@@ -107,7 +107,7 @@ describe('useCreateAddress', () => {
             () =>
               resolve({
                 data: { success: true },
-                error: null,
+                error: undefined,
               }),
             100
           );
@@ -136,11 +136,11 @@ describe('useCreateAddress', () => {
     mockSecurePost
       .mockResolvedValueOnce({
         data: { success: true },
-        error: null,
+        error: undefined,
       })
       .mockResolvedValueOnce({
         data: { success: true },
-        error: null,
+        error: undefined,
       });
 
     const { result } = renderHook(() => useCreateAddress());

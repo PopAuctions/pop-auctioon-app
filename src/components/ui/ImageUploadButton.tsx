@@ -135,6 +135,7 @@ export function ImageUploadButton({
                         source={{ uri: imageUri }}
                         className='h-20 w-20 rounded-lg'
                         resizeMode='cover'
+                        testID='image'
                       />
                       {/* Botón para eliminar */}
                       <TouchableOpacity
@@ -171,6 +172,7 @@ export function ImageUploadButton({
                     source={{ uri: selectedImage }}
                     className='h-24 w-24 rounded-lg'
                     resizeMode='cover'
+                    testID='image'
                   />
                   {/* Botón para eliminar */}
                   <TouchableOpacity
