@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Modal, ScrollView } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +7,7 @@ import { AddressSchema, type AddressSchemaType } from '@/utils/schemas';
 import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { SelectField } from '@/components/fields/SelectField';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
@@ -234,29 +234,20 @@ export function AddressFormModal({
               control={control}
               name='country'
               render={({ field: { onChange, value } }) => (
-                <View className='border-gray-300 overflow-hidden rounded-lg border bg-white'>
-                  <Picker
-                    selectedValue={value}
-                    onValueChange={onChange}
-                    enabled={!isSubmitting}
-                    style={{
-                      height: 50,
-                    }}
-                  >
-                    <Picker.Item
-                      label={t('screens.addresses.form.country')}
-                      value=''
-                      enabled={false}
-                    />
-                    {countries.map((country) => (
-                      <Picker.Item
-                        key={country.value}
-                        label={country.label}
-                        value={country.value}
-                      />
-                    ))}
-                  </Picker>
-                </View>
+                <SelectField
+                  name='country'
+                  value={value}
+                  options={countries.map((country) => ({
+                    label: country.label,
+                    value: country.value,
+                  }))}
+                  placeholder={t('screens.addresses.form.country')}
+                  isDisabled={isSubmitting}
+                  isClearable={false}
+                  isSearchable={true}
+                  formField={true}
+                  onChange={onChange}
+                />
               )}
             />
             {errors.country && (

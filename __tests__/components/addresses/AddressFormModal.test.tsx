@@ -8,28 +8,24 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
-jest.mock('@react-native-picker/picker', () => {
+// Mock react-native-element-dropdown (used by SelectField)
+jest.mock('react-native-element-dropdown', () => {
   const React = require('react');
   const { View } = require('react-native');
   return {
-    Picker: Object.assign(
-      ({ children, onValueChange, selectedValue, testID }: any) => {
-        // Create a testable element that can trigger onValueChange
-        return (
-          <View
-            testID={testID || 'picker'}
-            accessibilityRole='combobox'
-            // @ts-ignore - custom prop for testing
-            onValueChange={onValueChange}
-          >
-            {children}
-          </View>
-        );
-      },
-      {
-        Item: ({ label, value }: any) => null,
-      }
-    ),
+    Dropdown: ({ onChange, value, data, ...props }: any) => {
+      return (
+        <View
+          testID='dropdown'
+          accessibilityRole='combobox'
+          // @ts-ignore - custom prop for testing
+          onChange={onChange}
+          // @ts-ignore - custom prop for testing
+          value={value}
+          {...props}
+        />
+      );
+    },
   };
 });
 
@@ -134,7 +130,7 @@ describe('AddressFormModal', () => {
     it('calls securePost with CREATE_ADDRESS endpoint on successful submission', async () => {
       mockSecurePost.mockResolvedValueOnce({ data: { success: true } });
 
-      const { getByText, getAllByDisplayValue, getByTestId } = render(
+      const { getByText, getAllByDisplayValue, UNSAFE_getByType } = render(
         <AddressFormModal
           visible={true}
           onClose={mockOnClose}
@@ -151,9 +147,10 @@ describe('AddressFormModal', () => {
       fireEvent.changeText(inputs[3], 'NY');
       fireEvent.changeText(inputs[4], '10001');
 
-      // Set country via Picker
-      const picker = getByTestId('picker');
-      fireEvent(picker, 'onValueChange', 'US');
+      // Set country via SelectField (Dropdown component)
+      const { Dropdown } = require('react-native-element-dropdown');
+      const dropdown = UNSAFE_getByType(Dropdown);
+      fireEvent(dropdown, 'onChange', { value: 'US', label: 'United States' });
 
       const submitButton = getByText('screens.addresses.form.submit');
       fireEvent.press(submitButton);
@@ -185,7 +182,7 @@ describe('AddressFormModal', () => {
         },
       });
 
-      const { getByText, getAllByDisplayValue, getByTestId } = render(
+      const { getByText, getAllByDisplayValue, UNSAFE_getByType } = render(
         <AddressFormModal
           visible={true}
           onClose={mockOnClose}
@@ -200,9 +197,10 @@ describe('AddressFormModal', () => {
       fireEvent.changeText(inputs[3], 'NY');
       fireEvent.changeText(inputs[4], '10001');
 
-      // Set country via Picker
-      const picker = getByTestId('picker');
-      fireEvent(picker, 'onValueChange', 'US');
+      // Set country via SelectField (Dropdown component)
+      const { Dropdown } = require('react-native-element-dropdown');
+      const dropdown = UNSAFE_getByType(Dropdown);
+      fireEvent(dropdown, 'onChange', { value: 'US', label: 'United States' });
 
       const submitButton = getByText('screens.addresses.form.submit');
       fireEvent.press(submitButton);
@@ -218,7 +216,7 @@ describe('AddressFormModal', () => {
     it('includes primaryAddress flag when checkbox is checked', async () => {
       mockSecurePost.mockResolvedValueOnce({ data: { success: true } });
 
-      const { getByText, getAllByDisplayValue, getByTestId, getByRole } =
+      const { getByText, getAllByDisplayValue, UNSAFE_getByType, getByRole } =
         render(
           <AddressFormModal
             visible={true}
@@ -234,9 +232,10 @@ describe('AddressFormModal', () => {
       fireEvent.changeText(inputs[3], 'NY');
       fireEvent.changeText(inputs[4], '10001');
 
-      // Set country via Picker
-      const picker = getByTestId('picker');
-      fireEvent(picker, 'onValueChange', 'US');
+      // Set country via SelectField (Dropdown component)
+      const { Dropdown } = require('react-native-element-dropdown');
+      const dropdown = UNSAFE_getByType(Dropdown);
+      fireEvent(dropdown, 'onChange', { value: 'US', label: 'United States' });
 
       // Set primary address checkbox (role checkbox)
       const checkbox = getByRole('checkbox');
