@@ -49,10 +49,11 @@ export function FollowButton({
   const { callToast } = useToast(lang);
 
   const isLoading = status === 'loading';
-  const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
 
   const handleClick = async () => {
     setStatus('loading');
+    const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
+
     try {
       const response = await securePost<LangMap>({ endpoint });
 
@@ -68,6 +69,7 @@ export function FollowButton({
       callToast({ variant: 'success', description: response.data });
     } catch (e: any) {
       sentryErrorReport(e?.message, `FOLLOW_BUTTON - ${endpoint}`);
+      setStatus('error');
     }
   };
 

@@ -15,7 +15,7 @@ export function useToast(lang: Lang) {
     actionLabel,
     onAction,
   }: {
-    variant: ToastVariant;
+    variant?: ToastVariant;
     description?: LangMap | null;
     position?: ToastPosition;
     durationMs?: number;
@@ -39,7 +39,7 @@ export function useToast(lang: Lang) {
       text1: TOAST_TEXTS[lang][variant],
       text2: description ? description[lang] : undefined,
       visibilityTime: durationMs,
-      props: { actionLabel, onAction },
+      // props: { actionLabel, onAction },
     });
   };
 

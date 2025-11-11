@@ -1,10 +1,23 @@
 import React from 'react';
 import Toast, { type ToastConfig } from 'react-native-toast-message';
-import { View, Text, Image, Pressable, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  Platform,
+  ImageSourcePropType,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lang } from '@/types/types';
 
 export type ToastVariant = 'success' | 'error' | 'warning' | 'info';
+
+interface ToastComponentProps {
+  text1?: string;
+  text2?: string;
+  onPress?: () => void;
+}
 
 export const TOAST_TEXTS: Record<Lang, Record<ToastVariant, string>> = {
   en: { success: 'Success', error: 'Error', warning: 'Warning', info: 'Info' },
@@ -16,7 +29,7 @@ export const TOAST_TEXTS: Record<Lang, Record<ToastVariant, string>> = {
   },
 };
 
-const ICONS: Record<ToastVariant, any> = {
+const ICONS: Record<ToastVariant, ImageSourcePropType> = {
   success: require('../../assets/icons/toast/success.webp'),
   error: require('../../assets/icons/toast/error.webp'),
   warning: require('../../assets/icons/toast/warning.webp'),
@@ -38,10 +51,15 @@ const textClass: Record<ToastVariant, string> = {
 };
 
 const makeToast = (variant: ToastVariant) => {
-  const ToastComponent = ({ text1, text2, onPress }: any) => (
+  const ToastComponent = ({ text1, text2, onPress }: ToastComponentProps) => (
     <Pressable
       accessibilityRole='alert'
-      onPress={onPress}
+      onPress={() => {
+        Toast.hide();
+        if (typeof onPress === 'function') {
+          onPress();
+        }
+      }}
       className={`mx-4 mt-2 flex-row items-center rounded-2xl border border-l-4 p-3 ${
         containerClass[variant]
       }`}

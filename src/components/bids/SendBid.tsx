@@ -92,7 +92,6 @@ export function SendBid({
   const sendBid = async () => {
     if (parseInt(bidAmount) < computedMinBid) {
       const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
-
       callToast({
         variant: 'error',
         description: { es: message, en: message },
@@ -104,8 +103,6 @@ export function SendBid({
     // enforce max
     if (parseInt(bidAmount) > computedMaxBid) {
       const message = bidLang.maxBid + ' ' + formatter.format(computedMaxBid);
-      console.log(message);
-
       callToast({
         variant: 'error',
         description: { es: message, en: message },
