@@ -347,7 +347,7 @@ exports[`CustomLink Hover and interaction effects should apply hover effects by 
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-white "
   >
     Hover Link
   </Text>
@@ -390,7 +390,7 @@ exports[`CustomLink Hover and interaction effects should disable hover effects w
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-white "
   >
     No Hover Link
   </Text>
@@ -472,7 +472,7 @@ exports[`CustomLink Link modes and styling should render plainText mode 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal underline"
+    className="text-center text-lg font-normal text-cinnabar underline"
   >
     Plain Text Link
   </Text>
@@ -515,7 +515,7 @@ exports[`CustomLink Link modes and styling should render primary mode 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-white "
   >
     Primary Link
   </Text>
@@ -558,7 +558,7 @@ exports[`CustomLink Link modes and styling should render secondary mode 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-cinnabar "
   >
     Secondary Link
   </Text>
@@ -601,7 +601,7 @@ exports[`CustomLink Link sizes should handle plainText size variations 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal underline"
+    className="text-center text-lg font-normal text-cinnabar underline"
   >
     Small Plain Text
   </Text>
@@ -644,7 +644,7 @@ exports[`CustomLink Link sizes should render large size by default 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-white "
   >
     Large Link
   </Text>
@@ -687,7 +687,7 @@ exports[`CustomLink Link sizes should render small primary link 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-white "
   >
     Small Primary
   </Text>
@@ -730,7 +730,7 @@ exports[`CustomLink Link sizes should render small secondary link 1`] = `
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-cinnabar "
   >
     Small Secondary
   </Text>
@@ -773,7 +773,7 @@ exports[`CustomLink Text rendering modes should apply underline for plainText mo
   }
 >
   <Text
-    className="text-center text-base font-normal underline"
+    className="text-center text-lg font-normal text-cinnabar underline"
   >
     Underlined Text
   </Text>
@@ -855,7 +855,7 @@ exports[`CustomLink Text rendering modes should wrap children in Text component 
   }
 >
   <Text
-    className="text-center text-base font-normal "
+    className="text-center text-lg font-normal text-white "
   >
     Styled Text Content
   </Text>

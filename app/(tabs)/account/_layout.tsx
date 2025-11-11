@@ -48,7 +48,7 @@ export default function AccountLayout() {
       <Stack.Screen
         name='reset-password'
         options={{
-          title: t('screens.account.resetPassword'),
+          title: '', //t('screens.account.resetPassword'),
           presentation: 'card',
         }}
       />

@@ -70,19 +70,28 @@ describe('CalendarScreen', () => {
 
   it('renders loading state correctly', () => {
     mockUseAuctionsCalendar.mockReturnValue({
-      auctions: null,
+      auctions: {
+        today: [],
+        this_month: [],
+        next_month: [],
+      },
       status: 'loading',
       refetch: jest.fn(),
     });
 
     const { getByText } = render(<CalendarScreen />);
-    expect(getByText('Loading auctions...')).toBeTruthy();
+    // El componente Loading muestra "Loading..." no "Loading auctions..."
+    expect(getByText('Loading...')).toBeTruthy();
   });
 
   it('renders error state correctly', () => {
     const mockRefetch = jest.fn();
     mockUseAuctionsCalendar.mockReturnValue({
-      auctions: null,
+      auctions: {
+        today: [],
+        this_month: [],
+        next_month: [],
+      },
       status: 'error',
       refetch: mockRefetch,
     });
@@ -104,20 +113,24 @@ describe('CalendarScreen', () => {
         refetch: jest.fn(),
       });
 
-      const { getByText, queryAllByText } = render(<CalendarScreen />);
+      const { getByText, queryAllByText, queryByText } = render(
+        <CalendarScreen />
+      );
 
       await waitFor(() => {
-        // Verificar que se muestran los títulos de ambos meses
+        // Verificar que se muestra solo el título del mes actual
         expect(getByText('Auctions of September')).toBeTruthy();
-        expect(getByText('Auctions of October')).toBeTruthy();
 
-        // Verificar que se muestran los subtítulos
+        // El próximo mes NO debe mostrarse cuando next_month está vacío
+        expect(queryByText('Auctions of October')).toBeNull();
+
+        // Verificar que se muestra el subtítulo
         const subtitles = queryAllByText("DON'T MISS ANYTHING!");
-        expect(subtitles).toHaveLength(2);
+        expect(subtitles).toHaveLength(1);
 
-        // Verificar que se muestran los mensajes de "no auctions" en ambos meses
+        // Verificar que se muestra el mensaje de "no auctions"
         const noAuctionsMessages = queryAllByText('No auctions found');
-        expect(noAuctionsMessages).toHaveLength(2);
+        expect(noAuctionsMessages).toHaveLength(1);
       });
     });
 
@@ -188,20 +201,18 @@ describe('CalendarScreen', () => {
         refetch: jest.fn(),
       });
 
-      const { getByText, queryAllByText } = render(<CalendarScreen />);
+      const { getByText, queryByText } = render(<CalendarScreen />);
 
       await waitFor(() => {
-        // Verificar títulos
+        // Verificar título del mes actual
         expect(getByText('Auctions of September')).toBeTruthy();
-        expect(getByText('Auctions of October')).toBeTruthy();
+
+        // El próximo mes NO debe mostrarse cuando next_month está vacío
+        expect(queryByText('Auctions of October')).toBeNull();
 
         // Verificar que septiembre muestra las subastas
         expect(getByText('SUBASTA LOTE HERMES')).toBeTruthy();
         expect(getByText('PRELOVED')).toBeTruthy();
-
-        // Verificar que octubre muestra "no auctions"
-        const noAuctionsMessages = queryAllByText('No auctions found');
-        expect(noAuctionsMessages).toHaveLength(1); // Solo octubre
       });
     });
 

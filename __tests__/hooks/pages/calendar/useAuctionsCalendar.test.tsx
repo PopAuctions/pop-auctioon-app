@@ -74,7 +74,11 @@ describe('useAuctionsCalendar', () => {
 
       // Check initial state
       expect(result.current.status).toBe('loading');
-      expect(result.current.auctions).toBeNull();
+      expect(result.current.auctions).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
       expect(typeof result.current.refetch).toBe('function');
     });
 
@@ -214,10 +218,14 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded'); // Finally block sets to 'loaded'
+        expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.auctions).toBeNull();
+      expect(result.current.auctions).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
       expect(mockSentryErrorReport).toHaveBeenCalledWith(
         'RPC function failed',
         'USE_AUCTIONS_CALENDAR - RPC filter_auctions_for_calendar failed'
@@ -236,10 +244,14 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.auctions).toBeNull();
+      expect(result.current.auctions).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
       expect(mockSentryErrorReport).toHaveBeenCalledWith(
         'No data returned from calendar RPC',
         'USE_AUCTIONS_CALENDAR - RPC filter_auctions_for_calendar failed'
@@ -253,10 +265,14 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.auctions).toBeNull();
+      expect(result.current.auctions).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
       expect(mockSentryErrorReport).toHaveBeenCalledWith(
         mockError,
         'USE_AUCTIONS_CALENDAR - Unexpected error'
@@ -274,10 +290,14 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.auctions).toBeNull();
+      expect(result.current.auctions).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
       expect(mockSentryErrorReport).toHaveBeenCalledWith(
         mockError,
         'USE_AUCTIONS_CALENDAR - Unexpected error'
@@ -346,7 +366,11 @@ describe('useAuctionsCalendar', () => {
 
       // Should start as loading
       expect(result.current.status).toBe('loading');
-      expect(result.current.auctions).toBeNull();
+      expect(result.current.auctions).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
 
       // Wait for completion
       await waitFor(() => {

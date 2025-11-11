@@ -79,9 +79,13 @@ export const SECURE_ENDPOINTS = {
   USER: {
     PROFILE: '/user/profile',
     UPDATE_PROFILE: '/user/update-profile',
+    EDIT_INFO: '/user/edit-user-info',
     PREFERENCES: '/user/preferences',
     HISTORY: '/user/history',
     FAVORITES: '/user/favorites',
+    ADDRESSES: '/user/addresses',
+    CREATE_ADDRESS: '/user/addresses/create',
+    CURRENT_USER: '/user/current',
   },
 
   // Server Actions y operaciones complejas
