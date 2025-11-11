@@ -190,6 +190,7 @@ export default function AuctionDetailScreen() {
               )}
 
               <ShareButton
+                lang={locale}
                 className='w-1/2'
                 mode='secondary'
               >

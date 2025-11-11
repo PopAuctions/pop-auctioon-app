@@ -1,8 +1,9 @@
-import { useState } from 'react';
-// import { useToast } from '@/hooks/useToast';
+import { useEffect, useState } from 'react';
 import { ApiEndpoint, Lang, LangMap, RequestStatus } from '@/types/types';
 import { Button, ButtonMode, ButtonSize } from './Button';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { useToast } from '@/hooks/useToast';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 interface FollowButtonProps {
   mode: ButtonMode;
@@ -14,11 +15,6 @@ interface FollowButtonProps {
   isAvailable?: boolean;
   extraDataIsLoaded?: boolean;
   lang: Lang;
-}
-
-interface Response {
-  error: LangMap | null;
-  success: LangMap | null;
 }
 
 const TEXTS = {
@@ -47,38 +43,39 @@ export function FollowButton({
   isAvailable = false,
   extraDataIsLoaded = false,
 }: FollowButtonProps) {
-  const [isFollowing, setIsFollowing] = useState(follows);
+  const [isFollowing, setIsFollowing] = useState(() => !!follows);
   const [status, setStatus] = useState<RequestStatus>('idle');
   const { securePost } = useSecureApi();
+  const { callToast } = useToast(lang);
 
   const isLoading = status === 'loading';
-  // TODO: enable toasts
-  // const { callToast } = useToast(lang);
 
   const handleClick = async () => {
     setStatus('loading');
+    const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
+
     try {
-      const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
-      const response = await securePost<Response>({ endpoint });
+      const response = await securePost<LangMap>({ endpoint });
 
       if (response.error) {
-        console.log(response.error);
-        // callToast({ variant: 'error', description: error });
+        callToast({ variant: 'error', description: response.error });
+        setStatus('error');
         return;
       }
-
-      const success = response.data;
-      console.log(success);
 
       setIsFollowing((prev) => !prev);
       setStatus('success');
 
-      // callToast({ variant: 'success', description: success });
+      callToast({ variant: 'success', description: response.data });
     } catch (e: any) {
-      // keep quiet in UI, log for devs
-      console.log(e?.message ?? e);
+      sentryErrorReport(e?.message, `FOLLOW_BUTTON - ${endpoint}`);
+      setStatus('error');
     }
   };
+
+  useEffect(() => {
+    setIsFollowing(!!follows);
+  }, [follows]);
 
   const label = !isAvailable
     ? isFollowing

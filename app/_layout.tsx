@@ -27,6 +27,8 @@ import ErrorLoading from '@/components/loading/error-loading';
 import { AuthProvider } from '@/context/auth-context';
 import { ProtectedRoute } from '@/components/navigation/ProtectedRoute';
 import { DeepLinkListener } from '@/components/navigation/DeepLinkListener';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ToastProvider } from '@/providers/ToastProvider';
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -110,17 +112,20 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name='(tabs)'
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='modal'
-          options={{ presentation: 'modal' }}
-        />
-      </Stack>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen
+            name='(tabs)'
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='modal'
+            options={{ presentation: 'modal' }}
+          />
+        </Stack>
+        <ToastProvider />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
