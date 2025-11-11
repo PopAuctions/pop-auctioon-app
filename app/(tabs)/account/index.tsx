@@ -1,15 +1,14 @@
 import Account from './account-user';
-import { useAuth } from '@/context/auth-context';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { View, ActivityIndicator } from 'react-native';
 
 export default function AccountTab() {
-  const { getSession } = useAuth();
-  const [session] = getSession();
+  const { data: currentUser } = useGetCurrentUser();
   const { isNavigating } = useAuthNavigation();
 
   // Si no hay sesión, mostrar loading mientras ProtectedRoute maneja la redirección
-  if (!session) {
+  if (!currentUser) {
     return (
       <View className='flex-1 items-center justify-center'>
         <ActivityIndicator
@@ -32,5 +31,5 @@ export default function AccountTab() {
     );
   }
 
-  return <Account session={session} />;
+  return <Account currentUser={currentUser} />;
 }
