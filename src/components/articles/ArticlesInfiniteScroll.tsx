@@ -9,7 +9,7 @@ import { useFetchAuctionArticlesInfinite } from '@/hooks/components/useFetchAuct
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 
-const ITEMS_PER_PAGE = 1;
+const ITEMS_PER_PAGE = 4;
 const TEXTS = {
   noMoreArticles: {
     en: 'No more articles',
@@ -23,12 +23,16 @@ export const ArticlesInfiniteScroll = ({
   articlesFollowed,
   ListHeaderComponent,
   order,
+  texts,
 }: {
   lang: Lang;
   auctionId: string | number;
   ListHeaderComponent: React.ReactElement;
   articlesFollowed: number[];
   order?: number[];
+  texts: {
+    currentBid: string;
+  };
 }) => {
   const { locale } = useTranslation();
   const { fetchArticles } = useFetchAuctionArticlesInfinite();
@@ -142,11 +146,8 @@ export const ArticlesInfiniteScroll = ({
       renderItem={({ item }) => (
         <ArticleItem
           article={item}
-          // WIP: pass correct texts
           auctionLang={{
-            currentBid: 'Current Bid',
-            follow: 'Follow',
-            unfollow: 'Unfollow',
+            currentBid: texts.currentBid,
           }}
           formatter={formatter}
           lang={lang}

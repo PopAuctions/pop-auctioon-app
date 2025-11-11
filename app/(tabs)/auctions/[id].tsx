@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { FollowButton } from '@/components/ui/FollowButton';
 import { useGetUserFollowsAuction } from '@/hooks/pages/auction/useGetUserFollowsAuction';
 import { useGetArticlesUserFollows } from '@/hooks/pages/article/useGetArticlesUserFollows';
+import { ArticleFilters } from '@/components/articles/ArticleFilters';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -199,16 +200,17 @@ export default function AuctionDetailScreen() {
           />
         </View>
 
-        <View className='mt-5 px-5'>
+        <View className='mt-8 px-5'>
           <CustomText
             type='subtitle'
             className='text-center text-3xl text-cinnabar'
           >
             {auctionLang.articles}
           </CustomText>
+          <View className='my-2'>
+            <ArticleFilters locale={locale} />
+          </View>
         </View>
-
-        {/* <Filters ... /> */}
       </View>
     );
   }
@@ -219,6 +221,9 @@ export default function AuctionDetailScreen() {
         <ArticlesInfiniteScroll
           lang={locale}
           auctionId={id}
+          texts={{
+            currentBid: auctionLang.currentBid,
+          }}
           ListHeaderComponent={renderAuctionHeader()}
           articlesFollowed={userArticlesFollowed || []}
           // When there is a filter, the order is not applied

@@ -13,8 +13,6 @@ type ArticleItemProps = {
   article: SimpleArticle;
   auctionLang: {
     currentBid: string;
-    follow: string;
-    unfollow: string;
   };
   formatter: Intl.NumberFormat;
   lang: Lang;
