@@ -88,9 +88,9 @@ export function SelectField({
           onPress={handleClear}
         >
           <FontAwesomeIcon
-            name='trash-o'
+            name='close'
             variant='bold'
-            size={24}
+            size={20}
             color='cinnabar'
           />
         </Pressable>

@@ -8,12 +8,17 @@ import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { useFetchAuctionArticlesInfinite } from '@/hooks/components/useFetchAuctionArticlesInifinte';
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useLocalSearchParams } from 'expo-router';
 
 const ITEMS_PER_PAGE = 4;
 const TEXTS = {
   noMoreArticles: {
     en: 'No more articles',
     es: 'No hay más artículos',
+  },
+  noArticlesFound: {
+    en: 'No articles found with the selected filters',
+    es: 'No se han encontrado artículos con los filtros seleccionados',
   },
 };
 
@@ -24,59 +29,77 @@ export const ArticlesInfiniteScroll = ({
   ListHeaderComponent,
   order,
   texts,
+  filtersKey,
 }: {
   lang: Lang;
   auctionId: string | number;
   ListHeaderComponent: React.ReactElement;
   articlesFollowed: number[];
   order?: number[];
-  texts: {
-    currentBid: string;
-  };
+  texts: { currentBid: string };
+  filtersKey: string;
 }) => {
   const { locale } = useTranslation();
+  const { brand, price } = useLocalSearchParams<{
+    brand?: string;
+    price?: string;
+  }>();
+
   const { fetchArticles } = useFetchAuctionArticlesInfinite();
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [effectiveOrder, setEffectiveOrder] = useState<number[] | undefined>(
+    order
+  );
+
   const formatter = euroFormatter(lang);
+  const filtersActive = Boolean(brand || price);
 
   const orderedArticles = useMemo(() => {
-    if (!order || order.length === 0) return articles;
+    if (!effectiveOrder || effectiveOrder.length === 0) return articles;
 
-    const articleMap = new Map(articles.map((a) => [a.id.toString(), a]));
+    const map = new Map(articles.map((a) => [a.id.toString(), a]));
 
-    return order
-      .map((id) => articleMap.get(id.toString()))
+    return effectiveOrder
+      .map((id) => map.get(id.toString()))
       .filter((a): a is SimpleArticle => !!a);
-  }, [articles, order]);
+  }, [articles, effectiveOrder]);
 
   const loadInitial = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetchArticles({
         auctionId,
+        brand,
+        price,
         offset: 0,
         limit: ITEMS_PER_PAGE,
         orderedIds: order,
       });
-      const data = response?.data;
 
+      const data = response?.data;
       if (!data) {
+        setArticles([]);
+        setOffset(0);
         setHasMore(false);
+        setEffectiveOrder(filtersActive ? undefined : order);
         return;
       }
 
       setArticles(data);
       setOffset(data.length);
-      if (data.length < ITEMS_PER_PAGE) setHasMore(false);
-    } catch (error) {
-      console.warn('Error loading articles', error);
+      setHasMore(data.length >= ITEMS_PER_PAGE);
+      setEffectiveOrder(filtersActive ? undefined : order);
+    } catch (e) {
+      console.warn('Error loading articles', e);
+      setHasMore(false);
+      setEffectiveOrder(filtersActive ? undefined : order);
     } finally {
       setIsLoading(false);
     }
-  }, [auctionId, order, fetchArticles]);
+  }, [auctionId, brand, price, order, fetchArticles, filtersActive]);
 
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) return;
@@ -85,45 +108,64 @@ export const ArticlesInfiniteScroll = ({
     try {
       const response = await fetchArticles({
         auctionId,
+        brand,
+        price,
         offset,
         limit: ITEMS_PER_PAGE,
         orderedIds: order,
       });
       const newData = response.data;
 
-      if (!newData) {
+      if (!newData || newData.length === 0) {
         setHasMore(false);
         return;
       }
 
-      if (newData.length === 0) {
-        setHasMore(false);
-      } else {
-        setArticles((prev) => {
-          const existingIds = new Set(prev.map((a) => a.id));
-          const uniqueArticles = newData.filter(
-            (article: SimpleArticle) => !existingIds.has(article.id)
-          );
-
-          return [...prev, ...uniqueArticles];
-        });
-        setOffset((prev) => prev + newData.length);
-      }
-    } catch (error) {
-      console.warn('Error loading more', error);
+      setArticles((prev) => {
+        const existingIds = new Set(prev.map((a) => a.id));
+        const unique = newData.filter(
+          (a: SimpleArticle) => !existingIds.has(a.id)
+        );
+        return [...prev, ...unique];
+      });
+      setOffset((prev) => prev + newData.length);
+    } catch (e) {
+      console.warn('Error loading more', e);
     } finally {
       setIsLoading(false);
     }
-  }, [offset, isLoading, hasMore, auctionId, order, fetchArticles]);
+  }, [
+    auctionId,
+    brand,
+    price,
+    offset,
+    isLoading,
+    hasMore,
+    order,
+    fetchArticles,
+  ]);
 
   useEffect(() => {
     loadInitial();
-  }, [loadInitial]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtersKey, auctionId, order]);
 
   const renderFooter = useCallback(() => {
-    if (isLoading && hasMore) {
-      return <Loading locale={locale} />;
+    if (isLoading && hasMore) return <Loading locale={locale} />;
+
+    if (!hasMore && filtersActive && articles.length === 0) {
+      return (
+        <View className='items-center justify-center py-4'>
+          <CustomText
+            type='body'
+            className='text-center text-cinnabar'
+          >
+            {TEXTS.noArticlesFound[lang]}
+          </CustomText>
+        </View>
+      );
     }
+
     if (!hasMore) {
       return (
         <View className='items-center justify-center py-4'>
@@ -137,18 +179,23 @@ export const ArticlesInfiniteScroll = ({
       );
     }
     return null;
-  }, [isLoading, hasMore, lang, locale]);
+  }, [isLoading, hasMore, lang, locale, filtersActive, articles.length]);
 
   return (
     <FlatList
       data={orderedArticles}
       keyExtractor={(item) => item.id.toString()}
+      extraData={{
+        brand,
+        price,
+        order: effectiveOrder,
+        articlesFollowed,
+        texts,
+      }}
       renderItem={({ item }) => (
         <ArticleItem
           article={item}
-          auctionLang={{
-            currentBid: texts.currentBid,
-          }}
+          auctionLang={{ currentBid: texts.currentBid }}
           formatter={formatter}
           lang={lang}
           userFollows={articlesFollowed.includes(Number(item.id))}

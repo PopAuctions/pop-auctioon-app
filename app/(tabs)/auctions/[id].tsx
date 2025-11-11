@@ -28,7 +28,11 @@ import { ArticleFilters } from '@/components/articles/ArticleFilters';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, brand, price } = useLocalSearchParams<{
+    id: string;
+    brand?: string;
+    price?: string;
+  }>();
   const {
     data: liveAuction,
     status,
@@ -63,6 +67,9 @@ export default function AuctionDetailScreen() {
     auction.status === AuctionStatus.AVAILABLE ||
     auction.status === AuctionStatus.PARTIALLY_AVAILABLE ||
     auction.status === AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE;
+
+  const filtersKey = `${brand ?? ''}${price ?? ''}`;
+
   function renderAuctionHeader() {
     return (
       <View className='mt-5 flex w-full flex-col'>
@@ -200,7 +207,7 @@ export default function AuctionDetailScreen() {
           />
         </View>
 
-        <View className='mt-8 px-5'>
+        <View className='mt-8'>
           <CustomText
             type='subtitle'
             className='text-center text-3xl text-cinnabar'
@@ -226,8 +233,8 @@ export default function AuctionDetailScreen() {
           }}
           ListHeaderComponent={renderAuctionHeader()}
           articlesFollowed={userArticlesFollowed || []}
-          // When there is a filter, the order is not applied
-          order={liveAuction?.articlesOrder}
+          order={filtersKey.length > 0 ? undefined : liveAuction?.articlesOrder}
+          filtersKey={filtersKey}
         />
       </View>
       <AuctionSubscriber

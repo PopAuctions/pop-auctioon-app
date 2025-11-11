@@ -34,8 +34,9 @@ export function ArticleFilters({ locale }: Props) {
   const activeFilters = [brandValue, priceValue].filter((v) => v !== '');
 
   return (
-    <View className='flex w-full flex-col gap-y-3'>
+    <View className='flex w-full flex-row gap-x-3'>
       <FilterField
+        className='w-1/2'
         key={`${activeFilters.join('-')}-brand`}
         id='brand'
         label={FILTER_LABELS[locale].brand}
@@ -46,6 +47,7 @@ export function ArticleFilters({ locale }: Props) {
         isClearable={true}
       />
       <FilterField
+        className='w-1/2'
         key={`${activeFilters.join('-')}-price`}
         id='price'
         label={FILTER_LABELS[locale].price}
