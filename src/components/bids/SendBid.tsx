@@ -14,8 +14,8 @@ import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-// import * as Sentry from '@sentry/react-native'; // RN version
-// import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/hooks/useToast';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -29,11 +29,6 @@ interface SendBidProps {
   commissionPercentage: number;
 }
 
-interface BidResponse {
-  error: LangMap | null;
-  data: LangMap | null;
-}
-
 export function SendBid({
   articleId,
   bidLang,
@@ -43,12 +38,12 @@ export function SendBid({
   maxBidOffset,
   commissionPercentage,
 }: SendBidProps) {
-  const { securePost } = useSecureApi();
   const [isPending, setIsPending] = useState(false);
   const [bidAmount, setBidAmount] = useState<string>('');
+  const { securePost } = useSecureApi();
+  const { callToast } = useToast(lang);
 
   const formatter = euroFormatter(lang);
-  // const { callToast } = useToast(lang);
 
   const { minBid, tenPercent, twentyFivePercent, fiftyPercent } =
     biddingAmounts;
@@ -97,12 +92,10 @@ export function SendBid({
   const sendBid = async () => {
     if (parseInt(bidAmount) < computedMinBid) {
       const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
-      console.log(message);
-
-      // callToast({
-      //   variant: 'error',
-      //   description: { es: message, en: message },
-      // });
+      callToast({
+        variant: 'error',
+        description: { es: message, en: message },
+      });
 
       return;
     }
@@ -110,12 +103,10 @@ export function SendBid({
     // enforce max
     if (parseInt(bidAmount) > computedMaxBid) {
       const message = bidLang.maxBid + ' ' + formatter.format(computedMaxBid);
-      console.log(message);
-
-      // callToast({
-      //   variant: 'error',
-      //   description: { es: message, en: message },
-      // });
+      callToast({
+        variant: 'error',
+        description: { es: message, en: message },
+      });
 
       return;
     }
@@ -124,7 +115,7 @@ export function SendBid({
     try {
       setIsPending(true);
 
-      const response = await securePost<BidResponse>({
+      const response = await securePost<LangMap>({
         endpoint: '/bids',
         data: {
           articleId,
@@ -136,25 +127,21 @@ export function SendBid({
       const data = response?.data;
 
       if (response.error) {
-        console.log('ERROR_CREATE_BID', response.error);
-        // callToast({ variant: 'error', description: response.error });
+        callToast({ variant: 'error', description: response.error });
         return;
       }
 
-      // callToast({ variant: 'success', description: data });
-      console.log('SUCCESS_CREATE_BID', data);
+      callToast({ variant: 'success', description: data });
       setBidAmount('');
     } catch (e: any) {
-      console.log('CATCH_CREATE_BID', e?.message);
-      // callToast({
-      //   variant: 'error',
-      //   description: {
-      //     en: 'The bid could not be processed',
-      //     es: 'La puja no pudo ser procesada',
-      //   },
-      // });
-
-      // Sentry.captureException('CATCH_CREATE_BID' + e?.message);
+      sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'The bid could not be processed',
+          es: 'La puja no pudo ser procesada',
+        },
+      });
     } finally {
       setIsPending(false);
     }
@@ -176,7 +163,7 @@ export function SendBid({
                 setAmountToBid(tenPercent);
               }}
             >
-              {currentValue === 0
+              {!currentValue
                 ? ''
                 : formatter.format(
                     toTotal(tenPercent + currentValue, commissionPercentage)
@@ -192,7 +179,7 @@ export function SendBid({
                 setAmountToBid(twentyFivePercent);
               }}
             >
-              {currentValue === 0
+              {!currentValue
                 ? ''
                 : formatter.format(
                     toTotal(
@@ -211,7 +198,7 @@ export function SendBid({
                 setAmountToBid(fiftyPercent);
               }}
             >
-              {currentValue === 0
+              {!currentValue
                 ? ''
                 : formatter.format(
                     toTotal(fiftyPercent + currentValue, commissionPercentage)
@@ -244,7 +231,7 @@ export function SendBid({
               type='bodysmall'
               className={`${isTooLow ? 'text-red-500' : 'text-[#787878]'}`}
             >
-              {currentValue === 0
+              {!currentValue
                 ? bidLang.minBid
                 : `${bidLang.minBid} ${formatter.format(computedMinBid)}`}
             </CustomText>
