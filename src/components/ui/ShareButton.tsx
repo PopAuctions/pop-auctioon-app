@@ -26,7 +26,6 @@ export function ShareButton({
 
   const copyCurrentPath = async () => {
     try {
-      console.log({ baseUrl, pathname });
       const fullUrl = `${baseUrl}${pathname ?? ''}`;
       await Clipboard.setStringAsync(fullUrl);
       console.log('Copied URL:', fullUrl);
