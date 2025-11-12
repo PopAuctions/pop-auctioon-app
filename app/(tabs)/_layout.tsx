@@ -69,7 +69,7 @@ export default function TabLayout() {
 
       {/* STORE tab - visible for all users */}
       <Tabs.Screen
-        name='store'
+        name='online-store'
         options={{
           title: t('tabsNames.store'),
           headerShown: false,
