@@ -288,7 +288,13 @@
     },
     "paymentsHistory": {
       "title": "Historial de Pagos",
-      "subtitle": "Revisa tus transacciones anteriores"
+      "subtitle": "Revisa tus transacciones anteriores",
+      "noPaymentsYet": "No tienes pagos registrados",
+      "noPaymentsSubtitle": "Aquí aparecerán tus compras y pagos realizados",
+      "totalAmount": "Importe Total",
+      "viewPayment": "Ver pago",
+      "articlesPaid": "Artículos pagados",
+      "onlineStore": "Tienda Online"
     },
     "articlesWon": {
       "title": "Artículos Ganados",

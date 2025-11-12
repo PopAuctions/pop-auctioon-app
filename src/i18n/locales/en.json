@@ -288,7 +288,13 @@
     },
     "paymentsHistory": {
       "title": "Payments History",
-      "subtitle": "Review your past transactions"
+      "subtitle": "Review your past transactions",
+      "noPaymentsYet": "You have no registered payments",
+      "noPaymentsSubtitle": "Your purchases and payments will appear here",
+      "totalAmount": "Total amount",
+      "viewPayment": "View payment",
+      "articlesPaid": "Articles paid",
+      "onlineStore": "Online Store"
     },
     "articlesWon": {
       "title": "Articles Won",

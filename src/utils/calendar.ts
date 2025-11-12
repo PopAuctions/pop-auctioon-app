@@ -92,8 +92,33 @@ export function formatCalendarDate(
   locale: string = 'es-ES'
 ): string {
   return date.toLocaleDateString(locale, {
-    day: 'numeric',
-    month: 'long',
     year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+/**
+ * Formatea una fecha para el historial de pagos
+ * Ejemplo: "October 8, 2025 at 6:43 AM"
+ *
+ * @param dateString - Fecha en formato string ISO
+ * @param lang - Idioma ('es' | 'en')
+ * @returns Fecha formateada con hora
+ */
+export function formatPaymentDate(
+  dateString: string,
+  lang: 'es' | 'en' = 'es'
+): string {
+  const dateISO = new Date(dateString).toISOString();
+  const formattedDate = new Date(dateISO);
+  const dateLang = lang === 'en' ? 'en-US' : 'es-ES';
+
+  return formattedDate.toLocaleDateString(dateLang, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
   });
 }
