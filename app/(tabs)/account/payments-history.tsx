@@ -4,9 +4,9 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { Loading } from '@/components/ui/Loading';
 import { PaymentCard } from '@/components/payment-history/PaymentCard';
+import { EmptyPaymentHistory } from '@/components/payment-history/EmptyPaymentHistory';
 import { useGetPaymentHistory } from '@/hooks/pages/payment/useGetPaymentHistory';
 import { useState, useCallback } from 'react';
-import { useFocusEffect } from 'expo-router';
 
 export default function PaymentsHistoryScreen() {
   const { t, locale } = useTranslation();
@@ -59,39 +59,10 @@ export default function PaymentsHistoryScreen() {
   // Empty state
   if (payments.length === 0) {
     return (
-      <SafeAreaView
-        className='flex-1 bg-white'
-        edges={['bottom']}
-      >
-        <ScrollView
-          contentContainerClassName='flex-1 items-center justify-center px-6'
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-        >
-          <CustomText
-            type='h1'
-            className='mb-2 text-center text-cinnabar'
-          >
-            {t('screens.paymentsHistory.title')}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='text-gray-600 mb-8 text-center'
-          >
-            {t('screens.paymentsHistory.noPaymentsYet')}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='text-gray-500 text-center'
-          >
-            {t('screens.paymentsHistory.noPaymentsSubtitle')}
-          </CustomText>
-        </ScrollView>
-      </SafeAreaView>
+      <EmptyPaymentHistory
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
     );
   }
 
@@ -117,8 +88,8 @@ export default function PaymentsHistoryScreen() {
           {t('screens.paymentsHistory.title')}
         </CustomText>
         <CustomText
-          type='body'
-          className='text-gray-600 mb-6 text-center'
+          type='h4'
+          className=' text-center'
         >
           {t('screens.paymentsHistory.subtitle')}
         </CustomText>

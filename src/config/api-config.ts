@@ -89,6 +89,7 @@ export const SECURE_ENDPOINTS = {
     BILLING: '/user/billing', // GET (list all) y POST (create new)
     BILLING_BY_ID: (id: string): ApiEndpoint =>
       `/user/billing/${id}` as ApiEndpoint, // PATCH (update) y DELETE
+    PAYMENT_HISTORY: '/user/payment-history', // GET payment history
   },
 
   // Server Actions y operaciones complejas

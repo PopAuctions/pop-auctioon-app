@@ -288,7 +288,7 @@
     },
     "paymentsHistory": {
       "title": "Payments History",
-      "subtitle": "Review your past transactions",
+      "subtitle": "Review your past auctioon purchases",
       "noPaymentsYet": "You have no registered payments",
       "noPaymentsSubtitle": "Your purchases and payments will appear here",
       "totalAmount": "Total amount",
