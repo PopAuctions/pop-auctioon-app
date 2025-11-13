@@ -10,6 +10,9 @@ export * from './forms';
 // Artículos y productos
 export * from './articles';
 
+// Tienda en línea
+export * from './onlineStore';
+
 // Localización e idiomas
 export * from './locales';
 
