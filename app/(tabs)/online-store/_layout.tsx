@@ -13,8 +13,8 @@ export default function StoreLayout() {
       <Stack.Screen
         name='index'
         options={{
-          title: t('tabsNames.store'),
-          headerShown: false,
+          title: t('screens.store.title'),
+          headerShown: true,
         }}
       />
       <Stack.Screen
