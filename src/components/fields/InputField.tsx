@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
-import { useDebounce } from '@/hooks/useDebouce';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface InputProps {
   name: string;

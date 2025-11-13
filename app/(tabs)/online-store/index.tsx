@@ -3,6 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { OnlineStoreArticlesInfiniteScroll } from '@/components/online-store/OnlineStoreArticlesInfiniteScroll';
 import { OnlineStoreArticleFilters } from '@/components/online-store/OnlineStoreArticleFilters';
+import { useCallback } from 'react';
 
 export interface Filters {
   brand?: string;
@@ -20,13 +21,13 @@ export default function OnlineStoreScreen() {
     params as Filters;
   const filtersKey = `${brand ?? ''}${price ?? ''}${model ?? ''}${codeNumber ?? ''}${category ?? ''}${sortBy || ''}`;
 
-  function renderAuctionHeader() {
+  const renderAuctionHeader = useCallback(() => {
     return (
       <View className='mb-4 mt-2 flex w-full flex-col'>
         <OnlineStoreArticleFilters locale={locale} />
       </View>
     );
-  }
+  }, [locale]);
 
   return (
     <View className='flex-1'>

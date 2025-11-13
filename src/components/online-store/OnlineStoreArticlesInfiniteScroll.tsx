@@ -8,7 +8,7 @@ import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { OnlineStoreArticleItem } from './OnlineStoreArticleItem';
-import { useFetchOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchOnlineStoreArticlesInifinte';
+import { useFetchOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchOnlineStoreArticlesInfinite';
 import { Filters } from '@/app/(tabs)/online-store';
 
 const ITEMS_PER_PAGE = 4;
@@ -171,11 +171,15 @@ export const OnlineStoreArticlesInfiniteScroll = ({
 
   return (
     <FlatList
-      data={isLoading ? [] : articles}
+      data={articles}
       keyExtractor={(item) => item.id.toString()}
       extraData={{
         brand,
         price,
+        model,
+        codeNumber,
+        category,
+        sortBy,
       }}
       renderItem={({ item }) => (
         <OnlineStoreArticleItem
