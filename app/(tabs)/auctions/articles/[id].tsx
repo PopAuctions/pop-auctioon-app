@@ -24,7 +24,7 @@ import { FollowButton } from '@/components/ui/FollowButton';
 import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 import { parseNumber } from '@/utils/parse-number';
 
-export default function ArticleDetailScreen() {
+export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const auctionLang = t('screens.auction');
@@ -60,7 +60,9 @@ export default function ArticleDetailScreen() {
     { previousArticleId, nextArticleId } = {},
     biddingAmounts,
   ] = (articlePageData ?? []) as any[];
-  const extraDataIsLoaded = articlePageStatus === REQUEST_STATUS.success;
+  const extraDataIsLoaded =
+    articlePageStatus === REQUEST_STATUS.success ||
+    articlePageStatus === REQUEST_STATUS.error;
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     if (status === 'loading') {
@@ -97,7 +99,7 @@ export default function ArticleDetailScreen() {
                 <View className='items-center justify-center'>
                   <CustomLink
                     mode='empty'
-                    href={`/(tabs)/auctions/article/${previousArticleId}`}
+                    href={`/(tabs)/auctions/articles/${previousArticleId}`}
                     className='hover:scale-110'
                   >
                     <FontAwesomeIcon
@@ -123,7 +125,7 @@ export default function ArticleDetailScreen() {
                 <View className='items-center justify-center'>
                   <CustomLink
                     mode='empty'
-                    href={`/(tabs)/auctions/article/${nextArticleId}`}
+                    href={`/(tabs)/auctions/articles/${nextArticleId}`}
                     className='hover:scale-110'
                   >
                     <FontAwesomeIcon
