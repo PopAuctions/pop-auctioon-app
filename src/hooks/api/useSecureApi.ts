@@ -3,7 +3,6 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import {
   API_CONFIG,
   HEADERS_CONFIG,
-  API_ERROR_CODES,
   DEV_CONFIG,
   buildProtectedUrl,
   buildSecureUrl,
@@ -41,15 +40,16 @@ export const useSecureApi = () => {
     // Obtener sesión actual de Supabase
     const {
       data: { session },
-      error,
     } = await supabase.auth.getSession();
-    if (error || !session?.access_token) {
-      throw new Error(API_ERROR_CODES.MISSING_JWT);
+    const accessToken = session?.access_token;
+
+    if (!accessToken) {
+      return baseHeaders;
     }
 
     return {
       ...baseHeaders,
-      [HEADERS_CONFIG.AUTHORIZATION_HEADER]: `Bearer ${session.access_token}`,
+      [HEADERS_CONFIG.AUTHORIZATION_HEADER]: `Bearer ${accessToken}`,
     };
   }, [createBaseHeaders]);
 
@@ -179,12 +179,12 @@ export const useSecureApi = () => {
       options?: RequestOptions;
       secureHeader?: boolean;
     }): Promise<Partial<ApiResponse<T>>> => {
-      const headers = secureHeader
-        ? await createSecureHeaders()
-        : createBaseHeaders();
-      const url = buildProtectedUrl(endpoint);
-
       try {
+        const headers = secureHeader
+          ? await createSecureHeaders()
+          : createBaseHeaders();
+        const url = buildProtectedUrl(endpoint);
+
         return makeRequest<T>(
           url,
           {
@@ -217,10 +217,10 @@ export const useSecureApi = () => {
       data?: any;
       options?: RequestOptions;
     }): Promise<Partial<ApiResponse<T>>> => {
-      const headers = createBaseHeaders();
-      const url = buildProtectedUrl(endpoint);
-
       try {
+        const headers = createBaseHeaders();
+        const url = buildProtectedUrl(endpoint);
+
         return makeRequest<T>(
           url,
           {
@@ -254,10 +254,10 @@ export const useSecureApi = () => {
       data?: any;
       options?: RequestOptions;
     }): Promise<Partial<ApiResponse<T>>> => {
-      const headers = createBaseHeaders();
-      const url = buildProtectedUrl(endpoint);
-
       try {
+        const headers = createBaseHeaders();
+        const url = buildProtectedUrl(endpoint);
+
         return makeRequest<T>(
           url,
           {
@@ -289,10 +289,10 @@ export const useSecureApi = () => {
       endpoint: ApiEndpoint;
       options?: RequestOptions;
     }): Promise<Partial<ApiResponse<T>>> => {
-      const headers = createBaseHeaders();
-      const url = buildProtectedUrl(endpoint);
-
       try {
+        const headers = createBaseHeaders();
+        const url = buildProtectedUrl(endpoint);
+
         return makeRequest<T>(
           url,
           {

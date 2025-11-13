@@ -184,7 +184,8 @@ export default function AuctionDetailScreen() {
                   lang={locale}
                   isAvailable={!isAuctionAvailable}
                   extraDataIsLoaded={
-                    userFollowsStatus === REQUEST_STATUS.success
+                    userFollowsStatus === REQUEST_STATUS.success ||
+                    userFollowsStatus === REQUEST_STATUS.error
                   }
                 />
               )}
