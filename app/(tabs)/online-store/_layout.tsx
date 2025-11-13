@@ -18,7 +18,7 @@ export default function StoreLayout() {
         }}
       />
       <Stack.Screen
-        name='[id]'
+        name='articles/[id]'
         options={{
           title: t('screens.store.productDetail'),
           presentation: 'card',

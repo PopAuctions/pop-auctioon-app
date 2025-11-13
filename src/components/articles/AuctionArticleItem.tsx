@@ -46,7 +46,7 @@ export function ArticleItem({
     <View className='w-full gap-2'>
       <CustomLink
         className='flex w-full flex-row gap-5'
-        href={`/(tabs)/auctions/article/${article.id}`}
+        href={`/(tabs)/auctions/articles/${article.id}`}
         mode='empty'
       >
         <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl'>

@@ -45,7 +45,7 @@ export default function AuctionsLayout() {
         }}
       />
       <Stack.Screen
-        name='article/[id]'
+        name='articles/[id]'
         options={{
           title: t('tabsNames.articleDetails'),
           presentation: 'card',

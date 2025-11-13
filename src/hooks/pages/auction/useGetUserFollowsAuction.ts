@@ -23,6 +23,7 @@ export const useGetUserFollowsAuction = ({
       if (res.error) {
         setStatus('error');
         setErrorMessage(res.error);
+        setFollows(false);
         return {
           message: {
             en: 'Error fetching user information',
