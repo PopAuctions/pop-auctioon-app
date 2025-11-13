@@ -9,6 +9,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { OnlineStoreArticleItem } from './OnlineStoreArticleItem';
 import { useFetchOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchOnlineStoreArticlesInifinte';
+import { Filters } from '@/app/(tabs)/online-store';
 
 const ITEMS_PER_PAGE = 4;
 const TEXTS = {
@@ -36,10 +37,9 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   };
 }) => {
   const { locale } = useTranslation();
-  const { brand, price } = useLocalSearchParams<{
-    brand?: string;
-    price?: string;
-  }>();
+  const params = useLocalSearchParams();
+  const { brand, price, model, codeNumber, category, sortBy } =
+    params as Filters;
 
   const { fetchArticles } = useFetchOnlineStoreArticlesInfinite();
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
@@ -48,7 +48,9 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   const [hasMore, setHasMore] = useState(true);
 
   const formatter = euroFormatter(lang);
-  const filtersActive = Boolean(brand || price);
+  const filtersActive = Boolean(
+    brand || price || model || codeNumber || category || sortBy
+  );
 
   const loadInitial = useCallback(async () => {
     try {
@@ -56,6 +58,10 @@ export const OnlineStoreArticlesInfiniteScroll = ({
       const response = await fetchArticles({
         brand,
         price,
+        model,
+        codeNumber,
+        category,
+        sortBy,
         offset: 0,
         limit: ITEMS_PER_PAGE,
       });
@@ -77,7 +83,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     } finally {
       setIsLoading(false);
     }
-  }, [brand, price, fetchArticles]);
+  }, [fetchArticles, brand, price, model, codeNumber, category, sortBy]);
 
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) return;
@@ -87,6 +93,10 @@ export const OnlineStoreArticlesInfiniteScroll = ({
       const response = await fetchArticles({
         brand,
         price,
+        model,
+        codeNumber,
+        category,
+        sortBy,
         offset,
         limit: ITEMS_PER_PAGE,
       });
@@ -110,7 +120,18 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     } finally {
       setIsLoading(false);
     }
-  }, [brand, price, offset, isLoading, hasMore, fetchArticles]);
+  }, [
+    isLoading,
+    hasMore,
+    fetchArticles,
+    brand,
+    price,
+    model,
+    codeNumber,
+    category,
+    sortBy,
+    offset,
+  ]);
 
   useEffect(() => {
     loadInitial();
@@ -118,13 +139,13 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   }, [filtersKey]);
 
   const renderFooter = useCallback(() => {
-    if (isLoading && hasMore) return <Loading locale={locale} />;
+    if (isLoading) return <Loading locale={locale} />;
 
     if (!hasMore && filtersActive && articles.length === 0) {
       return (
         <View className='items-center justify-center py-4'>
           <CustomText
-            type='body'
+            type='h4'
             className='text-center text-cinnabar'
           >
             {TEXTS.noArticlesFound[lang]}
@@ -150,7 +171,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
 
   return (
     <FlatList
-      data={articles}
+      data={isLoading ? [] : articles}
       keyExtractor={(item) => item.id.toString()}
       extraData={{
         brand,

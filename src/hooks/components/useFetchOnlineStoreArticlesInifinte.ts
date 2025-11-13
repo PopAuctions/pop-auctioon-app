@@ -32,10 +32,11 @@ export const useFetchOnlineStoreArticlesInfinite = () => {
 
       if (brand) params.append('brand', brand);
       if (price) params.append('price', price);
-      if (model) params.append('price', model);
-      if (codeNumber) params.append('price', codeNumber);
-      if (category) params.append('price', category);
-      if (sortBy) params.append('price', sortBy);
+      if (model) params.append('model', model);
+      if (codeNumber) params.append('codeNumber', codeNumber);
+      if (category) params.append('category', category);
+
+      params.append('sortBy', sortBy ?? '');
 
       const res = await protectedGet<CustomArticleSecondChance[]>({
         endpoint: `/online-store/articles/infinite?${params}`,

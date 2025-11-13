@@ -3,17 +3,26 @@ import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { OnlineStoreArticlesInfiniteScroll } from '@/components/online-store/OnlineStoreArticlesInfiniteScroll';
 import { OnlineStoreArticleFilters } from '@/components/online-store/OnlineStoreArticleFilters';
+
+export interface Filters {
+  brand?: string;
+  price?: string;
+  model?: string;
+  codeNumber?: string;
+  category?: string;
+  sortBy?: string;
+}
+
 export default function OnlineStoreScreen() {
   const { t, locale } = useTranslation();
-  const { brand, price } = useLocalSearchParams<{
-    brand?: string;
-    price?: string;
-  }>();
-  const filtersKey = `${brand ?? ''}${price ?? ''}`;
+  const params = useLocalSearchParams();
+  const { brand, price, model, codeNumber, category, sortBy } =
+    params as Filters;
+  const filtersKey = `${brand ?? ''}${price ?? ''}${model ?? ''}${codeNumber ?? ''}${category ?? ''}${sortBy || ''}`;
 
   function renderAuctionHeader() {
     return (
-      <View className='my-4 flex w-full flex-col'>
+      <View className='mb-4 mt-2 flex w-full flex-col'>
         <OnlineStoreArticleFilters locale={locale} />
       </View>
     );

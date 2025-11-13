@@ -1,21 +1,22 @@
 import { View, Text } from 'react-native';
 import { SelectField } from './SelectField';
 import { cn } from '@/utils/cn';
+import { TextField } from './InputField';
 
 type Option = { value: string; label: string };
 
 // Discriminated union
-type InputProps<Name extends string> = {
-  id: Name;
+type InputProps = {
+  id: string;
   label: string;
   type: 'input';
   value: string;
-  onChange: { value: string; options?: { name: Name } };
   className?: string;
+  isClearable?: boolean;
 };
 
-type SelectProps<Name extends string> = {
-  id: Name;
+type SelectProps = {
+  id: string;
   label: string;
   type: 'select';
   value: string;
@@ -25,26 +26,21 @@ type SelectProps<Name extends string> = {
   className?: string;
 };
 
-type FilterFieldProps<Name extends string> =
-  | InputProps<Name>
-  | SelectProps<Name>;
+type FilterFieldProps = InputProps | SelectProps;
 
-export function FilterField<Name extends string>(
-  props: FilterFieldProps<Name>
-) {
+export function FilterField(props: FilterFieldProps) {
   const { id, label, className } = props;
 
   if (props.type === 'input') {
     return (
       <View className={cn('w-full', className)}>
-        <Text className='mb-1 text-base'>input {label}</Text>
-        {/* <TextInput
-          className='w-full rounded-lg border border-silver px-3 py-2 text-input-text'
+        <Text className='mb-1 text-base'>{label}</Text>
+        <TextField
+          name={id}
           value={props.value}
-          onChangeText={(txt) => props.onChange(txt, { name: id })}
           placeholder={label}
-          placeholderTextColor='rgba(0,0,0,0.4)'
-          /> */}
+          isClearable={props.isClearable}
+        />
       </View>
     );
   }
