@@ -14,12 +14,12 @@ export function Tooltip({ text }: InfoTooltipProps) {
       <Pressable
         onPress={() => setOpen(true)}
         hitSlop={10}
-        className='h-4 w-4 items-center justify-center rounded-full bg-black/5'
+        className='items-center justify-center rounded-full bg-black/5'
         testID='tooltip-pressable'
       >
         <FontAwesomeIcon
           name='info-circle'
-          size={15}
+          size={14}
           color='cinnabar'
         />
       </Pressable>
