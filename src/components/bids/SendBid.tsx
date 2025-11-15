@@ -163,7 +163,7 @@ export function SendBid({
                 setAmountToBid(tenPercent);
               }}
             >
-              {!currentValue
+              {isNaN(currentValue)
                 ? ''
                 : formatter.format(
                     toTotal(tenPercent + currentValue, commissionPercentage)
@@ -179,7 +179,7 @@ export function SendBid({
                 setAmountToBid(twentyFivePercent);
               }}
             >
-              {!currentValue
+              {isNaN(currentValue)
                 ? ''
                 : formatter.format(
                     toTotal(
@@ -198,7 +198,7 @@ export function SendBid({
                 setAmountToBid(fiftyPercent);
               }}
             >
-              {!currentValue
+              {isNaN(currentValue)
                 ? ''
                 : formatter.format(
                     toTotal(fiftyPercent + currentValue, commissionPercentage)
@@ -231,7 +231,7 @@ export function SendBid({
               type='bodysmall'
               className={`${isTooLow ? 'text-red-500' : 'text-[#787878]'}`}
             >
-              {!currentValue
+              {isNaN(currentValue)
                 ? bidLang.minBid
                 : `${bidLang.minBid} ${formatter.format(computedMinBid)}`}
             </CustomText>

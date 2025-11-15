@@ -1,37 +1,32 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { Lang, SimpleArticle } from '@/types/types';
+import { CustomArticleSecondChance, Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { CustomLink } from '../ui/CustomLink';
 import { ARTICLE_BRANDS_LABELS } from '@/constants';
 import { CustomImage } from '../ui/CustomImage';
-import { SimpleCountdown } from '../ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
-import { FollowButton } from '../ui/FollowButton';
 
-type ArticleItemProps = {
-  article: SimpleArticle;
-  auctionLang: {
-    currentBid: string;
-  };
+type OnlineStoreArticleItemProps = {
+  onlineStoreArticle: CustomArticleSecondChance;
   formatter: Intl.NumberFormat;
+  texts: {
+    price: string;
+  };
   lang: Lang;
-  userFollows: boolean;
   commissionValue: number;
-  showFollowButton?: boolean;
 };
 
-export function ArticleItem({
-  article,
-  auctionLang,
+export function OnlineStoreArticleItem({
+  onlineStoreArticle,
   formatter,
   lang,
-  userFollows,
+  texts,
   commissionValue,
-  showFollowButton = true,
-}: ArticleItemProps) {
-  const articleId = article.id;
-  const price = article.ArticleBid.currentValue;
+}: OnlineStoreArticleItemProps) {
+  const articleId = onlineStoreArticle.id;
+  const article = onlineStoreArticle.Article;
+  const price = onlineStoreArticle.price;
 
   const commissionedPrice = useMemo(
     () => getArticleCommissionedPrice(price, commissionValue),
@@ -46,7 +41,7 @@ export function ArticleItem({
     <View className='w-full gap-2'>
       <CustomLink
         className='flex w-full flex-row gap-5'
-        href={`/(tabs)/auctions/articles/${article.id}`}
+        href={`/(tabs)/online-store/articles/${articleId}`}
         mode='empty'
       >
         <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl'>
@@ -60,18 +55,8 @@ export function ArticleItem({
 
         <View className='w-1/2 flex-col items-start justify-between'>
           <View className='flex flex-col pr-2'>
-            {article.whenInAuction && (
-              <SimpleCountdown
-                dateString={article.whenInAuction.toUTCString()}
-                locale={lang}
-                texts={{
-                  completed: { es: 'Ya comenzó', en: 'Already started' },
-                }}
-              />
-            )}
-
             <CustomText type='subtitle'>
-              {`${auctionLang.currentBid} ${formatter.format(commissionedPrice)}`}
+              {`${texts.price} ${formatter.format(commissionedPrice)}`}
             </CustomText>
 
             <CustomText
@@ -92,20 +77,6 @@ export function ArticleItem({
                 ''}
             </CustomText>
           </View>
-
-          {showFollowButton && (
-            <FollowButton
-              className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
-              mode='primary'
-              size='large'
-              follows={userFollows}
-              followEndpoint={`/articles/${articleId}/follow`}
-              unfollowEndpoint={`/articles/${articleId}/unfollow`}
-              lang={lang}
-              isAvailable={article.sold}
-              extraDataIsLoaded={true}
-            />
-          )}
         </View>
       </CustomLink>
     </View>

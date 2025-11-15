@@ -41,8 +41,8 @@ export const BUTTON_SIZE_STYLES: Record<
     large: 'px-[27px] py-[11px]',
   },
   empty: {
-    small: 'px-2 py-1',
-    large: 'px-4 py-2',
+    small: 'px-0 py-0',
+    large: 'px-0 py-0',
   },
 };
 
