@@ -1,5 +1,7 @@
-import { View, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { VerifyPhoneWizard } from '@/components/verify-phone/VerifyPhoneWizard';
@@ -7,25 +9,24 @@ import { Loading } from '@/components/ui/Loading';
 
 export default function VerifyPhoneScreen() {
   const { locale } = useTranslation();
+  const router = useRouter();
   const { data: currentUser, status } = useGetCurrentUser();
+
+  // Redirect to account if no user (like web version)
+  useEffect(() => {
+    if (status === 'error' || (!currentUser && status === 'success')) {
+      router.replace('/(tabs)/account');
+    }
+  }, [status, currentUser, router]);
 
   // Loading state
   if (status === 'loading' || status === 'idle') {
     return <Loading locale={locale} />;
   }
 
-  // Error or no user - shouldn't happen if ProtectedRoute works correctly
+  // If redirecting, show loading while navigating
   if (status === 'error' || !currentUser) {
-    return (
-      <SafeAreaView
-        className='flex-1 bg-white'
-        edges={['bottom']}
-      >
-        <View className='flex-1 items-center justify-center p-6'>
-          {/* Error content could go here */}
-        </View>
-      </SafeAreaView>
-    );
+    return <Loading locale={locale} />;
   }
 
   return (

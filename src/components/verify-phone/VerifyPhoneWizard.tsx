@@ -33,7 +33,7 @@ export function VerifyPhoneWizard({
   // Always start at step 1, even if phone is already verified
   // User might want to re-verify or change number
   const [step, setStep] = useState<Step>(1);
-  const [phoneNumber, setPhoneNumber] = useState(verifiedPhoneNumber || '');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [isValidPhone, setIsValidPhone] = useState(false);
   const [otpCode, setOtpCode] = useState('');
@@ -47,12 +47,14 @@ export function VerifyPhoneWizard({
       return;
     }
 
-    const result = await sendOtp(phoneNumber);
+    // Send OTP
+    console.log('📲 Sending OTP to phone number:', phoneNumber);
+    /* const result = await sendOtp(phoneNumber);
 
     if (result.success) {
       setStep(2);
       setOtpCode(''); // Clear OTP input
-    }
+    } */
   };
 
   // Step 2: Resend OTP
@@ -160,14 +162,14 @@ export function VerifyPhoneWizard({
           />
 
           {/* Error message */}
-          {errorMessage && (
+          {/* {errorMessage && (
             <CustomText
               type='error'
               className='text-center'
             >
               {errorMessage[locale]}
             </CustomText>
-          )}
+          )} */}
 
           {/* Send Code Button */}
           <Button
