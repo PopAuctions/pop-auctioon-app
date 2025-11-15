@@ -47,21 +47,33 @@ export function VerifyPhoneWizard({
       return;
     }
 
+    // Get full phone number with country code from ref (remove spaces)
+    const fullPhone = (phoneInputRef.current?.fullPhoneNumber || '').replace(
+      /\s/g,
+      ''
+    );
+
     // Send OTP
-    console.log('📲 Sending OTP to phone number:', phoneNumber);
-    /* const result = await sendOtp(phoneNumber);
+    console.log('📲 Sending OTP to phone number:', fullPhone);
+    const result = await sendOtp(fullPhone);
 
     if (result.success) {
       setStep(2);
       setOtpCode(''); // Clear OTP input
-    } */
+    }
   };
 
   // Step 2: Resend OTP
   const handleResendCode = async () => {
     if (!canResend || !phoneNumber) return;
 
-    await sendOtp(phoneNumber);
+    // Get full phone number with country code from ref (remove spaces)
+    const fullPhone = (phoneInputRef.current?.fullPhoneNumber || '').replace(
+      /\s/g,
+      ''
+    );
+    console.log('📲 Resending OTP to phone number:', fullPhone);
+    await sendOtp(fullPhone);
   };
 
   // Step 2: Verify OTP
@@ -72,7 +84,12 @@ export function VerifyPhoneWizard({
       return;
     }
 
-    const result = await verifyOtp(phoneNumber, otpCode);
+    // Get full phone number with country code from ref (remove spaces)
+    const fullPhone = (phoneInputRef.current?.fullPhoneNumber || '').replace(
+      /\s/g,
+      ''
+    );
+    const result = await verifyOtp(fullPhone, otpCode);
 
     if (result.success) {
       setStep(3);
@@ -98,7 +115,7 @@ export function VerifyPhoneWizard({
 
       {/* Step indicator subtitle */}
       <CustomText
-        type='subtitle'
+        type='h4'
         className='text-gray-600 mb-8 text-center'
       >
         {step === 1 && t('screens.verifyPhone.step1Subtitle')}
@@ -162,14 +179,14 @@ export function VerifyPhoneWizard({
           />
 
           {/* Error message */}
-          {/* {errorMessage && (
+          {errorMessage && (
             <CustomText
               type='error'
               className='text-center'
             >
               {errorMessage[locale]}
             </CustomText>
-          )} */}
+          )}
 
           {/* Send Code Button */}
           <Button

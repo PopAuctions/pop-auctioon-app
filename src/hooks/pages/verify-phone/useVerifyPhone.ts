@@ -85,7 +85,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         setErrorMessage(null);
 
         const response = await securePost({
-          endpoint: SECURE_ENDPOINTS.OTP.SEND,
+          endpoint: SECURE_ENDPOINTS.USER.OTP.SEND,
           data: { phoneNumber },
         });
 
@@ -145,7 +145,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         setErrorMessage(null);
 
         const response = await securePost({
-          endpoint: SECURE_ENDPOINTS.OTP.VERIFY,
+          endpoint: SECURE_ENDPOINTS.USER.OTP.VERIFY,
           data: { phoneNumber, code },
         });
 

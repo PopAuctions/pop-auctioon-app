@@ -90,12 +90,10 @@ export const SECURE_ENDPOINTS = {
     BILLING_BY_ID: (id: string): ApiEndpoint =>
       `/user/billing/${id}` as ApiEndpoint, // PATCH (update) y DELETE
     PAYMENT_HISTORY: '/user/payment-history', // GET payment history
-  },
-
-  // OTP (One-Time Password) para verificación telefónica
-  OTP: {
-    SEND: '/otp/send', // POST - Enviar código OTP al teléfono
-    VERIFY: '/otp/verify', // POST - Verificar código OTP
+    OTP: {
+      SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
+      VERIFY: '/user/otp/verify', // POST - Verificar código OTP
+    },
   },
 
   // Server Actions y operaciones complejas
