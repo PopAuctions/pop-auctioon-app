@@ -13,13 +13,6 @@ export default function PaymentsHistoryScreen() {
   const { data: payments, status, refetch } = useGetPaymentHistory();
   const [refreshing, setRefreshing] = useState(false);
 
-  // Refrescar cuando el screen vuelva al foco
-  /* useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch])
-  ); */
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refetch();
@@ -89,7 +82,7 @@ export default function PaymentsHistoryScreen() {
         </CustomText>
         <CustomText
           type='h4'
-          className=' text-center'
+          className='text-center'
         >
           {t('screens.paymentsHistory.subtitle')}
         </CustomText>

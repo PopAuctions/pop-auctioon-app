@@ -2,7 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import { View, TextInput, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import PhoneInput from 'react-native-international-phone-number';
-import type { IPhoneInputRef } from 'react-native-international-phone-number';
+import type {
+  IPhoneInputRef,
+  ICountry,
+} from 'react-native-international-phone-number';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useVerifyPhone } from '@/hooks/pages/verify-phone/useVerifyPhone';
 import { CustomText } from '@/components/ui/CustomText';
@@ -32,11 +35,10 @@ export function VerifyPhoneWizard({
     remainingSeconds,
   } = useVerifyPhone();
 
-  // Always start at step 1, even if phone is already verified
-  // User might want to re-verify or change number
+  // Always start at step 1
   const [step, setStep] = useState<Step>(1);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState<any>(null);
+  const [selectedCountry, setSelectedCountry] = useState<ICountry | null>(null);
   const [isValidPhone, setIsValidPhone] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const phoneInputRef = useRef<IPhoneInputRef>(null);
@@ -47,6 +49,13 @@ export function VerifyPhoneWizard({
       toast.error({ description: errorMessage });
     }
   }, [errorMessage, toast]);
+
+  // Update phone validation when phoneNumber or selectedCountry changes
+  useEffect(() => {
+    if (phoneInputRef.current) {
+      setIsValidPhone(phoneInputRef.current.isValid);
+    }
+  }, [phoneNumber, selectedCountry]);
 
   // Step 1: Send OTP
   const handleSendCode = async () => {
@@ -65,6 +74,20 @@ export function VerifyPhoneWizard({
       /\s/g,
       ''
     );
+
+    // Validate that user is not trying to verify an already verified number
+    if (
+      isPhoneVerified &&
+      fullPhone.replace(/\s/g, '') === verifiedPhoneNumber.replace(/\s/g, '')
+    ) {
+      toast.error({
+        description: {
+          en: 'This number is already verified. Please enter a different one.',
+          es: 'Este número ya está verificado. Ingresa uno diferente.',
+        },
+      });
+      return;
+    }
 
     // Send OTP
     const result = await sendOtp(fullPhone);
@@ -148,17 +171,9 @@ export function VerifyPhoneWizard({
           <PhoneInput
             ref={phoneInputRef}
             value={phoneNumber}
-            onChangePhoneNumber={(phone) => {
-              setPhoneNumber(phone);
-              // Usar ref para obtener validación
-              setTimeout(() => {
-                if (phoneInputRef.current) {
-                  setIsValidPhone(phoneInputRef.current.isValid);
-                }
-              }, 0);
-            }}
+            onChangePhoneNumber={setPhoneNumber}
             selectedCountry={selectedCountry}
-            onChangeSelectedCountry={(country) => setSelectedCountry(country)}
+            onChangeSelectedCountry={setSelectedCountry}
             defaultCountry='ES'
             placeholder={t('screens.verifyPhone.phonePlaceholder')}
             phoneInputStyles={{

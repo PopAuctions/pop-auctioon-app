@@ -110,8 +110,7 @@ export function formatPaymentDate(
   dateString: string,
   lang: 'es' | 'en' = 'es'
 ): string {
-  const dateISO = new Date(dateString).toISOString();
-  const formattedDate = new Date(dateISO);
+  const formattedDate = new Date(dateString);
   const dateLang = lang === 'en' ? 'en-US' : 'es-ES';
 
   return formattedDate.toLocaleDateString(dateLang, {
