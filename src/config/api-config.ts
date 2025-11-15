@@ -92,6 +92,12 @@ export const SECURE_ENDPOINTS = {
     PAYMENT_HISTORY: '/user/payment-history', // GET payment history
   },
 
+  // OTP (One-Time Password) para verificación telefónica
+  OTP: {
+    SEND: '/otp/send', // POST - Enviar código OTP al teléfono
+    VERIFY: '/otp/verify', // POST - Verificar código OTP
+  },
+
   // Server Actions y operaciones complejas
   ACTIONS: {
     CREATE_AUCTION: '/actions/create-auction',

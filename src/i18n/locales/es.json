@@ -230,8 +230,21 @@
       "errorMessage": "Error al enviar el enlace"
     },
     "verifyPhone": {
-      "title": "Verificar Teléfono",
-      "subtitle": "Verifica tu número de teléfono"
+      "title": "Verificar tu número de teléfono",
+      "subtitle": "Verifica tu número de teléfono",
+      "step1Subtitle": "Ingresa tu número de teléfono y haz clic en 'Enviar código'",
+      "step2Subtitle": "Ingresa el código recibido",
+      "step3Subtitle": "¡Teléfono verificado!",
+      "phonePlaceholder": "Número de teléfono",
+      "otpPlaceholder": "Ingresa el código recibido",
+      "sendCodeButton": "Enviar código",
+      "verifyCodeButton": "Verificar código",
+      "resendCodeButton": "Reenviar código",
+      "resendCountdown": "Espera para reenviar: {{seconds}}s",
+      "successMessage": "¡Teléfono verificado!",
+      "goToProfileButton": "Ir a perfil",
+      "invalidPhoneError": "Formato de número de teléfono inválido",
+      "invalidCodeError": "Código de verificación inválido"
     },
     "addresses": {
       "title": "Mis Direcciones",

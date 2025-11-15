@@ -230,8 +230,21 @@
       "errorMessage": "Error sending reset link"
     },
     "verifyPhone": {
-      "title": "Verify Phone",
-      "subtitle": "Verify your phone number"
+      "title": "Verify your phone number",
+      "subtitle": "Verify your phone number",
+      "step1Subtitle": "Enter your phone number and click on 'Send code'",
+      "step2Subtitle": "Enter the received code",
+      "step3Subtitle": "Phone verified!",
+      "phonePlaceholder": "Phone number",
+      "otpPlaceholder": "Enter the received code",
+      "sendCodeButton": "Send code",
+      "verifyCodeButton": "Verify code",
+      "resendCodeButton": "Resend code",
+      "resendCountdown": "Wait to resend: {{seconds}}s",
+      "successMessage": "Phone verified!",
+      "goToProfileButton": "Go to profile",
+      "invalidPhoneError": "Invalid phone number format",
+      "invalidCodeError": "Invalid verification code"
     },
     "addresses": {
       "title": "My Addresses",

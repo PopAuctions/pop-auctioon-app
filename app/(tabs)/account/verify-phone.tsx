@@ -1,26 +1,47 @@
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { CustomText } from '@/components/ui/CustomText';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { VerifyPhoneWizard } from '@/components/verify-phone/VerifyPhoneWizard';
+import { Loading } from '@/components/ui/Loading';
 
 export default function VerifyPhoneScreen() {
-  const { t } = useTranslation();
+  const { locale } = useTranslation();
+  const { data: currentUser, status } = useGetCurrentUser();
+
+  // Loading state
+  if (status === 'loading' || status === 'idle') {
+    return <Loading locale={locale} />;
+  }
+
+  // Error or no user - shouldn't happen if ProtectedRoute works correctly
+  if (status === 'error' || !currentUser) {
+    return (
+      <SafeAreaView
+        className='flex-1 bg-white'
+        edges={['bottom']}
+      >
+        <View className='flex-1 items-center justify-center p-6'>
+          {/* Error content could go here */}
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <View className='flex-1'>
-      <View className='p-6'>
-        <CustomText
-          type='h1'
-          className='mb-2 text-black'
-        >
-          {t('screens.verifyPhone.title')}
-        </CustomText>
-        <CustomText
-          type='subtitle'
-          className='text-gray-600'
-        >
-          {t('screens.verifyPhone.subtitle')}
-        </CustomText>
-      </View>
-    </View>
+    <SafeAreaView
+      className='flex-1 bg-white'
+      edges={['bottom']}
+    >
+      <ScrollView
+        contentContainerClassName='flex-grow py-6'
+        keyboardShouldPersistTaps='handled'
+      >
+        <VerifyPhoneWizard
+          verifiedPhoneNumber={currentUser.phoneNumber ?? ''}
+          isPhoneVerified={currentUser.phoneValidated ?? false}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
