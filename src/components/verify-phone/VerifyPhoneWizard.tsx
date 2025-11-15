@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { View, TextInput, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import PhoneInput from 'react-native-international-phone-number';
@@ -7,6 +7,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useVerifyPhone } from '@/hooks/pages/verify-phone/useVerifyPhone';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
+import { useToast } from '@/hooks/useToast';
 
 type Step = 1 | 2 | 3;
 
@@ -21,6 +22,7 @@ export function VerifyPhoneWizard({
 }: VerifyPhoneWizardProps) {
   const { t, locale } = useTranslation();
   const router = useRouter();
+  const { toast } = useToast(locale);
   const {
     sendOtp,
     verifyOtp,
@@ -39,11 +41,22 @@ export function VerifyPhoneWizard({
   const [otpCode, setOtpCode] = useState('');
   const phoneInputRef = useRef<IPhoneInputRef>(null);
 
+  // Show toast when errorMessage changes from hook
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error({ description: errorMessage });
+    }
+  }, [errorMessage, toast]);
+
   // Step 1: Send OTP
   const handleSendCode = async () => {
     if (!isValidPhone || !phoneNumber) {
-      console.error('ERROR_INVALID_PHONE_NUMBER');
-      // TODO: Show toast
+      toast.error({
+        description: {
+          en: 'Please enter a valid phone number',
+          es: 'Por favor ingrese un número de teléfono válido',
+        },
+      });
       return;
     }
 
@@ -54,7 +67,6 @@ export function VerifyPhoneWizard({
     );
 
     // Send OTP
-    console.log('📲 Sending OTP to phone number:', fullPhone);
     const result = await sendOtp(fullPhone);
 
     if (result.success) {
@@ -72,15 +84,18 @@ export function VerifyPhoneWizard({
       /\s/g,
       ''
     );
-    console.log('📲 Resending OTP to phone number:', fullPhone);
     await sendOtp(fullPhone);
   };
 
   // Step 2: Verify OTP
   const handleVerifyCode = async () => {
     if (!otpCode || otpCode.length < 6) {
-      console.error('ERROR_INVALID_OTP_CODE');
-      // TODO: Show toast
+      toast.error({
+        description: {
+          en: 'Please enter the 6-digit code',
+          es: 'Por favor ingrese el código de 6 dígitos',
+        },
+      });
       return;
     }
 
@@ -93,6 +108,9 @@ export function VerifyPhoneWizard({
 
     if (result.success) {
       setStep(3);
+    } else {
+      // Clear OTP input if verification failed
+      setOtpCode('');
     }
   };
 

@@ -90,8 +90,6 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         });
 
         if (response.error) {
-          console.error('ERROR_SEND_OTP', response.error);
-          // TODO: Show toast with response.error[locale]
           setStatus('error');
           setErrorMessage(response.error);
           return { success: false };
@@ -104,11 +102,12 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         }
 
         // No data received
-        setStatus('error');
-        setErrorMessage({
+        const noDataError = {
           en: 'No response from server',
           es: 'Sin respuesta del servidor',
-        });
+        };
+        setStatus('error');
+        setErrorMessage(noDataError);
         return { success: false };
       } catch (error) {
         const errorMsg =
@@ -119,13 +118,12 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
           'USE_VERIFY_PHONE - Unexpected error sending OTP'
         );
 
-        console.error('ERROR_SEND_OTP_CATCH', errorMsg);
-
-        setStatus('error');
-        setErrorMessage({
+        const catchError = {
           en: 'Failed to send verification code',
           es: 'Error al enviar código de verificación',
-        });
+        };
+        setStatus('error');
+        setErrorMessage(catchError);
         return { success: false };
       }
     },
@@ -150,8 +148,6 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         });
 
         if (response.error) {
-          console.error('ERROR_VERIFY_OTP', response.error);
-          // TODO: Show toast with response.error[locale]
           setStatus('error');
           setErrorMessage(response.error);
           return { success: false };
@@ -163,11 +159,12 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         }
 
         // No data received
-        setStatus('error');
-        setErrorMessage({
+        const invalidCodeError = {
           en: 'Invalid verification code',
           es: 'Código de verificación inválido',
-        });
+        };
+        setStatus('error');
+        setErrorMessage(invalidCodeError);
         return { success: false };
       } catch (error) {
         const errorMsg =
@@ -178,13 +175,12 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
           'USE_VERIFY_PHONE - Unexpected error verifying OTP'
         );
 
-        console.error('ERROR_VERIFY_OTP_CATCH', errorMsg);
-
-        setStatus('error');
-        setErrorMessage({
+        const verifyError = {
           en: 'Failed to verify code',
           es: 'Error al verificar código',
-        });
+        };
+        setStatus('error');
+        setErrorMessage(verifyError);
         return { success: false };
       }
     },
