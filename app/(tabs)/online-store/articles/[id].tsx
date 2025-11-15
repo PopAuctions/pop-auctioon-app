@@ -10,11 +10,13 @@ import { formatTextToParagraph } from '@/utils/formatTextToParagraph';
 import { parseNumber } from '@/utils/parse-number';
 import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlineStoreArticle';
 import { OnlineStorePriceInfo } from '@/components/online-store/OnlineStorePriceInfo';
+import { ArticleOfferForm } from '@/components/online-store/ArticleOfferForm';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const articleLang = t('screens.article');
+  const onlineStoreArticleTexts = t('screens.onlineStoreArticle');
   const articleId = parseNumber(id);
 
   const {
@@ -85,29 +87,16 @@ export default function ArticlesDetailScreen() {
                   price: articleLang.price,
                 }}
               />
-              {/* {[
-                AuctionStatus.PARTIALLY_AVAILABLE,
-                AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE,
-                AuctionStatus.AVAILABLE,
-                AuctionStatus.LIVE,
-              ].includes(auction.status) && (
-                <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
-                  <SendBid
-                    articleId={article.id}
-                    articleServerState={{
-                      currentValue: articleBid.currentValue,
-                      highestBidder: '',
-                      highestBidderImage: '',
-                      available: articleBid.available,
-                    }}
-                    bidLang={bidsLang}
-                    lang={locale}
-                    biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
-                    maxBidOffset={MAX_BID_OFFSET}
-                    commissionPercentage={LOW_COMMISSION_AMOUNT}
-                  />
-                </View>
-              )} */}
+              <ArticleOfferForm
+                articleSecondChanceId={onlineStoreArticle.id}
+                minOffer={onlineStoreArticle.minOffer}
+                lang={locale}
+                texts={{
+                  minOffer: onlineStoreArticleTexts.minOffer,
+                  submit: onlineStoreArticleTexts.makeOffer,
+                  penalty: onlineStoreArticleTexts.penalty,
+                }}
+              />
             </View>
 
             {/* SECTION: Specifications & Description & Observations */}
