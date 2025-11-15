@@ -227,6 +227,7 @@ export function VerifyPhoneWizard({
             onPress={handleSendCode}
             disabled={!isValidPhone || !phoneNumber || isLoading}
             className='mt-4'
+            testID='send-otp-button'
           >
             {isLoading ? (
               <ActivityIndicator
@@ -270,6 +271,7 @@ export function VerifyPhoneWizard({
             onPress={handleVerifyCode}
             disabled={!otpCode || otpCode.length < 6 || isLoading}
             className='mt-2'
+            testID='verify-otp-button'
           >
             {isLoading ? (
               <ActivityIndicator
@@ -287,6 +289,7 @@ export function VerifyPhoneWizard({
             onPress={handleResendCode}
             disabled={!canResend || isLoading}
             className='mt-2'
+            testID='resend-otp-button'
           >
             {isLoading ? (
               <ActivityIndicator
