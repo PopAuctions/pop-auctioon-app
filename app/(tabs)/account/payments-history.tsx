@@ -19,8 +19,9 @@ export default function PaymentsHistoryScreen() {
     setRefreshing(false);
   }, [refetch]);
 
-  // Loading state
-  if (status === 'loading' || status === 'idle') {
+  // Loading state - Solo mostrar si NO es un refresh manual
+  // Si refreshing=true, el usuario ve el loader nativo del gesto
+  if ((status === 'loading' || status === 'idle') && !refreshing) {
     return <Loading locale={locale} />;
   }
 

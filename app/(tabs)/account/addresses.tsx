@@ -52,8 +52,8 @@ export default function AddressesScreen() {
     );
   };
 
-  // Loading state
-  if (status === 'loading' || status === 'idle') {
+  // Loading state - Solo mostrar si NO es un refresh manual
+  if ((status === 'loading' || status === 'idle') && !refreshing) {
     return <Loading locale={locale} />;
   }
 
