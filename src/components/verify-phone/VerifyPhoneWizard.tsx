@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { View, TextInput, ActivityIndicator } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import PhoneInput from 'react-native-international-phone-number';
 import type {
@@ -26,14 +26,8 @@ export function VerifyPhoneWizard({
   const { t, locale } = useTranslation();
   const router = useRouter();
   const { toast } = useToast(locale);
-  const {
-    sendOtp,
-    verifyOtp,
-    status,
-    errorMessage,
-    canResend,
-    remainingSeconds,
-  } = useVerifyPhone();
+  const { sendOtp, verifyOtp, errorMessage, canResend, remainingSeconds } =
+    useVerifyPhone();
 
   // Always start at step 1
   const [step, setStep] = useState<Step>(1);
@@ -41,6 +35,9 @@ export function VerifyPhoneWizard({
   const [selectedCountry, setSelectedCountry] = useState<ICountry | null>(null);
   const [isValidPhone, setIsValidPhone] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const phoneInputRef = useRef<IPhoneInputRef>(null);
 
   // Show toast when errorMessage changes from hook
@@ -90,7 +87,9 @@ export function VerifyPhoneWizard({
     }
 
     // Send OTP
+    setIsSending(true);
     const result = await sendOtp(fullPhone);
+    setIsSending(false);
 
     if (result.success) {
       setStep(2);
@@ -107,7 +106,9 @@ export function VerifyPhoneWizard({
       /\s/g,
       ''
     );
+    setIsResending(true);
     await sendOtp(fullPhone);
+    setIsResending(false);
   };
 
   // Step 2: Verify OTP
@@ -127,7 +128,9 @@ export function VerifyPhoneWizard({
       /\s/g,
       ''
     );
+    setIsVerifying(true);
     const result = await verifyOtp(fullPhone, otpCode);
+    setIsVerifying(false);
 
     if (result.success) {
       setStep(3);
@@ -141,8 +144,6 @@ export function VerifyPhoneWizard({
   const handleGoToProfile = () => {
     router.push('/(tabs)/account');
   };
-
-  const isLoading = status === 'loading';
 
   return (
     <View className='flex-1 px-6'>
@@ -225,18 +226,12 @@ export function VerifyPhoneWizard({
           <Button
             mode='primary'
             onPress={handleSendCode}
-            disabled={!isValidPhone || !phoneNumber || isLoading}
+            disabled={!isValidPhone || !phoneNumber}
+            isLoading={isSending}
             className='mt-4'
             testID='send-otp-button'
           >
-            {isLoading ? (
-              <ActivityIndicator
-                color='#fff'
-                size='small'
-              />
-            ) : (
-              t('screens.verifyPhone.sendCodeButton')
-            )}
+            {t('screens.verifyPhone.sendCodeButton')}
           </Button>
         </View>
       )}
@@ -269,40 +264,28 @@ export function VerifyPhoneWizard({
           <Button
             mode='primary'
             onPress={handleVerifyCode}
-            disabled={!otpCode || otpCode.length < 6 || isLoading}
+            disabled={!otpCode || otpCode.length < 6}
+            isLoading={isVerifying}
             className='mt-2'
             testID='verify-otp-button'
           >
-            {isLoading ? (
-              <ActivityIndicator
-                color='#fff'
-                size='small'
-              />
-            ) : (
-              t('screens.verifyPhone.verifyCodeButton')
-            )}
+            {t('screens.verifyPhone.verifyCodeButton')}
           </Button>
 
           {/* Resend Code Button */}
           <Button
             mode='secondary'
             onPress={handleResendCode}
-            disabled={!canResend || isLoading}
+            disabled={!canResend}
+            isLoading={isResending}
             className='mt-2'
             testID='resend-otp-button'
           >
-            {isLoading ? (
-              <ActivityIndicator
-                color='#d54444'
-                size='small'
-              />
-            ) : canResend ? (
-              t('screens.verifyPhone.resendCodeButton')
-            ) : (
-              t('screens.verifyPhone.resendCountdown', {
-                seconds: remainingSeconds.toString(),
-              })
-            )}
+            {canResend
+              ? t('screens.verifyPhone.resendCodeButton')
+              : t('screens.verifyPhone.resendCountdown', {
+                  seconds: remainingSeconds.toString(),
+                })}
           </Button>
         </View>
       )}

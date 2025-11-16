@@ -378,7 +378,7 @@ describe('useToast', () => {
 
     it('should handle locale change between renders', () => {
       const { result, rerender } = renderHook(({ lang }) => useToast(lang), {
-        initialProps: { lang: 'es' as const },
+        initialProps: { lang: 'es' as 'es' | 'en' },
       });
 
       act(() => {
