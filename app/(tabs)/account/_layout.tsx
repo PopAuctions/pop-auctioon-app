@@ -8,7 +8,7 @@ export default function AccountLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
-        headerBackTitle: 'Atrás',
+        headerBackTitle: t('tabsNames.back'),
       }}
     >
       <Stack.Screen

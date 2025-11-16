@@ -71,6 +71,14 @@ export default function Account({ currentUser }: { currentUser: User }) {
             >
               {currentUser.email}
             </CustomText>
+            <CustomText
+              type='h4'
+              className={`text-base ${currentUser.phoneValidated ? 'text-green-600' : 'text-red-600'}`}
+            >
+              {currentUser.phoneValidated
+                ? t('screens.account.phoneVerified')
+                : t('screens.account.phoneNotVerified')}
+            </CustomText>
           </View>
         </View>
 

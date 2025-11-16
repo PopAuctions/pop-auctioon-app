@@ -26,7 +26,7 @@ const TEXT_TYPE_STYLES: Record<TextType, string> = {
   h2: 'grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[40px] md:leading-[62px]',
   h3: 'grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[30px] md:leading-[40px]',
   h4: 'grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px]',
-  body: 'grow-0 self-stretch font-rubik text-base leading-[24px] tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px]',
+  body: 'grow-0 self-stretch font-rubik text-lg leading-[24px] tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px]',
   bloquote:
     'grow font-rubik text-[22px] italic leading-[32px] md:grow-0 md:font-poppins',
   bold: 'grow-0 self-stretch font-rubik font-bold text-[24px] leading-[30px] md:self-auto md:font-poppins md:leading-[34px]',

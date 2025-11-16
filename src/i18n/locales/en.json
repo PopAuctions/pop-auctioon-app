@@ -183,6 +183,8 @@
       "paymentsHistory": "Payments History",
       "articlesWon": "Articles Won",
       "aboutUs": "About Us",
+      "phoneVerified": "Phone Verified",
+      "phoneNotVerified": "Phone Not Verified",
       "howItWorks": "How it Works",
       "faqs": "FAQs",
       "contactUs": "Contact Us",
@@ -230,8 +232,21 @@
       "errorMessage": "Error sending reset link"
     },
     "verifyPhone": {
-      "title": "Verify Phone",
-      "subtitle": "Verify your phone number"
+      "title": "Verify your phone number",
+      "subtitle": "Verify your phone number",
+      "step1Subtitle": "Enter your phone number and click on 'Send code'",
+      "step2Subtitle": "Enter the received code",
+      "step3Subtitle": "Phone verified!",
+      "phonePlaceholder": "Phone number",
+      "otpPlaceholder": "Enter the received code",
+      "sendCodeButton": "Send code",
+      "verifyCodeButton": "Verify code",
+      "resendCodeButton": "Resend code",
+      "resendCountdown": "Wait to resend: {{seconds}}s",
+      "successMessage": "Phone verified!",
+      "goToProfileButton": "Go to profile",
+      "invalidPhoneError": "Invalid phone number format",
+      "invalidCodeError": "Invalid verification code"
     },
     "addresses": {
       "title": "My Addresses",
@@ -288,7 +303,13 @@
     },
     "paymentsHistory": {
       "title": "Payments History",
-      "subtitle": "Review your past transactions"
+      "subtitle": "Review your past auction purchases",
+      "noPaymentsYet": "You have no registered payments",
+      "noPaymentsSubtitle": "Your purchases and payments will appear here",
+      "totalAmount": "Total amount",
+      "viewPayment": "View payment",
+      "articlesPaid": "Articles paid",
+      "onlineStore": "Online Store"
     },
     "articlesWon": {
       "title": "Articles Won",
