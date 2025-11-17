@@ -8,6 +8,7 @@ export interface InputProps extends TextInputProps {
 export const Input: React.FC<InputProps> = ({
   className = '',
   style,
+  editable = true,
   ...props
 }) => {
   return (
@@ -26,10 +27,12 @@ export const Input: React.FC<InputProps> = ({
         shadow-sm
         focus:border-cinnabar
         disabled:opacity-50
+        ${editable ? '' : 'opacity-50'}
         ${className}
       `}
       placeholderTextColor='#64748b'
       style={style}
+      editable={editable}
       {...props}
     />
   );
