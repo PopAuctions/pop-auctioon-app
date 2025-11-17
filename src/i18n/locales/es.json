@@ -145,6 +145,17 @@
         "jewelry": "Joyería"
       }
     },
+    "onlineStoreArticle": {
+      "title": "Tienda Online",
+      "price": "Precio",
+      "buy": "Comprar",
+      "offer": "¡Haz una oferta al vendedor!",
+      "makeOffer": "Hacer oferta",
+      "ask": "Preguntar",
+      "minOffer": "La oferta mínima es de:",
+      "penalty": "Si tu oferta es aceptada, recibirás un correo con los siguientes pasos y tendrás 24 horas para hacer el pago.",
+      "noArticlesFound": "No se encontraron artículos"
+    },
     "myAuctions": {
       "title": "Mis Subastas",
       "subtitle": "Gestiona tus subastas creadas",

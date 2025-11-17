@@ -148,6 +148,7 @@ export interface CustomFullArticleSecondChance {
   price: number;
   status: ArticleSecondChanceStatus;
   Article: Article;
+  minOffer: number;
   ArticleOffer?: Pick<
     ArticleOffer,
     'id' | 'amount' | 'expiresAt' | 'status' | 'createdAt'
