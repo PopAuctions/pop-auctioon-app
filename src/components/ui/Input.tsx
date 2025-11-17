@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import React from 'react';
 import { TextInput, type TextInputProps } from 'react-native';
 
@@ -13,7 +14,8 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <TextInput
-      className={`
+      className={cn(
+        `
         h-12
         w-full
         rounded-lg
@@ -28,8 +30,9 @@ export const Input: React.FC<InputProps> = ({
         focus:border-cinnabar
         disabled:opacity-50
         ${editable ? '' : 'opacity-50'}
-        ${className}
-      `}
+      `,
+        className
+      )}
       placeholderTextColor='#64748b'
       style={style}
       editable={editable}

@@ -23,6 +23,7 @@ export default function StoreLayout() {
           title: t('screens.store.productDetail'),
           presentation: 'card',
           headerShown: true, // Solo en detalle de producto
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
     </Stack>
