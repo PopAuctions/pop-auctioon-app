@@ -194,6 +194,8 @@
       "paymentsHistory": "Historial de Pagos",
       "articlesWon": "Artículos Ganados",
       "aboutUs": "Acerca de Nosotros",
+      "phoneVerified": "Teléfono Verificado",
+      "phoneNotVerified": "Teléfono No Verificado",
       "howItWorks": "Cómo Funciona",
       "faqs": "Preguntas Frecuentes",
       "contactUs": "Contáctanos",
@@ -241,8 +243,21 @@
       "errorMessage": "Error al enviar el enlace"
     },
     "verifyPhone": {
-      "title": "Verificar Teléfono",
-      "subtitle": "Verifica tu número de teléfono"
+      "title": "Verificar tu número de teléfono",
+      "subtitle": "Verifica tu número de teléfono",
+      "step1Subtitle": "Ingresa tu número de teléfono y haz clic en 'Enviar código'",
+      "step2Subtitle": "Ingresa el código recibido",
+      "step3Subtitle": "¡Teléfono verificado!",
+      "phonePlaceholder": "Número de teléfono",
+      "otpPlaceholder": "Ingresa el código recibido",
+      "sendCodeButton": "Enviar código",
+      "verifyCodeButton": "Verificar código",
+      "resendCodeButton": "Reenviar código",
+      "resendCountdown": "Espera para reenviar: {{seconds}}s",
+      "successMessage": "¡Teléfono verificado!",
+      "goToProfileButton": "Ir a perfil",
+      "invalidPhoneError": "Formato de número de teléfono inválido",
+      "invalidCodeError": "Código de verificación inválido"
     },
     "addresses": {
       "title": "Mis Direcciones",
@@ -299,7 +314,13 @@
     },
     "paymentsHistory": {
       "title": "Historial de Pagos",
-      "subtitle": "Revisa tus transacciones anteriores"
+      "subtitle": "Revisa tus compras anteriores de subastas",
+      "noPaymentsYet": "No tienes pagos registrados",
+      "noPaymentsSubtitle": "Aquí aparecerán tus compras y pagos realizados",
+      "totalAmount": "Importe Total",
+      "viewPayment": "Ver pago",
+      "articlesPaid": "Artículos pagados",
+      "onlineStore": "Tienda Online"
     },
     "articlesWon": {
       "title": "Artículos Ganados",

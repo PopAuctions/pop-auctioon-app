@@ -1,26 +1,48 @@
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { CustomText } from '@/components/ui/CustomText';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { VerifyPhoneWizard } from '@/components/verify-phone/VerifyPhoneWizard';
+import { Loading } from '@/components/ui/Loading';
 
 export default function VerifyPhoneScreen() {
-  const { t } = useTranslation();
+  const { locale } = useTranslation();
+  const router = useRouter();
+  const { data: currentUser, status } = useGetCurrentUser();
+
+  // Redirect to account if no user (like web version)
+  useEffect(() => {
+    if (status === 'error' || (!currentUser && status === 'success')) {
+      router.replace('/(tabs)/account');
+    }
+  }, [status, currentUser, router]);
+
+  // Loading state
+  if (status === 'loading' || status === 'idle') {
+    return <Loading locale={locale} />;
+  }
+
+  // If redirecting, show loading while navigating
+  if (status === 'error' || !currentUser) {
+    return <Loading locale={locale} />;
+  }
 
   return (
-    <View className='flex-1'>
-      <View className='p-6'>
-        <CustomText
-          type='h1'
-          className='mb-2 text-black'
-        >
-          {t('screens.verifyPhone.title')}
-        </CustomText>
-        <CustomText
-          type='subtitle'
-          className='text-gray-600'
-        >
-          {t('screens.verifyPhone.subtitle')}
-        </CustomText>
-      </View>
-    </View>
+    <SafeAreaView
+      className='flex-1 bg-white'
+      edges={['bottom']}
+    >
+      <ScrollView
+        contentContainerClassName='flex-grow py-6'
+        keyboardShouldPersistTaps='handled'
+      >
+        <VerifyPhoneWizard
+          verifiedPhoneNumber={currentUser.phoneNumber ?? ''}
+          isPhoneVerified={currentUser.phoneValidated ?? false}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }

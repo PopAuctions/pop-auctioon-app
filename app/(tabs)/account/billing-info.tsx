@@ -81,8 +81,8 @@ export default function BillingInfoScreen() {
     refetch(); // Refresh list
   };
 
-  // Loading state
-  const loading = status === 'loading';
+  // Loading state - Solo mostrar si NO es un refresh manual
+  const loading = status === 'loading' && !refreshing;
 
   if (loading) {
     return <Loading locale={locale} />;

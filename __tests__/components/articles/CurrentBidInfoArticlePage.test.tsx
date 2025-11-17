@@ -3,6 +3,15 @@ import { render } from '@testing-library/react-native';
 import { CurrentBidInfoArticlePage } from '@/components/articles/CurrentBidInfoArticlePage';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 
+// Mock SimpleCountdown to avoid timer issues in tests
+jest.mock('@/components/ui/SimpleCountdown', () => {
+  const mockReact = jest.requireActual('react');
+  const { Text } = jest.requireActual('react-native');
+  return {
+    SimpleCountdown: () => mockReact.createElement(Text, {}, '5d 3h 20m 15s'),
+  };
+});
+
 describe('CurrentBidInfoArticlePage', () => {
   it('renders current bid info with all props', () => {
     const { getByText } = render(
