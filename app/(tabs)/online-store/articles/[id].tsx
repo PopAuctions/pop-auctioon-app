@@ -28,9 +28,7 @@ export default function ArticlesDetailScreen() {
   });
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
-    if (status === 'loading') {
-      return <Loading locale={locale} />;
-    }
+    return <Loading locale={locale} />;
   }
 
   if (status === REQUEST_STATUS.error || !onlineStoreArticle) {

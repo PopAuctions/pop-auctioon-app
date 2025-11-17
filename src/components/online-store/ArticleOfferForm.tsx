@@ -12,6 +12,7 @@ import { Lang, LangMap } from '@/types/types';
 import { Input } from '../ui/Input';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { parseNumber } from '@/utils/parse-number';
 
 type ArticleOfferFormProps = {
   texts: { minOffer: string; submit: string; penalty: string };
@@ -26,7 +27,7 @@ export function ArticleOfferForm({
   minOffer,
   onlineStoreArticleId,
 }: ArticleOfferFormProps) {
-  const [amount, setAmount] = useState('0');
+  const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
@@ -47,7 +48,7 @@ export function ArticleOfferForm({
       callToast({
         variant: 'error',
         description: {
-          es: 'Ingresa un número valido',
+          es: 'Ingresa un número válido',
           en: 'Enter a valid number',
         },
       });
@@ -60,7 +61,7 @@ export function ArticleOfferForm({
         endpoint: SECURE_ENDPOINTS.OFFERS.CREATE,
         data: {
           onlineStoreArticleId,
-          amount,
+          amount: parseNumber(amount),
         },
       });
 

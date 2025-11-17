@@ -135,7 +135,7 @@ export function SendBid({
       callToast({ variant: 'success', description: data });
       setBidAmount('');
     } catch (e: any) {
-      sentryErrorReport(e?.message, 'CATCH_CREATE_OFFER - Unexpected error');
+      sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
       callToast({
         variant: 'error',
         description: {
