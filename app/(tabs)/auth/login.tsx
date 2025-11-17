@@ -83,7 +83,7 @@ export default function Auth() {
             alignItems: 'center',
           }}
         >
-          <View className='flex-1 pt-10'>
+          <View className='w-full flex-1 px-4 pt-10'>
             {/* Logo/Title Section */}
             <View className='items-center'>
               <View className='h-20 w-80'>
@@ -94,7 +94,7 @@ export default function Auth() {
               </View>
             </View>
             {/* Form Container */}
-            <View className='rounded-2xl bg-white p-6 shadow-2xl'>
+            <View className='w-full rounded-2xl bg-white p-6 shadow-2xl'>
               <View className='mb-5'>
                 <CustomText
                   type='body'

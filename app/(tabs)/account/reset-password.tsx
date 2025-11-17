@@ -1,4 +1,4 @@
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
@@ -11,10 +11,17 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type * as z from 'zod';
+import { useToast } from '@/hooks/useToast';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { LangMap } from '@/types/types';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 export default function ResetPasswordScreen() {
   const { t, locale } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const { securePost } = useSecureApi();
+  const { callToast } = useToast(locale);
 
   const {
     control,
@@ -31,28 +38,30 @@ export default function ResetPasswordScreen() {
     setLoading(true);
 
     try {
-      // TODO: Implementar llamada al backend para enviar email de reset
-      console.log('Reset password for email:', values.email);
+      const response = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.USER.RESET_PASSWORD,
+        data: {
+          email: values.email,
+        },
+      });
 
-      // Simular delay de red
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const data = response?.data;
 
-      Alert.alert(
-        t('commonActions.ok'),
-        t('screens.resetPassword.successMessage'),
-        [
-          {
-            text: t('commonActions.ok'),
-            onPress: () => router.back(),
-          },
-        ]
-      );
-    } catch (error) {
-      console.error('Reset password error:', error);
-      Alert.alert(
-        t('commonActions.error'),
-        t('screens.resetPassword.errorMessage')
-      );
+      if (response.error) {
+        callToast({ variant: 'error', description: response.error });
+        return;
+      }
+
+      callToast({ variant: 'success', description: data });
+    } catch (e: any) {
+      sentryErrorReport(e?.message, 'CATCH_RESET_PASSWORD - Unexpected error');
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'An unexpected error occurred. Please try again later.',
+          es: 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.',
+        },
+      });
     } finally {
       setLoading(false);
     }
