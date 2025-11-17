@@ -95,6 +95,9 @@ export const SECURE_ENDPOINTS = {
       VERIFY: '/user/otp/verify', // POST - Verificar código OTP
     },
   },
+  BIDS: {
+    CREATE: '/bids',
+  },
 
   // Server Actions y operaciones complejas
   ACTIONS: {
@@ -102,6 +105,9 @@ export const SECURE_ENDPOINTS = {
     UPDATE_AUCTION: '/actions/update-auction',
     PROCESS_PAYMENT: '/actions/process-payment',
     SEND_MESSAGE: '/actions/send-message',
+  },
+  OFFERS: {
+    CREATE: '/online-store/offers',
   },
 
   // Proxy universal para endpoints existentes

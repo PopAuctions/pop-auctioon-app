@@ -16,6 +16,7 @@ import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -116,7 +117,7 @@ export function SendBid({
       setIsPending(true);
 
       const response = await securePost<LangMap>({
-        endpoint: '/bids',
+        endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
         data: {
           articleId,
           amount: bidAmount,
@@ -134,7 +135,7 @@ export function SendBid({
       callToast({ variant: 'success', description: data });
       setBidAmount('');
     } catch (e: any) {
-      sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
+      sentryErrorReport(e?.message, 'CATCH_CREATE_OFFER - Unexpected error');
       callToast({
         variant: 'error',
         description: {

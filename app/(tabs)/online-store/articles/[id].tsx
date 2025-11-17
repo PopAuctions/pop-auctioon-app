@@ -88,7 +88,7 @@ export default function ArticlesDetailScreen() {
                 }}
               />
               <ArticleOfferForm
-                articleSecondChanceId={onlineStoreArticle.id}
+                onlineStoreArticleId={onlineStoreArticle.id}
                 minOffer={onlineStoreArticle.minOffer}
                 lang={locale}
                 texts={{

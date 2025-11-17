@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
   View,
-  TextInput,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
 } from 'react-native';
@@ -9,23 +8,27 @@ import { useToast } from '@/hooks/useToast';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
-import { Lang } from '@/types/types';
+import { Lang, LangMap } from '@/types/types';
+import { Input } from '../ui/Input';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 type ArticleOfferFormProps = {
   texts: { minOffer: string; submit: string; penalty: string };
   lang: Lang;
   minOffer: number;
-  articleSecondChanceId: number;
+  onlineStoreArticleId: number;
 };
 
 export function ArticleOfferForm({
   texts,
   lang,
   minOffer,
-  articleSecondChanceId,
+  onlineStoreArticleId,
 }: ArticleOfferFormProps) {
   const [amount, setAmount] = useState('0');
   const [isLoading, setIsLoading] = useState(false);
+  const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
 
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
@@ -53,17 +56,22 @@ export function ArticleOfferForm({
 
     setIsLoading(true);
     try {
-      // const { error, success } = await makeOffer({
-      //   articleSecondChanceId,
-      //   offerAmount: parsed,
-      // });
+      const response = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.OFFERS.CREATE,
+        data: {
+          onlineStoreArticleId,
+          amount,
+        },
+      });
 
-      // if (error) {
-      //   callToast({ variant: 'error', description: error });
-      //   return;
-      // }
+      const data = response?.data;
 
-      // callToast({ variant: 'success', description: success });
+      if (response.error) {
+        callToast({ variant: 'error', description: response.error });
+        return;
+      }
+
+      callToast({ variant: 'success', description: data });
       setAmount('');
     } catch (e: any) {
       console.log(e?.message);
@@ -90,13 +98,14 @@ export function ArticleOfferForm({
   return (
     <View className='flex flex-col space-y-2'>
       <View className='my-3'>
-        <TextInput
+        <Input
           value={amount}
           onChangeText={handleChange}
           onSubmitEditing={handleSubmitEditing}
           keyboardType='numeric'
           placeholder='....'
-          className='mr-2 w-1/2 rounded border border-neutral-300 px-3 py-2'
+          className='mr-2 w-1/2 rounded px-3 py-2'
+          editable={!isLoading}
         />
 
         <CustomText
