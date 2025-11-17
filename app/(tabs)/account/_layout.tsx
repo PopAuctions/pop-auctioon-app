@@ -27,28 +27,28 @@ export default function AccountLayout() {
       <Stack.Screen
         name='edit-profile'
         options={{
-          title: '', //t('screens.account.editProfile'),
+          title: t('screens.account.editProfile'),
           presentation: 'card',
         }}
       />
       <Stack.Screen
         name='followed-auctions'
         options={{
-          title: '', //t('screens.account.followedAuctions'),
+          title: t('screens.account.followedAuctions'),
           presentation: 'card',
         }}
       />
       <Stack.Screen
         name='followed-articles'
         options={{
-          title: '', //t('screens.account.followedArticles'),
+          title: t('screens.account.followedArticles'),
           presentation: 'card',
         }}
       />
       <Stack.Screen
         name='reset-password'
         options={{
-          title: '', //t('screens.account.resetPassword'),
+          title: t('screens.account.resetPassword'),
           presentation: 'card',
         }}
       />
