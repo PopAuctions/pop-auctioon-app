@@ -12,6 +12,11 @@ interface CustomErrorProps {
   customMessage?: LangMap | null;
 }
 
+const fallbackMessage: LangMap = {
+  es: 'Hubo un error al cargar el contenido.',
+  en: 'There was an error loading the content.',
+};
+
 export const CustomError = ({
   refreshRoute,
   customMessage,
@@ -19,7 +24,7 @@ export const CustomError = ({
   const { t, locale } = useTranslation();
   const router = useRouter();
 
-  const message = customMessage?.[locale];
+  const message = customMessage?.[locale] ?? fallbackMessage[locale];
 
   const handleRefresh = () => {
     router.replace(refreshRoute);
@@ -37,14 +42,12 @@ export const CustomError = ({
         >
           {t('commonErrors.generic')}
         </CustomText>
-        {message && (
-          <CustomText
-            type='h4'
-            className='mb-2 text-center'
-          >
-            {message}
-          </CustomText>
-        )}
+        <CustomText
+          type='h4'
+          className='mb-2 text-center'
+        >
+          {message}
+        </CustomText>
         <CustomText
           type='body'
           className='text-center text-base'
