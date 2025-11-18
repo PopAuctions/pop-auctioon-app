@@ -21,7 +21,7 @@ export const useGetFollowedAuctions = (): ActionResponse<
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureGet } = useSecureApi();
 
-  const fetchFollowedArticles = useCallback(async () => {
+  const fetchFollowedAuctions = useCallback(async () => {
     setStatus('loading');
 
     const res = await secureGet<CustomAuction[]>({
@@ -52,7 +52,7 @@ export const useGetFollowedAuctions = (): ActionResponse<
     };
   }, [secureGet]);
 
-  const refetchFollowedArticles = useCallback(async () => {
+  const refetchFollowedAuctions = useCallback(async () => {
     const res = await secureGet<CustomAuction[]>({
       endpoint: SECURE_ENDPOINTS.AUCTIONS.FOLLOWED_AUCTIONS,
     });
@@ -76,14 +76,14 @@ export const useGetFollowedAuctions = (): ActionResponse<
   }, [secureGet]);
 
   useEffect(() => {
-    fetchFollowedArticles();
-  }, [fetchFollowedArticles]);
+    fetchFollowedAuctions();
+  }, [fetchFollowedAuctions]);
 
   return {
     data: auctions,
     status,
     errorMessage,
     setErrorMessage,
-    refetch: refetchFollowedArticles,
+    refetch: refetchFollowedAuctions,
   };
 };
