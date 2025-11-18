@@ -316,7 +316,6 @@
     },
     "paymentsHistory": {
       "title": "Historial de Pagos",
-      "subtitle": "Revisa tus compras anteriores de subastas",
       "noPaymentsYet": "No tienes pagos registrados",
       "noPaymentsSubtitle": "Aquí aparecerán tus compras y pagos realizados",
       "totalAmount": "Importe Total",
