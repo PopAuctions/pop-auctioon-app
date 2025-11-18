@@ -15,6 +15,7 @@ interface FollowButtonProps {
   isAvailable?: boolean;
   extraDataIsLoaded?: boolean;
   lang: Lang;
+  actionAfterFollow?: () => void;
 }
 
 const TEXTS = {
@@ -42,6 +43,7 @@ export function FollowButton({
   lang,
   isAvailable = false,
   extraDataIsLoaded = false,
+  actionAfterFollow = () => {},
 }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(() => !!follows);
   const [status, setStatus] = useState<RequestStatus>('idle');
@@ -67,6 +69,7 @@ export function FollowButton({
       setStatus('success');
 
       callToast({ variant: 'success', description: response.data });
+      actionAfterFollow?.();
     } catch (e: any) {
       sentryErrorReport(e?.message, `FOLLOW_BUTTON - ${endpoint}`);
       setStatus('error');

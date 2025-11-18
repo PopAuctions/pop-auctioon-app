@@ -64,6 +64,9 @@ export const SECURE_ENDPOINTS = {
     FEATURE_FLAGS: '/config/feature-flags',
   },
 
+  ARTICLES: {
+    FOLLOWED_ARTICLES: '/articles/followed',
+  },
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',
@@ -73,6 +76,7 @@ export const SECURE_ENDPOINTS = {
     JOIN: '/auctions/join',
     BID: '/auctions/bid',
     DETAILS: '/auctions/details',
+    FOLLOWED_AUCTIONS: '/auctions/followed',
   },
 
   // Usuario y perfil

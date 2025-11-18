@@ -125,7 +125,8 @@
       "questions": "¿Tienes preguntas?",
       "articleNotFound": "Artículo no encontrado",
       "bidsHistory": "Historial de pujas",
-      "comments": "Comentarios"
+      "comments": "Comentarios",
+      "noFollowedArticles": "No tienes artículos seguidos"
     },
     "store": {
       "title": "Tienda Online",
