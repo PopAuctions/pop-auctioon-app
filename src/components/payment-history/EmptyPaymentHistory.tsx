@@ -29,14 +29,8 @@ export function EmptyPaymentHistory({
         }
       >
         <CustomText
-          type='h1'
-          className='my-4 text-center text-cinnabar'
-        >
-          {t('screens.paymentsHistory.title')}
-        </CustomText>
-        <CustomText
-          type='h3'
-          className='my-8 text-center'
+          type='h2'
+          className='text-center text-cinnabar'
         >
           {t('screens.paymentsHistory.noPaymentsYet')}
         </CustomText>

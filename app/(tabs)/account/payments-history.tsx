@@ -7,10 +7,17 @@ import { PaymentCard } from '@/components/payment-history/PaymentCard';
 import { EmptyPaymentHistory } from '@/components/payment-history/EmptyPaymentHistory';
 import { useGetPaymentHistory } from '@/hooks/pages/payment/useGetPaymentHistory';
 import { useState, useCallback } from 'react';
+import { REQUEST_STATUS } from '@/constants';
+import { CustomError } from '@/components/ui/CustomError';
 
 export default function PaymentsHistoryScreen() {
   const { t, locale } = useTranslation();
-  const { data: payments, status, refetch } = useGetPaymentHistory();
+  const {
+    data: payments,
+    status,
+    refetch,
+    errorMessage,
+  } = useGetPaymentHistory();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
@@ -19,34 +26,19 @@ export default function PaymentsHistoryScreen() {
     setRefreshing(false);
   }, [refetch]);
 
-  // Loading state - Solo mostrar si NO es un refresh manual
-  // Si refreshing=true, el usuario ve el loader nativo del gesto
-  if ((status === 'loading' || status === 'idle') && !refreshing) {
+  if (
+    (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) &&
+    !refreshing
+  ) {
     return <Loading locale={locale} />;
   }
 
-  // Error state (show error but allow retry)
-  if (status === 'error') {
+  if (status === REQUEST_STATUS.error) {
     return (
-      <SafeAreaView
-        className='flex-1 bg-white'
-        edges={['bottom']}
-      >
-        <View className='flex-1 items-center justify-center p-6'>
-          <CustomText
-            type='h3'
-            className='mb-4 text-center text-red-500'
-          >
-            {t('commonErrors.generic')}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='text-gray-600 text-center'
-          >
-            {t('commonErrors.defaultMessage')}
-          </CustomText>
-        </View>
-      </SafeAreaView>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute='/(tabs)/account/payments-history'
+      />
     );
   }
 
