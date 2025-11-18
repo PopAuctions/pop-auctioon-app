@@ -2,21 +2,21 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import type {
   ActionResponse,
-  Article,
+  Auction,
   LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
-interface CustomArticle {
+interface CustomAuction {
   id: string;
-  Article: Article & { ArticleBid: { currentValue: number } };
+  Auction: Auction;
 }
 
-export const useGetFollowedArticles = (): ActionResponse<
-  CustomArticle[] | null
+export const useGetFollowedAuctions = (): ActionResponse<
+  CustomAuction[] | null
 > => {
-  const [articles, setArticles] = useState<CustomArticle[] | null>(null);
+  const [auctions, setAuctions] = useState<CustomAuction[] | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureGet } = useSecureApi();
@@ -24,25 +24,25 @@ export const useGetFollowedArticles = (): ActionResponse<
   const fetchFollowedArticles = useCallback(async () => {
     setStatus('loading');
 
-    const res = await secureGet<CustomArticle[]>({
-      endpoint: SECURE_ENDPOINTS.ARTICLES.FOLLOWED_ARTICLES,
+    const res = await secureGet<CustomAuction[]>({
+      endpoint: SECURE_ENDPOINTS.AUCTIONS.FOLLOWED_AUCTIONS,
     });
 
     if (res.error) {
       setStatus('error');
       setErrorMessage({
-        en: 'Error fetching followed articles',
-        es: 'Error al obtener los artículos seguidos',
+        en: 'Error fetching followed auctions',
+        es: 'Error al obtener las subastas seguidas',
       });
       return {
         message: {
-          en: 'Error fetching followed articles',
-          es: 'Error al obtener los artículos seguidos',
+          en: 'Error fetching followed auctions',
+          es: 'Error al obtener las subastas seguidas',
         },
       };
     }
 
-    setArticles(res.data || null);
+    setAuctions(res.data || null);
     setStatus('success');
 
     return {
@@ -53,20 +53,20 @@ export const useGetFollowedArticles = (): ActionResponse<
   }, [secureGet]);
 
   const refetchFollowedArticles = useCallback(async () => {
-    const res = await secureGet<CustomArticle[]>({
-      endpoint: SECURE_ENDPOINTS.ARTICLES.FOLLOWED_ARTICLES,
+    const res = await secureGet<CustomAuction[]>({
+      endpoint: SECURE_ENDPOINTS.AUCTIONS.FOLLOWED_AUCTIONS,
     });
 
     if (res.error) {
       return {
         message: {
-          en: 'Error fetching followed articles',
-          es: 'Error al obtener los artículos seguidos',
+          en: 'Error fetching followed auctions',
+          es: 'Error al obtener las subastas seguidas',
         },
       };
     }
 
-    setArticles(res.data || null);
+    setAuctions(res.data || null);
 
     return {
       error: null,
@@ -80,7 +80,7 @@ export const useGetFollowedArticles = (): ActionResponse<
   }, [fetchFollowedArticles]);
 
   return {
-    data: articles,
+    data: auctions,
     status,
     errorMessage,
     setErrorMessage,

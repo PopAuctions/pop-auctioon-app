@@ -83,7 +83,8 @@
       "timeStart": "Time to start:",
       "auctionNotFound": "Auction not found or not longer available",
       "noArticlesFound": "No articles found",
-      "specialMessage": "For this auction, no commission will be charged for any of the articles"
+      "specialMessage": "For this auction, no commission will be charged for any of the articles",
+      "noFollowedAuctions": "You have no followed auctions"
     },
     "article": {
       "title": "Auction ",
