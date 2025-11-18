@@ -58,3 +58,10 @@ export const REQUEST_STATUS: Record<RequestStatus, string> = {
   success: 'success',
   error: 'error',
 };
+
+export const COMPANY_INFO = [
+  'POPAUCTIOON',
+  'KEWAYCASH AND VERD SLU',
+  'LAGASCA 83 28006 MADRID',
+  'support@popauctioon.com',
+];
