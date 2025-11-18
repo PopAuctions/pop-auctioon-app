@@ -358,7 +358,7 @@
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",
-    "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
+    "defaultMessage": "Si el problema persiste, contacta soporte.",
     "tryAgain": "Intentar de nuevo",
     "generic": "Algo salió mal"
   },

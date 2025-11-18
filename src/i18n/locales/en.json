@@ -347,7 +347,7 @@
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",
-    "defaultMessage": "Please check your internet connection and restart Expo. If the problem persists, contact support.",
+    "defaultMessage": "If the problem persists, contact support.",
     "tryAgain": "Try again",
     "generic": "Something went wrong"
   },
