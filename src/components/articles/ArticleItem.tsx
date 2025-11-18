@@ -19,6 +19,7 @@ type ArticleItemProps = {
   userFollows: boolean;
   commissionValue: number;
   showFollowButton?: boolean;
+  actionAfterFollow?: () => void;
 };
 
 export function ArticleItem({
@@ -29,6 +30,7 @@ export function ArticleItem({
   userFollows,
   commissionValue,
   showFollowButton = true,
+  actionAfterFollow = () => {},
 }: ArticleItemProps) {
   const articleId = article.id;
   const price = article.ArticleBid.currentValue;
@@ -85,11 +87,11 @@ export function ArticleItem({
               type='body'
               className='text-cinnabar'
             >
-              {ARTICLE_BRANDS_LABELS[
-                article.brand as keyof typeof ARTICLE_BRANDS_LABELS
-              ] ??
-                article.brand ??
-                ''}
+              {
+                ARTICLE_BRANDS_LABELS[
+                  article.brand as keyof typeof ARTICLE_BRANDS_LABELS
+                ]
+              }
             </CustomText>
           </View>
 
@@ -104,6 +106,7 @@ export function ArticleItem({
               lang={lang}
               isAvailable={article.sold}
               extraDataIsLoaded={true}
+              actionAfterFollow={actionAfterFollow}
             />
           )}
         </View>

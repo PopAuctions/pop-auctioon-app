@@ -65,9 +65,7 @@ export default function ArticlesDetailScreen() {
     articlePageStatus === REQUEST_STATUS.error;
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
-    if (status === 'loading') {
-      return <Loading locale={locale} />;
-    }
+    return <Loading locale={locale} />;
   }
 
   if (status === REQUEST_STATUS.error || !article || !article?.images) {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { mockSupabase, mockSafeAreaContext } from '../../setup/mocks.mock';
-import { ArticleItem } from '@/components/articles/AuctionArticleItem';
+import { ArticleItem } from '@/components/articles/ArticleItem';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
-describe('AuctionArticleItem', () => {
+describe('ArticleItem', () => {
   it('renders with complete props', () => {
     const mockArticle = {
       id: 1,

@@ -83,7 +83,8 @@
       "timeStart": "Time to start:",
       "auctionNotFound": "Auction not found or not longer available",
       "noArticlesFound": "No articles found",
-      "specialMessage": "For this auction, no commission will be charged for any of the articles"
+      "specialMessage": "For this auction, no commission will be charged for any of the articles",
+      "noFollowedAuctions": "You have no followed auctions"
     },
     "article": {
       "title": "Auction ",
@@ -125,7 +126,8 @@
       "questions": "Questions?",
       "articleNotFound": "Article not found",
       "bidsHistory": "Bids record",
-      "comments": "Comments"
+      "comments": "Comments",
+      "noFollowedArticles": "You have no followed articles"
     },
     "store": {
       "title": "Online Store",
@@ -176,8 +178,8 @@
       "editProfile": "Edit Profile Information",
       "resetPassword": "Reset Password",
       "verifyPhone": "Verify Phone",
-      "followedAuctions": "Subastas Seguidas",
-      "followedArticles": "Artículos Seguidos",
+      "followedAuctions": "Followed Auctions",
+      "followedArticles": "Followed Articles",
       "addresses": "Addresses",
       "billingInfo": "Billing Information",
       "paymentsHistory": "Payments History",
