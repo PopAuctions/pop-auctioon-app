@@ -233,6 +233,11 @@
       "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
       "compressionError": "Error al comprimir la imagen. Por favor intenta con otra.",
       "compressingImages": "Comprimiendo imágenes...",
+      "updateSuccess": "Perfil actualizado exitosamente",
+      "updateError": "Error al actualizar el perfil",
+      "loadError": "Error al cargar datos del usuario",
+      "permissionDenied": "Se requiere permiso para acceder a la galería",
+      "compressionFailed": "Error al comprimir la imagen. Por favor intenta con otra.",
       "update": "Actualizar",
       "back": "Volver"
     },
@@ -261,7 +266,12 @@
       "successMessage": "¡Teléfono verificado!",
       "goToProfileButton": "Ir a perfil",
       "invalidPhoneError": "Formato de número de teléfono inválido",
-      "invalidCodeError": "Código de verificación inválido"
+      "invalidCodeError": "Código de verificación inválido",
+      "invalidPhoneNumber": "Por favor ingrese un número de teléfono válido",
+      "alreadyVerified": "Este número ya está verificado. Ingresa uno diferente.",
+      "codeSentSuccess": "Código de verificación enviado exitosamente",
+      "invalidCode": "Por favor ingrese el código de 6 dígitos",
+      "verifiedSuccess": "¡Teléfono verificado exitosamente!"
     },
     "addresses": {
       "title": "Mis Direcciones",
@@ -289,7 +299,9 @@
         "postalCode": "Código postal",
         "setPrimary": "Establecer como dirección principal",
         "submit": "Guardar dirección",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "createSuccess": "Dirección creada exitosamente",
+        "createError": "Error al crear la dirección"
       },
       "success": "Dirección guardada correctamente",
       "error": "Error al guardar la dirección"
@@ -312,7 +324,11 @@
       "billingAddress": "Dirección de facturación",
       "billingAddressPlaceholder": "Dirección completa",
       "vatNumber": "Número de identificación fiscal / NIT",
-      "vatNumberPlaceholder": "RFC, NIT, RUT, etc.",
+      "vatNumberPlaceholder": "Ej: B12345678",
+      "createSuccess": "Información de facturación creada exitosamente",
+      "updateSuccess": "Información de facturación actualizada exitosamente",
+      "deleteSuccess": "Información de facturación eliminada exitosamente",
+      "deleteInfo": "Eliminando información de facturación...",
       "success": "Información guardada correctamente",
       "error": "Error al guardar la información"
     },

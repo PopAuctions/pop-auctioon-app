@@ -14,6 +14,7 @@ import {
   BillingSchema,
   type BillingSchemaType,
 } from '@/utils/schemas/billingSchemas';
+import { useToast } from '@/hooks/useToast';
 
 interface BillingFormModalProps {
   visible: boolean;
@@ -29,6 +30,7 @@ export function BillingFormModal({
   billingToEdit,
 }: BillingFormModalProps) {
   const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
   const { createBilling, status: createStatus } = useCreateBilling();
   const { updateBilling, status: updateStatus } = useUpdateBilling();
   const isSubmittingRef = useRef(false);
@@ -58,16 +60,30 @@ export function BillingFormModal({
 
     if (currentStatus === 'success' && isSubmittingRef.current) {
       console.log(`✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING`);
-      // TODO: Show success toast
+      callToast({
+        variant: 'success',
+        description: {
+          en: t(
+            isEditMode
+              ? 'screens.billingInfo.updateSuccess'
+              : 'screens.billingInfo.createSuccess'
+          ),
+          es: t(
+            isEditMode
+              ? 'screens.billingInfo.updateSuccess'
+              : 'screens.billingInfo.createSuccess'
+          ),
+        },
+      });
       isSubmittingRef.current = false;
       reset();
       onSuccess();
     } else if (currentStatus === 'error' && isSubmittingRef.current) {
-      console.error('❌ ERROR_SAVE_BILLING');
-      // TODO: Show error toast
+      console.log('❌ ERROR_SAVE_BILLING');
+      // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;
     }
-  }, [currentStatus, visible, isEditMode, reset, onSuccess]);
+  }, [currentStatus, visible, isEditMode, reset, onSuccess, callToast, t]);
 
   // Populate form when billingToEdit changes
   useEffect(() => {
@@ -110,8 +126,8 @@ export function BillingFormModal({
       }
     } catch (error) {
       console.error('❌ ERROR_SAVE_BILLING_CATCH:', error);
+      // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;
-      // TODO: Mostrar toast con error
     }
   };
 

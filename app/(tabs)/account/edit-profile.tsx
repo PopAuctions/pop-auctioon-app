@@ -18,10 +18,12 @@ import { Loading } from '@/components/ui/Loading';
 import { APP_USER_ROLES } from '@/constants/user';
 import type * as z from 'zod';
 import { REQUEST_STATUS } from '@/constants';
+import { useToast } from '@/hooks/useToast';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
+  const { callToast } = useToast(locale);
   const isSubmittingRef = useRef(false);
 
   // Usar los nuevos hooks
@@ -105,28 +107,39 @@ export default function EditProfileScreen() {
   // Handle fetch errors
   useEffect(() => {
     if (fetchStatus === 'error') {
-      console.error('ERROR_LOAD_USER_DATA', fetchError);
-      // TODO: Show toast with fetchError[locale]
+      callToast({
+        variant: 'error',
+        description: fetchError || {
+          en: t('screens.editProfile.loadError'),
+          es: t('screens.editProfile.loadError'),
+        },
+      });
       router.back();
     }
-  }, [fetchStatus, fetchError, locale]);
+  }, [fetchStatus, fetchError, locale, callToast, t]);
 
   // Handle update result (success or error)
   useEffect(() => {
     if (!isSubmittingRef.current) return;
 
     if (updateStatus === 'success') {
-      console.log('SUCCESS_UPDATE_PROFILE');
-      // TODO: Show success toast
+      callToast({
+        variant: 'success',
+        description: {
+          en: t('screens.editProfile.updateSuccess'),
+          es: t('screens.editProfile.updateSuccess'),
+        },
+      });
       router.back();
       isSubmittingRef.current = false;
     } else if (updateStatus === 'error' && updateError) {
-      console.error('ERROR_UPDATE_PROFILE', updateError);
-      // TODO: Show error toast with updateError[locale]
-      router.back();
+      callToast({
+        variant: 'error',
+        description: updateError,
+      });
       isSubmittingRef.current = false;
     }
-  }, [updateStatus, updateError, locale]);
+  }, [updateStatus, updateError, locale, callToast, t]);
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>

@@ -14,11 +14,22 @@ import { BillingCard } from '@/components/billing-info/BillingCard';
 import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
 import type { UserBillingInfo } from '@/types/types';
 import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
+import { useToast } from '@/hooks/useToast';
 
 export default function BillingInfoScreen() {
   const { t, locale } = useTranslation();
-  const { data: billingRecords, status, refetch } = useGetBilling();
-  const { deleteBilling, status: deleteStatus } = useDeleteBilling();
+  const { callToast } = useToast(locale);
+  const {
+    data: billingRecords,
+    status,
+    refetch,
+    errorMessage: fetchError,
+  } = useGetBilling();
+  const {
+    deleteBilling,
+    status: deleteStatus,
+    errorMessage: deleteError,
+  } = useDeleteBilling();
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,19 +37,35 @@ export default function BillingInfoScreen() {
     (BillingSchemaType & { id?: string }) | undefined
   >(undefined);
 
-  // Handle delete success - refetch is now stable, no loop
+  // Handle fetch error and delete status
   useEffect(() => {
+    // Handle fetch error
+    if (status === 'error' && fetchError) {
+      callToast({
+        variant: 'error',
+        description: fetchError,
+      });
+    }
+
+    // Handle delete success
     if (deleteStatus === 'success') {
-      console.log('✅ Billing deleted successfully');
-      // TODO: Show success toast
+      callToast({
+        variant: 'success',
+        description: {
+          en: t('screens.billingInfo.deleteSuccess'),
+          es: t('screens.billingInfo.deleteSuccess'),
+        },
+      });
       setDeletingId(null);
-      refetch(); // Refresh list after delete
-    } else if (deleteStatus === 'error') {
-      console.error('❌ Delete billing failed');
-      // TODO: Show error toast
+      refetch();
+    } else if (deleteStatus === 'error' && deleteError) {
+      callToast({
+        variant: 'error',
+        description: deleteError,
+      });
       setDeletingId(null);
     }
-  }, [deleteStatus, refetch]);
+  }, [status, fetchError, deleteStatus, deleteError, refetch, callToast, t]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -51,8 +78,6 @@ export default function BillingInfoScreen() {
   };
 
   const handleEdit = (billing: UserBillingInfo) => {
-    console.log('✏️ Editar billing:', billing.id);
-
     // Convert UserBillingInfo to BillingSchemaType format
     setBillingToEdit({
       id: billing.id,
@@ -65,7 +90,6 @@ export default function BillingInfoScreen() {
   };
 
   const handleDelete = async (billing: UserBillingInfo) => {
-    // TODO: Show confirmation modal
     setDeletingId(billing.id);
     await deleteBilling(billing.id);
   };

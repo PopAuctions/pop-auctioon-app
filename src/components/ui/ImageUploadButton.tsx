@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
   TouchableOpacity,
   Image,
-  Alert,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
@@ -13,6 +13,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { ARTICLE_IMAGES_MAX } from '@/constants';
 import { compressImage } from '@/utils/compress-image';
 import { useState } from 'react';
+import { useToast } from '@/hooks/useToast';
 
 interface ImageUploadButtonProps {
   // Para modo simple (una sola imagen)
@@ -45,7 +46,8 @@ export function ImageUploadButton({
   maxImages = ARTICLE_IMAGES_MAX,
   disabled = false,
 }: ImageUploadButtonProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
   const [isCompressing, setIsCompressing] = useState(false);
 
   // Determinar si ya alcanzó el límite de imágenes
@@ -59,11 +61,13 @@ export function ImageUploadButton({
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      Alert.alert(
-        t('screens.editProfile.permissionRequired'),
-        t('screens.editProfile.permissionMessage'),
-        [{ text: t('commonActions.ok') }]
-      );
+      callToast({
+        variant: 'error',
+        description: {
+          en: t('screens.editProfile.permissionDenied'),
+          es: t('screens.editProfile.permissionDenied'),
+        },
+      });
       return;
     }
 
@@ -99,23 +103,26 @@ export function ImageUploadButton({
 
           if (!compressedUri) {
             // Si falla la compresión, mostrar error y no continuar
-            Alert.alert(
-              t('commonErrors.generic'),
-              t('screens.editProfile.compressionError'),
-              [{ text: t('commonActions.ok') }]
-            );
+            callToast({
+              variant: 'error',
+              description: {
+                en: t('screens.editProfile.compressionFailed'),
+                es: t('screens.editProfile.compressionFailed'),
+              },
+            });
             return;
           }
 
           onImageSelected?.(compressedUri);
         }
       } catch (error) {
-        console.error('ERROR_COMPRESS_IMAGE_PICKER', error);
-        Alert.alert(
-          t('commonErrors.generic'),
-          t('screens.editProfile.compressionError'),
-          [{ text: t('commonActions.ok') }]
-        );
+        callToast({
+          variant: 'error',
+          description: {
+            en: 'Failed to compress image. Please try another one.',
+            es: 'Error al comprimir la imagen. Por favor intenta con otra.',
+          },
+        });
       } finally {
         setIsCompressing(false);
       }
