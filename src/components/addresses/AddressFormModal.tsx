@@ -62,8 +62,8 @@ export function AddressFormModal({
       callToast({
         variant: 'success',
         description: {
-          en: t('screens.addresses.form.createSuccess'),
-          es: t('screens.addresses.form.createSuccess'),
+          en: t('screens.addresses.success'),
+          es: t('screens.addresses.success'),
         },
       });
       reset();

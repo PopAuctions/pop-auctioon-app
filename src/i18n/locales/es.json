@@ -299,9 +299,7 @@
         "postalCode": "Código postal",
         "setPrimary": "Establecer como dirección principal",
         "submit": "Guardar dirección",
-        "cancel": "Cancelar",
-        "createSuccess": "Dirección creada exitosamente",
-        "createError": "Error al crear la dirección"
+        "cancel": "Cancelar"
       },
       "success": "Dirección guardada correctamente",
       "error": "Error al guardar la dirección"
