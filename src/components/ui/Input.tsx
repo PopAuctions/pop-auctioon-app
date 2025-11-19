@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import React from 'react';
 import { TextInput, type TextInputProps } from 'react-native';
 
@@ -8,11 +9,13 @@ export interface InputProps extends TextInputProps {
 export const Input: React.FC<InputProps> = ({
   className = '',
   style,
+  editable = true,
   ...props
 }) => {
   return (
     <TextInput
-      className={`
+      className={cn(
+        `
         h-12
         w-full
         rounded-lg
@@ -26,10 +29,13 @@ export const Input: React.FC<InputProps> = ({
         shadow-sm
         focus:border-cinnabar
         disabled:opacity-50
-        ${className}
-      `}
+        ${editable ? '' : 'opacity-50'}
+      `,
+        className
+      )}
       placeholderTextColor='#64748b'
       style={style}
+      editable={editable}
       {...props}
     />
   );

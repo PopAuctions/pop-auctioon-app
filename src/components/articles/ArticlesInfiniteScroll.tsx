@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { FlatList, View } from 'react-native';
-import { ArticleItem } from './AuctionArticleItem';
+import { ArticleItem } from './ArticleItem';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';

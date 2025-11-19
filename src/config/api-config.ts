@@ -64,6 +64,9 @@ export const SECURE_ENDPOINTS = {
     FEATURE_FLAGS: '/config/feature-flags',
   },
 
+  ARTICLES: {
+    FOLLOWED_ARTICLES: '/articles/followed',
+  },
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',
@@ -73,6 +76,7 @@ export const SECURE_ENDPOINTS = {
     JOIN: '/auctions/join',
     BID: '/auctions/bid',
     DETAILS: '/auctions/details',
+    FOLLOWED_AUCTIONS: '/auctions/followed',
   },
 
   // Usuario y perfil
@@ -90,10 +94,14 @@ export const SECURE_ENDPOINTS = {
     BILLING_BY_ID: (id: string): ApiEndpoint =>
       `/user/billing/${id}` as ApiEndpoint, // PATCH (update) y DELETE
     PAYMENT_HISTORY: '/user/payment-history', // GET payment history
+    RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
       VERIFY: '/user/otp/verify', // POST - Verificar código OTP
     },
+  },
+  BIDS: {
+    CREATE: '/bids',
   },
 
   // Server Actions y operaciones complejas
@@ -102,6 +110,9 @@ export const SECURE_ENDPOINTS = {
     UPDATE_AUCTION: '/actions/update-auction',
     PROCESS_PAYMENT: '/actions/process-payment',
     SEND_MESSAGE: '/actions/send-message',
+  },
+  OFFERS: {
+    CREATE: '/online-store/offers',
   },
 
   // Proxy universal para endpoints existentes

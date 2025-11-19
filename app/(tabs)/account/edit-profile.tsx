@@ -17,6 +17,7 @@ import { useUpdateProfile } from '@/hooks/pages/user/useUpdateProfile';
 import { Loading } from '@/components/ui/Loading';
 import { APP_USER_ROLES } from '@/constants/user';
 import type * as z from 'zod';
+import { REQUEST_STATUS } from '@/constants';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
@@ -61,7 +62,7 @@ export default function EditProfileScreen() {
       username: '',
       phoneNumber: '',
       profilePicture: '',
-      ...(userRole === 'AUCTIONEER' && {
+      ...(userRole === APP_USER_ROLES.AUCTIONEER && {
         address: '',
         town: '',
         province: '',
@@ -86,7 +87,7 @@ export default function EditProfileScreen() {
       };
 
       // Agregar campos de AUCTIONEER si aplica
-      if (userRole === 'AUCTIONEER') {
+      if (userRole === APP_USER_ROLES.AUCTIONEER) {
         formData.address = currentUserData.address || '';
         formData.town = currentUserData.town || '';
         formData.province = currentUserData.province || '';
@@ -145,12 +146,12 @@ export default function EditProfileScreen() {
   };
 
   // Show loading while fetching user data
-  if (fetchStatus === 'loading') {
+  if (fetchStatus === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }
 
   // Compute loading state for form controls
-  const isLoading = updateStatus === 'loading';
+  const isLoading = updateStatus === REQUEST_STATUS.loading;
 
   return (
     <SafeAreaView

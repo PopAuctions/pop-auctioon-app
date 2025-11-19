@@ -119,13 +119,13 @@ export default function BillingInfoScreen() {
       >
         <View className='p-6'>
           {/* Header */}
-          <View className='mb-6 flex-row items-center justify-between'>
-            <CustomText
-              type='h1'
-              className='flex-1 text-cinnabar'
-            >
-              {t('screens.billingInfo.title')}
-            </CustomText>
+          <CustomText
+            type='h1'
+            className='text-center text-cinnabar'
+          >
+            {t('screens.billingInfo.title')}
+          </CustomText>
+          <View className='my-4 self-end'>
             <Button
               mode='primary'
               onPress={handleAddBilling}

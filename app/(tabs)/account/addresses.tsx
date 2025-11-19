@@ -134,13 +134,13 @@ export default function AddressesScreen() {
       >
         <View className='p-6'>
           {/* Header */}
-          <View className='mb-6 flex-row items-center justify-between'>
-            <CustomText
-              type='h1'
-              className='flex-1 text-cinnabar'
-            >
-              {t('screens.addresses.title')}
-            </CustomText>
+          <CustomText
+            type='h1'
+            className='text-center text-cinnabar'
+          >
+            {t('screens.addresses.title')}
+          </CustomText>
+          <View className='my-4 self-end'>
             <Button
               mode='primary'
               onPress={handleAddAddress}
@@ -149,7 +149,6 @@ export default function AddressesScreen() {
               {t('screens.addresses.addNew')}
             </Button>
           </View>
-
           {/* Addresses List */}
           <View className='gap-4'>
             {addresses.map((address) => (
