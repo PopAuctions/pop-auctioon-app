@@ -15,6 +15,7 @@ import { getErrorMessage } from '@/utils/form-errors';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useUpdateProfile } from '@/hooks/pages/user/useUpdateProfile';
 import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
 import { APP_USER_ROLES } from '@/constants/user';
 import type * as z from 'zod';
 import { REQUEST_STATUS } from '@/constants';
@@ -104,19 +105,7 @@ export default function EditProfileScreen() {
     }
   }, [currentUserData, userRole, reset]);
 
-  // Handle fetch errors
-  useEffect(() => {
-    if (fetchStatus === 'error') {
-      callToast({
-        variant: 'error',
-        description: fetchError || {
-          en: t('screens.editProfile.loadError'),
-          es: t('screens.editProfile.loadError'),
-        },
-      });
-      router.back();
-    }
-  }, [fetchStatus, fetchError, locale, callToast, t]);
+  // No useEffect for fetch errors - we handle it in the render
 
   // Handle update result (success or error)
   useEffect(() => {
@@ -161,6 +150,16 @@ export default function EditProfileScreen() {
   // Show loading while fetching user data
   if (fetchStatus === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
+  }
+
+  // Show error if fetch failed or if we don't have user data
+  if (fetchStatus === REQUEST_STATUS.error || !currentUserData) {
+    return (
+      <CustomError
+        customMessage={fetchError}
+        refreshRoute='/(tabs)/account/edit-profile'
+      />
+    );
   }
 
   // Compute loading state for form controls

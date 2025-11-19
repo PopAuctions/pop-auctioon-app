@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { CustomText } from '@/components/ui/CustomText';
+import { CustomError } from '@/components/ui/CustomError';
+import { REQUEST_STATUS } from '@/constants';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
@@ -15,7 +17,7 @@ import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
   const { t, locale } = useTranslation();
-  const { data: addresses, status, refetch } = useGetAddresses();
+  const { data: addresses, status, refetch, errorMessage } = useGetAddresses();
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -52,39 +54,20 @@ export default function AddressesScreen() {
   };
 
   // Loading state - Solo mostrar si NO es un refresh manual
-  if ((status === 'loading' || status === 'idle') && !refreshing) {
+  if (
+    (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) &&
+    !refreshing
+  ) {
     return <Loading locale={locale} />;
   }
 
   // Error state (show error but allow retry)
-  if (status === 'error') {
+  if (status === REQUEST_STATUS.error) {
     return (
-      <SafeAreaView
-        className='flex-1 bg-white'
-        edges={['bottom']}
-      >
-        <View className='flex-1 items-center justify-center p-6'>
-          <CustomText
-            type='h1'
-            className='mb-2 text-center text-cinnabar'
-          >
-            {t('commonErrors.loadFailedTitle')}
-          </CustomText>
-          <CustomText
-            type='h4'
-            className='mb-8 text-center'
-          >
-            {t('commonErrors.loadFailedMessage')}
-          </CustomText>
-          <Button
-            mode='primary'
-            onPress={onRefresh}
-            disabled={refreshing}
-          >
-            {t('commonErrors.retryButton')}
-          </Button>
-        </View>
-      </SafeAreaView>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute='/(tabs)/account/addresses'
+      />
     );
   }
 

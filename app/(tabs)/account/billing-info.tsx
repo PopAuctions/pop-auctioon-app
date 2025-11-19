@@ -9,6 +9,7 @@ import {
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
 import { EmptyBillingState } from '@/components/billing-info/EmptyBillingState';
 import { BillingCard } from '@/components/billing-info/BillingCard';
 import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
@@ -115,32 +116,10 @@ export default function BillingInfoScreen() {
   // Error state (show error but allow retry)
   if (status === 'error') {
     return (
-      <SafeAreaView
-        className='flex-1 bg-white'
-        edges={['bottom']}
-      >
-        <View className='flex-1 items-center justify-center p-6'>
-          <CustomText
-            type='h1'
-            className='mb-2 text-center text-cinnabar'
-          >
-            {t('commonErrors.loadFailedTitle')}
-          </CustomText>
-          <CustomText
-            type='h4'
-            className='mb-8 text-center'
-          >
-            {t('commonErrors.loadFailedMessage')}
-          </CustomText>
-          <Button
-            mode='primary'
-            onPress={onRefresh}
-            disabled={refreshing}
-          >
-            {t('commonErrors.retryButton')}
-          </Button>
-        </View>
-      </SafeAreaView>
+      <CustomError
+        customMessage={fetchError}
+        refreshRoute='/(tabs)/account/billing-info'
+      />
     );
   }
 

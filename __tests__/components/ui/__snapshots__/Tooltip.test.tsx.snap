@@ -20,7 +20,7 @@ exports[`Tooltip renders with custom text content 1`] = `
     }
   }
   accessible={true}
-  className="h-4 w-4 items-center justify-center rounded-full bg-black/5"
+  className="items-center justify-center rounded-full bg-black/5"
   collapsable={false}
   focusable={true}
   hitSlop={10}
@@ -42,7 +42,7 @@ exports[`Tooltip renders with custom text content 1`] = `
       [
         {
           "color": "#d75639",
-          "fontSize": 15,
+          "fontSize": 14,
         },
         undefined,
         {
