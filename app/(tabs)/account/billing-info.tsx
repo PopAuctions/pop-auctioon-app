@@ -53,10 +53,7 @@ export default function BillingInfoScreen() {
     if (deleteStatus === REQUEST_STATUS.success) {
       callToast({
         variant: 'success',
-        description: {
-          en: 'Billing information deleted successfully',
-          es: 'Información de facturación eliminada exitosamente',
-        },
+        description: 'screens.billingInfo.deleteSuccess',
       });
       setDeletingId(null);
       refetch();
@@ -67,7 +64,7 @@ export default function BillingInfoScreen() {
       });
       setDeletingId(null);
     }
-  }, [status, fetchError, deleteStatus, deleteError, refetch, callToast, t]);
+  }, [status, fetchError, deleteStatus, deleteError, refetch, callToast]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

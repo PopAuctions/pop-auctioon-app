@@ -62,10 +62,7 @@ export function ImageUploadButton({
     if (!permissionResult.granted) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Permission Required',
-          es: 'Permiso Requerido',
-        },
+        description: 'screens.editProfile.permissionRequired',
       });
       return;
     }
@@ -104,23 +101,17 @@ export function ImageUploadButton({
             // Si falla la compresión, mostrar error y no continuar
             callToast({
               variant: 'error',
-              description: {
-                en: t('screens.editProfile.compressionFailed'),
-                es: t('screens.editProfile.compressionFailed'),
-              },
+              description: 'screens.editProfile.compressionError',
             });
             return;
           }
 
           onImageSelected?.(compressedUri);
         }
-      } catch (error) {
+      } catch {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to compress image. Please try another one.',
-            es: 'Error al comprimir la imagen. Por favor intenta con otra.',
-          },
+          description: 'screens.editProfile.compressionError',
         });
       } finally {
         setIsCompressing(false);

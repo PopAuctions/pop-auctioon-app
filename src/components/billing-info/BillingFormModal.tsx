@@ -64,14 +64,8 @@ export function BillingFormModal({
       callToast({
         variant: 'success',
         description: isEditMode
-          ? {
-              en: 'Billing information updated successfully',
-              es: 'Información de facturación actualizada exitosamente',
-            }
-          : {
-              en: 'Billing information created successfully',
-              es: 'Información de facturación creada exitosamente',
-            },
+          ? 'screens.billingInfo.updateSuccess'
+          : 'screens.billingInfo.createSuccess',
       });
       isSubmittingRef.current = false;
       reset();
@@ -84,7 +78,7 @@ export function BillingFormModal({
       // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;
     }
-  }, [currentStatus, visible, isEditMode, reset, onSuccess, callToast, t]);
+  }, [currentStatus, visible, isEditMode, reset, onSuccess, callToast]);
 
   // Populate form when billingToEdit changes
   useEffect(() => {

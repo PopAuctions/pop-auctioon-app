@@ -42,10 +42,7 @@ export default function Auth() {
     if (error) {
       callToast({
         variant: 'error',
-        description: {
-          en: error.message,
-          es: error.message,
-        },
+        description: error.message,
       });
     } else {
       // Login exitoso - redirigir al home y reemplazar la pantalla de login

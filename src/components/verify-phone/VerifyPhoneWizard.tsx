@@ -59,10 +59,7 @@ export function VerifyPhoneWizard({
     if (!isValidPhone || !phoneNumber) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Please enter a valid phone number',
-          es: 'Por favor ingrese un número de teléfono válido',
-        },
+        description: 'screens.verifyPhone.invalidPhoneNumber',
       });
       return;
     }
@@ -80,10 +77,7 @@ export function VerifyPhoneWizard({
     ) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'This number is already verified. Please enter a different one.',
-          es: 'Este número ya está verificado. Ingresa uno diferente.',
-        },
+        description: 'screens.verifyPhone.alreadyVerified',
       });
       return;
     }
@@ -98,10 +92,7 @@ export function VerifyPhoneWizard({
       setOtpCode(''); // Clear OTP input
       callToast({
         variant: 'success',
-        description: {
-          en: 'Verification code sent successfully',
-          es: 'Código de verificación enviado exitosamente',
-        },
+        description: 'screens.verifyPhone.codeSentSuccess',
       });
     }
   };
@@ -125,10 +116,7 @@ export function VerifyPhoneWizard({
     if (!otpCode || otpCode.length < 6) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Please enter the 6-digit code',
-          es: 'Por favor ingrese el código de 6 dígitos',
-        },
+        description: 'screens.verifyPhone.invalidCode',
       });
       return;
     }
@@ -146,10 +134,7 @@ export function VerifyPhoneWizard({
       setStep(3);
       callToast({
         variant: 'success',
-        description: {
-          en: 'Phone verified successfully!',
-          es: '¡Teléfono verificado exitosamente!',
-        },
+        description: 'screens.verifyPhone.verifiedSuccess',
       });
     } else {
       // Clear OTP input if verification failed

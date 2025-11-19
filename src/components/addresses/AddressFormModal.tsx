@@ -61,10 +61,7 @@ export function AddressFormModal({
     if (status === REQUEST_STATUS.success) {
       callToast({
         variant: 'success',
-        description: {
-          en: 'Address saved successfully',
-          es: 'Dirección guardada correctamente',
-        },
+        description: 'screens.addresses.success',
       });
       reset();
       onSuccess();
@@ -77,7 +74,7 @@ export function AddressFormModal({
       });
       isSubmittingRef.current = false;
     }
-  }, [status, errorMessage, locale, reset, onSuccess, onClose, callToast, t]);
+  }, [status, errorMessage, locale, reset, onSuccess, onClose, callToast]);
 
   const onSubmit = async (data: AddressSchemaType) => {
     isSubmittingRef.current = true;

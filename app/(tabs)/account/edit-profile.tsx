@@ -114,10 +114,7 @@ export default function EditProfileScreen() {
     if (updateStatus === REQUEST_STATUS.success) {
       callToast({
         variant: 'success',
-        description: {
-          en: 'Profile updated successfully',
-          es: 'Perfil actualizado exitosamente',
-        },
+        description: 'screens.editProfile.updateSuccess',
       });
       router.back();
       isSubmittingRef.current = false;
@@ -128,7 +125,7 @@ export default function EditProfileScreen() {
       });
       isSubmittingRef.current = false;
     }
-  }, [updateStatus, updateError, locale, callToast, t]);
+  }, [updateStatus, updateError, locale, callToast]);
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
