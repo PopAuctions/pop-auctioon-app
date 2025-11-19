@@ -11,7 +11,6 @@ import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
 import { AddressCard } from '@/components/addresses/AddressCard';
 import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
@@ -65,32 +64,24 @@ export default function AddressesScreen() {
         edges={['bottom']}
       >
         <View className='flex-1 items-center justify-center p-6'>
-          <FontAwesomeIcon
-            name='exclamation-triangle'
-            size={64}
-            color='#C1463D'
-            variant='light'
-          />
           <CustomText
-            type='h2'
-            className='mb-2 mt-6 text-center text-cinnabar'
+            type='h1'
+            className='mb-2 text-center text-cinnabar'
           >
-            {locale === 'es' ? 'Error al cargar' : 'Error loading'}
+            {t('commonErrors.loadFailedTitle')}
           </CustomText>
           <CustomText
-            type='body'
+            type='h4'
             className='mb-8 text-center'
           >
-            {locale === 'es'
-              ? 'No se pudieron cargar las direcciones'
-              : 'Could not load addresses'}
+            {t('commonErrors.loadFailedMessage')}
           </CustomText>
           <Button
             mode='primary'
             onPress={onRefresh}
             disabled={refreshing}
           >
-            {locale === 'es' ? 'Reintentar' : 'Retry'}
+            {t('commonErrors.retryButton')}
           </Button>
         </View>
       </SafeAreaView>

@@ -112,6 +112,38 @@ export default function BillingInfoScreen() {
     return <Loading locale={locale} />;
   }
 
+  // Error state (show error but allow retry)
+  if (status === 'error') {
+    return (
+      <SafeAreaView
+        className='flex-1 bg-white'
+        edges={['bottom']}
+      >
+        <View className='flex-1 items-center justify-center p-6'>
+          <CustomText
+            type='h1'
+            className='mb-2 text-center text-cinnabar'
+          >
+            {t('commonErrors.loadFailedTitle')}
+          </CustomText>
+          <CustomText
+            type='h4'
+            className='mb-8 text-center'
+          >
+            {t('commonErrors.loadFailedMessage')}
+          </CustomText>
+          <Button
+            mode='primary'
+            onPress={onRefresh}
+            disabled={refreshing}
+          >
+            {t('commonErrors.retryButton')}
+          </Button>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   // Empty state
   if (billingRecords.length === 0) {
     return (

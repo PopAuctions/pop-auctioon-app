@@ -378,7 +378,10 @@
     "applicationError": "Ocurrió un error al cargar la aplicación",
     "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
     "tryAgain": "Intentar de nuevo",
-    "generic": "Algo salió mal"
+    "generic": "Algo salió mal",
+    "loadFailedTitle": "Error al cargar",
+    "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
+    "retryButton": "Reintentar"
   },
   "errorLoading": {
     "title": "Error de Carga",
