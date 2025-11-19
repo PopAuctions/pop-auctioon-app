@@ -60,8 +60,8 @@ export function VerifyPhoneWizard({
       callToast({
         variant: 'error',
         description: {
-          en: t('screens.verifyPhone.invalidPhoneNumber'),
-          es: t('screens.verifyPhone.invalidPhoneNumber'),
+          en: 'Please enter a valid phone number',
+          es: 'Por favor ingrese un número de teléfono válido',
         },
       });
       return;
@@ -81,8 +81,8 @@ export function VerifyPhoneWizard({
       callToast({
         variant: 'error',
         description: {
-          en: t('screens.verifyPhone.alreadyVerified'),
-          es: t('screens.verifyPhone.alreadyVerified'),
+          en: 'This number is already verified. Please enter a different one.',
+          es: 'Este número ya está verificado. Ingresa uno diferente.',
         },
       });
       return;
@@ -99,8 +99,8 @@ export function VerifyPhoneWizard({
       callToast({
         variant: 'success',
         description: {
-          en: t('screens.verifyPhone.codeSentSuccess'),
-          es: t('screens.verifyPhone.codeSentSuccess'),
+          en: 'Verification code sent successfully',
+          es: 'Código de verificación enviado exitosamente',
         },
       });
     }
@@ -126,8 +126,8 @@ export function VerifyPhoneWizard({
       callToast({
         variant: 'error',
         description: {
-          en: t('screens.verifyPhone.invalidCode'),
-          es: t('screens.verifyPhone.invalidCode'),
+          en: 'Please enter the 6-digit code',
+          es: 'Por favor ingrese el código de 6 dígitos',
         },
       });
       return;
@@ -147,8 +147,8 @@ export function VerifyPhoneWizard({
       callToast({
         variant: 'success',
         description: {
-          en: t('screens.verifyPhone.verifiedSuccess'),
-          es: t('screens.verifyPhone.verifiedSuccess'),
+          en: 'Phone verified successfully!',
+          es: '¡Teléfono verificado exitosamente!',
         },
       });
     } else {

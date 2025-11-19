@@ -62,8 +62,8 @@ export function AddressFormModal({
       callToast({
         variant: 'success',
         description: {
-          en: t('screens.addresses.success'),
-          es: t('screens.addresses.success'),
+          en: 'Address saved successfully',
+          es: 'Dirección guardada correctamente',
         },
       });
       reset();

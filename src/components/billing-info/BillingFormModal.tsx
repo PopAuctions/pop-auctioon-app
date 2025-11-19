@@ -63,18 +63,15 @@ export function BillingFormModal({
       console.log(`✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING`);
       callToast({
         variant: 'success',
-        description: {
-          en: t(
-            isEditMode
-              ? 'screens.billingInfo.updateSuccess'
-              : 'screens.billingInfo.createSuccess'
-          ),
-          es: t(
-            isEditMode
-              ? 'screens.billingInfo.updateSuccess'
-              : 'screens.billingInfo.createSuccess'
-          ),
-        },
+        description: isEditMode
+          ? {
+              en: 'Billing information updated successfully',
+              es: 'Información de facturación actualizada exitosamente',
+            }
+          : {
+              en: 'Billing information created successfully',
+              es: 'Información de facturación creada exitosamente',
+            },
       });
       isSubmittingRef.current = false;
       reset();

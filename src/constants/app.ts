@@ -52,9 +52,9 @@ export const ARTICLE_PRICE_FILTER_LIST = [
   { value: '>2000', label: '> 2000€' },
 ];
 
-export const REQUEST_STATUS: Record<RequestStatus, string> = {
+export const REQUEST_STATUS = {
   idle: 'idle',
   loading: 'loading',
   success: 'success',
   error: 'error',
-};
+} as const;

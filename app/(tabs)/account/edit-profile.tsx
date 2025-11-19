@@ -115,8 +115,8 @@ export default function EditProfileScreen() {
       callToast({
         variant: 'success',
         description: {
-          en: t('screens.editProfile.updateSuccess'),
-          es: t('screens.editProfile.updateSuccess'),
+          en: 'Profile updated successfully',
+          es: 'Perfil actualizado exitosamente',
         },
       });
       router.back();

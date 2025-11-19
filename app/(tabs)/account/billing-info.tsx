@@ -54,8 +54,8 @@ export default function BillingInfoScreen() {
       callToast({
         variant: 'success',
         description: {
-          en: t('screens.billingInfo.deleteSuccess'),
-          es: t('screens.billingInfo.deleteSuccess'),
+          en: 'Billing information deleted successfully',
+          es: 'Información de facturación eliminada exitosamente',
         },
       });
       setDeletingId(null);

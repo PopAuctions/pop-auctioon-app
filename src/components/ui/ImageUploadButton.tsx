@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   View,
   TouchableOpacity,
@@ -64,8 +63,8 @@ export function ImageUploadButton({
       callToast({
         variant: 'error',
         description: {
-          en: t('screens.editProfile.permissionDenied'),
-          es: t('screens.editProfile.permissionDenied'),
+          en: 'Permission Required',
+          es: 'Permiso Requerido',
         },
       });
       return;

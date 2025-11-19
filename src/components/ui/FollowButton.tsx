@@ -54,7 +54,7 @@ export function FollowButton({
   const isLoading = status === REQUEST_STATUS.loading;
 
   const handleClick = async () => {
-    setStatus(REQUEST_STATUS.loading as RequestStatus);
+    setStatus(REQUEST_STATUS.loading);
     const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
 
     try {
@@ -62,18 +62,18 @@ export function FollowButton({
 
       if (response.error) {
         callToast({ variant: 'error', description: response.error });
-        setStatus(REQUEST_STATUS.error as RequestStatus);
+        setStatus(REQUEST_STATUS.error);
         return;
       }
 
       setIsFollowing((prev) => !prev);
-      setStatus(REQUEST_STATUS.success as RequestStatus);
+      setStatus(REQUEST_STATUS.success);
 
       callToast({ variant: 'success', description: response.data });
       actionAfterFollow?.();
     } catch (e: any) {
       sentryErrorReport(e?.message, `FOLLOW_BUTTON - ${endpoint}`);
-      setStatus(REQUEST_STATUS.error as RequestStatus);
+      setStatus(REQUEST_STATUS.error);
     }
   };
 
