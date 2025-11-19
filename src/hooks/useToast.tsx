@@ -37,12 +37,13 @@ export function useToast(lang: Lang) {
     // Handle description: can be LangMap, translation key string, or null
     let text2: string | undefined;
     if (description) {
-      if (typeof description === 'string') {
-        // Translation key - translate it
-        text2 = t(description as any);
-      } else {
-        // LangMap - extract the text for current language
+      if (typeof description === 'object' && description !== null) {
+        // LangMap object - prioritize this over string
+        // Extract the text for current language
         text2 = description[lang];
+      } else if (typeof description === 'string') {
+        // Translation key string - translate it
+        text2 = t(description as any);
       }
     }
 

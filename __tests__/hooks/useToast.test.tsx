@@ -854,4 +854,179 @@ describe('useToast', () => {
       );
     });
   });
+
+  describe('Type priority and edge cases', () => {
+    it('should prioritize LangMap object over string translation', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      // LangMap objects should always be treated as LangMap, not as translation keys
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Mensaje directo', en: 'Direct message' },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Mensaje directo',
+        })
+      );
+    });
+
+    it('should handle object type correctly (LangMap vs string)', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        // LangMap object
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Español', en: 'English' },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'English',
+        })
+      );
+
+      act(() => {
+        // Translation key string
+        result.current.callToast({
+          variant: 'success',
+          description: 'screens.addresses.success',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Address saved successfully',
+        })
+      );
+    });
+
+    it('should handle empty object as LangMap', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: {} as any,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+
+    it('should handle LangMap with only one language key', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Solo español' } as any,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Solo español',
+        })
+      );
+    });
+
+    it('should use correct language from LangMap when locale changes', () => {
+      const { result, rerender } = renderHook(({ lang }) => useToast(lang), {
+        initialProps: { lang: 'es' as 'es' | 'en' },
+      });
+
+      const message = { es: 'Mensaje español', en: 'English message' };
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: message,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Mensaje español',
+        })
+      );
+
+      // Change to English
+      rerender({ lang: 'en' });
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: message,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'English message',
+        })
+      );
+    });
+
+    it('should not confuse string with object property access', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      // This should be treated as a translation key, not object property
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: 'screens.billingInfo.deleteSuccess',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Billing information deleted',
+        })
+      );
+    });
+
+    it('should handle null explicitly', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'info',
+          description: null,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+
+    it('should handle undefined explicitly', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'info',
+          description: undefined,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+  });
 });
