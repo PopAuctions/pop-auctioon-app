@@ -2,7 +2,6 @@ import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
-import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { PaymentCard } from '@/components/payment-history/PaymentCard';
 import { EmptyPaymentHistory } from '@/components/payment-history/EmptyPaymentHistory';
@@ -35,24 +34,17 @@ export default function PaymentsHistoryScreen() {
       >
         <View className='flex-1 items-center justify-center p-6'>
           <CustomText
-            type='h1'
-            className='mb-2 text-center text-cinnabar'
+            type='h3'
+            className='mb-4 text-center text-red-500'
           >
-            {t('commonErrors.loadFailedTitle')}
+            {t('commonErrors.generic')}
           </CustomText>
           <CustomText
-            type='h4'
-            className='mb-8 text-center'
+            type='body'
+            className='text-gray-600 text-center'
           >
-            {t('commonErrors.loadFailedMessage')}
+            {t('commonErrors.defaultMessage')}
           </CustomText>
-          <Button
-            mode='primary'
-            onPress={onRefresh}
-            disabled={refreshing}
-          >
-            {t('commonErrors.retryButton')}
-          </Button>
         </View>
       </SafeAreaView>
     );
