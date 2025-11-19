@@ -220,6 +220,8 @@
       "permissionMessage": "We need access to your gallery to select an image.",
       "imageTooLarge": "Image too large",
       "imageTooLargeMessage": "The selected image is larger than 1MB. It will be compressed automatically.",
+      "compressionError": "Failed to compress image. Please try another one.",
+      "compressingImages": "Compressing images...",
       "update": "Update",
       "back": "Back"
     },
