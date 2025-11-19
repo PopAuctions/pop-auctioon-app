@@ -16,6 +16,7 @@ import { BillingFormModal } from '@/components/billing-info/BillingFormModal';
 import type { UserBillingInfo } from '@/types/types';
 import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
 import { useToast } from '@/hooks/useToast';
+import { REQUEST_STATUS } from '@/constants';
 
 export default function BillingInfoScreen() {
   const { t, locale } = useTranslation();
@@ -41,7 +42,7 @@ export default function BillingInfoScreen() {
   // Handle fetch error and delete status
   useEffect(() => {
     // Handle fetch error
-    if (status === 'error' && fetchError) {
+    if (status === REQUEST_STATUS.error && fetchError) {
       callToast({
         variant: 'error',
         description: fetchError,
@@ -49,7 +50,7 @@ export default function BillingInfoScreen() {
     }
 
     // Handle delete success
-    if (deleteStatus === 'success') {
+    if (deleteStatus === REQUEST_STATUS.success) {
       callToast({
         variant: 'success',
         description: {
@@ -59,7 +60,7 @@ export default function BillingInfoScreen() {
       });
       setDeletingId(null);
       refetch();
-    } else if (deleteStatus === 'error' && deleteError) {
+    } else if (deleteStatus === REQUEST_STATUS.error && deleteError) {
       callToast({
         variant: 'error',
         description: deleteError,
@@ -107,14 +108,14 @@ export default function BillingInfoScreen() {
   };
 
   // Loading state - Solo mostrar si NO es un refresh manual
-  const loading = status === 'loading' && !refreshing;
+  const loading = status === REQUEST_STATUS.loading && !refreshing;
 
   if (loading) {
     return <Loading locale={locale} />;
   }
 
   // Error state (show error but allow retry)
-  if (status === 'error') {
+  if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
         customMessage={fetchError}
@@ -178,7 +179,7 @@ export default function BillingInfoScreen() {
                 billing={billing}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
-                disabled={refreshing || deleteStatus === 'loading'}
+                disabled={refreshing || deleteStatus === REQUEST_STATUS.loading}
                 isDeleting={deletingId === billing.id}
               />
             ))}

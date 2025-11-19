@@ -14,6 +14,7 @@ import { getErrorMessage } from '@/utils/form-errors';
 import { COUNTRIES_MAP } from '@/constants/payment';
 import type { CountryObject } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
+import { REQUEST_STATUS } from '@/constants';
 
 interface AddressFormModalProps {
   visible: boolean;
@@ -51,13 +52,13 @@ export function AddressFormModal({
     },
   });
 
-  const isSubmitting = status === 'loading';
+  const isSubmitting = status === REQUEST_STATUS.loading;
 
   // React to status changes only after a submit attempt
   useEffect(() => {
     if (!isSubmittingRef.current) return;
 
-    if (status === 'success') {
+    if (status === REQUEST_STATUS.success) {
       callToast({
         variant: 'success',
         description: {
@@ -69,7 +70,7 @@ export function AddressFormModal({
       onSuccess();
       onClose();
       isSubmittingRef.current = false;
-    } else if (status === 'error' && errorMessage) {
+    } else if (status === REQUEST_STATUS.error && errorMessage) {
       callToast({
         variant: 'error',
         description: errorMessage,

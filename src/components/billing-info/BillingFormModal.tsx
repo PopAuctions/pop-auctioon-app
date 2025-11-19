@@ -15,6 +15,7 @@ import {
   type BillingSchemaType,
 } from '@/utils/schemas/billingSchemas';
 import { useToast } from '@/hooks/useToast';
+import { REQUEST_STATUS } from '@/constants';
 
 interface BillingFormModalProps {
   visible: boolean;
@@ -37,7 +38,7 @@ export function BillingFormModal({
 
   const isEditMode = billingToEdit?.id !== undefined;
   const currentStatus = isEditMode ? updateStatus : createStatus;
-  const isSubmitting = currentStatus === 'loading';
+  const isSubmitting = currentStatus === REQUEST_STATUS.loading;
 
   const {
     control,
@@ -58,7 +59,7 @@ export function BillingFormModal({
   useEffect(() => {
     if (!visible) return;
 
-    if (currentStatus === 'success' && isSubmittingRef.current) {
+    if (currentStatus === REQUEST_STATUS.success && isSubmittingRef.current) {
       console.log(`✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING`);
       callToast({
         variant: 'success',
@@ -78,7 +79,10 @@ export function BillingFormModal({
       isSubmittingRef.current = false;
       reset();
       onSuccess();
-    } else if (currentStatus === 'error' && isSubmittingRef.current) {
+    } else if (
+      currentStatus === REQUEST_STATUS.error &&
+      isSubmittingRef.current
+    ) {
       console.log('❌ ERROR_SAVE_BILLING');
       // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;

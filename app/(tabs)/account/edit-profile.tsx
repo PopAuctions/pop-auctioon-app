@@ -111,7 +111,7 @@ export default function EditProfileScreen() {
   useEffect(() => {
     if (!isSubmittingRef.current) return;
 
-    if (updateStatus === 'success') {
+    if (updateStatus === REQUEST_STATUS.success) {
       callToast({
         variant: 'success',
         description: {
@@ -121,7 +121,7 @@ export default function EditProfileScreen() {
       });
       router.back();
       isSubmittingRef.current = false;
-    } else if (updateStatus === 'error' && updateError) {
+    } else if (updateStatus === REQUEST_STATUS.error && updateError) {
       callToast({
         variant: 'error',
         description: updateError,
