@@ -29,10 +29,10 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
         {paymentsDict.shippingInformation}
       </CustomText>
 
-      <View className='mt-3 w-full'>
+      <View className='mt-2 w-full'>
         {/* User info (2 columns) */}
-        <View className='w-full flex-row flex-wrap px-4'>
-          <View className='mb-2 w-1/2'>
+        <View className='w-full flex-row flex-wrap px-2'>
+          <View className='mb-2 w-2/3'>
             <CustomText
               type='body'
               className='text-base font-bold'
@@ -47,22 +47,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
             </CustomText>
           </View>
 
-          <View className='mb-2 w-1/2'>
-            <CustomText
-              type='body'
-              className='text-base font-bold'
-            >
-              {paymentsDict.email}:
-            </CustomText>
-            <CustomText
-              type='body'
-              className='text-base'
-            >
-              {user?.email}
-            </CustomText>
-          </View>
-
-          <View className='mb-2 w-1/2'>
+          <View className='mb-2 w-1/3'>
             <CustomText
               type='body'
               className='text-base font-bold'
@@ -77,7 +62,22 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
             </CustomText>
           </View>
 
-          <View className='mb-2 w-1/2'>
+          <View className='mb-2 w-2/3'>
+            <CustomText
+              type='body'
+              className='text-base font-bold'
+            >
+              {paymentsDict.email}:
+            </CustomText>
+            <CustomText
+              type='body'
+              className='text-base'
+            >
+              {user?.email}
+            </CustomText>
+          </View>
+
+          <View className='mb-2 w-1/3'>
             <CustomText
               type='body'
               className='text-base font-bold'
@@ -94,7 +94,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
         </View>
 
         {/* Address info */}
-        <View className='mt-3 w-full flex-row flex-wrap px-4'>
+        <View className='mt-2 w-full flex-row flex-wrap px-2'>
           <View className='mb-2 w-full'>
             <CustomText
               type='body'
@@ -174,8 +174,8 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
         <Divider className='mt-3' />
 
         {/* Courier info */}
-        <View className='mt-3 w-full flex-row flex-wrap px-4'>
-          <View className='mb-2 w-1/2'>
+        <View className='mt-2 w-full flex-row flex-wrap px-2'>
+          <View className='w-1/2'>
             <CustomText
               type='body'
               className='text-base font-bold'
@@ -190,7 +190,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
             </CustomText>
           </View>
 
-          <View className='mb-2 w-1/2'>
+          <View className='w-1/2'>
             <CustomText
               type='body'
               className='text-base font-bold'

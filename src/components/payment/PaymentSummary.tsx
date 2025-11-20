@@ -19,7 +19,7 @@ export function PaymentSummary({ lang, paymentDict, payment }: Props) {
   return (
     <>
       {/* Subtotal */}
-      <View className='flex flex-row items-center justify-between px-4'>
+      <View className='flex flex-row items-center justify-between px-2'>
         <CustomText
           type='h4'
           className='text-base'
@@ -35,7 +35,7 @@ export function PaymentSummary({ lang, paymentDict, payment }: Props) {
       </View>
 
       {/* Commission */}
-      <View className='flex flex-row items-center justify-between px-4'>
+      <View className='flex flex-row items-center justify-between px-2'>
         <CustomText
           type='h4'
           className='text-base'
@@ -51,7 +51,9 @@ export function PaymentSummary({ lang, paymentDict, payment }: Props) {
       </View>
 
       {/* Shipping */}
-      <View className='flex flex-row items-center justify-between px-4'>
+      <View
+        className={`flex flex-row items-center justify-between px-2 ${payment.discountAmount ? '' : 'mb-2'}`}
+      >
         <CustomText
           type='h4'
           className='text-base'
@@ -68,7 +70,7 @@ export function PaymentSummary({ lang, paymentDict, payment }: Props) {
 
       {/* Discount (optional) */}
       {payment.discountAmount ? (
-        <View className='flex flex-row items-center justify-between px-4'>
+        <View className='mb-2 flex flex-row items-center justify-between px-2'>
           <CustomText
             type='h4'
             className='text-base'
@@ -87,7 +89,7 @@ export function PaymentSummary({ lang, paymentDict, payment }: Props) {
       <Divider />
 
       {/* Total */}
-      <View className='flex flex-row items-center justify-between px-4 font-bold'>
+      <View className='mt-2 flex flex-row items-center justify-between px-2 font-bold'>
         <CustomText
           type='h4'
           className='text-base'

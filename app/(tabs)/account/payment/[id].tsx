@@ -121,14 +121,14 @@ export default function PaymentScreen() {
 
           <Divider />
 
-          <View className='space-y-2'>
+          <View className='my-2'>
             <PaymentSummary
               lang={locale}
               paymentDict={paymentDict}
               payment={paymentData}
             />
 
-            <Divider className='my-3' />
+            <Divider className='my-2' />
 
             <AddressInfo
               user={user}
@@ -137,7 +137,7 @@ export default function PaymentScreen() {
             />
           </View>
 
-          <Divider className='my-3' />
+          <Divider className='my-2' />
 
           <View className='flex w-full flex-col items-center justify-center'>
             {/* Download Section */}
