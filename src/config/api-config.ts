@@ -101,6 +101,11 @@ export const SECURE_ENDPOINTS = {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
       VERIFY: '/user/otp/verify', // POST - Verificar código OTP
     },
+    INVOICE: {
+      CREATE: (id: string): ApiEndpoint => `/user/payments/${id}/invoice`, // POST - Crear nueva factura
+      GET: (id: string): ApiEndpoint =>
+        `/user/payments/${id}/invoice` as ApiEndpoint, // GET - Obtener factura por paymentID
+    },
   },
   BIDS: {
     CREATE: '/bids',

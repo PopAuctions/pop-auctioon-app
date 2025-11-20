@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useLocalSearchParams } from 'expo-router';
 
 import { CustomText } from '@/components/ui/CustomText';
@@ -17,15 +16,22 @@ import { useGetPayment } from '@/hooks/pages/payment/useGetPayment';
 import { PaidArticleItem } from '@/components/payment/PaidArticleItem';
 import { PaymentSummary } from '@/components/payment/PaymentSummary';
 import { AddressInfo } from '@/components/payment/AddressInfo';
+import { UserInvoice } from '@/components/invoices/UserInvoice';
+import { useGetBilling } from '@/hooks/pages/billing/useBilling';
+import { useGetUserInvoice } from '@/hooks/components/useUserInvoice';
 
 export default function PaymentScreen() {
+  const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const {
     data: paymentData,
     status,
     errorMessage,
   } = useGetPayment({ paymentId: id });
-  const { t, locale } = useTranslation();
+  const { data: billingData, refetch: refetchBillingInfo } = useGetBilling();
+  const { data: invoiceData } = useGetUserInvoice({
+    paymentID: id,
+  });
 
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
 
@@ -45,11 +51,6 @@ export default function PaymentScreen() {
       />
     );
   }
-
-  // const [{ data }, { invoiceData }] = await Promise.all([
-  //   getUserBilling(),
-  //   getCreateUserInvoice({ paymentId: Number(id) }),
-  // ]);
 
   const profileDic = t('screens.editProfile');
   const paymentDict = t('screens.payment');
@@ -141,39 +142,42 @@ export default function PaymentScreen() {
 
           <View className='flex w-full flex-col items-center justify-center'>
             {/* Download Section */}
-            <View className='w-full space-y-3'>
+            <View className='w-full'>
               <View className='flex w-full flex-col gap-4'>
                 {paymentData.receiptUrl && (
-                  <View className='flex flex-col gap-1'>
+                  <View className='flex flex-col'>
                     <CustomText type='subtitle'>
                       {paymentDict.receipt}
                     </CustomText>
                     <Button
                       mode='primary'
+                      size='small'
                       onPress={() => {
+                        console.log(paymentData.receiptUrl);
                         Linking.openURL(paymentData.receiptUrl as string);
                       }}
                     >
-                      {paymentDict.download}
+                      {paymentDict.view}
                     </Button>
                   </View>
                 )}
 
-                <View className='flex flex-col gap-1'>
+                <View className='flex flex-col'>
                   <CustomText type='subtitle'>{paymentDict.invoice}</CustomText>
-                  {/* <UserInvoice
-                      lang={locale}
-                      texts={{
-                        download: paymentDict.download,
-                        generate: paymentDict.generate,
-                        billing: paymentDict.billingInformation,
-                      }}
-                      billingDict={billingDict}
-                      billingData={billingData}
-                      paymentId={paymentData.id}
-                      companyInfo={COMPANY_INFO}
-                      invoiceData={invoiceData}
-                    /> */}
+                  <UserInvoice
+                    lang={locale}
+                    texts={{
+                      download: paymentDict.download,
+                      generate: paymentDict.generate,
+                      billing: paymentDict.billingInformation,
+                    }}
+                    billingDict={billingDict}
+                    billingData={billingData}
+                    paymentId={paymentData.id}
+                    companyInfo={COMPANY_INFO}
+                    invoiceData={invoiceData}
+                    refetchBillingInfo={refetchBillingInfo}
+                  />
                 </View>
               </View>
 
