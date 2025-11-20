@@ -7,6 +7,7 @@ import { CustomText } from '@/components/ui/CustomText';
 import { AuctionCalendarCard } from '@/components/ui/AuctionCalendarCard';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
+import { REQUEST_STATUS } from '@/constants';
 
 export default function CalendarScreen() {
   const { auctions, status, refetch } = useAuctionsCalendar();
@@ -21,11 +22,11 @@ export default function CalendarScreen() {
   const nextMonth = monthsArray[1];
   const hasAuctionsNextMonth = auctions?.next_month?.length > 0 || false;
 
-  if (status === 'loading') {
+  if (status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }
 
-  if (status === 'error') {
+  if (status === REQUEST_STATUS.error) {
     return (
       <View className='flex-1 items-center justify-center p-4'>
         <CustomText

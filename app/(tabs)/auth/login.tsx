@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, View, AppState, ScrollView } from 'react-native';
+import { View, AppState, ScrollView } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +10,7 @@ import { BackgroundImage } from '@/components/ui/BackgroundImage';
 import { router } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
+import { useToast } from '@/hooks/useToast';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -28,7 +29,8 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
 
   async function signInWithEmail() {
     setLoading(true);
@@ -38,7 +40,10 @@ export default function Auth() {
     });
 
     if (error) {
-      Alert.alert(error.message);
+      callToast({
+        variant: 'error',
+        description: error.message,
+      });
     } else {
       // Login exitoso - redirigir al home y reemplazar la pantalla de login
       router.replace('/(tabs)/home');

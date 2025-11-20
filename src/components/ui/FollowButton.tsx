@@ -4,6 +4,7 @@ import { Button, ButtonMode, ButtonSize } from './Button';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { REQUEST_STATUS } from '@/constants';
 
 interface FollowButtonProps {
   mode: ButtonMode;
@@ -50,10 +51,10 @@ export function FollowButton({
   const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
 
-  const isLoading = status === 'loading';
+  const isLoading = status === REQUEST_STATUS.loading;
 
   const handleClick = async () => {
-    setStatus('loading');
+    setStatus(REQUEST_STATUS.loading);
     const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
 
     try {
@@ -61,18 +62,18 @@ export function FollowButton({
 
       if (response.error) {
         callToast({ variant: 'error', description: response.error });
-        setStatus('error');
+        setStatus(REQUEST_STATUS.error);
         return;
       }
 
       setIsFollowing((prev) => !prev);
-      setStatus('success');
+      setStatus(REQUEST_STATUS.success);
 
       callToast({ variant: 'success', description: response.data });
       actionAfterFollow?.();
     } catch (e: any) {
       sentryErrorReport(e?.message, `FOLLOW_BUTTON - ${endpoint}`);
-      setStatus('error');
+      setStatus(REQUEST_STATUS.error);
     }
   };
 

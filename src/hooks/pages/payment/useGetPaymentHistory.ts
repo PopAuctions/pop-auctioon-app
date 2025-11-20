@@ -29,7 +29,6 @@ export const useGetPaymentHistory = (): ActionResponse<UserPayment[]> & {
       });
 
       if (response.error) {
-        console.error('ERROR_LOAD_PAYMENT_HISTORY', response.error);
         setStatus('error');
         setErrorMessage(response.error);
         return;

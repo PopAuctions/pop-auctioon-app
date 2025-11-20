@@ -5,18 +5,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { CustomText } from '@/components/ui/CustomText';
+import { CustomError } from '@/components/ui/CustomError';
+import { REQUEST_STATUS } from '@/constants';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
 import { AddressCard } from '@/components/addresses/AddressCard';
 import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
   const { t, locale } = useTranslation();
-  const { data: addresses, status, refetch } = useGetAddresses();
+  const { data: addresses, status, refetch, errorMessage } = useGetAddresses();
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -53,47 +54,20 @@ export default function AddressesScreen() {
   };
 
   // Loading state - Solo mostrar si NO es un refresh manual
-  if ((status === 'loading' || status === 'idle') && !refreshing) {
+  if (
+    (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) &&
+    !refreshing
+  ) {
     return <Loading locale={locale} />;
   }
 
   // Error state (show error but allow retry)
-  if (status === 'error') {
+  if (status === REQUEST_STATUS.error) {
     return (
-      <SafeAreaView
-        className='flex-1 bg-white'
-        edges={['bottom']}
-      >
-        <View className='flex-1 items-center justify-center p-6'>
-          <FontAwesomeIcon
-            name='exclamation-triangle'
-            size={64}
-            color='#C1463D'
-            variant='light'
-          />
-          <CustomText
-            type='h2'
-            className='mb-2 mt-6 text-center text-cinnabar'
-          >
-            {locale === 'es' ? 'Error al cargar' : 'Error loading'}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='mb-8 text-center'
-          >
-            {locale === 'es'
-              ? 'No se pudieron cargar las direcciones'
-              : 'Could not load addresses'}
-          </CustomText>
-          <Button
-            mode='primary'
-            onPress={onRefresh}
-            disabled={refreshing}
-          >
-            {locale === 'es' ? 'Reintentar' : 'Retry'}
-          </Button>
-        </View>
-      </SafeAreaView>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute='/(tabs)/account/addresses'
+      />
     );
   }
 

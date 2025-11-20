@@ -231,6 +231,13 @@
       "permissionMessage": "Necesitamos acceso a tu galería para seleccionar una imagen.",
       "imageTooLarge": "Imagen muy grande",
       "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
+      "compressionError": "Error al comprimir la imagen. Por favor intenta con otra.",
+      "compressingImages": "Comprimiendo imágenes...",
+      "updateSuccess": "Perfil actualizado exitosamente",
+      "updateError": "Error al actualizar el perfil",
+      "loadError": "Error al cargar datos del usuario",
+      "permissionDenied": "Se requiere permiso para acceder a la galería",
+      "compressionFailed": "Error al comprimir la imagen. Por favor intenta con otra.",
       "update": "Actualizar",
       "back": "Volver"
     },
@@ -259,7 +266,12 @@
       "successMessage": "¡Teléfono verificado!",
       "goToProfileButton": "Ir a perfil",
       "invalidPhoneError": "Formato de número de teléfono inválido",
-      "invalidCodeError": "Código de verificación inválido"
+      "invalidCodeError": "Código de verificación inválido",
+      "invalidPhoneNumber": "Por favor ingrese un número de teléfono válido",
+      "alreadyVerified": "Este número ya está verificado. Ingresa uno diferente.",
+      "codeSentSuccess": "Código de verificación enviado exitosamente",
+      "invalidCode": "Por favor ingrese el código de 6 dígitos",
+      "verifiedSuccess": "¡Teléfono verificado exitosamente!"
     },
     "addresses": {
       "title": "Mis Direcciones",
@@ -310,7 +322,11 @@
       "billingAddress": "Dirección de facturación",
       "billingAddressPlaceholder": "Dirección completa",
       "vatNumber": "Número de identificación fiscal / NIT",
-      "vatNumberPlaceholder": "RFC, NIT, RUT, etc.",
+      "vatNumberPlaceholder": "Ej: B12345678",
+      "createSuccess": "Información de facturación creada exitosamente",
+      "updateSuccess": "Información de facturación actualizada exitosamente",
+      "deleteSuccess": "Información de facturación eliminada exitosamente",
+      "deleteInfo": "Eliminando información de facturación...",
       "success": "Información guardada correctamente",
       "error": "Error al guardar la información"
     },
@@ -358,9 +374,12 @@
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",
-    "defaultMessage": "Por favor, verifica tu conexión a internet y reinicia Expo. Si el problema persiste, contacta soporte.",
+    "defaultMessage": "Si el problema persiste, contacta soporte.",
     "tryAgain": "Intentar de nuevo",
-    "generic": "Algo salió mal"
+    "generic": "Algo salió mal",
+    "loadFailedTitle": "Error al cargar",
+    "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
+    "retryButton": "Reintentar"
   },
   "errorLoading": {
     "title": "Error de Carga",

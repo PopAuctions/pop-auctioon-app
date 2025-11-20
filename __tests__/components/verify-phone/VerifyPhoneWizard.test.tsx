@@ -35,7 +35,10 @@ jest.mock('@/hooks/pages/verify-phone/useVerifyPhone', () => ({
 
 jest.mock('@/hooks/useToast', () => ({
   useToast: () => ({
-    toast: mockToast,
+    callToast: ({ variant, description }: any) => {
+      const fn = mockToast[variant as keyof typeof mockToast];
+      if (typeof fn === 'function') fn(description);
+    },
   }),
 }));
 
@@ -479,10 +482,8 @@ describe('VerifyPhoneWizard', () => {
 
       await waitFor(() => {
         expect(mockToast.error).toHaveBeenCalledWith({
-          description: {
-            en: 'Invalid phone number',
-            es: 'Número de teléfono inválido',
-          },
+          en: 'Invalid phone number',
+          es: 'Número de teléfono inválido',
         });
       });
     });

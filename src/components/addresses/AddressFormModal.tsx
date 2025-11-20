@@ -13,6 +13,8 @@ import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
 import { COUNTRIES_MAP } from '@/constants/payment';
 import type { CountryObject } from '@/types/types';
+import { useToast } from '@/hooks/useToast';
+import { REQUEST_STATUS } from '@/constants';
 
 interface AddressFormModalProps {
   visible: boolean;
@@ -26,6 +28,7 @@ export function AddressFormModal({
   onSuccess,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
   const { createAddress, status, errorMessage } = useCreateAddress();
   const isSubmittingRef = useRef(false);
 
@@ -49,25 +52,29 @@ export function AddressFormModal({
     },
   });
 
-  const isSubmitting = status === 'loading';
+  const isSubmitting = status === REQUEST_STATUS.loading;
 
   // React to status changes only after a submit attempt
   useEffect(() => {
     if (!isSubmittingRef.current) return;
 
-    if (status === 'success') {
-      console.log('SUCCESS_CREATE_ADDRESS');
-      // TODO: Mostrar toast de éxito
+    if (status === REQUEST_STATUS.success) {
+      callToast({
+        variant: 'success',
+        description: 'screens.addresses.success',
+      });
       reset();
       onSuccess();
       onClose();
       isSubmittingRef.current = false;
-    } else if (status === 'error' && errorMessage) {
-      console.error('ERROR_CREATE_ADDRESS', errorMessage);
-      // TODO: Mostrar toast con errorMessage[locale]
+    } else if (status === REQUEST_STATUS.error && errorMessage) {
+      callToast({
+        variant: 'error',
+        description: errorMessage,
+      });
       isSubmittingRef.current = false;
     }
-  }, [status, errorMessage, locale, reset, onSuccess, onClose]);
+  }, [status, errorMessage, locale, reset, onSuccess, onClose, callToast]);
 
   const onSubmit = async (data: AddressSchemaType) => {
     isSubmittingRef.current = true;

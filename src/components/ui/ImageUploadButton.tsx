@@ -1,9 +1,18 @@
-import { View, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import * as ImagePicker from 'expo-image-picker';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { FontAwesome } from '@expo/vector-icons';
 import { ARTICLE_IMAGES_MAX } from '@/constants';
+import { compressImage } from '@/utils/compress-image';
+import { useState } from 'react';
+import { useToast } from '@/hooks/useToast';
 
 interface ImageUploadButtonProps {
   // Para modo simple (una sola imagen)
@@ -36,7 +45,9 @@ export function ImageUploadButton({
   maxImages = ARTICLE_IMAGES_MAX,
   disabled = false,
 }: ImageUploadButtonProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   // Determinar si ya alcanzó el límite de imágenes
   const hasReachedLimit = multiple
@@ -49,11 +60,10 @@ export function ImageUploadButton({
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      Alert.alert(
-        t('screens.editProfile.permissionRequired'),
-        t('screens.editProfile.permissionMessage'),
-        [{ text: t('commonActions.ok') }]
-      );
+      callToast({
+        variant: 'error',
+        description: 'screens.editProfile.permissionRequired',
+      });
       return;
     }
 
@@ -66,40 +76,45 @@ export function ImageUploadButton({
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      if (multiple) {
-        // Modo múltiple: agregar todas las imágenes seleccionadas
-        const newImageUris = result.assets.map((asset) => asset.uri);
-        const allImages = [...selectedImages, ...newImageUris].slice(
-          0,
-          maxImages
-        );
-        onImagesSelected?.(allImages);
+      setIsCompressing(true);
 
-        // Verificar si alguna imagen es muy grande
-        const largeImages = result.assets.filter(
-          (asset) => asset.fileSize && asset.fileSize > 1024 * 1024
-        );
-        if (largeImages.length > 0) {
-          Alert.alert(
-            t('screens.editProfile.imageTooLarge'),
-            t('screens.editProfile.imageTooLargeMessage'),
-            [{ text: t('commonActions.ok') }]
-          );
-        }
-      } else {
-        // Modo simple: una sola imagen
-        const imageUri = result.assets[0].uri;
-        onImageSelected?.(imageUri);
+      try {
+        if (multiple) {
+          // Modo múltiple: comprimir todas las imágenes seleccionadas
+          const compressionPromises = result.assets.map(async (asset) => {
+            const compressedUri = await compressImage(asset.uri);
+            return compressedUri || asset.uri; // Fallback a URI original si falla
+          });
 
-        // Verificar tamaño del archivo
-        const fileSize = result.assets[0].fileSize;
-        if (fileSize && fileSize > 1024 * 1024) {
-          Alert.alert(
-            t('screens.editProfile.imageTooLarge'),
-            t('screens.editProfile.imageTooLargeMessage'),
-            [{ text: t('commonActions.ok') }]
+          const compressedUris = await Promise.all(compressionPromises);
+          const allImages = [...selectedImages, ...compressedUris].slice(
+            0,
+            maxImages
           );
+          onImagesSelected?.(allImages);
+        } else {
+          // Modo simple: comprimir una sola imagen
+          const originalUri = result.assets[0].uri;
+          const compressedUri = await compressImage(originalUri);
+
+          if (!compressedUri) {
+            // Si falla la compresión, mostrar error y no continuar
+            callToast({
+              variant: 'error',
+              description: 'screens.editProfile.compressionError',
+            });
+            return;
+          }
+
+          onImageSelected?.(compressedUri);
         }
+      } catch {
+        callToast({
+          variant: 'error',
+          description: 'screens.editProfile.compressionError',
+        });
+      } finally {
+        setIsCompressing(false);
       }
     }
   };
@@ -196,35 +211,53 @@ export function ImageUploadButton({
         {!hasReachedLimit && (
           <TouchableOpacity
             onPress={pickImage}
-            disabled={disabled}
+            disabled={disabled || isCompressing}
             className='items-center py-2'
             activeOpacity={0.7}
           >
-            <FontAwesome
-              name='cloud-upload'
-              size={32}
-              color='#9ca3af'
-              style={{ marginBottom: 6 }}
-            />
-            <CustomText
-              type='body'
-              className='text-gray-600 mb-1 text-center'
-            >
-              {multiple
-                ? selectedImages.length > 0
-                  ? t('screens.editProfile.addMoreImages')
-                  : t('screens.editProfile.uploadImageButton')
-                : selectedImage
-                  ? t('screens.editProfile.changeImageText')
-                  : t('screens.editProfile.uploadImageButton')}
-            </CustomText>
-            {multiple && (
-              <CustomText
-                type='bodysmall'
-                className='text-gray-400 text-xs'
-              >
-                {selectedImages.length} / {maxImages}
-              </CustomText>
+            {isCompressing ? (
+              <>
+                <ActivityIndicator
+                  size='large'
+                  color='#e63946'
+                  style={{ marginBottom: 6 }}
+                />
+                <CustomText
+                  type='body'
+                  className='text-gray-600 mb-1 text-center'
+                >
+                  {t('screens.editProfile.compressingImages')}
+                </CustomText>
+              </>
+            ) : (
+              <>
+                <FontAwesome
+                  name='cloud-upload'
+                  size={32}
+                  color='#9ca3af'
+                  style={{ marginBottom: 6 }}
+                />
+                <CustomText
+                  type='body'
+                  className='text-gray-600 mb-1 text-center'
+                >
+                  {multiple
+                    ? selectedImages.length > 0
+                      ? t('screens.editProfile.addMoreImages')
+                      : t('screens.editProfile.uploadImageButton')
+                    : selectedImage
+                      ? t('screens.editProfile.changeImageText')
+                      : t('screens.editProfile.uploadImageButton')}
+                </CustomText>
+                {multiple && (
+                  <CustomText
+                    type='bodysmall'
+                    className='text-gray-400 text-xs'
+                  >
+                    {selectedImages.length} / {maxImages}
+                  </CustomText>
+                )}
+              </>
             )}
           </TouchableOpacity>
         )}
