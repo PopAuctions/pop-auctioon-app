@@ -2,6 +2,7 @@ import Toast from 'react-native-toast-message';
 import * as Haptics from 'expo-haptics';
 import type { Lang, LangMap } from '@/types/types';
 import { TOAST_TEXTS, ToastVariant } from '@/providers/ToastProvider';
+import { t } from '@/i18n';
 
 type ToastPosition = 'top' | 'bottom';
 
@@ -16,7 +17,7 @@ export function useToast(lang: Lang) {
     onAction,
   }: {
     variant?: ToastVariant;
-    description?: LangMap | null;
+    description?: LangMap | string | null;
     position?: ToastPosition;
     durationMs?: number;
     haptics?: boolean;
@@ -33,11 +34,24 @@ export function useToast(lang: Lang) {
       Haptics.notificationAsync(type).catch(() => {});
     }
 
+    // Handle description: can be LangMap, translation key string, or null
+    let text2: string | undefined;
+    if (description) {
+      if (typeof description === 'object' && description !== null) {
+        // LangMap object - prioritize this over string
+        // Extract the text for current language
+        text2 = description[lang];
+      } else if (typeof description === 'string') {
+        // Translation key string - translate it
+        text2 = t(description as any);
+      }
+    }
+
     Toast.show({
       type: variant,
       position,
       text1: TOAST_TEXTS[lang][variant],
-      text2: description ? description[lang] : undefined,
+      text2,
       visibilityTime: durationMs,
       // props: { actionLabel, onAction },
     });

@@ -47,7 +47,7 @@ describe('BillingFormModal', () => {
     expect(getByPlaceholderText('E.g: Company, Personal, etc.')).toBeTruthy();
     expect(getByPlaceholderText('Full name or company')).toBeTruthy();
     expect(getByPlaceholderText('Complete address')).toBeTruthy();
-    expect(getByPlaceholderText('RFC, NIT, RUT, etc.')).toBeTruthy();
+    expect(getByPlaceholderText('E.g.: B12345678')).toBeTruthy();
   });
 
   it('shows validation errors for required fields', async () => {
@@ -77,7 +77,7 @@ describe('BillingFormModal', () => {
       'Empresa S.A.'
     );
     fireEvent.changeText(getByPlaceholderText('Complete address'), 'Calle 123');
-    fireEvent.changeText(getByPlaceholderText('RFC, NIT, RUT, etc.'), 'RFC123');
+    fireEvent.changeText(getByPlaceholderText('E.g.: B12345678'), 'RFC123');
 
     fireEvent.press(getByText(/save/i));
 
@@ -145,7 +145,7 @@ describe('BillingFormModal', () => {
       'Empresa S.A.'
     );
     fireEvent.changeText(getByPlaceholderText('Complete address'), 'Calle 123');
-    fireEvent.changeText(getByPlaceholderText('RFC, NIT, RUT, etc.'), 'RFC123');
+    fireEvent.changeText(getByPlaceholderText('E.g.: B12345678'), 'RFC123');
 
     fireEvent.press(getByText(/save/i));
 

@@ -221,6 +221,13 @@
       "permissionMessage": "We need access to your gallery to select an image.",
       "imageTooLarge": "Image too large",
       "imageTooLargeMessage": "The selected image is larger than 1MB. It will be compressed automatically.",
+      "compressionError": "Failed to compress image. Please try another one.",
+      "compressingImages": "Compressing images...",
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile",
+      "loadError": "Failed to load user data",
+      "permissionDenied": "Permission required to access gallery",
+      "compressionFailed": "Failed to compress image. Please try another one.",
       "onlineStore": "Online Store",
       "update": "Update",
       "back": "Back"
@@ -373,7 +380,12 @@
       "successMessage": "Phone verified!",
       "goToProfileButton": "Go to profile",
       "invalidPhoneError": "Invalid phone number format",
-      "invalidCodeError": "Invalid verification code"
+      "invalidCodeError": "Invalid verification code",
+      "invalidPhoneNumber": "Please enter a valid phone number",
+      "alreadyVerified": "This number is already verified. Please enter a different one.",
+      "codeSentSuccess": "Verification code sent successfully",
+      "invalidCode": "Please enter the 6-digit code",
+      "verifiedSuccess": "Phone verified successfully!"
     },
     "addresses": {
       "title": "My Addresses",
@@ -424,7 +436,11 @@
       "billingAddress": "Billing address",
       "billingAddressPlaceholder": "Complete address",
       "vatNumber": "Tax ID / VAT number",
-      "vatNumberPlaceholder": "RFC, NIT, RUT, etc.",
+      "vatNumberPlaceholder": "E.g.: B12345678",
+      "createSuccess": "Billing information created successfully",
+      "updateSuccess": "Billing information updated successfully",
+      "deleteSuccess": "Billing information deleted successfully",
+      "deleteInfo": "Deleting billing information...",
       "success": "Information saved successfully",
       "error": "Error saving information"
     },
@@ -473,7 +489,10 @@
     "applicationError": "An error occurred while loading the application",
     "defaultMessage": "If the problem persists, contact support.",
     "tryAgain": "Try again",
-    "generic": "Something went wrong"
+    "generic": "Something went wrong",
+    "loadFailedTitle": "Error loading",
+    "loadFailedMessage": "Could not load information. Please try again.",
+    "retryButton": "Retry"
   },
   "errorLoading": {
     "title": "Loading Error",

@@ -15,13 +15,16 @@ import { getErrorMessage } from '@/utils/form-errors';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useUpdateProfile } from '@/hooks/pages/user/useUpdateProfile';
 import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
 import { APP_USER_ROLES } from '@/constants/user';
 import type * as z from 'zod';
 import { REQUEST_STATUS } from '@/constants';
+import { useToast } from '@/hooks/useToast';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
+  const { callToast } = useToast(locale);
   const isSubmittingRef = useRef(false);
 
   // Usar los nuevos hooks
@@ -102,31 +105,27 @@ export default function EditProfileScreen() {
     }
   }, [currentUserData, userRole, reset]);
 
-  // Handle fetch errors
-  useEffect(() => {
-    if (fetchStatus === 'error') {
-      console.error('ERROR_LOAD_USER_DATA', fetchError);
-      // TODO: Show toast with fetchError[locale]
-      router.back();
-    }
-  }, [fetchStatus, fetchError, locale]);
+  // No useEffect for fetch errors - we handle it in the render
 
   // Handle update result (success or error)
   useEffect(() => {
     if (!isSubmittingRef.current) return;
 
-    if (updateStatus === 'success') {
-      console.log('SUCCESS_UPDATE_PROFILE');
-      // TODO: Show success toast
+    if (updateStatus === REQUEST_STATUS.success) {
+      callToast({
+        variant: 'success',
+        description: 'screens.editProfile.updateSuccess',
+      });
       router.back();
       isSubmittingRef.current = false;
-    } else if (updateStatus === 'error' && updateError) {
-      console.error('ERROR_UPDATE_PROFILE', updateError);
-      // TODO: Show error toast with updateError[locale]
-      router.back();
+    } else if (updateStatus === REQUEST_STATUS.error && updateError) {
+      callToast({
+        variant: 'error',
+        description: updateError,
+      });
       isSubmittingRef.current = false;
     }
-  }, [updateStatus, updateError, locale]);
+  }, [updateStatus, updateError, locale, callToast]);
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>
@@ -148,6 +147,16 @@ export default function EditProfileScreen() {
   // Show loading while fetching user data
   if (fetchStatus === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
+  }
+
+  // Show error if fetch failed or if we don't have user data
+  if (fetchStatus === REQUEST_STATUS.error || !currentUserData) {
+    return (
+      <CustomError
+        customMessage={fetchError}
+        refreshRoute='/(tabs)/account/edit-profile'
+      />
+    );
   }
 
   // Compute loading state for form controls

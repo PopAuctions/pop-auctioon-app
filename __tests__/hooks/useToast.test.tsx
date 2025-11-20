@@ -36,6 +36,20 @@ jest.mock('@/providers/ToastProvider', () => ({
   },
 }));
 
+// Mock i18n
+jest.mock('@/i18n', () => ({
+  t: jest.fn((key: string) => {
+    const translations: Record<string, string> = {
+      'screens.editProfile.updateSuccess': 'Profile updated successfully',
+      'screens.addresses.success': 'Address saved successfully',
+      'screens.billingInfo.deleteSuccess': 'Billing information deleted',
+      'screens.verifyPhone.codeSentSuccess': 'Code sent successfully',
+      'screens.editProfile.compressionError': 'Failed to compress image',
+    };
+    return translations[key] || key;
+  }),
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -628,6 +642,391 @@ describe('useToast', () => {
 
       expect(Toast.show).toHaveBeenCalledTimes(2);
       expect(Toast.hide).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Translation key support', () => {
+    it('should accept translation key as string and translate it', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: 'screens.editProfile.updateSuccess',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'success',
+        position: 'top',
+        text1: 'Success',
+        text2: 'Profile updated successfully',
+        visibilityTime: undefined,
+      });
+    });
+
+    it('should handle translation key for error toast', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.error({
+          description: 'screens.editProfile.compressionError',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'error',
+          text2: 'Failed to compress image',
+        })
+      );
+    });
+
+    it('should handle translation key via shorthand methods', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.success({
+          description: 'screens.addresses.success',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Address saved successfully',
+        })
+      );
+    });
+
+    it('should still accept LangMap objects', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Éxito manual', en: 'Manual success' },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Éxito manual',
+        })
+      );
+    });
+
+    it('should accept plain error message strings', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.error({
+          description: 'Network error occurred',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Network error occurred',
+        })
+      );
+    });
+
+    it('should handle null description with translation key support', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: null,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+
+    it('should handle undefined description with translation key support', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'info',
+          description: undefined,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+  });
+
+  describe('Real-world patterns with translation keys', () => {
+    it('should handle billing delete success pattern', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.success({
+          description: 'screens.billingInfo.deleteSuccess',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'success',
+          text2: 'Billing information deleted',
+        })
+      );
+    });
+
+    it('should handle phone verification pattern', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.success({
+          description: 'screens.verifyPhone.codeSentSuccess',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Code sent successfully',
+        })
+      );
+    });
+
+    it('should handle API error with LangMap (backend errors)', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      const apiError = {
+        en: 'Server error occurred',
+        es: 'Ocurrió un error en el servidor',
+      };
+
+      act(() => {
+        result.current.toast.error({ description: apiError });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Ocurrió un error en el servidor',
+        })
+      );
+    });
+
+    it('should handle mixed usage in sequence', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        // Translation key
+        result.current.toast.success({
+          description: 'screens.addresses.success',
+        });
+
+        // LangMap
+        result.current.toast.error({
+          description: { en: 'Network error', es: 'Error de red' },
+        });
+
+        // Plain string
+        result.current.toast.info({
+          description: 'Processing...',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledTimes(3);
+      expect(Toast.show).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ text2: 'Address saved successfully' })
+      );
+      expect(Toast.show).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ text2: 'Network error' })
+      );
+      expect(Toast.show).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ text2: 'Processing...' })
+      );
+    });
+  });
+
+  describe('Type priority and edge cases', () => {
+    it('should prioritize LangMap object over string translation', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      // LangMap objects should always be treated as LangMap, not as translation keys
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Mensaje directo', en: 'Direct message' },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Mensaje directo',
+        })
+      );
+    });
+
+    it('should handle object type correctly (LangMap vs string)', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        // LangMap object
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Español', en: 'English' },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'English',
+        })
+      );
+
+      act(() => {
+        // Translation key string
+        result.current.callToast({
+          variant: 'success',
+          description: 'screens.addresses.success',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Address saved successfully',
+        })
+      );
+    });
+
+    it('should handle empty object as LangMap', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: {} as any,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+
+    it('should handle LangMap with only one language key', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: { es: 'Solo español' } as any,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Solo español',
+        })
+      );
+    });
+
+    it('should use correct language from LangMap when locale changes', () => {
+      const { result, rerender } = renderHook(({ lang }) => useToast(lang), {
+        initialProps: { lang: 'es' as 'es' | 'en' },
+      });
+
+      const message = { es: 'Mensaje español', en: 'English message' };
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: message,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Mensaje español',
+        })
+      );
+
+      // Change to English
+      rerender({ lang: 'en' });
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: message,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'English message',
+        })
+      );
+    });
+
+    it('should not confuse string with object property access', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      // This should be treated as a translation key, not object property
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: 'screens.billingInfo.deleteSuccess',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: 'Billing information deleted',
+        })
+      );
+    });
+
+    it('should handle null explicitly', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'info',
+          description: null,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
+    });
+
+    it('should handle undefined explicitly', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'info',
+          description: undefined,
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text2: undefined,
+        })
+      );
     });
   });
 });
