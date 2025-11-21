@@ -58,7 +58,8 @@ export const useSecureApi = () => {
     async <T>(
       url: string,
       options: RequestInit,
-      requestOptions: RequestOptions = {}
+      requestOptions: RequestOptions = {},
+      parseJson: boolean = true
     ): Promise<Partial<ApiResponse<T>>> => {
       const { timeout = API_CONFIG.TIMEOUT, retries = API_CONFIG.MAX_RETRIES } =
         requestOptions;
@@ -68,10 +69,10 @@ export const useSecureApi = () => {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-          // Logging para desarrollo
           if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
             console.log(`🚀 API Request: ${options.method} ${url}`);
           }
+
           const response = await fetch(url, {
             ...options,
             signal: controller.signal,
@@ -79,51 +80,116 @@ export const useSecureApi = () => {
 
           clearTimeout(timeoutId);
 
-          // Clonar la respuesta para poder leer el body múltiples veces si es necesario
+          // We’ll use this clone for text/json parsing when needed
           const responseClone = response.clone();
 
-          // Intentar parsear como JSON, si falla usar texto plano
+          // Helper to build a default LangMap error
+          const defaultError: LangMap = {
+            es: 'Error al obtener información',
+            en: 'Error getting information',
+          };
+
+          const getErrorMessage = (data: unknown): LangMap => {
+            if (data && typeof data === 'object' && 'error' in data) {
+              const anyData = data as any;
+
+              if (anyData.error && typeof anyData.error === 'object') {
+                return anyData.error as LangMap;
+              }
+
+              if (typeof anyData.error === 'string') {
+                return {
+                  en: anyData.error,
+                  es: anyData.error,
+                };
+              }
+            }
+
+            return defaultError;
+          };
+
+          // 🔹 BINARY / NON-JSON MODE (parseJson === false)
+          if (!parseJson) {
+            const contentType =
+              response.headers.get('content-type') || 'unknown';
+
+            // ✅ Success: return raw binary (ArrayBuffer)
+            if (response.ok) {
+              const arrayBuffer = await response.arrayBuffer();
+
+              if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
+                console.log(`✅ API Binary Response: ${response.status}`, {
+                  contentType,
+                  size: arrayBuffer.byteLength,
+                });
+              }
+
+              return {
+                data: arrayBuffer as T,
+                status: response.status,
+                error: undefined,
+                contentType,
+              };
+            }
+
+            // ❌ Error: try to parse JSON error, then text
+            let errorMessage = defaultError;
+            let responseText = '';
+
+            try {
+              const maybeJson = await responseClone.json();
+              errorMessage = getErrorMessage(maybeJson);
+            } catch {
+              try {
+                const textResponse = await responseClone.text();
+                const safeText =
+                  typeof textResponse === 'string' ? textResponse : '';
+                responseText =
+                  safeText.substring(0, 200) +
+                  (safeText.length > 200 ? '...' : '');
+              } catch {
+                // ignore – keep default error + empty responseText
+              }
+            }
+
+            if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
+              console.log(`⚠️ API Binary Error Response: ${response.status}`, {
+                errorMessage,
+                responseText,
+                contentType,
+              });
+            }
+
+            return {
+              data: undefined,
+              status: response.status,
+              error: errorMessage,
+              responseText,
+              contentType,
+            };
+          }
+
+          // 🔹 JSON MODE (parseJson === true) – your original logic
           let responseData: Partial<ApiResponse<T>>;
           try {
             responseData = await response.json();
           } catch {
-            // Si no es JSON válido, obtener como texto usando la copia del response
             const textResponse = await responseClone.text();
+            const safeText =
+              typeof textResponse === 'string' ? textResponse : '';
+
             responseData = {
-              error: {
-                es: 'Error al obtener información',
-                en: 'Error getting information',
-              },
+              error: defaultError,
               responseText:
-                textResponse.substring(0, 200) +
-                (textResponse.length > 200 ? '...' : ''),
+                safeText.substring(0, 200) +
+                (safeText.length > 200 ? '...' : ''),
               contentType: response.headers.get('content-type') || 'unknown',
             };
           }
 
-          // Logging para desarrollo
           if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
             console.log(`✅ API Response: ${response.status}`, responseData);
           }
-
-          // Helper para extraer mensaje de error de forma type-safe
-          const getErrorMessage = (data: unknown): LangMap => {
-            if (data && typeof data === 'object' && 'error' in data) {
-              if (typeof data.error === 'object') {
-                return data.error as LangMap;
-              }
-
-              return {
-                en: data.error as string,
-                es: data.error as string,
-              };
-            }
-
-            return {
-              es: 'Error al obtener información',
-              en: 'Error getting information',
-            };
-          };
 
           return {
             data: responseData.data as T | undefined,
@@ -131,17 +197,14 @@ export const useSecureApi = () => {
             error: response.ok ? undefined : getErrorMessage(responseData),
           };
         } catch (error) {
-          // Logging de errores
           if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
             console.error(`❌ API Error (attempt ${attempt + 1}):`, error);
           }
 
-          // Si es el último intento, lanzar el error
           if (attempt === retries) {
             break;
           }
 
-          // Esperar antes del siguiente intento (exponential backoff con cap máximo)
           await new Promise((resolve) =>
             setTimeout(
               resolve,
@@ -323,9 +386,11 @@ export const useSecureApi = () => {
     async <T>({
       endpoint,
       options = {},
+      parseJson = true,
     }: {
       endpoint: ApiEndpoint;
       options?: RequestOptions;
+      parseJson?: boolean;
     }): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
@@ -337,7 +402,8 @@ export const useSecureApi = () => {
             method: 'GET',
             headers,
           },
-          options
+          options,
+          parseJson
         );
       } catch (error) {
         sentryErrorReport(error, `${endpoint} - secureGet failed`);
