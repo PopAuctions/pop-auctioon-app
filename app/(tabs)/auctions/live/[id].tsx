@@ -1,15 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useAuth } from '@/context/auth-context';
+import { useLocalSearchParams } from 'expo-router';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 
 export default function LiveAuctionScreen() {
-  const { getSession } = useAuth();
-  const [session] = getSession();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: currentUser } = useGetCurrentUser();
 
-  // Por ahora usamos 'totisama' como fallback, pero idealmente vendría del session
-  const username = session?.user?.user_metadata?.username || 'totisama';
-  const auctionId = '14'; // Usa el id de los params, o 14 como fallback
+  const username = currentUser?.username || 'guest';
+  const auctionId = id || '14'; // Usa el id de los params, o 14 como fallback
   console.log(
     `Iniciando subasta en vivo: ${auctionId} para el usuario ${username}`
   );
