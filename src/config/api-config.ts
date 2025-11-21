@@ -93,12 +93,23 @@ export const SECURE_ENDPOINTS = {
     BILLING: '/user/billing', // GET (list all) y POST (create new)
     BILLING_BY_ID: (id: string): ApiEndpoint =>
       `/user/billing/${id}` as ApiEndpoint, // PATCH (update) y DELETE
-    PAYMENT_HISTORY: '/user/payment-history', // GET payment history
+    PAYMENT_HISTORY: '/user/payments', // GET payment history
+    PAYMENT_BY_ID: (id: string): ApiEndpoint =>
+      `/user/payments/${id}` as ApiEndpoint, // GET payment by ID
     RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
       VERIFY: '/user/otp/verify', // POST - Verificar código OTP
     },
+    INVOICE: {
+      CREATE: (id: string): ApiEndpoint => `/user/payments/${id}/invoice`, // POST - Crear nueva factura
+      GET: (id: string): ApiEndpoint =>
+        `/user/payments/${id}/invoice` as ApiEndpoint, // GET - Obtener factura por paymentID
+    },
+  },
+  INVOICE: {
+    GET: (id: string): ApiEndpoint =>
+      `/invoice?paymentId=${id}&format=pdf` as ApiEndpoint, // GET - Obtener factura por paymentID
   },
   BIDS: {
     CREATE: '/bids',

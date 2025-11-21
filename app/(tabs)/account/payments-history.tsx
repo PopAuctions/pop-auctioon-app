@@ -1,17 +1,16 @@
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { CustomText } from '@/components/ui/CustomText';
 import { Loading } from '@/components/ui/Loading';
-import { PaymentCard } from '@/components/payment-history/PaymentCard';
-import { EmptyPaymentHistory } from '@/components/payment-history/EmptyPaymentHistory';
+import { PaymentCard } from '@/components/payment/PaymentCard';
+import { EmptyPaymentHistory } from '@/components/payment/EmptyPaymentHistory';
 import { useGetPaymentHistory } from '@/hooks/pages/payment/useGetPaymentHistory';
 import { useState, useCallback } from 'react';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 
 export default function PaymentsHistoryScreen() {
-  const { t, locale } = useTranslation();
+  const { locale } = useTranslation();
   const {
     data: payments,
     status,
@@ -67,19 +66,6 @@ export default function PaymentsHistoryScreen() {
           />
         }
       >
-        <CustomText
-          type='h1'
-          className='mb-2 text-center text-cinnabar'
-        >
-          {t('screens.paymentsHistory.title')}
-        </CustomText>
-        <CustomText
-          type='h4'
-          className='text-center'
-        >
-          {t('screens.paymentsHistory.subtitle')}
-        </CustomText>
-
         {/* Payment cards list */}
         <View className='mt-4'>
           {payments.map((payment) => (

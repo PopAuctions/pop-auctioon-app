@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { PaymentCard } from '@/components/payment-history/PaymentCard';
+import { PaymentCard } from '@/components/payment/PaymentCard';
 import type { UserPayment } from '@/types/types';
 
 // Mock useTranslation
