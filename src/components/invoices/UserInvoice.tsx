@@ -127,6 +127,14 @@ export function UserInvoice({
 
       if (response.status !== 200 || !response.data) {
         setDownloading(false);
+        callToast({
+          variant: 'error',
+          description: {
+            es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
+            en: 'Error downloading the invoice. If the problem persists, contact support.',
+          },
+          durationMs: 5000,
+        });
         return;
       }
 

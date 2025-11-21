@@ -1,13 +1,10 @@
 import React, { useMemo } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
-
 import { CustomText } from '@/components/ui/CustomText';
 import { Divider } from '@/components/ui/Divider';
 import { Button } from '@/components/ui/Button';
 import { CustomError } from '@/components/ui/CustomError';
-// import UserInvoice from '@/components/payments/UserInvoice';
-
 import { euroFormatter } from '@/utils/euroFormatter';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { REQUEST_STATUS } from '@/constants';
@@ -19,8 +16,6 @@ import { AddressInfo } from '@/components/payment/AddressInfo';
 import { UserInvoice } from '@/components/invoices/UserInvoice';
 import { useGetBilling } from '@/hooks/pages/billing/useBilling';
 import { useGetUserInvoice } from '@/hooks/components/useUserInvoice';
-
-export const runtime = 'nodejs';
 
 export default function PaymentScreen() {
   const { t, locale } = useTranslation();
