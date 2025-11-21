@@ -1,12 +1,19 @@
 import React, { useMemo, useState } from 'react';
-import { View } from 'react-native';
-
+import { Linking, View } from 'react-native';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { GeneratedInvoice, Lang, UserBillingInfo } from '@/types/types';
 import { SelectField } from '../fields/SelectField';
 import { Translations } from '@/i18n';
 import { BillingFormModal } from '../billing-info/BillingFormModal';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import { useCreateUserInvoice } from '@/hooks/components/useUserInvoice';
+import { arrayBufferToBase64 } from '@/utils/arrayBufferToBase64';
+import { useToast } from '@/hooks/useToast';
+import { REQUEST_STATUS } from '@/constants';
 
 interface BillingOption {
   value: string;
@@ -14,19 +21,19 @@ interface BillingOption {
   data: string[];
 }
 
-type Props = {
+type UserInvoiceProps = {
   lang: Lang;
   texts: {
     billing: string;
     generate: string;
-    download: string;
+    view: string;
   };
   billingDict: Translations['es']['screens']['billingInfo'];
   billingData: Partial<UserBillingInfo>[];
   paymentId: number;
-  companyInfo: string[];
   invoiceData: GeneratedInvoice | null;
   refetchBillingInfo: () => void;
+  refetchUserInvoice: () => void;
 };
 
 export function UserInvoice({
@@ -35,15 +42,22 @@ export function UserInvoice({
   billingDict,
   billingData,
   paymentId,
-  companyInfo,
   invoiceData,
   refetchBillingInfo,
-}: Props) {
+  refetchUserInvoice,
+}: UserInvoiceProps) {
+  const [downloading, setDownloading] = useState(false);
   const [showBillinModal, setShowBillinModal] = useState(false);
   const [selectedBillingInfo, setSelectedBillingInfo] = useState<
     string[] | null
   >(null);
-  console.log({ selectedBillingInfo });
+  const { createUserInvoice, status: createStatus } = useCreateUserInvoice({
+    locale: lang,
+    paymentID: paymentId.toString(),
+  });
+  const { secureGet } = useSecureApi();
+  const { callToast } = useToast(lang);
+  const creatingInvoice = createStatus === REQUEST_STATUS.loading;
 
   const billingDataFormatted: BillingOption[] = useMemo(
     () =>
@@ -67,35 +81,93 @@ export function UserInvoice({
             value: billing.id ?? '',
             label: billing.label ?? '',
             data: [
-              billing?.billingName ?? '',
-              billing?.billingAddress ?? '',
-              billing?.vatNumber ?? '',
-            ],
+              billing.billingName,
+              billing.billingAddress,
+              billing.vatNumber,
+            ] as string[],
           },
         ])
       ),
     [billingData]
   );
 
-  // If invoice already exists: show a simple "Download" button for now
+  const handleCreateInvoice = async () => {
+    if (!selectedBillingInfo) {
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'Selecciona una información de facturación.',
+          en: 'Select a billing information.',
+        },
+      });
+      return;
+    }
+
+    const payload = {
+      billingName: selectedBillingInfo[0],
+      billingAddress: selectedBillingInfo[1],
+      vatNumber: selectedBillingInfo?.[2] || '',
+    };
+
+    await createUserInvoice({
+      paymentId: paymentId,
+      billingInfo: payload,
+    });
+    refetchUserInvoice();
+  };
+
+  const handleDownloadInvoice = async () => {
+    try {
+      setDownloading(true);
+
+      const response = await secureGet<ArrayBuffer>({
+        endpoint: SECURE_ENDPOINTS.INVOICE.GET(paymentId.toString()),
+        parseJson: false,
+      });
+
+      if (response.status !== 200 || !response.data) {
+        setDownloading(false);
+        return;
+      }
+
+      const arrayBuffer = response.data as ArrayBuffer;
+      const base64 = arrayBufferToBase64(arrayBuffer);
+      const fileUri = FileSystem.cacheDirectory + `Factura-${paymentId}.pdf`;
+
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const canShare = await Sharing.isAvailableAsync();
+      if (canShare) {
+        await Sharing.shareAsync(fileUri);
+      } else {
+        await Linking.openURL(fileUri);
+      }
+    } catch {
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
+          en: 'Error downloading the invoice. If the problem persists, contact support.',
+        },
+        durationMs: 5000,
+      });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (invoiceData) {
     return (
       <View className='w-fit'>
         <Button
           mode='primary'
           size='small'
-          // later we’ll replace with the special DownloadUserInvoiceButton
-          onPress={() => {
-            // TODO: implement download behavior for mobile
-            console.log('Download existing invoice', {
-              lang,
-              paymentId,
-              companyInfo,
-              invoiceData,
-            });
-          }}
+          isLoading={downloading}
+          onPress={handleDownloadInvoice}
         >
-          {texts.download}
+          {texts.view}
         </Button>
       </View>
     );
@@ -121,11 +193,13 @@ export function UserInvoice({
               isSearchable
               formField={true}
               onChange={(value) => {
-                console.log({ value });
-                const selected = value as string;
-                setSelectedBillingInfo(
-                  billingDataMap.get(selected)?.data ?? null
-                );
+                if (!value) {
+                  setSelectedBillingInfo(null);
+                  return;
+                }
+
+                const selected = billingDataMap.get(value as string);
+                setSelectedBillingInfo(selected?.data ?? null);
               }}
             />
           </View>
@@ -134,6 +208,7 @@ export function UserInvoice({
             <Button
               mode='secondary'
               size='small'
+              disabled={downloading || creatingInvoice}
               onPress={() => {
                 setShowBillinModal(true);
               }}
@@ -189,36 +264,15 @@ export function UserInvoice({
           </View>
         )}
 
-        {/* Action button */}
-        {selectedBillingInfo ? (
-          <View className='w-fit'>
-            <Button
-              mode='primary'
-              size='small'
-              onPress={() => {
-                // TODO: replace with special invoice generation/download button
-                console.log('Generate + download invoice with billing info', {
-                  lang,
-                  paymentId,
-                  companyInfo,
-                  selectedBillingInfo,
-                });
-              }}
-            >
-              {texts.generate}
-            </Button>
-          </View>
-        ) : (
-          <View className='w-fit'>
-            <Button
-              mode='primary'
-              size='small'
-              disabled
-            >
-              {texts.generate}
-            </Button>
-          </View>
-        )}
+        <Button
+          mode='primary'
+          size='small'
+          onPress={handleCreateInvoice}
+          isLoading={creatingInvoice}
+          disabled={!selectedBillingInfo || creatingInvoice}
+        >
+          {texts.generate}
+        </Button>
       </View>
 
       {/* Billing form modal */}

@@ -3,8 +3,6 @@
  * Incluye regex, límites, duraciones y configuraciones básicas
  */
 
-import { RequestStatus } from '@/types/types';
-
 export const LOCALE_PATTERN = /\/(?:es|en)/g;
 
 export const VALID_URL_REGEX =
@@ -58,10 +56,3 @@ export const REQUEST_STATUS = {
   success: 'success',
   error: 'error',
 } as const;
-
-export const COMPANY_INFO = [
-  'POPAUCTIOON',
-  'KEWAYCASH AND VERD SLU',
-  'LAGASCA 83 28006 MADRID',
-  'support@popauctioon.com',
-];

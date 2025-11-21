@@ -17,7 +17,9 @@ export const useGetUserInvoice = ({
   paymentID,
 }: {
   paymentID: string;
-}): ActionResponse<GeneratedInvoice | null> => {
+}): ActionResponse<GeneratedInvoice | null> & {
+  refetch: () => Promise<void>;
+} => {
   const [data, setData] = useState<GeneratedInvoice | null>(null);
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);

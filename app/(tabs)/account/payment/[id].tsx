@@ -10,7 +10,7 @@ import { CustomError } from '@/components/ui/CustomError';
 
 import { euroFormatter } from '@/utils/euroFormatter';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { COMPANY_INFO, REQUEST_STATUS } from '@/constants';
+import { REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { useGetPayment } from '@/hooks/pages/payment/useGetPayment';
 import { PaidArticleItem } from '@/components/payment/PaidArticleItem';
@@ -19,6 +19,8 @@ import { AddressInfo } from '@/components/payment/AddressInfo';
 import { UserInvoice } from '@/components/invoices/UserInvoice';
 import { useGetBilling } from '@/hooks/pages/billing/useBilling';
 import { useGetUserInvoice } from '@/hooks/components/useUserInvoice';
+
+export const runtime = 'nodejs';
 
 export default function PaymentScreen() {
   const { t, locale } = useTranslation();
@@ -29,7 +31,7 @@ export default function PaymentScreen() {
     errorMessage,
   } = useGetPayment({ paymentId: id });
   const { data: billingData, refetch: refetchBillingInfo } = useGetBilling();
-  const { data: invoiceData } = useGetUserInvoice({
+  const { data: invoiceData, refetch: refetchUserInvoice } = useGetUserInvoice({
     paymentID: id,
   });
 
@@ -144,16 +146,40 @@ export default function PaymentScreen() {
             {/* Download Section */}
             <View className='w-full'>
               <View className='flex w-full flex-col gap-4'>
+                <View className='flex flex-col'>
+                  <CustomText
+                    type='subtitle'
+                    className='text-lg'
+                  >
+                    {paymentDict.invoice}
+                  </CustomText>
+                  <UserInvoice
+                    lang={locale}
+                    texts={{
+                      view: paymentDict.view,
+                      generate: paymentDict.generate,
+                      billing: paymentDict.billingInformation,
+                    }}
+                    billingDict={billingDict}
+                    billingData={billingData}
+                    paymentId={paymentData.id}
+                    invoiceData={invoiceData}
+                    refetchBillingInfo={refetchBillingInfo}
+                    refetchUserInvoice={refetchUserInvoice}
+                  />
+                </View>
                 {paymentData.receiptUrl && (
                   <View className='flex flex-col'>
-                    <CustomText type='subtitle'>
+                    <CustomText
+                      type='subtitle'
+                      className='text-lg'
+                    >
                       {paymentDict.receipt}
                     </CustomText>
                     <Button
                       mode='primary'
                       size='small'
                       onPress={() => {
-                        console.log(paymentData.receiptUrl);
                         Linking.openURL(paymentData.receiptUrl as string);
                       }}
                     >
@@ -161,24 +187,6 @@ export default function PaymentScreen() {
                     </Button>
                   </View>
                 )}
-
-                <View className='flex flex-col'>
-                  <CustomText type='subtitle'>{paymentDict.invoice}</CustomText>
-                  <UserInvoice
-                    lang={locale}
-                    texts={{
-                      download: paymentDict.download,
-                      generate: paymentDict.generate,
-                      billing: paymentDict.billingInformation,
-                    }}
-                    billingDict={billingDict}
-                    billingData={billingData}
-                    paymentId={paymentData.id}
-                    companyInfo={COMPANY_INFO}
-                    invoiceData={invoiceData}
-                    refetchBillingInfo={refetchBillingInfo}
-                  />
-                </View>
               </View>
 
               <View className='mt-2 text-center'>
