@@ -368,7 +368,8 @@
     "generic": "Something went wrong",
     "loadFailedTitle": "Error loading",
     "loadFailedMessage": "Could not load information. Please try again.",
-    "retryButton": "Retry"
+    "retryButton": "Retry",
+    "missingAuctionId": "Auction ID was not provided"
   },
   "errorLoading": {
     "title": "Loading Error",

@@ -379,7 +379,8 @@
     "generic": "Algo salió mal",
     "loadFailedTitle": "Error al cargar",
     "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
-    "retryButton": "Reintentar"
+    "retryButton": "Reintentar",
+    "missingAuctionId": "No se proporcionó el ID de la subasta"
   },
   "errorLoading": {
     "title": "Error de Carga",

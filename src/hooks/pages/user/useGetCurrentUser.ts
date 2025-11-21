@@ -45,7 +45,6 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       });
 
       if (response.error) {
-        console.error('ERROR_LOAD_CURRENT_USER', response.error);
         setStatus('error');
         setErrorMessage(response.error);
         return;
