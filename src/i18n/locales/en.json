@@ -357,6 +357,20 @@
       "notPaid": "The article has not been paid yet",
       "downloadCSV": "Download report"
     },
+    "myOffers": {
+      "title": "Offers made",
+      "noOffers": "No offers made",
+      "checkOnlineStore": "Check online store",
+      "loading": "Cargando...",
+      "offer": "Offer",
+      "alreadySold": "Already sold",
+      "offerExpired": "Offer expired",
+      "payNow": "Pay now",
+      "article": "Article",
+      "status": "Status",
+      "actions": "Actions",
+      "delete": "Delete"
+    },
     "resetPassword": {
       "title": "Reset password",
       "subtitle": "Change your access password",

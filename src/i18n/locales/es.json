@@ -466,6 +466,20 @@
       "notPaid": "El artículo aún no ha sido pagado",
       "downloadCSV": "Descargar reporte"
     },
+    "myOffers": {
+      "title": "Ofertas realizadas",
+      "noOffers": "No offers made",
+      "checkOnlineStore": "Check online store",
+      "loading": "Cargando...",
+      "offer": "Offer",
+      "alreadySold": "Ya fue vendido",
+      "offerExpired": "La oferta ha expirado",
+      "payNow": "Pagar ahora",
+      "article": "Article",
+      "status": "Status",
+      "actions": "Actions",
+      "delete": "Delete"
+    },
     "articlesWon": {
       "title": "Artículos Ganados",
       "subtitle": "Visualiza los artículos que has ganado en las subastas"

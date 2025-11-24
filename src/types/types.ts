@@ -390,6 +390,19 @@ export const OfferStatusConst: Record<OfferStatus, string> = {
   REJECTED: 'REJECTED',
 } as const;
 
+export const OfferStatusLabels: Record<Lang, Record<OfferStatus, string>> = {
+  en: {
+    PENDING: 'Pending',
+    ACCEPTED: 'Accepted',
+    REJECTED: 'Rejected',
+  },
+  es: {
+    PENDING: 'Pendiente',
+    ACCEPTED: 'Aceptado',
+    REJECTED: 'Rechazado',
+  },
+} as const;
+
 export type OfferStatus = Database['public']['Enums']['OfferStatus'];
 
 export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
