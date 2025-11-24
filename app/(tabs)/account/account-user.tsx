@@ -200,7 +200,7 @@ export default function Account({ currentUser }: { currentUser: User }) {
 
           {/* Offers Done */}
           <CustomLink
-            href='/(tabs)/account/offers-done'
+            href='/(tabs)/account/offers-made'
             mode='empty'
             hoverEffect={false}
             className='mb-3 flex flex-row items-center justify-between py-4'
@@ -215,7 +215,7 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 />
               </View>
               <CustomText type='body'>
-                {t('screens.account.offersDone')}
+                {t('screens.account.offersMade')}
               </CustomText>
             </View>
             <FontAwesomeIcon

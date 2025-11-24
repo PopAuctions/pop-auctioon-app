@@ -124,6 +124,7 @@ export const SECURE_ENDPOINTS = {
   },
   OFFERS: {
     CREATE: '/online-store/offers',
+    MADE: '/user/offers-made',
   },
 
   // Proxy universal para endpoints existentes
