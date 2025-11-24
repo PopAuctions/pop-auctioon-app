@@ -5,12 +5,12 @@ import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { Button } from '@/components/ui/Button';
 import { router } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useAuth } from '@/context/auth-context';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/types';
 import { Divider } from '@/components/ui/Divider';
 import { CustomImage } from '@/components/ui/CustomImage';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 
 export default function Account({ currentUser }: { currentUser: User }) {
   const { signOut } = useAuth();
@@ -95,7 +95,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='trophy'
                   size={20}
                   color='#4d4d4d'
@@ -105,7 +106,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.articlesWon')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -121,7 +123,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='user'
                   size={20}
                   color='#4d4d4d'
@@ -131,7 +134,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.editProfile')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -147,7 +151,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='lock'
                   size={20}
                   color='#4d4d4d'
@@ -157,7 +162,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.resetPassword')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -173,7 +179,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='phone'
                   size={20}
                   color='#4d4d4d'
@@ -183,7 +190,36 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.verifyPhone')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
+          {/* Offers Done */}
+          <CustomLink
+            href='/(tabs)/account/offers-done'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex flex-row items-center justify-between py-4'
+          >
+            <View className='flex flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='list-alt'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.offersDone')}
+              </CustomText>
+            </View>
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -199,7 +235,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='gavel'
                   size={20}
                   color='#4d4d4d'
@@ -209,7 +246,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.followedAuctions')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -225,7 +263,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='shopping-bag'
                   size={20}
                   color='#4d4d4d'
@@ -235,7 +274,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.followedArticles')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -251,7 +291,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='map-marker'
                   size={20}
                   color='#4d4d4d'
@@ -261,7 +302,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.addresses')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -277,7 +319,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='credit-card'
                   size={20}
                   color='#4d4d4d'
@@ -287,7 +330,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.billingInfo')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -303,7 +347,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='history'
                   size={20}
                   color='#4d4d4d'
@@ -313,7 +358,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.paymentsHistory')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -332,7 +378,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='info-circle'
                   size={20}
                   color='#4d4d4d'
@@ -342,7 +389,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.aboutUs')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -358,7 +406,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='question-circle'
                   size={20}
                   color='#4d4d4d'
@@ -368,7 +417,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.howItWorks')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -384,7 +434,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='comments'
                   size={20}
                   color='#4d4d4d'
@@ -392,7 +443,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
               </View>
               <CustomText type='body'>{t('screens.account.faqs')}</CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
@@ -408,7 +460,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
           >
             <View className='flex-row items-center'>
               <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
-                <FontAwesome
+                <FontAwesomeIcon
+                  variant='bold'
                   name='envelope'
                   size={20}
                   color='#4d4d4d'
@@ -418,7 +471,8 @@ export default function Account({ currentUser }: { currentUser: User }) {
                 {t('screens.account.contactUs')}
               </CustomText>
             </View>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='chevron-right'
               size={16}
               color='#9ca3af'
