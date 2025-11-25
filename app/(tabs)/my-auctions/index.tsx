@@ -37,86 +37,92 @@ export default function MyAuctionsScreen() {
   }
 
   return (
-    <ScrollView
-      className='flex-1'
-      contentContainerClassName='px-6 py-6'
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
+    <SafeAreaView
+      className='flex-1 bg-white'
+      edges={['bottom']}
     >
-      <View className='mx-auto w-full max-w-5xl px-6'>
-        {/* Top actions */}
-        <View className='flex flex-row gap-3'>
-          <CustomLink
-            href='/my-auctions/new'
-            mode='primary'
-          >
-            {myAuctions.newAuction}
-          </CustomLink>
+      <ScrollView
+        className='flex-1'
+        contentContainerClassName='px-6 py-6'
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+        {/* Payment cards list */}
+        <View className='mt-4 flex flex-col items-center gap-4'>
+          {/* Top actions */}
+          <View className='flex flex-row gap-3'>
+            <CustomLink
+              href='/my-auctions/new'
+              mode='primary'
+            >
+              {myAuctions.newAuction}
+            </CustomLink>
 
-          <CustomLink
-            href='/my-auctions/old'
-            mode='secondary'
-          >
-            {myAuctions.oldAuctions}
-          </CustomLink>
-        </View>
-
-        {/* Auctions list */}
-        <View className='mt-6 w-full'>
-          <View className='flex w-full flex-col gap-5'>
-            {auctions.map((auction) => (
-              <View
-                key={auction.id}
-                className='w-full'
-              >
-                <CustomLink
-                  href={`/my-auction/${auction.id}`}
-                  className='flex w-full flex-row gap-5'
-                >
-                  {/* Image */}
-                  <View className='aspect-[3/4] w-full max-w-40 overflow-hidden rounded-lg'>
-                    <CustomImage
-                      src={auction.image}
-                      alt={auction.title}
-                      className='h-full w-full'
-                      resizeMode='cover'
-                    />
-                  </View>
-
-                  {/* Info */}
-                  <View className='flex flex-1 flex-col items-start justify-center'>
-                    <AuctionDisplayDateTime
-                      locale={locale}
-                      startDate={auction.startDate}
-                      singleLine={true}
-                      displayTime={false}
-                    />
-                    <CustomText
-                      type='h4'
-                      className='text-start'
-                    >
-                      {auction.title}
-                    </CustomText>
-                  </View>
-                </CustomLink>
-              </View>
-            ))}
+            <CustomLink
+              href='/my-auctions/old'
+              mode='secondary'
+            >
+              {myAuctions.oldAuctions}
+            </CustomLink>
           </View>
 
-          {auctions.length === 0 && (
-            <CustomText
-              type='h2'
-              className='mt-6 text-center text-cinnabar'
-            >
-              {myAuctions.noAuctionsFound}
-            </CustomText>
-          )}
+          {/* Auctions list */}
+          <View className='mt-6 w-full'>
+            <View className='flex w-full flex-col gap-5'>
+              {auctions.map((auction) => (
+                <View
+                  key={auction.id}
+                  className='w-full'
+                >
+                  <CustomLink
+                    href={`/my-auction/${auction.id}`}
+                    className='flex w-full flex-row gap-5'
+                  >
+                    {/* Image */}
+                    <View className='aspect-[3/4] w-full max-w-40 overflow-hidden rounded-lg'>
+                      <CustomImage
+                        src={auction.image}
+                        alt={auction.title}
+                        className='h-full w-full'
+                        resizeMode='cover'
+                      />
+                    </View>
+
+                    {/* Info */}
+                    <View className='flex flex-1 flex-col items-start justify-center'>
+                      <AuctionDisplayDateTime
+                        locale={locale}
+                        startDate={auction.startDate}
+                        singleLine={true}
+                        displayTime={false}
+                      />
+                      <CustomText
+                        type='h4'
+                        className='text-start'
+                      >
+                        {auction.title}
+                      </CustomText>
+                    </View>
+                  </CustomLink>
+                </View>
+              ))}
+            </View>
+
+            {auctions.length === 0 && (
+              <CustomText
+                type='h2'
+                className='mt-6 text-center text-cinnabar'
+              >
+                {myAuctions.noAuctionsFound}
+              </CustomText>
+            )}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
