@@ -67,6 +67,10 @@ export const SECURE_ENDPOINTS = {
   ARTICLES: {
     FOLLOWED_ARTICLES: '/articles/followed',
   },
+  MY_AUCTIONS: {
+    LIST: '/my-auctions',
+    OLD_LIST: '/my-auctions/old',
+  },
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',

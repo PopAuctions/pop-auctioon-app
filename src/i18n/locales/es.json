@@ -159,13 +159,14 @@
       "noArticlesFound": "No se encontraron artículos"
     },
     "myAuctions": {
-      "title": "Mis Subastas",
-      "subtitle": "Gestiona tus subastas creadas",
-      "noAuctions": "Aún no has creado ninguna subasta",
-      "createAuction": "Crear Subasta",
-      "detail": "Detalles de Subasta",
-      "edit": "Editar Subasta",
-      "stats": "Estadísticas"
+      "title": "Mis subastas",
+      "oldAuctionsTitle": "Mis subastas antiguas",
+      "newAuction": "Nueva subasta",
+      "search": "Buscar",
+      "searchLabel": "Buscar por nombre",
+      "edit": "Editar",
+      "oldAuctions": "Subastas antiguas",
+      "noAuctionsFound": "No se encontraron subastas"
     },
     "calendar": {
       "title": "Calendario de Subastas",

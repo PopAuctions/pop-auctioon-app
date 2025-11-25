@@ -14,21 +14,21 @@ export default function MyAuctionsLayout() {
         name='index'
         options={{
           title: t('tabsNames.myAuctions'),
-          headerShown: false,
+          headerShown: true,
         }}
       />
       <Stack.Screen
-        name='create'
+        name='new'
         options={{
-          title: t('screens.myAuctions.createAuction'),
+          title: t('screens.myAuctions.newAuction'),
           presentation: 'modal',
-          headerShown: true, // Solo en pantallas secundarias
+          headerShown: true,
         }}
       />
       <Stack.Screen
-        name='[id]/index'
+        name='old'
         options={{
-          title: t('screens.myAuctions.detail'),
+          title: t('screens.myAuctions.oldAuctions'),
           presentation: 'card',
           headerShown: true,
         }}
@@ -37,13 +37,6 @@ export default function MyAuctionsLayout() {
         name='[id]/edit'
         options={{
           title: t('screens.myAuctions.edit'),
-          presentation: 'card',
-        }}
-      />
-      <Stack.Screen
-        name='[id]/stats'
-        options={{
-          title: t('screens.myAuctions.stats'),
           presentation: 'card',
         }}
       />

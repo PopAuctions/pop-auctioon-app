@@ -1,180 +1,122 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import React, { useCallback, useState } from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-// Subastas del auctioneer - con diferentes estados
-const myAuctions = [
-  {
-    id: '1',
-    title: 'Colección de Arte Moderno',
-    currentBid: 1245,
-    status: 'live',
-    timeLeft: '2h 15m',
-    participants: 8,
-    items: 12,
-  },
-  {
-    id: '2',
-    title: 'Antigüedades Victorianas',
-    currentBid: 850,
-    status: 'scheduled',
-    timeLeft: 'Inicia en 2 días',
-    participants: 0,
-    items: 7,
-  },
-  {
-    id: '3',
-    title: 'Joyas Vintage',
-    finalPrice: 2100,
-    status: 'completed',
-    timeLeft: 'Finalizada',
-    participants: 15,
-    items: 5,
-  },
-  {
-    id: '4',
-    title: 'Instrumentos Musicales',
-    currentBid: 350,
-    status: 'draft',
-    timeLeft: 'Borrador',
-    participants: 0,
-    items: 3,
-  },
-];
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
+import { CustomImage } from '@/components/ui/CustomImage';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
+import { useGetMyAuctions } from '@/hooks/pages/my-auctions/useGetMyAuctions';
+import { REQUEST_STATUS } from '@/constants';
+import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
 
 export default function MyAuctionsScreen() {
-  const { t } = useTranslation();
-  const { navigateWithAuth } = useAuthNavigation();
+  const { locale, t } = useTranslation();
+  const { data: auctions, status, errorMessage, refetch } = useGetMyAuctions();
+  const [refreshing, setRefreshing] = useState(false);
+  const myAuctions = t('screens.myAuctions');
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'live':
-        return 'bg-red-100 text-red-800';
-      case 'scheduled':
-        return 'bg-blue-100 text-blue-800';
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'draft':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'live':
-        return '🔴 EN VIVO';
-      case 'scheduled':
-        return '📅 PROGRAMADA';
-      case 'completed':
-        return '✅ FINALIZADA';
-      case 'draft':
-        return '📝 BORRADOR';
-      default:
-        return status.toUpperCase();
-    }
-  };
+  if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
+    return <Loading locale={locale} />;
+  }
+
+  if (status === REQUEST_STATUS.error || auctions === null) {
+    return (
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute='/(tabs)/my-auctions'
+      />
+    );
+  }
 
   return (
-    <SafeAreaView
+    <ScrollView
       className='flex-1'
-      edges={['top']}
+      contentContainerClassName='px-6 py-6'
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
     >
-      <ScrollView className='flex-1'>
-        {/* Header */}
-        <View className='border-gray-200 border-b   p-4'>
-          <Text className='text-gray-800 mb-2 text-2xl font-bold'>
-            {t('screens.myAuctions.title')}
-          </Text>
-          <Text className='text-gray-600 mb-4'>
-            Gestiona todas tus subastas desde aquí
-          </Text>
-          <TouchableOpacity
-            className='rounded-lg bg-blue-500 p-3'
-            onPress={() => navigateWithAuth('/(tabs)/my-auctions/create')}
+      <View className='mx-auto w-full max-w-5xl px-6'>
+        {/* Top actions */}
+        <View className='flex flex-row gap-3'>
+          <CustomLink
+            href='/my-auctions/new'
+            mode='primary'
           >
-            <Text className='text-center font-semibold text-white'>
-              ➕ {t('screens.myAuctions.createAuction')}
-            </Text>
-          </TouchableOpacity>
+            {myAuctions.newAuction}
+          </CustomLink>
+
+          <CustomLink
+            href='/my-auctions/old'
+            mode='secondary'
+          >
+            {myAuctions.oldAuctions}
+          </CustomLink>
         </View>
 
-        {/* Statistics Overview */}
-        <View className='mx-4 mt-4 rounded-lg   p-4 shadow-sm'>
-          <Text className='text-gray-800 mb-3 text-lg font-semibold'>
-            📊 Resumen
-          </Text>
-          <View className='flex-row justify-between'>
-            <View className='items-center'>
-              <Text className='text-2xl font-bold text-blue-600'>4</Text>
-              <Text className='text-gray-600 text-sm'>Subastas</Text>
-            </View>
-            <View className='items-center'>
-              <Text className='text-2xl font-bold text-green-600'>1</Text>
-              <Text className='text-gray-600 text-sm'>En Vivo</Text>
-            </View>
-            <View className='items-center'>
-              <Text className='text-2xl font-bold text-orange-600'>$4,545</Text>
-              <Text className='text-gray-600 text-sm'>Total Ventas</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Auctions List */}
-        <View className='mx-4 mb-6 mt-4'>
-          {myAuctions.map((auction) => (
-            <TouchableOpacity
-              key={auction.id}
-              className='border-gray-200 mb-3 rounded-lg border   p-4 shadow-sm'
-              onPress={() =>
-                navigateWithAuth(`/(tabs)/my-auctions/${auction.id}`)
-              }
-            >
-              <View className='mb-3 flex-row items-start justify-between'>
-                <View className='flex-1'>
-                  <Text className='text-gray-800 mb-1 text-lg font-semibold'>
-                    {auction.title}
-                  </Text>
-                  <Text className='text-gray-600'>
-                    📦 {auction.items} artículos • 👥 {auction.participants}{' '}
-                    participantes
-                  </Text>
-                </View>
-                <View
-                  className={`rounded px-2 py-1 ${getStatusColor(auction.status)}`}
+        {/* Auctions list */}
+        <View className='mt-6 w-full'>
+          <View className='flex w-full flex-col gap-5'>
+            {auctions.map((auction) => (
+              <View
+                key={auction.id}
+                className='w-full'
+              >
+                <CustomLink
+                  href={`/my-auction/${auction.id}`}
+                  className='flex w-full flex-row gap-5'
                 >
-                  <Text className='text-xs font-medium'>
-                    {getStatusText(auction.status)}
-                  </Text>
-                </View>
-              </View>
+                  {/* Image */}
+                  <View className='aspect-[3/4] w-full max-w-40 overflow-hidden rounded-lg'>
+                    <CustomImage
+                      src={auction.image}
+                      alt={auction.title}
+                      className='h-full w-full'
+                      resizeMode='cover'
+                    />
+                  </View>
 
-              <View className='flex-row items-center justify-between'>
-                <View>
-                  {auction.status === 'completed' ? (
-                    <Text className='text-lg font-bold text-green-600'>
-                      Vendido: ${auction.finalPrice?.toLocaleString()}
-                    </Text>
-                  ) : auction.status === 'draft' ? (
-                    <Text className='text-gray-500'>{auction.timeLeft}</Text>
-                  ) : (
-                    <>
-                      <Text className='font-medium text-blue-600'>
-                        Puja actual: ${auction.currentBid?.toLocaleString()}
-                      </Text>
-                      <Text className='text-gray-500'>{auction.timeLeft}</Text>
-                    </>
-                  )}
-                </View>
-                <Text className='text-gray-400'>→</Text>
+                  {/* Info */}
+                  <View className='flex flex-1 flex-col items-start justify-center'>
+                    <AuctionDisplayDateTime
+                      locale={locale}
+                      startDate={auction.startDate}
+                      singleLine={true}
+                      displayTime={false}
+                    />
+                    <CustomText
+                      type='h4'
+                      className='text-start'
+                    >
+                      {auction.title}
+                    </CustomText>
+                  </View>
+                </CustomLink>
               </View>
-            </TouchableOpacity>
-          ))}
+            ))}
+          </View>
+
+          {auctions.length === 0 && (
+            <CustomText
+              type='h2'
+              className='mt-6 text-center text-cinnabar'
+            >
+              {myAuctions.noAuctionsFound}
+            </CustomText>
+          )}
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 }

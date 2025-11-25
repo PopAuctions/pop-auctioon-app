@@ -148,13 +148,14 @@
       }
     },
     "myAuctions": {
-      "title": "My Auctions",
-      "subtitle": "Manage your created auctions",
-      "noAuctions": "You haven't created any auctions yet",
-      "createAuction": "Create Auction",
-      "detail": "Auction Details",
-      "edit": "Edit Auction",
-      "stats": "Statistics"
+      "title": "My auctions",
+      "oldAuctionsTitle": "My old auctions",
+      "newAuction": "New auction",
+      "search": "Search",
+      "searchLabel": "Search by name",
+      "edit": "Edita",
+      "oldAuctions": "Old auctions",
+      "noAuctionsFound": "No auctions found"
     },
     "calendar": {
       "title": "Auction Calendar",
