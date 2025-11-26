@@ -231,7 +231,7 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
   >;
   Auction: Pick<
     Auction,
-    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate'
+    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate' | 'category'
   >;
 };
 
