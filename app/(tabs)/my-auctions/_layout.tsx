@@ -34,10 +34,35 @@ export default function MyAuctionsLayout() {
         }}
       />
       <Stack.Screen
+        name='[id]'
+        options={{
+          title: t('screens.auctions.detail'),
+          presentation: 'card',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
         name='[id]/edit'
         options={{
-          title: t('screens.myAuctions.edit'),
-          presentation: 'card',
+          title: t('screens.myAuctions.edit') + ' subasta',
+          presentation: 'modal',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name='[id]/new-article'
+        options={{
+          title: t('screens.myAuctions.edit') + ' nuevo artículo',
+          presentation: 'modal',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name='[id]/edit-article/[slug]'
+        options={{
+          title: t('screens.myAuctions.edit') + ' artículo',
+          presentation: 'modal',
+          headerShown: true,
         }}
       />
     </Stack>

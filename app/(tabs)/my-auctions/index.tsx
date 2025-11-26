@@ -79,7 +79,7 @@ export default function MyAuctionsScreen() {
                   className='w-full'
                 >
                   <CustomLink
-                    href={`/my-auction/${auction.id}`}
+                    href={`/my-auctions/${auction.id}`}
                     className='flex w-full flex-row gap-5'
                   >
                     {/* Image */}

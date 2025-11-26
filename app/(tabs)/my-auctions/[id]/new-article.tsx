@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 
-export default function EditAuctionArticleScreen() {
-  const { id, slug } = useLocalSearchParams<{ id: string; slug: string }>();
+export default function NewAuctionArticleScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
   const [title, setTitle] = useState('Producto de Ejemplo');
   const [description, setDescription] = useState('Descripción del producto...');
   const [startingPrice, setStartingPrice] = useState('100.00');
@@ -26,7 +26,7 @@ export default function EditAuctionArticleScreen() {
     <ScrollView className='flex-1'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
-          Editar artículo #{slug}
+          Nuevo Artículo #{id}
         </Text>
 
         <View className='mb-4'>
