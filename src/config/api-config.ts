@@ -83,6 +83,8 @@ export const SECURE_ENDPOINTS = {
     FOLLOWED_AUCTIONS: '/auctions/followed',
     ARTICLES: (auctionId: string | number, params: string): ApiEndpoint =>
       `/auctions/${auctionId}/articles?${params}` as ApiEndpoint,
+    REQUEST_REVIEW: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/request-review` as ApiEndpoint,
   },
 
   // Usuario y perfil

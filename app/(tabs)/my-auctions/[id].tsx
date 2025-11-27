@@ -19,6 +19,7 @@ import { MyAuctionArticlesFilters } from '@/components/articles/MyAuctionArticle
 import { CustomError } from '@/components/ui/CustomError';
 import { View } from '@/components/Themed';
 import { CustomLink } from '@/components/ui/CustomLink';
+import { MyAuctionActions } from '@/components/auctions/MyAuctionActions';
 
 export default function MyAuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -29,6 +30,7 @@ export default function MyAuctionDetailScreen() {
     data: liveAuction,
     status,
     errorMessage,
+    refetch,
   } = useGetLiveAuction({
     auctionId: id,
   });
@@ -111,6 +113,13 @@ export default function MyAuctionDetailScreen() {
                 }
               </CustomText>
             </View>
+            <MyAuctionActions
+              locale={locale}
+              auctionId={id}
+              auctionStatus={auction.status as AuctionStatus}
+              myAuction={auctionLang}
+              refetch={refetch}
+            />
           </View>
           <View className='mt-8'>
             <CustomText
