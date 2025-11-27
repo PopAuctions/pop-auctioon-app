@@ -44,7 +44,7 @@ export default function MyAuctionsLayout() {
       <Stack.Screen
         name='[id]/edit'
         options={{
-          title: t('screens.myAuctions.edit') + ' subasta',
+          title: t('screens.myAuction.edit'),
           presentation: 'modal',
           headerShown: true,
         }}
@@ -52,7 +52,7 @@ export default function MyAuctionsLayout() {
       <Stack.Screen
         name='[id]/new-article'
         options={{
-          title: t('screens.myAuctions.edit') + ' nuevo artículo',
+          title: t('screens.myAuction.newArticle'),
           presentation: 'modal',
           headerShown: true,
         }}
@@ -60,7 +60,7 @@ export default function MyAuctionsLayout() {
       <Stack.Screen
         name='[id]/edit-article/[slug]'
         options={{
-          title: t('screens.myAuctions.edit') + ' artículo',
+          title: t('screens.myAuction.editArticle'),
           presentation: 'modal',
           headerShown: true,
         }}

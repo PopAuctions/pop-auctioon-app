@@ -81,6 +81,8 @@ export const SECURE_ENDPOINTS = {
     BID: '/auctions/bid',
     DETAILS: '/auctions/details',
     FOLLOWED_AUCTIONS: '/auctions/followed',
+    ARTICLES: (auctionId: string | number, params: string): ApiEndpoint =>
+      `/auctions/${auctionId}/articles?${params}` as ApiEndpoint,
   },
 
   // Usuario y perfil
