@@ -82,7 +82,10 @@ export function MyArticleItem({
               ]
             }
           </CustomText>
-          <CustomText type='subtitle'>
+          <CustomText
+            type='subtitle'
+            className='text-lg'
+          >
             {formatter.format(commissionedPrice)}
           </CustomText>
         </View>

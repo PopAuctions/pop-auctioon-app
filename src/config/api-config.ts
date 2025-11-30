@@ -85,6 +85,8 @@ export const SECURE_ENDPOINTS = {
       `/auctions/${auctionId}/articles?${params}` as ApiEndpoint,
     REQUEST_REVIEW: (auctionId: string | number): ApiEndpoint =>
       `/auctions/${auctionId}/request-review` as ApiEndpoint,
+    REORDER_MY_AUCTION_ARTICLES: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/update-order` as ApiEndpoint,
   },
 
   // Usuario y perfil

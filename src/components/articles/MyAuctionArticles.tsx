@@ -1,27 +1,18 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { Article, Lang } from '@/types/types';
-import { CustomText } from '../ui/CustomText';
 import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
-import { Loading } from '../ui/Loading';
 import { useLocalSearchParams } from 'expo-router';
 import { useFetchMyAuctionArticles } from '@/hooks/components/useFetchMyAuctionArticles';
 import { REQUEST_STATUS } from '@/constants';
 import { AuctionStatus } from '@/constants/auctions';
 import { MyArticleItem } from './MyArticleItem';
 import { Divider } from '../ui/Divider';
-import { Fragment } from 'react';
-
-const TEXTS = {
-  noArticlesFound: {
-    en: 'No articles found with the selected filters',
-    es: 'No se han encontrado artículos con los filtros seleccionados',
-  },
-  errorOccurred: {
-    en: 'An error occurred while fetching articles',
-    es: 'Ocurrió un error al obtener los artículos',
-  },
-};
+import { useEffect, useMemo, useState } from 'react';
+import DraggableFlatList, {
+  RenderItemParams,
+} from 'react-native-draggable-flatlist';
+import { MyAuctionArticlesState } from './MyAuctionArticlesState';
 
 export const MyAuctionArticles = ({
   lang,
@@ -29,16 +20,21 @@ export const MyAuctionArticles = ({
   auctionStatus,
   order,
   texts,
+  isOrderingItems,
+  onChangeOrder,
+  ListHeaderComponent,
 }: {
   lang: Lang;
   auctionId: string;
   auctionStatus: AuctionStatus;
   order: number[];
   texts: { remove: string };
+  isOrderingItems: boolean;
+  onChangeOrder: (newOrder: number[]) => void;
+  ListHeaderComponent: React.ReactElement;
 }) => {
-  const { name } = useLocalSearchParams<{
-    name?: string;
-  }>();
+  const { name } = useLocalSearchParams<{ name?: string }>();
+
   const {
     data: articles,
     status,
@@ -47,64 +43,95 @@ export const MyAuctionArticles = ({
 
   const formatter = euroFormatter(lang);
   const isLoading = status === REQUEST_STATUS.loading;
-  let iterableArticles = articles;
 
-  if (isLoading) return <Loading locale={lang} />;
+  const showNoResults =
+    Boolean(name) &&
+    articles.length === 0 &&
+    !isLoading &&
+    status !== REQUEST_STATUS.error;
 
-  if (status === REQUEST_STATUS.error) {
+  // 1) Compute iterableArticles based on current order of IDs
+  const iterableArticles = useMemo(() => {
+    if (
+      status === REQUEST_STATUS.error ||
+      ![
+        AuctionStatus.AVAILABLE,
+        AuctionStatus.LIVE,
+        AuctionStatus.FINISHED,
+      ].includes(auctionStatus)
+    ) {
+      return articles;
+    }
+
+    return getIterableArticles(articles, order, name);
+  }, [articles, order, name, status, auctionStatus]);
+  const [listData, setListData] = useState<Article[]>([]);
+
+  useEffect(() => {
+    setListData(iterableArticles);
+  }, [iterableArticles]);
+
+  // 3) Loading / error / no-results UI is handled by state component in header
+  const listDataToRender =
+    isLoading || status === REQUEST_STATUS.error || showNoResults
+      ? []
+      : listData;
+
+  const handleDragEnd = ({ data }: { data: Article[] }) => {
+    setListData(data);
+    // always notify parent with the new order of IDs
+    const newOrder = data.map((article) => article.id);
+    onChangeOrder(newOrder);
+  };
+
+  const renderDraggableItem = ({
+    item,
+    drag,
+    isActive,
+    getIndex,
+  }: RenderItemParams<Article>) => {
+    const index = getIndex() ?? 0;
+
     return (
-      <View className='items-center justify-center py-4'>
-        <CustomText
-          type='body'
-          className='text-center text-cinnabar'
-        >
-          {errorMessage?.[lang] ?? TEXTS.errorOccurred[lang]}
-        </CustomText>
-      </View>
+      <Pressable
+        onLongPress={isOrderingItems ? drag : undefined}
+        disabled={!isOrderingItems}
+        delayLongPress={150}
+      >
+        <View className={isActive ? 'opacity-70' : ''}>
+          <MyArticleItem
+            article={item}
+            auctionLang={{ remove: texts.remove }}
+            formatter={formatter}
+            lang={lang}
+            commissionValue={LOW_COMMISSION_AMOUNT}
+          />
+          {index < listDataToRender.length - 1 && <Divider className='my-2' />}
+        </View>
+      </Pressable>
     );
-  }
-
-  if (name && articles.length === 0) {
-    return (
-      <View className='items-center justify-center py-4'>
-        <CustomText
-          type='body'
-          className='text-center text-cinnabar'
-        >
-          {TEXTS.noArticlesFound[lang]}
-        </CustomText>
-      </View>
-    );
-  }
-
-  if (
-    [
-      AuctionStatus.AVAILABLE,
-      AuctionStatus.LIVE,
-      AuctionStatus.FINISHED,
-    ].includes(auctionStatus)
-  ) {
-    iterableArticles = getIterableArticles(articles, order, name);
-  }
+  };
 
   return (
-    <>
-      {iterableArticles &&
-        iterableArticles.map((article, index) => (
-          <Fragment key={article.id}>
-            <MyArticleItem
-              article={article}
-              auctionLang={{ remove: texts.remove }}
-              formatter={formatter}
-              lang={lang}
-              commissionValue={LOW_COMMISSION_AMOUNT}
-            />
-            {index < iterableArticles.length - 1 && (
-              <Divider className='my-2' />
-            )}
-          </Fragment>
-        ))}
-    </>
+    <DraggableFlatList
+      data={listDataToRender}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={renderDraggableItem}
+      onDragEnd={handleDragEnd}
+      activationDistance={isOrderingItems ? 12 : Number.MAX_SAFE_INTEGER}
+      ListHeaderComponent={
+        <>
+          {ListHeaderComponent}
+          <MyAuctionArticlesState
+            lang={lang}
+            isLoading={isLoading}
+            status={status}
+            errorMessage={errorMessage}
+            showNoResults={showNoResults}
+          />
+        </>
+      }
+    />
   );
 };
 

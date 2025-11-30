@@ -1,11 +1,11 @@
 import React from 'react';
-import { View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Lang } from '@/types/types';
 import { FilterField } from '../fields/FilterField';
 
 interface Props {
   locale: Lang;
+  isDisabled?: boolean;
 }
 
 const FILTER_LABELS = {
@@ -17,7 +17,7 @@ const FILTER_LABELS = {
   },
 };
 
-export function MyAuctionArticlesFilters({ locale }: Props) {
+export function MyAuctionArticlesFilters({ locale, isDisabled }: Props) {
   const searchParams = useLocalSearchParams();
 
   const getParam = (v: unknown): string => {
@@ -29,16 +29,14 @@ export function MyAuctionArticlesFilters({ locale }: Props) {
   const activeFilters = [nameValue].filter((v) => v !== '');
 
   return (
-    <View className='flex flex-row gap-x-3'>
-      <FilterField
-        key={`${activeFilters.join('-')}-name`}
-        className='w-2/3'
-        id='name'
-        label={FILTER_LABELS[locale].name}
-        type='input'
-        value={nameValue}
-        isClearable={true}
-      />
-    </View>
+    <FilterField
+      key={`${activeFilters.join('-')}-name`}
+      id='name'
+      label={FILTER_LABELS[locale].name}
+      type='input'
+      value={nameValue}
+      isClearable={true}
+      isDisabled={isDisabled}
+    />
   );
 }
