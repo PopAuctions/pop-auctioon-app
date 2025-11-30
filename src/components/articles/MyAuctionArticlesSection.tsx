@@ -65,6 +65,7 @@ export const MyAuctionArticlesSection = ({
       const response = await securePost<LangMap>({
         endpoint:
           SECURE_ENDPOINTS.AUCTIONS.REORDER_MY_AUCTION_ARTICLES(auctionId),
+        // It works?
         data: {
           order: orderedIds,
         },
@@ -167,7 +168,12 @@ export const MyAuctionArticlesSection = ({
           auctionStatus={auctionStatus}
           auctionId={auctionId}
           texts={{
-            remove: auctionLang.remove,
+            editText: auctionLang.edit,
+            deleteText: auctionLang.delete,
+            removeText: auctionLang.remove,
+            orderImagesText: auctionLang.orderImages,
+            featuredText: auctionLang.setAsFeatured,
+            unfeaturedText: auctionLang.unsetAsFeatured,
           }}
           order={effectiveOrder}
           isOrderingItems={isOrderingItems}

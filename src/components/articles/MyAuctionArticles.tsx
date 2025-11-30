@@ -28,7 +28,14 @@ export const MyAuctionArticles = ({
   auctionId: string;
   auctionStatus: AuctionStatus;
   order: number[];
-  texts: { remove: string };
+  texts: {
+    editText: string;
+    deleteText: string;
+    removeText: string;
+    orderImagesText: string;
+    featuredText: string;
+    unfeaturedText: string;
+  };
   isOrderingItems: boolean;
   onChangeOrder: (newOrder: number[]) => void;
   ListHeaderComponent: React.ReactElement;
@@ -96,9 +103,19 @@ export const MyAuctionArticles = ({
         <View className={isActive ? 'opacity-70' : ''}>
           <MyArticleItem
             article={item}
-            auctionLang={{ remove: texts.remove }}
+            auctionId={auctionId}
+            auctionStatus={auctionStatus}
+            showActions={true}
+            texts={{
+              editText: texts.editText,
+              deleteText: texts.deleteText,
+              removeText: texts.removeText,
+              orderImagesText: texts.orderImagesText,
+              featuredText: texts.featuredText,
+              unfeaturedText: texts.unfeaturedText,
+            }}
             formatter={formatter}
-            lang={lang}
+            locale={lang}
             commissionValue={LOW_COMMISSION_AMOUNT}
           />
           {index < listDataToRender.length - 1 && <Divider className='my-2' />}

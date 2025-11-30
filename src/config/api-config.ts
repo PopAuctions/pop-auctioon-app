@@ -87,6 +87,16 @@ export const SECURE_ENDPOINTS = {
       `/auctions/${auctionId}/request-review` as ApiEndpoint,
     REORDER_MY_AUCTION_ARTICLES: (auctionId: string | number): ApiEndpoint =>
       `/auctions/${auctionId}/articles/update-order` as ApiEndpoint,
+    TOGGLE_ARTICLE_FEATURED: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/toggle-featured` as ApiEndpoint,
+    REMOVE_ARTICLE: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/remove` as ApiEndpoint,
   },
 
   // Usuario y perfil
