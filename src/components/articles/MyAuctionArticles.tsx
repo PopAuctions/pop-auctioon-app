@@ -33,8 +33,8 @@ export const MyAuctionArticles = ({
   onChangeOrder: (newOrder: number[]) => void;
   ListHeaderComponent: React.ReactElement;
 }) => {
+  const [listData, setListData] = useState<Article[]>([]);
   const { name } = useLocalSearchParams<{ name?: string }>();
-
   const {
     data: articles,
     status,
@@ -49,8 +49,11 @@ export const MyAuctionArticles = ({
     articles.length === 0 &&
     !isLoading &&
     status !== REQUEST_STATUS.error;
+  const listDataToRender =
+    isLoading || status === REQUEST_STATUS.error || showNoResults
+      ? []
+      : listData;
 
-  // 1) Compute iterableArticles based on current order of IDs
   const iterableArticles = useMemo(() => {
     if (
       status === REQUEST_STATUS.error ||
@@ -65,24 +68,16 @@ export const MyAuctionArticles = ({
 
     return getIterableArticles(articles, order, name);
   }, [articles, order, name, status, auctionStatus]);
-  const [listData, setListData] = useState<Article[]>([]);
+
+  const handleDragEnd = ({ data }: { data: Article[] }) => {
+    setListData(data);
+    const newOrder = data.map((article) => article.id);
+    onChangeOrder(newOrder);
+  };
 
   useEffect(() => {
     setListData(iterableArticles);
   }, [iterableArticles]);
-
-  // 3) Loading / error / no-results UI is handled by state component in header
-  const listDataToRender =
-    isLoading || status === REQUEST_STATUS.error || showNoResults
-      ? []
-      : listData;
-
-  const handleDragEnd = ({ data }: { data: Article[] }) => {
-    setListData(data);
-    // always notify parent with the new order of IDs
-    const newOrder = data.map((article) => article.id);
-    onChangeOrder(newOrder);
-  };
 
   const renderDraggableItem = ({
     item,
