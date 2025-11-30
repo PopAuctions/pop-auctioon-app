@@ -65,6 +65,14 @@ export default function MyAuctionsLayout() {
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name='[id]/rearrange-article-images/[slug]'
+        options={{
+          title: t('screens.myAuction.rearrangeArticleImages'),
+          presentation: 'modal',
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 }
