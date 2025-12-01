@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { ONLY_INTEGERS_EMPTY_REGEX, ONLY_INTEGERS_REGEX } from '@/constants';
+import { AuctionCategories } from '@/types/types';
 
 const commonSchema = z.object({
   title: z
@@ -140,7 +141,7 @@ export const NewArticleSchemaBags = commonSchema
     }
   );
 
-export const NewArticleSchemaJewelry = commonSchema.extend({
+export const NewArticleSchemaJewrly = commonSchema.extend({
   material: z.string().min(1, {
     message: JSON.stringify({
       en: 'Required',
@@ -249,7 +250,7 @@ const defaultCommonValues = {
   observations: '',
 };
 
-export const DEFAULT_VALUES_MAP = {
+export const DEFAULT_VALUES_MAP: ArticleDefaultValuesMap = {
   BAGS: {
     ...defaultCommonValues,
     material: '',
@@ -260,7 +261,7 @@ export const DEFAULT_VALUES_MAP = {
     width: '',
     height: '',
   },
-  JEWELRY: {
+  JEWERLY: {
     ...defaultCommonValues,
     material: '',
     brand: '',
@@ -289,3 +290,21 @@ export const DEFAULT_VALUES_MAP = {
     height: '',
   },
 } as const;
+
+export const ArticleSchemasMap = {
+  BAGS: NewArticleSchemaBags,
+  JEWERLY: NewArticleSchemaJewrly,
+  WATCHES: NewArticleSchemaWatches,
+  ART: NewArticleSchemaArt,
+} as const;
+
+type ArticleDefaultValuesMap = {
+  [K in AuctionCategories]: z.infer<(typeof ArticleSchemasMap)[K]>;
+};
+
+export type SchemaFor<C extends AuctionCategories> =
+  (typeof ArticleSchemasMap)[C];
+
+export type ArticleFormValues<C extends AuctionCategories> = z.infer<
+  SchemaFor<C>
+>;
