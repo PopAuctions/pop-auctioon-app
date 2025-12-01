@@ -6,8 +6,8 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
-  // Allows to automatically instanciate createClient with right options
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: '12.2.3 (519615d)';
@@ -25,6 +25,7 @@ export interface Database {
           category: Database['public']['Enums']['ArticleCategory'];
           codeNumber: string | null;
           color: string | null;
+          createdAt: string | null;
           description: string | null;
           documentation: boolean;
           estimatedValue: number | null;
@@ -32,6 +33,7 @@ export interface Database {
           height: number | null;
           id: number;
           images: string[] | null;
+          isFeatured: boolean | null;
           length: number | null;
           material: string | null;
           movement: string | null;
@@ -47,6 +49,7 @@ export interface Database {
           status: Database['public']['Enums']['ArticleStatus'];
           strapMaterial: string | null;
           title: string;
+          views: number | null;
           weight: string | null;
           width: number | null;
           year: number | null;
@@ -61,6 +64,7 @@ export interface Database {
           category?: Database['public']['Enums']['ArticleCategory'];
           codeNumber?: string | null;
           color?: string | null;
+          createdAt?: string | null;
           description?: string | null;
           documentation?: boolean;
           estimatedValue?: number | null;
@@ -68,6 +72,7 @@ export interface Database {
           height?: number | null;
           id?: number;
           images?: string[] | null;
+          isFeatured?: boolean | null;
           length?: number | null;
           material?: string | null;
           movement?: string | null;
@@ -83,6 +88,7 @@ export interface Database {
           status?: Database['public']['Enums']['ArticleStatus'];
           strapMaterial?: string | null;
           title: string;
+          views?: number | null;
           weight?: string | null;
           width?: number | null;
           year?: number | null;
@@ -97,6 +103,7 @@ export interface Database {
           category?: Database['public']['Enums']['ArticleCategory'];
           codeNumber?: string | null;
           color?: string | null;
+          createdAt?: string | null;
           description?: string | null;
           documentation?: boolean;
           estimatedValue?: number | null;
@@ -104,6 +111,7 @@ export interface Database {
           height?: number | null;
           id?: number;
           images?: string[] | null;
+          isFeatured?: boolean | null;
           length?: number | null;
           material?: string | null;
           movement?: string | null;
@@ -119,6 +127,7 @@ export interface Database {
           status?: Database['public']['Enums']['ArticleStatus'];
           strapMaterial?: string | null;
           title?: string;
+          views?: number | null;
           weight?: string | null;
           width?: number | null;
           year?: number | null;
@@ -1246,48 +1255,43 @@ export interface Database {
         Args: { p_auction_id: number; p_hard_timeout_ms: number };
         Returns: Json;
       };
-      auto_start_countdown: {
-        Args: { p_auction_id: number };
-        Returns: Json;
-      };
+      auto_start_countdown: { Args: { p_auction_id: number }; Returns: Json };
       cancel_article_acquisition_send_to_online_store: {
-        Args: { article_id: number; user_id: string; sold_price: number };
+        Args: { article_id: number; sold_price: number; user_id: string };
         Returns: Json;
       };
       create_bid: {
         Args: {
-          p_article_id: number;
           p_amount: number;
+          p_article_id: number;
           p_client_current_amount: number;
           p_user_id: string;
-          p_username: string;
           p_user_image: string;
+          p_username: string;
         };
         Returns: Json;
       };
-      custom_access_token_hook: {
-        Args: { event: Json };
-        Returns: Json;
-      };
+      custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       filter_auctions_for_calendar: {
         Args: {
-          today: string;
-          start_of_month: string;
-          end_of_month: string;
-          start_of_next_month: string;
-          end_of_next_month: string;
           category_param?: Database['public']['Enums']['AuctionCategory'];
+          end_of_month: string;
+          end_of_next_month: string;
+          start_of_month: string;
+          start_of_next_month: string;
+          today: string;
         };
         Returns: Json;
       };
       grant_article_to_second_user: {
-        Args: { article_id: number; second_user_id: string; new_price: number };
+        Args: { article_id: number; new_price: number; second_user_id: string };
         Returns: Json;
       };
-      sell_article: {
-        Args: { article_id: number };
-        Returns: Json;
+      increment_article_views: {
+        Args: { article_id_input: number };
+        Returns: string;
       };
+      sell_article: { Args: { article_id: number }; Returns: Json };
     };
     Enums: {
       ArticleCategory: 'BAG' | 'ART' | 'JEWERLY' | 'WATCH';
@@ -1329,7 +1333,7 @@ export interface Database {
       [_ in never]: never;
     };
   };
-}
+};
 
 type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 

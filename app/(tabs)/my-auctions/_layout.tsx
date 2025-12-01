@@ -14,21 +14,29 @@ export default function MyAuctionsLayout() {
         name='index'
         options={{
           title: t('tabsNames.myAuctions'),
-          headerShown: false,
+          headerShown: true,
         }}
       />
       <Stack.Screen
-        name='create'
+        name='new'
         options={{
-          title: t('screens.myAuctions.createAuction'),
+          title: t('screens.myAuctions.newAuction'),
           presentation: 'modal',
-          headerShown: true, // Solo en pantallas secundarias
+          headerShown: true,
         }}
       />
       <Stack.Screen
-        name='[id]/index'
+        name='old'
         options={{
-          title: t('screens.myAuctions.detail'),
+          title: t('screens.myAuctions.oldAuctions'),
+          presentation: 'card',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name='[id]'
+        options={{
+          title: t('screens.auctions.detail'),
           presentation: 'card',
           headerShown: true,
         }}
@@ -36,15 +44,33 @@ export default function MyAuctionsLayout() {
       <Stack.Screen
         name='[id]/edit'
         options={{
-          title: t('screens.myAuctions.edit'),
-          presentation: 'card',
+          title: t('screens.myAuction.edit'),
+          presentation: 'modal',
+          headerShown: true,
         }}
       />
       <Stack.Screen
-        name='[id]/stats'
+        name='[id]/new-article'
         options={{
-          title: t('screens.myAuctions.stats'),
-          presentation: 'card',
+          title: t('screens.myAuction.newArticle'),
+          presentation: 'modal',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name='[id]/edit-article/[slug]'
+        options={{
+          title: t('screens.myAuction.editArticle'),
+          presentation: 'modal',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name='[id]/rearrange-article-images/[slug]'
+        options={{
+          title: t('screens.myAuction.rearrangeArticleImages'),
+          presentation: 'modal',
+          headerShown: true,
         }}
       />
     </Stack>

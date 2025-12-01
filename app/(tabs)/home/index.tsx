@@ -101,7 +101,7 @@ export default function HomeScreen() {
             )}
           </View>
           <CustomLink
-            href='/(tabs)/auctions/article/81'
+            href='/(tabs)/my-auctions/28'
             mode='primary'
             className='mt-2'
           >

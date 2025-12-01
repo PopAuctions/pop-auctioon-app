@@ -7,30 +7,17 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { router } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 
-export default function CreateAuctionScreen() {
-  const { t } = useTranslation();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [startingPrice, setStartingPrice] = useState('');
-  const [duration, setDuration] = useState('');
+export default function EditAuctionArticleScreen() {
+  const { id, slug } = useLocalSearchParams<{ id: string; slug: string }>();
+  const [title, setTitle] = useState('Producto de Ejemplo');
+  const [description, setDescription] = useState('Descripción del producto...');
+  const [startingPrice, setStartingPrice] = useState('100.00');
 
-  const handleCreateAuction = () => {
-    if (!title || !description || !startingPrice || !duration) {
-      Alert.alert('Error', 'Por favor completa todos los campos');
-      return;
-    }
-
-    // Lógica para crear la subasta
-    console.log('Creating auction:', {
-      title,
-      description,
-      startingPrice,
-      duration,
-    });
-    Alert.alert('Éxito', 'Subasta creada exitosamente', [
+  const handleSaveChanges = () => {
+    console.log('Saving changes for auction:', id);
+    Alert.alert('Éxito', 'Cambios guardados exitosamente', [
       { text: 'OK', onPress: () => router.back() },
     ]);
   };
@@ -39,14 +26,13 @@ export default function CreateAuctionScreen() {
     <ScrollView className='flex-1'>
       <View className='p-4'>
         <Text className='text-gray-800 mb-6 text-2xl font-bold'>
-          {t('screens.myAuctions.createAuction')}
+          Editar artículo #{slug}
         </Text>
 
         <View className='mb-4'>
           <Text className='mb-2 text-lg font-semibold'>Título</Text>
           <TextInput
             className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            placeholder='Nombre de tu subasta'
             value={title}
             onChangeText={setTitle}
           />
@@ -56,7 +42,6 @@ export default function CreateAuctionScreen() {
           <Text className='mb-2 text-lg font-semibold'>Descripción</Text>
           <TextInput
             className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            placeholder='Describe tu producto...'
             value={description}
             onChangeText={setDescription}
             multiline
@@ -65,34 +50,26 @@ export default function CreateAuctionScreen() {
           />
         </View>
 
-        <View className='mb-4'>
+        <View className='mb-6'>
           <Text className='mb-2 text-lg font-semibold'>Precio Inicial ($)</Text>
           <TextInput
             className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            placeholder='0.00'
             value={startingPrice}
             onChangeText={setStartingPrice}
             keyboardType='numeric'
+            editable={false}
           />
-        </View>
-
-        <View className='mb-6'>
-          <Text className='mb-2 text-lg font-semibold'>Duración (horas)</Text>
-          <TextInput
-            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            placeholder='24'
-            value={duration}
-            onChangeText={setDuration}
-            keyboardType='numeric'
-          />
+          <Text className='text-gray-500 mt-1 text-sm'>
+            El precio inicial no se puede modificar una vez iniciada la subasta
+          </Text>
         </View>
 
         <TouchableOpacity
           className='mb-3 items-center rounded-lg bg-blue-500 p-4'
-          onPress={handleCreateAuction}
+          onPress={handleSaveChanges}
         >
           <Text className='text-lg font-semibold text-white'>
-            Crear Subasta
+            Guardar Cambios
           </Text>
         </TouchableOpacity>
 

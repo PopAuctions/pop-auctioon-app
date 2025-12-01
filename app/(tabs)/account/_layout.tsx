@@ -60,6 +60,13 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
+        name='offers-made'
+        options={{
+          title: t('screens.account.offersMade'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
         name='addresses'
         options={{
           title: t('screens.account.addresses'),

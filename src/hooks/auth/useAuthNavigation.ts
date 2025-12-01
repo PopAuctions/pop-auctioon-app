@@ -8,6 +8,7 @@ export const useAuthNavigation = () => {
   const [session, role] = getSession();
   const [isNavigating, setIsNavigating] = useState(false);
 
+  // Refactor para revisar rutas anidadas (ej: 'my-auctions/[id]')
   const navigateWithAuth = useCallback(
     (href: string, options?: { replace?: boolean }) => {
       // Extraer ruta del href (ej: '/(tabs)/my-auctions' -> 'my-auctions')

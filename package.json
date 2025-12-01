@@ -18,7 +18,8 @@
     "test:update-snapshots": "jest -u",
     "build:ios": "eas build --platform ios --profile development",
     "build:android": "eas build --platform android --profile development",
-    "build:ios:device": "eas build --platform ios --profile development-device"
+    "build:ios:device": "eas build --platform ios --profile development-device",
+    "generate-types": "npx supabase gen types typescript --project-id xvohgpgzvxdwooerdnfb --schema public > ./src/types/supabase.ts"
   },
   "dependencies": {
     "@expo-google-fonts/dev": "^0.4.12",
@@ -60,7 +61,9 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.65.0",
     "react-native": "0.79.5",
+    "react-native-draggable-flatlist": "^4.0.3",
     "react-native-element-dropdown": "^2.12.4",
+    "react-native-gesture-handler": "~2.24.0",
     "react-native-get-random-values": "^1.11.0",
     "react-native-international-phone-number": "^0.11.2",
     "react-native-reanimated": "~3.17.4",

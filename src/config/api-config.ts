@@ -67,6 +67,10 @@ export const SECURE_ENDPOINTS = {
   ARTICLES: {
     FOLLOWED_ARTICLES: '/articles/followed',
   },
+  MY_AUCTIONS: {
+    LIST: '/my-auctions',
+    OLD_LIST: '/my-auctions/old',
+  },
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',
@@ -77,6 +81,22 @@ export const SECURE_ENDPOINTS = {
     BID: '/auctions/bid',
     DETAILS: '/auctions/details',
     FOLLOWED_AUCTIONS: '/auctions/followed',
+    ARTICLES: (auctionId: string | number, params: string): ApiEndpoint =>
+      `/auctions/${auctionId}/articles?${params}` as ApiEndpoint,
+    REQUEST_REVIEW: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/request-review` as ApiEndpoint,
+    REORDER_MY_AUCTION_ARTICLES: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/update-order` as ApiEndpoint,
+    TOGGLE_ARTICLE_FEATURED: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/toggle-featured` as ApiEndpoint,
+    REMOVE_ARTICLE: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/remove` as ApiEndpoint,
   },
 
   // Usuario y perfil
@@ -124,6 +144,7 @@ export const SECURE_ENDPOINTS = {
   },
   OFFERS: {
     CREATE: '/online-store/offers',
+    MADE: '/user/offers-made',
   },
 
   // Proxy universal para endpoints existentes
