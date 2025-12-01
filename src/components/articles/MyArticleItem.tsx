@@ -183,19 +183,19 @@ export function MyArticleItem({
         </View>
       </View>
       {showActions && (
-        <View className='flex shrink-0 flex-row items-center gap-x-6'>
-          <View className='mt-4 flex flex-row items-end gap-5'>
-            {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
-              auctionStatus === AuctionStatus.NEED_CHANGES ||
-              auctionStatus === AuctionStatus.CHANGES_MADE ||
-              ((auctionStatus === AuctionStatus.WAITING_MIN_ARTICLES_AMOUNT ||
-                auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE) &&
-                (article.status === ArticleStatus.NOT_PUBLISHED ||
-                  article.status === ArticleStatus.NEED_CHANGES ||
-                  article.status === ArticleStatus.CHANGES_MADE))) &&
-              article.status !== ArticleStatus.APPROVED &&
-              article.status !== ArticleStatus.PUBLISHED && (
-                <>
+        <View className='mt-4 flex w-full flex-row flex-wrap gap-3'>
+          {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
+            auctionStatus === AuctionStatus.NEED_CHANGES ||
+            auctionStatus === AuctionStatus.CHANGES_MADE ||
+            ((auctionStatus === AuctionStatus.WAITING_MIN_ARTICLES_AMOUNT ||
+              auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE) &&
+              (article.status === ArticleStatus.NOT_PUBLISHED ||
+                article.status === ArticleStatus.NEED_CHANGES ||
+                article.status === ArticleStatus.CHANGES_MADE))) &&
+            article.status !== ArticleStatus.APPROVED &&
+            article.status !== ArticleStatus.PUBLISHED && (
+              <>
+                <View className='min-w-[45%] flex-1'>
                   <CustomLink
                     href={`/(tabs)/my-auctions/${auctionId}/rearrange-article-images/${article.id}`}
                     mode='primary'
@@ -203,6 +203,8 @@ export function MyArticleItem({
                   >
                     {orderImagesText}
                   </CustomLink>
+                </View>
+                <View className='min-w-[45%] flex-1'>
                   <CustomLink
                     href={`/(tabs)/my-auctions/${auctionId}/edit-article/${article.id}`}
                     mode='secondary'
@@ -210,10 +212,12 @@ export function MyArticleItem({
                   >
                     {editText}
                   </CustomLink>
-                </>
-              )}
-            {article.status === ArticleStatus.PUBLISHED &&
-              auctionStatus !== AuctionStatus.FINISHED && (
+                </View>
+              </>
+            )}
+          {article.status === ArticleStatus.PUBLISHED &&
+            auctionStatus !== AuctionStatus.FINISHED && (
+              <View className='min-w-[45%] flex-1'>
                 <ConfirmModal
                   mode='primary'
                   onConfirm={toggleArticleFeatured}
@@ -237,9 +241,11 @@ export function MyArticleItem({
                 >
                   {article.isFeatured ? unfeaturedText : featuredText}
                 </ConfirmModal>
-              )}
-            {(auctionStatus === AuctionStatus.AVAILABLE ||
-              auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE) && (
+              </View>
+            )}
+          {(auctionStatus === AuctionStatus.AVAILABLE ||
+            auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE) && (
+            <View className='min-w-[45%] flex-1'>
               <ConfirmModal
                 mode='primary'
                 onConfirm={removeArticle}
@@ -249,8 +255,8 @@ export function MyArticleItem({
               >
                 {removeText}
               </ConfirmModal>
-            )}
-          </View>
+            </View>
+          )}
         </View>
       )}
     </View>

@@ -26,6 +26,7 @@ export const MyAuctionArticlesSection = ({
   ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null;
 }) => {
   const [isOrderingItems, setIsOrderingItems] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [orderedIds, setOrderedIds] = useState<number[] | null>(null);
 
   const { t, locale } = useTranslation();
@@ -62,10 +63,10 @@ export const MyAuctionArticlesSection = ({
     }
 
     try {
+      setIsLoading(true);
       const response = await securePost<LangMap>({
         endpoint:
           SECURE_ENDPOINTS.AUCTIONS.REORDER_MY_AUCTION_ARTICLES(auctionId),
-        // It works?
         data: {
           order: orderedIds,
         },
@@ -80,9 +81,10 @@ export const MyAuctionArticlesSection = ({
     } catch (e: any) {
       sentryErrorReport(
         e?.message,
-        `FOLLOW_BUTTON - ${SECURE_ENDPOINTS.AUCTIONS.REORDER_MY_AUCTION_ARTICLES(auctionId)}`
+        `SAVE_ARTICLES_NEW_ORDER - ${SECURE_ENDPOINTS.AUCTIONS.REORDER_MY_AUCTION_ARTICLES(auctionId)}`
       );
     } finally {
+      setIsLoading(false);
       setIsOrderingItems(false);
     }
   };
@@ -134,6 +136,7 @@ export const MyAuctionArticlesSection = ({
               mode='primary'
               textClassName='text-center'
               onPress={handleSaveOrder}
+              isLoading={isLoading}
             >
               {auctionLang.saveOrder}
             </Button>
@@ -142,6 +145,7 @@ export const MyAuctionArticlesSection = ({
               mode='secondary'
               textClassName='text-center'
               onPress={handleCancelOrder}
+              disabled={isLoading}
             >
               {auctionLang.cancel}
             </Button>

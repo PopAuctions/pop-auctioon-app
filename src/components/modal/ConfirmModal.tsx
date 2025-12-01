@@ -58,6 +58,8 @@ export const ConfirmModal = ({
       <Button
         mode={mode}
         onPress={openModal}
+        size='small'
+        textClassName='text-center'
       >
         {children}
       </Button>
