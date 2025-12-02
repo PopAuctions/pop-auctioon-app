@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Controller } from 'react-hook-form';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -11,7 +11,13 @@ import { useToast } from '@/hooks/useToast';
 import { useArticleForm } from '@/hooks/components/useArticleForm';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
-import { ARTICLE_IMAGES_MAX, REQUEST_STATUS } from '@/constants';
+import {
+  ARTICLE_IMAGES_MAX,
+  ARTICLE_STATE,
+  ARTICLE_STATE_DESCRIPTION,
+  ARTICLE_STATE_LABELS,
+  REQUEST_STATUS,
+} from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
@@ -19,6 +25,9 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
 import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
+import { ArticleExtraFields } from '@/components/articles/ArticleExtraFields';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { SelectField } from '@/components/fields/SelectField';
 // import { useCreateArticle } from '@/hooks/pages/article/useCreateArticle';
 
 export default function NewAuctionArticleScreen() {
@@ -76,6 +85,28 @@ export default function NewAuctionArticleScreen() {
       />
     );
   }
+
+  const tooltipContent = (
+    <View className='gap-2'>
+      {Object.entries(ARTICLE_STATE_DESCRIPTION[locale]).map(([key, value]) => {
+        const label =
+          ARTICLE_STATE_LABELS[locale][
+            key as keyof (typeof ARTICLE_STATE_LABELS)['en']
+          ];
+
+        return (
+          <CustomText
+            key={key}
+            type='body'
+            className='text-sm text-black/70'
+          >
+            <Text className='font-bold text-black'>{label}</Text>
+            {`: ${value}`}
+          </CustomText>
+        );
+      })}
+    </View>
+  );
 
   // const { createArticle, status, errorMessage } = useCreateArticle();
 
@@ -167,12 +198,50 @@ export default function NewAuctionArticleScreen() {
                 />
               )}
             />
-            {'title' in errors && errors.title && (
+            {errors.title && (
               <CustomText
                 type='error'
                 className='mt-1'
               >
                 {getErrorMessage(errors.title.message, locale)}
+              </CustomText>
+            )}
+          </View>
+
+          {/* STATE */}
+          <View className='mb-4'>
+            <View className='flex flex-row gap-2'>
+              <Tooltip content={tooltipContent} />
+              <CustomText
+                type='body'
+                className='mb-2'
+              >
+                {t('screens.newArticle.state')}*
+              </CustomText>
+            </View>
+            <Controller
+              control={control}
+              name='state'
+              render={({ field: { onChange, onBlur, value } }) => (
+                <SelectField
+                  name='state'
+                  value={value ?? null}
+                  options={ARTICLE_STATE[locale]}
+                  placeholder={t('screens.newArticle.state')}
+                  isSearchable={true}
+                  isDisabled={isLoading}
+                  formField={true}
+                  isClearable={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+            {errors.state && (
+              <CustomText
+                type='error'
+                className='mt-1'
+              >
+                {getErrorMessage(errors.state?.message, locale)}
               </CustomText>
             )}
           </View>
@@ -199,7 +268,7 @@ export default function NewAuctionArticleScreen() {
                 />
               )}
             />
-            {'startingPrice' in errors && errors.startingPrice && (
+            {errors.startingPrice && (
               <CustomText
                 type='error'
                 className='mt-1'
@@ -233,7 +302,7 @@ export default function NewAuctionArticleScreen() {
                 />
               )}
             />
-            {'estimatedValue' in errors && errors.estimatedValue && (
+            {errors.estimatedValue && (
               <CustomText
                 type='error'
                 className='mt-1'
@@ -242,6 +311,13 @@ export default function NewAuctionArticleScreen() {
               </CustomText>
             )}
           </View>
+
+          <ArticleExtraFields
+            control={control}
+            errors={errors}
+            isLoading={isLoading}
+            auctionCategory={auctionCategory}
+          />
 
           {/* Description */}
           <View className='mb-6'>
@@ -268,7 +344,7 @@ export default function NewAuctionArticleScreen() {
                 />
               )}
             />
-            {'description' in errors && errors.description && (
+            {errors.description && (
               <CustomText
                 type='error'
                 className='mt-1'
