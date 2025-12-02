@@ -313,7 +313,7 @@
       "addMoreImages": "Agregar más imágenes",
       "imageSelected": "Imagen seleccionada",
       "imagesSelected": "imágenes seleccionadas",
-      "supportedFormats": "Formatos soportados: png, jpg, jpeg, webp (Máx 1MB)",
+      "supportedFormats": "Formatos soportados: png, jpg, jpeg, webp",
       "permissionRequired": "Permiso Requerido",
       "permissionMessage": "Necesitamos acceso a tu galería para seleccionar una imagen.",
       "imageTooLarge": "Imagen muy grande",
