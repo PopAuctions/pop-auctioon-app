@@ -29,6 +29,7 @@ import { ProtectedRoute } from '@/components/navigation/ProtectedRoute';
 import { DeepLinkListener } from '@/components/navigation/DeepLinkListener';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from '@/providers/ToastProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -114,17 +115,19 @@ function RootLayoutNav() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen
-            name='(tabs)'
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name='modal'
-            options={{ presentation: 'modal' }}
-          />
-        </Stack>
-        <ToastProvider />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Stack>
+            <Stack.Screen
+              name='(tabs)'
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='modal'
+              options={{ presentation: 'modal' }}
+            />
+          </Stack>
+          <ToastProvider />
+        </GestureHandlerRootView>
       </ThemeProvider>
     </SafeAreaProvider>
   );

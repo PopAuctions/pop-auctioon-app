@@ -231,7 +231,7 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
   >;
   Auction: Pick<
     Auction,
-    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate'
+    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate' | 'category'
   >;
 };
 
@@ -388,6 +388,19 @@ export const OfferStatusConst: Record<OfferStatus, string> = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
+} as const;
+
+export const OfferStatusLabels: Record<Lang, Record<OfferStatus, string>> = {
+  en: {
+    PENDING: 'Pending',
+    ACCEPTED: 'Accepted',
+    REJECTED: 'Rejected',
+  },
+  es: {
+    PENDING: 'Pendiente',
+    ACCEPTED: 'Aceptado',
+    REJECTED: 'Rechazado',
+  },
 } as const;
 
 export type OfferStatus = Database['public']['Enums']['OfferStatus'];

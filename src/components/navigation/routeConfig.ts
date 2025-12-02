@@ -32,6 +32,9 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'my-auctions': {
     requiredRole: 'AUCTIONEER',
   },
+  'my-auctions/[id]': {
+    requiredRole: 'AUCTIONEER',
+  },
 
   // Ejemplo de rutas futuras:
   // 'admin-panel': {

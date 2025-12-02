@@ -1,11 +1,12 @@
 import { View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomImage } from '@/components/ui/CustomImage';
-import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { formatPaymentDate } from '@/utils/calendar';
 import { UserPaymentStatusLabels } from '@/constants/payment';
 import type { UserPayment } from '@/types/types';
+import { CustomLink } from '../ui/CustomLink';
+import { euroFormatter } from '@/utils/euroFormatter';
 
 interface PaymentCardProps {
   payment: UserPayment;
@@ -13,20 +14,7 @@ interface PaymentCardProps {
 
 export function PaymentCard({ payment }: PaymentCardProps) {
   const { t, locale } = useTranslation();
-
-  const handleViewPayment = () => {
-    // TODO: Navegar a pantalla de detalles del pago cuando exista
-    console.log('Ver pago:', payment.id);
-    // router.push(`/(tabs)/account/payment/${payment.id}`);
-  };
-
-  const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat(locale === 'en' ? 'en-US' : 'es-ES', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2,
-    }).format(amount);
-  };
+  const formatter = euroFormatter(locale);
 
   return (
     <View className='my-3 mb-4 flex-row overflow-hidden rounded-3xl bg-white p-2 shadow-sm'>
@@ -83,7 +71,7 @@ export function PaymentCard({ payment }: PaymentCardProps) {
               type='body'
               className='font-bold'
             >
-              {formatAmount(payment.totalAmount)}
+              {formatter.format(payment.totalAmount)}
             </CustomText>
           </CustomText>
 
@@ -100,12 +88,13 @@ export function PaymentCard({ payment }: PaymentCardProps) {
         {/* Botón para ver el pago (solo si está aprobado) */}
         {payment.status === 'APPROVED' && (
           <View className='mt-3'>
-            <Button
+            <CustomLink
               mode='secondary'
-              onPress={handleViewPayment}
+              size='small'
+              href={`/(tabs)/account/payment/${payment.id}`}
             >
               {t('screens.paymentsHistory.viewPayment')}
-            </Button>
+            </CustomLink>
           </View>
         )}
       </View>

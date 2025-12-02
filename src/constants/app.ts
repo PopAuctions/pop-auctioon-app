@@ -3,8 +3,6 @@
  * Incluye regex, límites, duraciones y configuraciones básicas
  */
 
-import { RequestStatus } from '@/types/types';
-
 export const LOCALE_PATTERN = /\/(?:es|en)/g;
 
 export const VALID_URL_REGEX =

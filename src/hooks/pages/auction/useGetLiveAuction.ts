@@ -14,7 +14,9 @@ export const useGetLiveAuction = ({
 }: {
   auctionId: string;
   validateIsLive?: boolean;
-}): ActionResponse<LiveAuction | null> => {
+}): ActionResponse<LiveAuction | null> & {
+  refetch: () => Promise<void>;
+} => {
   const [auction, setAuction] = useState<LiveAuction | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
@@ -22,6 +24,7 @@ export const useGetLiveAuction = ({
 
   const fetchLiveAuction = useCallback(async () => {
     try {
+      setStatus('loading');
       const params = new URLSearchParams();
       params.append('validateIsLive', String(validateIsLive));
 
@@ -85,6 +88,45 @@ export const useGetLiveAuction = ({
     }
   }, [auctionId, validateIsLive, protectedGet]);
 
+  const refetchLiveAuction = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append('validateIsLive', String(validateIsLive));
+
+      const res = await protectedGet<LiveAuction>({
+        endpoint: `/auctions/${auctionId}?${params}`,
+      });
+
+      if (res.error) {
+        console.log('error', res.error);
+        setStatus('error');
+        setErrorMessage(res.error);
+        return;
+      }
+
+      if (!res.data) {
+        setErrorMessage({
+          en: 'Auction not found',
+          es: 'Subasta no encontrada',
+        });
+        return;
+      }
+
+      const liveAuction = res.data;
+
+      setStatus('success');
+      setAuction(liveAuction);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error occurred';
+
+      sentryErrorReport(
+        errorMessage,
+        '2_USE_GET_LIVE_AUCTION - Unexpected error'
+      );
+    }
+  }, [auctionId, validateIsLive, protectedGet]);
+
   useEffect(() => {
     fetchLiveAuction();
   }, [fetchLiveAuction]);
@@ -94,5 +136,6 @@ export const useGetLiveAuction = ({
     status,
     errorMessage,
     setErrorMessage,
+    refetch: refetchLiveAuction,
   };
 };

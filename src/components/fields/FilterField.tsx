@@ -13,6 +13,7 @@ type InputProps = {
   value: string;
   className?: string;
   isClearable?: boolean;
+  isDisabled?: boolean;
 };
 
 type SelectProps = {
@@ -40,6 +41,7 @@ export function FilterField(props: FilterFieldProps) {
           value={props.value}
           placeholder={label}
           isClearable={props.isClearable}
+          isDisabled={props.isDisabled}
         />
       </View>
     );

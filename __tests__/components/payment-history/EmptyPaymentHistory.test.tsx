@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { EmptyPaymentHistory } from '@/components/payment-history/EmptyPaymentHistory';
+import { EmptyPaymentHistory } from '@/components/payment/EmptyPaymentHistory';
 
 // Mock useTranslation
 jest.mock('@/hooks/i18n/useTranslation', () => ({

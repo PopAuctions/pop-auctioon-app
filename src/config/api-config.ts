@@ -67,6 +67,10 @@ export const SECURE_ENDPOINTS = {
   ARTICLES: {
     FOLLOWED_ARTICLES: '/articles/followed',
   },
+  MY_AUCTIONS: {
+    LIST: '/my-auctions',
+    OLD_LIST: '/my-auctions/old',
+  },
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',
@@ -77,6 +81,22 @@ export const SECURE_ENDPOINTS = {
     BID: '/auctions/bid',
     DETAILS: '/auctions/details',
     FOLLOWED_AUCTIONS: '/auctions/followed',
+    ARTICLES: (auctionId: string | number, params: string): ApiEndpoint =>
+      `/auctions/${auctionId}/articles?${params}` as ApiEndpoint,
+    REQUEST_REVIEW: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/request-review` as ApiEndpoint,
+    REORDER_MY_AUCTION_ARTICLES: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/update-order` as ApiEndpoint,
+    TOGGLE_ARTICLE_FEATURED: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/toggle-featured` as ApiEndpoint,
+    REMOVE_ARTICLE: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/remove` as ApiEndpoint,
   },
 
   // Usuario y perfil
@@ -93,12 +113,23 @@ export const SECURE_ENDPOINTS = {
     BILLING: '/user/billing', // GET (list all) y POST (create new)
     BILLING_BY_ID: (id: string): ApiEndpoint =>
       `/user/billing/${id}` as ApiEndpoint, // PATCH (update) y DELETE
-    PAYMENT_HISTORY: '/user/payment-history', // GET payment history
+    PAYMENT_HISTORY: '/user/payments', // GET payment history
+    PAYMENT_BY_ID: (id: string): ApiEndpoint =>
+      `/user/payments/${id}` as ApiEndpoint, // GET payment by ID
     RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
       VERIFY: '/user/otp/verify', // POST - Verificar código OTP
     },
+    INVOICE: {
+      CREATE: (id: string): ApiEndpoint => `/user/payments/${id}/invoice`, // POST - Crear nueva factura
+      GET: (id: string): ApiEndpoint =>
+        `/user/payments/${id}/invoice` as ApiEndpoint, // GET - Obtener factura por paymentID
+    },
+  },
+  INVOICE: {
+    GET: (id: string): ApiEndpoint =>
+      `/invoice?paymentId=${id}&format=pdf` as ApiEndpoint, // GET - Obtener factura por paymentID
   },
   BIDS: {
     CREATE: '/bids',
@@ -113,6 +144,7 @@ export const SECURE_ENDPOINTS = {
   },
   OFFERS: {
     CREATE: '/online-store/offers',
+    MADE: '/user/offers-made',
   },
 
   // Proxy universal para endpoints existentes
