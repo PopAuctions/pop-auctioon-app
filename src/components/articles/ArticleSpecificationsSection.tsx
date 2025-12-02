@@ -105,7 +105,7 @@ export function ArticleSpecificationsSection({
           }
           tooltip={
             conditionDescription ? (
-              <Tooltip text={conditionDescription} />
+              <Tooltip content={conditionDescription} />
             ) : null
           }
         />

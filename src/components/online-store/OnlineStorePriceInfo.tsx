@@ -33,7 +33,7 @@ export function OnlineStorePriceInfo({
       <CustomText type='h4'>{texts.price}</CustomText>
       <View className='relative flex flex-row items-start gap-2'>
         <CustomText type='h2'>{formatter.format(commissionedPrice)}</CustomText>
-        <Tooltip text={texts.shipping} />
+        <Tooltip content={texts.shipping} />
       </View>
       <Divider />
     </View>
