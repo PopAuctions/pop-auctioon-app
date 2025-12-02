@@ -28,7 +28,8 @@ import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { ArticleExtraFields } from '@/components/articles/ArticleExtraFields';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { SelectField } from '@/components/fields/SelectField';
-// import { useCreateArticle } from '@/hooks/pages/article/useCreateArticle';
+import { useArticle } from '@/hooks/pages/my-auction/useArticle';
+import { useState } from 'react';
 
 export default function NewAuctionArticleScreen() {
   const params = useLocalSearchParams<{
@@ -36,9 +37,17 @@ export default function NewAuctionArticleScreen() {
   }>();
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
+  const [isUploadingArticle, setIsUploadingArticle] = useState(false);
+
+  const auctionId = params.id;
+
+  const { createArticle } = useArticle({
+    auctionId,
+  });
+
   const {
     images,
-    isUploading,
+    isUploading: isUploadingImages,
     handleImagesSelected,
     handleRemoveImageAt,
     validateMinImages,
@@ -51,7 +60,6 @@ export default function NewAuctionArticleScreen() {
     callToast: callToast,
   });
 
-  const auctionId = params.id;
   const {
     data: liveAuction,
     status,
@@ -108,10 +116,8 @@ export default function NewAuctionArticleScreen() {
     </View>
   );
 
-  // const { createArticle, status, errorMessage } = useCreateArticle();
-
   const onSubmit = async (data: any) => {
-    console.log('Submitting new article...', data);
+    setIsUploadingArticle(true);
     if (!validateMinImages()) {
       callToast({
         variant: 'error',
@@ -120,34 +126,32 @@ export default function NewAuctionArticleScreen() {
           en: `You must upload at least ${ARTICLE_IMAGES_MIN} images.`,
         },
       });
+      setIsUploadingArticle(false);
       return;
     }
 
     const publicUrls = await uploadAllAndGetPublicUrls();
 
-    console.log('New article form submit', {
+    const response = await createArticle({
+      values: { ...data },
       auctionId,
-      auctionCategory,
-      data,
       images: publicUrls,
     });
 
-    // TODO: replace with real mutation
-    // await createArticle({ ...data, auctionId, images: publicUrls });
-
-    callToast({
-      variant: 'success',
-      description: 'screens.newArticle.createSuccess',
-    });
+    if (response.status === 'error') {
+      setIsUploadingArticle(false);
+      return;
+    }
 
     router.back();
+    setIsUploadingArticle(false);
   };
 
   const handleCancel = () => {
     router.back();
   };
 
-  const isLoading = isSubmitting || isUploading;
+  const isLoading = isSubmitting || isUploadingImages || isUploadingArticle;
 
   return (
     <SafeAreaView
@@ -370,8 +374,6 @@ export default function NewAuctionArticleScreen() {
               maxImages={ARTICLE_IMAGES_MAX}
               disabled={isLoading}
             />
-
-            {/* If you want error text from min-images, you can show something conditionally here later */}
           </View>
 
           {/* Submit Button */}

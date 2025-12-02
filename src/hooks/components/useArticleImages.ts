@@ -2,6 +2,7 @@ import { useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/react-native';
+import { base64ToArrayBuffer } from '@/utils/base64ToArrayBuffer';
 
 interface UseArticleImagesParams {
   supabase: SupabaseClient;
@@ -71,11 +72,10 @@ export function useArticleImages({
             encoding: FileSystem.EncodingType.Base64,
           });
 
-          const fileBuffer = Buffer.from(fileBase64, 'base64');
-
+          const fileArrayBuffer = base64ToArrayBuffer(fileBase64);
           const { data, error } = await supabase.storage
             .from(bucket)
-            .upload(filePath, fileBuffer, {
+            .upload(filePath, fileArrayBuffer, {
               contentType: `image/${fileExt}`,
               upsert: false,
             });
