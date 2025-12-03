@@ -191,7 +191,9 @@ describe('useAuctionsCalendar', () => {
       });
 
       // Mock error for refetch
-      mockSupabaseInternal.rpc.mockRejectedValueOnce(new Error('Refetch failed'));
+      mockSupabaseInternal.rpc.mockRejectedValueOnce(
+        new Error('Refetch failed')
+      );
 
       await result.current.refetch();
 
@@ -379,4 +381,3 @@ describe('useAuctionsCalendar', () => {
     });
   });
 });
-

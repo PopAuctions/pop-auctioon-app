@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSegments, useRouter } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
-import { PROTECTED_ROUTES } from './routeConfig';
+import { PROTECTED_ROUTES, normalizeRoutePath } from './routeConfig';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -15,14 +15,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   useEffect(() => {
     const inAuthGroup = segments[0] === '(tabs)' && segments[1] === 'auth';
 
-    // Extraer la ruta más específica (último segment válido)
-    // Para '/(tabs)/account/about-us' -> 'about-us'
-    // Para '/(tabs)/account' -> 'account'
-    // Para '/(tabs)/auctions/calendar' -> 'calendar'
-    const validSegments = segments.filter(
-      (seg) => seg && !seg.includes('(') && !seg.includes(')')
-    );
-    const currentRoute = validSegments[validSegments.length - 1] ?? '';
+    // Normalizar la ruta completa para manejar parámetros dinámicos
+    // Ejemplos:
+    // - ['(tabs)', 'my-auctions', '28'] → 'my-auctions/[id]'
+    // - ['(tabs)', 'account', 'edit-profile'] → 'edit-profile'
+    // - ['(tabs)', 'auctions', 'live', '123'] → 'auctions/live/[id]'
+    const fullPath = segments.join('/');
+    const currentRoute = normalizeRoutePath(fullPath);
     const routeConfig = PROTECTED_ROUTES[currentRoute];
 
     if (auth.state === 'loading') return;

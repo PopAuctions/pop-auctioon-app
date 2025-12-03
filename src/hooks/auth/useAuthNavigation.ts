@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react';
 import { router } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
-import { PROTECTED_ROUTES } from '@/components/navigation/routeConfig';
+import {
+  PROTECTED_ROUTES,
+  normalizeRoutePath,
+} from '@/components/navigation/routeConfig';
 
 export const useAuthNavigation = () => {
   const { getSession } = useAuth();
@@ -11,10 +14,11 @@ export const useAuthNavigation = () => {
   // Refactor para revisar rutas anidadas (ej: 'my-auctions/[id]')
   const navigateWithAuth = useCallback(
     (href: string, options?: { replace?: boolean }) => {
-      // Extraer ruta del href (ej: '/(tabs)/my-auctions' -> 'my-auctions')
-      const routeParts = href.split('/');
-      const routeName =
-        routeParts[routeParts.length - 1] || routeParts[routeParts.length - 2];
+      // Normalizar la ruta para manejar parámetros dinámicos
+      // Ejemplos:
+      // - '/(tabs)/my-auctions/28' → 'my-auctions/[id]'
+      // - '/(tabs)/account/edit-profile' → 'edit-profile'
+      const routeName = normalizeRoutePath(href);
       const routeConfig = PROTECTED_ROUTES[routeName];
 
       // Si la ruta está en PROTECTED_ROUTES, requiere autenticación

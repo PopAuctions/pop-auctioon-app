@@ -219,7 +219,7 @@ describe('useGetPaymentHistory', () => {
 
     await waitFor(() => {
       expect(mockSecureGet).toHaveBeenCalledWith({
-        endpoint: '/user/payment-history',
+        endpoint: '/user/payments',
       });
     });
   });
