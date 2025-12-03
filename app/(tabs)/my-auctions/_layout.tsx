@@ -42,7 +42,7 @@ export default function MyAuctionsLayout() {
           headerShown: true,
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name='[id]/edit'
         options={{
           title: t('screens.myAuction.edit'),
@@ -50,7 +50,7 @@ export default function MyAuctionsLayout() {
           animation: 'slide_from_bottom',
           headerShown: true,
         }}
-      />
+      /> */}
       <Stack.Screen
         name='[id]/new-article'
         options={{
