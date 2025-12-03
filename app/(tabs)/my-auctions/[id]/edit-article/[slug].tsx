@@ -127,6 +127,10 @@ export default function EditAuctionArticleScreen() {
     resetRemovedRemoteImages,
   ]);
 
+  useEffect(() => {
+    hasHydratedForm.current = false;
+  }, [articleId]);
+
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }

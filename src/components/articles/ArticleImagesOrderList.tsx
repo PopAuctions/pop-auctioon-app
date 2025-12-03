@@ -30,7 +30,6 @@ export function ArticleImagesOrderList({
   }, [images]);
 
   const handleDragEnd = ({ data }: { data: string[] }) => {
-    console.log('New order of images:', data);
     setListData(data);
   };
 

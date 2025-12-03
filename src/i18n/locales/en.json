@@ -229,7 +229,7 @@
       "salePrice": "Price (€)",
       "image": "Images of the article",
       "imageAlt": "Image",
-      "imageFormats": "Supported formats: png, jpg, jpep, webp",
+      "imageFormats": "Supported formats: png, jpg, jpeg, webp",
       "uploadImage": "Upload new images",
       "removeImage": "Remove image",
       "editSubmit": "Update",
