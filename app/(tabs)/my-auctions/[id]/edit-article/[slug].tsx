@@ -37,6 +37,8 @@ import { SelectField } from '@/components/fields/SelectField';
 import { useArticle } from '@/hooks/pages/my-auction/useArticle';
 import { mapArticleToFormValues } from '@/utils/mapArticleToFormValues';
 import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
+import { useGetArticleComments } from '@/hooks/pages/my-auction/useGetArticleComments';
+import { ArticleComments } from '@/components/articles/ArticleComments';
 
 export default function EditAuctionArticleScreen() {
   const params = useLocalSearchParams<{
@@ -45,7 +47,7 @@ export default function EditAuctionArticleScreen() {
   }>();
 
   const auctionId = params.id;
-  const articleId = Number(params.slug);
+  const articleId = params.slug;
 
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
@@ -62,6 +64,10 @@ export default function EditAuctionArticleScreen() {
 
   const { editArticle } = useArticle({
     auctionId,
+  });
+  const { data: comments } = useGetArticleComments({
+    auctionId,
+    articleId,
   });
 
   const {
@@ -175,7 +181,7 @@ export default function EditAuctionArticleScreen() {
     const publicUrls = await uploadAllAndGetPublicUrls();
 
     const response = await editArticle({
-      articleId,
+      articleId: Number(articleId),
       images: publicUrls,
       removedImages: removedImages,
       articleAuctionId: article.auctionId?.toString() as string,
@@ -204,25 +210,25 @@ export default function EditAuctionArticleScreen() {
     >
       <ScrollView className='flex-1'>
         <View className='p-6'>
-          <View className='mb-4'>
-            <CustomText
-              type='subtitle'
-              className='mb-4 text-center text-3xl text-cinnabar'
-            >
-              {
-                AUCTION_CATEGORIES_LABEL[locale][
-                  auctionCategory as AuctionCategories
-                ]
-              }
-            </CustomText>
+          <CustomText
+            type='subtitle'
+            className='mb-4 text-center text-3xl text-cinnabar'
+          >
+            {
+              AUCTION_CATEGORIES_LABEL[locale][
+                auctionCategory as AuctionCategories
+              ]
+            }
+          </CustomText>
 
-            <CustomText
-              type='body'
-              className='text-red-600'
-            >
-              {t('screens.newArticle.required')}
-            </CustomText>
-          </View>
+          <ArticleComments comments={comments || []} />
+
+          <CustomText
+            type='body'
+            className='mb-2 text-red-600'
+          >
+            {t('screens.newArticle.required')}
+          </CustomText>
 
           {/* Title */}
           <View className='mb-4'>

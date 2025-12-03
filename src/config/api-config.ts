@@ -77,6 +77,10 @@ export const SECURE_ENDPOINTS = {
       articleId: string | number
     ): ApiEndpoint =>
       `/auctions/${auctionId}/articles/${articleId}/update-images-order`,
+    COMMENTS: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint => `/auctions/${auctionId}/articles/${articleId}/comments`,
   },
   MY_AUCTIONS: {
     LIST: '/my-auctions',
