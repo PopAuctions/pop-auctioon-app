@@ -23,6 +23,7 @@ export function useArticleImages({
   callToast,
 }: UseArticleImagesParams) {
   const [images, setImages] = useState<string[]>([]);
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImagesSelected = useCallback((uris: string[]) => {
@@ -30,7 +31,20 @@ export function useArticleImages({
   }, []);
 
   const handleRemoveImageAt = useCallback((index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    setImages((prev) => {
+      const removedUri = prev[index];
+
+      // Si es una imagen ya subida (no file://), la marcamos para borrar
+      if (removedUri && !removedUri.startsWith('file://')) {
+        setRemovedImages((prevRemoved) => {
+          if (prevRemoved.includes(removedUri)) return prevRemoved;
+
+          return [...prevRemoved, removedUri];
+        });
+      }
+
+      return prev.filter((_, i) => i !== index);
+    });
   }, []);
 
   const validateMinImages = useCallback(() => {
@@ -114,13 +128,19 @@ export function useArticleImages({
     }
   }, [images, supabase, bucket, folder, callToast]);
 
+  const resetRemovedRemoteImages = useCallback(() => {
+    setRemovedImages([]);
+  }, []);
+
   return {
     images,
+    removedImages,
     isUploading,
     handleImagesSelected,
     handleRemoveImageAt,
     validateMinImages,
     uploadAllAndGetPublicUrls,
     setImages,
+    resetRemovedRemoteImages,
   };
 }

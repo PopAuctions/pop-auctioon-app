@@ -143,8 +143,8 @@ export default function NewAuctionArticleScreen() {
       return;
     }
 
-    router.navigate(`/(tabs)/my-auctions/${auctionId}`);
     setIsUploadingArticle(false);
+    router.navigate(`/(tabs)/my-auctions/${auctionId}`);
   };
 
   const handleCancel = () => {

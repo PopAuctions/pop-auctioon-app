@@ -19,6 +19,8 @@ interface EditArticleArgs {
   articleId: number;
   values: any;
   images: string[];
+  removedImages: string[];
+  articleAuctionId: string;
 }
 
 export const useArticle = ({
@@ -82,12 +84,18 @@ export const useArticle = ({
     articleId,
     values,
     images,
+    removedImages,
+    articleAuctionId,
   }: EditArticleArgs): Promise<FunctionResponse> => {
     try {
       const payload = {
         articleId,
         images,
-        ...values,
+        removedImages: removedImages,
+        articleAuctionId,
+        data: {
+          ...values,
+        },
       };
 
       const response = await securePost<LangMap>({
@@ -99,12 +107,10 @@ export const useArticle = ({
       });
 
       if (response.error) {
-        console.error('ERROR_EDIT_ARTICLE', response.error);
         callToast({ variant: 'error', description: response.error });
         return { status: 'error' };
       }
 
-      console.log('SUCCESS_CREATE_ARTICLE');
       callToast({ variant: 'success', description: response.data });
       return { status: 'success' };
     } catch (error) {
