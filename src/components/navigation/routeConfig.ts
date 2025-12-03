@@ -104,7 +104,7 @@ export const hasAccess = (
  *
  * Convierte rutas reales con IDs/slugs a sus patrones con [id]/[slug]:
  * - '/(tabs)/my-auctions/28' → 'my-auctions/[id]'
- * - '/(tabs)/my-auctions/28/edit-article/vintage-watch-2024' → 'my-auctions/[id]/edit-article/[slug]'
+ * - '/(tabs)/my-auctions/28/edit-article/789' → 'my-auctions/[id]/edit-article/[slug]'
  * - '/(tabs)/account/edit-profile' → 'edit-profile'
  * - '/(tabs)/auctions/live/123' → 'auctions/live/[id]'
  *
@@ -143,7 +143,7 @@ export const normalizeRoutePath = (path: string): string => {
     // ✅ PATRÓN 2: UUID estándar
     // Ejemplo: '550e8400-e29b-41d4-a716-446655440000'
     if (
-      /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
         part
       )
     ) {
