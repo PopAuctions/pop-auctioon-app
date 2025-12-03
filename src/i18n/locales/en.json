@@ -301,6 +301,7 @@
       "changeImageText": "Change image",
       "addMoreImages": "Add more images",
       "imageSelected": "Image selected",
+      "takePhoto": "Take photo",
       "imagesSelected": "images selected",
       "supportedFormats": "Supported formats: png, jpg, jpeg, webp",
       "permissionRequired": "Permission Required",

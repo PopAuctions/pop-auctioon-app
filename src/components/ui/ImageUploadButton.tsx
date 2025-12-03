@@ -13,6 +13,7 @@ import { ARTICLE_IMAGES_MAX } from '@/constants';
 import { compressImage } from '@/utils/compress-image';
 import { useState } from 'react';
 import { useToast } from '@/hooks/useToast';
+import { FontAwesomeIcon } from './FontAwesomeIcon';
 
 interface ImageUploadButtonProps {
   // Para modo simple (una sola imagen)
@@ -54,8 +55,68 @@ export function ImageUploadButton({
     ? selectedImages.length >= maxImages
     : !!selectedImage;
 
+  const handleAssets = async (assets: ImagePicker.ImagePickerAsset[]) => {
+    setIsCompressing(true);
+
+    try {
+      if (multiple) {
+        const compressionPromises = assets.map(async (asset) => {
+          const compressedUri = await compressImage(asset.uri);
+          return compressedUri || asset.uri;
+        });
+
+        const compressedUris = await Promise.all(compressionPromises);
+        const allImages = [...selectedImages, ...compressedUris].slice(
+          0,
+          maxImages
+        );
+        onImagesSelected?.(allImages);
+      } else {
+        const originalUri = assets[0].uri;
+        const compressedUri = await compressImage(originalUri);
+
+        if (!compressedUri) {
+          callToast({
+            variant: 'error',
+            description: 'screens.editProfile.compressionError',
+          });
+          return;
+        }
+
+        onImageSelected?.(compressedUri);
+      }
+    } catch {
+      callToast({
+        variant: 'error',
+        description: 'screens.editProfile.compressionError',
+      });
+    } finally {
+      setIsCompressing(false);
+    }
+  };
+
+  const takePhoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      callToast({
+        variant: 'error',
+        description: 'screens.editProfile.permissionRequired',
+      });
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      await handleAssets(result.assets);
+    }
+  };
+
   const pickImage = async () => {
-    // Solicitar permisos para acceder a la galería
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -67,7 +128,6 @@ export function ImageUploadButton({
       return;
     }
 
-    // Abrir el selector de imágenes
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       quality: 0.8,
@@ -76,46 +136,7 @@ export function ImageUploadButton({
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      setIsCompressing(true);
-
-      try {
-        if (multiple) {
-          // Modo múltiple: comprimir todas las imágenes seleccionadas
-          const compressionPromises = result.assets.map(async (asset) => {
-            const compressedUri = await compressImage(asset.uri);
-            return compressedUri || asset.uri; // Fallback a URI original si falla
-          });
-
-          const compressedUris = await Promise.all(compressionPromises);
-          const allImages = [...selectedImages, ...compressedUris].slice(
-            0,
-            maxImages
-          );
-          onImagesSelected?.(allImages);
-        } else {
-          // Modo simple: comprimir una sola imagen
-          const originalUri = result.assets[0].uri;
-          const compressedUri = await compressImage(originalUri);
-
-          if (!compressedUri) {
-            // Si falla la compresión, mostrar error y no continuar
-            callToast({
-              variant: 'error',
-              description: 'screens.editProfile.compressionError',
-            });
-            return;
-          }
-
-          onImageSelected?.(compressedUri);
-        }
-      } catch {
-        callToast({
-          variant: 'error',
-          description: 'screens.editProfile.compressionError',
-        });
-      } finally {
-        setIsCompressing(false);
-      }
+      await handleAssets(result.assets);
     }
   };
 
@@ -209,30 +230,72 @@ export function ImageUploadButton({
 
         {/* Botón de subida / mensaje */}
         {!hasReachedLimit && (
-          <TouchableOpacity
-            onPress={pickImage}
-            disabled={disabled || isCompressing}
-            className='items-center py-2'
-            activeOpacity={0.7}
-          >
-            {isCompressing ? (
-              <>
-                <ActivityIndicator
-                  size='large'
-                  color='#e63946'
-                  style={{ marginBottom: 6 }}
-                />
-                <CustomText
-                  type='body'
-                  className='text-gray-600 mb-1 text-center'
-                >
-                  {t('screens.editProfile.compressingImages')}
-                </CustomText>
-              </>
-            ) : (
-              <>
-                <FontAwesome
-                  name='cloud-upload'
+          <View className='flex-row justify-center gap-4 py-2'>
+            {/* Gallery button */}
+            <TouchableOpacity
+              onPress={pickImage}
+              disabled={disabled || isCompressing}
+              className='items-center'
+              activeOpacity={0.7}
+            >
+              {isCompressing ? (
+                <>
+                  <ActivityIndicator
+                    size='large'
+                    color='#e63946'
+                    style={{ marginBottom: 6 }}
+                  />
+                  <CustomText
+                    type='body'
+                    className='text-gray-600 mb-1 text-center'
+                  >
+                    {t('screens.editProfile.compressingImages')}
+                  </CustomText>
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='cloud-upload'
+                    size={32}
+                    color='#9ca3af'
+                    style={{ marginBottom: 6 }}
+                  />
+                  <CustomText
+                    type='body'
+                    className='text-gray-600 mb-1 text-center'
+                  >
+                    {multiple
+                      ? selectedImages.length > 0
+                        ? t('screens.editProfile.addMoreImages')
+                        : t('screens.editProfile.uploadImageButton')
+                      : selectedImage
+                        ? t('screens.editProfile.changeImageText')
+                        : t('screens.editProfile.uploadImageButton')}
+                  </CustomText>
+                  {multiple && (
+                    <CustomText
+                      type='bodysmall'
+                      className='text-gray-400 text-xs'
+                    >
+                      {selectedImages.length} / {maxImages}
+                    </CustomText>
+                  )}
+                </>
+              )}
+            </TouchableOpacity>
+
+            {/* Camera button */}
+            {!isCompressing && (
+              <TouchableOpacity
+                onPress={takePhoto}
+                disabled={disabled}
+                className='items-center'
+                activeOpacity={0.7}
+              >
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='camera'
                   size={32}
                   color='#9ca3af'
                   style={{ marginBottom: 6 }}
@@ -241,31 +304,18 @@ export function ImageUploadButton({
                   type='body'
                   className='text-gray-600 mb-1 text-center'
                 >
-                  {multiple
-                    ? selectedImages.length > 0
-                      ? t('screens.editProfile.addMoreImages')
-                      : t('screens.editProfile.uploadImageButton')
-                    : selectedImage
-                      ? t('screens.editProfile.changeImageText')
-                      : t('screens.editProfile.uploadImageButton')}
+                  {t('screens.editProfile.takePhoto')}
                 </CustomText>
-                {multiple && (
-                  <CustomText
-                    type='bodysmall'
-                    className='text-gray-400 text-xs'
-                  >
-                    {selectedImages.length} / {maxImages}
-                  </CustomText>
-                )}
-              </>
+              </TouchableOpacity>
             )}
-          </TouchableOpacity>
+          </View>
         )}
 
         {/* Si alcanzó el límite */}
         {hasReachedLimit && (
           <View className='items-center py-2'>
-            <FontAwesome
+            <FontAwesomeIcon
+              variant='bold'
               name='check-circle'
               size={32}
               color='#10b981'
