@@ -20,7 +20,7 @@ exports[`Tooltip renders with custom text content 1`] = `
     }
   }
   accessible={true}
-  className="items-center justify-center rounded-full bg-black/5"
+  className="items-center justify-center rounded-full"
   collapsable={false}
   focusable={true}
   hitSlop={10}

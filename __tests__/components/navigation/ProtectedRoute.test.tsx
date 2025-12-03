@@ -30,13 +30,13 @@ jest.mock('@/components/navigation/routeConfig', () => ({
     const parts = cleanPath
       .split('/')
       .filter((part) => part && !part.includes('(') && !part.includes(')'));
-    
+
     // Convert numbers to [id]
     const normalized = parts.map((part) => {
       if (/^\d+$/.test(part)) return '[id]';
       return part;
     });
-    
+
     // Return most specific match
     for (let i = normalized.length; i > 0; i--) {
       const candidate = normalized.slice(0, i).join('/');
@@ -45,7 +45,7 @@ jest.mock('@/components/navigation/routeConfig', () => ({
         return candidate;
       }
     }
-    
+
     return normalized[normalized.length - 1] || '';
   }),
 }));

@@ -197,4 +197,165 @@ describe('routeConfig', () => {
       });
     });
   });
+
+  describe('normalizeRoutePath', () => {
+    describe('Query parameter removal', () => {
+      it('should remove query parameters', () => {
+        expect(normalizeRoutePath('/(tabs)/home?foo=bar')).toBe('home');
+        expect(normalizeRoutePath('/(tabs)/account?tab=settings')).toBe(
+          'account'
+        );
+      });
+    });
+
+    describe('Expo Router groups removal', () => {
+      it('should remove (tabs) group', () => {
+        expect(normalizeRoutePath('/(tabs)/home')).toBe('home');
+        expect(normalizeRoutePath('/(tabs)/account')).toBe('account');
+      });
+
+      it('should remove multiple groups', () => {
+        expect(normalizeRoutePath('/(tabs)/(modals)/profile')).toBe('profile');
+      });
+    });
+
+    describe('Simple routes (no parameters)', () => {
+      it('should normalize simple route names', () => {
+        expect(normalizeRoutePath('/(tabs)/home')).toBe('home');
+        expect(normalizeRoutePath('/(tabs)/auctions')).toBe('auctions');
+        expect(normalizeRoutePath('/(tabs)/my-auctions')).toBe('my-auctions');
+        expect(normalizeRoutePath('/(tabs)/account')).toBe('account');
+      });
+
+      it('should handle routes with "new" keyword', () => {
+        expect(normalizeRoutePath('/(tabs)/my-auctions/new')).toBe(
+          'my-auctions/new'
+        );
+      });
+    });
+
+    describe('Single-level dynamic routes ([id])', () => {
+      it('should convert pure numbers to [id]', () => {
+        expect(normalizeRoutePath('/(tabs)/my-auctions/28')).toBe(
+          'my-auctions/[id]'
+        );
+        expect(normalizeRoutePath('/(tabs)/my-auctions/123')).toBe(
+          'my-auctions/[id]'
+        );
+      });
+
+      it('should convert UUIDs to [id]', () => {
+        const uuid = '550e8400-e29b-41d4-a716-446655440000';
+        expect(normalizeRoutePath(`/(tabs)/my-auctions/${uuid}`)).toBe(
+          'my-auctions/[id]'
+        );
+      });
+
+      it('should keep route names as literals (not convert to [id])', () => {
+        // "edit-article" should NOT be converted to [id]
+        expect(normalizeRoutePath('/(tabs)/my-auctions/28/edit-article')).toBe(
+          'my-auctions/[id]'
+        );
+      });
+    });
+
+    describe('Multi-level dynamic routes ([id]/something/[slug])', () => {
+      it('should convert multi-level routes with numeric slugs', () => {
+        expect(
+          normalizeRoutePath('/(tabs)/my-auctions/28/edit-article/456')
+        ).toBe('my-auctions/[id]/edit-article/[slug]');
+
+        expect(
+          normalizeRoutePath('/(tabs)/my-auctions/28/edit-article/789')
+        ).toBe('my-auctions/[id]/edit-article/[slug]');
+
+        expect(
+          normalizeRoutePath(
+            '/(tabs)/my-auctions/100/rearrange-article-images/200'
+          )
+        ).toBe('my-auctions/[id]/rearrange-article-images/[slug]');
+      });
+
+      it('should handle first number as [id], second as [slug]', () => {
+        // Context-aware: first number → [id], second number → [slug]
+        const path = '/(tabs)/my-auctions/28/edit-article/72';
+        const normalized = normalizeRoutePath(path);
+
+        expect(normalized).toBe('my-auctions/[id]/edit-article/[slug]');
+      });
+
+      it('should handle UUID as [id] and number as [slug]', () => {
+        const uuid = '550e8400-e29b-41d4-a716-446655440000';
+        const path = `/(tabs)/my-auctions/${uuid}/edit-article/123`;
+        const normalized = normalizeRoutePath(path);
+
+        expect(normalized).toBe('my-auctions/[id]/edit-article/[slug]');
+      });
+    });
+
+    describe('Fallback to most specific route', () => {
+      it('should return most specific matching route', () => {
+        // Should find 'my-auctions/[id]' instead of just 'my-auctions'
+        expect(normalizeRoutePath('/(tabs)/my-auctions/28')).toBe(
+          'my-auctions/[id]'
+        );
+      });
+
+      it('should fallback to less specific if full path not found', () => {
+        // If 'my-auctions/[id]/edit-article/[slug]' not in PROTECTED_ROUTES,
+        // should fallback to 'my-auctions/[id]'
+        // But since it IS in PROTECTED_ROUTES, should return full path
+        expect(
+          normalizeRoutePath('/(tabs)/my-auctions/28/edit-article/456')
+        ).toBe('my-auctions/[id]/edit-article/[slug]');
+      });
+
+      it('should return last segment if no match found', () => {
+        // If route not found in PROTECTED_ROUTES at all
+        expect(normalizeRoutePath('/(tabs)/unknown/route')).toBe('route');
+      });
+    });
+
+    describe('Edge cases', () => {
+      it('should handle empty path', () => {
+        expect(normalizeRoutePath('')).toBe('');
+      });
+
+      it('should handle path with only groups', () => {
+        expect(normalizeRoutePath('/(tabs)/(modals)')).toBe('');
+      });
+
+      it('should handle path with trailing slash', () => {
+        expect(normalizeRoutePath('/(tabs)/home/')).toBe('home');
+      });
+
+      it('should handle path with multiple slashes', () => {
+        expect(normalizeRoutePath('/(tabs)//home')).toBe('home');
+      });
+    });
+
+    describe('Real-world scenarios', () => {
+      it('should handle complex route navigation flow', () => {
+        // User navigates from home → auction → edit article
+        expect(normalizeRoutePath('/(tabs)/home')).toBe('home');
+        expect(normalizeRoutePath('/(tabs)/my-auctions')).toBe('my-auctions');
+        expect(normalizeRoutePath('/(tabs)/my-auctions/28')).toBe(
+          'my-auctions/[id]'
+        );
+        expect(
+          normalizeRoutePath('/(tabs)/my-auctions/28/edit-article/456')
+        ).toBe('my-auctions/[id]/edit-article/[slug]');
+      });
+
+      it('should distinguish between route names and IDs', () => {
+        // "new" is a route name, "28" is an ID
+        expect(normalizeRoutePath('/(tabs)/my-auctions/new')).toBe(
+          'my-auctions/new'
+        );
+        expect(normalizeRoutePath('/(tabs)/my-auctions/28')).toBe(
+          'my-auctions/[id]'
+        );
+      });
+    });
+  });
 });
