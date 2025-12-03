@@ -97,7 +97,7 @@ export const MyAuctionArticlesSection = ({
   const mergedHeader = (
     <>
       {ListHeaderComponent}
-      <View>
+      <View className='mt-4'>
         <CustomText
           type='subtitle'
           className='text-center text-3xl text-cinnabar'
