@@ -375,7 +375,20 @@ export interface RolesTypes {
   'host-auctioneer': RoleType;
 }
 
-export const AuctionCategoriesConst: Record<AuctionCategories, string> = {
+export const FromArticleCategoryToAuctionCategory: Record<
+  ArticleCategories,
+  AuctionCategories
+> = {
+  BAG: 'BAGS',
+  JEWERLY: 'JEWERLY',
+  WATCH: 'WATCHES',
+  ART: 'ART',
+} as const;
+
+export const AuctionCategoriesConst: Record<
+  AuctionCategories,
+  AuctionCategories
+> = {
   BAGS: 'BAGS',
   JEWERLY: 'JEWERLY',
   WATCHES: 'WATCHES',

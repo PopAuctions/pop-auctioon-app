@@ -1,85 +1,80 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import { View } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
+import { ArticleImagesOrderList } from '@/components/articles/ArticleImagesOrderList';
+import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
+import { Loading } from '@/components/ui/Loading';
+import { REQUEST_STATUS } from '@/constants';
+import { CustomError } from '@/components/ui/CustomError';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useArticle } from '@/hooks/pages/my-auction/useArticle';
+import { useToast } from '@/hooks/useToast';
 
 export default function RearrangeArticleImagesScreen() {
   const { id, slug } = useLocalSearchParams<{ id: string; slug: string }>();
-  const [title, setTitle] = useState('Producto de Ejemplo');
-  const [description, setDescription] = useState('Descripción del producto...');
-  const [startingPrice, setStartingPrice] = useState('100.00');
+  const { locale } = useTranslation();
+  const [isSaving, setIsSaving] = useState(false);
+  const { callToast } = useToast(locale);
 
-  const handleSaveChanges = () => {
-    console.log('Saving changes for auction:', id);
-    Alert.alert('Éxito', 'Cambios guardados exitosamente', [
-      { text: 'OK', onPress: () => router.back() },
-    ]);
+  const auctionId = String(id);
+  const articleId = Number(slug);
+
+  const {
+    data: article,
+    status,
+    errorMessage,
+  } = useGetArticle({ articleId: articleId });
+  const { editArticleImagesOrder } = useArticle({ auctionId });
+
+  if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
+    return <Loading locale={locale} />;
+  }
+
+  if (status === REQUEST_STATUS.error || !article || !article.images) {
+    return (
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute={`/(tabs)/my-auctions/${auctionId}/rearrange-article-images/${articleId}`}
+      />
+    );
+  }
+
+  const handleSaveChanges = async (newOrder: string[]) => {
+    setIsSaving(true);
+
+    if (JSON.stringify(newOrder) === JSON.stringify(article.images)) {
+      setIsSaving(false);
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'No changes to save',
+          es: 'No hay cambios para guardar',
+        },
+      });
+      return;
+    }
+
+    const response = await editArticleImagesOrder({
+      articleId: articleId,
+      newOrder: newOrder,
+    });
+
+    if (response.status === 'error') {
+      setIsSaving(false);
+      return;
+    }
+
+    router.navigate(`/(tabs)/my-auctions/${auctionId}`);
+    setIsSaving(false);
   };
 
   return (
-    <ScrollView className='flex-1'>
-      <View className='p-4'>
-        <Text className='text-gray-800 mb-6 text-2xl font-bold'>
-          Reordenar imágenes del artículo #{slug}
-        </Text>
-
-        <View className='mb-4'>
-          <Text className='mb-2 text-lg font-semibold'>Título</Text>
-          <TextInput
-            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            value={title}
-            onChangeText={setTitle}
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='mb-2 text-lg font-semibold'>Descripción</Text>
-          <TextInput
-            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            value={description}
-            onChangeText={setDescription}
-            multiline
-            numberOfLines={4}
-            textAlignVertical='top'
-          />
-        </View>
-
-        <View className='mb-6'>
-          <Text className='mb-2 text-lg font-semibold'>Precio Inicial ($)</Text>
-          <TextInput
-            className='bg-gray-100 text-gray-800 rounded-lg px-4 py-3'
-            value={startingPrice}
-            onChangeText={setStartingPrice}
-            keyboardType='numeric'
-            editable={false}
-          />
-          <Text className='text-gray-500 mt-1 text-sm'>
-            El precio inicial no se puede modificar una vez iniciada la subasta
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          className='mb-3 items-center rounded-lg bg-blue-500 p-4'
-          onPress={handleSaveChanges}
-        >
-          <Text className='text-lg font-semibold text-white'>
-            Guardar Cambios
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          className='bg-gray-300 items-center rounded-lg p-4'
-          onPress={() => router.back()}
-        >
-          <Text className='text-gray-700 text-lg font-semibold'>Cancelar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <View className='flex-1'>
+      <ArticleImagesOrderList
+        images={article.images}
+        isSaving={isSaving}
+        onSaveOrder={handleSaveChanges}
+      />
+    </View>
   );
 }

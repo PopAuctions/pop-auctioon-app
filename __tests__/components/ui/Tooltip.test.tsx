@@ -4,14 +4,14 @@ import { Tooltip } from '@/components/ui/Tooltip';
 
 describe('Tooltip', () => {
   it('renders tooltip pressable', async () => {
-    const { findByTestId } = render(<Tooltip text='info' />);
+    const { findByTestId } = render(<Tooltip content='info' />);
     const pressable = await findByTestId('tooltip-pressable');
     expect(pressable).toBeTruthy();
   });
 
   it('opens modal when pressed and displays tooltip text', async () => {
     const { findByTestId, getByText } = render(
-      <Tooltip text='This is a test tooltip message' />
+      <Tooltip content='This is a test tooltip message' />
     );
 
     const pressable = await findByTestId('tooltip-pressable');
@@ -23,7 +23,7 @@ describe('Tooltip', () => {
   });
 
   it('renders with custom text content', () => {
-    const { toJSON } = render(<Tooltip text='Test tooltip message' />);
+    const { toJSON } = render(<Tooltip content='Test tooltip message' />);
     expect(toJSON()).toMatchSnapshot();
   });
 });

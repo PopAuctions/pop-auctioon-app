@@ -1,4 +1,3 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
@@ -115,16 +114,13 @@ export default function MyAuctionDetailScreen() {
   );
 
   return (
-    <SafeAreaView
-      className='flex-1 bg-white px-4'
-      edges={['bottom']}
-    >
+    <View className='flex-1 bg-white p-4'>
       <MyAuctionArticlesSection
         auctionId={id}
         auctionStatus={auction.status as AuctionStatus}
         articlesOrder={liveAuction?.articlesOrder ?? []}
         ListHeaderComponent={header}
       />
-    </SafeAreaView>
+    </View>
   );
 }

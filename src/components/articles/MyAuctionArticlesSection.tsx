@@ -97,7 +97,7 @@ export const MyAuctionArticlesSection = ({
   const mergedHeader = (
     <>
       {ListHeaderComponent}
-      <View>
+      <View className='mt-4'>
         <CustomText
           type='subtitle'
           className='text-center text-3xl text-cinnabar'
@@ -115,20 +115,25 @@ export const MyAuctionArticlesSection = ({
 
         {!isOrderingItems ? (
           <View className='flex flex-[0.45] flex-col gap-2'>
-            <CustomLink
-              mode='primary'
-              href={`(tabs)/my-auctions/${auctionId}/new-article`}
-            >
-              {auctionLang.newArticle}
-            </CustomLink>
-
-            <Button
-              mode='secondary'
-              textClassName='text-center'
-              onPress={toggleOrderingItems}
-            >
-              {auctionLang.rearrangeArticles}
-            </Button>
+            {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
+              auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE ||
+              auctionStatus === AuctionStatus.AVAILABLE) && (
+              <CustomLink
+                mode='primary'
+                href={`(tabs)/my-auctions/${auctionId}/new-article`}
+              >
+                {auctionLang.newArticle}
+              </CustomLink>
+            )}
+            {auctionStatus === AuctionStatus.AVAILABLE && (
+              <Button
+                mode='secondary'
+                textClassName='text-center'
+                onPress={toggleOrderingItems}
+              >
+                {auctionLang.rearrangeArticles}
+              </Button>
+            )}
           </View>
         ) : (
           <View className='flex flex-[0.45] flex-col gap-2'>
@@ -157,7 +162,7 @@ export const MyAuctionArticlesSection = ({
           type='body'
           className='mb-2 text-base text-slate-600'
         >
-          {auctionLang.articlesInstructions}
+          {auctionLang.dragInstructions}
         </CustomText>
       )}
     </>

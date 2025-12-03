@@ -20,7 +20,7 @@ export const Input: React.FC<InputProps> = ({
         w-full
         rounded-lg
         border
-        border-silver
+        border-black
         bg-white
         px-3
         py-3

@@ -1,20 +1,22 @@
-import { useState } from 'react';
-import { View, Text, Pressable, Modal } from 'react-native';
+import React, { useState } from 'react';
+import { View, Pressable, Modal } from 'react-native';
 import { FontAwesomeIcon } from './FontAwesomeIcon';
+import { CustomText } from './CustomText';
 
 type InfoTooltipProps = {
-  text: string;
+  content?: string | React.ReactNode;
 };
 
-export function Tooltip({ text }: InfoTooltipProps) {
+export function Tooltip({ content }: InfoTooltipProps) {
   const [open, setOpen] = useState(false);
+  const isString = typeof content === 'string';
 
   return (
     <>
       <Pressable
         onPress={() => setOpen(true)}
         hitSlop={10}
-        className='items-center justify-center rounded-full bg-black/5'
+        className='items-center justify-center rounded-full'
         testID='tooltip-pressable'
       >
         <FontAwesomeIcon
@@ -55,7 +57,16 @@ export function Tooltip({ text }: InfoTooltipProps) {
                 </Pressable>
               </View>
 
-              <Text className='text-sm leading-snug text-black'>{text}</Text>
+              {isString ? (
+                <CustomText
+                  type='body'
+                  className='text-sm leading-snug text-black'
+                >
+                  {content}
+                </CustomText>
+              ) : (
+                <View style={{ marginTop: 8 }}>{content}</View>
+              )}
             </View>
           </View>
         </View>
