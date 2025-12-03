@@ -24,6 +24,30 @@ jest.mock('@/components/navigation/routeConfig', () => ({
     'edit-profile': {},
     'my-auctions': { requiredRole: 'AUCTIONEER' as const },
   },
+  normalizeRoutePath: jest.fn((path: string) => {
+    // Simple mock: remove (tabs) and return path
+    const cleanPath = path.split('?')[0];
+    const parts = cleanPath
+      .split('/')
+      .filter((part) => part && !part.includes('(') && !part.includes(')'));
+    
+    // Convert numbers to [id]
+    const normalized = parts.map((part) => {
+      if (/^\d+$/.test(part)) return '[id]';
+      return part;
+    });
+    
+    // Return most specific match
+    for (let i = normalized.length; i > 0; i--) {
+      const candidate = normalized.slice(0, i).join('/');
+      const routes = ['my-auctions', 'account', 'edit-profile'];
+      if (routes.includes(candidate)) {
+        return candidate;
+      }
+    }
+    
+    return normalized[normalized.length - 1] || '';
+  }),
 }));
 
 const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;

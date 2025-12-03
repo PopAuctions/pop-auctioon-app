@@ -188,7 +188,7 @@ export const useSecureApi = () => {
           }
 
           if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
-            console.log(`✅ API Response: ${response.status}`, responseData);
+            //console.log(`✅ API Response: ${response.status}`, responseData);
           }
 
           return {

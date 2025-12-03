@@ -3,6 +3,7 @@ import {
   requiresAuth,
   getRequiredRole,
   hasAccess,
+  normalizeRoutePath,
 } from '@/components/navigation/routeConfig';
 import type { UserRoles } from '@/types/types';
 
