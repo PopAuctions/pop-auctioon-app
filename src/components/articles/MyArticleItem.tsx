@@ -33,6 +33,7 @@ type MyArticleItemProps = {
   commissionValue: number;
   showActions: boolean;
   auctionStatus: AuctionStatus;
+  refetch: () => void;
 };
 
 const MODAL_TITLE_REMOVE = {
@@ -71,6 +72,7 @@ export function MyArticleItem({
   commissionValue,
   showActions,
   auctionStatus,
+  refetch,
 }: MyArticleItemProps) {
   const { callToast } = useToast(locale);
   const { securePost } = useSecureApi();
@@ -102,6 +104,8 @@ export function MyArticleItem({
         callToast({ variant: 'error', description: response.error });
         return;
       }
+
+      refetch?.();
 
       callToast({ variant: 'success', description: response.data });
     } catch (e: any) {
