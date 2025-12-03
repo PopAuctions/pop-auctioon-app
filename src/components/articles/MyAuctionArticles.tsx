@@ -46,6 +46,7 @@ export const MyAuctionArticles = ({
     data: articles,
     status,
     errorMessage,
+    refetch,
   } = useFetchMyAuctionArticles({ auctionId, name });
 
   const formatter = euroFormatter(lang);
@@ -117,6 +118,7 @@ export const MyAuctionArticles = ({
             formatter={formatter}
             locale={lang}
             commissionValue={LOW_COMMISSION_AMOUNT}
+            refetch={refetch}
           />
           {index < listDataToRender.length - 1 && <Divider className='my-2' />}
         </View>

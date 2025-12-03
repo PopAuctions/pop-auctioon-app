@@ -164,12 +164,21 @@ export default function Auth() {
               </View>
 
               <View className='mb-4'>
-                <CustomLink
-                  mode='secondary'
-                  href='/(tabs)/auth/register'
-                >
-                  {t('loginPage.newAccount')}
-                </CustomLink>
+                {loading ? (
+                  <Button
+                    mode='secondary'
+                    disabled={loading}
+                  >
+                    {t('loginPage.newAccount')}
+                  </Button>
+                ) : (
+                  <CustomLink
+                    mode='secondary'
+                    href='/(tabs)/auth/register'
+                  >
+                    {t('loginPage.newAccount')}
+                  </CustomLink>
+                )}
               </View>
             </View>
 

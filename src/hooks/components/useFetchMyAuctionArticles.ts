@@ -15,7 +15,9 @@ export const useFetchMyAuctionArticles = ({
 }: {
   auctionId: string;
   name?: string;
-}): ActionResponse<Article[]> => {
+}): ActionResponse<Article[]> & {
+  refetch: () => Promise<void>;
+} => {
   const [data, setData] = useState<Article[]>([]);
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
@@ -64,6 +66,35 @@ export const useFetchMyAuctionArticles = ({
     }
   }, [protectedGet, auctionId, name]);
 
+  const refetchArticles = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+
+      if (name) params.append('name', name);
+
+      const response = await protectedGet<Article[]>({
+        endpoint: SECURE_ENDPOINTS.AUCTIONS.ARTICLES(
+          auctionId,
+          params.toString()
+        ),
+      });
+
+      if (response.error) {
+        return;
+      }
+
+      setData(response.data ?? []);
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error ? error.message : 'Unknown error occurred';
+
+      sentryErrorReport(
+        errorMsg,
+        'USE_FETCH_MY_AUCTION_ARTICLES - Unexpected error'
+      );
+    }
+  }, [protectedGet, auctionId, name]);
+
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles, name]);
@@ -73,5 +104,6 @@ export const useFetchMyAuctionArticles = ({
     status,
     errorMessage,
     setErrorMessage,
+    refetch: refetchArticles,
   };
 };

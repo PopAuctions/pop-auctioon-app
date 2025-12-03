@@ -26,7 +26,7 @@ export const useGetArticle = ({
   publishedArticle = false,
   getAuctionData = false,
 }: {
-  articleId: number;
+  articleId: number | string;
   validateAuctionStatus?: boolean;
   getStatus?: boolean;
   publishedArticle?: boolean;
