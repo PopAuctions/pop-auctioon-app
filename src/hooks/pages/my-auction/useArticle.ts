@@ -23,6 +23,11 @@ interface EditArticleArgs {
   articleAuctionId: string;
 }
 
+interface EditArticleImagesOrderArgs {
+  articleId: number;
+  newOrder: string[];
+}
+
 export const useArticle = ({
   auctionId,
 }: {
@@ -30,6 +35,9 @@ export const useArticle = ({
 }): {
   createArticle: (args: CreateArticleArgs) => Promise<FunctionResponse>;
   editArticle: (args: EditArticleArgs) => Promise<FunctionResponse>;
+  editArticleImagesOrder: (
+    args: EditArticleImagesOrderArgs
+  ) => Promise<FunctionResponse>;
 } => {
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
@@ -101,9 +109,6 @@ export const useArticle = ({
       const response = await securePost<LangMap>({
         endpoint: SECURE_ENDPOINTS.ARTICLES.EDIT_ARTICLE(auctionId, articleId),
         data: payload,
-        options: {
-          timeout: 30000,
-        },
       });
 
       if (response.error) {
@@ -129,8 +134,53 @@ export const useArticle = ({
     }
   };
 
+  const editArticleImagesOrder = async ({
+    articleId,
+    newOrder,
+  }: EditArticleImagesOrderArgs): Promise<FunctionResponse> => {
+    try {
+      const payload = {
+        articleId,
+        newOrder,
+      };
+
+      const response = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.ARTICLES.EDIT_ARTICLE_IMAGES_ORDER(
+          auctionId,
+          articleId
+        ),
+        data: payload,
+      });
+
+      if (response.error) {
+        callToast({ variant: 'error', description: response.error });
+        return { status: 'error' };
+      }
+
+      callToast({ variant: 'success', description: response.data });
+      return { status: 'success' };
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      sentryErrorReport(
+        msg,
+        'USE_ARTICLE_MUTATION_EDIT_IMAGES_ORDER - Unexpected error'
+      );
+
+      console.error('ERROR_EDIT_IMAGES_ORDER_ARTICLE_CATCH', msg);
+
+      const message: LangMap = {
+        en: 'Error updating article',
+        es: 'Error al actualizar el artículo',
+      };
+
+      callToast({ variant: 'error', description: message });
+      return { status: 'error' };
+    }
+  };
+
   return {
     createArticle,
     editArticle,
+    editArticleImagesOrder,
   };
 };

@@ -72,6 +72,11 @@ export const SECURE_ENDPOINTS = {
       auctionId: string | number,
       articleId: string | number
     ): ApiEndpoint => `/auctions/${auctionId}/articles/${articleId}/edit`,
+    EDIT_ARTICLE_IMAGES_ORDER: (
+      auctionId: string | number,
+      articleId: string | number
+    ): ApiEndpoint =>
+      `/auctions/${auctionId}/articles/${articleId}/update-images-order`,
   },
   MY_AUCTIONS: {
     LIST: '/my-auctions',

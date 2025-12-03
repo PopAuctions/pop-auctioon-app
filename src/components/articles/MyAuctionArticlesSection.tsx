@@ -162,7 +162,7 @@ export const MyAuctionArticlesSection = ({
           type='body'
           className='mb-2 text-base text-slate-600'
         >
-          {auctionLang.articlesInstructions}
+          {auctionLang.dragInstructions}
         </CustomText>
       )}
     </>

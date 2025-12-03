@@ -171,7 +171,7 @@
       "articles": "Articles",
       "editArticle": "Edit article",
       "rearrangeArticleImages": "Rearrange article images",
-      "articlesInstructions": "Longpress and drag articles to rearrange their order in the auction. Then click 'Save order' to confirm",
+      "dragInstructions": "Longpress and drag to rearrange their order. Then click 'Save order' to confirm",
       "setAsFeatured": "Mark as featured",
       "unsetAsFeatured": "Unmark as featured",
       "featuredArticles": "Featured articles",

@@ -182,7 +182,7 @@
       "articles": "Artículos",
       "editArticle": "Editar artículo",
       "rearrangeArticleImages": "Reordenar imágenes del artículo",
-      "articlesInstructions": "Arrastra y suelta los artículos para reordenarlos en la subasta. Luego haz clic en 'Guardar orden' para confirmar",
+      "dragInstructions": "Mantén presionado y arrastra para reordenar su orden. Luego haz clic en 'Guardar orden' para confirmar",
       "setAsFeatured": "Marcar como destacado",
       "unsetAsFeatured": "Desmarcar como destacado",
       "featuredArticles": "Artículos destacados",
