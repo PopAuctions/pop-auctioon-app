@@ -21,7 +21,8 @@ export default function MyAuctionsLayout() {
         name='new'
         options={{
           title: t('screens.myAuctions.newAuction'),
-          presentation: 'modal',
+          presentation: 'card',
+          animation: 'slide_from_bottom',
           headerShown: true,
         }}
       />
@@ -45,7 +46,8 @@ export default function MyAuctionsLayout() {
         name='[id]/edit'
         options={{
           title: t('screens.myAuction.edit'),
-          presentation: 'modal',
+          presentation: 'card',
+          animation: 'slide_from_bottom',
           headerShown: true,
         }}
       />
@@ -53,7 +55,8 @@ export default function MyAuctionsLayout() {
         name='[id]/new-article'
         options={{
           title: t('screens.myAuction.newArticle'),
-          presentation: 'modal',
+          presentation: 'card',
+          animation: 'slide_from_bottom',
           headerShown: true,
         }}
       />
@@ -61,7 +64,8 @@ export default function MyAuctionsLayout() {
         name='[id]/edit-article/[slug]'
         options={{
           title: t('screens.myAuction.editArticle'),
-          presentation: 'modal',
+          presentation: 'card',
+          animation: 'slide_from_bottom',
           headerShown: true,
         }}
       />
@@ -69,7 +73,8 @@ export default function MyAuctionsLayout() {
         name='[id]/rearrange-article-images/[slug]'
         options={{
           title: t('screens.myAuction.rearrangeArticleImages'),
-          presentation: 'modal',
+          presentation: 'card',
+          animation: 'slide_from_bottom',
           headerShown: true,
         }}
       />
