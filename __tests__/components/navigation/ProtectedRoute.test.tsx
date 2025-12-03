@@ -295,12 +295,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue([
-        '(tabs)',
-        'account',
-        'info',
-        'about-us',
-      ]);
+      mockUseSegments.mockReturnValue(['(tabs)', 'account', 'info', '[page]']);
 
       render(
         <ProtectedRoute>
@@ -347,7 +342,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should allow access to store', () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'store']);
+      mockUseSegments.mockReturnValue(['(tabs)', 'online-store']);
 
       render(
         <ProtectedRoute>
