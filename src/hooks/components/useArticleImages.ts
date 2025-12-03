@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/react-native';
@@ -25,15 +25,15 @@ export function useArticleImages({
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleImagesSelected = (uris: string[]) => {
+  const handleImagesSelected = useCallback((uris: string[]) => {
     setImages(uris);
-  };
+  }, []);
 
-  const handleRemoveImageAt = (index: number) => {
+  const handleRemoveImageAt = useCallback((index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
-  };
+  }, []);
 
-  const validateMinImages = () => {
+  const validateMinImages = useCallback(() => {
     if (images.length < minImages) {
       callToast({
         variant: 'error',
@@ -42,14 +42,14 @@ export function useArticleImages({
       return false;
     }
     return true;
-  };
+  }, [images.length, minImages, callToast]);
 
   /**
    * Upload all local images (file://) to Supabase and return
    * an array of public URLs.
    * - If an image already looks like a Supabase URL, we keep it.
    */
-  const uploadAllAndGetPublicUrls = async (): Promise<string[]> => {
+  const uploadAllAndGetPublicUrls = useCallback(async (): Promise<string[]> => {
     try {
       setIsUploading(true);
 
@@ -112,7 +112,7 @@ export function useArticleImages({
       });
       return [];
     }
-  };
+  }, [images, supabase, bucket, folder, callToast]);
 
   return {
     images,
