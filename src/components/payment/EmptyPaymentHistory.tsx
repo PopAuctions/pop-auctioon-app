@@ -29,6 +29,12 @@ export function EmptyPaymentHistory({
         }
       >
         <CustomText
+          type='h1'
+          className='mb-4 text-center font-bold'
+        >
+          {t('screens.paymentsHistory.title')}
+        </CustomText>
+        <CustomText
           type='h2'
           className='text-center text-cinnabar'
         >
