@@ -111,7 +111,6 @@ export default function LiveAuctionScreen() {
               auctionId={auctionId}
               username={username}
               enabled={true}
-              transparent={true}
             />
           </View>
         )}

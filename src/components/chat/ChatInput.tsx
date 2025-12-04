@@ -16,7 +16,6 @@ interface ChatInputProps {
   disabled?: boolean;
   isSending?: boolean;
   placeholder?: string;
-  transparent?: boolean;
 }
 
 export const ChatInput = ({
@@ -24,7 +23,6 @@ export const ChatInput = ({
   disabled = false,
   isSending = false,
   placeholder,
-  transparent = false,
 }: ChatInputProps) => {
   const [message, setMessage] = useState('');
   const { t } = useTranslation();
@@ -46,14 +44,7 @@ export const ChatInput = ({
   const isSendDisabled = disabled || isSending || !message.trim();
 
   return (
-    <View
-      className={cn(
-        'flex-row items-center gap-2 px-3 py-2',
-        transparent
-          ? 'rounded-full bg-black/40'
-          : 'border-gray-200 border-t bg-white'
-      )}
-    >
+    <View className='flex-row items-center gap-2 rounded-full bg-black/40 px-3 py-2'>
       <Input
         value={message}
         onChangeText={setMessage}
@@ -67,18 +58,18 @@ export const ChatInput = ({
         className={cn(
           'h-10 flex-1 text-[15px]',
           (disabled || isSending) && 'opacity-50',
-          transparent && 'placeholder:text-gray-300 bg-transparent text-white'
+          'placeholder:text-gray-300 bg-transparent text-white'
         )}
-        placeholderTextColor={transparent ? '#d1d5db' : undefined}
+        placeholderTextColor='#d1d5db'
       />
 
       <Button
-        mode={transparent ? 'secondary' : 'primary'}
+        mode='secondary'
         size='small'
         onPress={handleSend}
         disabled={isSendDisabled}
         isLoading={isSending}
-        className={cn('min-w-[70px]', transparent && 'bg-white/90')}
+        className='min-w-[70px] bg-white/90'
       >
         {t('chat.send')}
       </Button>

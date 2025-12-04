@@ -13,7 +13,6 @@ import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { ChatMessage as ChatMessageType } from 'amazon-ivs-chat-messaging';
-import { cn } from '@/utils/cn';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
 
@@ -21,14 +20,12 @@ interface ChatProps {
   auctionId: string;
   enabled?: boolean;
   username?: string;
-  transparent?: boolean;
 }
 
 export const Chat = ({
   auctionId,
   enabled = true,
   username: propUsername,
-  transparent = false,
 }: ChatProps) => {
   const { auth } = useAuth();
   const { t } = useTranslation();
@@ -59,12 +56,9 @@ export const Chat = ({
     }
   }, [messages]);
 
-  // Renderizar cada mensaje
+  // Renderizar cada mensaje (siempre transparente)
   const renderMessage = ({ item }: { item: ChatMessageType }) => (
-    <ChatMessage
-      message={item}
-      transparent={transparent}
-    />
+    <ChatMessage message={item} />
   );
 
   // Estado de carga inicial (idle o loading del hook)
@@ -127,30 +121,7 @@ export const Chat = ({
   }
 
   return (
-    <View
-      className={cn(
-        'flex-1 overflow-hidden',
-        transparent ? 'rounded-2xl' : 'rounded-xl bg-white'
-      )}
-    >
-      {/* Header - solo si no es transparente */}
-      {!transparent && (
-        <View className='flex-row items-center justify-between rounded-t-xl bg-cinnabar px-4 py-3'>
-          <CustomText
-            type='h4'
-            className='text-white'
-          >
-            {t('chat.title')}
-          </CustomText>
-          <View
-            className={cn(
-              'h-2.5 w-2.5 rounded-full',
-              isConnected ? 'bg-green-500' : 'bg-gray-400'
-            )}
-          />
-        </View>
-      )}
-
+    <View className='flex-1 overflow-hidden rounded-2xl'>
       {/* Lista de mensajes */}
       <FlatList
         ref={flatListRef}
@@ -159,19 +130,7 @@ export const Chat = ({
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingVertical: 8, flexGrow: 1 }}
         showsVerticalScrollIndicator={true}
-        className={transparent ? 'bg-transparent' : ''}
-        ListEmptyComponent={
-          !transparent ? (
-            <View className='flex-1 items-center justify-center py-8'>
-              <CustomText
-                type='body'
-                className='text-gray-400 text-center'
-              >
-                {t('chat.noMessages')}
-              </CustomText>
-            </View>
-          ) : null
-        }
+        className='bg-transparent'
       />
 
       {/* Error de envío */}
@@ -188,32 +147,19 @@ export const Chat = ({
 
       {/* Input - solo para usuarios autenticados */}
       {!isAnonymous ? (
-        <View className={transparent ? '' : ''}>
-          <ChatInput
-            onSend={sendMessage}
-            disabled={!isConnected}
-            isSending={isSending}
-            placeholder={
-              isConnected ? t('chat.placeholder') : t('chat.disconnected')
-            }
-            transparent={transparent}
-          />
-        </View>
+        <ChatInput
+          onSend={sendMessage}
+          disabled={!isConnected}
+          isSending={isSending}
+          placeholder={
+            isConnected ? t('chat.placeholder') : t('chat.disconnected')
+          }
+        />
       ) : (
-        <View
-          className={cn(
-            'px-3 py-2',
-            transparent
-              ? 'rounded-full bg-black/40'
-              : 'border-gray-200 bg-gray-50 border-t'
-          )}
-        >
+        <View className='rounded-full bg-black/40 px-3 py-2'>
           <CustomText
             type='bodysmall'
-            className={cn(
-              'text-center',
-              transparent ? 'text-white' : 'text-gray-600'
-            )}
+            className='text-center text-white'
           >
             {t('chat.loginToChat')}
           </CustomText>
