@@ -15,6 +15,7 @@ import { CustomText } from '@/components/ui/CustomText';
 import { ChatMessage as ChatMessageType } from 'amazon-ivs-chat-messaging';
 import { cn } from '@/utils/cn';
 import { CustomError } from '@/components/ui/CustomError';
+import { REQUEST_STATUS } from '@/constants';
 
 interface ChatProps {
   auctionId: string;
@@ -61,8 +62,26 @@ export const Chat = ({
     <ChatMessage message={item} />
   );
 
+  // Estado de carga inicial (idle o loading del hook)
+  if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
+    return (
+      <View className='flex-1 items-center justify-center rounded-xl bg-white p-6'>
+        <ActivityIndicator
+          size='large'
+          color='#DC2626'
+        />
+        <CustomText
+          type='body'
+          className='text-gray-600 mt-3 text-center'
+        >
+          {t('chat.connecting')}
+        </CustomText>
+      </View>
+    );
+  }
+
   // Estado de error al obtener token o inicializar
-  if (status === 'error' && errorMessage) {
+  if (status === REQUEST_STATUS.error && errorMessage) {
     return (
       <CustomError
         customMessage={errorMessage}

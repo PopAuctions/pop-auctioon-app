@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -14,6 +14,8 @@ export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: currentUser, status } = useGetCurrentUser();
   const { locale } = useTranslation();
+  const [streamLoaded, setStreamLoaded] = useState(false);
+  const [streamError, setStreamError] = useState(false);
 
   // Validar que existe el auction ID
   if (!id) {
@@ -45,6 +47,19 @@ export default function LiveAuctionScreen() {
   // Construir la URL del stream
   const streamUrl = `http://10.0.2.2:3000/es/stream/${auctionId}?username=${username}`;
 
+  // Si el stream falló, mostrar error
+  if (streamError) {
+    return (
+      <CustomError
+        refreshRoute='/(tabs)/auctions'
+        customMessage={{
+          es: 'Error al cargar el stream de la subasta',
+          en: 'Error loading auction stream',
+        }}
+      />
+    );
+  }
+
   return (
     <View className='flex-1'>
       {/* WebView ocupando todo el espacio disponible */}
@@ -60,9 +75,15 @@ export default function LiveAuctionScreen() {
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        onLoad={() => {
+          console.log('[STREAM] WebView cargado exitosamente');
+          setStreamLoaded(true);
+          setStreamError(false);
+        }}
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
-          console.warn('WebView error: ', nativeEvent);
+          console.error('[STREAM] WebView error:', nativeEvent);
+          setStreamError(true);
         }}
       />
 
@@ -83,16 +104,18 @@ export default function LiveAuctionScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Chat flotante - Lado derecho (siempre visible) */}
-        <View className='pointer-events-auto absolute bottom-4 right-4 h-[70%] w-80'>
-          <View className='h-full overflow-hidden rounded-2xl bg-white/95 shadow-2xl'>
-            <Chat
-              auctionId={auctionId}
-              username={username}
-              enabled={true}
-            />
+        {/* Chat flotante - Lado derecho (solo visible cuando stream carga) */}
+        {streamLoaded && (
+          <View className='pointer-events-auto absolute bottom-4 right-4 h-[70%] w-80'>
+            <View className='h-full overflow-hidden rounded-2xl bg-white/95 shadow-2xl'>
+              <Chat
+                auctionId={auctionId}
+                username={username}
+                enabled={true}
+              />
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </View>
   );
