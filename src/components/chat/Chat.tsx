@@ -21,12 +21,14 @@ interface ChatProps {
   auctionId: string;
   enabled?: boolean;
   username?: string;
+  transparent?: boolean;
 }
 
 export const Chat = ({
   auctionId,
   enabled = true,
   username: propUsername,
+  transparent = false,
 }: ChatProps) => {
   const { auth } = useAuth();
   const { t } = useTranslation();
@@ -122,22 +124,29 @@ export const Chat = ({
   }
 
   return (
-    <View className='flex-1 overflow-hidden rounded-xl bg-white'>
-      {/* Header con estado de conexión */}
-      <View className='flex-row items-center justify-between rounded-t-xl bg-cinnabar px-4 py-3'>
-        <CustomText
-          type='h4'
-          className='text-white'
-        >
-          {t('chat.title')}
-        </CustomText>
-        <View
-          className={cn(
-            'h-2.5 w-2.5 rounded-full',
-            isConnected ? 'bg-green-500' : 'bg-gray-400'
-          )}
-        />
-      </View>
+    <View
+      className={cn(
+        'flex-1 overflow-hidden',
+        transparent ? 'rounded-2xl' : 'rounded-xl bg-white'
+      )}
+    >
+      {/* Header - solo si no es transparente */}
+      {!transparent && (
+        <View className='flex-row items-center justify-between rounded-t-xl bg-cinnabar px-4 py-3'>
+          <CustomText
+            type='h4'
+            className='text-white'
+          >
+            {t('chat.title')}
+          </CustomText>
+          <View
+            className={cn(
+              'h-2.5 w-2.5 rounded-full',
+              isConnected ? 'bg-green-500' : 'bg-gray-400'
+            )}
+          />
+        </View>
+      )}
 
       {/* Lista de mensajes */}
       <FlatList
@@ -146,16 +155,19 @@ export const Chat = ({
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingVertical: 8, flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
+        className={transparent ? 'bg-transparent' : ''}
         ListEmptyComponent={
-          <View className='flex-1 items-center justify-center py-8'>
-            <CustomText
-              type='body'
-              className='text-gray-400 text-center'
-            >
-              {t('chat.noMessages')}
-            </CustomText>
-          </View>
+          !transparent ? (
+            <View className='flex-1 items-center justify-center py-8'>
+              <CustomText
+                type='body'
+                className='text-gray-400 text-center'
+              >
+                {t('chat.noMessages')}
+              </CustomText>
+            </View>
+          ) : null
         }
       />
 
@@ -173,23 +185,28 @@ export const Chat = ({
 
       {/* Input - solo para usuarios autenticados */}
       {!isAnonymous ? (
-        <ChatInput
-          onSend={sendMessage}
-          disabled={!isConnected}
-          isSending={isSending}
-          placeholder={
-            isConnected ? t('chat.placeholder') : t('chat.disconnected')
-          }
-        />
-      ) : (
-        <View className='border-gray-200 bg-gray-50 border-t px-4 py-3'>
-          <CustomText
-            type='bodysmall'
-            className='text-gray-600 text-center'
-          >
-            {t('chat.loginToChat')}
-          </CustomText>
+        <View className={transparent ? '' : ''}>
+          <ChatInput
+            onSend={sendMessage}
+            disabled={!isConnected}
+            isSending={isSending}
+            placeholder={
+              isConnected ? t('chat.placeholder') : t('chat.disconnected')
+            }
+            transparent={transparent}
+          />
         </View>
+      ) : (
+        !transparent && (
+          <View className='border-gray-200 bg-gray-50 border-t px-4 py-3'>
+            <CustomText
+              type='bodysmall'
+              className='text-gray-600 text-center'
+            >
+              {t('chat.loginToChat')}
+            </CustomText>
+          </View>
+        )
       )}
     </View>
   );
