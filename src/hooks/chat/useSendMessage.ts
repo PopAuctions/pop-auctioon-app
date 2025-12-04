@@ -10,14 +10,9 @@ import * as Sentry from '@sentry/react-native';
 interface UseSendMessageProps {
   room: ChatRoom | null;
   isConnected: boolean;
-  profilePicture?: string;
 }
 
-export const useSendMessage = ({
-  room,
-  isConnected,
-  profilePicture,
-}: UseSendMessageProps) => {
+export const useSendMessage = ({ room, isConnected }: UseSendMessageProps) => {
   const [isSending, setIsSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
 
@@ -39,10 +34,7 @@ export const useSendMessage = ({
       try {
         console.log('[CHAT] Enviando mensaje...');
 
-        // Crear request con atributos opcionales
-        const attributes = profilePicture ? { profilePicture } : undefined;
-        const request = new SendMessageRequest(message.trim(), attributes);
-
+        const request = new SendMessageRequest(message.trim());
         await room.sendMessage(request);
 
         console.log('[CHAT] Mensaje enviado exitosamente');
@@ -60,7 +52,7 @@ export const useSendMessage = ({
         setIsSending(false);
       }
     },
-    [room, isConnected, profilePicture]
+    [room, isConnected]
   );
 
   return {

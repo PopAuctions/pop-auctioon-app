@@ -1,12 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
+import { Chat } from '@/components/chat/Chat';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -44,7 +46,7 @@ export default function LiveAuctionScreen() {
   const streamUrl = `http://10.0.2.2:3000/es/stream/${auctionId}?username=${username}`;
 
   return (
-    <View className='flex-1 '>
+    <View className='flex-1'>
       {/* WebView ocupando todo el espacio disponible */}
       <WebView
         source={{ uri: streamUrl }}
@@ -63,6 +65,35 @@ export default function LiveAuctionScreen() {
           console.warn('WebView error: ', nativeEvent);
         }}
       />
+
+      {/* Overlay con controles flotantes */}
+      <View className='pointer-events-box-none absolute inset-0'>
+        {/* Botón de Back - Arriba izquierda */}
+        <View className='pointer-events-auto absolute left-4 top-12'>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className='h-10 w-10 items-center justify-center rounded-full bg-black/50'
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name='arrow-back'
+              size={24}
+              color='white'
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Chat flotante - Lado derecho (siempre visible) */}
+        <View className='pointer-events-auto absolute bottom-4 right-4 h-[70%] w-80'>
+          <View className='h-full overflow-hidden rounded-2xl bg-white/95 shadow-2xl'>
+            <Chat
+              auctionId={auctionId}
+              username={username}
+              enabled={true}
+            />
+          </View>
+        </View>
+      </View>
     </View>
   );
 }

@@ -14,51 +14,39 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { ChatMessage as ChatMessageType } from 'amazon-ivs-chat-messaging';
 import { cn } from '@/utils/cn';
-import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
-import { REQUEST_STATUS } from '@/constants';
-import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 
 interface ChatProps {
   auctionId: string;
   enabled?: boolean;
+  username?: string;
 }
 
-export const Chat = ({ auctionId, enabled = true }: ChatProps) => {
+export const Chat = ({
+  auctionId,
+  enabled = true,
+  username: propUsername,
+}: ChatProps) => {
   const { auth } = useAuth();
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const flatListRef = useRef<FlatList>(null);
-  const {
-    data: currentUser,
-    status: userStatus,
-    errorMessage: userError,
-  } = useGetCurrentUser();
 
-  console.log('userName from useGetCurrentUser:', currentUser?.username);
+  // Si no se pasa username, será usuario anónimo
+  const username = propUsername || '';
+  const isAnonymous = auth.state !== 'authenticated' || !username;
 
   // Hook de conexión al chat
-  const {
-    room,
-    messages,
-    connectionState,
-    status: chatStatus,
-    errorMessage: chatError,
-    isConnected,
-  } = useChatRoom({
-    auctionId,
-    username: currentUser?.username,
-    enabled,
-  });
-
-  // Obtener datos del usuario
-  const profilePicture = currentUser?.username || '';
-  const isAnonymous = auth.state !== 'authenticated';
+  const { room, messages, connectionState, isConnected, status, errorMessage } =
+    useChatRoom({
+      auctionId,
+      username,
+      enabled,
+    });
 
   // Hook para enviar mensajes
   const { sendMessage, isSending, sendError } = useSendMessage({
     room,
     isConnected,
-    profilePicture,
   });
 
   // Auto-scroll al recibir nuevos mensajes
@@ -73,31 +61,12 @@ export const Chat = ({ auctionId, enabled = true }: ChatProps) => {
     <ChatMessage message={item} />
   );
 
-  // Loading state - esperar a que ambos hooks terminen de cargar
-  if (
-    userStatus === REQUEST_STATUS.idle ||
-    userStatus === REQUEST_STATUS.loading ||
-    chatStatus === REQUEST_STATUS.idle ||
-    chatStatus === REQUEST_STATUS.loading
-  ) {
-    return <Loading locale={locale} />;
-  }
-
-  // Error state - mostrar error si alguno de los dos falló
-  if (userStatus === REQUEST_STATUS.error) {
+  // Estado de error al obtener token o inicializar
+  if (status === 'error' && errorMessage) {
     return (
       <CustomError
-        customMessage={userError}
-        refreshRoute={`/(tabs)/home/test-chat`}
-      />
-    );
-  }
-
-  if (chatStatus === REQUEST_STATUS.error) {
-    return (
-      <CustomError
-        customMessage={chatError}
-        refreshRoute={`/(tabs)/home/test-chat`}
+        customMessage={errorMessage}
+        refreshRoute='/(tabs)/auctions'
       />
     );
   }
@@ -117,6 +86,19 @@ export const Chat = ({ auctionId, enabled = true }: ChatProps) => {
           {t('chat.connecting')}
         </CustomText>
       </View>
+    );
+  }
+
+  // Error de conexión (disconnected sin room)
+  if (connectionState === 'disconnected' && !room) {
+    return (
+      <CustomError
+        customMessage={{
+          es: t('chat.connectionError'),
+          en: t('chat.connectionError'),
+        }}
+        refreshRoute='/(tabs)/auctions'
+      />
     );
   }
 
