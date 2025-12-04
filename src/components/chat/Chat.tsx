@@ -58,7 +58,10 @@ export const Chat = ({
 
   // Renderizar cada mensaje (siempre transparente)
   const renderMessage = ({ item }: { item: ChatMessageType }) => (
-    <ChatMessage message={item} />
+    <ChatMessage
+      message={item}
+      currentUsername={username}
+    />
   );
 
   // Estado de carga inicial (idle o loading del hook)

@@ -44,7 +44,7 @@ export const ChatInput = ({
   const isSendDisabled = disabled || isSending || !message.trim();
 
   return (
-    <View className='flex-row items-center gap-2 rounded-full bg-black/40 px-3 py-2'>
+    <View className='flex-row items-center gap-2 rounded-full bg-black/40 px-3 py-2.5'>
       <Input
         value={message}
         onChangeText={setMessage}
@@ -56,7 +56,7 @@ export const ChatInput = ({
         returnKeyType='send'
         onSubmitEditing={handleSend}
         className={cn(
-          'h-10 flex-1 text-[15px]',
+          'h-10 flex-1 pt-2 text-[15px]',
           (disabled || isSending) && 'opacity-50',
           'placeholder:text-gray-300 bg-transparent text-white'
         )}

@@ -8,21 +8,29 @@ import { View } from 'react-native';
 import { ChatMessage as ChatMessageType } from 'amazon-ivs-chat-messaging';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomText } from '@/components/ui/CustomText';
+import { cn } from '@/utils/cn';
 
 interface ChatMessageProps {
   message: ChatMessageType;
+  currentUsername?: string;
 }
 
-export const ChatMessage = ({ message }: ChatMessageProps) => {
+export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
   // Obtener avatar del atributo o usar default
   const avatar = message.attributes?.profilePicture || '';
+  const isMine = currentUsername && message.sender.userId === currentUsername;
 
   return (
     <View className='mx-2 my-0.5 flex-row items-start'>
       {/* Contenido del mensaje - siempre transparente */}
-      <View className='max-w-[85%] rounded-lg bg-black/60 px-2 py-1'>
+      <View
+        className={cn(
+          'max-w-[85%] rounded-lg px-2.5 py-1.5',
+          isMine ? 'bg-orange-500/60' : 'bg-black/60'
+        )}
+      >
         {/* Username con avatar inline */}
-        <View className='mb-0.5 flex-row items-center gap-1'>
+        <View className='mb-0.5 flex-row items-center gap-1.5'>
           {avatar ? (
             <CustomImage
               src={avatar}
@@ -42,7 +50,10 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
           )}
           <CustomText
             type='bodysmall'
-            className='font-bold text-cinnabar drop-shadow-md'
+            className={cn(
+              'font-bold drop-shadow-md',
+              isMine ? 'text-yellow-300' : 'text-cinnabar'
+            )}
           >
             {message.sender.userId}
           </CustomText>
