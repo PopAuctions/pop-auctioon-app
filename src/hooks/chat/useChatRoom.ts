@@ -57,6 +57,11 @@ export const useChatRoom = ({
           data: { auctionId },
         });
 
+        console.log(
+          '[CHAT] Response completa:',
+          JSON.stringify(response, null, 2)
+        );
+
         if (response.error) {
           console.error('[CHAT] Error obteniendo token:', response.error);
           setStatus('error');
@@ -67,19 +72,59 @@ export const useChatRoom = ({
           return;
         }
 
-        if (!response.data?.chatToken) {
-          console.error('[CHAT] No se recibió token');
+        // Verificar si la respuesta tiene la estructura esperada
+        console.log('[CHAT] Response.data:', response.data);
+        console.log('[CHAT] Type of response.data:', typeof response.data);
+
+        if (!response.data) {
+          console.error('[CHAT] No se recibió data en la respuesta');
           const message: LangMap = {
-            en: 'Could not get chat token',
-            es: 'No se pudo obtener el token del chat',
+            en: 'No data received from server',
+            es: 'No se recibieron datos del servidor',
           };
           setStatus('error');
           setErrorMessage(message);
           return;
         }
 
-        const { chatToken } = response.data;
-        console.log('[CHAT] Token obtenido exitosamente');
+        // Extraer el token - puede venir en diferentes formatos
+        let chatToken: string;
+
+        if (typeof response.data === 'string') {
+          // Si data es un string, es el token directamente
+          chatToken = response.data;
+        } else if (
+          typeof response.data.chatToken === 'object' &&
+          response.data.chatToken !== null &&
+          'token' in response.data.chatToken
+        ) {
+          // Si chatToken es un objeto AWS con la propiedad token
+          chatToken = (response.data.chatToken as any).token;
+          console.log('[CHAT] Token extraído del objeto AWS');
+        } else if (typeof response.data.chatToken === 'string') {
+          // Si data es un objeto con chatToken como string
+          chatToken = response.data.chatToken;
+        } else if ((response.data as any).token) {
+          // Si data es un objeto con token
+          chatToken = (response.data as any).token;
+        } else {
+          console.error(
+            '[CHAT] No se encontró token en la respuesta:',
+            response.data
+          );
+          const message: LangMap = {
+            en: 'Invalid token format received',
+            es: 'Formato de token inválido recibido',
+          };
+          setStatus('error');
+          setErrorMessage(message);
+          return;
+        }
+
+        console.log(
+          '[CHAT] Token obtenido exitosamente, length:',
+          chatToken.length
+        );
 
         // Crear instancia de ChatRoom
         const chatRoom = new ChatRoom({

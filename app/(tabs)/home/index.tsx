@@ -48,6 +48,22 @@ export default function HomeScreen() {
             </CustomLink>
           </View>
 
+          {/* Botón para Testing Chat */}
+          <View className='mb-6'>
+            <CustomLink
+              href='/home/test-chat'
+              mode='empty'
+              className='rounded-lg bg-cinnabar p-4'
+            >
+              <Text className='text-center text-lg font-semibold text-white'>
+                💬 Test Chat en Vivo
+              </Text>
+              <Text className='mt-1 text-center text-red-100'>
+                Probar AWS IVS Chat
+              </Text>
+            </CustomLink>
+          </View>
+
           {/* Información de la App */}
           <View className='bg-gray-100 rounded-lg p-6'>
             <Text className='text-gray-800 mb-3 text-lg font-semibold'>
