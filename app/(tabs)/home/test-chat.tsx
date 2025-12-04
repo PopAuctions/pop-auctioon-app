@@ -28,7 +28,6 @@ export default function TestChatScreen() {
           <Chat
             auctionId='14'
             enabled={true}
-            maxLength={500}
           />
         </View>
       </View>

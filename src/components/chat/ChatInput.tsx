@@ -9,12 +9,12 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { cn } from '@/utils/cn';
+import { CHAT_MAX_LENGTH } from '@/constants/app';
 
 interface ChatInputProps {
   onSend: (message: string) => Promise<boolean>;
   disabled?: boolean;
   isSending?: boolean;
-  maxLength?: number;
   placeholder?: string;
 }
 
@@ -22,7 +22,6 @@ export const ChatInput = ({
   onSend,
   disabled = false,
   isSending = false,
-  maxLength = 500,
   placeholder,
 }: ChatInputProps) => {
   const [message, setMessage] = useState('');
@@ -50,7 +49,7 @@ export const ChatInput = ({
         value={message}
         onChangeText={setMessage}
         placeholder={defaultPlaceholder}
-        maxLength={maxLength}
+        maxLength={CHAT_MAX_LENGTH}
         editable={!disabled && !isSending}
         multiline
         numberOfLines={1}

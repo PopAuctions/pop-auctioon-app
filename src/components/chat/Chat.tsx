@@ -14,33 +14,44 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { ChatMessage as ChatMessageType } from 'amazon-ivs-chat-messaging';
 import { cn } from '@/utils/cn';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { REQUEST_STATUS } from '@/constants';
+import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
 
 interface ChatProps {
   auctionId: string;
   enabled?: boolean;
-  maxLength?: number;
 }
 
-export const Chat = ({
-  auctionId,
-  enabled = true,
-  maxLength = 500,
-}: ChatProps) => {
+export const Chat = ({ auctionId, enabled = true }: ChatProps) => {
   const { auth } = useAuth();
   const { t, locale } = useTranslation();
   const flatListRef = useRef<FlatList>(null);
+  const {
+    data: currentUser,
+    status: userStatus,
+    errorMessage: userError,
+  } = useGetCurrentUser();
+
+  console.log('userName from useGetCurrentUser:', currentUser?.username);
 
   // Hook de conexión al chat
-  const { room, messages, connectionState, errorMessage, isConnected } =
-    useChatRoom({
-      auctionId,
-      enabled,
-    });
+  const {
+    room,
+    messages,
+    connectionState,
+    status: chatStatus,
+    errorMessage: chatError,
+    isConnected,
+  } = useChatRoom({
+    auctionId,
+    username: currentUser?.username,
+    enabled,
+  });
 
   // Obtener datos del usuario
-  const currentUser =
-    auth.state === 'authenticated' ? auth.session?.user?.user_metadata : null;
-  const profilePicture = currentUser?.profilePicture || '';
+  const profilePicture = currentUser?.username || '';
   const isAnonymous = auth.state !== 'authenticated';
 
   // Hook para enviar mensajes
@@ -62,7 +73,36 @@ export const Chat = ({
     <ChatMessage message={item} />
   );
 
-  // Estado de carga
+  // Loading state - esperar a que ambos hooks terminen de cargar
+  if (
+    userStatus === REQUEST_STATUS.idle ||
+    userStatus === REQUEST_STATUS.loading ||
+    chatStatus === REQUEST_STATUS.idle ||
+    chatStatus === REQUEST_STATUS.loading
+  ) {
+    return <Loading locale={locale} />;
+  }
+
+  // Error state - mostrar error si alguno de los dos falló
+  if (userStatus === REQUEST_STATUS.error) {
+    return (
+      <CustomError
+        customMessage={userError}
+        refreshRoute={`/(tabs)/home/test-chat`}
+      />
+    );
+  }
+
+  if (chatStatus === REQUEST_STATUS.error) {
+    return (
+      <CustomError
+        customMessage={chatError}
+        refreshRoute={`/(tabs)/home/test-chat`}
+      />
+    );
+  }
+
+  // Estado de carga (connecting)
   if (connectionState === 'connecting') {
     return (
       <View className='flex-1 items-center justify-center rounded-xl bg-white p-6'>
@@ -75,26 +115,6 @@ export const Chat = ({
           className='text-gray-600 mt-3 text-center'
         >
           {t('chat.connecting')}
-        </CustomText>
-      </View>
-    );
-  }
-
-  // Error de conexión
-  if (errorMessage) {
-    return (
-      <View className='flex-1 items-center justify-center rounded-xl bg-white p-6'>
-        <CustomText
-          type='h4'
-          className='mb-2 text-center text-cinnabar'
-        >
-          {errorMessage[locale] || errorMessage.es}
-        </CustomText>
-        <CustomText
-          type='bodysmall'
-          className='text-gray-600 text-center'
-        >
-          {t('chat.errorRetry')}
         </CustomText>
       </View>
     );
@@ -156,7 +176,6 @@ export const Chat = ({
           onSend={sendMessage}
           disabled={!isConnected}
           isSending={isSending}
-          maxLength={maxLength}
           placeholder={
             isConnected ? t('chat.placeholder') : t('chat.disconnected')
           }

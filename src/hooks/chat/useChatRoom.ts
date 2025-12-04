@@ -16,6 +16,7 @@ import * as Sentry from '@sentry/react-native';
 
 interface UseChatRoomProps {
   auctionId: string;
+  username?: string;
   enabled?: boolean;
 }
 
@@ -26,6 +27,7 @@ interface ChatTokenResponse {
 
 export const useChatRoom = ({
   auctionId,
+  username,
   enabled = true,
 }: UseChatRoomProps) => {
   const [room, setRoom] = useState<ChatRoom | null>(null);
@@ -50,11 +52,12 @@ export const useChatRoom = ({
         setStatus('loading');
         setErrorMessage(null);
         console.log('[CHAT] Solicitando token para auctionId:', auctionId);
+        console.log('[CHAT] Username:', username || 'ANÓNIMO');
 
         // Obtener token del backend
         const response = await protectedPost<ChatTokenResponse>({
           endpoint: PROTECTED_ENDPOINTS.CHAT.GET_TOKEN,
-          data: { auctionId },
+          data: { auctionId, username },
         });
 
         console.log(
@@ -146,7 +149,6 @@ export const useChatRoom = ({
         const unsubscribeConnected = chatRoom.addListener('connect', () => {
           console.log('[CHAT] Conectado');
           setConnectionState('connected');
-          setStatus('success');
         });
 
         const unsubscribeDisconnected = chatRoom.addListener(
@@ -184,6 +186,7 @@ export const useChatRoom = ({
         // Conectar al chat
         chatRoom.connect();
         setRoom(chatRoom);
+        setStatus('success'); // Marcar como success una vez que el room está creado y conectando
 
         // Cleanup
         return () => {
@@ -216,7 +219,7 @@ export const useChatRoom = ({
     return () => {
       cleanup?.then((cleanupFn) => cleanupFn?.());
     };
-  }, [auctionId, enabled, protectedPost]);
+  }, [auctionId, username, enabled, protectedPost]);
 
   return {
     room,
