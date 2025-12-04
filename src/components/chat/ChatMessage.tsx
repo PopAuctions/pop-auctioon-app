@@ -13,9 +13,13 @@ import { cn } from '@/utils/cn';
 
 interface ChatMessageProps {
   message: ChatMessageType;
+  transparent?: boolean;
 }
 
-export const ChatMessage = ({ message }: ChatMessageProps) => {
+export const ChatMessage = ({
+  message,
+  transparent = false,
+}: ChatMessageProps) => {
   const { auth } = useAuth();
 
   // Determinar si el mensaje es del usuario actual
@@ -31,14 +35,9 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
   const avatar = message.attributes?.profilePicture || '';
 
   return (
-    <View
-      className={cn(
-        'mx-3 my-1.5 flex-row items-start',
-        isMine && 'flex-row-reverse'
-      )}
-    >
-      {/* Avatar - solo para mensajes de otros */}
-      {!isMine && (
+    <View className='mx-2 my-0.5 flex-row items-start'>
+      {/* Avatar - oculto en modo transparente */}
+      {!transparent && !isMine && (
         <View className='mr-2'>
           {avatar ? (
             <CustomImage
@@ -63,24 +62,56 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
       {/* Contenido del mensaje */}
       <View
         className={cn(
-          'max-w-[70%] rounded-xl p-2',
-          isMine ? 'bg-blue-500' : 'bg-gray-200'
+          'max-w-[85%] rounded-lg px-2 py-1',
+          transparent ? 'bg-black/60' : isMine ? 'bg-blue-500' : 'bg-gray-200'
         )}
       >
-        {/* Username - solo para mensajes de otros */}
-        {!isMine && (
+        {/* Username con avatar inline en modo transparente */}
+        <View className='mb-0.5 flex-row items-center gap-1'>
+          {transparent && avatar && (
+            <CustomImage
+              src={avatar}
+              alt={message.sender.userId}
+              className='h-4 w-4 rounded-full'
+              resizeMode='cover'
+            />
+          )}
+          {transparent && !avatar && (
+            <View className='h-4 w-4 items-center justify-center rounded-full bg-white/30'>
+              <CustomText
+                type='bodysmall'
+                className='text-[8px] font-semibold text-white'
+              >
+                {message.sender.userId.charAt(0).toUpperCase()}
+              </CustomText>
+            </View>
+          )}
           <CustomText
             type='bodysmall'
-            className='text-gray-700 mb-0.5 font-semibold'
+            className={cn(
+              'font-bold',
+              transparent
+                ? 'text-cinnabar drop-shadow-md'
+                : isMine
+                  ? 'text-white'
+                  : 'text-gray-700'
+            )}
           >
             {message.sender.userId}
           </CustomText>
-        )}
+        </View>
 
         {/* Mensaje */}
         <CustomText
           type='body'
-          className={cn('text-[15px]', isMine ? 'text-white' : 'text-gray-900')}
+          className={cn(
+            'text-[13px]',
+            transparent
+              ? 'text-white drop-shadow-lg'
+              : isMine
+                ? 'text-white'
+                : 'text-gray-900'
+          )}
         >
           {message.content}
         </CustomText>

@@ -106,7 +106,7 @@ export default function LiveAuctionScreen() {
 
         {/* Chat flotante - Lado derecho (solo visible cuando stream carga) */}
         {streamLoaded && (
-          <View className='pointer-events-auto absolute bottom-4 right-4 h-[50%] w-72'>
+          <View className='pointer-events-auto absolute bottom-4 left-4 h-[25%] w-72'>
             <Chat
               auctionId={auctionId}
               username={username}

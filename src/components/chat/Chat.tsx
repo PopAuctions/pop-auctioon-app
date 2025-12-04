@@ -61,7 +61,10 @@ export const Chat = ({
 
   // Renderizar cada mensaje
   const renderMessage = ({ item }: { item: ChatMessageType }) => (
-    <ChatMessage message={item} />
+    <ChatMessage
+      message={item}
+      transparent={transparent}
+    />
   );
 
   // Estado de carga inicial (idle o loading del hook)
@@ -197,16 +200,24 @@ export const Chat = ({
           />
         </View>
       ) : (
-        !transparent && (
-          <View className='border-gray-200 bg-gray-50 border-t px-4 py-3'>
-            <CustomText
-              type='bodysmall'
-              className='text-gray-600 text-center'
-            >
-              {t('chat.loginToChat')}
-            </CustomText>
-          </View>
-        )
+        <View
+          className={cn(
+            'px-3 py-2',
+            transparent
+              ? 'rounded-full bg-black/40'
+              : 'border-gray-200 bg-gray-50 border-t'
+          )}
+        >
+          <CustomText
+            type='bodysmall'
+            className={cn(
+              'text-center',
+              transparent ? 'text-white' : 'text-gray-600'
+            )}
+          >
+            {t('chat.loginToChat')}
+          </CustomText>
+        </View>
       )}
     </View>
   );
