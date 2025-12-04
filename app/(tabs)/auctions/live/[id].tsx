@@ -71,6 +71,13 @@ export default function LiveAuctionScreen() {
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        // Propiedades de rendimiento
+        androidLayerType='hardware'
+        androidHardwareAccelerationDisabled={false}
+        mixedContentMode='always'
+        cacheEnabled={true}
+        cacheMode='LOAD_DEFAULT'
+        // Eventos
         onLoad={() => {
           setStreamLoaded(true);
           setStreamError(false);
@@ -79,6 +86,15 @@ export default function LiveAuctionScreen() {
           const { nativeEvent } = syntheticEvent;
           console.error('[STREAM] WebView error:', nativeEvent);
           setStreamError(true);
+        }}
+        onHttpError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.error('[STREAM] HTTP error:', nativeEvent.statusCode);
+        }}
+        onLoadProgress={({ nativeEvent }) => {
+          if (nativeEvent.progress === 1) {
+            setStreamLoaded(true);
+          }
         }}
       />
 
