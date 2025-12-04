@@ -40,10 +40,6 @@ export default function LiveAuctionScreen() {
   // Usar username del usuario, o vacío si no hay o hubo error
   const username = currentUser?.username || '';
 
-  console.log(
-    `Iniciando subasta en vivo: ${auctionId} para el usuario ${username || '(sin usuario)'}`
-  );
-
   // Construir la URL del stream
   const streamUrl = `http://10.0.2.2:3000/es/stream/${auctionId}?username=${username}`;
 
@@ -76,7 +72,6 @@ export default function LiveAuctionScreen() {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onLoad={() => {
-          console.log('[STREAM] WebView cargado exitosamente');
           setStreamLoaded(true);
           setStreamError(false);
         }}

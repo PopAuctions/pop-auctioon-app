@@ -51,8 +51,6 @@ export const useChatRoom = ({
       try {
         setStatus('loading');
         setErrorMessage(null);
-        console.log('[CHAT] Solicitando token para auctionId:', auctionId);
-        console.log('[CHAT] Username:', username || 'ANÓNIMO');
 
         // Obtener token del backend
         const response = await protectedPost<ChatTokenResponse>({
@@ -60,13 +58,7 @@ export const useChatRoom = ({
           data: { auctionId, username },
         });
 
-        console.log(
-          '[CHAT] Response completa:',
-          JSON.stringify(response, null, 2)
-        );
-
         if (response.error) {
-          console.error('[CHAT] Error obteniendo token:', response.error);
           setStatus('error');
           setErrorMessage(response.error);
           Sentry.captureException(
@@ -76,11 +68,7 @@ export const useChatRoom = ({
         }
 
         // Verificar si la respuesta tiene la estructura esperada
-        console.log('[CHAT] Response.data:', response.data);
-        console.log('[CHAT] Type of response.data:', typeof response.data);
-
         if (!response.data) {
-          console.error('[CHAT] No se recibió data en la respuesta');
           const message: LangMap = {
             en: 'No data received from server',
             es: 'No se recibieron datos del servidor',
@@ -103,7 +91,6 @@ export const useChatRoom = ({
         ) {
           // Si chatToken es un objeto AWS con la propiedad token
           chatToken = (response.data.chatToken as any).token;
-          console.log('[CHAT] Token extraído del objeto AWS');
         } else if (typeof response.data.chatToken === 'string') {
           // Si data es un objeto con chatToken como string
           chatToken = response.data.chatToken;
@@ -111,10 +98,6 @@ export const useChatRoom = ({
           // Si data es un objeto con token
           chatToken = (response.data as any).token;
         } else {
-          console.error(
-            '[CHAT] No se encontró token en la respuesta:',
-            response.data
-          );
           const message: LangMap = {
             en: 'Invalid token format received',
             es: 'Formato de token inválido recibido',
@@ -123,11 +106,6 @@ export const useChatRoom = ({
           setErrorMessage(message);
           return;
         }
-
-        console.log(
-          '[CHAT] Token obtenido exitosamente, length:',
-          chatToken.length
-        );
 
         // Crear instancia de ChatRoom
         const chatRoom = new ChatRoom({
@@ -142,19 +120,16 @@ export const useChatRoom = ({
 
         // Listeners de conexión
         const unsubscribeConnecting = chatRoom.addListener('connecting', () => {
-          console.log('[CHAT] Conectando...');
           setConnectionState('connecting');
         });
 
         const unsubscribeConnected = chatRoom.addListener('connect', () => {
-          console.log('[CHAT] Conectado');
           setConnectionState('connected');
         });
 
         const unsubscribeDisconnected = chatRoom.addListener(
           'disconnect',
           () => {
-            console.log('[CHAT] Desconectado');
             setConnectionState('disconnected');
           }
         );
@@ -163,7 +138,6 @@ export const useChatRoom = ({
         const unsubscribeMessage = chatRoom.addListener(
           'message',
           (message: ChatMessage) => {
-            console.log('[CHAT] Nuevo mensaje:', message.sender.userId);
             setMessages((prev) => {
               // Evitar duplicados
               if (prev.some((msg) => msg.id === message.id)) {
@@ -178,7 +152,6 @@ export const useChatRoom = ({
         const unsubscribeMessageDelete = chatRoom.addListener(
           'messageDelete',
           (event) => {
-            console.log('[CHAT] Mensaje eliminado:', event.id);
             setMessages((prev) => prev.filter((msg) => msg.id !== event.id));
           }
         );
@@ -190,7 +163,6 @@ export const useChatRoom = ({
 
         // Cleanup
         return () => {
-          console.log('[CHAT] Limpiando conexión');
           unsubscribeConnecting();
           unsubscribeConnected();
           unsubscribeDisconnected();
@@ -199,7 +171,6 @@ export const useChatRoom = ({
           chatRoom.disconnect();
         };
       } catch (error: any) {
-        console.error('[CHAT] Error inicializando:', error);
         const message: LangMap = {
           en: 'Error initializing chat',
           es: 'Error al inicializar el chat',

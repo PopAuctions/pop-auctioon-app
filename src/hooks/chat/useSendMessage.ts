@@ -6,6 +6,7 @@
 import { useState, useCallback } from 'react';
 import { ChatRoom, SendMessageRequest } from 'amazon-ivs-chat-messaging';
 import * as Sentry from '@sentry/react-native';
+import type { LangMap } from '@/types/types';
 
 interface UseSendMessageProps {
   room: ChatRoom | null;
@@ -14,17 +15,15 @@ interface UseSendMessageProps {
 
 export const useSendMessage = ({ room, isConnected }: UseSendMessageProps) => {
   const [isSending, setIsSending] = useState(false);
-  const [sendError, setSendError] = useState<string | null>(null);
+  const [sendError, setSendError] = useState<LangMap | null>(null);
 
   const sendMessage = useCallback(
     async (message: string): Promise<boolean> => {
       if (!room || !isConnected) {
-        console.log('[CHAT] No se puede enviar: no hay conexión');
         return false;
       }
 
       if (!message.trim()) {
-        console.log('[CHAT] No se puede enviar: mensaje vacío');
         return false;
       }
 
@@ -32,16 +31,15 @@ export const useSendMessage = ({ room, isConnected }: UseSendMessageProps) => {
       setSendError(null);
 
       try {
-        console.log('[CHAT] Enviando mensaje...');
-
         const request = new SendMessageRequest(message.trim());
         await room.sendMessage(request);
 
-        console.log('[CHAT] Mensaje enviado exitosamente');
         return true;
       } catch (error: any) {
-        console.error('[CHAT] Error enviando mensaje:', error);
-        const errorMessage = 'No se pudo enviar el mensaje';
+        const errorMessage: LangMap = {
+          es: 'No se pudo enviar el mensaje',
+          en: 'Could not send message',
+        };
         setSendError(errorMessage);
 
         Sentry.captureException(

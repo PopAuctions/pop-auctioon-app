@@ -15,6 +15,7 @@ import { CustomText } from '@/components/ui/CustomText';
 import { ChatMessage as ChatMessageType } from 'amazon-ivs-chat-messaging';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
+import { useToast } from '@/hooks/useToast';
 
 interface ChatProps {
   auctionId: string;
@@ -28,7 +29,8 @@ export const Chat = ({
   username: propUsername,
 }: ChatProps) => {
   const { auth } = useAuth();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
   const flatListRef = useRef<FlatList>(null);
 
   // Si no se pasa username, será usuario anónimo
@@ -55,6 +57,13 @@ export const Chat = ({
       flatListRef.current?.scrollToEnd({ animated: true });
     }
   }, [messages]);
+
+  // Mostrar toast cuando hay error de envío
+  useEffect(() => {
+    if (sendError) {
+      callToast({ variant: 'error', description: sendError });
+    }
+  }, [sendError, callToast]);
 
   // Renderizar cada mensaje (siempre transparente)
   const renderMessage = ({ item }: { item: ChatMessageType }) => (
@@ -92,31 +101,17 @@ export const Chat = ({
     );
   }
 
-  // Estado de carga (connecting)
-  if (connectionState === 'connecting') {
-    return (
-      <View className='flex-1 items-center justify-center rounded-xl bg-white p-6'>
-        <ActivityIndicator
-          size='large'
-          color='#DC2626'
-        />
-        <CustomText
-          type='body'
-          className='text-gray-600 mt-3 text-center'
-        >
-          {t('chat.connecting')}
-        </CustomText>
-      </View>
-    );
-  }
-
-  // Error de conexión (disconnected sin room)
-  if (connectionState === 'disconnected' && !room) {
+  // Error de conexión (disconnected sin room después de intentar conectar)
+  if (
+    connectionState === 'disconnected' &&
+    !room &&
+    status === REQUEST_STATUS.success
+  ) {
     return (
       <CustomError
         customMessage={{
-          es: t('chat.connectionError'),
-          en: t('chat.connectionError'),
+          es: 'Error al conectar con el chat',
+          en: 'Failed to connect to chat',
         }}
         refreshRoute='/(tabs)/auctions'
       />
@@ -135,18 +130,6 @@ export const Chat = ({
         showsVerticalScrollIndicator={true}
         className='bg-transparent'
       />
-
-      {/* Error de envío */}
-      {sendError && (
-        <View className='border-l-4 border-cinnabar bg-red-100 px-4 py-2'>
-          <CustomText
-            type='bodysmall'
-            className='text-red-900'
-          >
-            {sendError}
-          </CustomText>
-        </View>
-      )}
 
       {/* Input - solo para usuarios autenticados */}
       {!isAnonymous ? (
