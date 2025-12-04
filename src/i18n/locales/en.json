@@ -600,5 +600,17 @@
   "errorLoading": {
     "title": "Loading Error",
     "fontError": "Error loading fonts. Please restart the app."
+  },
+  "chat": {
+    "title": "Live chat",
+    "placeholder": "Type a message...",
+    "connecting": "Connecting to chat...",
+    "disconnected": "Disconnected...",
+    "errorRetry": "Try reloading the screen",
+    "noMessages": "No messages yet",
+    "loginToChat": "Log in to participate in the chat",
+    "sendError": "Could not send the message",
+    "connectionError": "Error connecting to chat",
+    "send": "Send"
   }
 }

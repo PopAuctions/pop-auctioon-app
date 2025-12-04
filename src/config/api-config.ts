@@ -50,6 +50,11 @@ export const PROTECTED_ENDPOINTS = {
     CRASH: '/analytics/crash',
     PERFORMANCE: '/analytics/performance',
   },
+
+  // Chat (IVS Chat)
+  CHAT: {
+    GET_TOKEN: '/chat/get-token',
+  },
 } as const;
 
 // ========================================

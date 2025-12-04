@@ -611,5 +611,17 @@
   "errorLoading": {
     "title": "Error de Carga",
     "fontError": "Error al cargar las fuentes. Por favor, reinicia la aplicación."
+  },
+  "chat": {
+    "title": "Chat en vivo",
+    "placeholder": "Escribe un mensaje...",
+    "connecting": "Conectando al chat...",
+    "disconnected": "Desconectado...",
+    "errorRetry": "Intenta recargar la pantalla",
+    "noMessages": "Aún no hay mensajes",
+    "loginToChat": "Inicia sesión para participar en el chat",
+    "sendError": "No se pudo enviar el mensaje",
+    "connectionError": "Error al conectar con el chat",
+    "send": "Enviar"
   }
 }
