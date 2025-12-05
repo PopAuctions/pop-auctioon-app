@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Modal } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { CustomText } from '@/components/ui/CustomText';
 import { REQUEST_STATUS } from '@/constants';
 import { Chat } from '@/components/chat/Chat';
 import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
-import { Button } from '@/components/ui/Button';
+import { StreamInfoModal } from '@/components/live-auction/StreamInfoModal';
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: currentUser, status } = useGetCurrentUser();
-  const { locale, t } = useTranslation();
+  const { locale } = useTranslation();
   const [streamLoaded, setStreamLoaded] = useState(false);
   const [streamError, setStreamError] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -163,106 +162,13 @@ export default function LiveAuctionScreen() {
       </View>
 
       {/* Modal de Stream Info */}
-      <Modal
+      <StreamInfoModal
         visible={showInfoModal}
-        transparent={true}
-        animationType='fade'
-        onRequestClose={() => setShowInfoModal(false)}
-      >
-        <View className='flex-1 items-center justify-center bg-black/70'>
-          <View className='mx-4 w-full max-w-md rounded-2xl bg-white p-6'>
-            {/* Header */}
-            <View className='mb-4 flex-row items-center justify-between'>
-              <CustomText
-                type='subtitle'
-                className='text-xl'
-              >
-                {t('screens.liveAuction.streamInfo')}
-              </CustomText>
-              <TouchableOpacity onPress={() => setShowInfoModal(false)}>
-                <Ionicons
-                  name='close'
-                  size={28}
-                  color='#374151'
-                />
-              </TouchableOpacity>
-            </View>
-
-            {/* Contenido */}
-            <View className='space-y-4'>
-              <View>
-                <CustomText
-                  type='bodysmall'
-                  className='text-gray-600 mb-1 font-semibold'
-                >
-                  {t('screens.liveAuction.auctionId')}
-                </CustomText>
-                <CustomText
-                  type='body'
-                  className='text-gray-900'
-                >
-                  {auctionId}
-                </CustomText>
-              </View>
-
-              <View>
-                <CustomText
-                  type='bodysmall'
-                  className='text-gray-600 mb-1 font-semibold'
-                >
-                  {t('screens.liveAuction.username')}
-                </CustomText>
-                <CustomText
-                  type='body'
-                  className='text-gray-900'
-                >
-                  {username || t('screens.liveAuction.anonymous')}
-                </CustomText>
-              </View>
-
-              <View>
-                <CustomText
-                  type='bodysmall'
-                  className='text-gray-600 mb-1 font-semibold'
-                >
-                  {t('screens.liveAuction.chatStatus')}
-                </CustomText>
-                <CustomText
-                  type='body'
-                  className='text-gray-900'
-                >
-                  {t('screens.liveAuction.connected')}
-                </CustomText>
-              </View>
-
-              <View>
-                <CustomText
-                  type='bodysmall'
-                  className='text-gray-600 mb-1 font-semibold'
-                >
-                  {t('screens.liveAuction.url')}
-                </CustomText>
-                <CustomText
-                  type='bodysmall'
-                  className='text-gray-900'
-                  numberOfLines={2}
-                >
-                  {streamUrl}
-                </CustomText>
-              </View>
-            </View>
-
-            {/* Botón Cerrar */}
-            <Button
-              mode='primary'
-              onPress={() => setShowInfoModal(false)}
-              className='mt-6'
-            >
-              {t('screens.liveAuction.close')}
-            </Button>
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setShowInfoModal(false)}
+        auctionId={auctionId}
+        username={username}
+        streamUrl={streamUrl}
+      />
     </View>
   );
 }
