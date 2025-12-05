@@ -583,8 +583,18 @@
       "subtitle": "Encuentra respuestas a tus dudas"
     },
     "contactUs": {
-      "title": "Contáctanos",
+      "title": "Contacto",
       "subtitle": "Estamos aquí para ayudarte"
+    },
+    "liveAuction": {
+      "streamInfo": "Información del Stream",
+      "auctionId": "ID de Subasta",
+      "username": "Usuario",
+      "chatStatus": "Estado del Chat",
+      "connected": "Conectado",
+      "anonymous": "Anónimo",
+      "url": "URL",
+      "close": "Cerrar"
     }
   },
   "components": {
