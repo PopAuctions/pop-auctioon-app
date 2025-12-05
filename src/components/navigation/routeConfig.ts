@@ -18,33 +18,39 @@ export interface RouteConfig {
 export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   // Rutas que requieren LOGIN (cualquier rol)
   account: {},
+  'account-user': {},
+  addresses: {},
+  'articles-won': {},
+  'billing-info': {},
   'edit-profile': {},
-  'reset-password': {},
-  'verify-phone': {},
   'followed-auctions': {},
   'followed-articles': {},
-  addresses: {},
-  'billing-info': {},
+  'offers-made': {},
   'payments-history': {},
-  'articles-won': {},
+  'reset-password': {},
+  'verify-phone': {},
+  'payment/[id]': {},
 
   // Rutas que requieren LOGIN + rol específico
   'my-auctions': {
     requiredRole: 'AUCTIONEER',
   },
+  'my-auctions/old': {
+    requiredRole: 'AUCTIONEER',
+  },
+  'my-auctions/new': {
+    requiredRole: 'AUCTIONEER',
+  },
   'my-auctions/[id]': {
+    requiredRole: 'AUCTIONEER',
+  },
+  'my-auctions/[id]/new-article': {
     requiredRole: 'AUCTIONEER',
   },
   'my-auctions/[id]/edit-article/[slug]': {
     requiredRole: 'AUCTIONEER',
   },
   'my-auctions/[id]/rearrange-article-images/[slug]': {
-    requiredRole: 'AUCTIONEER',
-  },
-  'my-auctions/new': {
-    requiredRole: 'AUCTIONEER',
-  },
-  'my-auctions/old': {
     requiredRole: 'AUCTIONEER',
   },
 
