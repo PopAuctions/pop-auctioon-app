@@ -10,16 +10,17 @@
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "lint": "npx expo lint",
-    "lint:fix": "npx expo lint -- --fix",
+    "lint": "pnpm exec expo lint",
+    "lint:fix": "pnpm exec expo lint -- --fix",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "coverage:open": "npx --no-install open-cli ./coverage/lcov-report/index.html",
+    "coverage:open": "pnpm exec open-cli ./coverage/lcov-report/index.html",
     "test:update-snapshots": "jest -u",
+    "check-all": "pnpm type-check && pnpm lint && pnpm prettier:check",
     "build:ios": "eas build --platform ios --profile development",
     "build:android": "eas build --platform android --profile development",
     "build:ios:device": "eas build --platform ios --profile development-device",
-    "generate-types": "npx supabase gen types typescript --project-id xvohgpgzvxdwooerdnfb --schema public > ./src/types/supabase.ts"
+    "generate-types": "pnpm exec supabase gen types typescript --project-id xvohgpgzvxdwooerdnfb --schema public > ./src/types/supabase.ts"
   },
   "dependencies": {
     "@expo-google-fonts/dev": "^0.4.12",
