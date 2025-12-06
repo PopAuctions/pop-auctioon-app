@@ -46,6 +46,7 @@ export const useChatRoom = ({
     }
 
     isInitializing.current = true;
+    let cleanupFn: (() => void) | undefined;
 
     const initializeChatRoom = async () => {
       try {
@@ -161,8 +162,8 @@ export const useChatRoom = ({
         setRoom(chatRoom);
         setStatus('success'); // Marcar como success una vez que el room está creado y conectando
 
-        // Cleanup
-        return () => {
+        // Guardar función de cleanup
+        cleanupFn = () => {
           unsubscribeConnecting();
           unsubscribeConnected();
           unsubscribeDisconnected();
@@ -185,10 +186,10 @@ export const useChatRoom = ({
       }
     };
 
-    const cleanup = initializeChatRoom();
+    initializeChatRoom();
 
     return () => {
-      cleanup?.then((cleanupFn) => cleanupFn?.());
+      cleanupFn?.();
     };
   }, [auctionId, username, enabled, protectedPost]);
 

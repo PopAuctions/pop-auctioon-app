@@ -102,9 +102,15 @@ export default function LiveAuctionScreen() {
       />
 
       {/* Overlay con controles flotantes */}
-      <View className='pointer-events-box-none absolute inset-0'>
+      <View
+        className='absolute inset-0'
+        pointerEvents='box-none'
+      >
         {/* Botón de Back - Arriba izquierda */}
-        <View className='pointer-events-auto absolute left-4 top-12'>
+        <View
+          className='absolute left-4 top-12'
+          pointerEvents='auto'
+        >
           <TouchableOpacity
             onPress={() => router.back()}
             className='h-10 w-10 items-center justify-center rounded-full bg-black/50'
@@ -120,7 +126,10 @@ export default function LiveAuctionScreen() {
 
         {/* Chat flotante - Lado izquierdo (solo visible cuando stream carga) */}
         {streamLoaded && (
-          <View className='pointer-events-auto absolute bottom-4 left-4 h-[25%] w-72'>
+          <View
+            className='absolute bottom-4 left-4 h-[25%] w-72'
+            pointerEvents='auto'
+          >
             <Chat
               auctionId={auctionId}
               username={username}
@@ -131,7 +140,10 @@ export default function LiveAuctionScreen() {
 
         {/* Botones de Share e Info - Lado derecho del chat */}
         {streamLoaded && (
-          <View className='pointer-events-auto absolute bottom-4 right-4 gap-2'>
+          <View
+            className='absolute bottom-4 right-4 gap-2'
+            pointerEvents='auto'
+          >
             {/* Botón de Info */}
             <TouchableOpacity
               onPress={() => setShowInfoModal(true)}
