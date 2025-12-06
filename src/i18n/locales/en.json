@@ -337,7 +337,18 @@
       "invoice": "Invoice",
       "billingInformation": "Billing Information",
       "help": "If you need any help, contact us at:",
-      "receipt": "Receipt"
+      "receipt": "Receipt",
+      "selectItems": "Select items to pay",
+      "noItemsSelected": "You must select at least one item",
+      "payNow": "Pay now",
+      "paymentInitError": "Error initializing payment",
+      "paymentSuccess": "Payment successful!",
+      "paymentCanceled": "Payment canceled",
+      "paymentError": "Error processing payment",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "itemsSelected": "items selected",
+      "totalToPay": "Total to pay"
     },
     "payments": {
       "title": "Payment",

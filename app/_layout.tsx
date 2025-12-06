@@ -29,6 +29,7 @@ import { ProtectedRoute } from '@/components/navigation/ProtectedRoute';
 import { DeepLinkListener } from '@/components/navigation/DeepLinkListener';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from '@/providers/ToastProvider';
+import { StripeProvider } from '@/providers/StripeProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 Sentry.init({
@@ -115,19 +116,21 @@ function RootLayoutNav() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Stack>
-            <Stack.Screen
-              name='(tabs)'
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name='modal'
-              options={{ presentation: 'modal' }}
-            />
-          </Stack>
-          <ToastProvider />
-        </GestureHandlerRootView>
+        <StripeProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen
+                name='(tabs)'
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name='modal'
+                options={{ presentation: 'modal' }}
+              />
+            </Stack>
+            <ToastProvider />
+          </GestureHandlerRootView>
+        </StripeProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

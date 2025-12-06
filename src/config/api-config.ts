@@ -136,6 +136,8 @@ export const SECURE_ENDPOINTS = {
     PAYMENT_HISTORY: '/user/payments', // GET payment history
     PAYMENT_BY_ID: (id: string): ApiEndpoint =>
       `/user/payments/${id}` as ApiEndpoint, // GET payment by ID
+    WON_ARTICLES: (auctionId: string): ApiEndpoint =>
+      `/user/won-articles?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados en subasta
     RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
@@ -165,6 +167,11 @@ export const SECURE_ENDPOINTS = {
   OFFERS: {
     CREATE: '/online-store/offers',
     MADE: '/user/offers-made',
+  },
+
+  // Payments (Stripe)
+  PAYMENT: {
+    CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
   },
 
   // Proxy universal para endpoints existentes
