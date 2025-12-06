@@ -41,12 +41,23 @@ export const useStripePayment = (): UseStripePaymentReturn => {
    */
   const initializePaymentSheet = useCallback(
     async (amount: number, selectedItems: number[]): Promise<boolean> => {
+      console.log('\n🔧 [useStripePayment] initializePaymentSheet llamado');
+      console.log('💰 [useStripePayment] amount:', amount);
+      console.log('📦 [useStripePayment] selectedItems:', selectedItems);
+      console.log(
+        '✅ [useStripePayment] selectedItems types:',
+        selectedItems.map((id) => `${id} (${typeof id})`)
+      );
+
       setIsLoading(true);
       setStatus('loading');
       setErrorMessage(null);
 
       try {
         // Crear Payment Intent en el backend
+        console.log(
+          '🔄 [useStripePayment] Llamando a backend para crear Payment Intent...'
+        );
         const response = await securePost<CreatePaymentIntentResponse>({
           endpoint: SECURE_ENDPOINTS.PAYMENT.CREATE_PAYMENT_INTENT,
           data: {
@@ -55,7 +66,16 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           },
         });
 
+        console.log(
+          '📡 [useStripePayment] Respuesta del backend:',
+          response.error ? 'ERROR' : 'SUCCESS'
+        );
+
         if (response.error) {
+          console.error(
+            '❌ [useStripePayment] Error del backend:',
+            response.error
+          );
           setErrorMessage(response.error);
           setStatus('error');
           setIsLoading(false);
@@ -63,6 +83,9 @@ export const useStripePayment = (): UseStripePaymentReturn => {
         }
 
         if (!response.data || !response.data.clientSecret) {
+          console.error(
+            '❌ [useStripePayment] No se recibió clientSecret del backend'
+          );
           const errorMsg: LangMap = {
             es: 'No se pudo crear el intento de pago',
             en: 'Could not create payment intent',
@@ -72,6 +95,13 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           setIsLoading(false);
           return false;
         }
+
+        console.log(
+          '✅ [useStripePayment] clientSecret recibido correctamente'
+        );
+        console.log(
+          '🔄 [useStripePayment] Inicializando Stripe Payment Sheet...'
+        );
 
         // Inicializar Payment Sheet con el client secret
         const { error: initError } = await initPaymentSheet({
@@ -83,6 +113,10 @@ export const useStripePayment = (): UseStripePaymentReturn => {
         });
 
         if (initError) {
+          console.error(
+            '❌ [useStripePayment] Error al inicializar Payment Sheet:',
+            initError.message
+          );
           const errorMsg: LangMap = {
             es: 'Error al inicializar el formulario de pago',
             en: 'Error initializing payment form',
@@ -97,6 +131,9 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           return false;
         }
 
+        console.log(
+          '✅ [useStripePayment] Payment Sheet inicializado exitosamente'
+        );
         setStatus('success');
         setIsLoading(false);
         return true;
@@ -122,20 +159,29 @@ export const useStripePayment = (): UseStripePaymentReturn => {
    * Presenta el Payment Sheet al usuario
    */
   const presentPaymentSheet = useCallback(async (): Promise<boolean> => {
+    console.log('\n🔧 [useStripePayment] presentPaymentSheet llamado');
     setIsLoading(true);
     setErrorMessage(null);
 
     try {
+      console.log(
+        '🔄 [useStripePayment] Mostrando Payment Sheet al usuario...'
+      );
       const { error: presentError } = await presentStripeSheet();
 
       if (presentError) {
         // Usuario canceló o hubo un error
         if (presentError.code === 'Canceled') {
+          console.warn('⚠️ [useStripePayment] Usuario canceló el pago');
           // Usuario canceló - no es un error
           setIsLoading(false);
           return false;
         }
 
+        console.error(
+          '❌ [useStripePayment] Error al presentar Payment Sheet:',
+          presentError.message
+        );
         const errorMsg: LangMap = {
           es: 'Error al procesar el pago',
           en: 'Error processing payment',
@@ -150,6 +196,9 @@ export const useStripePayment = (): UseStripePaymentReturn => {
       }
 
       // Pago exitoso
+      console.log(
+        '✅ [useStripePayment] Pago procesado exitosamente por Stripe'
+      );
       setIsLoading(false);
       return true;
     } catch (error: any) {

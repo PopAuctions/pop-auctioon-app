@@ -485,7 +485,6 @@
       "noItemsSelected": "Debes seleccionar al menos un artículo",
       "payNow": "Pagar ahora",
       "paymentInitError": "Error al iniciar el pago",
-      "paymentSuccess": "¡Pago realizado con éxito!",
       "paymentCanceled": "Pago cancelado",
       "paymentError": "Error al procesar el pago",
       "selectAll": "Seleccionar todos",

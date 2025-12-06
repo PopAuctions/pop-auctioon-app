@@ -84,6 +84,36 @@ export default function Account({ currentUser }: { currentUser: User }) {
 
         <Divider />
 
+        {/* TODO: TESTING STRIPE - Remover después */}
+        <View className='mx-2 bg-yellow-100 p-4'>
+          <CustomText
+            type='h4'
+            className='mb-2 text-center text-orange-600'
+          >
+            🧪 TESTING STRIPE PAYMENT 🧪
+          </CustomText>
+          <Button
+            mode='primary'
+            onPress={() => {
+              console.log(
+                '🧪 [STRIPE TEST] Navegando a payment con auctionId=1'
+              );
+              router.push('/(tabs)/account/payment?auctionId=20');
+            }}
+            className='mb-2'
+          >
+            Test Payment (auctionId=1)
+          </Button>
+          <CustomText
+            type='bodysmall'
+            className='text-gray-600 text-center'
+          >
+            Presiona para probar el flujo de pago completo
+          </CustomText>
+        </View>
+
+        <Divider />
+
         {/* Opciones de cuenta */}
         <View className='mx-2 p-4'>
           {/* Articles Won */}

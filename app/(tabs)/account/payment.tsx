@@ -6,7 +6,7 @@
  * 3. Pasa datos a componente de pago
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -56,6 +56,36 @@ export default function PaymentScreen() {
 
   const paymentTranslations = t('screens.payment');
 
+  // DEBUG: Logs para verificar el flujo
+  useEffect(() => {
+    console.log('\n🔍 [PAYMENT SCREEN] Component mounted');
+    console.log('📦 [PAYMENT SCREEN] auctionId:', auctionId);
+  }, [auctionId]);
+
+  useEffect(() => {
+    console.log('📊 [PAYMENT SCREEN] Articles status:', articlesStatus);
+    console.log(
+      '📦 [PAYMENT SCREEN] Articles data:',
+      articles?.length || 0,
+      'items'
+    );
+    if (articlesError) {
+      console.error('❌ [PAYMENT SCREEN] Articles error:', articlesError);
+    }
+  }, [articlesStatus, articles, articlesError]);
+
+  useEffect(() => {
+    console.log('📍 [PAYMENT SCREEN] Addresses status:', addressesStatus);
+    console.log(
+      '📦 [PAYMENT SCREEN] Addresses data:',
+      addresses?.length || 0,
+      'items'
+    );
+    if (addressesError) {
+      console.error('❌ [PAYMENT SCREEN] Addresses error:', addressesError);
+    }
+  }, [addressesStatus, addresses, addressesError]);
+
   // Calcular el total de artículos seleccionados
   const totalAmount = useMemo(() => {
     return articles
@@ -84,7 +114,12 @@ export default function PaymentScreen() {
 
   // Manejar el pago
   const handlePayment = useCallback(async () => {
+    console.log('\n💳 [PAYMENT] Iniciando proceso de pago');
+    console.log('📦 [PAYMENT] Artículos seleccionados:', selectedArticleIds);
+    console.log('💰 [PAYMENT] Total a pagar:', totalAmount);
+
     if (selectedArticleIds.length === 0) {
+      console.warn('⚠️ [PAYMENT] No hay artículos seleccionados');
       callToast({
         variant: 'warning',
         description: {
@@ -96,12 +131,17 @@ export default function PaymentScreen() {
     }
 
     // Inicializar Payment Sheet
+    console.log('🔄 [PAYMENT] Inicializando Payment Sheet...');
     const initialized = await initializePaymentSheet(
       totalAmount,
       selectedArticleIds
     );
 
     if (!initialized) {
+      console.error(
+        '❌ [PAYMENT] Error al inicializar Payment Sheet:',
+        paymentError
+      );
       callToast({
         variant: 'error',
         description: paymentError || {
@@ -112,10 +152,14 @@ export default function PaymentScreen() {
       return;
     }
 
+    console.log('✅ [PAYMENT] Payment Sheet inicializado correctamente');
+
     // Presentar Payment Sheet
+    console.log('🔄 [PAYMENT] Presentando Payment Sheet al usuario...');
     const success = await presentPaymentSheet();
 
     if (success) {
+      console.log('✅ [PAYMENT] Pago completado exitosamente');
       callToast({
         variant: 'success',
         description: {
@@ -125,7 +169,10 @@ export default function PaymentScreen() {
       });
 
       // Navegar al historial de pagos después de un pago exitoso
+      console.log('🔄 [PAYMENT] Redirigiendo a historial de pagos');
       router.replace('/(tabs)/account/payments-history');
+    } else {
+      console.warn('⚠️ [PAYMENT] Pago cancelado o fallido');
     }
   }, [
     selectedArticleIds,
