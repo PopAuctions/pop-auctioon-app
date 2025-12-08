@@ -174,6 +174,12 @@ export const SECURE_ENDPOINTS = {
     CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
   },
 
+  // Discount codes
+  DISCOUNT: {
+    VALIDATE: (code: string): ApiEndpoint =>
+      `/user/payments/discount-code?code=${encodeURIComponent(code)}` as ApiEndpoint, // GET - Validate discount code
+  },
+
   // Proxy universal para endpoints existentes
   PROXY: {
     BASE: '/proxy', // Seguido de la ruta del endpoint original

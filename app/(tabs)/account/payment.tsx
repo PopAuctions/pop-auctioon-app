@@ -3,7 +3,10 @@
  * Patrón similar a Next.js web:
  * 1. Recibe auctionId como query param
  * 2. Carga artículos ganados y direcciones
- * 3. Pasa datos a componente de pago
+ * 3. Permite seleccionar dirección de envío
+ * 4. Calcula breakdown de costos (subtotal, comisión, envío, descuento)
+ * 5. Aplica códigos de descuento
+ * 6. Pasa datos a Stripe Payment Sheet
  */
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
@@ -13,16 +16,24 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useStripePayment } from '@/hooks/payment/useStripePayment';
+import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { CustomImage } from '@/components/ui/CustomImage';
+import { Input } from '@/components/ui/Input';
+import { SelectField } from '@/components/fields/SelectField';
+import { AddressFormModal } from '@/components/addresses/AddressFormModal';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Checkbox } from 'expo-checkbox';
 import { cn } from '@/utils/cn';
+import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
+import type { CountryValue } from '@/types/types';
+import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
@@ -53,6 +64,22 @@ export default function PaymentScreen() {
   } = useStripePayment();
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null
+  );
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [discountCode, setDiscountCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState<{
+    code: string;
+    amount: number;
+  } | null>(null);
+
+  const {
+    validateCode,
+    isValidating: isValidatingDiscount,
+    discountData,
+    errorMessage: discountErrorMessage,
+  } = useGetDiscountCode();
 
   const paymentTranslations = t('screens.payment');
 
@@ -86,12 +113,27 @@ export default function PaymentScreen() {
     }
   }, [addressesStatus, addresses, addressesError]);
 
-  // Calcular el total de artículos seleccionados
-  const totalAmount = useMemo(() => {
+  // Obtener dirección seleccionada
+  const selectedAddress = useMemo(() => {
+    if (!selectedAddressId || !addresses) return null;
+    return addresses.find((addr) => addr.id === selectedAddressId) || null;
+  }, [selectedAddressId, addresses]);
+
+  // Calcular subtotal de artículos seleccionados
+  const subtotal = useMemo(() => {
     return articles
       .filter((article) => selectedArticleIds.includes(article.id))
       .reduce((sum, article) => sum + (article.soldPrice || 0), 0);
   }, [articles, selectedArticleIds]);
+
+  // Calcular el breakdown completo de pago
+  const paymentDetails = useMemo(() => {
+    return calculatePaymentDetails({
+      articlesAmount: subtotal,
+      selectedCountry: selectedAddress?.country as CountryValue | null,
+      discount: appliedDiscount?.amount || 0,
+    });
+  }, [subtotal, selectedAddress, appliedDiscount]);
 
   // Toggle selección de artículo
   const toggleArticleSelection = useCallback((articleId: number) => {
@@ -112,11 +154,69 @@ export default function PaymentScreen() {
     }
   }, [articles, selectedArticleIds.length]);
 
+  // Manejar aplicación de código de descuento
+  const handleApplyDiscount = useCallback(async () => {
+    if (!discountCode.trim()) {
+      callToast({
+        variant: 'warning',
+        description: {
+          es: 'Ingresa un código de descuento',
+          en: 'Enter a discount code',
+        },
+      });
+      return;
+    }
+
+    const isValid = await validateCode(discountCode);
+
+    if (isValid && discountData) {
+      setAppliedDiscount({
+        code: discountData.code,
+        amount: discountData.amount,
+      });
+      setDiscountCode('');
+      callToast({
+        variant: 'success',
+        description: {
+          es: `Código aplicado: $${discountData.amount} de descuento`,
+          en: `Code applied: $${discountData.amount} discount`,
+        },
+      });
+    } else {
+      // Mostrar error específico del backend si existe
+      callToast({
+        variant: 'error',
+        description: discountErrorMessage || {
+          es: 'Código de descuento inválido',
+          en: 'Invalid discount code',
+        },
+      });
+    }
+  }, [
+    discountCode,
+    validateCode,
+    discountData,
+    discountErrorMessage,
+    callToast,
+  ]);
+
+  // Remover descuento aplicado
+  const handleRemoveDiscount = useCallback(() => {
+    setAppliedDiscount(null);
+    callToast({
+      variant: 'info',
+      description: {
+        es: 'Descuento removido',
+        en: 'Discount removed',
+      },
+    });
+  }, [callToast]);
+
   // Manejar el pago
   const handlePayment = useCallback(async () => {
     console.log('\n💳 [PAYMENT] Iniciando proceso de pago');
     console.log('📦 [PAYMENT] Artículos seleccionados:', selectedArticleIds);
-    console.log('💰 [PAYMENT] Total a pagar:', totalAmount);
+    console.log('💰 [PAYMENT] Total a pagar:', paymentDetails.total);
 
     if (selectedArticleIds.length === 0) {
       console.warn('⚠️ [PAYMENT] No hay artículos seleccionados');
@@ -130,10 +230,21 @@ export default function PaymentScreen() {
       return;
     }
 
+    if (!selectedAddress) {
+      callToast({
+        variant: 'warning',
+        description: {
+          es: 'Selecciona una dirección de envío',
+          en: 'Select a shipping address',
+        },
+      });
+      return;
+    }
+
     // Inicializar Payment Sheet
     console.log('🔄 [PAYMENT] Inicializando Payment Sheet...');
     const initialized = await initializePaymentSheet(
-      totalAmount,
+      paymentDetails.total,
       selectedArticleIds
     );
 
@@ -176,7 +287,8 @@ export default function PaymentScreen() {
     }
   }, [
     selectedArticleIds,
-    totalAmount,
+    selectedAddress,
+    paymentDetails.total,
     initializePaymentSheet,
     presentPaymentSheet,
     paymentError,
@@ -267,6 +379,101 @@ export default function PaymentScreen() {
         className='flex-1'
         contentContainerClassName='px-6 py-6'
       >
+        {/* Alerta de verificación */}
+        <View className='mb-6 flex-row items-start rounded-lg border border-yellow-300 bg-yellow-50 p-4'>
+          <View className='mr-3 mt-1'>
+            <FontAwesomeIcon
+              variant='bold'
+              name='circle-exclamation'
+              size={20}
+              color='#f59e0b'
+            />
+          </View>
+          <CustomText
+            type='bodysmall'
+            className='flex-1 text-yellow-800'
+          >
+            {paymentTranslations.paymentAlert}
+          </CustomText>
+        </View>
+
+        {/* Sección: Dirección de envío */}
+        <View className='mb-6'>
+          <CustomText
+            type='h3'
+            className='mb-3 text-cinnabar'
+          >
+            {paymentTranslations.address}
+          </CustomText>
+
+          {/* Selector de dirección + botón "+" */}
+          <View className='mb-3 flex-row items-center gap-3'>
+            <View className='flex-1'>
+              <SelectField
+                name='addressId'
+                value={selectedAddressId || ''}
+                options={
+                  addresses?.map((addr) => ({
+                    label: addr.nameAddress || `${addr.city}, ${addr.country}`,
+                    value: addr.id,
+                  })) || []
+                }
+                placeholder={paymentTranslations.selectAddress}
+                onChange={(value) => setSelectedAddressId(value as string)}
+              />
+            </View>
+            <Button
+              mode='secondary'
+              size='small'
+              onPress={() => setShowAddressModal(true)}
+              className='aspect-square'
+            >
+              <FontAwesomeIcon
+                variant='bold'
+                name='plus'
+                size={18}
+                color='#d75639'
+              />
+            </Button>
+          </View>
+
+          {/* Preview de dirección seleccionada */}
+          {selectedAddress && (
+            <View className='bg-gray-50 rounded-lg p-4'>
+              <CustomText
+                type='body'
+                className='mb-2 font-medium'
+              >
+                {selectedAddress.nameAddress ||
+                  paymentTranslations.addressPreview}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-gray-600'
+              >
+                {selectedAddress.address}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-gray-600'
+              >
+                {selectedAddress.city}, {selectedAddress.state}{' '}
+                {selectedAddress.postalCode}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-gray-600'
+              >
+                {
+                  COUNTRIES_MAP_LABEL[locale][
+                    selectedAddress.country as CountryValue
+                  ]
+                }
+              </CustomText>
+            </View>
+          )}
+        </View>
+
         {/* Header con título y botón seleccionar todos */}
         <View className='mb-4 flex-row items-center justify-between'>
           <CustomText
@@ -294,12 +501,165 @@ export default function PaymentScreen() {
           >
             {selectedArticleIds.length} {paymentTranslations.itemsSelected}
           </CustomText>
+        </View>
+
+        {/* Sección: Código de descuento */}
+        <View className='mb-6'>
           <CustomText
             type='h4'
-            className='mt-1 text-cinnabar'
+            className='mb-3'
           >
-            {paymentTranslations.totalToPay}: ${totalAmount.toFixed(2)}
+            {paymentTranslations.couponCode}
           </CustomText>
+
+          {!appliedDiscount ? (
+            <View className='flex-row items-center gap-3'>
+              <View className='flex-1'>
+                <Input
+                  placeholder={paymentTranslations.couponCode}
+                  value={discountCode}
+                  onChangeText={setDiscountCode}
+                  autoCapitalize='characters'
+                  editable={!isValidatingDiscount}
+                />
+              </View>
+              <Button
+                mode='secondary'
+                size='small'
+                onPress={handleApplyDiscount}
+                disabled={!discountCode.trim() || isValidatingDiscount}
+                isLoading={isValidatingDiscount}
+              >
+                {paymentTranslations.applyCoupon}
+              </Button>
+            </View>
+          ) : (
+            <View className='flex-row items-center justify-between rounded-lg border border-green-300 bg-green-50 p-4'>
+              <View className='flex-1'>
+                <CustomText
+                  type='body'
+                  className='font-medium text-green-800'
+                >
+                  {paymentTranslations.couponApplied}
+                </CustomText>
+                <CustomText
+                  type='bodysmall'
+                  className='text-green-600'
+                >
+                  {appliedDiscount.code} - ${appliedDiscount.amount.toFixed(2)}
+                </CustomText>
+              </View>
+              <Button
+                mode='empty'
+                size='small'
+                onPress={handleRemoveDiscount}
+              >
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='xmark'
+                  size={18}
+                  color='#dc2626'
+                />
+              </Button>
+            </View>
+          )}
+        </View>
+
+        {/* Sección: Resumen de pago */}
+        <View className='mb-6'>
+          <CustomText
+            type='h3'
+            className='mb-3 text-cinnabar'
+          >
+            {paymentTranslations.summary}
+          </CustomText>
+
+          <View className='bg-gray-50 rounded-lg p-4'>
+            {/* Subtotal */}
+            <View className='mb-2 flex-row justify-between'>
+              <CustomText
+                type='body'
+                className='text-gray-600'
+              >
+                Subtotal:
+              </CustomText>
+              <CustomText
+                type='body'
+                className='font-medium'
+              >
+                ${paymentDetails.subtotal.toFixed(2)}
+              </CustomText>
+            </View>
+
+            {/* Comisión */}
+            <View className='mb-2 flex-row justify-between'>
+              <CustomText
+                type='body'
+                className='text-gray-600'
+              >
+                Comisión (IVA inc.):
+              </CustomText>
+              <CustomText
+                type='body'
+                className='font-medium'
+              >
+                ${paymentDetails.commission.toFixed(2)}
+              </CustomText>
+            </View>
+
+            {/* Envío */}
+            <View className='mb-2 flex-row justify-between'>
+              <CustomText
+                type='body'
+                className='text-gray-600'
+              >
+                Envío:
+              </CustomText>
+              <CustomText
+                type='body'
+                className='font-medium'
+              >
+                ${paymentDetails.shipping.toFixed(2)}
+              </CustomText>
+            </View>
+
+            {/* Descuento (si aplica) */}
+            {appliedDiscount && (
+              <View className='mb-2 flex-row justify-between'>
+                <CustomText
+                  type='body'
+                  className='text-green-600'
+                >
+                  Descuento:
+                </CustomText>
+                <CustomText
+                  type='body'
+                  className='font-medium text-green-600'
+                >
+                  -${paymentDetails.discount.toFixed(2)}
+                </CustomText>
+              </View>
+            )}
+
+            {/* Línea divisoria */}
+            <View className='bg-gray-300 my-3 h-px' />
+
+            {/* Total */}
+            <View className='flex-row justify-between'>
+              <CustomText
+                type='h4'
+                className='text-cinnabar'
+              >
+                Total:
+              </CustomText>
+              <CustomText
+                type='h4'
+                className='text-cinnabar'
+              >
+                ${paymentDetails.total.toFixed(2)}
+              </CustomText>
+            </View>
+          </View>
         </View>
 
         {/* Lista de artículos */}
@@ -366,13 +726,28 @@ export default function PaymentScreen() {
         <Button
           mode='primary'
           onPress={handlePayment}
-          disabled={selectedArticleIds.length === 0 || paymentLoading}
+          disabled={
+            selectedArticleIds.length === 0 ||
+            !selectedAddress ||
+            paymentLoading
+          }
           isLoading={paymentLoading}
           className='mb-6'
         >
           {paymentTranslations.payNow}
         </Button>
       </ScrollView>
+
+      {/* Modal para agregar dirección */}
+      <AddressFormModal
+        visible={showAddressModal}
+        onClose={() => setShowAddressModal(false)}
+        onSuccess={() => {
+          setShowAddressModal(false);
+          // Refetch addresses para actualizar la lista
+          // El hook useGetAddresses debería tener un refetch, pero si no, el modal ya hace el refetch
+        }}
+      />
     </SafeAreaView>
   );
 }
