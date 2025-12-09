@@ -60,7 +60,6 @@ export default function PaymentScreen() {
     initializePaymentSheet,
     presentPaymentSheet,
     isLoading: paymentLoading,
-    errorMessage: paymentError,
   } = useStripePayment();
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
@@ -78,6 +77,8 @@ export default function PaymentScreen() {
   );
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
+  const [isInitializingPayment, setIsInitializingPayment] =
+    useState<boolean>(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{
     code: string;
     amount: number;
@@ -147,6 +148,63 @@ export default function PaymentScreen() {
       discount: appliedDiscount?.amount || 0,
     });
   }, [subtotal, selectedAddress, appliedDiscount]);
+
+  // Inicializar Payment Sheet una sola vez al montar (como en web antes de React 18)
+  // NOTA: A diferencia de web, NO re-inicializamos en cada cambio porque crea loops
+  // El monto se actualiza solo en el momento de handlePayment
+  useEffect(() => {
+    // Solo inicializar si hay artículos seleccionados
+    if (selectedArticleIds.length === 0) {
+      console.log('⏭️ [PAYMENT] Skipping init: no articles selected');
+      return;
+    }
+
+    const initPaymentSheet = async () => {
+      try {
+        setIsInitializingPayment(true);
+        console.log('🔄 [PAYMENT] Initializing Payment Sheet on mount');
+        console.log(
+          '💰 [PAYMENT] Initial total (backend will convert to cents):',
+          paymentDetails.total
+        );
+
+        const initialized = await initializePaymentSheet(
+          paymentDetails.total, // Backend convierte a centavos
+          selectedArticleIds
+        );
+
+        if (!initialized) {
+          console.error('❌ [PAYMENT] Failed to initialize Payment Sheet');
+          callToast({
+            variant: 'error',
+            description: {
+              es: 'Error al preparar el pago. Inténtalo de nuevo.',
+              en: 'Error preparing payment. Please try again.',
+            },
+          });
+        } else {
+          console.log('✅ [PAYMENT] Payment Sheet ready');
+        }
+      } catch (error) {
+        console.error(
+          '❌ [PAYMENT] Exception initializing Payment Sheet:',
+          error
+        );
+        callToast({
+          variant: 'error',
+          description: {
+            es: 'Error al preparar el pago. Inténtalo de nuevo.',
+            en: 'Error preparing payment. Please try again.',
+          },
+        });
+      } finally {
+        setIsInitializingPayment(false);
+      }
+    };
+
+    initPaymentSheet();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Solo al montar, NO escuchar cambios
 
   // Toggle selección de artículo
   const toggleArticleSelection = useCallback(
@@ -251,31 +309,40 @@ export default function PaymentScreen() {
       return;
     }
 
-    // Inicializar Payment Sheet
-    console.log('🔄 [PAYMENT] Inicializando Payment Sheet...');
-    const initialized = await initializePaymentSheet(
-      paymentDetails.total,
-      selectedArticleIds
+    // Re-inicializar Payment Sheet con el monto final actualizado
+    // CRÍTICO: Si esto falla, NO se debe presentar el Payment Sheet con el monto viejo
+    console.log('🔄 [PAYMENT] Re-initializing Payment Sheet with final amount');
+    console.log(
+      '💰 [PAYMENT] Final amount to charge (backend will convert to cents):',
+      paymentDetails.total
     );
 
+    const initialized = await initializePaymentSheet(
+      paymentDetails.total, // Backend convierte a centavos
+      selectedArticleIds
+    );
     if (!initialized) {
       console.error(
-        '❌ [PAYMENT] Error al inicializar Payment Sheet:',
-        paymentError
+        '❌ [PAYMENT] CRITICAL: Failed to initialize Payment Sheet with updated amount'
+      );
+      console.error(
+        '❌ [PAYMENT] Payment blocked - cannot proceed with outdated amount'
       );
       callToast({
         variant: 'error',
-        description: paymentError || {
-          es: paymentTranslations.paymentInitError,
-          en: paymentTranslations.paymentInitError,
+        description: {
+          es: 'Error al preparar el pago con el monto actualizado. Por favor, inténtalo de nuevo.',
+          en: 'Error preparing payment with updated amount. Please try again.',
         },
       });
-      return;
+      return; // STOP HERE - No presentar Payment Sheet con monto viejo
     }
 
-    console.log('✅ [PAYMENT] Payment Sheet inicializado correctamente');
+    console.log(
+      '✅ [PAYMENT] Payment Sheet successfully initialized with correct amount'
+    );
 
-    // Presentar Payment Sheet
+    // Presentar Payment Sheet (solo si se inicializó correctamente)
     console.log('🔄 [PAYMENT] Presentando Payment Sheet al usuario...');
     const success = await presentPaymentSheet();
 
@@ -301,7 +368,6 @@ export default function PaymentScreen() {
     paymentDetails.total,
     initializePaymentSheet,
     presentPaymentSheet,
-    paymentError,
     callToast,
     router,
     paymentTranslations,
@@ -744,12 +810,15 @@ export default function PaymentScreen() {
           disabled={
             selectedArticleIds.length === 0 ||
             !selectedAddress ||
-            paymentLoading
+            paymentLoading ||
+            isInitializingPayment
           }
-          isLoading={paymentLoading}
+          isLoading={paymentLoading || isInitializingPayment}
           className='mb-6'
         >
-          {paymentTranslations.payNow}
+          {isInitializingPayment
+            ? paymentTranslations.processing
+            : paymentTranslations.payNow}
         </Button>
       </ScrollView>
 

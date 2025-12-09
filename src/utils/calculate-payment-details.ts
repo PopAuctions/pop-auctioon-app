@@ -1,9 +1,5 @@
 import type { CountryValue } from '@/types/types';
-import {
-  getShippingTax,
-  getCommissionsValue,
-  TAX_PERCENTAGE,
-} from '@/constants/payment';
+import { getShippingTax, getCommissionsValue } from '@/constants/payment';
 
 /**
  * Input parameters for payment calculation
@@ -23,13 +19,13 @@ export interface PaymentDetailsInput {
 export interface PaymentDetails {
   /** Subtotal (articles amount) */
   subtotal: number;
-  /** Commission fee (IVA included) */
+  /** Commission fee (WITHOUT VAT - matches web) */
   commission: number;
   /** Shipping cost based on country */
   shipping: number;
   /** Discount applied */
   discount: number;
-  /** Final total amount */
+  /** Final total amount in euros (backend converts to cents) */
   total: number;
 }
 
@@ -64,13 +60,12 @@ export function calculatePaymentDetails(
   // Subtotal = suma de precios de artículos
   const subtotal = articlesAmount;
 
-  // Commission calculation (with VAT included)
+  // Commission calculation (WITHOUT VAT - matches web behavior)
   const commissionsValue = getCommissionsValue();
   const commissionPercentage = commissionsValue.STANDARD.PERCENTAGE; // 0.125 (12.5%)
-  const taxPercentage = TAX_PERCENTAGE; // 0.21 (21% IVA)
 
-  const commissionWithoutTax = subtotal * commissionPercentage;
-  const commission = commissionWithoutTax * (1 + taxPercentage);
+  // Web usa Math.round() para la comisión
+  const commission = Math.round(subtotal * commissionPercentage);
 
   // Shipping calculation based on country
   // Default to GENERAL (like web) if no country selected
@@ -90,6 +85,6 @@ export function calculatePaymentDetails(
     commission: Number(commission.toFixed(2)),
     shipping: Number(shipping.toFixed(2)),
     discount: Number(discount.toFixed(2)),
-    total: Number(total.toFixed(2)),
+    total: Number(total.toFixed(2)), // Backend convierte a centavos
   };
 }
