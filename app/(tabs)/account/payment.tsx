@@ -32,6 +32,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Checkbox } from 'expo-checkbox';
 import { cn } from '@/utils/cn';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
+import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
 import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
 
@@ -92,6 +93,9 @@ export default function PaymentScreen() {
   } = useGetDiscountCode();
 
   const paymentTranslations = t('screens.payment');
+
+  // Formatter para euros (formato europeo: 10.114,00 €)
+  const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
 
   // DEBUG: Logs para verificar el flujo
   useEffect(() => {
@@ -248,8 +252,8 @@ export default function PaymentScreen() {
       callToast({
         variant: 'success',
         description: {
-          es: `Código aplicado: $${discountData.amount} de descuento`,
-          en: `Code applied: $${discountData.amount} discount`,
+          es: `Código aplicado: ${formatter.format(discountData.amount)} de descuento`,
+          en: `Code applied: ${formatter.format(discountData.amount)} discount`,
         },
       });
     } else {
@@ -266,6 +270,7 @@ export default function PaymentScreen() {
     discountData,
     discountErrorMessage,
     callToast,
+    formatter,
   ]);
 
   // Remover descuento aplicado
@@ -668,7 +673,7 @@ export default function PaymentScreen() {
                 type='body'
                 className='font-medium'
               >
-                ${paymentDetails.subtotal.toFixed(2)}
+                {formatter.format(paymentDetails.subtotal)}
               </CustomText>
             </View>
 
@@ -684,7 +689,7 @@ export default function PaymentScreen() {
                 type='body'
                 className='font-medium'
               >
-                ${paymentDetails.commission.toFixed(2)}
+                {formatter.format(paymentDetails.commission)}
               </CustomText>
             </View>
 
@@ -700,7 +705,7 @@ export default function PaymentScreen() {
                 type='body'
                 className='font-medium'
               >
-                ${paymentDetails.shipping.toFixed(2)}
+                {formatter.format(paymentDetails.shipping)}
               </CustomText>
             </View>
 
@@ -717,7 +722,7 @@ export default function PaymentScreen() {
                   type='body'
                   className='font-medium text-green-600'
                 >
-                  -${paymentDetails.discount.toFixed(2)}
+                  -{formatter.format(paymentDetails.discount)}
                 </CustomText>
               </View>
             )}
@@ -729,15 +734,15 @@ export default function PaymentScreen() {
             <View className='flex-row justify-between'>
               <CustomText
                 type='h4'
-                className='text-cinnabar'
+                className='font-bold text-cinnabar'
               >
                 Total:
               </CustomText>
               <CustomText
                 type='h4'
-                className='text-cinnabar'
+                className='font-bold text-cinnabar'
               >
-                ${paymentDetails.total.toFixed(2)}
+                {formatter.format(paymentDetails.total)}
               </CustomText>
             </View>
           </View>
@@ -795,7 +800,7 @@ export default function PaymentScreen() {
                     type='body'
                     className='font-bold text-cinnabar'
                   >
-                    ${(article.soldPrice || 0).toFixed(2)}
+                    {formatter.format(article.soldPrice || 0)}
                   </CustomText>
                 </View>
               </View>
