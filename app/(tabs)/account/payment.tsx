@@ -49,11 +49,11 @@ export default function PaymentScreen() {
   } = useGetWonArticles({ auctionId: auctionId || '' });
 
   // Cargar direcciones (equivalente a getUserAddresses en web)
-  // TODO: Usar addresses para selección de dirección de envío
   const {
     data: addresses,
     status: addressesStatus,
     errorMessage: addressesError,
+    refetch: refetchAddresses,
   } = useGetAddresses();
 
   const {
@@ -64,6 +64,15 @@ export default function PaymentScreen() {
   } = useStripePayment();
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
+
+  // Inicializar artículos seleccionados cuando se cargan (como en web)
+  useEffect(() => {
+    if (articles.length > 0 && selectedArticleIds.length === 0) {
+      const allIds = articles.map((a) => a.id);
+      setSelectedArticleIds(allIds);
+      console.log('📦 [PAYMENT] Auto-selecting all articles:', allIds);
+    }
+  }, [articles, selectedArticleIds.length]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null
   );
@@ -115,8 +124,12 @@ export default function PaymentScreen() {
 
   // Obtener dirección seleccionada
   const selectedAddress = useMemo(() => {
+    console.log('🔍 [PAYMENT] selectedAddressId:', selectedAddressId);
+    console.log('🔍 [PAYMENT] addresses length:', addresses?.length);
     if (!selectedAddressId || !addresses) return null;
-    return addresses.find((addr) => addr.id === selectedAddressId) || null;
+    const found = addresses.find((addr) => addr.id === selectedAddressId);
+    console.log('🔍 [PAYMENT] selectedAddress found:', found ? 'YES' : 'NO');
+    return found || null;
   }, [selectedAddressId, addresses]);
 
   // Calcular subtotal de artículos seleccionados
@@ -136,33 +149,32 @@ export default function PaymentScreen() {
   }, [subtotal, selectedAddress, appliedDiscount]);
 
   // Toggle selección de artículo
-  const toggleArticleSelection = useCallback((articleId: number) => {
-    setSelectedArticleIds((prev) => {
-      if (prev.includes(articleId)) {
-        return prev.filter((id) => id !== articleId);
-      }
-      return [...prev, articleId];
-    });
-  }, []);
-
-  // Seleccionar/deseleccionar todos
-  const toggleSelectAll = useCallback(() => {
-    if (selectedArticleIds.length === articles.length) {
-      setSelectedArticleIds([]);
-    } else {
-      setSelectedArticleIds(articles.map((a) => a.id));
-    }
-  }, [articles, selectedArticleIds.length]);
+  const toggleArticleSelection = useCallback(
+    (articleId: number) => {
+      setSelectedArticleIds((prev) => {
+        if (prev.includes(articleId)) {
+          // Prevenir deselección del último artículo (como en web)
+          if (prev.length === 1) {
+            callToast({
+              variant: 'error',
+              description: 'screens.payment.cannotDeselectLastItem',
+            });
+            return prev;
+          }
+          return prev.filter((id) => id !== articleId);
+        }
+        return [...prev, articleId];
+      });
+    },
+    [callToast]
+  );
 
   // Manejar aplicación de código de descuento
   const handleApplyDiscount = useCallback(async () => {
     if (!discountCode.trim()) {
       callToast({
         variant: 'warning',
-        description: {
-          es: 'Ingresa un código de descuento',
-          en: 'Enter a discount code',
-        },
+        description: 'screens.payments.emptyDiscountCode',
       });
       return;
     }
@@ -186,10 +198,8 @@ export default function PaymentScreen() {
       // Mostrar error específico del backend si existe
       callToast({
         variant: 'error',
-        description: discountErrorMessage || {
-          es: 'Código de descuento inválido',
-          en: 'Invalid discount code',
-        },
+        description:
+          discountErrorMessage || 'screens.payments.invalidDiscountCode',
       });
     }
   }, [
@@ -380,18 +390,18 @@ export default function PaymentScreen() {
         contentContainerClassName='px-6 py-6'
       >
         {/* Alerta de verificación */}
-        <View className='mb-6 flex-row items-start rounded-lg border border-yellow-300 bg-yellow-50 p-4'>
+        <View className='border-hairline mb-6 flex-row items-start rounded-lg border-black  p-4'>
           <View className='mr-3 mt-1'>
             <FontAwesomeIcon
               variant='bold'
-              name='circle-exclamation'
+              name='exclamation-triangle'
               size={20}
               color='#f59e0b'
             />
           </View>
           <CustomText
-            type='bodysmall'
-            className='flex-1 text-yellow-800'
+            type='bold'
+            className='flex-1 text-base text-cinnabar'
           >
             {paymentTranslations.paymentAlert}
           </CustomText>
@@ -410,7 +420,7 @@ export default function PaymentScreen() {
           <View className='mb-3 flex-row items-center gap-3'>
             <View className='flex-1'>
               <SelectField
-                name='addressId'
+                name=''
                 value={selectedAddressId || ''}
                 options={
                   addresses?.map((addr) => ({
@@ -419,7 +429,15 @@ export default function PaymentScreen() {
                   })) || []
                 }
                 placeholder={paymentTranslations.selectAddress}
-                onChange={(value) => setSelectedAddressId(value as string)}
+                formField={true}
+                onChange={(value) => {
+                  console.log(
+                    '📍 [PAYMENT] SelectField onChange:',
+                    value,
+                    typeof value
+                  );
+                  setSelectedAddressId(value as string);
+                }}
               />
             </View>
             <Button
@@ -439,128 +457,71 @@ export default function PaymentScreen() {
 
           {/* Preview de dirección seleccionada */}
           {selectedAddress && (
-            <View className='bg-gray-50 rounded-lg p-4'>
-              <CustomText
-                type='body'
-                className='mb-2 font-medium'
-              >
-                {selectedAddress.nameAddress ||
-                  paymentTranslations.addressPreview}
-              </CustomText>
+            <View className='mt-2 w-fit space-y-1 rounded bg-neutral-100 p-3'>
               <CustomText
                 type='bodysmall'
-                className='text-gray-600'
+                className='text-black'
               >
+                <CustomText
+                  type='bodysmall'
+                  className='font-bold text-black'
+                >
+                  {paymentTranslations.address}:
+                </CustomText>{' '}
                 {selectedAddress.address}
               </CustomText>
               <CustomText
                 type='bodysmall'
-                className='text-gray-600'
+                className='text-black'
               >
-                {selectedAddress.city}, {selectedAddress.state}{' '}
-                {selectedAddress.postalCode}
-              </CustomText>
-              <CustomText
-                type='bodysmall'
-                className='text-gray-600'
-              >
+                <CustomText
+                  type='bodysmall'
+                  className='font-bold text-black'
+                >
+                  {paymentTranslations.country}:
+                </CustomText>{' '}
                 {
                   COUNTRIES_MAP_LABEL[locale][
                     selectedAddress.country as CountryValue
                   ]
                 }
               </CustomText>
-            </View>
-          )}
-        </View>
-
-        {/* Header con título y botón seleccionar todos */}
-        <View className='mb-4 flex-row items-center justify-between'>
-          <CustomText
-            type='h3'
-            className='text-cinnabar'
-          >
-            {paymentTranslations.selectItems}
-          </CustomText>
-          <Button
-            mode='secondary'
-            size='small'
-            onPress={toggleSelectAll}
-          >
-            {selectedArticleIds.length === articles.length
-              ? paymentTranslations.deselectAll
-              : paymentTranslations.selectAll}
-          </Button>
-        </View>
-
-        {/* Información de selección */}
-        <View className='bg-gray-50 mb-6 rounded-lg p-4'>
-          <CustomText
-            type='body'
-            className='text-gray-600'
-          >
-            {selectedArticleIds.length} {paymentTranslations.itemsSelected}
-          </CustomText>
-        </View>
-
-        {/* Sección: Código de descuento */}
-        <View className='mb-6'>
-          <CustomText
-            type='h4'
-            className='mb-3'
-          >
-            {paymentTranslations.couponCode}
-          </CustomText>
-
-          {!appliedDiscount ? (
-            <View className='flex-row items-center gap-3'>
-              <View className='flex-1'>
-                <Input
-                  placeholder={paymentTranslations.couponCode}
-                  value={discountCode}
-                  onChangeText={setDiscountCode}
-                  autoCapitalize='characters'
-                  editable={!isValidatingDiscount}
-                />
-              </View>
-              <Button
-                mode='secondary'
-                size='small'
-                onPress={handleApplyDiscount}
-                disabled={!discountCode.trim() || isValidatingDiscount}
-                isLoading={isValidatingDiscount}
+              <CustomText
+                type='bodysmall'
+                className='text-black'
               >
-                {paymentTranslations.applyCoupon}
-              </Button>
-            </View>
-          ) : (
-            <View className='flex-row items-center justify-between rounded-lg border border-green-300 bg-green-50 p-4'>
-              <View className='flex-1'>
-                <CustomText
-                  type='body'
-                  className='font-medium text-green-800'
-                >
-                  {paymentTranslations.couponApplied}
-                </CustomText>
                 <CustomText
                   type='bodysmall'
-                  className='text-green-600'
+                  className='font-bold text-black'
                 >
-                  {appliedDiscount.code} - ${appliedDiscount.amount.toFixed(2)}
-                </CustomText>
-              </View>
-              <Button
-                mode='empty'
-                size='small'
-                onPress={handleRemoveDiscount}
+                  {paymentTranslations.city}:
+                </CustomText>{' '}
+                {selectedAddress.city}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-black'
               >
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='xmark'
-                  size={18}
-                  color='#dc2626'
-                />
-              </Button>
+                <CustomText
+                  type='bodysmall'
+                  className='font-bold text-black'
+                >
+                  {paymentTranslations.state}:
+                </CustomText>{' '}
+                {selectedAddress.state}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-black'
+              >
+                <CustomText
+                  type='bodysmall'
+                  className='font-bold text-black'
+                >
+                  {paymentTranslations.postalCode}:
+                </CustomText>{' '}
+                {selectedAddress.postalCode}
+              </CustomText>
             </View>
           )}
         </View>
@@ -575,6 +536,60 @@ export default function PaymentScreen() {
           </CustomText>
 
           <View className='bg-gray-50 rounded-lg p-4'>
+            {/* Código de descuento (como en web, arriba del subtotal) */}
+            <View className='mb-4'>
+              <CustomText
+                type='body'
+                className='text-gray-700 mb-2 font-medium'
+              >
+                {paymentTranslations.couponCode}
+              </CustomText>
+
+              {!appliedDiscount ? (
+                <View className='flex-row items-center gap-2'>
+                  <View className='flex-1'>
+                    <Input
+                      placeholder={paymentTranslations.couponCode}
+                      value={discountCode}
+                      onChangeText={setDiscountCode}
+                      autoCapitalize='characters'
+                      editable={!isValidatingDiscount}
+                    />
+                  </View>
+                  <Button
+                    mode='secondary'
+                    size='small'
+                    onPress={handleApplyDiscount}
+                    disabled={!discountCode.trim() || isValidatingDiscount}
+                    isLoading={isValidatingDiscount}
+                  >
+                    {paymentTranslations.applyCoupon}
+                  </Button>
+                </View>
+              ) : (
+                <View className='relative'>
+                  <Input
+                    value={appliedDiscount.code}
+                    editable={false}
+                    className='pr-10'
+                  />
+                  <Button
+                    mode='empty'
+                    size='small'
+                    onPress={handleRemoveDiscount}
+                    className='absolute right-2 top-1/2 -translate-y-1/2'
+                  >
+                    <CustomText
+                      type='body'
+                      className='text-gray-600'
+                    >
+                      x
+                    </CustomText>
+                  </Button>
+                </View>
+              )}
+            </View>
+
             {/* Subtotal */}
             <View className='mb-2 flex-row justify-between'>
               <CustomText
@@ -745,7 +760,7 @@ export default function PaymentScreen() {
         onSuccess={() => {
           setShowAddressModal(false);
           // Refetch addresses para actualizar la lista
-          // El hook useGetAddresses debería tener un refetch, pero si no, el modal ya hace el refetch
+          refetchAddresses();
         }}
       />
     </SafeAreaView>

@@ -73,9 +73,11 @@ export function calculatePaymentDetails(
   const commission = commissionWithoutTax * (1 + taxPercentage);
 
   // Shipping calculation based on country
-  let shipping = 0;
+  // Default to GENERAL (like web) if no country selected
+  const shippingTax = getShippingTax();
+  let shipping = shippingTax.GENERAL; // Default 29€
+
   if (selectedCountry) {
-    const shippingTax = getShippingTax();
     shipping =
       selectedCountry === 'SPAIN' ? shippingTax.SPAIN : shippingTax.GENERAL;
   }
