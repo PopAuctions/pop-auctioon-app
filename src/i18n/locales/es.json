@@ -583,8 +583,18 @@
       "subtitle": "Encuentra respuestas a tus dudas"
     },
     "contactUs": {
-      "title": "Contáctanos",
+      "title": "Contacto",
       "subtitle": "Estamos aquí para ayudarte"
+    },
+    "liveAuction": {
+      "streamInfo": "Información del Stream",
+      "auctionId": "ID de Subasta",
+      "username": "Usuario",
+      "chatStatus": "Estado del Chat",
+      "connected": "Conectado",
+      "anonymous": "Anónimo",
+      "url": "URL",
+      "close": "Cerrar"
     }
   },
   "components": {
@@ -605,10 +615,23 @@
     "generic": "Algo salió mal",
     "loadFailedTitle": "Error al cargar",
     "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
-    "retryButton": "Reintentar"
+    "retryButton": "Reintentar",
+    "missingAuctionId": "No se proporcionó el ID de la subasta"
   },
   "errorLoading": {
     "title": "Error de Carga",
     "fontError": "Error al cargar las fuentes. Por favor, reinicia la aplicación."
+  },
+  "chat": {
+    "title": "Chat en vivo",
+    "placeholder": "Escribe un mensaje...",
+    "connecting": "Conectando al chat...",
+    "disconnected": "Desconectado...",
+    "errorRetry": "Intenta recargar la pantalla",
+    "noMessages": "Aún no hay mensajes",
+    "loginToChat": "Inicia sesión para participar en el chat",
+    "sendError": "No se pudo enviar el mensaje",
+    "connectionError": "Error al conectar con el chat",
+    "send": "Enviar"
   }
 }

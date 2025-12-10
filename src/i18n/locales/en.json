@@ -574,6 +574,16 @@
     "contactUs": {
       "title": "Contact Us",
       "subtitle": "We're here to help"
+    },
+    "liveAuction": {
+      "streamInfo": "Stream Information",
+      "auctionId": "Auction ID",
+      "username": "Username",
+      "chatStatus": "Chat Status",
+      "connected": "Connected",
+      "anonymous": "Anonymous",
+      "url": "URL",
+      "close": "Close"
     }
   },
   "components": {
@@ -592,12 +602,25 @@
     "defaultMessage": "If the problem persists, contact support.",
     "tryAgain": "Try again",
     "generic": "Something went wrong",
-    "loadFailedTitle": "Error loading",
+    "loadFailedTitle": "Loading Error",
     "loadFailedMessage": "Could not load information. Please try again.",
-    "retryButton": "Retry"
+    "retryButton": "Retry",
+    "missingAuctionId": "Auction ID was not provided"
   },
   "errorLoading": {
     "title": "Loading Error",
     "fontError": "Error loading fonts. Please restart the app."
+  },
+  "chat": {
+    "title": "Live chat",
+    "placeholder": "Type a message...",
+    "connecting": "Connecting to chat...",
+    "disconnected": "Disconnected...",
+    "errorRetry": "Try reloading the screen",
+    "noMessages": "No messages yet",
+    "loginToChat": "Log in to participate in the chat",
+    "sendError": "Could not send the message",
+    "connectionError": "Error connecting to chat",
+    "send": "Send"
   }
 }

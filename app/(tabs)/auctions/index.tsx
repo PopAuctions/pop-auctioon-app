@@ -26,7 +26,7 @@ export default function AuctionsScreen() {
         {/* Live Auction Banner */}
         <View className='mx-4 mt-4'>
           <CustomLink
-            href='/(tabs)/auctions/live/123'
+            href='/(tabs)/auctions/live/14'
             mode='empty'
             className='rounded-lg bg-red-500 p-6'
           >
