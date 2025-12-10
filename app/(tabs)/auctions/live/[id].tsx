@@ -43,8 +43,9 @@ export default function LiveAuctionScreen() {
   // Usar username del usuario, o vacío si no hay o hubo error
   const username = currentUser?.username || '';
 
-  // Construir la URL del stream
-  const streamUrl = `http://10.0.2.2:3000/es/stream/${auctionId}?username=${username}`;
+  // Construir la URL del stream (usando variable de entorno para desarrollo local)
+  const streamBaseUrl = process.env.EXPO_PUBLIC_STREAM_URL;
+  const streamUrl = `${streamBaseUrl}/${locale}/stream/${auctionId}?username=${username}`;
 
   // Si el stream falló, mostrar error
   if (streamError) {
