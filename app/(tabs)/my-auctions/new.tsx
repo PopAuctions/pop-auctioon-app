@@ -23,13 +23,6 @@ export default function CreateAuctionScreen() {
       return;
     }
 
-    // Lógica para crear la subasta
-    console.log('Creating auction:', {
-      title,
-      description,
-      startingPrice,
-      duration,
-    });
     Alert.alert('Éxito', 'Subasta creada exitosamente', [
       { text: 'OK', onPress: () => router.back() },
     ]);

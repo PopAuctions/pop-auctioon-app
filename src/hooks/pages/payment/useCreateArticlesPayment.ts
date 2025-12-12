@@ -36,23 +36,12 @@ export function useCreateArticlesPayment() {
     setErrorMessage(null);
 
     try {
-      console.log('[useCreateArticlesPayment] Creating payment record:', {
-        auctionId: params.auctionId,
-        articlesCount: params.articlesIds.length,
-        amount: params.clientTotalAmount,
-        hasDiscount: !!params.discount,
-      });
-
       const response = await securePost<CreateArticlesPaymentResponse>({
         endpoint: SECURE_ENDPOINTS.PAYMENT.CREATE_ARTICLES_PAYMENT,
         data: params,
       });
 
       if (response.error) {
-        console.error(
-          '[useCreateArticlesPayment] Error from backend:',
-          response.error
-        );
         setStatus(REQUEST_STATUS.error);
         setErrorMessage(response.error);
         return { userPaymentId: null, error: response.error };
@@ -63,18 +52,10 @@ export function useCreateArticlesPayment() {
           es: 'No se recibió respuesta del servidor',
           en: 'No response received from server',
         };
-        console.error('[useCreateArticlesPayment] No data received');
         setStatus(REQUEST_STATUS.error);
         setErrorMessage(error);
         return { userPaymentId: null, error };
       }
-
-      console.log(
-        '[useCreateArticlesPayment] Payment record created successfully:',
-        {
-          userPaymentId: response.data.userPaymentId,
-        }
-      );
 
       setStatus(REQUEST_STATUS.success);
       return { userPaymentId: response.data.userPaymentId, error: null };

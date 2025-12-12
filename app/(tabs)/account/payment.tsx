@@ -76,10 +76,6 @@ export default function PaymentScreen() {
   useEffect(() => {
     if (paymentIntentId) {
       paymentIntentRef.current = paymentIntentId;
-      console.log(
-        '🆔 [PAYMENT] Payment Intent ID actualizado:',
-        paymentIntentId
-      );
     }
   }, [paymentIntentId]);
 
@@ -90,7 +86,6 @@ export default function PaymentScreen() {
     if (articles.length > 0 && selectedArticleIds.length === 0) {
       const allIds = articles.map((a) => a.id);
       setSelectedArticleIds(allIds);
-      console.log('📦 [PAYMENT] Auto-selecting all articles:', allIds);
     }
   }, [articles, selectedArticleIds.length]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
@@ -117,44 +112,10 @@ export default function PaymentScreen() {
   // Formatter para euros (formato europeo: 10.114,00 €)
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
 
-  // DEBUG: Logs para verificar el flujo
-  useEffect(() => {
-    console.log('\n🔍 [PAYMENT SCREEN] Component mounted');
-    console.log('📦 [PAYMENT SCREEN] auctionId:', auctionId);
-  }, [auctionId]);
-
-  useEffect(() => {
-    console.log('📊 [PAYMENT SCREEN] Articles status:', articlesStatus);
-    console.log(
-      '📦 [PAYMENT SCREEN] Articles data:',
-      articles?.length || 0,
-      'items'
-    );
-    if (articlesError) {
-      console.error('❌ [PAYMENT SCREEN] Articles error:', articlesError);
-    }
-  }, [articlesStatus, articles, articlesError]);
-
-  useEffect(() => {
-    console.log('📍 [PAYMENT SCREEN] Addresses status:', addressesStatus);
-    console.log(
-      '📦 [PAYMENT SCREEN] Addresses data:',
-      addresses?.length || 0,
-      'items'
-    );
-    if (addressesError) {
-      console.error('❌ [PAYMENT SCREEN] Addresses error:', addressesError);
-    }
-  }, [addressesStatus, addresses, addressesError]);
-
   // Obtener dirección seleccionada
   const selectedAddress = useMemo(() => {
-    console.log('🔍 [PAYMENT] selectedAddressId:', selectedAddressId);
-    console.log('🔍 [PAYMENT] addresses length:', addresses?.length);
     if (!selectedAddressId || !addresses) return null;
-    const found = addresses.find((addr) => addr.id === selectedAddressId);
-    console.log('🔍 [PAYMENT] selectedAddress found:', found ? 'YES' : 'NO');
-    return found || null;
+    return addresses.find((addr) => addr.id === selectedAddressId) || null;
   }, [selectedAddressId, addresses]);
 
   // Calcular subtotal de artículos seleccionados
@@ -179,26 +140,19 @@ export default function PaymentScreen() {
   useEffect(() => {
     // Solo inicializar si hay artículos seleccionados
     if (selectedArticleIds.length === 0) {
-      console.log('⏭️ [PAYMENT] Skipping init: no articles selected');
       return;
     }
 
     const initPaymentSheet = async () => {
       try {
         setIsInitializingPayment(true);
-        console.log('🔄 [PAYMENT] Initializing Payment Sheet on mount');
-        console.log(
-          '💰 [PAYMENT] Initial total (backend will convert to cents):',
-          paymentDetails.total
-        );
 
         const initialized = await initializePaymentSheet(
-          paymentDetails.total, // Backend convierte a centavos
+          paymentDetails.total,
           selectedArticleIds
         );
 
         if (!initialized) {
-          console.error('❌ [PAYMENT] Failed to initialize Payment Sheet');
           callToast({
             variant: 'error',
             description: {
@@ -206,14 +160,8 @@ export default function PaymentScreen() {
               en: 'Error preparing payment. Please try again.',
             },
           });
-        } else {
-          console.log('✅ [PAYMENT] Payment Sheet ready');
         }
       } catch (error) {
-        console.error(
-          '❌ [PAYMENT] Exception initializing Payment Sheet:',
-          error
-        );
         callToast({
           variant: 'error',
           description: {
@@ -307,12 +255,7 @@ export default function PaymentScreen() {
 
   // Manejar el pago (flujo completo idéntico a web)
   const handlePayment = useCallback(async () => {
-    console.log('\n💳 [PAYMENT] Iniciando proceso de pago');
-    console.log('📦 [PAYMENT] Artículos seleccionados:', selectedArticleIds);
-    console.log('💰 [PAYMENT] Total a pagar:', paymentDetails.total);
-
     if (selectedArticleIds.length === 0) {
-      console.warn('⚠️ [PAYMENT] No hay artículos seleccionados');
       callToast({
         variant: 'warning',
         description: {
@@ -336,18 +279,12 @@ export default function PaymentScreen() {
 
     try {
       // PASO 1: Re-inicializar Payment Sheet con monto final actualizado
-      console.log(
-        '🔄 [PAYMENT] Re-initializing Payment Sheet with final amount'
-      );
-      console.log('💰 [PAYMENT] Final amount:', paymentDetails.total);
-
       const initialized = await initializePaymentSheet(
         paymentDetails.total,
         selectedArticleIds
       );
 
       if (!initialized) {
-        console.error('❌ [PAYMENT] Failed to initialize Payment Sheet');
         callToast({
           variant: 'error',
           description: {
@@ -361,12 +298,6 @@ export default function PaymentScreen() {
       // Obtener el Payment Intent ID directamente del hook (se actualiza después de initializePaymentSheet)
       const currentPaymentIntentId = paymentIntentId;
       if (!currentPaymentIntentId) {
-        console.error('❌ [PAYMENT] No Payment Intent ID available');
-        console.error('❌ [PAYMENT] paymentIntentId:', paymentIntentId);
-        console.error(
-          '❌ [PAYMENT] paymentIntentRef.current:',
-          paymentIntentRef.current
-        );
         callToast({
           variant: 'error',
           description: {
@@ -377,11 +308,7 @@ export default function PaymentScreen() {
         return;
       }
 
-      console.log('✅ [PAYMENT] Payment Sheet ready');
-      console.log('🆔 [PAYMENT] Payment Intent ID:', currentPaymentIntentId);
-
       // PASO 2: CRÍTICO - Crear registro en BD ANTES de confirmar pago
-      console.log('💾 [PAYMENT] Creating payment record in database');
       const { userPaymentId, error: createPaymentError } = await createPayment({
         auctionId: auctionId || '',
         articlesIds: selectedArticleIds,
@@ -393,10 +320,6 @@ export default function PaymentScreen() {
       });
 
       if (createPaymentError || !userPaymentId) {
-        console.error(
-          '❌ [PAYMENT] Failed to create payment record:',
-          createPaymentError
-        );
         callToast({
           variant: 'error',
           description: createPaymentError || {
@@ -407,20 +330,11 @@ export default function PaymentScreen() {
         return;
       }
 
-      console.log('✅ [PAYMENT] Payment record created. ID:', userPaymentId);
-
       // PASO 3: Presentar Payment Sheet al usuario
-      console.log('📱 [PAYMENT] Presenting Payment Sheet to user');
       const { success, error: presentError } = await presentPaymentSheet();
 
       if (!success && presentError) {
-        console.error(
-          '❌ [PAYMENT] Payment failed or cancelled:',
-          presentError
-        );
-
         // PASO 4: CRÍTICO - Revertir registro en BD si el pago falla
-        console.log('🔄 [PAYMENT] Reverting payment record due to failure');
         await rejectPayment({
           userPaymentId,
           errorCode: presentError.code,
@@ -441,9 +355,6 @@ export default function PaymentScreen() {
       }
 
       // PASO 5: Pago exitoso
-      console.log('✅ [PAYMENT] Payment successful!');
-      console.log('🎉 [PAYMENT] User Payment ID:', userPaymentId);
-
       callToast({
         variant: 'success',
         description: {
@@ -452,8 +363,6 @@ export default function PaymentScreen() {
         },
       });
 
-      // Navegar al historial de pagos
-      console.log('🔄 [PAYMENT] Redirecting to payment history');
       router.replace('/(tabs)/account/payments-history');
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
@@ -606,11 +515,6 @@ export default function PaymentScreen() {
                 placeholder={paymentTranslations.selectAddress}
                 formField={true}
                 onChange={(value) => {
-                  console.log(
-                    '📍 [PAYMENT] SelectField onChange:',
-                    value,
-                    typeof value
-                  );
                   setSelectedAddressId(value as string);
                 }}
               />
