@@ -358,10 +358,15 @@ export default function PaymentScreen() {
         return;
       }
 
-      // Obtener el Payment Intent ID del hook
-      const currentPaymentIntentId = paymentIntentRef.current;
+      // Obtener el Payment Intent ID directamente del hook (se actualiza después de initializePaymentSheet)
+      const currentPaymentIntentId = paymentIntentId;
       if (!currentPaymentIntentId) {
         console.error('❌ [PAYMENT] No Payment Intent ID available');
+        console.error('❌ [PAYMENT] paymentIntentId:', paymentIntentId);
+        console.error(
+          '❌ [PAYMENT] paymentIntentRef.current:',
+          paymentIntentRef.current
+        );
         callToast({
           variant: 'error',
           description: {
@@ -467,6 +472,7 @@ export default function PaymentScreen() {
     paymentDetails.total,
     auctionId,
     appliedDiscount,
+    paymentIntentId,
     initializePaymentSheet,
     createPayment,
     rejectPayment,
