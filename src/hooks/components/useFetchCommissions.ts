@@ -10,7 +10,7 @@ export const useFetchCommissions = (): ActionResponse<number> => {
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { protectedGet } = useSecureApi();
 
-  const fetchArticles = useCallback(async () => {
+  const fetchCommission = useCallback(async () => {
     try {
       setStatus('loading');
 
@@ -24,17 +24,26 @@ export const useFetchCommissions = (): ActionResponse<number> => {
         return;
       }
 
-      setData(response.data ?? -1);
+      if (response.data === null || response.data === undefined) {
+        setStatus('error');
+        setErrorMessage({
+          en: 'Commission percentage data is missing',
+          es: 'Faltan los datos del porcentaje de comisión',
+        });
+        return;
+      }
+
+      setData(response.data);
       setStatus('success');
     } catch (error) {
       const errorMsg =
         error instanceof Error ? error.message : 'Unknown error occurred';
 
-      sentryErrorReport(errorMsg, 'USE_FETCH_COMMISSIONS - Unexpected error');
+      sentryErrorReport(errorMsg, 'USE_FETCH_COMMISSION - Unexpected error');
 
       const message: LangMap = {
-        en: 'Error loading auction articles',
-        es: 'Error al cargar los artículos de la subasta',
+        en: 'Error fetching commission data',
+        es: 'Error al cargar la comisión',
       };
 
       setStatus('error');
@@ -43,8 +52,8 @@ export const useFetchCommissions = (): ActionResponse<number> => {
   }, [protectedGet]);
 
   useEffect(() => {
-    fetchArticles();
-  }, [fetchArticles]);
+    fetchCommission();
+  }, [fetchCommission]);
   return {
     data,
     status,
