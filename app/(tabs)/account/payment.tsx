@@ -9,7 +9,7 @@
  * 6. Pasa datos a Stripe Payment Sheet
  */
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -17,6 +17,8 @@ import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useStripePayment } from '@/hooks/payment/useStripePayment';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
+import { useCreateArticlesPayment } from '@/hooks/pages/payment/useCreateArticlesPayment';
+import { useRejectArticlesPayment } from '@/hooks/pages/payment/useRejectArticlesPayment';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomText } from '@/components/ui/CustomText';
@@ -61,7 +63,25 @@ export default function PaymentScreen() {
     initializePaymentSheet,
     presentPaymentSheet,
     isLoading: paymentLoading,
+    paymentIntentId,
   } = useStripePayment();
+
+  const { createPayment } = useCreateArticlesPayment();
+  const { rejectPayment } = useRejectArticlesPayment();
+
+  // Ref para guardar el Payment Intent ID (sincronizado con el hook)
+  const paymentIntentRef = useRef<string | null>(null);
+
+  // Sincronizar el Payment Intent ID del hook con el ref local
+  useEffect(() => {
+    if (paymentIntentId) {
+      paymentIntentRef.current = paymentIntentId;
+      console.log(
+        '🆔 [PAYMENT] Payment Intent ID actualizado:',
+        paymentIntentId
+      );
+    }
+  }, [paymentIntentId]);
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
 
@@ -285,7 +305,7 @@ export default function PaymentScreen() {
     });
   }, [callToast]);
 
-  // Manejar el pago
+  // Manejar el pago (flujo completo idéntico a web)
   const handlePayment = useCallback(async () => {
     console.log('\n💳 [PAYMENT] Iniciando proceso de pago');
     console.log('📦 [PAYMENT] Artículos seleccionados:', selectedArticleIds);
@@ -303,7 +323,7 @@ export default function PaymentScreen() {
       return;
     }
 
-    if (!selectedAddress) {
+    if (!selectedAddressId || !selectedAddress) {
       callToast({
         variant: 'warning',
         description: {
@@ -314,45 +334,111 @@ export default function PaymentScreen() {
       return;
     }
 
-    // Re-inicializar Payment Sheet con el monto final actualizado
-    // CRÍTICO: Si esto falla, NO se debe presentar el Payment Sheet con el monto viejo
-    console.log('🔄 [PAYMENT] Re-initializing Payment Sheet with final amount');
-    console.log(
-      '💰 [PAYMENT] Final amount to charge (backend will convert to cents):',
-      paymentDetails.total
-    );
+    try {
+      // PASO 1: Re-inicializar Payment Sheet con monto final actualizado
+      console.log(
+        '🔄 [PAYMENT] Re-initializing Payment Sheet with final amount'
+      );
+      console.log('💰 [PAYMENT] Final amount:', paymentDetails.total);
 
-    const initialized = await initializePaymentSheet(
-      paymentDetails.total, // Backend convierte a centavos
-      selectedArticleIds
-    );
-    if (!initialized) {
-      console.error(
-        '❌ [PAYMENT] CRITICAL: Failed to initialize Payment Sheet with updated amount'
+      const initialized = await initializePaymentSheet(
+        paymentDetails.total,
+        selectedArticleIds
       );
-      console.error(
-        '❌ [PAYMENT] Payment blocked - cannot proceed with outdated amount'
-      );
-      callToast({
-        variant: 'error',
-        description: {
-          es: 'Error al preparar el pago con el monto actualizado. Por favor, inténtalo de nuevo.',
-          en: 'Error preparing payment with updated amount. Please try again.',
-        },
+
+      if (!initialized) {
+        console.error('❌ [PAYMENT] Failed to initialize Payment Sheet');
+        callToast({
+          variant: 'error',
+          description: {
+            es: 'Error al preparar el pago con el monto actualizado',
+            en: 'Error preparing payment with updated amount',
+          },
+        });
+        return;
+      }
+
+      // Obtener el Payment Intent ID del hook
+      const currentPaymentIntentId = paymentIntentRef.current;
+      if (!currentPaymentIntentId) {
+        console.error('❌ [PAYMENT] No Payment Intent ID available');
+        callToast({
+          variant: 'error',
+          description: {
+            es: 'Error: No se generó el ID de pago',
+            en: 'Error: Payment ID not generated',
+          },
+        });
+        return;
+      }
+
+      console.log('✅ [PAYMENT] Payment Sheet ready');
+      console.log('🆔 [PAYMENT] Payment Intent ID:', currentPaymentIntentId);
+
+      // PASO 2: CRÍTICO - Crear registro en BD ANTES de confirmar pago
+      console.log('💾 [PAYMENT] Creating payment record in database');
+      const { userPaymentId, error: createPaymentError } = await createPayment({
+        auctionId: auctionId || '',
+        articlesIds: selectedArticleIds,
+        clientTotalAmount: paymentDetails.total,
+        clientIntent: currentPaymentIntentId,
+        country: selectedAddress.country,
+        userAddressId: selectedAddressId,
+        discount: appliedDiscount,
       });
-      return; // STOP HERE - No presentar Payment Sheet con monto viejo
-    }
 
-    console.log(
-      '✅ [PAYMENT] Payment Sheet successfully initialized with correct amount'
-    );
+      if (createPaymentError || !userPaymentId) {
+        console.error(
+          '❌ [PAYMENT] Failed to create payment record:',
+          createPaymentError
+        );
+        callToast({
+          variant: 'error',
+          description: createPaymentError || {
+            es: 'Error al crear el registro de pago',
+            en: 'Error creating payment record',
+          },
+        });
+        return;
+      }
 
-    // Presentar Payment Sheet (solo si se inicializó correctamente)
-    console.log('🔄 [PAYMENT] Presentando Payment Sheet al usuario...');
-    const success = await presentPaymentSheet();
+      console.log('✅ [PAYMENT] Payment record created. ID:', userPaymentId);
 
-    if (success) {
-      console.log('✅ [PAYMENT] Pago completado exitosamente');
+      // PASO 3: Presentar Payment Sheet al usuario
+      console.log('📱 [PAYMENT] Presenting Payment Sheet to user');
+      const { success, error: presentError } = await presentPaymentSheet();
+
+      if (!success && presentError) {
+        console.error(
+          '❌ [PAYMENT] Payment failed or cancelled:',
+          presentError
+        );
+
+        // PASO 4: CRÍTICO - Revertir registro en BD si el pago falla
+        console.log('🔄 [PAYMENT] Reverting payment record due to failure');
+        await rejectPayment({
+          userPaymentId,
+          errorCode: presentError.code,
+          errorDescription: presentError.message,
+        });
+
+        // Mostrar error solo si NO fue cancelación del usuario
+        if (presentError.code !== 'Canceled') {
+          callToast({
+            variant: 'error',
+            description: {
+              es: presentError.message || 'Error al procesar el pago',
+              en: presentError.message || 'Error processing payment',
+            },
+          });
+        }
+        return;
+      }
+
+      // PASO 5: Pago exitoso
+      console.log('✅ [PAYMENT] Payment successful!');
+      console.log('🎉 [PAYMENT] User Payment ID:', userPaymentId);
+
       callToast({
         variant: 'success',
         description: {
@@ -361,17 +447,29 @@ export default function PaymentScreen() {
         },
       });
 
-      // Navegar al historial de pagos después de un pago exitoso
-      console.log('🔄 [PAYMENT] Redirigiendo a historial de pagos');
+      // Navegar al historial de pagos
+      console.log('🔄 [PAYMENT] Redirecting to payment history');
       router.replace('/(tabs)/account/payments-history');
-    } else {
-      console.warn('⚠️ [PAYMENT] Pago cancelado o fallido');
+    } catch (error: any) {
+      console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'Error inesperado al procesar el pago',
+          en: 'Unexpected error processing payment',
+        },
+      });
     }
   }, [
     selectedArticleIds,
+    selectedAddressId,
     selectedAddress,
     paymentDetails.total,
+    auctionId,
+    appliedDiscount,
     initializePaymentSheet,
+    createPayment,
+    rejectPayment,
     presentPaymentSheet,
     callToast,
     router,

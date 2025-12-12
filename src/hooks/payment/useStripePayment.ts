@@ -3,7 +3,7 @@
  * Maneja la creación del Payment Intent y presentación del Payment Sheet
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useStripe } from '@stripe/stripe-react-native';
 import * as Sentry from '@sentry/react-native';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
@@ -20,11 +20,15 @@ interface UseStripePaymentReturn {
     amount: number,
     selectedItems: number[]
   ) => Promise<boolean>;
-  presentPaymentSheet: () => Promise<boolean>;
+  presentPaymentSheet: () => Promise<{
+    success: boolean;
+    error?: { code: string; message: string };
+  }>;
   isLoading: boolean;
   status: RequestStatus;
   errorMessage: LangMap | null;
   clearError: () => void;
+  paymentIntentId: string | null;
 }
 
 export const useStripePayment = (): UseStripePaymentReturn => {
@@ -35,6 +39,7 @@ export const useStripePayment = (): UseStripePaymentReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<RequestStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const paymentIntentIdRef = useRef<string | null>(null);
 
   /**
    * Inicializa el Payment Sheet con el Payment Intent
@@ -95,6 +100,13 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           setIsLoading(false);
           return false;
         }
+
+        // Guardar el Payment Intent ID para usarlo en el registro de BD
+        paymentIntentIdRef.current = response.data.id;
+        console.log(
+          '✅ [useStripePayment] Payment Intent ID guardado:',
+          response.data.id
+        );
 
         console.log(
           '✅ [useStripePayment] clientSecret recibido correctamente'
@@ -157,8 +169,12 @@ export const useStripePayment = (): UseStripePaymentReturn => {
 
   /**
    * Presenta el Payment Sheet al usuario
+   * Retorna objeto con success y error para mejor manejo
    */
-  const presentPaymentSheet = useCallback(async (): Promise<boolean> => {
+  const presentPaymentSheet = useCallback(async (): Promise<{
+    success: boolean;
+    error?: { code: string; message: string };
+  }> => {
     console.log('\n🔧 [useStripePayment] presentPaymentSheet llamado');
     setIsLoading(true);
     setErrorMessage(null);
@@ -173,9 +189,14 @@ export const useStripePayment = (): UseStripePaymentReturn => {
         // Usuario canceló o hubo un error
         if (presentError.code === 'Canceled') {
           console.warn('⚠️ [useStripePayment] Usuario canceló el pago');
-          // Usuario canceló - no es un error
           setIsLoading(false);
-          return false;
+          return {
+            success: false,
+            error: {
+              code: presentError.code,
+              message: 'Payment cancelled by user',
+            },
+          };
         }
 
         console.error(
@@ -192,7 +213,13 @@ export const useStripePayment = (): UseStripePaymentReturn => {
         Sentry.captureException(
           `STRIPE_PRESENT_ERROR: ${presentError.message ?? 'Unknown'}`
         );
-        return false;
+        return {
+          success: false,
+          error: {
+            code: presentError.code ?? 'UNKNOWN',
+            message: presentError.message ?? 'Unknown error',
+          },
+        };
       }
 
       // Pago exitoso
@@ -200,11 +227,11 @@ export const useStripePayment = (): UseStripePaymentReturn => {
         '✅ [useStripePayment] Pago procesado exitosamente por Stripe'
       );
       setIsLoading(false);
-      return true;
+      return { success: true };
     } catch (error: any) {
       const errorMsg: LangMap = {
-        es: 'Error inesperado al procesar el pago',
-        en: 'Unexpected error processing payment',
+        es: 'Error inesperado al presentar el pago',
+        en: 'Unexpected error presenting payment',
       };
       setErrorMessage(errorMsg);
       setIsLoading(false);
@@ -212,7 +239,13 @@ export const useStripePayment = (): UseStripePaymentReturn => {
       Sentry.captureException(
         `STRIPE_PAYMENT_UNEXPECTED: ${error?.message ?? 'Unknown'}`
       );
-      return false;
+      return {
+        success: false,
+        error: {
+          code: 'UNEXPECTED_ERROR',
+          message: error?.message ?? 'Unknown error',
+        },
+      };
     }
   }, [presentStripeSheet]);
 
@@ -227,5 +260,6 @@ export const useStripePayment = (): UseStripePaymentReturn => {
     status,
     errorMessage,
     clearError,
+    paymentIntentId: paymentIntentIdRef.current,
   };
 };
