@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Pantalla de pago con Stripe
  * Patrón similar a Next.js web:
@@ -23,20 +24,17 @@ import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
-import { CustomImage } from '@/components/ui/CustomImage';
-import { Input } from '@/components/ui/Input';
-import { SelectField } from '@/components/fields/SelectField';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
+import { PaymentCheckoutSummary } from '@/components/payment/PaymentCheckoutSummary';
+import { AddressSelector } from '@/components/payment/AddressSelector';
+import { PaymentArticlesList } from '@/components/payment/PaymentArticlesList';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Checkbox } from 'expo-checkbox';
-import { cn } from '@/utils/cn';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
-import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
@@ -108,8 +106,6 @@ export default function PaymentScreen() {
   } = useGetDiscountCode();
 
   const paymentTranslations = t('screens.payment');
-
-  // Formatter para euros (formato europeo: 10.114,00 €)
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
 
   // Obtener dirección seleccionada
@@ -491,330 +487,32 @@ export default function PaymentScreen() {
           </CustomText>
         </View>
 
-        {/* Sección: Dirección de envío */}
-        <View className='mb-6'>
-          <CustomText
-            type='h3'
-            className='mb-3 text-cinnabar'
-          >
-            {paymentTranslations.address}
-          </CustomText>
+        {/* Selector de dirección */}
+        <AddressSelector
+          addresses={addresses || []}
+          selectedAddressId={selectedAddressId}
+          selectedAddress={selectedAddress || undefined}
+          onAddressChange={setSelectedAddressId}
+          onAddNewAddress={() => setShowAddressModal(true)}
+        />
 
-          {/* Selector de dirección + botón "+" */}
-          <View className='mb-3 flex-row items-center gap-3'>
-            <View className='flex-1'>
-              <SelectField
-                name=''
-                value={selectedAddressId || ''}
-                options={
-                  addresses?.map((addr) => ({
-                    label: addr.nameAddress || `${addr.city}, ${addr.country}`,
-                    value: addr.id,
-                  })) || []
-                }
-                placeholder={paymentTranslations.selectAddress}
-                formField={true}
-                onChange={(value) => {
-                  setSelectedAddressId(value as string);
-                }}
-              />
-            </View>
-            <Button
-              mode='secondary'
-              size='small'
-              onPress={() => setShowAddressModal(true)}
-              className='aspect-square'
-            >
-              <FontAwesomeIcon
-                variant='bold'
-                name='plus'
-                size={18}
-                color='#d75639'
-              />
-            </Button>
-          </View>
-
-          {/* Preview de dirección seleccionada */}
-          {selectedAddress && (
-            <View className='mt-2 w-fit space-y-1 rounded bg-neutral-100 p-3'>
-              <CustomText
-                type='bodysmall'
-                className='text-black'
-              >
-                <CustomText
-                  type='bodysmall'
-                  className='font-bold text-black'
-                >
-                  {paymentTranslations.address}:
-                </CustomText>{' '}
-                {selectedAddress.address}
-              </CustomText>
-              <CustomText
-                type='bodysmall'
-                className='text-black'
-              >
-                <CustomText
-                  type='bodysmall'
-                  className='font-bold text-black'
-                >
-                  {paymentTranslations.country}:
-                </CustomText>{' '}
-                {
-                  COUNTRIES_MAP_LABEL[locale][
-                    selectedAddress.country as CountryValue
-                  ]
-                }
-              </CustomText>
-              <CustomText
-                type='bodysmall'
-                className='text-black'
-              >
-                <CustomText
-                  type='bodysmall'
-                  className='font-bold text-black'
-                >
-                  {paymentTranslations.city}:
-                </CustomText>{' '}
-                {selectedAddress.city}
-              </CustomText>
-              <CustomText
-                type='bodysmall'
-                className='text-black'
-              >
-                <CustomText
-                  type='bodysmall'
-                  className='font-bold text-black'
-                >
-                  {paymentTranslations.state}:
-                </CustomText>{' '}
-                {selectedAddress.state}
-              </CustomText>
-              <CustomText
-                type='bodysmall'
-                className='text-black'
-              >
-                <CustomText
-                  type='bodysmall'
-                  className='font-bold text-black'
-                >
-                  {paymentTranslations.postalCode}:
-                </CustomText>{' '}
-                {selectedAddress.postalCode}
-              </CustomText>
-            </View>
-          )}
-        </View>
-
-        {/* Sección: Resumen de pago */}
-        <View className='mb-6'>
-          <CustomText
-            type='h3'
-            className='mb-3 text-cinnabar'
-          >
-            {paymentTranslations.summary}
-          </CustomText>
-
-          <View className='bg-gray-50 rounded-lg p-4'>
-            {/* Código de descuento (como en web, arriba del subtotal) */}
-            <View className='mb-4'>
-              <CustomText
-                type='body'
-                className='text-gray-700 mb-2 font-medium'
-              >
-                {paymentTranslations.couponCode}
-              </CustomText>
-
-              {!appliedDiscount ? (
-                <View className='flex-row items-center gap-2'>
-                  <View className='flex-1'>
-                    <Input
-                      placeholder={paymentTranslations.couponCode}
-                      value={discountCode}
-                      onChangeText={setDiscountCode}
-                      autoCapitalize='characters'
-                      editable={!isValidatingDiscount}
-                    />
-                  </View>
-                  <Button
-                    mode='secondary'
-                    size='small'
-                    onPress={handleApplyDiscount}
-                    disabled={!discountCode.trim() || isValidatingDiscount}
-                    isLoading={isValidatingDiscount}
-                  >
-                    {paymentTranslations.applyCoupon}
-                  </Button>
-                </View>
-              ) : (
-                <View className='relative'>
-                  <Input
-                    value={appliedDiscount.code}
-                    editable={false}
-                    className='pr-10'
-                  />
-                  <Button
-                    mode='empty'
-                    size='small'
-                    onPress={handleRemoveDiscount}
-                    className='absolute right-2 top-1/2 -translate-y-1/2'
-                  >
-                    <CustomText
-                      type='body'
-                      className='text-gray-600'
-                    >
-                      x
-                    </CustomText>
-                  </Button>
-                </View>
-              )}
-            </View>
-
-            {/* Subtotal */}
-            <View className='mb-2 flex-row justify-between'>
-              <CustomText
-                type='body'
-                className='text-gray-600'
-              >
-                Subtotal:
-              </CustomText>
-              <CustomText
-                type='body'
-                className='font-medium'
-              >
-                {formatter.format(paymentDetails.subtotal)}
-              </CustomText>
-            </View>
-
-            {/* Comisión */}
-            <View className='mb-2 flex-row justify-between'>
-              <CustomText
-                type='body'
-                className='text-gray-600'
-              >
-                Comisión (IVA inc.):
-              </CustomText>
-              <CustomText
-                type='body'
-                className='font-medium'
-              >
-                {formatter.format(paymentDetails.commission)}
-              </CustomText>
-            </View>
-
-            {/* Envío */}
-            <View className='mb-2 flex-row justify-between'>
-              <CustomText
-                type='body'
-                className='text-gray-600'
-              >
-                Envío:
-              </CustomText>
-              <CustomText
-                type='body'
-                className='font-medium'
-              >
-                {formatter.format(paymentDetails.shipping)}
-              </CustomText>
-            </View>
-
-            {/* Descuento (si aplica) */}
-            {appliedDiscount && (
-              <View className='mb-2 flex-row justify-between'>
-                <CustomText
-                  type='body'
-                  className='text-green-600'
-                >
-                  Descuento:
-                </CustomText>
-                <CustomText
-                  type='body'
-                  className='font-medium text-green-600'
-                >
-                  -{formatter.format(paymentDetails.discount)}
-                </CustomText>
-              </View>
-            )}
-
-            {/* Línea divisoria */}
-            <View className='bg-gray-300 my-3 h-px' />
-
-            {/* Total */}
-            <View className='flex-row justify-between'>
-              <CustomText
-                type='h4'
-                className='font-bold text-cinnabar'
-              >
-                Total:
-              </CustomText>
-              <CustomText
-                type='h4'
-                className='font-bold text-cinnabar'
-              >
-                {formatter.format(paymentDetails.total)}
-              </CustomText>
-            </View>
-          </View>
-        </View>
+        {/* Resumen de pago con código de descuento */}
+        <PaymentCheckoutSummary
+          paymentDetails={paymentDetails}
+          appliedDiscount={appliedDiscount}
+          discountCode={discountCode}
+          onDiscountCodeChange={setDiscountCode}
+          onApplyDiscount={handleApplyDiscount}
+          onRemoveDiscount={handleRemoveDiscount}
+          isValidatingDiscount={isValidatingDiscount}
+        />
 
         {/* Lista de artículos */}
-        <View className='mb-6 flex flex-col gap-4'>
-          {articles.map((article) => {
-            const isSelected = selectedArticleIds.includes(article.id);
-
-            return (
-              <View
-                key={article.id}
-                className={cn(
-                  'flex-row items-center gap-4 rounded-lg border-2 p-4',
-                  isSelected
-                    ? 'border-cinnabar bg-orange-50'
-                    : 'border-gray-200'
-                )}
-              >
-                {/* Checkbox */}
-                <Checkbox
-                  value={isSelected}
-                  onValueChange={() => toggleArticleSelection(article.id)}
-                  color={isSelected ? '#d75639' : undefined}
-                />
-
-                {/* Imagen del artículo */}
-                <View className='aspect-square w-20 overflow-hidden rounded-lg'>
-                  <CustomImage
-                    src={article.image}
-                    alt={article.title}
-                    className='h-full w-full'
-                    resizeMode='cover'
-                  />
-                </View>
-
-                {/* Info del artículo */}
-                <View className='flex-1'>
-                  <CustomText
-                    type='h4'
-                    className='mb-1'
-                  >
-                    {article.title}
-                  </CustomText>
-                  {article.brand && (
-                    <CustomText
-                      type='bodysmall'
-                      className='text-gray-500 mb-2'
-                    >
-                      {article.brand}
-                    </CustomText>
-                  )}
-                  <CustomText
-                    type='body'
-                    className='font-bold text-cinnabar'
-                  >
-                    {formatter.format(article.soldPrice || 0)}
-                  </CustomText>
-                </View>
-              </View>
-            );
-          })}
-        </View>
+        <PaymentArticlesList
+          articles={articles as any}
+          selectedArticleIds={selectedArticleIds}
+          onToggleArticle={toggleArticleSelection}
+        />
 
         {/* Botón de pago */}
         <Button
