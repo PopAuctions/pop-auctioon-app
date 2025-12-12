@@ -1,22 +1,10 @@
-import { useMemo, useState } from 'react';
 import { View, TextInput } from 'react-native';
-import { ONLY_INTEGERS_REGEX } from '@/constants';
-import { euroFormatter } from '@/utils/euroFormatter';
-import type {
-  BiddingAmounts,
-  HighestBidderState,
-  Lang,
-  LangMap,
-} from '@/types/types';
+import type { BiddingAmounts, HighestBidderState } from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
-import { useHighestBidderContext } from '@/context/highest-bidder-context';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { useToast } from '@/hooks/useToast';
-import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useSendBid } from '@/hooks/components/useSendBid';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -24,9 +12,7 @@ interface SendBidProps {
   articleServerState: HighestBidderState;
   articleId: number;
   bidLang: DictionaryTypeBid;
-  lang: Lang;
   biddingAmounts: BiddingAmounts;
-  maxBidOffset: number;
   commissionPercentage: number;
 }
 
@@ -34,119 +20,31 @@ export function SendBid({
   articleId,
   bidLang,
   articleServerState,
-  lang,
   biddingAmounts = {} as BiddingAmounts,
-  maxBidOffset,
   commissionPercentage,
 }: SendBidProps) {
-  const [isPending, setIsPending] = useState(false);
-  const [bidAmount, setBidAmount] = useState<string>('');
-  const { securePost } = useSecureApi();
-  const { callToast } = useToast(lang);
-
-  const formatter = euroFormatter(lang);
-
-  const { minBid, tenPercent, twentyFivePercent, fiftyPercent } =
-    biddingAmounts;
-
-  const { state } = useHighestBidderContext({
-    initialValue: articleServerState,
+  const {
+    currentValue,
+    isPending,
+    computedMaxBid,
+    computedMinBid,
+    bidAmount,
+    tenPercent,
+    twentyFivePercent,
+    fiftyPercent,
+    articleAvailable,
+    isTooLow,
+    isTooHigh,
+    setAmountToBid,
+    handleInputChange,
+    sendBid,
+    formatter,
+  } = useSendBid({
+    biddingAmounts,
+    articleServerState,
+    articleId,
+    commissionPercentage,
   });
-  const { currentValue, available: articleAvailable } = state;
-
-  const computedMinBid = useMemo(
-    () => toTotal(minBid + currentValue, commissionPercentage),
-    [minBid, currentValue, commissionPercentage]
-  );
-  const computedMaxBid = useMemo(
-    () =>
-      toTotal(fiftyPercent + currentValue + maxBidOffset, commissionPercentage),
-    [fiftyPercent, currentValue, maxBidOffset, commissionPercentage]
-  );
-
-  const isTooLow = parseInt(bidAmount) < computedMinBid;
-  const isTooHigh = parseInt(bidAmount) > computedMaxBid;
-
-  const setAmountToBid = (amountBase: number) => {
-    const finalBase = amountBase + currentValue;
-    const total = toTotal(finalBase, commissionPercentage);
-    setBidAmount(String(total));
-  };
-
-  const handleInputChange = (value: string) => {
-    const numericValue = Number(value);
-
-    if (
-      value !== '' &&
-      (numericValue <= 0 ||
-        !Number.isInteger(numericValue) ||
-        value.includes('-'))
-    ) {
-      return;
-    }
-
-    if (value === '' || ONLY_INTEGERS_REGEX.test(value)) {
-      setBidAmount(value);
-    }
-  };
-
-  const sendBid = async () => {
-    if (parseInt(bidAmount) < computedMinBid) {
-      const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
-      callToast({
-        variant: 'error',
-        description: { es: message, en: message },
-      });
-
-      return;
-    }
-
-    // enforce max
-    if (parseInt(bidAmount) > computedMaxBid) {
-      const message = bidLang.maxBid + ' ' + formatter.format(computedMaxBid);
-      callToast({
-        variant: 'error',
-        description: { es: message, en: message },
-      });
-
-      return;
-    }
-
-    // actual request
-    try {
-      setIsPending(true);
-
-      const response = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
-        data: {
-          articleId,
-          amount: bidAmount,
-          clientCurrentAmount: currentValue,
-        },
-      });
-
-      const data = response?.data;
-
-      if (response.error) {
-        callToast({ variant: 'error', description: response.error });
-        return;
-      }
-
-      callToast({ variant: 'success', description: data });
-      setBidAmount('');
-    } catch (e: any) {
-      sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
-      callToast({
-        variant: 'error',
-        description: {
-          en: 'The bid could not be processed',
-          es: 'La puja no pudo ser procesada',
-        },
-      });
-    } finally {
-      setIsPending(false);
-    }
-  };
 
   return (
     <View className='w-full rounded-xl border border-neutral-200 bg-white p-4'>

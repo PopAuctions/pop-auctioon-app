@@ -15,7 +15,6 @@ import { CurrentBidInfoArticlePage } from '@/components/articles/CurrentBidInfoA
 import { ArticleSpecificationsSection } from '@/components/articles/ArticleSpecificationsSection';
 import { formatTextToParagraph } from '@/utils/formatTextToParagraph';
 import { SendBid } from '@/components/bids/SendBid';
-import { MAX_BID_OFFSET } from '@/constants/bid';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
 import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
@@ -264,9 +263,7 @@ export default function ArticlesDetailScreen() {
                       available: articleBid.available,
                     }}
                     bidLang={bidsLang}
-                    lang={locale}
                     biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
-                    maxBidOffset={MAX_BID_OFFSET}
                     commissionPercentage={LOW_COMMISSION_AMOUNT}
                   />
                 </View>
