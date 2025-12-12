@@ -54,7 +54,7 @@ export const useFetchMyAuctionArticles = ({
         'USE_FETCH_MY_AUCTION_ARTICLES - Unexpected error'
       );
 
-      console.error('ERROR_LOAD_INVOICE_CATCH', errorMsg);
+      console.error('ERROR_USE_FETCH_MY_AUCTION_ARTICLES', errorMsg);
 
       const message: LangMap = {
         en: 'Error loading auction articles',

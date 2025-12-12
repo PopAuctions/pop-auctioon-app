@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { CustomLink } from '../ui/CustomLink';
-import { ARTICLE_BRANDS_LABELS } from '@/constants';
+import { AMOUNT_PLACEHOLDER, ARTICLE_BRANDS_LABELS } from '@/constants';
 import { CustomImage } from '../ui/CustomImage';
 import { SimpleCountdown } from '../ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
@@ -17,7 +17,7 @@ type ArticleItemProps = {
   formatter: Intl.NumberFormat;
   lang: Lang;
   userFollows: boolean;
-  commissionValue: number;
+  commissionValue: number | null;
   showFollowButton?: boolean;
   actionAfterFollow?: () => void;
 };
@@ -36,7 +36,7 @@ export function ArticleItem({
   const price = article.ArticleBid.currentValue;
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue),
+    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
     [price, commissionValue]
   );
 
@@ -73,7 +73,7 @@ export function ArticleItem({
             )}
 
             <CustomText type='subtitle'>
-              {`${auctionLang.currentBid} ${formatter.format(commissionedPrice)}`}
+              {`${auctionLang.currentBid} ${commissionedPrice !== null ? formatter.format(commissionedPrice) : AMOUNT_PLACEHOLDER}`}
             </CustomText>
 
             <CustomText

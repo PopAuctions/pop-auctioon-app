@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 type ArticlePriceBreakdownProps = {
   lang: Lang;
   price: number;
-  commissionValue: number;
+  commissionValue: number | null;
   texts: {
     commission: string;
     shipping: string;
@@ -30,7 +30,7 @@ export function ArticlePriceBreakdown({
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue),
+    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
     [price, commissionValue]
   );
 

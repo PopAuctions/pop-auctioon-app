@@ -3,13 +3,14 @@ import { FlatList, View } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { CustomArticleSecondChance, Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
-import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { OnlineStoreArticleItem } from './OnlineStoreArticleItem';
 import { useFetchOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchOnlineStoreArticlesInfinite';
 import { Filters } from '@/app/(tabs)/online-store';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { REQUEST_STATUS } from '@/constants';
 
 const ITEMS_PER_PAGE = 4;
 const TEXTS = {
@@ -42,6 +43,8 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     params as Filters;
 
   const { fetchArticles } = useFetchOnlineStoreArticlesInfinite();
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +54,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   const filtersActive = Boolean(
     brand || price || model || codeNumber || category || sortBy
   );
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const loadInitial = useCallback(async () => {
     try {
@@ -187,7 +191,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
           formatter={formatter}
           texts={texts}
           lang={lang}
-          commissionValue={LOW_COMMISSION_AMOUNT}
+          commissionValue={isCommissionReady ? commissionData : null}
         />
       )}
       contentContainerStyle={{

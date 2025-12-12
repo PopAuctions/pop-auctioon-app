@@ -1,7 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { Article, Lang } from '@/types/types';
-import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { useLocalSearchParams } from 'expo-router';
 import { useFetchMyAuctionArticles } from '@/hooks/components/useFetchMyAuctionArticles';
 import { REQUEST_STATUS } from '@/constants';
@@ -13,6 +12,7 @@ import DraggableFlatList, {
   RenderItemParams,
 } from 'react-native-draggable-flatlist';
 import { MyAuctionArticlesState } from './MyAuctionArticlesState';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export const MyAuctionArticles = ({
   lang,
@@ -48,7 +48,10 @@ export const MyAuctionArticles = ({
     errorMessage,
     refetch,
   } = useFetchMyAuctionArticles({ auctionId, name });
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
 
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
   const formatter = euroFormatter(lang);
   const isLoading = status === REQUEST_STATUS.loading;
 
@@ -117,7 +120,7 @@ export const MyAuctionArticles = ({
             }}
             formatter={formatter}
             locale={lang}
-            commissionValue={LOW_COMMISSION_AMOUNT}
+            commissionValue={isCommissionReady ? commissionData : null}
             refetch={refetch}
           />
           {index < listDataToRender.length - 1 && <Divider className='my-2' />}

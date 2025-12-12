@@ -4,11 +4,12 @@ import { ArticleItem } from './ArticleItem';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
-import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { useFetchAuctionArticlesInfinite } from '@/hooks/components/useFetchAuctionArticlesInifinte';
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { REQUEST_STATUS } from '@/constants';
 
 const ITEMS_PER_PAGE = 4;
 const TEXTS = {
@@ -44,6 +45,8 @@ export const ArticlesInfiniteScroll = ({
     brand?: string;
     price?: string;
   }>();
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
 
   const { fetchArticles } = useFetchAuctionArticlesInfinite();
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
@@ -56,6 +59,7 @@ export const ArticlesInfiniteScroll = ({
 
   const formatter = euroFormatter(lang);
   const filtersActive = Boolean(brand || price);
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const orderedArticles = useMemo(() => {
     if (!effectiveOrder || effectiveOrder.length === 0) return articles;
@@ -199,7 +203,7 @@ export const ArticlesInfiniteScroll = ({
           formatter={formatter}
           lang={lang}
           userFollows={articlesFollowed.includes(Number(item.id))}
-          commissionValue={LOW_COMMISSION_AMOUNT}
+          commissionValue={isCommissionReady ? commissionData : null}
         />
       )}
       contentContainerStyle={{

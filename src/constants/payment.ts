@@ -49,50 +49,6 @@ export function getShippingTax(): PaymentShippingTax {
 }
 
 // ========================================
-// COMMISSION RATES
-// ========================================
-
-export const LOW_COMMISSION_AMOUNT = 0.125;
-
-const COMMISSIONS = {
-  STANDARD: {
-    PERCENTAGE: LOW_COMMISSION_AMOUNT,
-    THRESHOLD: Infinity,
-    LABEL: '12.5%',
-  },
-  // Commented out tier-based commissions (can be enabled later)
-  // LOW: {
-  //   PERCENTAGE: 0.2,
-  //   THRESHOLD: 10000,
-  //   LABEL: '20%',
-  // },
-  // MEDIUM_LOW: {
-  //   PERCENTAGE: 0.175,
-  //   THRESHOLD: 20000,
-  //   LABEL: '17.5%',
-  // },
-  // MEDIUM: {
-  //   PERCENTAGE: 0.15,
-  //   THRESHOLD: 25000,
-  //   LABEL: '15%',
-  // },
-  // MEDIUM_HIGH: {
-  //   PERCENTAGE: 0.125,
-  //   THRESHOLD: 35000,
-  //   LABEL: '12.5%',
-  // },
-  // HIGH: {
-  //   PERCENTAGE: 0.1,
-  //   THRESHOLD: Infinity,
-  //   LABEL: '10%',
-  // },
-};
-
-export function getCommissionsValue() {
-  return COMMISSIONS;
-}
-
-// ========================================
 // PAYMENT STATUS
 // ========================================
 
