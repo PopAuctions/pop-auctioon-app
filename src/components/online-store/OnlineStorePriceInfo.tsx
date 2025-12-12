@@ -37,13 +37,11 @@ export function OnlineStorePriceInfo({
     <View className='flex w-2/3 flex-col gap-1 self-center'>
       <CustomText type='h4'>{texts.price}</CustomText>
       <View className='relative flex flex-row items-start gap-2'>
-        {isCommissionReady ? (
-          <CustomText type='h2'>
-            {formatter.format(commissionedPrice)}
-          </CustomText>
-        ) : (
-          <CustomText type='h2'>{AMOUNT_PLACEHOLDER}</CustomText>
-        )}
+        <CustomText type='h2'>
+          {isCommissionReady
+            ? formatter.format(commissionedPrice)
+            : AMOUNT_PLACEHOLDER}
+        </CustomText>
 
         <Tooltip content={texts.shipping} />
       </View>
