@@ -13,7 +13,7 @@ interface SendBidProps {
   articleId: number;
   bidLang: DictionaryTypeBid;
   biddingAmounts: BiddingAmounts;
-  commissionPercentage: number;
+  commissionPercentage: number | null;
 }
 
 export function SendBid({
@@ -43,8 +43,10 @@ export function SendBid({
     biddingAmounts,
     articleServerState,
     articleId,
-    commissionPercentage,
+    commissionPercentage: commissionPercentage ?? 0,
   });
+
+  const isReady = commissionPercentage !== null && !isNaN(currentValue);
 
   return (
     <View className='w-full rounded-xl border border-neutral-200 bg-white p-4'>
@@ -62,7 +64,7 @@ export function SendBid({
                 setAmountToBid(tenPercent);
               }}
             >
-              {isNaN(currentValue)
+              {!isReady
                 ? ''
                 : formatter.format(
                     toTotal(tenPercent + currentValue, commissionPercentage)
@@ -78,7 +80,7 @@ export function SendBid({
                 setAmountToBid(twentyFivePercent);
               }}
             >
-              {isNaN(currentValue)
+              {!isReady
                 ? ''
                 : formatter.format(
                     toTotal(
@@ -97,7 +99,7 @@ export function SendBid({
                 setAmountToBid(fiftyPercent);
               }}
             >
-              {isNaN(currentValue)
+              {!isReady
                 ? ''
                 : formatter.format(
                     toTotal(fiftyPercent + currentValue, commissionPercentage)
