@@ -12,7 +12,7 @@ type CurrentBidInfoArticlePageProps = {
   currentValue: number;
   estimatedValue: number | null;
   reservePrice: number | null;
-  commissionValue: number;
+  commissionValue: number | null;
   texts: {
     highestBid: string;
     estimatedValue: string;

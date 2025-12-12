@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { CustomArticleSecondChance, Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { CustomLink } from '../ui/CustomLink';
-import { ARTICLE_BRANDS_LABELS } from '@/constants';
+import { AMOUNT_PLACEHOLDER, ARTICLE_BRANDS_LABELS } from '@/constants';
 import { CustomImage } from '../ui/CustomImage';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
@@ -14,7 +14,7 @@ type OnlineStoreArticleItemProps = {
     price: string;
   };
   lang: Lang;
-  commissionValue: number;
+  commissionValue: number | null;
 };
 
 export function OnlineStoreArticleItem({
@@ -29,7 +29,7 @@ export function OnlineStoreArticleItem({
   const price = onlineStoreArticle.price;
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue),
+    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
     [price, commissionValue]
   );
 
@@ -56,7 +56,7 @@ export function OnlineStoreArticleItem({
         <View className='w-1/2 flex-col items-start justify-between'>
           <View className='flex flex-col pr-2'>
             <CustomText type='subtitle'>
-              {`${texts.price} ${formatter.format(commissionedPrice)}`}
+              {`${texts.price} ${commissionValue !== null ? formatter.format(commissionedPrice) : AMOUNT_PLACEHOLDER}`}
             </CustomText>
 
             <CustomText

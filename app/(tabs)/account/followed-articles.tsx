@@ -4,8 +4,9 @@ import { CustomText } from '@/components/ui/CustomText';
 import { useGetFollowedArticles } from '@/hooks/pages/article/useGetFollowedArticles';
 import { ArticleItem } from '@/components/articles/ArticleItem';
 import { Loading } from '@/components/ui/Loading';
-import { LOW_COMMISSION_AMOUNT, REQUEST_STATUS } from '@/constants';
+import { REQUEST_STATUS } from '@/constants';
 import { euroFormatter } from '@/utils/euroFormatter';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function FollowedArticlesScreen() {
   const { t, locale } = useTranslation();
@@ -15,6 +16,10 @@ export default function FollowedArticlesScreen() {
     errorMessage,
     refetch,
   } = useGetFollowedArticles();
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
+
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
   const articleLang = t('screens.article');
   const formatter = euroFormatter(locale);
 
@@ -51,7 +56,7 @@ export default function FollowedArticlesScreen() {
               formatter={formatter}
               lang={locale}
               userFollows={true}
-              commissionValue={LOW_COMMISSION_AMOUNT}
+              commissionValue={isCommissionReady ? commissionData : null}
               actionAfterFollow={refetch}
             />
           ))}

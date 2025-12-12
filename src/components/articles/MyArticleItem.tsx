@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Lang, Article, LangMap } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import {
+  AMOUNT_PLACEHOLDER,
   ARTICLE_BRANDS_LABELS,
   ARTICLE_STATUS_LABELS,
   ArticleStatus,
@@ -30,7 +31,7 @@ type MyArticleItemProps = {
   auctionId: string;
   formatter: Intl.NumberFormat;
   locale: Lang;
-  commissionValue: number;
+  commissionValue: number | null;
   showActions: boolean;
   auctionStatus: AuctionStatus;
   refetch: () => void;
@@ -79,7 +80,7 @@ export function MyArticleItem({
   const price = article.ArticleBid.currentValue;
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue),
+    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
     [price, commissionValue]
   );
 
@@ -182,7 +183,9 @@ export function MyArticleItem({
             type='subtitle'
             className='text-lg'
           >
-            {formatter.format(commissionedPrice)}
+            {commissionValue !== null
+              ? formatter.format(commissionedPrice)
+              : AMOUNT_PLACEHOLDER}
           </CustomText>
         </View>
       </View>

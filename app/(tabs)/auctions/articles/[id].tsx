@@ -223,6 +223,7 @@ export default function ArticlesDetailScreen() {
                     articleId={parseNumber(id)}
                     lang={locale}
                     initialPrice={article.startingPrice}
+                    commissionValue={isCommissionReady ? commissionData : null}
                   />
                 )}
               </View>
@@ -241,7 +242,7 @@ export default function ArticlesDetailScreen() {
                 currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
-                commissionValue={isCommissionReady ? commissionData : 0}
+                commissionValue={isCommissionReady ? commissionData : null}
                 texts={{
                   highestBid: articleLang.highestBid,
                   estimatedValue: articleLang.estimatedValue,

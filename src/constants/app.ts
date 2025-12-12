@@ -56,3 +56,5 @@ export const REQUEST_STATUS = {
   success: 'success',
   error: 'error',
 } as const;
+
+export const AMOUNT_PLACEHOLDER = '--.-- €';

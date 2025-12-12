@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 import { CustomText } from '../ui/CustomText';
 import { Loading } from '../ui/Loading';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
-import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { CustomImage } from '../ui/CustomImage';
 
 type ArticleBidsRecordModalProps = {
@@ -21,6 +20,7 @@ type ArticleBidsRecordModalProps = {
   };
   bids: Bids[];
   isLoading: boolean;
+  commissionValue: number | null;
 };
 
 export const ArticleBidsRecordModal = ({
@@ -31,12 +31,13 @@ export const ArticleBidsRecordModal = ({
   texts,
   bids,
   isLoading,
+  commissionValue,
 }: ArticleBidsRecordModalProps) => {
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   const commissionedPrice = getArticleCommissionedPrice(
     initialPrice ?? 0,
-    LOW_COMMISSION_AMOUNT
+    commissionValue ?? 0
   );
 
   return (
@@ -106,7 +107,7 @@ export const ArticleBidsRecordModal = ({
                           : '';
                         const currentPrice = getArticleCommissionedPrice(
                           bid.currentPrice,
-                          LOW_COMMISSION_AMOUNT
+                          commissionValue ?? 0
                         );
 
                         return (
