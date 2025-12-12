@@ -52,7 +52,7 @@ export function getShippingTax(): PaymentShippingTax {
 // COMMISSION RATES
 // ========================================
 
-export const LOW_COMMISSION_AMOUNT = 0.125;
+export const LOW_COMMISSION_AMOUNT = 0;
 
 const COMMISSIONS = {
   STANDARD: {
