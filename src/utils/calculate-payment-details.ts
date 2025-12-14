@@ -1,5 +1,5 @@
 import type { CountryValue } from '@/types/types';
-import { getShippingTax, getCommissionsValue } from '@/constants/payment';
+import { getShippingTax } from '@/constants/payment';
 
 /**
  * Input parameters for payment calculation
@@ -9,6 +9,8 @@ export interface PaymentDetailsInput {
   articlesAmount: number;
   /** Selected country for shipping address */
   selectedCountry: CountryValue | null;
+  /** Commission percentage (from useFetchCommissions hook) */
+  commissionPercentage: number;
   /** Discount amount (absolute value, not percentage) */
   discount?: number;
 }
@@ -41,31 +43,34 @@ export interface PaymentDetails {
  * const details = calculatePaymentDetails({
  *   articlesAmount: 1000,
  *   selectedCountry: 'SPAIN',
+ *   commissionPercentage: 12.5,
  *   discount: 50,
  * });
  * // {
  * //   subtotal: 1000,
- * //   commission: 151.56,
+ * //   commission: 125,
  * //   shipping: 10,
  * //   discount: 50,
- * //   total: 1111.56
+ * //   total: 1085
  * // }
  * ```
  */
 export function calculatePaymentDetails(
   input: PaymentDetailsInput
 ): PaymentDetails {
-  const { articlesAmount, selectedCountry, discount = 0 } = input;
+  const {
+    articlesAmount,
+    selectedCountry,
+    commissionPercentage,
+    discount = 0,
+  } = input;
 
   // Subtotal = suma de precios de artículos
   const subtotal = articlesAmount;
 
   // Commission calculation (WITHOUT VAT - matches web behavior)
-  const commissionsValue = getCommissionsValue();
-  const commissionPercentage = commissionsValue.STANDARD.PERCENTAGE; // 0.125 (12.5%)
-
-  // Web usa Math.round() para la comisión
-  const commission = Math.round(subtotal * commissionPercentage);
+  // commissionPercentage viene del hook useFetchCommissions (ej: 0.125 = 12.5%)
+  const commission = Math.round(subtotal * (commissionPercentage / 100));
 
   // Shipping calculation based on country
   // Default to GENERAL (like web) if no country selected

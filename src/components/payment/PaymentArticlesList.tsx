@@ -14,10 +14,10 @@ import { CustomImage } from '@/components/ui/CustomImage';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { cn } from '@/utils/cn';
-import type { CustomArticle } from '@/types/types';
+import type { UserArticlesWon } from '@/types/types';
 
 interface PaymentArticlesListProps {
-  articles: CustomArticle[];
+  articles: UserArticlesWon[];
   selectedArticleIds: number[];
   onToggleArticle: (articleId: number) => void;
 }
@@ -53,7 +53,7 @@ export function PaymentArticlesList({
             {/* Imagen del artículo */}
             <View className='aspect-square w-20 overflow-hidden rounded-lg'>
               <CustomImage
-                src={article.images?.[0] || ''}
+                src={article.image}
                 alt={article.title}
                 className='h-full w-full'
                 resizeMode='cover'

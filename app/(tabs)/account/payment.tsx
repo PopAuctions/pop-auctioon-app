@@ -17,6 +17,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useStripePayment } from '@/hooks/payment/useStripePayment';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { useCreateArticlesPayment } from '@/hooks/pages/payment/useCreateArticlesPayment';
 import { useRejectArticlesPayment } from '@/hooks/pages/payment/useRejectArticlesPayment';
@@ -66,6 +67,11 @@ export default function PaymentScreen() {
 
   const { createPayment } = useCreateArticlesPayment();
   const { rejectPayment } = useRejectArticlesPayment();
+
+  // Hook para obtener porcentaje de comisión dinámico
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   // Ref para guardar el Payment Intent ID (sincronizado con el hook)
   const paymentIntentRef = useRef<string | null>(null);
@@ -123,12 +129,30 @@ export default function PaymentScreen() {
 
   // Calcular el breakdown completo de pago
   const paymentDetails = useMemo(() => {
+    // Solo calcular si tenemos el porcentaje de comisión
+    if (!isCommissionReady) {
+      return {
+        subtotal: 0,
+        commission: 0,
+        shipping: 0,
+        discount: 0,
+        total: 0,
+      };
+    }
+
     return calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
+      commissionPercentage: commissionData || 0,
       discount: appliedDiscount?.amount || 0,
     });
-  }, [subtotal, selectedAddress, appliedDiscount]);
+  }, [
+    subtotal,
+    selectedAddress,
+    appliedDiscount,
+    isCommissionReady,
+    commissionData,
+  ]);
 
   // Inicializar Payment Sheet una sola vez al montar (como en web antes de React 18)
   // NOTA: A diferencia de web, NO re-inicializamos en cada cambio porque crea loops
@@ -509,7 +533,7 @@ export default function PaymentScreen() {
 
         {/* Lista de artículos */}
         <PaymentArticlesList
-          articles={articles as any}
+          articles={articles}
           selectedArticleIds={selectedArticleIds}
           onToggleArticle={toggleArticleSelection}
         />
