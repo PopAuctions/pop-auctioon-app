@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Pantalla de pago con Stripe
  * Patrón similar a Next.js web:
@@ -129,23 +128,25 @@ export default function PaymentScreen() {
 
   // Calcular el breakdown completo de pago
   const paymentDetails = useMemo(() => {
-    // Solo calcular si tenemos el porcentaje de comisión
+    // Siempre mostrar el subtotal aunque no tengamos comisión
     if (!isCommissionReady) {
       return {
-        subtotal: 0,
+        subtotal,
         commission: 0,
         shipping: 0,
         discount: 0,
-        total: 0,
+        total: subtotal,
       };
     }
 
-    return calculatePaymentDetails({
+    const details = calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
       commissionPercentage: commissionData || 0,
       discount: appliedDiscount?.amount || 0,
     });
+
+    return details;
   }, [
     subtotal,
     selectedAddress,
