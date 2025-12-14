@@ -153,6 +153,9 @@ export const SECURE_ENDPOINTS = {
     GET: (id: string): ApiEndpoint =>
       `/invoice?paymentId=${id}&format=pdf` as ApiEndpoint, // GET - Obtener factura por paymentID
   },
+  PAYMENT: {
+    COMMISSIONS: '/payments/commission',
+  },
   BIDS: {
     CREATE: '/bids',
   },

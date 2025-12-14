@@ -9,6 +9,7 @@ type ArticleBidsRecordProps = {
   articleId: number;
   lang: Lang;
   initialPrice: number;
+  commissionValue: number | null;
 };
 
 const TEXTS = {
@@ -30,6 +31,7 @@ export function ArticleBidsRecord({
   articleId,
   lang,
   initialPrice,
+  commissionValue,
 }: ArticleBidsRecordProps) {
   const [open, setOpen] = useState(false);
   const { data, status } = useGetArticleBids({ articleId, shouldFetch: open });
@@ -55,6 +57,7 @@ export function ArticleBidsRecord({
         texts={texts}
         bids={data}
         isLoading={isLoading}
+        commissionValue={commissionValue}
       />
     </>
   );

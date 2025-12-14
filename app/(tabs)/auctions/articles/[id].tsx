@@ -6,7 +6,6 @@ import { CustomText } from '@/components/ui/CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { AuctionStatus } from '@/constants/auctions';
-import { LOW_COMMISSION_AMOUNT } from '@/constants/payment';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomLink } from '@/components/ui/CustomLink';
@@ -15,7 +14,6 @@ import { CurrentBidInfoArticlePage } from '@/components/articles/CurrentBidInfoA
 import { ArticleSpecificationsSection } from '@/components/articles/ArticleSpecificationsSection';
 import { formatTextToParagraph } from '@/utils/formatTextToParagraph';
 import { SendBid } from '@/components/bids/SendBid';
-import { MAX_BID_OFFSET } from '@/constants/bid';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useGetArticlePageData } from '@/hooks/pages/article/useGetArticlePageData';
 import { ArticleBidSubscriber } from '@/components/subscribers/ArticleBidSubscriber';
@@ -23,6 +21,7 @@ import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { FollowButton } from '@/components/ui/FollowButton';
 import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 import { parseNumber } from '@/utils/parse-number';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -32,6 +31,8 @@ export default function ArticlesDetailScreen() {
   const bidsLang = t('components.bid');
   const articleId = Number(id);
 
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
   const {
     data: article,
     status,
@@ -63,6 +64,8 @@ export default function ArticlesDetailScreen() {
   const extraDataIsLoaded =
     articlePageStatus === REQUEST_STATUS.success ||
     articlePageStatus === REQUEST_STATUS.error;
+
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
@@ -220,6 +223,7 @@ export default function ArticlesDetailScreen() {
                     articleId={parseNumber(id)}
                     lang={locale}
                     initialPrice={article.startingPrice}
+                    commissionValue={isCommissionReady ? commissionData : null}
                   />
                 )}
               </View>
@@ -238,7 +242,7 @@ export default function ArticlesDetailScreen() {
                 currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
-                commissionValue={LOW_COMMISSION_AMOUNT}
+                commissionValue={isCommissionReady ? commissionData : null}
                 texts={{
                   highestBid: articleLang.highestBid,
                   estimatedValue: articleLang.estimatedValue,
@@ -264,10 +268,10 @@ export default function ArticlesDetailScreen() {
                       available: articleBid.available,
                     }}
                     bidLang={bidsLang}
-                    lang={locale}
                     biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
-                    maxBidOffset={MAX_BID_OFFSET}
-                    commissionPercentage={LOW_COMMISSION_AMOUNT}
+                    commissionPercentage={
+                      isCommissionReady ? commissionData : null
+                    }
                   />
                 </View>
               )}
