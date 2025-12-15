@@ -48,7 +48,6 @@ export const useGetWonArticles = ({
       if (response.error) {
         setStatus('error');
         setErrorMessage(response.error);
-        console.error('ERROR_FETCH_WON_ARTICLES', response.error);
         return;
       }
 
@@ -66,7 +65,6 @@ export const useGetWonArticles = ({
       };
       setErrorMessage(errorMsg);
       setStatus('error');
-      console.error('ERROR_FETCH_WON_ARTICLES_CATCH', error);
     }
   }, [secureGet, auctionId]);
 

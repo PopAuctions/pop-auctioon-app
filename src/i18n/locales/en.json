@@ -340,7 +340,10 @@
       "receipt": "Receipt",
       "selectItems": "Select items to pay",
       "noItemsSelected": "You must select at least one item",
+      "noPendingItems": "No pending items",
+      "noPendingItemsDescription": "You don't have any won items pending payment in this auction",
       "payNow": "Pay now",
+      "confirmAndPay": "Confirm and Pay",
       "paymentInitError": "Error initializing payment",
       "paymentSuccess": "Payment successful!",
       "paymentCanceled": "Payment canceled",
@@ -365,7 +368,6 @@
       "cannotDeselectLastItem": "You cannot deselect the last item",
       "summary": "Summary",
       "paymentData": "Payment data",
-      "confirmAndPay": "Confirm and pay",
       "processing": "Processing..."
     },
     "payments": {

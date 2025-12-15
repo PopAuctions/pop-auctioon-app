@@ -98,7 +98,7 @@ export default function Account({ currentUser }: { currentUser: User }) {
               console.log(
                 '🧪 [STRIPE TEST] Navegando a payment con auctionId=1'
               );
-              router.push('/(tabs)/account/payment?auctionId=20');
+              router.push('/(tabs)/account/payment?auctionId=28');
             }}
             className='mb-2'
           >

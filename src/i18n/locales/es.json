@@ -351,7 +351,10 @@
       "receipt": "Recibo",
       "selectItems": "Selecciona artículos a pagar",
       "noItemsSelected": "Debes seleccionar al menos un artículo",
+      "noPendingItems": "Sin artículos pendientes",
+      "noPendingItemsDescription": "No tienes artículos ganados pendientes de pago en esta subasta",
       "payNow": "Pagar ahora",
+      "confirmAndPay": "Confirmar y pagar",
       "paymentInitError": "Error al iniciar el pago",
       "paymentSuccess": "¡Pago realizado con éxito!",
       "paymentCanceled": "Pago cancelado",
@@ -376,7 +379,6 @@
       "cannotDeselectLastItem": "No puedes deseleccionar el último artículo",
       "summary": "Resumen",
       "paymentData": "Datos de pago",
-      "confirmAndPay": "Confirmar y pagar",
       "processing": "Procesando..."
     },
     "resetPassword": {

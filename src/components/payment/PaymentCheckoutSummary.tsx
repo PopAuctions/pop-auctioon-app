@@ -69,7 +69,10 @@ export function PaymentCheckoutSummary({
           </CustomText>
 
           {!appliedDiscount ? (
-            <View className='flex-row items-center gap-2'>
+            <View
+              key='discount-input'
+              className='flex-row items-center gap-2'
+            >
               <View className='flex-1'>
                 <Input
                   placeholder={paymentTranslations.couponCode}
@@ -90,7 +93,10 @@ export function PaymentCheckoutSummary({
               </Button>
             </View>
           ) : (
-            <View className='relative'>
+            <View
+              key='discount-applied'
+              className='relative'
+            >
               <Input
                 value={appliedDiscount.code}
                 editable={false}

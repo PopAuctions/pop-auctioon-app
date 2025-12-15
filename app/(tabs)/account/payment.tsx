@@ -230,19 +230,19 @@ export default function PaymentScreen() {
       return;
     }
 
-    const isValid = await validateCode(discountCode);
+    const result = await validateCode(discountCode);
 
-    if (isValid && discountData) {
+    if (result.isValid && result.data) {
       setAppliedDiscount({
-        code: discountData.code,
-        amount: discountData.amount,
+        code: result.data.code,
+        amount: result.data.amount,
       });
       setDiscountCode('');
       callToast({
         variant: 'success',
         description: {
-          es: `Código aplicado: ${formatter.format(discountData.amount)} de descuento`,
-          en: `Code applied: ${formatter.format(discountData.amount)} discount`,
+          es: `Código aplicado: ${formatter.format(result.data.amount)} de descuento`,
+          en: `Code applied: ${formatter.format(result.data.amount)} discount`,
         },
       });
     } else {
@@ -253,14 +253,7 @@ export default function PaymentScreen() {
           discountErrorMessage || 'screens.payments.invalidDiscountCode',
       });
     }
-  }, [
-    discountCode,
-    validateCode,
-    discountData,
-    discountErrorMessage,
-    callToast,
-    formatter,
-  ]);
+  }, [discountCode, validateCode, discountErrorMessage, callToast, formatter]);
 
   // Remover descuento aplicado
   const handleRemoveDiscount = useCallback(() => {
@@ -465,13 +458,13 @@ export default function PaymentScreen() {
             type='h2'
             className='mb-4 text-center text-cinnabar'
           >
-            {paymentTranslations.selectItems}
+            {paymentTranslations.noPendingItems}
           </CustomText>
           <CustomText
             type='body'
             className='text-center'
           >
-            {paymentTranslations.noItemsSelected}
+            {paymentTranslations.noPendingItemsDescription}
           </CustomText>
           <Button
             mode='primary'
@@ -554,7 +547,7 @@ export default function PaymentScreen() {
         >
           {isInitializingPayment
             ? paymentTranslations.processing
-            : paymentTranslations.payNow}
+            : `${paymentTranslations.confirmAndPay} ${formatter.format(paymentDetails.total)}`}
         </Button>
       </ScrollView>
 

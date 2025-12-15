@@ -40,10 +40,15 @@ export const useGetDiscountCode = () => {
   /**
    * Validate a discount code with the backend
    * @param code - Discount code to validate
-   * @returns true if valid, false otherwise
+   * @returns object with isValid flag and discount data if valid
    */
   const validateCode = useCallback(
-    async (code: string): Promise<boolean> => {
+    async (
+      code: string
+    ): Promise<{
+      isValid: boolean;
+      data: { code: string; amount: number } | null;
+    }> => {
       setStatus(REQUEST_STATUS.loading);
       setErrorMessage(null);
 
@@ -57,7 +62,7 @@ export const useGetDiscountCode = () => {
           setErrorMessage(response.error);
           setStatus(REQUEST_STATUS.error);
           setDiscountData(null);
-          return false;
+          return { isValid: false, data: null };
         }
 
         if (!response.data || !response.data.valid) {
@@ -69,17 +74,18 @@ export const useGetDiscountCode = () => {
           );
           setStatus(REQUEST_STATUS.error);
           setDiscountData(null);
-          return false;
+          return { isValid: false, data: null };
         }
 
         // Valid discount code - guardar code junto con amount
-        setDiscountData({
+        const discountInfo = {
           code: cleanCode,
           amount: response.data.amount,
-        });
+        };
+        setDiscountData(discountInfo);
         setStatus(REQUEST_STATUS.success);
         setErrorMessage(null);
-        return true;
+        return { isValid: true, data: discountInfo };
       } catch {
         setErrorMessage({
           es: 'Error al validar código',
@@ -87,7 +93,7 @@ export const useGetDiscountCode = () => {
         });
         setStatus(REQUEST_STATUS.error);
         setDiscountData(null);
-        return false;
+        return { isValid: false, data: null };
       }
     },
     [secureGet]
