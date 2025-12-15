@@ -9,7 +9,7 @@
  * 6. Pasa datos a Stripe Payment Sheet
  */
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -71,16 +71,6 @@ export default function PaymentScreen() {
   const { data: paymentConfig, status: commissionStatus } =
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
-
-  // Ref para guardar el Payment Intent ID (sincronizado con el hook)
-  const paymentIntentRef = useRef<string | null>(null);
-
-  // Sincronizar el Payment Intent ID del hook con el ref local
-  useEffect(() => {
-    if (paymentIntentId) {
-      paymentIntentRef.current = paymentIntentId;
-    }
-  }, [paymentIntentId]);
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
 
@@ -169,12 +159,12 @@ export default function PaymentScreen() {
       try {
         setIsInitializingPayment(true);
 
-        const initialized = await initializePaymentSheet(
+        const paymentIntentId = await initializePaymentSheet(
           paymentDetails.total,
           selectedArticleIds
         );
 
-        if (!initialized) {
+        if (!paymentIntentId) {
           callToast({
             variant: 'error',
             description: {
@@ -294,12 +284,12 @@ export default function PaymentScreen() {
 
     try {
       // PASO 1: Re-inicializar Payment Sheet con monto final actualizado
-      const initialized = await initializePaymentSheet(
+      const paymentIntentId = await initializePaymentSheet(
         paymentDetails.total,
         selectedArticleIds
       );
 
-      if (!initialized) {
+      if (!paymentIntentId) {
         callToast({
           variant: 'error',
           description: {
@@ -310,25 +300,12 @@ export default function PaymentScreen() {
         return;
       }
 
-      // Obtener el Payment Intent ID directamente del hook (se actualiza después de initializePaymentSheet)
-      const currentPaymentIntentId = paymentIntentId;
-      if (!currentPaymentIntentId) {
-        callToast({
-          variant: 'error',
-          description: {
-            es: 'Error: No se generó el ID de pago',
-            en: 'Error: Payment ID not generated',
-          },
-        });
-        return;
-      }
-
       // PASO 2: CRÍTICO - Crear registro en BD ANTES de confirmar pago
       const { userPaymentId, error: createPaymentError } = await createPayment({
         auctionId: auctionId || '',
         articlesIds: selectedArticleIds,
         clientTotalAmount: paymentDetails.total,
-        clientIntent: currentPaymentIntentId,
+        clientIntent: paymentIntentId, // Usar el ID devuelto directamente
         country: selectedAddress.country,
         userAddressId: selectedAddressId,
         discount: appliedDiscount,
@@ -396,7 +373,6 @@ export default function PaymentScreen() {
     paymentDetails.total,
     auctionId,
     appliedDiscount,
-    paymentIntentId,
     initializePaymentSheet,
     createPayment,
     rejectPayment,

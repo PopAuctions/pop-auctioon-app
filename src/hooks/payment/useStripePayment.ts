@@ -19,7 +19,7 @@ interface UseStripePaymentReturn {
   initializePaymentSheet: (
     amount: number,
     selectedItems: number[]
-  ) => Promise<boolean>;
+  ) => Promise<string | null>; // Devuelve el Payment Intent ID
   presentPaymentSheet: () => Promise<{
     success: boolean;
     error?: { code: string; message: string };
@@ -43,9 +43,10 @@ export const useStripePayment = (): UseStripePaymentReturn => {
 
   /**
    * Inicializa el Payment Sheet con el Payment Intent
+   * @returns Payment Intent ID si exitoso, null si falla
    */
   const initializePaymentSheet = useCallback(
-    async (amount: number, selectedItems: number[]): Promise<boolean> => {
+    async (amount: number, selectedItems: number[]): Promise<string | null> => {
       setIsLoading(true);
       setStatus('loading');
       setErrorMessage(null);
@@ -63,7 +64,7 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           setErrorMessage(response.error);
           setStatus('error');
           setIsLoading(false);
-          return false;
+          return null;
         }
 
         if (!response.data || !response.data.clientSecret) {
@@ -74,11 +75,12 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           setErrorMessage(errorMsg);
           setStatus('error');
           setIsLoading(false);
-          return false;
+          return null;
         }
 
         // Guardar el Payment Intent ID para usarlo en el registro de BD
-        paymentIntentIdRef.current = response.data.id;
+        const paymentIntentId = response.data.id;
+        paymentIntentIdRef.current = paymentIntentId;
 
         // Inicializar Payment Sheet con el client secret
         const { error: initError } = await initPaymentSheet({
@@ -105,12 +107,12 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           Sentry.captureException(
             `STRIPE_INIT_ERROR: ${initError.message ?? 'Unknown'}`
           );
-          return false;
+          return null;
         }
 
         setStatus('success');
         setIsLoading(false);
-        return true;
+        return paymentIntentId; // Devolver el ID directamente
       } catch (error: any) {
         const errorMsg: LangMap = {
           es: 'Error inesperado al procesar el pago',
@@ -123,7 +125,7 @@ export const useStripePayment = (): UseStripePaymentReturn => {
         Sentry.captureException(
           `STRIPE_PAYMENT_ERROR: ${error?.message ?? 'Unknown'}`
         );
-        return false;
+        return null;
       }
     },
     [securePost, initPaymentSheet]
