@@ -4,8 +4,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
-export const useFetchCommissions = (): ActionResponse<number> => {
-  const [data, setData] = useState<number>(0);
+interface PaymentConfigData {
+  commission: number;
+  shippingTaxes: Record<string, number>;
+}
+
+export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
+  const [data, setData] = useState<PaymentConfigData>({
+    commission: 0,
+    shippingTaxes: {},
+  });
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { protectedGet } = useSecureApi();
@@ -14,7 +22,7 @@ export const useFetchCommissions = (): ActionResponse<number> => {
     try {
       setStatus('loading');
 
-      const response = await protectedGet<number>({
+      const response = await protectedGet<PaymentConfigData>({
         endpoint: SECURE_ENDPOINTS.PAYMENT.COMMISSIONS,
       });
 
@@ -27,8 +35,8 @@ export const useFetchCommissions = (): ActionResponse<number> => {
       if (response.data === null || response.data === undefined) {
         setStatus('error');
         setErrorMessage({
-          en: 'Commission percentage data is missing',
-          es: 'Faltan los datos del porcentaje de comisión',
+          en: 'Payment configuration data is missing',
+          es: 'Faltan los datos de configuración de pago',
         });
         return;
       }

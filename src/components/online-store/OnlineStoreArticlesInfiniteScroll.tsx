@@ -43,7 +43,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     params as Filters;
 
   const { fetchArticles } = useFetchOnlineStoreArticlesInfinite();
-  const { data: commissionData, status: commissionStatus } =
+  const { data: paymentConfig, status: commissionStatus } =
     useFetchCommissions();
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
   const [offset, setOffset] = useState(0);
@@ -191,7 +191,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
           formatter={formatter}
           texts={texts}
           lang={lang}
-          commissionValue={isCommissionReady ? commissionData : null}
+          commissionValue={isCommissionReady ? paymentConfig.commission : null}
         />
       )}
       contentContainerStyle={{

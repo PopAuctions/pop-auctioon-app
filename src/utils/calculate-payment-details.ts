@@ -1,5 +1,4 @@
 import type { CountryValue } from '@/types/types';
-import { getShippingTax } from '@/constants/payment';
 
 /**
  * Input parameters for payment calculation
@@ -11,6 +10,8 @@ export interface PaymentDetailsInput {
   selectedCountry: CountryValue | null;
   /** Commission percentage (from useFetchCommissions hook) */
   commissionPercentage: number;
+  /** Shipping taxes by country (from useFetchCommissions hook) */
+  shippingTaxes: Record<string, number>;
   /** Discount amount (absolute value, not percentage) */
   discount?: number;
 }
@@ -62,6 +63,7 @@ export function calculatePaymentDetails(
     articlesAmount,
     selectedCountry,
     commissionPercentage,
+    shippingTaxes,
     discount = 0,
   } = input;
 
@@ -69,17 +71,17 @@ export function calculatePaymentDetails(
   const subtotal = articlesAmount;
 
   // Commission calculation (WITHOUT VAT - matches web behavior)
-  // commissionPercentage viene del hook useFetchCommissions (ej: 0.125 = 12.5%)
+  // commissionPercentage viene del hook useFetchCommissions (ej: 12.5 para 12.5%)
   const commission = Math.round(subtotal * (commissionPercentage / 100));
 
-  // Shipping calculation based on country
-  // Default to GENERAL (like web) if no country selected
-  const shippingTax = getShippingTax();
-  let shipping = shippingTax.GENERAL; // Default 29€
+  // Shipping calculation based on country from backend
+  // Default to GENERAL (29€) if no country selected or no shipping data
+  const defaultShipping = shippingTaxes.GENERAL || 29;
+  let shipping = defaultShipping;
 
   if (selectedCountry) {
-    shipping =
-      selectedCountry === 'SPAIN' ? shippingTax.SPAIN : shippingTax.GENERAL;
+    // Check if country-specific shipping exists in backend data
+    shipping = shippingTaxes[selectedCountry] || defaultShipping;
   }
 
   // Total = subtotal + commission + shipping - discount

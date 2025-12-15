@@ -67,8 +67,8 @@ export default function PaymentScreen() {
   const { createPayment } = useCreateArticlesPayment();
   const { rejectPayment } = useRejectArticlesPayment();
 
-  // Hook para obtener porcentaje de comisión dinámico
-  const { data: commissionData, status: commissionStatus } =
+  // Hook para obtener porcentaje de comisión y costos de envío dinámicos
+  const { data: paymentConfig, status: commissionStatus } =
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
@@ -142,7 +142,8 @@ export default function PaymentScreen() {
     const details = calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
-      commissionPercentage: commissionData || 0,
+      commissionPercentage: paymentConfig.commission || 0,
+      shippingTaxes: paymentConfig.shippingTaxes || {},
       discount: appliedDiscount?.amount || 0,
     });
 
@@ -152,7 +153,7 @@ export default function PaymentScreen() {
     selectedAddress,
     appliedDiscount,
     isCommissionReady,
-    commissionData,
+    paymentConfig,
   ]);
 
   // Inicializar Payment Sheet una sola vez al montar (como en web antes de React 18)
