@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
@@ -7,12 +7,13 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
-import { Chat } from '@/components/chat/Chat';
-import { Ionicons } from '@expo/vector-icons';
-import { ShareButton } from '@/components/ui/ShareButton';
 import { StreamInfoModal } from '@/components/live-auction/StreamInfoModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
 
 export default function LiveAuctionScreen() {
+  const insets = useSafeAreaInsets();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: currentUser, status } = useGetCurrentUser();
   const { locale } = useTranslation();
@@ -24,7 +25,7 @@ export default function LiveAuctionScreen() {
   if (!id) {
     return (
       <CustomError
-        refreshRoute='/(tabs)/auctions'
+        refreshRoute={`/(tabs)/auctions/live/index`}
         customMessage={{
           es: 'No se proporcionó el ID de la subasta',
           en: 'Auction ID was not provided',
@@ -45,13 +46,13 @@ export default function LiveAuctionScreen() {
 
   // Construir la URL del stream (usando variable de entorno para desarrollo local)
   const streamBaseUrl = process.env.EXPO_PUBLIC_STREAM_URL;
-  const streamUrl = `${streamBaseUrl}/${locale}/stream/${auctionId}?username=${username}`;
+  const streamUrl = `${streamBaseUrl}/${locale}/stream/${auctionId}?username=${encodeURIComponent(username)}`;
 
   // Si el stream falló, mostrar error
   if (streamError) {
     return (
       <CustomError
-        refreshRoute='/(tabs)/auctions'
+        refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
         customMessage={{
           es: 'Error al cargar el stream de la subasta',
           en: 'Error loading auction stream',
@@ -103,76 +104,19 @@ export default function LiveAuctionScreen() {
       />
 
       {/* Overlay con controles flotantes */}
-      <View
-        className='absolute inset-0'
-        pointerEvents='box-none'
-      >
-        {/* Botón de Back - Arriba izquierda */}
-        <View
-          className='absolute left-4 top-12'
-          pointerEvents='auto'
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className='h-10 w-10 items-center justify-center rounded-full bg-black/50'
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name='arrow-back'
-              size={24}
-              color='white'
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* Chat flotante - Lado izquierdo (solo visible cuando stream carga) */}
-        {streamLoaded && (
-          <View
-            className='absolute bottom-4 left-4 h-[25%] w-72'
-            pointerEvents='auto'
-          >
-            <Chat
-              auctionId={auctionId}
-              username={username}
-              enabled={true}
-            />
-          </View>
-        )}
-
-        {/* Botones de Share e Info - Lado derecho del chat */}
-        {streamLoaded && (
-          <View
-            className='absolute bottom-4 right-4 gap-2'
-            pointerEvents='auto'
-          >
-            {/* Botón de Info */}
-            <TouchableOpacity
-              onPress={() => setShowInfoModal(true)}
-              className='h-12 w-12 items-center justify-center rounded-full bg-black/60'
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name='information-circle-outline'
-                size={28}
-                color='white'
-              />
-            </TouchableOpacity>
-
-            {/* Botón de Compartir */}
-            <ShareButton
-              mode='empty'
-              className='h-12 w-12 items-center justify-center rounded-full bg-black/60'
-              lang={locale}
-            >
-              <Ionicons
-                name='share-outline'
-                size={24}
-                color='white'
-              />
-            </ShareButton>
-          </View>
-        )}
-      </View>
+      <LiveAuctionOverlay
+        insetsTop={insets.top}
+        insetsBottom={insets.bottom}
+        locale={locale}
+        streamLoaded={streamLoaded}
+        auctionId={auctionId}
+        username={username}
+        onBack={() => router.back()}
+        onOpenInfo={() => setShowInfoModal(true)}
+        onBid={() => {
+          console.log('bid');
+        }}
+      />
 
       {/* Modal de Stream Info */}
       <StreamInfoModal
