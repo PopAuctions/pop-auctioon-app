@@ -12,21 +12,12 @@ type BidBarProps = {
 };
 
 const COLORS = {
-  /* Brand */
   PRIMARY: '#d75639', // cinnabar
-
-  /* Neutrals */
   BLACK: '#000000',
   WHITE: '#ffffff',
-
   BORDER: '#cdcdcd',
-
-  /* Derived / usage-specific */
-  DRAG_FILL: '#d75639', // same as PRIMARY (no yellow)
-
-  /* Disabled states (same colors, lower opacity) */
-  PRIMARY_DISABLED: 'rgba(215, 86, 57, 0.45)', // PRIMARY @ 45%
-  THUMB_DISABLED: 'rgba(255, 255, 255, 0.6)', // WHITE @ 60%
+  PRIMARY_DISABLED: 'rgba(215, 86, 57, 0.45)',
+  THUMB_DISABLED: 'rgba(255, 255, 255, 0.6)',
 } as const;
 
 export const BidSlider = ({
@@ -40,15 +31,9 @@ export const BidSlider = ({
   const [swipeKey, setSwipeKey] = useState(0);
 
   const UI = {
-    ROW_GAP: 12,
     HEIGHT: 56,
-    FLEX_CUSTOM: 1,
-    FLEX_SLIDER: 2,
-
-    BORDER_RADIUS: 16,
-    BORDER_WIDTH: 1,
-
     SWIPE_THRESHOLD: 85,
+    THUMB_WIDTH: 80,
   } as const;
 
   const isDisabled = disabled || isSubmitting;
@@ -56,16 +41,12 @@ export const BidSlider = ({
   const handleBid = async (bidAmount: number) => {
     try {
       setIsSubmitting(true);
-
       console.log('[BID] Submitting bid of', bidAmount);
-      // simulate delay for UX
-      await new Promise((resolve) => setTimeout(resolve, 5000));
 
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       await onBid(bidAmount);
     } finally {
       setIsSubmitting(false);
-
-      // 🔄 reset SwipeButton
       setSwipeKey((k) => k + 1);
       console.log('[BID] Bid process finished');
     }
@@ -73,38 +54,44 @@ export const BidSlider = ({
 
   return (
     <>
-      <View style={{ width: '100%', flexDirection: 'row', gap: UI.ROW_GAP }}>
+      {/* Main row */}
+      <View className='w-full flex-row gap-3'>
         {/* Left: Custom */}
         <Button
           mode='secondary'
           size='small'
           disabled={isDisabled}
           onPress={() => setCustomOpen(true)}
-          className=''
+          className='flex-1'
         >
           Custom
         </Button>
 
-        {/* Right: Swipe-to-bid */}
-        <View style={{ height: UI.HEIGHT, flex: UI.FLEX_SLIDER }}>
+        {/* Right: Swipe */}
+        <View
+          className='flex-[2]'
+          style={{ height: UI.HEIGHT }}
+        >
           <SwipeButton
             key={swipeKey}
             disabled={isDisabled}
             height={UI.HEIGHT}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
             title={`Bid: ${quickBidAmount}  >>`}
+            titleStyles={{
+              paddingLeft: UI.THUMB_WIDTH,
+              textAlign: 'right',
+            }}
             onSwipeSuccess={() => handleBid(quickBidAmount)}
             titleFontSize={18}
             titleColor={COLORS.BLACK}
-            /* Active */
             railBackgroundColor={COLORS.WHITE}
-            railFillBackgroundColor={COLORS.DRAG_FILL}
+            railFillBackgroundColor={COLORS.PRIMARY}
             railBorderColor={COLORS.PRIMARY}
             railFillBorderColor='transparent'
             thumbIconBackgroundColor={COLORS.WHITE}
             thumbIconBorderColor={COLORS.PRIMARY}
-            thumbIconWidth={100}
-            /* Disabled */
+            thumbIconWidth={UI.THUMB_WIDTH}
             disabledThumbIconBackgroundColor={COLORS.THUMB_DISABLED}
             disabledThumbIconBorderColor={COLORS.PRIMARY}
           />
@@ -138,15 +125,6 @@ const CustomBidModal = ({
   const [value, onChangeValue] = useState('');
   const showMin = minBid != null;
 
-  const UI = {
-    OVERLAY_OPACITY: 'rgba(0,0,0,0.5)',
-    CARD_RADIUS: 24,
-    CARD_PADDING: 20,
-    BTN_HEIGHT: 48,
-    BTN_RADIUS: 16,
-    BTN_GAP: 12,
-  } as const;
-
   const handleSubmit = async () => {
     const numericValue = parseFloat(value);
     if (isNaN(numericValue)) {
@@ -170,37 +148,23 @@ const CustomBidModal = ({
       animationType='fade'
       onRequestClose={onClose}
     >
+      {/* Overlay */}
       <Pressable
         onPress={onClose}
-        style={{ flex: 1, backgroundColor: UI.OVERLAY_OPACITY }}
+        className='flex-1 bg-black/50'
       >
+        {/* Card */}
         <Pressable
           onPress={() => {}}
-          style={{
-            marginHorizontal: 20,
-            marginTop: 'auto',
-            marginBottom: 20,
-            borderRadius: UI.CARD_RADIUS,
-            backgroundColor: 'white',
-            padding: UI.CARD_PADDING,
-          }}
+          className='mx-5 mb-5 mt-auto rounded-3xl bg-white p-5'
         >
-          <Text
-            style={{
-              marginBottom: 8,
-              fontSize: 18,
-              fontWeight: '800',
-              color: '#111',
-            }}
-          >
+          <Text className='mb-2 text-lg font-extrabold text-neutral-900'>
             Custom bid
           </Text>
 
-          {showMin ? (
-            <Text style={{ marginBottom: 12, fontSize: 13, color: '#666' }}>
-              Min: {minBid}
-            </Text>
-          ) : null}
+          {showMin && (
+            <Text className='mb-3 text-sm text-neutral-500'>Min: {minBid}</Text>
+          )}
 
           <Input
             value={value}
@@ -209,16 +173,11 @@ const CustomBidModal = ({
             editable={!disabled}
           />
 
-          <View
-            style={{ marginTop: 16, flexDirection: 'row', gap: UI.BTN_GAP }}
-          >
+          <View className='mt-4 flex-row gap-3'>
             <Button
               mode='primary'
               onPress={handleSubmit}
               disabled={disabled}
-              style={{
-                opacity: disabled ? 0.6 : 1,
-              }}
               className='w-1/2'
             >
               Place bid
@@ -228,9 +187,6 @@ const CustomBidModal = ({
               mode='secondary'
               onPress={onClose}
               disabled={disabled}
-              style={{
-                opacity: disabled ? 0.6 : 1,
-              }}
               className='w-1/2'
             >
               Cancel
