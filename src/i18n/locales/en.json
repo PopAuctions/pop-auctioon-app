@@ -277,7 +277,11 @@
       "howItWorks": "How it Works",
       "faqs": "FAQs",
       "contactUs": "Contact Us",
-      "signOut": "Sign Out"
+      "signOut": "Sign Out",
+      "noArticlesWon": "You have not won any articles yet",
+      "winningBid": "Winning bid",
+      "payArticles": "Pay articles",
+      "viewArticle": "View article"
     },
     "editProfile": {
       "title": "Edit Profile Information",

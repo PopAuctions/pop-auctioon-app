@@ -288,7 +288,11 @@
       "howItWorks": "Cómo Funciona",
       "faqs": "Preguntas Frecuentes",
       "contactUs": "Contáctanos",
-      "signOut": "Cerrar Sesión"
+      "signOut": "Cerrar Sesión",
+      "noArticlesWon": "Aun no has ganado ningun artículo",
+      "winningBid": "Puja ganadora",
+      "payArticles": "Pagar artículos",
+      "viewArticle": "Ver artículo"
     },
     "editProfile": {
       "title": "Editar Información del Perfil",
