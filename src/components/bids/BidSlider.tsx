@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import SwipeButton from 'rn-swipe-button';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -11,15 +19,6 @@ type BidBarProps = {
   onBid: (amount: number) => void | Promise<void>;
 };
 
-const COLORS = {
-  PRIMARY: '#d75639', // cinnabar
-  BLACK: '#000000',
-  WHITE: '#ffffff',
-  BORDER: '#cdcdcd',
-  PRIMARY_DISABLED: 'rgba(215, 86, 57, 0.45)',
-  THUMB_DISABLED: 'rgba(255, 255, 255, 0.6)',
-} as const;
-
 export const BidSlider = ({
   quickBidAmount,
   minBid,
@@ -29,7 +28,14 @@ export const BidSlider = ({
   const [customOpen, setCustomOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [swipeKey, setSwipeKey] = useState(0);
-
+  const COLORS = {
+    PRIMARY: '#d75639', // cinnabar
+    BLACK: '#000000',
+    WHITE: '#ffffff',
+    BORDER: '#cdcdcd',
+    PRIMARY_DISABLED: 'rgba(215, 86, 57, 0.45)',
+    THUMB_DISABLED: 'rgba(255, 255, 255, 0.6)',
+  } as const;
   const UI = {
     HEIGHT: 56,
     SWIPE_THRESHOLD: 85,
@@ -61,7 +67,10 @@ export const BidSlider = ({
           mode='secondary'
           size='small'
           disabled={isDisabled}
-          onPress={() => setCustomOpen(true)}
+          onPress={() => {
+            Keyboard.dismiss();
+            setCustomOpen(true);
+          }}
           className='flex-1'
         >
           Custom
@@ -124,6 +133,11 @@ const CustomBidModal = ({
 }) => {
   const [value, onChangeValue] = useState('');
   const showMin = minBid != null;
+  const UI = {
+    CARD_MARGIN_X: 20,
+    CARD_MARGIN_BOTTOM: 20,
+    KEYBOARD_OFFSET_IOS: 0,
+  } as const;
 
   const handleSubmit = async () => {
     const numericValue = parseFloat(value);
@@ -153,46 +167,56 @@ const CustomBidModal = ({
         onPress={onClose}
         className='flex-1 bg-black/50'
       >
-        {/* Card */}
-        <Pressable
-          onPress={() => {}}
-          className='mx-5 mb-5 mt-auto rounded-3xl bg-white p-5'
+        <KeyboardAvoidingView
+          style={{ flex: 1, justifyContent: 'flex-end' }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={
+            Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
+          }
         >
-          <Text className='mb-2 text-lg font-extrabold text-neutral-900'>
-            Custom bid
-          </Text>
+          {/* Card */}
+          <Pressable
+            onPress={() => {}}
+            className='mx-5 mb-5 mt-auto rounded-3xl bg-white p-5'
+          >
+            <Text className='mb-2 text-lg font-extrabold text-neutral-900'>
+              Custom bid
+            </Text>
 
-          {showMin && (
-            <Text className='mb-3 text-sm text-neutral-500'>Min: {minBid}</Text>
-          )}
+            {showMin && (
+              <Text className='mb-3 text-sm text-neutral-500'>
+                Min: {minBid}
+              </Text>
+            )}
 
-          <Input
-            value={value}
-            onChangeText={onChangeValue}
-            placeholder='...'
-            editable={!disabled}
-          />
+            <Input
+              value={value}
+              onChangeText={onChangeValue}
+              placeholder='...'
+              editable={!disabled}
+            />
 
-          <View className='mt-4 flex-row gap-3'>
-            <Button
-              mode='primary'
-              onPress={handleSubmit}
-              disabled={disabled}
-              className='w-1/2'
-            >
-              Place bid
-            </Button>
+            <View className='mt-4 flex-row gap-3'>
+              <Button
+                mode='primary'
+                onPress={handleSubmit}
+                disabled={disabled}
+                className='w-1/2'
+              >
+                Place bid
+              </Button>
 
-            <Button
-              mode='secondary'
-              onPress={onClose}
-              disabled={disabled}
-              className='w-1/2'
-            >
-              Cancel
-            </Button>
-          </View>
-        </Pressable>
+              <Button
+                mode='secondary'
+                onPress={onClose}
+                disabled={disabled}
+                className='w-1/2'
+              >
+                Cancel
+              </Button>
+            </View>
+          </Pressable>
+        </KeyboardAvoidingView>
       </Pressable>
     </Modal>
   );

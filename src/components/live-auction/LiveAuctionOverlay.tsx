@@ -9,7 +9,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
-import { useKeyboardVisible } from '@/hooks/useKeyboardVisible';
 
 type OverlayProps = {
   insetsTop: number;
@@ -25,7 +24,7 @@ type OverlayProps = {
 
 const UI = {
   SCREEN_PADDING: 16,
-  HUD_BOTTOM_GAP: 12,
+  HUD_BOTTOM_GAP: 20,
   ROW_GAP: 12,
 
   BACK_TOP_GAP: 12,
@@ -37,7 +36,9 @@ const UI = {
   ACTION_GAP: 8,
   ACTION_BTN_SIZE: 48,
 
-  BID_HEIGHT: 56,
+  BID_HEIGHT: 36,
+
+  KEYBOARD_OFFSET_IOS: 0,
 } as const;
 
 export const LiveAuctionOverlay = ({
@@ -51,24 +52,18 @@ export const LiveAuctionOverlay = ({
   onOpenInfo,
   onBid,
 }: OverlayProps) => {
-  const keyboardVisible = useKeyboardVisible();
-
   if (!streamLoaded) return null;
 
-  const bottomPadding = keyboardVisible
-    ? UI.HUD_BOTTOM_GAP // keep a tiny breathing room
-    : insetsBottom + UI.HUD_BOTTOM_GAP;
+  // Bid row is ALWAYS pinned to safe area bottom (don’t change with keyboard)
+  const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
+
+  // Chat row sits ABOVE bid row
+  const chatBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
 
   return (
     <View
       pointerEvents='box-none'
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
     >
       {/* Back */}
       <View
@@ -99,52 +94,73 @@ export const LiveAuctionOverlay = ({
         </TouchableOpacity>
       </View>
 
-      {/* Bottom HUD */}
+      {/* Chat + Actions (keyboard-aware) */}
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        pointerEvents='box-none'
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? insetsTop : 0}
+        keyboardVerticalOffset={
+          Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
+        }
+        style={{
+          position: 'absolute',
+          left: UI.SCREEN_PADDING,
+          right: UI.SCREEN_PADDING,
+          bottom: chatBottom,
+        }}
       >
         <View
           pointerEvents='box-none'
           style={{
-            flex: 1,
-            justifyContent: 'flex-end',
-            paddingHorizontal: UI.SCREEN_PADDING,
-            paddingBottom: bottomPadding,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
           }}
         >
-          {/* Chat + actions */}
+          {/* Chat */}
           <View
-            pointerEvents='box-none'
+            pointerEvents='auto'
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              marginBottom: UI.ROW_GAP,
+              width: UI.CHAT_WIDTH,
+              height: UI.CHAT_HEIGHT,
             }}
           >
-            <View
-              pointerEvents='auto'
+            <Chat
+              auctionId={auctionId}
+              username={username}
+              enabled
+            />
+          </View>
+
+          {/* Actions */}
+          <View
+            pointerEvents='auto'
+            style={{ gap: UI.ACTION_GAP }}
+          >
+            <TouchableOpacity
+              onPress={onOpenInfo}
+              activeOpacity={0.7}
               style={{
-                width: UI.CHAT_WIDTH,
-                height: UI.CHAT_HEIGHT,
+                height: UI.ACTION_BTN_SIZE,
+                width: UI.ACTION_BTN_SIZE,
+                borderRadius: UI.ACTION_BTN_SIZE / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0,0,0,0.6)',
               }}
             >
-              <Chat
-                auctionId={auctionId}
-                username={username}
-                enabled
+              <Ionicons
+                name='information-circle-outline'
+                size={28}
+                color='white'
               />
-            </View>
+            </TouchableOpacity>
 
-            <View
-              pointerEvents='auto'
-              style={{ gap: UI.ACTION_GAP }}
+            <ShareButton
+              mode='empty'
+              className='items-center justify-center'
+              lang={locale as any}
             >
-              <TouchableOpacity
-                onPress={onOpenInfo}
-                activeOpacity={0.7}
+              <View
                 style={{
                   height: UI.ACTION_BTN_SIZE,
                   width: UI.ACTION_BTN_SIZE,
@@ -155,49 +171,32 @@ export const LiveAuctionOverlay = ({
                 }}
               >
                 <Ionicons
-                  name='information-circle-outline'
-                  size={28}
+                  name='share-outline'
+                  size={24}
                   color='white'
                 />
-              </TouchableOpacity>
-
-              <ShareButton
-                mode='empty'
-                className='items-center justify-center'
-                lang={locale as any}
-              >
-                <View
-                  style={{
-                    height: UI.ACTION_BTN_SIZE,
-                    width: UI.ACTION_BTN_SIZE,
-                    borderRadius: UI.ACTION_BTN_SIZE / 2,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(0,0,0,0.6)',
-                  }}
-                >
-                  <Ionicons
-                    name='share-outline'
-                    size={24}
-                    color='white'
-                  />
-                </View>
-              </ShareButton>
-            </View>
-          </View>
-
-          {/* Bid */}
-          <View
-            pointerEvents='auto'
-            style={{ height: UI.BID_HEIGHT }}
-          >
-            <BidSlider
-              quickBidAmount={300}
-              onBid={onBid}
-            />
+              </View>
+            </ShareButton>
           </View>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Bid (NOT keyboard-aware, pinned) */}
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          left: UI.SCREEN_PADDING,
+          right: UI.SCREEN_PADDING,
+          bottom: bidBottom,
+          height: UI.BID_HEIGHT,
+        }}
+      >
+        <BidSlider
+          quickBidAmount={300}
+          onBid={onBid}
+        />
+      </View>
     </View>
   );
 };
