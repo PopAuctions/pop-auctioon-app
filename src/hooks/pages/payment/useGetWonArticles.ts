@@ -58,7 +58,7 @@ export const useGetWonArticles = ({
         setArticles([]);
         setStatus('success');
       }
-    } catch (error: any) {
+    } catch {
       const errorMsg: LangMap = {
         es: 'Error al cargar artículos ganados',
         en: 'Error loading won articles',

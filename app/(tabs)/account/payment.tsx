@@ -489,6 +489,13 @@ export default function PaymentScreen() {
           onAddNewAddress={() => setShowAddressModal(true)}
         />
 
+        {/* Lista de artículos */}
+        <PaymentArticlesList
+          articles={articles}
+          selectedArticleIds={selectedArticleIds}
+          onToggleArticle={toggleArticleSelection}
+        />
+
         {/* Resumen de pago con código de descuento */}
         <PaymentCheckoutSummary
           paymentDetails={paymentDetails}
@@ -498,13 +505,6 @@ export default function PaymentScreen() {
           onApplyDiscount={handleApplyDiscount}
           onRemoveDiscount={handleRemoveDiscount}
           isValidatingDiscount={isValidatingDiscount}
-        />
-
-        {/* Lista de artículos */}
-        <PaymentArticlesList
-          articles={articles}
-          selectedArticleIds={selectedArticleIds}
-          onToggleArticle={toggleArticleSelection}
         />
 
         {/* Botón de pago */}
