@@ -12,7 +12,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
 import { COUNTRIES_MAP } from '@/constants/payment';
-import type { CountryObject } from '@/types/types';
+import type { CountryObject, CountryValue } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { REQUEST_STATUS } from '@/constants';
 
@@ -20,19 +20,30 @@ interface AddressFormModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  countries?: Record<string, CountryValue[]> | null;
 }
 
 export function AddressFormModal({
   visible,
   onClose,
   onSuccess,
+  countries: countriesProp,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { createAddress, status, errorMessage } = useCreateAddress();
   const isSubmittingRef = useRef(false);
 
-  const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
+  // Use countries from prop (if available) or fallback to constants
+  const countries: readonly CountryObject[] =
+    countriesProp &&
+    countriesProp[locale] &&
+    Array.isArray(countriesProp[locale])
+      ? countriesProp[locale].map((value) => ({
+          value,
+          label: value,
+        }))
+      : COUNTRIES_MAP[locale] || [];
 
   const {
     control,

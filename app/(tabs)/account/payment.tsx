@@ -61,7 +61,6 @@ export default function PaymentScreen() {
     initializePaymentSheet,
     presentPaymentSheet,
     isLoading: paymentLoading,
-    paymentIntentId,
   } = useStripePayment();
 
   const { createPayment } = useCreateArticlesPayment();
@@ -96,7 +95,6 @@ export default function PaymentScreen() {
   const {
     validateCode,
     isValidating: isValidatingDiscount,
-    discountData,
     errorMessage: discountErrorMessage,
   } = useGetDiscountCode();
 
@@ -173,7 +171,7 @@ export default function PaymentScreen() {
             },
           });
         }
-      } catch (error) {
+      } catch {
         callToast({
           variant: 'error',
           description: {
@@ -537,6 +535,7 @@ export default function PaymentScreen() {
           // Refetch addresses para actualizar la lista
           refetchAddresses();
         }}
+        countries={isCommissionReady ? paymentConfig.countries : null}
       />
     </SafeAreaView>
   );

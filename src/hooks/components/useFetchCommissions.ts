@@ -1,4 +1,9 @@
-import { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import {
+  ActionResponse,
+  LangMap,
+  RequestStatus,
+  CountryValue,
+} from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
@@ -7,12 +12,18 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 interface PaymentConfigData {
   commission: number;
   shippingTaxes: Record<string, number>;
+  taxPercentage: number;
+  countries: Record<string, CountryValue[]>;
+  countriesLabel: Record<string, Record<CountryValue, string>>;
 }
 
 export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
   const [data, setData] = useState<PaymentConfigData>({
     commission: 0,
     shippingTaxes: {},
+    taxPercentage: 0,
+    countries: {},
+    countriesLabel: {},
   });
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
@@ -23,7 +34,7 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
       setStatus('loading');
 
       const response = await protectedGet<PaymentConfigData>({
-        endpoint: SECURE_ENDPOINTS.PAYMENT.COMMISSIONS,
+        endpoint: SECURE_ENDPOINTS.PAYMENT.INFO,
       });
 
       if (response.error) {

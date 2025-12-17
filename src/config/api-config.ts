@@ -175,6 +175,7 @@ export const SECURE_ENDPOINTS = {
     CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
     REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
     COMMISSIONS: '/payments/commission',
+    INFO: '/payment-info', // GET - Complete payment configuration (commission, taxes, countries)
   },
 
   // Discount codes
