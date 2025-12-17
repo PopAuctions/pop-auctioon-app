@@ -489,6 +489,9 @@ export default function PaymentScreen() {
           selectedAddress={selectedAddress || undefined}
           onAddressChange={setSelectedAddressId}
           onAddNewAddress={() => setShowAddressModal(true)}
+          countriesLabel={
+            isCommissionReady ? paymentConfig.countriesLabel : null
+          }
         />
 
         {/* Resumen de pago con código de descuento */}
@@ -537,6 +540,7 @@ export default function PaymentScreen() {
           // Refetch addresses para actualizar la lista
           refetchAddresses();
         }}
+        countries={isCommissionReady ? paymentConfig.countries : null}
       />
     </SafeAreaView>
   );

@@ -11,8 +11,7 @@ import { SelectField } from '@/components/fields/SelectField';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
-import { COUNTRIES_MAP } from '@/constants/payment';
-import type { CountryObject } from '@/types/types';
+import type { CountryObject, CountryValue } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { REQUEST_STATUS } from '@/constants';
 
@@ -20,19 +19,28 @@ interface AddressFormModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  countries?: Record<string, CountryValue[]> | null;
 }
 
 export function AddressFormModal({
   visible,
   onClose,
   onSuccess,
+  countries: countriesProp,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { createAddress, status, errorMessage } = useCreateAddress();
   const isSubmittingRef = useRef(false);
 
-  const countries: readonly CountryObject[] = COUNTRIES_MAP[locale];
+  // Transform countries from backend format to CountryObject[] format
+  const countries: readonly CountryObject[] =
+    countriesProp && countriesProp[locale]
+      ? countriesProp[locale].map((value) => ({
+          value,
+          label: value, // Will be translated by SelectField
+        }))
+      : [];
 
   const {
     control,
