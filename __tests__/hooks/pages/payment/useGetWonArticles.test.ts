@@ -28,12 +28,23 @@ describe('useGetWonArticles', () => {
     });
   });
 
-  it('should start with idle status', () => {
+  it('should start with loading status and fetch data', async () => {
+    mockSecureGet.mockResolvedValueOnce({
+      data: [],
+      error: null,
+    });
+
     const { result } = renderHook(() =>
       useGetWonArticles({ auctionId: '123' })
     );
 
-    expect(result.current.status).toBe('idle');
+    // Hook starts loading immediately due to useEffect
+    expect(result.current.status).toBe('loading');
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('success');
+    });
+
     expect(result.current.data).toEqual([]);
     expect(result.current.errorMessage).toBeNull();
   });

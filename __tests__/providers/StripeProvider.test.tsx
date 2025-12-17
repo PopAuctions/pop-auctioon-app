@@ -1,17 +1,19 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { StripeProvider } from '@/providers/StripeProvider';
-import { Text } from 'react-native';
 
 // Mock Stripe React Native
-jest.mock('@stripe/stripe-react-native', () => ({
-  StripeProvider: ({ children, publishableKey }: any) => (
-    <>
-      <Text testID='stripe-key'>{publishableKey}</Text>
-      {children}
-    </>
-  ),
-}));
+jest.mock('@stripe/stripe-react-native', () => {
+  const { Text } = require('react-native');
+  return {
+    StripeProvider: ({ children, publishableKey }: any) => (
+      <>
+        <Text testID='stripe-key'>{publishableKey}</Text>
+        {children}
+      </>
+    ),
+  };
+});
 
 describe('StripeProvider', () => {
   const originalEnv = process.env;

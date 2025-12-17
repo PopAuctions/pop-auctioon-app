@@ -4,6 +4,10 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { CountryValue } from '@/types/types';
 
+jest.mock(
+  '@/utils/supabase/supabase-store',
+  () => require('@/__tests__/setup/mocks.mock').mockSupabase
+);
 jest.mock('@/hooks/api/useSecureApi');
 jest.mock('@/lib/error/sentry-error-report');
 

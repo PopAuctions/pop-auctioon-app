@@ -125,7 +125,7 @@ export function PaymentCheckoutSummary({
             type='body'
             className='text-gray-600'
           >
-            Subtotal:
+            {paymentTranslations.subtotal}:
           </CustomText>
           <CustomText
             type='body'
@@ -141,7 +141,7 @@ export function PaymentCheckoutSummary({
             type='body'
             className='text-gray-600'
           >
-            Comisión (IVA inc.):
+            {paymentTranslations.commission} {paymentTranslations.commission2}:
           </CustomText>
           <CustomText
             type='body'
@@ -157,7 +157,7 @@ export function PaymentCheckoutSummary({
             type='body'
             className='text-gray-600'
           >
-            Envío:
+            {paymentTranslations.shipping}:
           </CustomText>
           <CustomText
             type='body'
@@ -174,7 +174,7 @@ export function PaymentCheckoutSummary({
               type='body'
               className='text-green-600'
             >
-              Descuento:
+              {paymentTranslations.discount}:
             </CustomText>
             <CustomText
               type='body'
@@ -194,7 +194,7 @@ export function PaymentCheckoutSummary({
             type='h4'
             className='font-bold text-cinnabar'
           >
-            Total:
+            {paymentTranslations.total}:
           </CustomText>
           <CustomText
             type='h4'

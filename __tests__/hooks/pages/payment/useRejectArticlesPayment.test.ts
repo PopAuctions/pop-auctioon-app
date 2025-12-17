@@ -41,17 +41,18 @@ describe('useRejectArticlesPayment', () => {
 
     const { result } = renderHook(() => useRejectArticlesPayment());
 
-    let success = false;
+    let result2: any = null;
 
     await act(async () => {
-      success = await result.current.rejectPayment({
+      result2 = await result.current.rejectPayment({
         userPaymentId: 123,
         errorCode: 'payment_failed',
         errorDescription: 'Card declined by bank',
       });
     });
 
-    expect(success).toBe(true);
+    expect(result2.success).toBe(true);
+    expect(result2.error).toBeNull();
     expect(result.current.status).toBe(REQUEST_STATUS.success);
     expect(result.current.errorMessage).toBeNull();
 
@@ -73,15 +74,16 @@ describe('useRejectArticlesPayment', () => {
 
     const { result } = renderHook(() => useRejectArticlesPayment());
 
-    let success = false;
+    let result2: any = null;
 
     await act(async () => {
-      success = await result.current.rejectPayment({
+      result2 = await result.current.rejectPayment({
         userPaymentId: 456,
       });
     });
 
-    expect(success).toBe(true);
+    expect(result2.success).toBe(true);
+    expect(result2.error).toBeNull();
     expect(mockSecurePost).toHaveBeenCalledWith({
       endpoint: SECURE_ENDPOINTS.PAYMENT.REJECT_ARTICLES_PAYMENT,
       data: {
@@ -105,15 +107,16 @@ describe('useRejectArticlesPayment', () => {
 
     const { result } = renderHook(() => useRejectArticlesPayment());
 
-    let success = false;
+    let result2: any = null;
 
     await act(async () => {
-      success = await result.current.rejectPayment({
+      result2 = await result.current.rejectPayment({
         userPaymentId: 123,
       });
     });
 
-    expect(success).toBe(false);
+    expect(result2.success).toBe(false);
+    expect(result2.error).toEqual(mockError);
     expect(result.current.status).toBe(REQUEST_STATUS.error);
     expect(result.current.errorMessage).toEqual(mockError);
   });
@@ -123,21 +126,20 @@ describe('useRejectArticlesPayment', () => {
 
     const { result } = renderHook(() => useRejectArticlesPayment());
 
-    let success = false;
+    let result2: any = null;
 
     await act(async () => {
-      success = await result.current.rejectPayment({
+      result2 = await result.current.rejectPayment({
         userPaymentId: 123,
         errorCode: 'timeout',
         errorDescription: 'Request timeout',
       });
     });
 
-    expect(success).toBe(false);
-    expect(result.current.status).toBe(REQUEST_STATUS.error);
-    expect(result.current.errorMessage).toEqual({
-      es: 'Error inesperado al rechazar pago',
-      en: 'Unexpected error rejecting payment',
+    expect(result2.success).toBe(false);
+    expect(result2.error).toEqual({
+      es: 'Error al revertir el pago',
+      en: 'Error reverting payment',
     });
   });
 
