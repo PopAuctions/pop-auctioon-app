@@ -536,6 +536,7 @@ export default function PaymentScreen() {
           refetchAddresses();
         }}
         countries={isCommissionReady ? paymentConfig.countries : null}
+        countriesLabel={isCommissionReady ? paymentConfig.countriesLabel : null}
       />
     </SafeAreaView>
   );

@@ -438,7 +438,6 @@
       "sendToOnlineStore": "Send to online store",
       "notifyAgain": "Notify again",
       "shippingCourier": "Courier",
-      "trackingNumber": "Tracking number",
       "save": "Save",
       "updateCourier": "Update courier",
       "emailWarning": "User will receive an email with the shipping details, make sure the information is correct."

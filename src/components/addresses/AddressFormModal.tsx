@@ -21,6 +21,7 @@ interface AddressFormModalProps {
   onClose: () => void;
   onSuccess: () => void;
   countries?: Record<string, CountryValue[]> | null;
+  countriesLabel?: Record<string, Record<CountryValue, string>> | null;
 }
 
 export function AddressFormModal({
@@ -28,6 +29,7 @@ export function AddressFormModal({
   onClose,
   onSuccess,
   countries: countriesProp,
+  countriesLabel: countriesLabelProp,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
@@ -38,10 +40,12 @@ export function AddressFormModal({
   const countries: readonly CountryObject[] =
     countriesProp &&
     countriesProp[locale] &&
-    Array.isArray(countriesProp[locale])
+    Array.isArray(countriesProp[locale]) &&
+    countriesLabelProp &&
+    countriesLabelProp[locale]
       ? countriesProp[locale].map((value) => ({
           value,
-          label: value,
+          label: countriesLabelProp[locale][value] || value,
         }))
       : COUNTRIES_MAP[locale] || [];
 
