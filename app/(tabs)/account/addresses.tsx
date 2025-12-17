@@ -12,17 +12,14 @@ import { Loading } from '@/components/ui/Loading';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
 import { AddressCard } from '@/components/addresses/AddressCard';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
 import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
   const { t, locale } = useTranslation();
   const { data: addresses, status, refetch, errorMessage } = useGetAddresses();
-  const { data: paymentConfig, status: configStatus } = useFetchCommissions();
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const isConfigReady = configStatus === REQUEST_STATUS.success;
 
   // Refrescar cuando el screen vuelva al foco (ej: después de crear una dirección)
   useFocusEffect(
@@ -51,12 +48,8 @@ export default function AddressesScreen() {
   };
 
   const getCountryLabel = (countryValue: string) => {
-    if (!isConfigReady || !paymentConfig.countriesLabel[locale]) {
-      return countryValue;
-    }
     return (
-      paymentConfig.countriesLabel[locale][countryValue as CountryValue] ||
-      countryValue
+      COUNTRIES_MAP_LABEL[locale][countryValue as CountryValue] || countryValue
     );
   };
 
@@ -94,7 +87,6 @@ export default function AddressesScreen() {
           visible={modalVisible}
           onClose={handleModalClose}
           onSuccess={handleModalSuccess}
-          countries={isConfigReady ? paymentConfig.countries : null}
         />
       </SafeAreaView>
     );
@@ -148,7 +140,6 @@ export default function AddressesScreen() {
         visible={modalVisible}
         onClose={handleModalClose}
         onSuccess={handleModalSuccess}
-        countries={isConfigReady ? paymentConfig.countries : null}
       />
     </SafeAreaView>
   );
