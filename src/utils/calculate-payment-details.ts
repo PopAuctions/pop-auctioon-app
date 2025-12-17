@@ -76,12 +76,13 @@ export function calculatePaymentDetails(
 
   // Shipping calculation based on country from backend
   // Default to GENERAL (29€) if no country selected or no shipping data
-  const defaultShipping = shippingTaxes.GENERAL || 29;
+  const defaultShipping = shippingTaxes.GENERAL ?? 29;
   let shipping = defaultShipping;
 
   if (selectedCountry) {
     // Check if country-specific shipping exists in backend data
-    shipping = shippingTaxes[selectedCountry] || defaultShipping;
+    // Use ?? instead of || to allow 0 as valid shipping cost
+    shipping = shippingTaxes[selectedCountry] ?? defaultShipping;
   }
 
   // Total = subtotal + commission + shipping - discount

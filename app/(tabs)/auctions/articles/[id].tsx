@@ -223,7 +223,9 @@ export default function ArticlesDetailScreen() {
                     articleId={parseNumber(id)}
                     lang={locale}
                     initialPrice={article.startingPrice}
-                    commissionValue={isCommissionReady ? commissionData : null}
+                    commissionValue={
+                      isCommissionReady ? commissionData.commission : null
+                    }
                   />
                 )}
               </View>
@@ -242,7 +244,9 @@ export default function ArticlesDetailScreen() {
                 currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
-                commissionValue={isCommissionReady ? commissionData : null}
+                commissionValue={
+                  isCommissionReady ? commissionData.commission : null
+                }
                 texts={{
                   highestBid: articleLang.highestBid,
                   estimatedValue: articleLang.estimatedValue,
@@ -270,7 +274,7 @@ export default function ArticlesDetailScreen() {
                     bidLang={bidsLang}
                     biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
                     commissionPercentage={
-                      isCommissionReady ? commissionData : null
+                      isCommissionReady ? commissionData.commission : null
                     }
                   />
                 </View>

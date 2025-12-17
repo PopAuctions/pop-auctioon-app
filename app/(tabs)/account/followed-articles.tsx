@@ -56,7 +56,9 @@ export default function FollowedArticlesScreen() {
               formatter={formatter}
               lang={locale}
               userFollows={true}
-              commissionValue={isCommissionReady ? commissionData : null}
+              commissionValue={
+                isCommissionReady ? commissionData.commission : null
+              }
               actionAfterFollow={refetch}
             />
           ))}

@@ -30,7 +30,7 @@ export function OnlineStorePriceInfo({
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
   const commissionedPrice = getArticleCommissionedPrice(
     currentPrice,
-    commissionData ?? 0
+    commissionData?.commission ?? 0
   );
 
   return (

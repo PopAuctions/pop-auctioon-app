@@ -203,7 +203,7 @@ export const ArticlesInfiniteScroll = ({
           formatter={formatter}
           lang={lang}
           userFollows={articlesFollowed.includes(Number(item.id))}
-          commissionValue={isCommissionReady ? commissionData : null}
+          commissionValue={isCommissionReady ? commissionData.commission : null}
         />
       )}
       contentContainerStyle={{

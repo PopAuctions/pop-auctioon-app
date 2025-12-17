@@ -129,10 +129,10 @@ describe('useCreateArticlesPayment', () => {
 
     const { result } = renderHook(() => useCreateArticlesPayment());
 
-    let paymentId: number | null = null;
+    let response: { userPaymentId: number | null; error: LangMap | null };
 
     await act(async () => {
-      paymentId = await result.current.createPayment({
+      response = await result.current.createPayment({
         auctionId: '123',
         articlesIds: [1],
         clientTotalAmount: 500,
@@ -143,7 +143,8 @@ describe('useCreateArticlesPayment', () => {
       });
     });
 
-    expect(paymentId).toBeNull();
+    expect(response!.userPaymentId).toBeNull();
+    expect(response!.error).toEqual(mockError);
     expect(result.current.status).toBe(REQUEST_STATUS.error);
     expect(result.current.errorMessage).toEqual(mockError);
   });

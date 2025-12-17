@@ -548,6 +548,7 @@
       "paymentIntentFailedGeneral": "Hubo un error en el pago. Por favor, inténtalo de nuevo",
       "paymentNeedsConfirmation": "El pago necesita confirmación.",
       "newAddressText": "+",
+      "trackingNumber": "Número de seguimiento",
       "primaryAddress": "Establecer como dirección principal",
       "paymentAlertTitle": "¡Atención!",
       "paymentAlertMessage": "Por favor, asegúrate de que la información de tus direcciones y perfil sea correcta antes de continuar con el pago.",

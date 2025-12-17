@@ -1,6 +1,30 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { render } from '@testing-library/react-native';
-import { StripeProvider } from '@/providers/StripeProvider';
+
+// Mock AsyncStorage BEFORE any imports that use it
+jest.mock(
+  '@react-native-async-storage/async-storage',
+  () => require('@/__tests__/setup/mocks.mock').mockAsyncStorage
+);
+
+// Mock Supabase store to prevent AsyncStorage errors
+jest.mock(
+  '@/utils/supabase/supabase-store',
+  () => require('@/__tests__/setup/mocks.mock').mockSupabase
+);
+
+// Mock CustomError to avoid deep import chain
+jest.mock('@/components/ui/CustomError', () => {
+  const { Text } = require('react-native');
+  return {
+    CustomError: ({ customMessage }: any) => (
+      <Text testID='custom-error'>
+        {customMessage?.en || customMessage?.es}
+      </Text>
+    ),
+  };
+});
 
 // Mock Stripe React Native
 jest.mock('@stripe/stripe-react-native', () => {
@@ -15,99 +39,122 @@ jest.mock('@stripe/stripe-react-native', () => {
   };
 });
 
-describe('StripeProvider', () => {
-  const originalEnv = process.env;
-  const originalConsoleError = console.error;
+import { StripeProvider } from '@/providers/StripeProvider';
 
-  beforeEach(() => {
-    jest.resetModules();
-    process.env = { ...originalEnv };
-    console.error = jest.fn();
-  });
+describe('StripeProvider', () => {
+  const originalEnv = process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY;
 
   afterEach(() => {
-    process.env = originalEnv;
-    console.error = originalConsoleError;
+    if (originalEnv) {
+      process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY = originalEnv;
+    } else {
+      delete process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY;
+    }
+    jest.resetModules();
   });
 
   it('should render children correctly', () => {
+    // Set env before requiring the module
     process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY = 'pk_test_123';
 
-    const { getByText } = render(
-      <StripeProvider>
-        <Text>Test Child</Text>
-      </StripeProvider>
-    );
+    // Force re-import to pick up new env
+    jest.isolateModules(() => {
+      const { StripeProvider } = require('@/providers/StripeProvider');
 
-    expect(getByText('Test Child')).toBeTruthy();
+      const { getByText } = render(
+        <StripeProvider>
+          <Text>Test Child</Text>
+        </StripeProvider>
+      );
+
+      expect(getByText('Test Child')).toBeTruthy();
+    });
   });
 
   it('should pass publishable key to Stripe provider', () => {
     const testKey = 'pk_test_abcd1234';
     process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY = testKey;
 
-    const { getByTestId } = render(
-      <StripeProvider>
-        <Text>Child</Text>
-      </StripeProvider>
-    );
+    jest.isolateModules(() => {
+      const { StripeProvider } = require('@/providers/StripeProvider');
 
-    expect(getByTestId('stripe-key').props.children).toBe(testKey);
+      const { getByTestId } = render(
+        <StripeProvider>
+          <Text>Child</Text>
+        </StripeProvider>
+      );
+
+      expect(getByTestId('stripe-key').props.children).toBe(testKey);
+    });
   });
 
-  it('should log error when publishable key is missing', () => {
+  it('should show error when publishable key is missing', () => {
     process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY = '';
 
-    render(
-      <StripeProvider>
-        <Text>Child</Text>
-      </StripeProvider>
-    );
+    jest.isolateModules(() => {
+      const { StripeProvider } = require('@/providers/StripeProvider');
 
-    expect(console.error).toHaveBeenCalledWith(
-      'STRIPE_PUBLIC_KEY is not defined in environment variables'
-    );
+      const { getByTestId } = render(
+        <StripeProvider>
+          <Text>Child</Text>
+        </StripeProvider>
+      );
+
+      const errorText = getByTestId('custom-error').props.children;
+      expect(errorText).toContain('STRIPE_PUBLIC_KEY');
+    });
   });
 
-  it('should pass empty string when key is undefined', () => {
+  it('should show error when key is undefined', () => {
     delete process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY;
 
-    const { getByTestID } = render(
-      <StripeProvider>
-        <Text>Child</Text>
-      </StripeProvider>
-    );
+    jest.isolateModules(() => {
+      const { StripeProvider } = require('@/providers/StripeProvider');
 
-    expect(getByTestID('stripe-key').props.children).toBe('');
+      const { getByTestId } = render(
+        <StripeProvider>
+          <Text>Child</Text>
+        </StripeProvider>
+      );
+
+      expect(getByTestId('custom-error')).toBeTruthy();
+    });
   });
 
   it('should render multiple children', () => {
     process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY = 'pk_test_123';
 
-    const { getByText } = render(
-      <StripeProvider>
-        <Text>Child 1</Text>
-        <Text>Child 2</Text>
-        <Text>Child 3</Text>
-      </StripeProvider>
-    );
+    jest.isolateModules(() => {
+      const { StripeProvider } = require('@/providers/StripeProvider');
 
-    expect(getByText('Child 1')).toBeTruthy();
-    expect(getByText('Child 2')).toBeTruthy();
-    expect(getByText('Child 3')).toBeTruthy();
+      const { getByText } = render(
+        <StripeProvider>
+          <Text>Child 1</Text>
+          <Text>Child 2</Text>
+          <Text>Child 3</Text>
+        </StripeProvider>
+      );
+
+      expect(getByText('Child 1')).toBeTruthy();
+      expect(getByText('Child 2')).toBeTruthy();
+      expect(getByText('Child 3')).toBeTruthy();
+    });
   });
 
   it('should accept production publishable key', () => {
     const prodKey = 'pk_live_abcd1234';
     process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY = prodKey;
 
-    const { getByTestId } = render(
-      <StripeProvider>
-        <Text>Child</Text>
-      </StripeProvider>
-    );
+    jest.isolateModules(() => {
+      const { StripeProvider } = require('@/providers/StripeProvider');
 
-    expect(getByTestId('stripe-key').props.children).toBe(prodKey);
-    expect(console.error).not.toHaveBeenCalled();
+      const { getByTestId } = render(
+        <StripeProvider>
+          <Text>Child</Text>
+        </StripeProvider>
+      );
+
+      expect(getByTestId('stripe-key').props.children).toBe(prodKey);
+    });
   });
 });

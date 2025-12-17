@@ -120,7 +120,9 @@ export const MyAuctionArticles = ({
             }}
             formatter={formatter}
             locale={lang}
-            commissionValue={isCommissionReady ? commissionData : null}
+            commissionValue={
+              isCommissionReady ? commissionData.commission : null
+            }
             refetch={refetch}
           />
           {index < listDataToRender.length - 1 && <Divider className='my-2' />}

@@ -428,6 +428,7 @@
       "paymentIntentFailedGeneral": "Payment intent failed. Please try again",
       "paymentNeedsConfirmation": "Payment needs confirmation.",
       "newAddressText": "+",
+      "trackingNumber": "Tracking number",
       "addressTitle": "Address",
       "primaryAddress": "Set as primary address",
       "paymentAlertTitle": "Attention needed",

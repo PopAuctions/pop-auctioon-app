@@ -8,7 +8,7 @@ import { StripeProvider as StripeProviderNative } from '@stripe/stripe-react-nat
 import { CustomError } from '@/components/ui/CustomError';
 
 interface StripeProviderProps {
-  children: React.ReactNode;
+  children: React.ReactElement | React.ReactElement[];
 }
 
 const STRIPE_PUBLIC_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY || '';
