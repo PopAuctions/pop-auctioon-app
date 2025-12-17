@@ -9,6 +9,22 @@ import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
+// Backend response format (diferentes nombres)
+interface BackendPaymentConfig {
+  taxPercentageArticles: number;
+  taxForShipping: Record<string, number>;
+  commissionsValue: {
+    STANDARD: {
+      PERCENTAGE: number;
+      THRESHOLD: number | null;
+      LABEL: string;
+    };
+  };
+  countries: Record<string, { label: string; value: CountryValue }[]>;
+  countriesLabel: Record<string, Record<CountryValue, string>>;
+}
+
+// Frontend format (nuestro hook retorna esto)
 interface PaymentConfigData {
   commission: number;
   shippingTaxes: Record<string, number>;
@@ -27,13 +43,13 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
   });
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
-  const { protectedGet } = useSecureApi();
+  const { secureGet } = useSecureApi();
 
   const fetchCommission = useCallback(async () => {
     try {
       setStatus('loading');
 
-      const response = await protectedGet<PaymentConfigData>({
+      const response = await secureGet<BackendPaymentConfig>({
         endpoint: SECURE_ENDPOINTS.PAYMENT.INFO,
       });
 
@@ -52,7 +68,23 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
         return;
       }
 
-      setData(response.data);
+      // Transform backend data to frontend format
+      const transformedData: PaymentConfigData = {
+        commission: response.data.commissionsValue.STANDARD.PERCENTAGE,
+        shippingTaxes: response.data.taxForShipping,
+        taxPercentage: response.data.taxPercentageArticles,
+        // Transform countries from array of objects to array of values
+        countries: Object.keys(response.data.countries).reduce(
+          (acc, locale) => {
+            acc[locale] = response.data!.countries[locale].map((c) => c.value);
+            return acc;
+          },
+          {} as Record<string, CountryValue[]>
+        ),
+        countriesLabel: response.data.countriesLabel,
+      };
+
+      setData(transformedData);
       setStatus('success');
     } catch (error) {
       const errorMsg =
@@ -68,7 +100,7 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
       setStatus('error');
       setErrorMessage(message);
     }
-  }, [protectedGet]);
+  }, [secureGet]);
 
   useEffect(() => {
     fetchCommission();
