@@ -587,13 +587,11 @@
       "subtitle": "Estamos aquí para ayudarte"
     },
     "liveAuction": {
-      "streamInfo": "Información del Stream",
-      "auctionId": "ID de Subasta",
-      "username": "Usuario",
-      "chatStatus": "Estado del Chat",
-      "connected": "Conectado",
-      "anonymous": "Anónimo",
-      "url": "URL",
+      "articles": "Artículos",
+      "currentBid": "Puja Actual",
+      "liveNow": "En vivo",
+      "bids": "Pujas",
+      "estimatedPrice": "Precio estimado",
       "close": "Cerrar"
     }
   },

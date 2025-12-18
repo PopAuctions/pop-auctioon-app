@@ -576,13 +576,11 @@
       "subtitle": "We're here to help"
     },
     "liveAuction": {
-      "streamInfo": "Stream Information",
-      "auctionId": "Auction ID",
-      "username": "Username",
-      "chatStatus": "Chat Status",
-      "connected": "Connected",
-      "anonymous": "Anonymous",
-      "url": "URL",
+      "articles": "Articles",
+      "currentBid": "Current bid",
+      "liveNow": "Live now",
+      "bids": "Bid",
+      "estimatedPrice": "Estimated price",
       "close": "Close"
     }
   },

@@ -6,7 +6,6 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
-import { StreamInfoModal } from '@/components/live-auction/StreamInfoModal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
@@ -60,7 +59,6 @@ export default function LiveAuctionScreen() {
 
   const [streamLoaded, setStreamLoaded] = useState(false);
   const [streamError, setStreamError] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
   const showLoading =
@@ -200,13 +198,12 @@ export default function LiveAuctionScreen() {
         ) : (
           <>
             <LiveAuctionOverlay
+              orderedArticles={orderedArticles}
               insetsTop={insets.top}
               insetsBottom={insets.bottom}
-              locale={locale}
               auctionId={auctionId}
               username={username}
               onBack={() => router.back()}
-              onOpenInfo={() => setShowInfoModal(true)}
               biddingAmounts={biddingAmounts}
               articleServerState={{
                 highestBidder: highestBidderUsername ?? '',
@@ -215,14 +212,6 @@ export default function LiveAuctionScreen() {
                 available: currentArticle?.ArticleBid.available ?? false,
               }}
               articleId={articleId}
-            />
-
-            <StreamInfoModal
-              visible={showInfoModal}
-              onClose={() => setShowInfoModal(false)}
-              auctionId={auctionId}
-              username={username}
-              streamUrl={streamUrl}
             />
           </>
         )}

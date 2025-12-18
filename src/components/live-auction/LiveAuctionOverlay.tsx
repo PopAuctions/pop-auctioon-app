@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -9,21 +9,27 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
-import { BiddingAmounts, HighestBidderState } from '@/types/types';
+import {
+  BiddingAmounts,
+  CustomArticleLiveAuto,
+  HighestBidderState,
+} from '@/types/types';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { REQUEST_STATUS } from '@/constants';
+import { LiveArticlesModal } from './LiveArticlesModal';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 
 type OverlayProps = {
   insetsTop: number;
   insetsBottom: number;
-  locale: string;
   auctionId: string;
   username: string;
-  onBack: () => void;
-  onOpenInfo: () => void;
+  orderedArticles: CustomArticleLiveAuto[];
   biddingAmounts: BiddingAmounts | null;
   articleServerState: HighestBidderState | null;
   articleId: number;
+  onBack: () => void;
 };
 
 const UI = {
@@ -48,20 +54,19 @@ const UI = {
 export const LiveAuctionOverlay = ({
   insetsTop,
   insetsBottom,
-  locale,
   auctionId,
   username,
-  onBack,
-  onOpenInfo,
+  orderedArticles,
   biddingAmounts,
   articleServerState,
   articleId,
+  onBack,
 }: OverlayProps) => {
+  const { t, locale } = useTranslation();
   const { data: commissionData, status: commissionStatus } =
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
-
-  // get commission amount
+  const [showInfoModal, setOpenArticlesModal] = useState(false);
 
   // Bid row is ALWAYS pinned to safe area bottom (don’t change with keyboard)
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
@@ -70,106 +75,85 @@ export const LiveAuctionOverlay = ({
   const chatBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
 
   return (
-    <View
-      pointerEvents='box-none'
-      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-    >
-      {/* Back */}
+    <>
       <View
-        pointerEvents='auto'
-        style={{
-          position: 'absolute',
-          left: UI.SCREEN_PADDING,
-          top: insetsTop + UI.BACK_TOP_GAP,
-        }}
-      >
-        <TouchableOpacity
-          onPress={onBack}
-          activeOpacity={0.7}
-          style={{
-            height: UI.BACK_SIZE,
-            width: UI.BACK_SIZE,
-            borderRadius: UI.BACK_SIZE / 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-          }}
-        >
-          <Ionicons
-            name='arrow-back'
-            size={24}
-            color='white'
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* Chat + Actions (keyboard-aware) */}
-      <KeyboardAvoidingView
         pointerEvents='box-none'
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={
-          Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
-        }
-        style={{
-          position: 'absolute',
-          left: UI.SCREEN_PADDING,
-          right: UI.SCREEN_PADDING,
-          bottom: chatBottom,
-        }}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       >
+        {/* Back */}
         <View
-          pointerEvents='box-none'
+          pointerEvents='auto'
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
+            position: 'absolute',
+            left: UI.SCREEN_PADDING,
+            top: insetsTop + UI.BACK_TOP_GAP,
           }}
         >
-          {/* Chat */}
-          <View
-            pointerEvents='auto'
+          <TouchableOpacity
+            onPress={onBack}
+            activeOpacity={0.7}
             style={{
-              width: UI.CHAT_WIDTH,
-              height: UI.CHAT_HEIGHT,
+              height: UI.BACK_SIZE,
+              width: UI.BACK_SIZE,
+              borderRadius: UI.BACK_SIZE / 2,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0,0,0,0.5)',
             }}
           >
-            <Chat
-              auctionId={auctionId}
-              username={username}
-              enabled
+            <Ionicons
+              name='arrow-back'
+              size={24}
+              color='white'
             />
-          </View>
+          </TouchableOpacity>
+        </View>
 
-          {/* Actions */}
+        {/* Chat + Actions (keyboard-aware) */}
+        <KeyboardAvoidingView
+          pointerEvents='box-none'
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={
+            Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
+          }
+          style={{
+            position: 'absolute',
+            left: UI.SCREEN_PADDING,
+            right: UI.SCREEN_PADDING,
+            bottom: chatBottom,
+          }}
+        >
           <View
-            pointerEvents='auto'
-            style={{ gap: UI.ACTION_GAP }}
+            pointerEvents='box-none'
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+            }}
           >
-            <TouchableOpacity
-              onPress={onOpenInfo}
-              activeOpacity={0.7}
+            {/* Chat */}
+            <View
+              pointerEvents='auto'
               style={{
-                height: UI.ACTION_BTN_SIZE,
-                width: UI.ACTION_BTN_SIZE,
-                borderRadius: UI.ACTION_BTN_SIZE / 2,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0,0,0,0.6)',
+                width: UI.CHAT_WIDTH,
+                height: UI.CHAT_HEIGHT,
               }}
             >
-              <Ionicons
-                name='information-circle-outline'
-                size={28}
-                color='white'
+              <Chat
+                auctionId={auctionId}
+                username={username}
+                enabled
               />
-            </TouchableOpacity>
+            </View>
 
-            <ShareButton
-              mode='empty'
-              className='items-center justify-center'
-              lang={locale as any}
+            {/* Actions */}
+            <View
+              pointerEvents='auto'
+              style={{ gap: UI.ACTION_GAP }}
             >
-              <View
+              <TouchableOpacity
+                onPress={() => setOpenArticlesModal(true)}
+                activeOpacity={0.7}
                 style={{
                   height: UI.ACTION_BTN_SIZE,
                   width: UI.ACTION_BTN_SIZE,
@@ -179,38 +163,80 @@ export const LiveAuctionOverlay = ({
                   backgroundColor: 'rgba(0,0,0,0.6)',
                 }}
               >
-                <Ionicons
-                  name='share-outline'
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='list'
                   size={24}
-                  color='white'
+                  color='#FFFFFF'
                 />
-              </View>
-            </ShareButton>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+              </TouchableOpacity>
 
-      {/* Bid (NOT keyboard-aware, pinned) */}
-      <View
-        pointerEvents='auto'
-        style={{
-          position: 'absolute',
-          left: UI.SCREEN_PADDING,
-          right: UI.SCREEN_PADDING,
-          bottom: bidBottom,
-          height: UI.BID_HEIGHT,
-        }}
-      >
-        {/* loading skeleton */}
-        {!isCommissionReady || !biddingAmounts || !articleServerState ? null : (
-          <BidSlider
-            biddingAmounts={biddingAmounts}
-            articleServerState={articleServerState}
-            articleId={articleId}
-            commissionPercentage={commissionData}
-          />
-        )}
+              <ShareButton
+                mode='empty'
+                className='items-center justify-center'
+                lang={locale as any}
+              >
+                <View
+                  style={{
+                    height: UI.ACTION_BTN_SIZE,
+                    width: UI.ACTION_BTN_SIZE,
+                    borderRadius: UI.ACTION_BTN_SIZE / 2,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0,0,0,0.6)',
+                  }}
+                >
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='share'
+                    size={24}
+                    color='#FFFFFF'
+                  />
+                </View>
+              </ShareButton>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+
+        {/* Bid (NOT keyboard-aware, pinned) */}
+        <View
+          pointerEvents='auto'
+          style={{
+            position: 'absolute',
+            left: UI.SCREEN_PADDING,
+            right: UI.SCREEN_PADDING,
+            bottom: bidBottom,
+            height: UI.BID_HEIGHT,
+          }}
+        >
+          {/* loading skeleton */}
+          {!isCommissionReady ||
+          !biddingAmounts ||
+          !articleServerState ? null : (
+            <BidSlider
+              biddingAmounts={biddingAmounts}
+              articleServerState={articleServerState}
+              articleId={articleId}
+              commissionPercentage={commissionData}
+            />
+          )}
+        </View>
       </View>
-    </View>
+
+      <LiveArticlesModal
+        articles={orderedArticles}
+        currentArticleId={articleId}
+        lang={locale}
+        commissionValue={commissionData || 0}
+        texts={{
+          bids: t('screens.liveAuction.bids'),
+          estimatedPrice: t('screens.liveAuction.estimatedPrice'),
+          liveNow: t('screens.liveAuction.liveNow'),
+          articles: t('screens.liveAuction.articles'),
+        }}
+        visible={showInfoModal}
+        onClose={() => setOpenArticlesModal(false)}
+      />
+    </>
   );
 };
