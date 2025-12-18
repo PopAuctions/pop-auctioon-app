@@ -60,7 +60,6 @@ export function BillingFormModal({
     if (!visible) return;
 
     if (currentStatus === REQUEST_STATUS.success && isSubmittingRef.current) {
-      console.log(`✅ ${isEditMode ? 'UPDATED' : 'CREATED'} BILLING`);
       callToast({
         variant: 'success',
         description: isEditMode
@@ -74,7 +73,6 @@ export function BillingFormModal({
       currentStatus === REQUEST_STATUS.error &&
       isSubmittingRef.current
     ) {
-      console.log('❌ ERROR_SAVE_BILLING');
       // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;
     }
@@ -83,7 +81,6 @@ export function BillingFormModal({
   // Populate form when billingToEdit changes
   useEffect(() => {
     if (billingToEdit) {
-      console.log('📝 Populando formulario con:', billingToEdit);
       reset({
         label: billingToEdit.label,
         billingName: billingToEdit.billingName,
@@ -107,11 +104,6 @@ export function BillingFormModal({
     try {
       const isEditMode = billingToEdit?.id !== undefined;
 
-      console.log(
-        `💾 ${isEditMode ? 'Actualizando' : 'Creando'} billing info:`,
-        data
-      );
-
       if (isEditMode && billingToEdit.id) {
         // UPDATE - Use PATCH
         await updateBilling(billingToEdit.id, data);
@@ -120,7 +112,6 @@ export function BillingFormModal({
         await createBilling(data);
       }
     } catch (error) {
-      console.error('❌ ERROR_SAVE_BILLING_CATCH:', error);
       // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;
     }

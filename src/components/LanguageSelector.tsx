@@ -19,7 +19,7 @@ export default function LanguageSelector() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{t('account.language')}</Text>
+        <Text style={styles.title}>{t('screens.account.title')}</Text>
         {isPending && (
           <ActivityIndicator
             size='small'

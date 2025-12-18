@@ -55,6 +55,11 @@ export const PROTECTED_ENDPOINTS = {
   CHAT: {
     GET_TOKEN: '/chat/get-token',
   },
+
+  // Payment (solo comisión pública)
+  PAYMENT: {
+    COMMISSIONS: '/payments/commission', // GET - Solo valor de comisión
+  },
 } as const;
 
 // ========================================
@@ -137,6 +142,9 @@ export const SECURE_ENDPOINTS = {
     PAYMENT_HISTORY: '/user/payments', // GET payment history
     PAYMENT_BY_ID: (id: string): ApiEndpoint =>
       `/user/payments/${id}` as ApiEndpoint, // GET payment by ID
+    WON_ARTICLES: (auctionId: string): ApiEndpoint =>
+      `/user/won-articles?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados en subasta
+    WON_ARTICLES_BY_AUCTION: '/user/won-articles-by-auction', // GET - Artículos ganados agrupados por subasta
     RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
@@ -151,9 +159,6 @@ export const SECURE_ENDPOINTS = {
   INVOICE: {
     GET: (id: string): ApiEndpoint =>
       `/invoice?paymentId=${id}&format=pdf` as ApiEndpoint, // GET - Obtener factura por paymentID
-  },
-  PAYMENT: {
-    COMMISSIONS: '/payments/commission',
   },
   BIDS: {
     CREATE: '/bids',
@@ -172,6 +177,20 @@ export const SECURE_ENDPOINTS = {
   OFFERS: {
     CREATE: '/online-store/offers',
     MADE: '/user/offers-made',
+  },
+
+  // Payments (Stripe)
+  PAYMENT: {
+    CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
+    CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
+    REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
+    INFO: '/payment-info', // GET - Complete payment configuration (commission, taxes, countries)
+  },
+
+  // Discount codes
+  DISCOUNT: {
+    VALIDATE: (code: string): ApiEndpoint =>
+      `/user/payments/discount-code?code=${encodeURIComponent(code)}` as ApiEndpoint, // GET - Validate discount code
   },
 
   // Proxy universal para endpoints existentes
