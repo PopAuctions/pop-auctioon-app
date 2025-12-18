@@ -7,32 +7,32 @@ Aplicación móvil de subastas construida con React Native, Expo y Supabase.
 ### Instalación
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Desarrollo
 
 ```bash
-npm start                 # Iniciar Expo dev server
-npm run android          # Abrir en Android
-npm run ios              # Abrir en iOS
-npm run web              # Abrir en web
+pnpm start                # Iniciar Expo dev server
+pnpm android             # Abrir en Android
+pnpm ios                 # Abrir en iOS
+pnpm web                 # Abrir en web
 ```
 
 ### Testing
 
 ```bash
-npm test                 # Ejecutar tests
-npm run test:watch       # Tests en modo watch
-npm run coverage:open    # Ver reporte de cobertura
+pnpm test                # Ejecutar tests
+pnpm test:watch          # Tests en modo watch
+pnpm coverage:open       # Ver reporte de cobertura
 ```
 
 ### Development Builds
 
 ```bash
-npm run build:ios          # Build para iOS Simulator (cloud - GRATIS)
-npm run build:android      # Build para Android Emulator/Device (cloud - GRATIS)
-npm run build:ios:device   # Build para iPhone/iPad (cloud - requiere Apple Developer $99/año)
+pnpm build:ios             # Build para iOS Simulator (cloud - GRATIS)
+pnpm build:android         # Build para Android Emulator/Device (cloud - GRATIS)
+pnpm build:ios:device      # Build para iPhone/iPad (cloud - requiere Apple Developer $99/año)
 ```
 
 📖 Ver [BUILD.md](./BUILD.md) para guía detallada de builds.
@@ -154,10 +154,10 @@ const result = await callSecure('/auctions', 'POST', data);
 ### Ejecutar Tests
 
 ```bash
-npm test                        # Ejecutar todos los tests
-npm run test:watch             # Modo watch
-npm run test:update-snapshots  # Actualizar snapshots
-npm run coverage:open          # Ver cobertura
+pnpm test                      # Ejecutar todos los tests
+pnpm test:watch                # Modo watch
+pnpm test:update-snapshots     # Actualizar snapshots
+pnpm coverage:open             # Ver cobertura
 ```
 
 ### Cobertura Actual
@@ -202,24 +202,24 @@ const { id } = useLocalSearchParams();
 
 ```bash
 # Desarrollo
-npm start                   # Dev server
-npm run android            # Android development
-npm run ios                # iOS development
+pnpm start                 # Dev server
+pnpm android               # Android development
+pnpm ios                   # iOS development
 
 # Calidad de Código
-npm run lint               # ESLint check
-npm run lint:fix          # ESLint fix
-npm run prettier:check    # Prettier check
-npm run prettier:fix      # Prettier fix
+pnpm lint                  # ESLint check
+pnpm lint:fix              # ESLint fix
+pnpm prettier:check        # Prettier check
+pnpm prettier:fix          # Prettier fix
 
 # Testing
-npm test                   # Run tests
-npm run test:watch        # Watch mode
-npm run coverage:open     # Coverage report
+pnpm test                  # Run tests
+pnpm test:watch            # Watch mode
+pnpm coverage:open         # Coverage report
 
 # Builds
-npm run build:dev:ios     # iOS Simulator build
-npm run build:dev:android # Android Emulator build
+pnpm build:dev:ios         # iOS Simulator build
+pnpm build:dev:android     # Android Emulator build
 ```
 
 ## 📚 Documentación Adicional
@@ -232,7 +232,7 @@ npm run build:dev:android # Android Emulator build
 
 1. Crear branch desde `main`: `git checkout -b feature/nombre`
 2. Hacer cambios y tests
-3. Verificar calidad: `npm run lint:fix && npm test`
+3. Verificar calidad: `pnpm lint:fix && pnpm test`
 4. Commit y push
 5. Crear Pull Request
 

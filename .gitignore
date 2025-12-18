@@ -4,6 +4,9 @@ coverage/
 
 # dependencies
 node_modules/
+.pnpm-store/
+pnpm-debug.log*
+# Keep pnpm-lock.yaml for reproducible builds
 
 # Expo
 .expo/

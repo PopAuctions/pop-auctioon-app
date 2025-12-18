@@ -1,9 +1,16 @@
 import { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
+// Backend response format (solo comisión)
+interface BackendCommissionResponse {
+  commission: number;
+}
+
+// Este hook solo trae el valor de comisión (número)
+// Para payment checkout completo con impuestos, shipping, etc, usar useFetchPaymentConfig
 export const useFetchCommissions = (): ActionResponse<number> => {
   const [data, setData] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>('loading');
@@ -14,8 +21,8 @@ export const useFetchCommissions = (): ActionResponse<number> => {
     try {
       setStatus('loading');
 
-      const response = await protectedGet<number>({
-        endpoint: SECURE_ENDPOINTS.PAYMENT.COMMISSIONS,
+      const response = await protectedGet<BackendCommissionResponse>({
+        endpoint: PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS,
       });
 
       if (response.error) {
@@ -27,13 +34,13 @@ export const useFetchCommissions = (): ActionResponse<number> => {
       if (response.data === null || response.data === undefined) {
         setStatus('error');
         setErrorMessage({
-          en: 'Commission percentage data is missing',
-          es: 'Faltan los datos del porcentaje de comisión',
+          en: 'Commission data is missing',
+          es: 'Faltan los datos de comisión',
         });
         return;
       }
 
-      setData(response.data);
+      setData(response.data.commission);
       setStatus('success');
     } catch (error) {
       const errorMsg =
@@ -54,9 +61,11 @@ export const useFetchCommissions = (): ActionResponse<number> => {
   useEffect(() => {
     fetchCommission();
   }, [fetchCommission]);
+
   return {
     data,
     status,
+    refetch: fetchCommission,
     errorMessage,
     setErrorMessage,
   };

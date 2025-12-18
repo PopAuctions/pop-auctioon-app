@@ -518,8 +518,10 @@ export interface MyOffers {
   };
 }
 
-export interface CustomArticleLiveAuto
-  extends Pick<Article, 'id' | 'estimatedValue' | 'title' | 'images'> {
+export interface CustomArticleLiveAuto extends Pick<
+  Article,
+  'id' | 'estimatedValue' | 'title' | 'images'
+> {
   ArticleBid: Pick<ArticleBid, 'currentValue' | 'available'>;
   Bids: {
     count: number;
