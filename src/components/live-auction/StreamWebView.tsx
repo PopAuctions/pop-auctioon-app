@@ -18,6 +18,7 @@ export const StreamWebView = ({
       javaScriptEnabled={true}
       domStorageEnabled={true}
       startInLoadingState={true}
+      startInLoadingState={false}
       scalesPageToFit={true}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}

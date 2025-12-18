@@ -17,7 +17,6 @@ type OverlayProps = {
   insetsTop: number;
   insetsBottom: number;
   locale: string;
-  streamLoaded: boolean;
   auctionId: string;
   username: string;
   onBack: () => void;
@@ -50,7 +49,6 @@ export const LiveAuctionOverlay = ({
   insetsTop,
   insetsBottom,
   locale,
-  streamLoaded,
   auctionId,
   username,
   onBack,
@@ -64,7 +62,6 @@ export const LiveAuctionOverlay = ({
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   // get commission amount
-  if (!streamLoaded) return null;
 
   // Bid row is ALWAYS pinned to safe area bottom (don’t change with keyboard)
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;

@@ -37,10 +37,12 @@ export default function LiveAuctionScreen() {
     articlesOrderKey: articlesOrderKey,
     locale: locale,
   });
+
   const { data: currentArticle, status: currentArticleStatus } =
     useFetchCurrentArticle({
       articleId: liveAuctionData?.ArticleBid.articleId || 0,
     });
+
   const { data: biddingAmounts, status: biddingAmountsStatus } =
     useFetchBiddingAmounts({
       articleId: liveAuctionData?.ArticleBid.articleId || null,
@@ -60,110 +62,170 @@ export default function LiveAuctionScreen() {
   const [streamError, setStreamError] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
-  // Validar que existe el auction ID
-  if (!auctionId || isNaN(Number(auctionId))) {
-    return (
-      <CustomError
-        refreshRoute={`/(tabs)/auctions/live/index`}
-        customMessage={{
-          es: 'ID de subasta inválido',
-          en: 'Invalid auction ID',
-        }}
-      />
-    );
-  }
-
-  if (
+  const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
+  const showLoading =
     userStatus === REQUEST_STATUS.loading ||
     userStatus === REQUEST_STATUS.idle ||
     auctionStatus === REQUEST_STATUS.loading ||
-    auctionStatus === REQUEST_STATUS.idle
-    // add currentArticleStatus if needed
-  ) {
-    return <Loading locale={locale} />;
-  }
+    auctionStatus === REQUEST_STATUS.idle;
+  // add currentArticleStatus if needed
 
-  if (
+  const showError =
     userStatus === REQUEST_STATUS.error ||
     auctionStatus === REQUEST_STATUS.error ||
     currentArticleStatus === REQUEST_STATUS.error ||
     biddingAmountsStatus === REQUEST_STATUS.error ||
-    !liveAuctionData
-  ) {
+    (auctionStatus !== REQUEST_STATUS.loading && !liveAuctionData);
+
+  const username = currentUser?.username || '';
+  const streamUrl = `${STREAM_BASE_URL}/${locale}/stream/${auctionId}?username=${encodeURIComponent(
+    username
+  )}`;
+
+  // Extract highest bidder details (only safe to read when liveAuctionData exists)
+  const highestBidderUsername =
+    liveAuctionData?.ArticleBid.highestBidderUsername;
+  const highestBidderImage = liveAuctionData?.ArticleBid.highestBidderImage;
+  const articleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+
+  const showUnifiedLoader = showLoading || !streamLoaded;
+
+  if (invalidAuctionId) {
     return (
-      <CustomError
-        refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
-        customMessage={{
-          es: 'Hubo un error al cargar la información',
-          en: 'There was an error loading information',
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
-      />
+      >
+        <CustomError
+          refreshRoute={`/(tabs)/auctions/live/index`}
+          customMessage={{
+            es: 'ID de subasta inválido',
+            en: 'Invalid auction ID',
+          }}
+        />
+      </View>
     );
   }
 
-  const auction = liveAuctionData.Auction;
-  const currentArticleBidId = liveAuctionData.currentArticleBidId;
-  const articleId = liveAuctionData.ArticleBid.articleId;
+  if (showError) {
+    return (
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      >
+        <CustomError
+          refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
+          customMessage={{
+            es: 'Hubo un error al cargar la información',
+            en: 'There was an error loading information',
+          }}
+        />
+      </View>
+    );
+  }
 
-  const username = currentUser?.username || '';
-  const streamUrl = `${STREAM_BASE_URL}/${locale}/stream/${auctionId}?username=${encodeURIComponent(username)}`;
-
-  // Extract highest bidder details
-  const highestBidderUsername =
-    liveAuctionData.ArticleBid.highestBidderUsername;
-  const highestBidderImage = liveAuctionData.ArticleBid.highestBidderImage;
-
-  // Si el stream falló, mostrar error
   if (streamError) {
     return (
-      <CustomError
-        refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
-        customMessage={{
-          es: 'Error al cargar el stream de la subasta',
-          en: 'Error loading auction stream',
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
-      />
+      >
+        <CustomError
+          refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
+          customMessage={{
+            es: 'Error al cargar el stream de la subasta',
+            en: 'Error loading auction stream',
+          }}
+        />
+      </View>
     );
   }
 
   return (
     <HighestBidderProvider>
       <View className='flex-1'>
-        {/* WebView ocupando todo el espacio disponible */}
         <StreamWebView
           streamUrl={streamUrl}
           setStreamLoaded={setStreamLoaded}
           setStreamError={setStreamError}
         />
 
-        {/* Overlay con controles flotantes */}
-        <LiveAuctionOverlay
-          insetsTop={insets.top}
-          insetsBottom={insets.bottom}
-          locale={locale}
-          streamLoaded={streamLoaded}
-          auctionId={auctionId}
-          username={username}
-          onBack={() => router.back()}
-          onOpenInfo={() => setShowInfoModal(true)}
-          biddingAmounts={biddingAmounts}
-          articleServerState={{
-            highestBidder: highestBidderUsername,
-            highestBidderImage: highestBidderImage,
-            currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
-            available: currentArticle?.ArticleBid.available ?? false,
-          }}
-          articleId={articleId}
-        />
+        {showUnifiedLoader ? (
+          <View
+            pointerEvents='auto'
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Loading
+              locale={locale}
+              customMessage={
+                showLoading
+                  ? {
+                      es: 'Cargando información de la subasta...',
+                      en: 'Loading auction info...',
+                    }
+                  : {
+                      es: 'Cargando stream de la subasta...',
+                      en: 'Loading auction stream...',
+                    }
+              }
+            />
+          </View>
+        ) : (
+          <>
+            <LiveAuctionOverlay
+              insetsTop={insets.top}
+              insetsBottom={insets.bottom}
+              locale={locale}
+              auctionId={auctionId}
+              username={username}
+              onBack={() => router.back()}
+              onOpenInfo={() => setShowInfoModal(true)}
+              biddingAmounts={biddingAmounts}
+              articleServerState={{
+                highestBidder: highestBidderUsername ?? '',
+                highestBidderImage: highestBidderImage ?? null,
+                currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
+                available: currentArticle?.ArticleBid.available ?? false,
+              }}
+              articleId={articleId}
+            />
 
-        {/* Modal de Stream Info */}
-        <StreamInfoModal
-          visible={showInfoModal}
-          onClose={() => setShowInfoModal(false)}
-          auctionId={auctionId}
-          username={username}
-          streamUrl={streamUrl}
-        />
+            <StreamInfoModal
+              visible={showInfoModal}
+              onClose={() => setShowInfoModal(false)}
+              auctionId={auctionId}
+              username={username}
+              streamUrl={streamUrl}
+            />
+          </>
+        )}
       </View>
     </HighestBidderProvider>
   );
