@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -9,16 +9,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
+import { LiveArticlesModal } from '@/components/live-auction/LiveArticlesModal';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { REQUEST_STATUS } from '@/constants';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import {
   BiddingAmounts,
   CustomArticleLiveAuto,
   HighestBidderState,
 } from '@/types/types';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
-import { REQUEST_STATUS } from '@/constants';
-import { LiveArticlesModal } from './LiveArticlesModal';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
 
 type OverlayProps = {
   insetsTop: number;
@@ -46,6 +47,8 @@ const UI = {
   ACTION_GAP: 8,
   ACTION_BTN_SIZE: 48,
 
+  ARTICLE_HUD_HEIGHT: 76,
+
   BID_HEIGHT: 36,
 
   KEYBOARD_OFFSET_IOS: 0,
@@ -66,19 +69,27 @@ export const LiveAuctionOverlay = ({
   const { data: commissionData, status: commissionStatus } =
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
+
   const [showInfoModal, setOpenArticlesModal] = useState(false);
 
-  // Bid row is ALWAYS pinned to safe area bottom (don’t change with keyboard)
+  const currentArticle = useMemo(() => {
+    return orderedArticles.find((a) => a.id === articleId) ?? null;
+  }, [orderedArticles, articleId]);
+
+  // Bid row pinned
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
 
-  // Chat row sits ABOVE bid row
-  const chatBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
+  // Article HUD sits above bid
+  const articleHudBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
+
+  // Chat sits above article HUD
+  const chatBottom = articleHudBottom + UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP;
 
   return (
     <>
       <View
         pointerEvents='box-none'
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        className='absolute inset-0'
       >
         {/* Back */}
         <View
@@ -125,19 +136,12 @@ export const LiveAuctionOverlay = ({
         >
           <View
             pointerEvents='box-none'
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-            }}
+            className='flex-row items-end justify-between'
           >
             {/* Chat */}
             <View
               pointerEvents='auto'
-              style={{
-                width: UI.CHAT_WIDTH,
-                height: UI.CHAT_HEIGHT,
-              }}
+              style={{ width: UI.CHAT_WIDTH, height: UI.CHAT_HEIGHT }}
             >
               <Chat
                 auctionId={auctionId}
@@ -198,7 +202,23 @@ export const LiveAuctionOverlay = ({
           </View>
         </KeyboardAvoidingView>
 
-        {/* Bid (NOT keyboard-aware, pinned) */}
+        {/* Article HUD (not keyboard-aware, fixed slot) */}
+        <View
+          pointerEvents='auto'
+          style={{
+            position: 'absolute',
+            left: UI.SCREEN_PADDING,
+            right: UI.SCREEN_PADDING,
+            bottom: articleHudBottom,
+            height: UI.ARTICLE_HUD_HEIGHT,
+          }}
+        >
+          <LiveCurrentArticleCard
+            article={currentArticle}
+            lang={locale}
+          />
+        </View>
+
         <View
           pointerEvents='auto'
           style={{
@@ -209,7 +229,7 @@ export const LiveAuctionOverlay = ({
             height: UI.BID_HEIGHT,
           }}
         >
-          {/* loading skeleton */}
+          {/* add loading skeleton */}
           {!isCommissionReady ||
           !biddingAmounts ||
           !articleServerState ? null : (
