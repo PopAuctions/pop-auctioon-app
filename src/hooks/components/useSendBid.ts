@@ -83,8 +83,10 @@ export const useSendBid = ({
     }
   };
 
-  const sendBid = async () => {
-    if (parseInt(bidAmount) < computedMinBid) {
+  const sendBid = async (customAmount?: number) => {
+    const amount = customAmount ?? parseInt(bidAmount);
+
+    if (amount < computedMinBid) {
       const message = bidlocale.minBid + ' ' + formatter.format(computedMinBid);
       callToast({
         variant: 'error',
@@ -95,7 +97,7 @@ export const useSendBid = ({
     }
 
     // enforce max
-    if (parseInt(bidAmount) > computedMaxBid) {
+    if (amount > computedMaxBid) {
       const message = bidlocale.maxBid + ' ' + formatter.format(computedMaxBid);
       callToast({
         variant: 'error',
@@ -113,7 +115,7 @@ export const useSendBid = ({
         endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
         data: {
           articleId,
-          amount: bidAmount,
+          amount: amount,
           clientCurrentAmount: currentValue,
         },
       });

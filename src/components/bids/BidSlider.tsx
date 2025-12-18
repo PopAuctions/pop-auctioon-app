@@ -1,58 +1,82 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
-  Text,
   View,
 } from 'react-native';
 import SwipeButton from 'rn-swipe-button';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
+import { useSendBid } from '@/hooks/components/useSendBid';
+import { BiddingAmounts, HighestBidderState } from '@/types/types';
+import { CustomText } from '../ui/CustomText';
+import { toTotal } from '@/utils/toTotal';
 
-type BidBarProps = {
-  quickBidAmount: number;
-  minBid?: number;
-  disabled?: boolean;
-  onBid: (amount: number) => void | Promise<void>;
+type BidSliderProps = {
+  biddingAmounts: BiddingAmounts;
+  articleServerState: HighestBidderState;
+  articleId: number;
+  commissionPercentage: number;
 };
 
-export const BidSlider = ({
-  quickBidAmount,
-  minBid,
-  disabled = false,
-  onBid,
-}: BidBarProps) => {
-  const [customOpen, setCustomOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [swipeKey, setSwipeKey] = useState(0);
-  const COLORS = {
-    PRIMARY: '#d75639', // cinnabar
-    BLACK: '#000000',
-    WHITE: '#ffffff',
-    BORDER: '#cdcdcd',
-    PRIMARY_DISABLED: 'rgba(215, 86, 57, 0.45)',
-    THUMB_DISABLED: 'rgba(255, 255, 255, 0.6)',
-  } as const;
-  const UI = {
-    HEIGHT: 56,
-    SWIPE_THRESHOLD: 85,
-    THUMB_WIDTH: 80,
-  } as const;
+const COLORS = {
+  PRIMARY: '#d75639', // cinnabar
+  BLACK: '#000000',
+  WHITE: '#ffffff',
+  BORDER: '#cdcdcd',
+  PRIMARY_DISABLED: 'rgba(215, 86, 57, 0.45)',
+  THUMB_DISABLED: 'rgba(255, 255, 255, 0.6)',
+} as const;
 
-  const isDisabled = disabled || isSubmitting;
+const UI = {
+  HEIGHT: 56,
+  SWIPE_THRESHOLD: 85,
+  THUMB_WIDTH: 80,
+} as const;
+
+export const BidSlider = ({
+  biddingAmounts,
+  articleServerState,
+  articleId,
+  commissionPercentage,
+}: BidSliderProps) => {
+  const {
+    currentValue,
+    isPending,
+    computedMaxBid,
+    computedMinBid,
+    bidAmount,
+    tenPercent,
+    articleAvailable,
+    handleInputChange,
+    sendBid,
+    formatter,
+  } = useSendBid({
+    biddingAmounts: biddingAmounts,
+    articleServerState: articleServerState,
+    articleId,
+    commissionPercentage,
+  });
+
+  const [customOpen, setCustomOpen] = useState(false);
+  const [swipeKey, setSwipeKey] = useState(0);
+
+  const slideAmount = useMemo(() => {
+    return toTotal(tenPercent + currentValue, commissionPercentage);
+  }, [tenPercent, currentValue, commissionPercentage]);
+  const isDisabled = isPending || !articleAvailable;
 
   const handleBid = async (bidAmount: number) => {
     try {
-      setIsSubmitting(true);
-      console.log('[BID] Submitting bid of', bidAmount);
+      const finalBase = bidAmount + currentValue;
+      const total = toTotal(finalBase, commissionPercentage);
+      console.log('[BID] Submitting bid of', total);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      await onBid(bidAmount);
+      await sendBid(total);
     } finally {
-      setIsSubmitting(false);
       setSwipeKey((k) => k + 1);
       console.log('[BID] Bid process finished');
     }
@@ -86,12 +110,12 @@ export const BidSlider = ({
             disabled={isDisabled}
             height={UI.HEIGHT}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
-            title={`Bid: ${quickBidAmount}  >>`}
+            title={`Bid: ${formatter.format(slideAmount)}  >>`}
             titleStyles={{
               paddingLeft: UI.THUMB_WIDTH,
               textAlign: 'right',
             }}
-            onSwipeSuccess={() => handleBid(quickBidAmount)}
+            onSwipeSuccess={() => handleBid(tenPercent)}
             titleFontSize={18}
             titleColor={COLORS.BLACK}
             railBackgroundColor={COLORS.WHITE}
@@ -109,10 +133,14 @@ export const BidSlider = ({
 
       <CustomBidModal
         visible={customOpen}
-        minBid={minBid}
         disabled={isDisabled}
         onClose={() => setCustomOpen(false)}
-        onSubmit={handleBid}
+        onSubmit={sendBid}
+        bidAmount={Number(bidAmount)}
+        handleInputChange={handleInputChange}
+        computedMinBid={computedMinBid}
+        computedMaxBid={computedMaxBid}
+        formatter={formatter}
       />
     </>
   );
@@ -120,39 +148,29 @@ export const BidSlider = ({
 
 const CustomBidModal = ({
   visible,
-  minBid,
   disabled,
   onClose,
   onSubmit,
+  bidAmount,
+  handleInputChange,
+  computedMinBid,
+  computedMaxBid,
+  formatter,
 }: {
   visible: boolean;
   minBid?: number;
   disabled?: boolean;
+  bidAmount: number;
+  computedMinBid: number;
+  computedMaxBid: number;
+  formatter: Intl.NumberFormat;
+  handleInputChange: (value: string) => void;
   onClose: () => void;
-  onSubmit: (amount: number) => void | Promise<void>;
+  onSubmit: () => void | Promise<void>;
 }) => {
-  const [value, onChangeValue] = useState('');
-  const showMin = minBid != null;
-  const UI = {
-    CARD_MARGIN_X: 20,
-    CARD_MARGIN_BOTTOM: 20,
-    KEYBOARD_OFFSET_IOS: 0,
-  } as const;
-
   const handleSubmit = async () => {
-    const numericValue = parseFloat(value);
-    if (isNaN(numericValue)) {
-      alert('Please enter a valid number');
-      return;
-    }
-    if (minBid != null && numericValue < minBid) {
-      alert(`Bid must be at least ${minBid}`);
-      return;
-    }
-
-    await onSubmit(numericValue);
+    await onSubmit();
     onClose();
-    onChangeValue('');
   };
 
   return (
@@ -170,31 +188,37 @@ const CustomBidModal = ({
         <KeyboardAvoidingView
           style={{ flex: 1, justifyContent: 'flex-end' }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={
-            Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
-          }
+          keyboardVerticalOffset={0}
         >
           {/* Card */}
           <Pressable
             onPress={() => {}}
             className='mx-5 mb-5 mt-auto rounded-3xl bg-white p-5'
           >
-            <Text className='mb-2 text-lg font-extrabold text-neutral-900'>
-              Custom bid
-            </Text>
-
-            {showMin && (
-              <Text className='mb-3 text-sm text-neutral-500'>
-                Min: {minBid}
-              </Text>
-            )}
+            <CustomText type='subtitle'>Custom bid</CustomText>
 
             <Input
-              value={value}
-              onChangeText={onChangeValue}
+              value={bidAmount.toString()}
+              onChangeText={handleInputChange}
               placeholder='...'
               editable={!disabled}
+              keyboardType='numeric'
             />
+            {bidAmount <= computedMaxBid ? (
+              <CustomText
+                type='bodysmall'
+                className={`mb-3 text-sm ${bidAmount < computedMinBid ? 'text-red-500' : 'text-neutral-500'}`}
+              >
+                Min: ${formatter.format(computedMinBid)}
+              </CustomText>
+            ) : (
+              <CustomText
+                type='bodysmall'
+                className='text-red-500'
+              >
+                Max: ${formatter.format(computedMaxBid)}
+              </CustomText>
+            )}
 
             <View className='mt-4 flex-row gap-3'>
               <Button

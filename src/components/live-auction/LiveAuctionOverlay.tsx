@@ -9,6 +9,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
+import { BiddingAmounts, HighestBidderState } from '@/types/types';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { REQUEST_STATUS } from '@/constants';
 
 type OverlayProps = {
   insetsTop: number;
@@ -19,7 +22,9 @@ type OverlayProps = {
   username: string;
   onBack: () => void;
   onOpenInfo: () => void;
-  onBid: () => void;
+  biddingAmounts: BiddingAmounts | null;
+  articleServerState: HighestBidderState | null;
+  articleId: number;
 };
 
 const UI = {
@@ -50,8 +55,15 @@ export const LiveAuctionOverlay = ({
   username,
   onBack,
   onOpenInfo,
-  onBid,
+  biddingAmounts,
+  articleServerState,
+  articleId,
 }: OverlayProps) => {
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
+
+  // get commission amount
   if (!streamLoaded) return null;
 
   // Bid row is ALWAYS pinned to safe area bottom (don’t change with keyboard)
@@ -192,10 +204,15 @@ export const LiveAuctionOverlay = ({
           height: UI.BID_HEIGHT,
         }}
       >
-        <BidSlider
-          quickBidAmount={300}
-          onBid={onBid}
-        />
+        {/* loading skeleton */}
+        {!isCommissionReady || !biddingAmounts || !articleServerState ? null : (
+          <BidSlider
+            biddingAmounts={biddingAmounts}
+            articleServerState={articleServerState}
+            articleId={articleId}
+            commissionPercentage={commissionData}
+          />
+        )}
       </View>
     </View>
   );
