@@ -2,6 +2,7 @@
   "name": "pop-auctioon-app",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.26.0",
   "scripts": {
     "start": "expo start",
     "dev": "expo start",
