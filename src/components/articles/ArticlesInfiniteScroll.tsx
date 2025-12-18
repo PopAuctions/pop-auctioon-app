@@ -8,7 +8,7 @@ import { useFetchAuctionArticlesInfinite } from '@/hooks/components/useFetchAuct
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { REQUEST_STATUS } from '@/constants';
 
 const ITEMS_PER_PAGE = 4;
@@ -46,7 +46,7 @@ export const ArticlesInfiniteScroll = ({
     price?: string;
   }>();
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommission();
+    useFetchCommissions();
 
   const { fetchArticles } = useFetchAuctionArticlesInfinite();
   const [articles, setArticles] = useState<SimpleArticle[]>([]);

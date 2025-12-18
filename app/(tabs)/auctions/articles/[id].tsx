@@ -21,7 +21,7 @@ import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { FollowButton } from '@/components/ui/FollowButton';
 import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 import { parseNumber } from '@/utils/parse-number';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -32,7 +32,7 @@ export default function ArticlesDetailScreen() {
   const articleId = Number(id);
 
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommission();
+    useFetchCommissions();
   const {
     data: article,
     status,

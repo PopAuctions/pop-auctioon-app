@@ -6,7 +6,7 @@ import { useGetWonArticlesByAuction } from '@/hooks/pages/article/useGetWonArtic
 import { REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function ArticlesWonScreen() {
   const { t, locale } = useTranslation();
@@ -19,7 +19,7 @@ export default function ArticlesWonScreen() {
     data: commissionsData,
     status: commissionsStatus,
     errorMessage: commissionsErrorMessage,
-  } = useFetchCommission();
+  } = useFetchCommissions();
 
   if (
     status === REQUEST_STATUS.loading ||

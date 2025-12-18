@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 
@@ -15,7 +15,7 @@ const mockUseSecureApi = useSecureApi as jest.MockedFunction<
   typeof useSecureApi
 >;
 
-describe('useFetchCommission', () => {
+describe('useFetchCommissions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseSecureApi.mockReturnValue({
@@ -37,7 +37,7 @@ describe('useFetchCommission', () => {
         error: null,
       });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       expect(result.current.status).toBe('loading');
 
@@ -58,7 +58,7 @@ describe('useFetchCommission', () => {
         error: null,
       });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.status).toBe('success');
@@ -81,7 +81,7 @@ describe('useFetchCommission', () => {
         error: errorMessage,
       });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.status).toBe('error');
@@ -97,7 +97,7 @@ describe('useFetchCommission', () => {
         error: null,
       });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.status).toBe('error');
@@ -115,7 +115,7 @@ describe('useFetchCommission', () => {
         error: null,
       });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.status).toBe('error');
@@ -130,7 +130,7 @@ describe('useFetchCommission', () => {
     it('should handle exception during fetch', async () => {
       mockProtectedGet.mockRejectedValue(new Error('Network error'));
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.status).toBe('error');
@@ -155,7 +155,7 @@ describe('useFetchCommission', () => {
           error: null,
         });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.data).toBe(10);
@@ -178,7 +178,7 @@ describe('useFetchCommission', () => {
         error: null,
       });
 
-      const { result } = renderHook(() => useFetchCommission());
+      const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
         expect(result.current.status).toBe('success');

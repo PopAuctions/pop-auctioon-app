@@ -6,7 +6,7 @@ import { ArticleItem } from '@/components/articles/ArticleItem';
 import { Loading } from '@/components/ui/Loading';
 import { REQUEST_STATUS } from '@/constants';
 import { euroFormatter } from '@/utils/euroFormatter';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function FollowedArticlesScreen() {
   const { t, locale } = useTranslation();
@@ -17,7 +17,7 @@ export default function FollowedArticlesScreen() {
     refetch,
   } = useGetFollowedArticles();
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommission();
+    useFetchCommissions();
 
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
   const articleLang = t('screens.article');

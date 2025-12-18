@@ -11,7 +11,7 @@ interface BackendCommissionResponse {
 
 // Este hook solo trae el valor de comisión (número)
 // Para payment checkout completo con impuestos, shipping, etc, usar useFetchPaymentConfig
-export const useFetchCommission = (): ActionResponse<number> => {
+export const useFetchCommissions = (): ActionResponse<number> => {
   const [data, setData] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);

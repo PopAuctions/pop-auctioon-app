@@ -7,7 +7,7 @@ import { CustomText } from '../ui/CustomText';
 import { useMemo } from 'react';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { Tooltip } from '../ui/Tooltip';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 type OnlineStorePriceInfoProps = {
   lang: Lang;
@@ -24,7 +24,7 @@ export function OnlineStorePriceInfo({
   texts,
 }: OnlineStorePriceInfoProps) {
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommission();
+    useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const formatter = useMemo(() => euroFormatter(lang), [lang]);

@@ -12,7 +12,7 @@ import DraggableFlatList, {
   RenderItemParams,
 } from 'react-native-draggable-flatlist';
 import { MyAuctionArticlesState } from './MyAuctionArticlesState';
-import { useFetchCommission } from '@/hooks/components/useFetchCommission';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export const MyAuctionArticles = ({
   lang,
@@ -49,7 +49,7 @@ export const MyAuctionArticles = ({
     refetch,
   } = useFetchMyAuctionArticles({ auctionId, name });
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommission();
+    useFetchCommissions();
 
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
   const formatter = euroFormatter(lang);
