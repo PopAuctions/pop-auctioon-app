@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { CountryValue } from '@/types/types';
@@ -16,7 +16,7 @@ const mockUseSecureApi = useSecureApi as jest.MockedFunction<
   typeof useSecureApi
 >;
 
-describe('useFetchCommissions', () => {
+describe('useFetchPaymentConfig', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseSecureApi.mockReturnValue({
@@ -92,7 +92,7 @@ describe('useFetchCommissions', () => {
   it('should start with loading status', () => {
     mockSecureGet.mockImplementation(() => new Promise(() => {})); // Never resolves
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     expect(result.current.status).toBe('loading');
     expect(result.current.data).toEqual({
@@ -111,7 +111,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -131,7 +131,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -165,7 +165,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -185,7 +185,7 @@ describe('useFetchCommissions', () => {
       error: mockError,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
@@ -207,7 +207,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
@@ -225,7 +225,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
@@ -240,15 +240,15 @@ describe('useFetchCommissions', () => {
   it('should handle network/unexpected errors', async () => {
     mockSecureGet.mockRejectedValueOnce(new Error('Network error'));
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
     expect(result.current.errorMessage).toEqual({
-      en: 'Error fetching commission data',
-      es: 'Error al cargar la comisión',
+      en: 'Error fetching payment configuration data',
+      es: 'Error al cargar la configuración de pago',
     });
   });
 
@@ -264,7 +264,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -294,7 +294,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -327,7 +327,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -353,7 +353,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -368,7 +368,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    renderHook(() => useFetchCommissions());
+    renderHook(() => useFetchPaymentConfig());
 
     await waitFor(() => {
       expect(mockSecureGet).toHaveBeenCalledTimes(1);
@@ -381,7 +381,7 @@ describe('useFetchCommissions', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchCommissions());
+    const { result } = renderHook(() => useFetchPaymentConfig());
 
     expect(result.current.setErrorMessage).toBeInstanceOf(Function);
   });

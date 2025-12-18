@@ -55,6 +55,11 @@ export const PROTECTED_ENDPOINTS = {
   CHAT: {
     GET_TOKEN: '/chat/get-token',
   },
+
+  // Payment (solo comisión pública)
+  PAYMENT: {
+    COMMISSIONS: '/payments/commission', // GET - Solo valor de comisión
+  },
 } as const;
 
 // ========================================
@@ -175,7 +180,6 @@ export const SECURE_ENDPOINTS = {
     CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
     CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
     REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
-    COMMISSIONS: '/payments/commission',
     INFO: '/payment-info', // GET - Complete payment configuration (commission, taxes, countries)
   },
 

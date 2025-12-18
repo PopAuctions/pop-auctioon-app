@@ -16,7 +16,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useStripePayment } from '@/hooks/payment/useStripePayment';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { useCreateArticlesPayment } from '@/hooks/pages/payment/useCreateArticlesPayment';
 import { useRejectArticlesPayment } from '@/hooks/pages/payment/useRejectArticlesPayment';
@@ -68,7 +68,7 @@ export default function PaymentScreen() {
 
   // Hook para obtener porcentaje de comisión y costos de envío dinámicos
   const { data: paymentConfig, status: commissionStatus } =
-    useFetchCommissions();
+    useFetchPaymentConfig();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);

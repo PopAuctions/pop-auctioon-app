@@ -33,7 +33,7 @@ interface PaymentConfigData {
   countriesLabel: Record<string, Record<CountryValue, string>>;
 }
 
-export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
+export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
   const [data, setData] = useState<PaymentConfigData>({
     commission: 0,
     shippingTaxes: {},
@@ -45,7 +45,7 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureGet } = useSecureApi();
 
-  const fetchCommission = useCallback(async () => {
+  const fetchPaymentConfig = useCallback(async () => {
     try {
       setStatus('loading');
 
@@ -90,11 +90,14 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
       const errorMsg =
         error instanceof Error ? error.message : 'Unknown error occurred';
 
-      sentryErrorReport(errorMsg, 'USE_FETCH_COMMISSION - Unexpected error');
+      sentryErrorReport(
+        errorMsg,
+        'USE_FETCH_PAYMENT_CONFIG - Unexpected error'
+      );
 
       const message: LangMap = {
-        en: 'Error fetching commission data',
-        es: 'Error al cargar la comisión',
+        en: 'Error fetching payment configuration data',
+        es: 'Error al cargar la configuración de pago',
       };
 
       setStatus('error');
@@ -103,8 +106,8 @@ export const useFetchCommissions = (): ActionResponse<PaymentConfigData> => {
   }, [secureGet]);
 
   useEffect(() => {
-    fetchCommission();
-  }, [fetchCommission]);
+    fetchPaymentConfig();
+  }, [fetchPaymentConfig]);
   return {
     data,
     status,

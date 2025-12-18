@@ -23,9 +23,13 @@ describe('API Config - Payment Endpoints', () => {
     it('should have INFO endpoint for payment configuration', () => {
       expect(SECURE_ENDPOINTS.PAYMENT.INFO).toBe('/payment-info');
     });
+  });
 
+  describe('PROTECTED_ENDPOINTS.PAYMENT', () => {
     it('should have COMMISSIONS endpoint', () => {
-      expect(SECURE_ENDPOINTS.PAYMENT.COMMISSIONS).toBe('/payments/commission');
+      expect(PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS).toBe(
+        '/payments/commission'
+      );
     });
   });
 

@@ -9,7 +9,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { OnlineStoreArticleItem } from './OnlineStoreArticleItem';
 import { useFetchOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchOnlineStoreArticlesInfinite';
 import { Filters } from '@/app/(tabs)/online-store';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useFetchCommission } from '@/hooks/components/useFetchCommission';
 import { REQUEST_STATUS } from '@/constants';
 
 const ITEMS_PER_PAGE = 4;
@@ -43,8 +43,8 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     params as Filters;
 
   const { fetchArticles } = useFetchOnlineStoreArticlesInfinite();
-  const { data: paymentConfig, status: commissionStatus } =
-    useFetchCommissions();
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommission();
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -191,7 +191,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
           formatter={formatter}
           texts={texts}
           lang={lang}
-          commissionValue={isCommissionReady ? paymentConfig.commission : null}
+          commissionValue={isCommissionReady ? commissionData : null}
         />
       )}
       contentContainerStyle={{

@@ -21,7 +21,7 @@ import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { FollowButton } from '@/components/ui/FollowButton';
 import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 import { parseNumber } from '@/utils/parse-number';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useFetchCommission } from '@/hooks/components/useFetchCommission';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -32,7 +32,7 @@ export default function ArticlesDetailScreen() {
   const articleId = Number(id);
 
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommissions();
+    useFetchCommission();
   const {
     data: article,
     status,
@@ -223,9 +223,7 @@ export default function ArticlesDetailScreen() {
                     articleId={parseNumber(id)}
                     lang={locale}
                     initialPrice={article.startingPrice}
-                    commissionValue={
-                      isCommissionReady ? commissionData.commission : null
-                    }
+                    commissionValue={isCommissionReady ? commissionData : null}
                   />
                 )}
               </View>
@@ -244,9 +242,7 @@ export default function ArticlesDetailScreen() {
                 currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
-                commissionValue={
-                  isCommissionReady ? commissionData.commission : null
-                }
+                commissionValue={isCommissionReady ? commissionData : null}
                 texts={{
                   highestBid: articleLang.highestBid,
                   estimatedValue: articleLang.estimatedValue,
@@ -274,7 +270,7 @@ export default function ArticlesDetailScreen() {
                     bidLang={bidsLang}
                     biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
                     commissionPercentage={
-                      isCommissionReady ? commissionData.commission : null
+                      isCommissionReady ? commissionData : null
                     }
                   />
                 </View>
