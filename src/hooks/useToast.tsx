@@ -53,7 +53,7 @@ export function useToast(lang: Lang) {
       text1: TOAST_TEXTS[lang][variant],
       text2,
       visibilityTime: durationMs,
-      // props: { actionLabel, onAction },
+      props: { actionLabel, onAction },
     });
   };
 

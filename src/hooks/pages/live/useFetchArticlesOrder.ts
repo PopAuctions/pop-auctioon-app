@@ -10,6 +10,15 @@ import type {
 import { useToast } from '@/hooks/useToast';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 
+const TEXTS = {
+  es: {
+    retry: 'Reintentar',
+  },
+  en: {
+    retry: 'Retry',
+  },
+};
+
 export const useFetchArticlesOrder = ({
   articlesOrderKey,
   locale,
@@ -38,7 +47,9 @@ export const useFetchArticlesOrder = ({
           en: 'Error fetching articles information. Click to retry.',
           es: 'Error al obtener los artículos. Haz clic para reintentar.',
         },
+        actionLabel: TEXTS[locale].retry,
         onAction: fetchArticlesOrder,
+        durationMs: 7000,
       });
       setStatus('error');
       setErrorMessage({
