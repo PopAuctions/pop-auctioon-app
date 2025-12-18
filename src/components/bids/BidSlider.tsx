@@ -158,7 +158,6 @@ const CustomBidModal = ({
   formatter,
 }: {
   visible: boolean;
-  minBid?: number;
   disabled?: boolean;
   bidAmount: number;
   computedMinBid: number;
@@ -168,6 +167,11 @@ const CustomBidModal = ({
   onClose: () => void;
   onSubmit: () => void | Promise<void>;
 }) => {
+  const isLow = bidAmount < computedMinBid;
+  const isHigh = bidAmount > computedMaxBid;
+
+  const disabledFinal = disabled || isLow || isHigh;
+
   const handleSubmit = async () => {
     await onSubmit();
     onClose();
@@ -207,14 +211,14 @@ const CustomBidModal = ({
             {bidAmount <= computedMaxBid ? (
               <CustomText
                 type='bodysmall'
-                className={`mb-3 text-sm ${bidAmount < computedMinBid ? 'text-red-500' : 'text-neutral-500'}`}
+                className={`text-sm ${bidAmount < computedMinBid ? 'text-red-500' : 'text-neutral-500'}`}
               >
                 Min: ${formatter.format(computedMinBid)}
               </CustomText>
             ) : (
               <CustomText
                 type='bodysmall'
-                className='text-red-500'
+                className='text-sm text-red-500'
               >
                 Max: ${formatter.format(computedMaxBid)}
               </CustomText>
@@ -224,7 +228,7 @@ const CustomBidModal = ({
               <Button
                 mode='primary'
                 onPress={handleSubmit}
-                disabled={disabled}
+                disabled={disabledFinal}
                 className='w-1/2'
               >
                 Place bid
