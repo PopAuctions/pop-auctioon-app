@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
@@ -70,6 +70,11 @@ export const BidSlider = ({
   }, [tenPercent, currentValue, commissionPercentage]);
   const isDisabled = isPending || !articleAvailable;
 
+  const renderThumb = useCallback(
+    () => <SwipeThumb loading={isPending} />,
+    [isPending]
+  );
+
   const handleBid = async (bidAmount: number) => {
     try {
       const finalBase = bidAmount + currentValue;
@@ -128,7 +133,7 @@ export const BidSlider = ({
             thumbIconWidth={UI.THUMB_WIDTH}
             disabledThumbIconBackgroundColor={COLORS.THUMB_DISABLED}
             disabledThumbIconBorderColor={COLORS.PRIMARY}
-            thumbIconComponent={() => <SwipeThumb loading={isPending} />}
+            thumbIconComponent={renderThumb}
           />
         </View>
       </View>
@@ -148,7 +153,7 @@ export const BidSlider = ({
   );
 };
 
-export const SwipeThumb = ({ loading }: { loading: boolean }) => {
+const SwipeThumb = ({ loading }: { loading: boolean }) => {
   return (
     <View className='h-full w-full items-center justify-center'>
       {loading ? (
