@@ -27,8 +27,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
-      "package": "com.popauctioon.popauctioonapp"
+      "package": "com.popauctioon.popauctioonapp",
+      "androidNavigationBar": {
+        "enforceContrast": false
+      },
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "bundler": "metro",
@@ -59,7 +62,10 @@
           "photosPermission": "The app accesses your photos so you can share them.",
           "cameraPermission": "The app accesses your camera to take profile pictures."
         }
-      ]
+      ],
+      "@sentry/react-native",
+      "@stripe/stripe-react-native",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

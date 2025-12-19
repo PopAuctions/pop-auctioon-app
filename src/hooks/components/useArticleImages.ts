@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/react-native';
 import { base64ToArrayBuffer } from '@/utils/base64ToArrayBuffer';
@@ -82,9 +82,8 @@ export function useArticleImages({
             .slice(2)}.${fileExt}`;
           const filePath = `${folder}/${fileName}`;
 
-          const fileBase64 = await FileSystem.readAsStringAsync(uri, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
+          const file = new File(uri);
+          const fileBase64 = await file.base64();
 
           const fileArrayBuffer = base64ToArrayBuffer(fileBase64);
           const { data, error } = await supabase.storage

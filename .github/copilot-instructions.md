@@ -6,24 +6,42 @@ This is a **React Native/Expo** auction application with **file-based routing** 
 
 ### Key Tech Stack
 
-- **Expo SDK 53** with New Architecture enabled
-- **React 19** with concurrent features (`useTransition` in i18n)
-- **Expo Router v5.1+** (file-based routing with typed routes)
+- **Expo SDK 54.0.30** (React Native 0.81.5) with New Architecture enabled
+- **React 19.2.3** with concurrent features (`useTransition` in i18n)
+- **Expo Router v6.0.21** (file-based routing with typed routes, native tabs support)
 - **Supabase** (auth & database with complex schema in `src/types/supabase.ts`)
-- **NativeWind v4.1+** (Tailwind CSS for React Native)
+- **NativeWind v4.2.1** (Tailwind CSS for React Native)
 - **i18n-js v4.5+** (Spanish/English localization)
-- **Sentry** (error tracking with PII scrubbing in `app/_layout.tsx`)
-- **TypeScript** with strict configuration
+- **Sentry ~7.2.0** (error tracking with PII scrubbing in `app/_layout.tsx`)
+- **TypeScript 5.9.3** with strict configuration
 - **Volta** (Node 22.19.0 pinning)
 - **pnpm 10.26.0** (package manager - NOT npm)
-- **Stripe** (payment processing via `@stripe/stripe-react-native`)
-- **React Native Gesture Handler** (gesture support in GestureHandlerRootView)
+- **react-native-reanimated v4.2.1** (New Architecture only, includes worklets)
+- **react-native-worklets v0.7.1** (required by Reanimated v4)
+- **Stripe 0.50.3** (payment processing via `@stripe/stripe-react-native`)
+- **React Native Gesture Handler ~2.28.0** (gesture support in GestureHandlerRootView)
 
 ### Project Structure Pattern
 
-- `app/` - File-based routing (Expo Router v5.1+)
+- `app/` - File-based routing (Expo Router v6.0.21)
 - `src/` - Business logic, components, hooks, utilities
 - **Path aliases**: Extensive mapping in `tsconfig.json` and `jest.config.js` - always use `@/` imports
+
+### SDK 54 Specific Changes
+
+**New Features:**
+
+- **iOS**: Precompiled React Native frameworks (10x faster builds)
+- **Android**: Edge-to-edge ALWAYS enabled (cannot be disabled)
+- **Expo Router v6**: Native tabs support, link previews, improved modals
+- **Reanimated v4**: Requires New Architecture, uses worklets
+
+**Breaking Changes:**
+
+1. **Edge-to-Edge Android**: Always enabled, use `androidNavigationBar.enforceContrast` in app.json
+2. **Reanimated v3 → v4**: New Architecture only, requires `react-native-worklets@^0.7.0`
+3. **expo-file-system**: New API is default, legacy available at `expo-file-system/legacy`
+4. **Unhandled Promises**: Now logged as errors (add try-catch to all async code)
 
 ## Authentication & Authorization
 
