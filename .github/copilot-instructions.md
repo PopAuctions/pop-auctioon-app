@@ -1074,7 +1074,19 @@ Configured in: `tsconfig.json`, `jest.config.js`, and Metro bundler.
 ### Platform Support
 
 - **Universal app**: iOS, Android, Web
-- **New Architecture** enabled (Expo SDK 53)
-- **Edge-to-edge** Android support
+- **New Architecture** enabled (Expo SDK 54)
+- **Edge-to-edge** Android support (always enabled, cannot be disabled)
+
+### Jest Configuration
+
+- **Coverage threshold**: 70% for all metrics (branches, functions, lines, statements)
+- **Path aliases** mirrored in `jest.config.js` from `tsconfig.json`
+- **Test location**: `__tests__/` mirrors `src/` structure
+- **Snapshot testing** enabled for components
+- **Commands**:
+  - `pnpm test` - Run full suite
+  - `pnpm test:watch` - Watch mode
+  - `pnpm coverage:open` - Open coverage report in browser
+  - `pnpm test:update-snapshots` - Update snapshots
 
 When working on this codebase, always consider role-based access, use the established hook patterns, and maintain the file-based routing conventions.

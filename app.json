@@ -28,9 +28,6 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
-      "androidNavigationBar": {
-        "enforceContrast": false
-      },
       "predictiveBackGestureEnabled": false
     },
     "web": {
