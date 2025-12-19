@@ -16,7 +16,7 @@ import { BiddingAmounts, HighestBidderState } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { toTotal } from '@/utils/toTotal';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import * as Haptics from 'expo-haptics';
+import { hapticImpact } from '@/utils/triggerHaptic';
 
 type BidSliderProps = {
   biddingAmounts: BiddingAmounts;
@@ -80,7 +80,7 @@ export const BidSlider = ({
 
   const handleBid = async (bidAmount: number) => {
     try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      hapticImpact();
 
       const finalBase = bidAmount + currentValue;
       const total = toTotal(finalBase, commissionPercentage);

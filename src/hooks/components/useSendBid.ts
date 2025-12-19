@@ -10,7 +10,6 @@ import { ONLY_INTEGERS_REGEX } from '@/constants';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useTranslation } from '../i18n/useTranslation';
-import * as Haptics from 'expo-haptics';
 
 const maxBidOffset = MAX_BID_OFFSET;
 
@@ -88,7 +87,6 @@ export const useSendBid = ({
     const amount = customAmount ?? parseInt(bidAmount);
 
     if (amount < computedMinBid) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       const message = bidlocale.minBid + ' ' + formatter.format(computedMinBid);
       callToast({
         variant: 'error',
@@ -100,7 +98,6 @@ export const useSendBid = ({
 
     // enforce max
     if (amount > computedMaxBid) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       const message = bidlocale.maxBid + ' ' + formatter.format(computedMaxBid);
       callToast({
         variant: 'error',
@@ -126,16 +123,13 @@ export const useSendBid = ({
       const data = response?.data;
 
       if (response.error) {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         callToast({ variant: 'error', description: response.error });
         return;
       }
 
       callToast({ variant: 'success', description: data });
       setBidAmount('');
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (e: any) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
       callToast({
         variant: 'error',
