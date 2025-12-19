@@ -1,40 +1,36 @@
 import React, { useMemo } from 'react';
-import { Image, Text, View } from 'react-native';
-import { euroFormatter } from '@/utils/euroFormatter'; // adjust if you have one
-import { CustomArticleLiveAuto } from '@/types/types';
+import { Image, View } from 'react-native';
+import { euroFormatter } from '@/utils/euroFormatter';
+import type { CustomArticleLiveAuto, Lang } from '@/types/types';
+import { useHighestBidderContext } from '@/context/highest-bidder-context';
+import { CustomText } from '../ui/CustomText';
 
-type Props = {
-  article: CustomArticleLiveAuto | null;
-  lang: string;
-};
+interface LiveCurrentArticleCardProps {
+  article: CustomArticleLiveAuto;
+  lang: Lang;
+}
 
 const UI = {
-  IMAGE_SIZE: 56,
+  IMAGE_SIZE: 64,
   IMAGE_RADIUS: 12,
 } as const;
 
-export const LiveCurrentArticleCard = ({ article, lang }: Props) => {
-  const formatter = useMemo(() => euroFormatter(lang as any), [lang]);
+export const LiveCurrentArticleCard = ({
+  article,
+  lang,
+}: LiveCurrentArticleCardProps) => {
+  const { state } = useHighestBidderContext({});
+  const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
-  if (!article) return null;
-
-  const title = article.title ?? '';
-  const brand = article.brand ?? '';
-  const estimatedValue = article.estimatedValue ?? null;
-  const currentValue = article.currentValue ?? null;
-
-  const estimatedLabel =
-    estimatedValue != null ? formatter.format(estimatedValue) : '--';
+  const title = article.title;
+  const brand = article.brand;
+  const estimatedValue = article?.estimatedValue ?? null;
+  const currentValue = state.currentValue ?? null;
 
   const currentLabel =
     currentValue != null ? formatter.format(currentValue) : '--';
 
-  // pick the correct image field from your model
-  const imageUrl =
-    article.coverImageUrl ||
-    article.featuredImageUrl ||
-    article.images?.[0] ||
-    null;
+  const imageUrl = article.images?.[0] || null;
 
   return (
     <View className='w-full flex-row items-center justify-between rounded-2xl bg-white/90 px-3 py-2'>
@@ -59,32 +55,47 @@ export const LiveCurrentArticleCard = ({ article, lang }: Props) => {
         </View>
 
         <View className='ml-3 flex-1'>
-          <Text
-            numberOfLines={1}
-            className='text-[15px] font-extrabold text-neutral-900'
+          <CustomText
+            type='subtitle'
+            className='font-extrabold text-cinnabar'
           >
             {title}
-          </Text>
+          </CustomText>
 
-          <Text
+          <CustomText
+            type='body'
             numberOfLines={1}
-            className='text-[13px] font-semibold text-neutral-600'
+            className='font-semibold text-black'
           >
             {brand}
-          </Text>
+          </CustomText>
 
-          <Text className='text-[12px] font-semibold text-neutral-500'>
-            Est: {estimatedLabel}
-          </Text>
+          {estimatedValue != null && (
+            <CustomText
+              type='bodysmall'
+              numberOfLines={1}
+              className='font-semibold text-neutral-400'
+            >
+              Estimated value: {formatter.format(estimatedValue)}
+            </CustomText>
+          )}
         </View>
       </View>
 
       {/* Right */}
       <View className='items-end pl-3'>
-        <Text className='text-[11px] font-bold text-neutral-500'>Current</Text>
-        <Text className='text-[16px] font-extrabold text-neutral-900'>
+        <CustomText
+          type='h3'
+          className=''
+        >
+          Current
+        </CustomText>
+        <CustomText
+          type='h3'
+          className=''
+        >
           {currentLabel}
-        </Text>
+        </CustomText>
       </View>
     </View>
   );

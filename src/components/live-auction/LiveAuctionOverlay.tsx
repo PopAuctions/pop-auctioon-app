@@ -213,10 +213,12 @@ export const LiveAuctionOverlay = ({
             height: UI.ARTICLE_HUD_HEIGHT,
           }}
         >
-          <LiveCurrentArticleCard
-            article={currentArticle}
-            lang={locale}
-          />
+          {currentArticle ? (
+            <LiveCurrentArticleCard
+              article={currentArticle}
+              lang={locale}
+            />
+          ) : null}
         </View>
 
         <View

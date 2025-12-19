@@ -72,7 +72,7 @@ export const useFetchArticlesOrder = ({
       success: null,
       res,
     };
-  }, [articlesOrderKey, protectedGet, callToast]);
+  }, [articlesOrderKey, protectedGet, callToast, locale]);
 
   useEffect(() => {
     if (!articlesOrderKey || articlesOrderKey.length === 0) return;
