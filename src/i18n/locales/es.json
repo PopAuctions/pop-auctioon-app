@@ -637,6 +637,9 @@
       "articles": "Artículos",
       "currentBid": "Puja Actual",
       "liveNow": "En vivo",
+      "customBid": "Puja personalizada",
+      "placeBid": "Realizar puja",
+      "cancel": "Cancelar",
       "bids": "Pujas",
       "estimatedPrice": "Precio estimado",
       "close": "Cerrar"

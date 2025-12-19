@@ -616,6 +616,9 @@
       "articles": "Articles",
       "currentBid": "Current bid",
       "liveNow": "Live now",
+      "customBid": "Custom bid",
+      "placeBid": "Place bid",
+      "cancel": "Cancel",
       "bids": "Bid",
       "estimatedPrice": "Estimated price",
       "close": "Close"

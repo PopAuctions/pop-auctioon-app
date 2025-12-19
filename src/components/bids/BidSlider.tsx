@@ -15,6 +15,8 @@ import { useSendBid } from '@/hooks/components/useSendBid';
 import { BiddingAmounts, HighestBidderState } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { toTotal } from '@/utils/toTotal';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import * as Haptics from 'expo-haptics';
 
 type BidSliderProps = {
   biddingAmounts: BiddingAmounts;
@@ -44,6 +46,7 @@ export const BidSlider = ({
   articleId,
   commissionPercentage,
 }: BidSliderProps) => {
+  const { t } = useTranslation();
   const {
     currentValue,
     isPending,
@@ -77,14 +80,14 @@ export const BidSlider = ({
 
   const handleBid = async (bidAmount: number) => {
     try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
       const finalBase = bidAmount + currentValue;
       const total = toTotal(finalBase, commissionPercentage);
-      console.log('[BID] Submitting bid of', total);
 
       await sendBid(total);
     } finally {
       setSwipeKey((k) => k + 1);
-      console.log('[BID] Bid process finished');
     }
   };
 
@@ -102,8 +105,9 @@ export const BidSlider = ({
             setCustomOpen(true);
           }}
           className='flex-1'
+          textClassName='text-center'
         >
-          Custom
+          {t('screens.liveAuction.customBid')}
         </Button>
 
         {/* Right: Swipe */}
@@ -116,7 +120,7 @@ export const BidSlider = ({
             disabled={isDisabled}
             height={UI.HEIGHT}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
-            title={`Bid: ${formatter.format(slideAmount)}`}
+            title={`${t('screens.liveAuction.bids')}: ${formatter.format(slideAmount)}`}
             titleStyles={{
               paddingLeft: UI.THUMB_WIDTH,
               textAlign: 'right',
@@ -148,6 +152,11 @@ export const BidSlider = ({
         computedMinBid={computedMinBid}
         computedMaxBid={computedMaxBid}
         formatter={formatter}
+        texts={{
+          title: t('screens.liveAuction.customBid'),
+          placeBid: t('screens.liveAuction.placeBid'),
+          cancel: t('screens.liveAuction.cancel'),
+        }}
       />
     </>
   );
@@ -159,7 +168,7 @@ const SwipeThumb = ({ loading }: { loading: boolean }) => {
       {loading ? (
         <ActivityIndicator
           size='small'
-          color='#d75639'
+          color={COLORS.PRIMARY}
         />
       ) : (
         <CustomText
@@ -183,6 +192,7 @@ const CustomBidModal = ({
   computedMinBid,
   computedMaxBid,
   formatter,
+  texts,
 }: {
   visible: boolean;
   disabled?: boolean;
@@ -192,7 +202,12 @@ const CustomBidModal = ({
   formatter: Intl.NumberFormat;
   handleInputChange: (value: string) => void;
   onClose: () => void;
-  onSubmit: () => void | Promise<void>;
+  onSubmit: () => Promise<void>;
+  texts: {
+    title: string;
+    placeBid: string;
+    cancel: string;
+  };
 }) => {
   const isLow = bidAmount < computedMinBid;
   const isHigh = bidAmount > computedMaxBid;
@@ -226,7 +241,7 @@ const CustomBidModal = ({
             onPress={() => {}}
             className='mx-5 mb-5 mt-auto rounded-3xl bg-white p-5'
           >
-            <CustomText type='subtitle'>Custom bid</CustomText>
+            <CustomText type='subtitle'>{texts.title}</CustomText>
 
             <Input
               value={bidAmount.toString()}
@@ -258,7 +273,7 @@ const CustomBidModal = ({
                 disabled={disabledFinal}
                 className='w-1/2'
               >
-                Place bid
+                {texts.placeBid}
               </Button>
 
               <Button
@@ -267,7 +282,7 @@ const CustomBidModal = ({
                 disabled={disabled}
                 className='w-1/2'
               >
-                Cancel
+                {texts.cancel}
               </Button>
             </View>
           </Pressable>
