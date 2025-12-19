@@ -95,23 +95,27 @@ const makeToast = (variant: ToastVariant) => {
   return ToastComponent;
 };
 
-const config: ToastConfig = {
+const toastConfig: ToastConfig = {
   success: makeToast('success'),
   error: makeToast('error'),
   warning: makeToast('warning'),
   info: makeToast('info'),
 };
 
-export function ToastProvider() {
+export const CustomToast = () => {
   const insets = useSafeAreaInsets();
 
   return (
     <Toast
-      config={config}
+      config={toastConfig}
       topOffset={(insets.top || 12) + (Platform.OS === 'android' ? 8 : 0)}
       bottomOffset={insets.bottom || 12}
       visibilityTime={3000}
       autoHide={true}
     />
   );
+};
+
+export function ToastProvider() {
+  return <CustomToast />;
 }

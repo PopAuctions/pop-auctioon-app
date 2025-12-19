@@ -15,6 +15,7 @@ import { useFetchArticlesOrder } from '@/hooks/pages/live/useFetchArticlesOrder'
 import { useFetchCurrentArticle } from '@/hooks/pages/live/useFetchCurrentArticle';
 import { CustomArticleLiveAuto } from '@/types/types';
 import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmounts';
+import { CustomToast } from '@/providers/ToastProvider';
 
 const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
@@ -216,6 +217,8 @@ export default function LiveAuctionScreen() {
           </>
         )}
       </View>
+
+      <CustomToast />
     </HighestBidderProvider>
   );
 }
