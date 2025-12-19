@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -110,7 +111,7 @@ export const BidSlider = ({
             disabled={isDisabled}
             height={UI.HEIGHT}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
-            title={`Bid: ${formatter.format(slideAmount)}  >>`}
+            title={`Bid: ${formatter.format(slideAmount)}`}
             titleStyles={{
               paddingLeft: UI.THUMB_WIDTH,
               textAlign: 'right',
@@ -127,6 +128,7 @@ export const BidSlider = ({
             thumbIconWidth={UI.THUMB_WIDTH}
             disabledThumbIconBackgroundColor={COLORS.THUMB_DISABLED}
             disabledThumbIconBorderColor={COLORS.PRIMARY}
+            thumbIconComponent={() => <SwipeThumb loading={isPending} />}
           />
         </View>
       </View>
@@ -143,6 +145,26 @@ export const BidSlider = ({
         formatter={formatter}
       />
     </>
+  );
+};
+
+export const SwipeThumb = ({ loading }: { loading: boolean }) => {
+  return (
+    <View className='h-full w-full items-center justify-center'>
+      {loading ? (
+        <ActivityIndicator
+          size='small'
+          color='#d75639'
+        />
+      ) : (
+        <CustomText
+          type='h4'
+          className='text-cinnabar'
+        >
+          {'>>'}
+        </CustomText>
+      )}
+    </View>
   );
 };
 
