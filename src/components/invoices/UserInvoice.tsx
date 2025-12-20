@@ -11,7 +11,6 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { useCreateUserInvoice } from '@/hooks/components/useUserInvoice';
-import { arrayBufferToBase64 } from '@/utils/arrayBufferToBase64';
 import { useToast } from '@/hooks/useToast';
 import { REQUEST_STATUS } from '@/constants';
 
@@ -139,19 +138,20 @@ export function UserInvoice({
       }
 
       const arrayBuffer = response.data as ArrayBuffer;
-      const base64 = arrayBufferToBase64(arrayBuffer);
-      const file = new File(Paths.cache, `Factura-${paymentId}.pdf`);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      const file = new File(Paths.document, `Factura-${paymentId}.pdf`);
 
-      const buffer = Buffer.from(base64, 'base64');
-      file.write(buffer);
+      file.create({ overwrite: true });
+      file.write(uint8Array);
 
       const canShare = await Sharing.isAvailableAsync();
+
       if (canShare) {
         await Sharing.shareAsync(file.uri);
       } else {
         await Linking.openURL(file.uri);
       }
-    } catch {
+    } catch (error) {
       callToast({
         variant: 'error',
         description: {
