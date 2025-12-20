@@ -149,6 +149,17 @@
         "jewelry": "Jewelry"
       }
     },
+    "onlineStoreArticle": {
+      "title": "Online Store",
+      "price": "Price",
+      "buy": "Buy",
+      "offer": "Make an offer to the seller!",
+      "makeOffer": "Make offer",
+      "ask": "Ask",
+      "minOffer": "The minimum offer is:",
+      "penalty": "If your offer is accepted, you will receive an email with the next steps and you will have 24 hours to make the payment.",
+      "noArticlesFound": "No articles found"
+    },
     "myAuctions": {
       "title": "My auctions",
       "oldAuctionsTitle": "My old auctions",
