@@ -144,11 +144,11 @@ export const LiveAuctionOverlay = ({
               pointerEvents='auto'
               style={{ width: UI.CHAT_WIDTH, height: UI.CHAT_HEIGHT }}
             >
-              {/* <Chat
+              <Chat
                 auctionId={auctionId}
                 username={username}
                 enabled
-              /> */}
+              />
             </View>
 
             {/* Actions */}
