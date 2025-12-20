@@ -11,17 +11,14 @@ export const ArticleCountdownUser = ({
   COUNTDOWN_STEPS: number;
   autoLive?: boolean;
 }) => {
-  // Current finish ISO time
-  const mockedOnemMinuteLater = new Date(Date.now() + 60 * 1000).toISOString();
-  const [currentFinishIso, setCurrentFinishIso] = useState<string>(
-    mockedOnemMinuteLater
-  );
+  // const mocked15SecondsLater = new Date(Date.now() + 15 * 1000).toISOString();
+  const [currentFinishIso, setCurrentFinishIso] = useState<string>('');
 
   const handleStart = (finishIso: string) => setCurrentFinishIso(finishIso);
   // const handleReset = (finishIso: string) => setCurrentFinishIso(finishIso);
 
   useCountdownSubscription({
-    table: `article_countdown_${articleId}`,
+    table: `ArticleBid`,
     articleId: articleId,
     updateFinish: handleStart,
     filter: `articleId=eq.${articleId}`,

@@ -168,11 +168,11 @@ export default function LiveAuctionScreen() {
   return (
     <HighestBidderProvider>
       <View className='flex-1'>
-        {/* <StreamWebView
+        <StreamWebView
           streamUrl={streamUrl}
           setStreamLoaded={setStreamLoaded}
           setStreamError={setStreamError}
-        /> */}
+        />
 
         {showUnifiedLoader ? (
           <View

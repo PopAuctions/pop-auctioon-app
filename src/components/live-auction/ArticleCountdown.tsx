@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { CustomText } from '../ui/CustomText';
 
 export const ArticleCountdown = ({
   finishTime,
@@ -186,20 +185,20 @@ export const ArticleCountdown = ({
           end={{ x: 1, y: 0.5 }}
           style={styles.circle}
         >
-          <CustomText
-            type='bodysmall'
-            className='font-extrabold text-white'
+          <Text
             style={styles.number}
+            allowFontScaling={false}
+            className='text-white'
           >
             {tickValue}
-          </CustomText>
+          </Text>
         </LinearGradient>
       </Animated.View>
     </View>
   );
 };
 
-const SIZE = 128; // 8rem ≈ 128px
+const SIZE = 128;
 
 const styles = StyleSheet.create({
   container: {
@@ -218,9 +217,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   number: {
-    fontSize: 60, // ~3.75rem
+    fontSize: 60,
+    lineHeight: 66,
     fontWeight: '800',
-    // text-shadow: 0 4px 6px rgba(0,0,0,0.4)
+    color: 'white',
+    textAlign: 'center',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+
     textShadowColor: 'rgba(0,0,0,0.4)',
     textShadowOffset: { width: 0, height: 4 },
     textShadowRadius: 6,
