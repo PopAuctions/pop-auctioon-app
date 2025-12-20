@@ -20,6 +20,7 @@ import {
 } from '@/types/types';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
+import { ArticleCountdownUser } from './ArticleCountdownUser';
 
 type OverlayProps = {
   insetsTop: number;
@@ -143,11 +144,11 @@ export const LiveAuctionOverlay = ({
               pointerEvents='auto'
               style={{ width: UI.CHAT_WIDTH, height: UI.CHAT_HEIGHT }}
             >
-              <Chat
+              {/* <Chat
                 auctionId={auctionId}
                 username={username}
                 enabled
-              />
+              /> */}
             </View>
 
             {/* Actions */}
@@ -243,6 +244,11 @@ export const LiveAuctionOverlay = ({
             />
           )}
         </View>
+
+        <ArticleCountdownUser
+          articleId={articleId}
+          COUNTDOWN_STEPS={10}
+        />
       </View>
 
       <LiveArticlesModal

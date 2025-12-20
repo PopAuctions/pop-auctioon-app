@@ -16,6 +16,8 @@ import { useFetchCurrentArticle } from '@/hooks/pages/live/useFetchCurrentArticl
 import { CustomArticleLiveAuto } from '@/types/types';
 import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmounts';
 import { CustomToast } from '@/providers/ToastProvider';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { LiveAuctionSubscriber } from '@/components/subscribers/LiveAuctionSubscribe';
 
 const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
@@ -26,7 +28,11 @@ export default function LiveAuctionScreen() {
   const auctionId = id;
 
   const { data: currentUser, status: userStatus } = useGetCurrentUser();
-  const { data: liveAuctionData, status: auctionStatus } = useGetLiveAuction({
+  const {
+    data: liveAuctionData,
+    status: auctionStatus,
+    refetch: refetchLiveAuction,
+  } = useGetLiveAuction({
     auctionId: auctionId,
     validateIsLive: true,
   });
@@ -38,6 +44,7 @@ export default function LiveAuctionScreen() {
     locale: locale,
   });
 
+  // Fetch current article being bid on
   const { data: currentArticle, status: currentArticleStatus } =
     useFetchCurrentArticle({
       articleId: liveAuctionData?.ArticleBid.articleId || 0,
@@ -161,11 +168,11 @@ export default function LiveAuctionScreen() {
   return (
     <HighestBidderProvider>
       <View className='flex-1'>
-        <StreamWebView
+        {/* <StreamWebView
           streamUrl={streamUrl}
           setStreamLoaded={setStreamLoaded}
           setStreamError={setStreamError}
-        />
+        /> */}
 
         {showUnifiedLoader ? (
           <View
@@ -218,6 +225,14 @@ export default function LiveAuctionScreen() {
         )}
       </View>
 
+      <LiveAuctionSubscriber
+        auctionId={Number(auctionId)}
+        refetch={refetchLiveAuction}
+      />
+      <AuctionSubscriber
+        auctionId={Number(auctionId)}
+        refetch={refetchLiveAuction}
+      />
       <CustomToast />
     </HighestBidderProvider>
   );
