@@ -8,7 +8,7 @@ import { Translations } from '@/i18n';
 import { BillingFormModal } from '../billing-info/BillingFormModal';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import { File, Paths } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { useCreateUserInvoice } from '@/hooks/components/useUserInvoice';
 import { arrayBufferToBase64 } from '@/utils/arrayBufferToBase64';
@@ -140,18 +140,20 @@ export function UserInvoice({
 
       const arrayBuffer = response.data as ArrayBuffer;
       const base64 = arrayBufferToBase64(arrayBuffer);
-      const file = new File(Paths.cache, `Factura-${paymentId}.pdf`);
+      const fileUri = `${FileSystem.documentDirectory}Factura-${paymentId}.pdf`;
 
-      const buffer = Buffer.from(base64, 'base64');
-      file.write(buffer);
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
       const canShare = await Sharing.isAvailableAsync();
+
       if (canShare) {
-        await Sharing.shareAsync(file.uri);
+        await Sharing.shareAsync(fileUri);
       } else {
-        await Linking.openURL(file.uri);
+        await Linking.openURL(fileUri);
       }
-    } catch {
+    } catch (error) {
       callToast({
         variant: 'error',
         description: {
