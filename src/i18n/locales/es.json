@@ -658,7 +658,7 @@
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",
-    "defaultMessage": "Si el problema persiste, contacta soporte.",
+    "defaultMessage": "Si crees que esto es un error, por favor contacta con soporte.",
     "tryAgain": "Intentar de nuevo",
     "generic": "Algo salió mal",
     "loadFailedTitle": "Error al cargar",

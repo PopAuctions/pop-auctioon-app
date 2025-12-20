@@ -33,14 +33,10 @@ export const useGetLiveAuction = ({
       });
 
       if (res.error) {
-        console.log('error', res.error);
         setStatus('error');
         setErrorMessage(res.error);
         return {
-          message: {
-            en: 'Error fetching auction',
-            es: 'Error al obtener la subasta',
-          },
+          message: res.error,
         };
       }
 

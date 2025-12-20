@@ -648,7 +648,7 @@
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",
-    "defaultMessage": "If the problem persists, contact support.",
+    "defaultMessage": "If you think this is a mistake, contact support.",
     "tryAgain": "Try again",
     "generic": "Something went wrong",
     "loadFailedTitle": "Loading Error",

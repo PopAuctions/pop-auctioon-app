@@ -31,6 +31,7 @@ export default function LiveAuctionScreen() {
   const {
     data: liveAuctionData,
     status: auctionStatus,
+    errorMessage,
     refetch: refetchLiveAuction,
   } = useGetLiveAuction({
     auctionId: auctionId,
@@ -133,10 +134,12 @@ export default function LiveAuctionScreen() {
       >
         <CustomError
           refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
-          customMessage={{
-            es: 'Hubo un error al cargar la información',
-            en: 'There was an error loading information',
-          }}
+          customMessage={
+            errorMessage ?? {
+              es: 'Hubo un error al cargar la información',
+              en: 'There was an error loading information',
+            }
+          }
         />
       </View>
     );

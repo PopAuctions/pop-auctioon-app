@@ -74,7 +74,7 @@ export const LiveCurrentArticleCard = ({
             <CustomText
               type='bodysmall'
               numberOfLines={1}
-              className='font-semibold text-neutral-400'
+              className='font-semibold text-neutral-500'
             >
               Estimated value: {formatter.format(estimatedValue)}
             </CustomText>
@@ -85,13 +85,13 @@ export const LiveCurrentArticleCard = ({
       {/* Right */}
       <View className='items-end pl-3'>
         <CustomText
-          type='h3'
+          type='h4'
           className=''
         >
           Current
         </CustomText>
         <CustomText
-          type='h3'
+          type='h4'
           className=''
         >
           {currentLabel}
