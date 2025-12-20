@@ -39,9 +39,9 @@ pnpm build:ios:device      # Build para iPhone/iPad (cloud - requiere Apple Deve
 
 ## 🏗️ Tech Stack
 
-- **Framework**: Expo SDK 53 con New Architecture
+- **Framework**: Expo SDK 54 con New Architecture
 - **React**: 19.0.0 con concurrent features
-- **Routing**: Expo Router v5.1+ (file-based)
+- **Routing**: Expo Router v6.0+ (file-based)
 - **Styling**: NativeWind v4.1+ (Tailwind CSS)
 - **Backend**: Supabase (Auth + Database)
 - **i18n**: i18n-js v4.5+ (ES/EN)
