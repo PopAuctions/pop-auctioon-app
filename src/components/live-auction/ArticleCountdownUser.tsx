@@ -1,5 +1,5 @@
 import { useCountdownSubscription } from '@/hooks/subscribers/useCountdownSubscription';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ArticleCountdown } from './ArticleCountdown';
 
 export const ArticleCountdownUser = ({
@@ -14,7 +14,10 @@ export const ArticleCountdownUser = ({
   // const mocked15SecondsLater = new Date(Date.now() + 15 * 1000).toISOString();
   const [currentFinishIso, setCurrentFinishIso] = useState<string>('');
 
-  const handleStart = (finishIso: string) => setCurrentFinishIso(finishIso);
+  const handleStart = useCallback(
+    (finishIso: string) => setCurrentFinishIso(finishIso),
+    []
+  );
   // const handleReset = (finishIso: string) => setCurrentFinishIso(finishIso);
 
   useCountdownSubscription({
@@ -25,7 +28,7 @@ export const ArticleCountdownUser = ({
     autoLive,
   });
 
-  // if (!currentFinishIso) return null;
+  if (!currentFinishIso) return null;
 
   return (
     <ArticleCountdown
