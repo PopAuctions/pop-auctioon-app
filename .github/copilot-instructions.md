@@ -6,21 +6,42 @@ This is a **React Native/Expo** auction application with **file-based routing** 
 
 ### Key Tech Stack
 
-- **Expo SDK 53** with New Architecture enabled
-- **React 19** with concurrent features (`useTransition` in i18n)
-- **Expo Router v5.1+** (file-based routing with typed routes)
+- **Expo SDK 54.0.30** (React Native 0.81.5) with New Architecture enabled
+- **React 19.2.3** with concurrent features (`useTransition` in i18n)
+- **Expo Router v6.0.21** (file-based routing with typed routes, native tabs support)
 - **Supabase** (auth & database with complex schema in `src/types/supabase.ts`)
-- **NativeWind v4.1+** (Tailwind CSS for React Native)
+- **NativeWind v4.2.1** (Tailwind CSS for React Native)
 - **i18n-js v4.5+** (Spanish/English localization)
-- **Sentry** (error tracking with PII scrubbing in `app/_layout.tsx`)
-- **TypeScript** with strict configuration
-- **Volta** (Node 22.19.0, npm 11.6.0 pinning)
+- **Sentry ~7.2.0** (error tracking with PII scrubbing in `app/_layout.tsx`)
+- **TypeScript 5.9.3** with strict configuration
+- **Volta** (Node 22.19.0 pinning)
+- **pnpm 10.26.0** (package manager - NOT npm)
+- **react-native-reanimated v4.2.1** (New Architecture only, includes worklets)
+- **react-native-worklets v0.7.1** (required by Reanimated v4)
+- **Stripe 0.50.3** (payment processing via `@stripe/stripe-react-native`)
+- **React Native Gesture Handler ~2.28.0** (gesture support in GestureHandlerRootView)
 
 ### Project Structure Pattern
 
-- `app/` - File-based routing (Expo Router v5.1+)
+- `app/` - File-based routing (Expo Router v6.0.21)
 - `src/` - Business logic, components, hooks, utilities
 - **Path aliases**: Extensive mapping in `tsconfig.json` and `jest.config.js` - always use `@/` imports
+
+### SDK 54 Specific Changes
+
+**New Features:**
+
+- **iOS**: Precompiled React Native frameworks (10x faster builds)
+- **Android**: Edge-to-edge ALWAYS enabled (cannot be disabled)
+- **Expo Router v6**: Native tabs support, link previews, improved modals
+- **Reanimated v4**: Requires New Architecture, uses worklets
+
+**Breaking Changes:**
+
+1. **Edge-to-Edge Android**: Always enabled, use `androidNavigationBar.enforceContrast` in app.json
+2. **Reanimated v3 → v4**: New Architecture only, requires `react-native-worklets@^0.7.0`
+3. **expo-file-system**: New API is default, legacy available at `expo-file-system/legacy`
+4. **Unhandled Promises**: Now logged as errors (add try-catch to all async code)
 
 ## Authentication & Authorization
 
@@ -293,12 +314,30 @@ useEffect(() => {
 - **Pattern**: `console.error('ERROR_DESCRIPTION', error)` + `// TODO: Show toast`
 - **Navigate back** on critical errors: `router.back()` after logging error
 - **Error messages** are LangMap: `response.error[locale]` or `response.error.es/en`
+- **Toast system**: Available via `useToast()` hook from `@/hooks/useToast` (see Toast Messages section)
 
 ```typescript
-// ✅ CORRECT error handling
+// ✅ CORRECT error handling with toast (preferred)
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/useTranslation';
+
+const { locale } = useTranslation();
+const { callToast } = useToast(locale);
+
 if (response.error) {
   console.error('ERROR_LOAD_USER_DATA', response.error);
-  // TODO: Show toast with response.error[locale]
+  callToast({
+    variant: 'error',
+    description: response.error, // LangMap: { es: string, en: string }
+  });
+  router.back();
+  return;
+}
+
+// ✅ ACCEPTABLE - console.error with TODO (if toast not yet implemented in that screen)
+if (response.error) {
+  console.error('ERROR_LOAD_USER_DATA', response.error);
+  // TODO: Show toast with response.error
   router.back();
   return;
 }
@@ -639,22 +678,54 @@ setState({ currentValue: 1200 });
 
 ## Development Workflow
 
+### Package Manager
+
+**CRITICAL**: This project uses **pnpm**, not npm. All commands must use `pnpm`:
+
+```bash
+# ✅ CORRECT
+pnpm install
+pnpm start
+pnpm test
+
+# ❌ WRONG - Don't use npm
+npm install
+npm start
+```
+
+The project is configured with `"packageManager": "pnpm@10.26.0"` in package.json and uses a pnpm workspace configuration.
+
 ### Essential Commands
 
 ```bash
 # Development
-npm start              # Start Expo dev server
-npm run test:watch     # Jest in watch mode
-npm run lint:fix       # ESLint + Prettier
+pnpm start              # Start Expo dev server
+pnpm dev                # Alias for start
+pnpm test:watch         # Jest in watch mode
+pnpm lint:fix           # ESLint + Prettier
+pnpm prettier:fix       # Format all files
 
 # Testing
-npm run coverage:open  # Open coverage report
-npm test              # Run full test suite
+pnpm coverage:open      # Open coverage report in browser
+pnpm test               # Run full test suite
+pnpm test:update-snapshots  # Update Jest snapshots
+
+# Quality Checks
+pnpm check-all          # Run type-check, lint, format, and tests
+pnpm type-check         # TypeScript validation
 
 # Platform-specific
-npm run android       # Start Android development
-npm run ios          # Start iOS development
-npm run web          # Start web development
+pnpm android            # Start Android development
+pnpm ios                # Start iOS development
+pnpm web                # Start web development
+
+# Build & Deploy
+pnpm build:ios          # iOS Simulator build (cloud - free)
+pnpm build:android      # Android build (cloud - free)
+pnpm build:ios:device   # iOS device build (requires Apple Developer $99/year)
+
+# Database Types
+pnpm generate-types     # Regenerate Supabase types from schema
 ```
 
 ### Testing Patterns
@@ -874,6 +945,78 @@ const onSubmit = async (data: FormType) => {
 - **Custom error boundaries** via Expo Router
 - **Graceful degradation** with ErrorLoading component
 
+## Toast Messages
+
+The app uses `react-native-toast-message` for user notifications. Access via `useToast()` hook:
+
+```typescript
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/useTranslation';
+
+const { locale } = useTranslation();
+const { callToast } = useToast(locale);
+
+// Success message
+callToast({
+  variant: 'success',
+  description: 'Profile updated successfully',
+});
+
+// Error message (with bilingual support using LangMap)
+callToast({
+  variant: 'error',
+  description: response.error, // LangMap from API: { es: string, en: string }
+});
+
+// Info/Warning with action button
+callToast({
+  variant: 'info',
+  description: 'New auction available',
+  actionLabel: 'View',
+  onAction: () => router.push('/auctions'),
+});
+```
+
+**Toast Variants**: `success`, `error`, `info`, `warning`
+
+**Options**:
+
+- `description`: LangMap object, translation key string, or plain string
+- `position`: `'top'` (default) or `'bottom'`
+- `durationMs`: Custom display duration
+- `haptics`: Enable/disable haptic feedback (default: true)
+- `actionLabel` / `onAction`: Add action button to toast
+
+**Provider**: `ToastProvider` wraps app in `app/_layout.tsx` - no manual setup needed in screens.
+
+## Payment Integration
+
+### Stripe Setup
+
+The app uses `@stripe/stripe-react-native` for payment processing:
+
+```typescript
+// StripeProvider wraps app in app/_layout.tsx
+// Publishable key auto-loaded from EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
+// Example: Payment sheet usage (see Stripe docs for details)
+import { useStripe } from '@stripe/stripe-react-native';
+
+const { initPaymentSheet, presentPaymentSheet } = useStripe();
+```
+
+**Configuration**: Stripe is initialized in `src/providers/StripeProvider.tsx` with automatic key loading from environment variables.
+
+## Deep Linking
+
+The app supports deep linking via `DeepLinkListener` component:
+
+- **Component**: `src/components/navigation/DeepLinkListener.tsx`
+- **Integration**: Auto-initialized in `app/_layout.tsx`
+- **Handles**: OAuth callbacks, password resets, magic links, custom app links
+
+Deep link handling is automatic - no manual setup needed in screens. Supabase auth deep links are processed in the listener component.
+
 ## Critical Patterns
 
 ### Auth State Management
@@ -931,7 +1074,19 @@ Configured in: `tsconfig.json`, `jest.config.js`, and Metro bundler.
 ### Platform Support
 
 - **Universal app**: iOS, Android, Web
-- **New Architecture** enabled (Expo SDK 53)
-- **Edge-to-edge** Android support
+- **New Architecture** enabled (Expo SDK 54)
+- **Edge-to-edge** Android support (always enabled, cannot be disabled)
+
+### Jest Configuration
+
+- **Coverage threshold**: 70% for all metrics (branches, functions, lines, statements)
+- **Path aliases** mirrored in `jest.config.js` from `tsconfig.json`
+- **Test location**: `__tests__/` mirrors `src/` structure
+- **Snapshot testing** enabled for components
+- **Commands**:
+  - `pnpm test` - Run full suite
+  - `pnpm test:watch` - Watch mode
+  - `pnpm coverage:open` - Open coverage report in browser
+  - `pnpm test:update-snapshots` - Update snapshots
 
 When working on this codebase, always consider role-based access, use the established hook patterns, and maintain the file-based routing conventions.
