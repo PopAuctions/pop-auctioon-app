@@ -74,7 +74,7 @@ export const LiveAuctionOverlay = ({
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
-  const [showInfoModal, setOpenArticlesModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const currentArticle = useMemo(() => {
     return orderedArticles.find((a) => a.id === articleId) ?? null;
@@ -160,7 +160,7 @@ export const LiveAuctionOverlay = ({
               style={{ gap: UI.ACTION_GAP }}
             >
               <TouchableOpacity
-                onPress={() => setOpenArticlesModal(true)}
+                onPress={() => setShowInfoModal(true)}
                 activeOpacity={0.7}
                 style={{
                   height: UI.ACTION_BTN_SIZE,
@@ -182,7 +182,7 @@ export const LiveAuctionOverlay = ({
               <ShareButton
                 mode='empty'
                 className='items-center justify-center'
-                lang={locale as any}
+                lang={locale}
               >
                 <View
                   style={{
@@ -266,7 +266,7 @@ export const LiveAuctionOverlay = ({
           articles: t('screens.liveAuction.articles'),
         }}
         visible={showInfoModal}
-        onClose={() => setOpenArticlesModal(false)}
+        onClose={() => setShowInfoModal(false)}
       />
     </>
   );

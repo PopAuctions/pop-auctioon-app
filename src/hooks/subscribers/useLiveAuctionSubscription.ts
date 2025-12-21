@@ -70,7 +70,7 @@ export const useLiveAuctionSubscription = ({
       }
     });
 
-    if ((ch as any).state === 'joined') setIsSubscribed(true);
+    if (ch.state === 'joined') setIsSubscribed(true);
 
     return () => {
       if (chRef.current) {

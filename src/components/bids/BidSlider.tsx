@@ -254,14 +254,14 @@ const CustomBidModal = ({
                 type='bodysmall'
                 className={`text-sm ${bidAmount < computedMinBid ? 'text-red-500' : 'text-neutral-500'}`}
               >
-                Min: ${formatter.format(computedMinBid)}
+                Min: {formatter.format(computedMinBid)}
               </CustomText>
             ) : (
               <CustomText
                 type='bodysmall'
                 className='text-sm text-red-500'
               >
-                Max: ${formatter.format(computedMaxBid)}
+                Max: {formatter.format(computedMaxBid)}
               </CustomText>
             )}
 
