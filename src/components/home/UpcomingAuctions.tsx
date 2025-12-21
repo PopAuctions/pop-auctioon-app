@@ -6,11 +6,11 @@ import { AuctionsSlider } from '../auctions/AuctionsSlider';
 
 export const UpcomingAuctionsSection = ({
   locale,
-  texts: { title, subtitle, noAuction },
+  texts: { title, noAuction },
   auctions,
 }: {
   locale: Lang;
-  texts: { title: string; subtitle: string; noAuction: string };
+  texts: { title: string; noAuction: string };
   auctions: Auction[];
 }) => {
   return (
@@ -20,13 +20,6 @@ export const UpcomingAuctionsSection = ({
         className='text-center'
       >
         {title}
-      </CustomText>
-
-      <CustomText
-        type='subtitle'
-        className='text-center text-cinnabar'
-      >
-        {subtitle}
       </CustomText>
 
       <View className='my-5 w-full items-center justify-center'>

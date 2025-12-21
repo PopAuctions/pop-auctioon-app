@@ -40,7 +40,6 @@
   "screens": {
     "homePage": {
       "upcomingAuctionsTitle": "Upcoming auctions",
-      "upcomingAuctionsSubTitle": "GLORIOUS VICTORIES!",
       "auctionCategoriesTitle": "Find your auction",
       "auctionCategoriesSubTitle": "What are you interested in?",
       "auctioneer": "Become an auctioneer",

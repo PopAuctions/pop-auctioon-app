@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   FlatList,
   Pressable,
@@ -7,9 +7,11 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import type { Auction, Lang } from '@/types/types';
 import { AuctionsSliderItem } from './AuctionsSliderItem';
+import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+
+const ITEMS_GAP = 32;
 
 export const AuctionsSlider = ({
   auctions,
@@ -19,121 +21,80 @@ export const AuctionsSlider = ({
   locale: Lang;
 }) => {
   const { width } = useWindowDimensions();
-  const listRef = useRef<FlatList<Auction[]>>(null);
+  const listRef = useRef<FlatList<Auction>>(null);
   const [page, setPage] = useState(0);
 
-  // crude “lg” breakpoint (tweak if you want)
-  const isLarge = width >= 1024;
+  const CARD_W = Math.min(width - 48, Math.round(width * 0.72));
+  const SIDE_PADDING = Math.round((width - CARD_W) / 2);
 
-  // mimic web logic:
-  // - if > 3 => always carousel
-  // - else => on large show row, on small show carousel
-  const useCarousel = auctions.length > 3 || !isLarge;
-
-  // how many cards per “page” on large screens (like md 1/2, lg 1/3)
-  const cardsPerPage = isLarge ? 3 : 1;
-
-  const pages = useMemo(() => {
-    if (!useCarousel) return [];
-    const chunks: Auction[][] = [];
-    for (let i = 0; i < auctions.length; i += cardsPerPage) {
-      chunks.push(auctions.slice(i, i + cardsPerPage));
-    }
-    return chunks;
-  }, [auctions, cardsPerPage, useCarousel]);
+  const scrollToPage = (index: number) => {
+    const clamped = Math.max(0, Math.min(auctions.length - 1, index));
+    const offset = clamped * (CARD_W + ITEMS_GAP);
+    listRef.current?.scrollToOffset({ offset, animated: true });
+    setPage(clamped);
+  };
 
   const onMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const next = Math.round(e.nativeEvent.contentOffset.x / width);
+    const x = e.nativeEvent.contentOffset.x;
+    const next = Math.round(x / (CARD_W + ITEMS_GAP));
     setPage(next);
   };
 
-  if (!useCarousel) {
-    // Large screen row (like your "lg:flex" layout)
-    return (
-      <View
-        className='w-full flex-row justify-center'
-        style={{ gap: 16 }}
-      >
-        {auctions.map((auction) => (
-          <View
-            key={auction.id}
-            style={{ width: width / 3.2 }}
-          >
-            <AuctionsSliderItem
-              auction={auction}
-              lang={locale}
-            />
-          </View>
-        ))}
-      </View>
-    );
-  }
-
-  // Carousel mode (horizontal paging)
   return (
     <View className='w-full'>
-      <FlatList
+      <FlatList<Auction>
         ref={listRef}
-        data={pages}
-        keyExtractor={(_, idx) => `page-${idx}`}
+        data={auctions}
+        keyExtractor={(item) => item.id.toString()}
         horizontal
-        pagingEnabled
         showsHorizontalScrollIndicator={false}
+        snapToInterval={CARD_W + ITEMS_GAP}
+        snapToAlignment='start'
+        decelerationRate='fast'
+        contentContainerStyle={{
+          paddingHorizontal: SIDE_PADDING,
+        }}
+        ItemSeparatorComponent={() => <View style={{ width: ITEMS_GAP }} />}
         onMomentumScrollEnd={onMomentumEnd}
-        renderItem={({ item: pageAuctions }) => (
-          <View
-            style={{ width }}
-            className='flex-row justify-center'
-          >
-            <View
-              className='w-full flex-row justify-center px-4'
-              style={{ gap: 16 }}
-            >
-              {pageAuctions.map((auction) => (
-                <View
-                  key={auction.id}
-                  style={{ width: isLarge ? width / 3.2 : width - 32 }}
-                >
-                  <AuctionsSliderItem
-                    auction={auction}
-                    lang={locale}
-                  />
-                </View>
-              ))}
-            </View>
+        renderItem={({ item }) => (
+          <View style={{ width: CARD_W }}>
+            <AuctionsSliderItem
+              auction={item}
+              lang={locale}
+              cardWidth={CARD_W}
+            />
           </View>
         )}
       />
 
-      {/* Arrows */}
+      {/* Arrows + dots */}
       <View className='mt-3 flex-row items-center justify-between px-4'>
         <Pressable
           onPress={() => {
-            const prev = Math.max(0, page - 1);
-            listRef.current?.scrollToIndex({ index: prev, animated: true });
-            setPage(prev);
+            scrollToPage(page - 1);
           }}
-          className='h-10 w-10 items-center justify-center rounded-full'
+          disabled={page <= 0}
+          className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
         >
-          <Ionicons
-            name='chevron-back'
+          <FontAwesomeIcon
+            variant='bold'
+            name='arrow-circle-left'
             size={28}
-            color='#e44'
+            color='cinnabar'
           />
         </Pressable>
 
-        {/* Dots */}
         <View
           className='flex-row items-center'
           style={{ gap: 8 }}
         >
-          {pages.map((_, idx) => (
+          {auctions.map((_, idx) => (
             <View
               key={idx}
               className={
                 idx === page
                   ? 'h-2 w-2 rounded-full bg-cinnabar'
-                  : 'bg-gray-300 h-2 w-2 rounded-full'
+                  : 'h-2 w-2 rounded-full bg-neutral-600'
               }
             />
           ))}
@@ -141,16 +102,16 @@ export const AuctionsSlider = ({
 
         <Pressable
           onPress={() => {
-            const next = Math.min(pages.length - 1, page + 1);
-            listRef.current?.scrollToIndex({ index: next, animated: true });
-            setPage(next);
+            scrollToPage(page + 1);
           }}
-          className='h-10 w-10 items-center justify-center rounded-full'
+          disabled={page >= auctions.length - 1}
+          className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
         >
-          <Ionicons
-            name='chevron-forward'
+          <FontAwesomeIcon
+            variant='bold'
+            name='arrow-circle-right'
             size={28}
-            color='#e44'
+            color='cinnabar'
           />
         </Pressable>
       </View>

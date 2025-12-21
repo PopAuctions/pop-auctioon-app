@@ -20,7 +20,6 @@ export default function HomeScreen() {
           locale={locale}
           texts={{
             title: t('screens.homePage.upcomingAuctionsTitle'),
-            subtitle: t('screens.homePage.upcomingAuctionsSubTitle'),
             noAuction: t('screens.homePage.noAuctions'),
           }}
         />
