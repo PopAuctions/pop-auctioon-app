@@ -14,19 +14,10 @@ export default function AuctionsLayout() {
         name='index'
         options={{
           title: t('tabsNames.auctions'),
-          headerShown: false,
+          headerShown: true,
         }}
       />
-      <Stack.Screen
-        name='calendar'
-        options={{
-          title: t('screens.auctions.calendar'),
-          presentation: 'card',
-          headerShown: true, // Solo mostrar en pantallas secundarias
-          headerBackTitle: t('tabsNames.back'),
-        }}
-      />
-      <Stack.Screen
+      {/* <Stack.Screen
         name='articles'
         options={{
           title: t('screens.auctions.allArticles'),
@@ -34,7 +25,7 @@ export default function AuctionsLayout() {
           headerShown: true,
           headerBackTitle: t('tabsNames.back'),
         }}
-      />
+      /> */}
       <Stack.Screen
         name='[id]'
         options={{

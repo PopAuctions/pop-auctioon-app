@@ -1,123 +1,127 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
+import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { CustomLink } from '@/components/ui/CustomLink';
+import { CustomText } from '@/components/ui/CustomText';
+import { AuctionCalendarCard } from '@/components/ui/AuctionCalendarCard';
+import { Loading } from '@/components/ui/Loading';
+import { REQUEST_STATUS } from '@/constants';
+import { CustomError } from '@/components/ui/CustomError';
 
-export default function AuctionsScreen() {
-  const { t } = useTranslation();
+export default function IndexScreen() {
+  const { auctions, status } = useAuctionsCalendar();
+  const { t, locale } = useTranslation();
+
+  // Obtener meses directamente
+  const calendarMonths = getCalendarMonths();
+  const monthsArray = Array.from(calendarMonths.values()).filter(
+    (month) => month.value !== 0
+  );
+  const thisMonth = monthsArray[0];
+  const nextMonth = monthsArray[1];
+  const hasAuctionsNextMonth = auctions?.next_month?.length > 0 || false;
+
+  if (status === REQUEST_STATUS.loading) {
+    return <Loading locale={locale} />;
+  }
+
+  if (status === REQUEST_STATUS.error) {
+    return (
+      <CustomError
+        customMessage={{
+          es: 'No se pudieron cargar las subastas.',
+          en: 'Failed to load auctions.',
+        }}
+        refreshRoute='/(tabs)/auctions'
+      />
+    );
+  }
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
 
   return (
-    <SafeAreaView
-      className='flex-1'
-      edges={['top']}
-    >
-      <ScrollView className='flex-1'>
-        {/* Header */}
-        <View className='border-gray-200 border-b   p-4'>
-          <Text className='text-gray-800 mb-2 text-2xl font-bold'>
-            {t('screens.auctions.title')}
-          </Text>
-          <Text className='text-gray-600'>
-            Explora subastas programadas y artículos disponibles
-          </Text>
-        </View>
-
-        {/* Live Auction Banner */}
-        <View className='mx-4 mt-4'>
-          <CustomLink
-            href='/(tabs)/auctions/live/28'
-            mode='empty'
-            className='rounded-lg bg-red-500 p-6'
+    <ScrollView className='flex-1'>
+      <View className='p-4'>
+        <View className='mb-8'>
+          <CustomText
+            type='h1'
+            className='text-center'
           >
-            <View className='flex-row items-center justify-center'>
-              <View className='mr-3 h-3 w-3 animate-pulse rounded-full  ' />
-              <Text className='mr-2 text-xl font-bold text-white'>
-                🔴 SUBASTA EN VIVO
-              </Text>
-            </View>
-            <Text className='mt-2 text-center text-white opacity-90'>
-              ¡Únete ahora a la subasta activa!
-            </Text>
-            <View className='mt-3 flex-row justify-center space-x-4'>
-              <Text className='text-sm text-white opacity-80'>
-                ⏱️ 45:20 restante
-              </Text>
-              <Text className='text-sm text-white opacity-80'>
-                👥 23 participantes
-              </Text>
-            </View>
-          </CustomLink>
-        </View>
-
-        {/* Main Options */}
-        <View className='space-y-4 p-4'>
-          {/* Auctions Calendar Option */}
-          <CustomLink
-            href='/(tabs)/auctions/calendar'
-            mode='empty'
-            className='border-gray-200 rounded-lg border p-6'
+            {t('screens.calendar.thisMonth')}{' '}
+            {getMonthName(thisMonth.value, locale)}
+          </CustomText>
+          <CustomText
+            type='subtitle'
+            className='mb-4 text-center'
           >
-            <View className='mb-3 flex-row items-center'>
-              <Text className='mr-4 text-4xl'>📅</Text>
-              <View className='flex-1'>
-                <Text className='text-gray-800 mb-1 text-xl font-bold'>
-                  Calendario de Subastas
-                </Text>
-                <Text className='text-gray-600'>
-                  Ver todas las subastas programadas por fecha
-                </Text>
-              </View>
-              <Text className='text-gray-400 text-2xl'>→</Text>
-            </View>
-          </CustomLink>
+            {t('screens.calendar.subtitle').toUpperCase()}
+          </CustomText>
 
-          {/* All Articles Option */}
-          <CustomLink
-            href='/(tabs)/auctions/articles'
-            mode='empty'
-            className='border-gray-200 rounded-lg border p-6'
-          >
-            <View className='mb-3 flex-row items-center'>
-              <Text className='mr-4 text-4xl'>🏷️</Text>
-              <View className='flex-1'>
-                <Text className='text-gray-800 mb-1 text-xl font-bold'>
-                  All Articles
-                </Text>
-                <Text className='text-gray-600'>
-                  Explorar todos los artículos disponibles
-                </Text>
-              </View>
-              <Text className='text-gray-400 text-2xl'>→</Text>
+          {auctions?.this_month && auctions.this_month.length > 0 ? (
+            <View className='space-y-6'>
+              {auctions.this_month.map((auction) => (
+                <AuctionCalendarCard
+                  key={auction.id}
+                  auction={auction}
+                  locale={locale}
+                  formatTime={formatTime}
+                />
+              ))}
             </View>
-          </CustomLink>
+          ) : (
+            <CustomText
+              type='h2'
+              className='py-4 text-center text-cinnabar'
+            >
+              {t('screens.calendar.noAuctionsFound')}
+            </CustomText>
+          )}
         </View>
 
-        {/* Quick Stats */}
-        <View className='mx-4 mb-4'>
-          <View className='rounded-lg border border-orange-200 bg-orange-50 p-4'>
-            <Text className='mb-2 font-semibold text-orange-800'>
-              📊 Estadísticas
-            </Text>
-            <View className='flex-row justify-between'>
-              <View className='items-center'>
-                <Text className='text-2xl font-bold text-orange-600'>12</Text>
-                <Text className='text-sm text-orange-700'>
-                  Subastas Activas
-                </Text>
-              </View>
-              <View className='items-center'>
-                <Text className='text-2xl font-bold text-orange-600'>450</Text>
-                <Text className='text-sm text-orange-700'>Artículos</Text>
-              </View>
-              <View className='items-center'>
-                <Text className='text-2xl font-bold text-orange-600'>1.2k</Text>
-                <Text className='text-sm text-orange-700'>Participantes</Text>
+        {hasAuctionsNextMonth && (
+          <>
+            <View className='mx-4 my-3'>
+              <View className='border-gray-200 w-full border-b' />
+            </View>
+
+            <View className='mb-8'>
+              <CustomText
+                type='h1'
+                className='text-center'
+              >
+                {t('screens.calendar.nextMonth')}{' '}
+                {getMonthName(nextMonth.value, locale)}
+              </CustomText>
+              <CustomText
+                type='subtitle'
+                className='mb-4 text-center'
+              >
+                {t('screens.calendar.subtitle').toUpperCase()}
+              </CustomText>
+
+              <View className='space-y-6'>
+                {auctions?.next_month &&
+                  auctions.next_month.map((auction) => (
+                    <AuctionCalendarCard
+                      key={auction.id}
+                      auction={auction}
+                      locale={locale}
+                      formatTime={formatTime}
+                    />
+                  ))}
               </View>
             </View>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 }
