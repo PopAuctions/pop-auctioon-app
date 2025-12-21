@@ -78,7 +78,6 @@ export default function LiveAuctionScreen() {
   // add currentArticleStatus if needed
 
   const showError =
-    userStatus === REQUEST_STATUS.error ||
     auctionStatus === REQUEST_STATUS.error ||
     currentArticleStatus === REQUEST_STATUS.error ||
     biddingAmountsStatus === REQUEST_STATUS.error ||

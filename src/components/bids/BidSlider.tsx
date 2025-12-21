@@ -94,7 +94,7 @@ export const BidSlider = ({
   return (
     <>
       {/* Main row */}
-      <View className='w-full flex-row gap-3'>
+      <View className='w-full flex-row items-center justify-start gap-3'>
         {/* Left: Custom */}
         <Button
           mode='secondary'
@@ -104,7 +104,7 @@ export const BidSlider = ({
             Keyboard.dismiss();
             setCustomOpen(true);
           }}
-          className='flex-1'
+          className='h-full flex-1'
           textClassName='text-center'
         >
           {t('screens.liveAuction.customBid')}
@@ -112,13 +112,12 @@ export const BidSlider = ({
 
         {/* Right: Swipe */}
         <View
-          className='flex-[2]'
-          style={{ height: UI.HEIGHT }}
+          className='my-auto h-full flex-[2]'
+          style={{ maxHeight: UI.HEIGHT }}
         >
           <SwipeButton
             key={swipeKey}
             disabled={isDisabled}
-            height={UI.HEIGHT}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
             title={`${t('screens.liveAuction.bids')}: ${formatter.format(slideAmount)}`}
             titleStyles={{

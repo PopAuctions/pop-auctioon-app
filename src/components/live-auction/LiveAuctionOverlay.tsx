@@ -35,7 +35,7 @@ type OverlayProps = {
 };
 
 const UI = {
-  SCREEN_PADDING: 16,
+  SCREEN_PADDING: 8,
   HUD_BOTTOM_GAP: 20,
   ROW_GAP: 12,
 

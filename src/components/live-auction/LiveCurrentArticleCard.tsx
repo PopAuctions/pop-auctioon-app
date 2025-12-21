@@ -4,6 +4,7 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import type { CustomArticleLiveAuto, Lang } from '@/types/types';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { CustomText } from '../ui/CustomText';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface LiveCurrentArticleCardProps {
   article: CustomArticleLiveAuto;
@@ -19,6 +20,7 @@ export const LiveCurrentArticleCard = ({
   article,
   lang,
 }: LiveCurrentArticleCardProps) => {
+  const { t } = useTranslation();
   const { state } = useHighestBidderContext({});
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
@@ -74,9 +76,10 @@ export const LiveCurrentArticleCard = ({
             <CustomText
               type='bodysmall'
               numberOfLines={1}
-              className='font-semibold text-neutral-500'
+              className='font-semibold leading-normal text-neutral-500'
             >
-              Estimated value: {formatter.format(estimatedValue)}
+              {t('screens.article.estimatedValue')}:{' '}
+              {formatter.format(estimatedValue)}
             </CustomText>
           )}
         </View>
@@ -88,7 +91,7 @@ export const LiveCurrentArticleCard = ({
           type='h4'
           className=''
         >
-          Current
+          {t('screens.article.actualBid')}
         </CustomText>
         <CustomText
           type='h4'

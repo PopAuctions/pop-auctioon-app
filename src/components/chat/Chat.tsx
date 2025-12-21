@@ -147,14 +147,12 @@ export const Chat = ({
           }
         />
       ) : (
-        <View className='rounded-full bg-black/40 px-3 py-2'>
-          <CustomText
-            type='bodysmall'
-            className='text-center text-white'
-          >
-            {t('chat.loginToChat')}
-          </CustomText>
-        </View>
+        <CustomText
+          type='h4'
+          className='text-center text-xl text-cinnabar underline'
+        >
+          {t('chat.loginToChat')}
+        </CustomText>
       )}
     </View>
   );
