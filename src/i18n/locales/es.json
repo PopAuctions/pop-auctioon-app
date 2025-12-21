@@ -47,6 +47,8 @@
       "subtitle": "Participa en emocionantes subastas",
       "noAuctions": "No hay subastas disponibles en este momento",
       "detail": "Detalles de Subasta",
+      "liveAuction": "Subasta en Vivo",
+      "allArticles": "Todos los Artículos",
       "categories": "Categorías",
       "search": "Buscar Subastas",
       "calendar": "Calendario de Subastas",
@@ -632,13 +634,14 @@
       "subtitle": "Estamos aquí para ayudarte"
     },
     "liveAuction": {
-      "streamInfo": "Información del Stream",
-      "auctionId": "ID de Subasta",
-      "username": "Usuario",
-      "chatStatus": "Estado del Chat",
-      "connected": "Conectado",
-      "anonymous": "Anónimo",
-      "url": "URL",
+      "articles": "Artículos",
+      "currentBid": "Puja Actual",
+      "liveNow": "En vivo",
+      "customBid": "Puja personalizada",
+      "placeBid": "Realizar puja",
+      "cancel": "Cancelar",
+      "bids": "Pujas",
+      "estimatedPrice": "Precio estimado",
       "close": "Cerrar"
     }
   },
@@ -652,10 +655,14 @@
       "maxBid": "La puja máxima es de:"
     }
   },
+  "globals": {
+    "refreshPage": "Refrescar página",
+    "goToHome": "Ir a la página principal"
+  },
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",
-    "defaultMessage": "Si el problema persiste, contacta soporte.",
+    "defaultMessage": "Si crees que esto es un error, por favor contacta con soporte.",
     "tryAgain": "Intentar de nuevo",
     "generic": "Algo salió mal",
     "loadFailedTitle": "Error al cargar",

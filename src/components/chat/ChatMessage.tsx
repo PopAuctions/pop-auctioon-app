@@ -23,26 +23,21 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
   return (
     <View className='mx-2 my-0.5 flex-row items-start'>
       {/* Contenido del mensaje - siempre transparente */}
-      <View
-        className={cn(
-          'max-w-[85%] rounded-lg px-2.5 py-1.5',
-          isMine ? 'bg-orange-500/60' : 'bg-black/60'
-        )}
-      >
+      <View className='max-w-[85%] rounded-lg bg-black/30 px-2 py-1'>
         {/* Username con avatar inline */}
-        <View className='mb-0.5 flex-row items-center gap-1.5'>
+        <View className='mb-0.5 flex-row items-center gap-1'>
           {avatar ? (
             <CustomImage
               src={avatar}
               alt={message.sender.userId}
-              className='h-4 w-4 rounded-full'
+              className='h-6 w-6 rounded-full'
               resizeMode='cover'
             />
           ) : (
-            <View className='h-4 w-4 items-center justify-center rounded-full bg-white/30'>
+            <View className='h-6 w-6 items-center justify-center rounded-full bg-white/30'>
               <CustomText
                 type='bodysmall'
-                className='text-[8px] font-semibold text-white'
+                className={`text-sm font-semibold ${isMine ? 'text-cinnabar' : 'text-white'}`}
               >
                 {message.sender.userId.charAt(0).toUpperCase()}
               </CustomText>
@@ -52,7 +47,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
             type='bodysmall'
             className={cn(
               'font-bold drop-shadow-md',
-              isMine ? 'text-yellow-300' : 'text-cinnabar'
+              isMine ? 'text-cinnabar' : 'text-white'
             )}
           >
             {message.sender.userId}
@@ -62,7 +57,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
         {/* Mensaje */}
         <CustomText
           type='body'
-          className='text-[13px] text-white drop-shadow-lg'
+          className='mt-1 pl-1 text-[13px] text-white drop-shadow-lg'
         >
           {message.content}
         </CustomText>

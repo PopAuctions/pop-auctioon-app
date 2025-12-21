@@ -1,41 +1,29 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SubscribeStatus } from '@/types/types';
 
 type Options = {
   table: string;
-  articleId: string | number;
+  auctionId: string | number;
   filter?: string;
-  onFirstBid: (currentValue: number) => void;
   enabled?: boolean;
+  refetch?: () => void;
 };
 
-export const useArticleBidSubscription = ({
+export const useLiveAuctionSubscription = ({
   table,
-  articleId,
+  auctionId,
   filter,
-  onFirstBid,
   enabled = true,
+  refetch,
 }: Options) => {
-  const { setState } = useHighestBidderContext({});
   const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const onFirstBidRef = useRef(onFirstBid);
-  useEffect(() => {
-    onFirstBidRef.current = onFirstBid;
-  }, [onFirstBid]);
-
-  const setStateRef = useRef(setState);
-  useEffect(() => {
-    setStateRef.current = setState;
-  }, [setState]);
 
   // Include filter in the key so changing it forces a rebind
   const topic = useMemo(
-    () => `realtime:${table}:${articleId}:${filter ?? ''}`,
-    [table, articleId, filter]
+    () => `realtime:${table}:${auctionId}:${filter ?? ''}`,
+    [table, auctionId, filter]
   );
 
   const chRef = useRef<RealtimeChannel | null>(null);
@@ -68,28 +56,8 @@ export const useArticleBidSubscription = ({
         table,
         filter: filter,
       },
-      (payload) => {
-        const { new: newData, old: oldData } = payload as {
-          new: {
-            highestBidderUsername?: string | null;
-            highestBidderImage?: string | null;
-            currentValue?: number | null;
-            available?: boolean | null;
-            highestBidderId?: string | null;
-          };
-          old: { highestBidderId?: string | null };
-        };
-
-        setStateRef.current({
-          highestBidder: newData.highestBidderUsername ?? null,
-          highestBidderImage: newData.highestBidderImage ?? null,
-          currentValue: newData.currentValue ?? 0,
-          available: newData.available ?? true,
-        });
-
-        if (!oldData.highestBidderId && newData.highestBidderId) {
-          onFirstBidRef.current?.(newData.currentValue ?? 0);
-        }
+      () => {
+        refetch?.();
       }
     ).subscribe((status: SubscribeStatus) => {
       if (status === 'SUBSCRIBED') setIsSubscribed(true);
@@ -111,7 +79,7 @@ export const useArticleBidSubscription = ({
       }
       setIsSubscribed(false);
     };
-  }, [enabled, topic, table, articleId, filter]);
+  }, [enabled, topic, table, auctionId, filter, refetch]);
 
   return { isSubscribed };
 };

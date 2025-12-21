@@ -75,6 +75,7 @@ export const SECURE_ENDPOINTS = {
   },
 
   ARTICLES: {
+    ID: (articleId: string | number): ApiEndpoint => `/articles/${articleId}`,
     FOLLOWED_ARTICLES: '/articles/followed',
     NEW_ARTICLE: (auctionId: string | number): ApiEndpoint =>
       `/auctions/${auctionId}/articles/new`,
@@ -161,6 +162,9 @@ export const SECURE_ENDPOINTS = {
   },
   BIDS: {
     CREATE: '/bids',
+  },
+  LIVE: {
+    ARTICLES: '/live/articles',
   },
 
   // Server Actions y operaciones complejas

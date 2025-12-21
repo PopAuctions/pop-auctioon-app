@@ -45,6 +45,8 @@ export const Chat = ({
       enabled,
     });
 
+  const messagesData = React.useMemo(() => [...messages].reverse(), [messages]);
+
   // Hook para enviar mensajes
   const { sendMessage, isSending, sendError } = useSendMessage({
     room,
@@ -54,9 +56,9 @@ export const Chat = ({
   // Auto-scroll al recibir nuevos mensajes
   useEffect(() => {
     if (messages.length > 0) {
-      flatListRef.current?.scrollToEnd({ animated: true });
+      flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
     }
-  }, [messages]);
+  }, [messages.length]);
 
   // Mostrar toast cuando hay error de envío
   useEffect(() => {
@@ -119,15 +121,18 @@ export const Chat = ({
   }
 
   return (
-    <View className='flex-1 overflow-hidden rounded-2xl'>
+    <View className='flex-1'>
       {/* Lista de mensajes */}
       <FlatList
         ref={flatListRef}
-        data={messages}
+        data={messagesData}
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingVertical: 8, flexGrow: 1 }}
-        showsVerticalScrollIndicator={true}
+        inverted
+        keyboardDismissMode='interactive'
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={{ paddingVertical: 8 }}
+        showsVerticalScrollIndicator
         className='bg-transparent'
       />
 
@@ -142,14 +147,12 @@ export const Chat = ({
           }
         />
       ) : (
-        <View className='rounded-full bg-black/40 px-3 py-2'>
-          <CustomText
-            type='bodysmall'
-            className='text-center text-white'
-          >
-            {t('chat.loginToChat')}
-          </CustomText>
-        </View>
+        <CustomText
+          type='h4'
+          className='text-center text-xl text-cinnabar underline'
+        >
+          {t('chat.loginToChat')}
+        </CustomText>
       )}
     </View>
   );

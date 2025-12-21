@@ -20,7 +20,7 @@ export default function AuctionsLayout() {
       <Stack.Screen
         name='calendar'
         options={{
-          title: 'Calendario de Subastas',
+          title: t('screens.auctions.calendar'),
           presentation: 'card',
           headerShown: true, // Solo mostrar en pantallas secundarias
           headerBackTitle: t('tabsNames.back'),
@@ -29,7 +29,7 @@ export default function AuctionsLayout() {
       <Stack.Screen
         name='articles'
         options={{
-          title: 'All Articles',
+          title: t('screens.auctions.allArticles'),
           presentation: 'card',
           headerShown: true,
           headerBackTitle: t('tabsNames.back'),
@@ -56,7 +56,7 @@ export default function AuctionsLayout() {
       <Stack.Screen
         name='live/[id]'
         options={{
-          title: 'Subasta en Vivo',
+          title: t('screens.auctions.liveAuction'),
           presentation: 'fullScreenModal',
           headerShown: false,
           headerStyle: { backgroundColor: '#dc2626' },

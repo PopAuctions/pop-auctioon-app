@@ -4,11 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
-// Backend response format (solo comisión)
-interface BackendCommissionResponse {
-  commission: number;
-}
-
 // Este hook solo trae el valor de comisión (número)
 // Para payment checkout completo con impuestos, shipping, etc, usar useFetchPaymentConfig
 export const useFetchCommissions = (): ActionResponse<number> => {
@@ -21,7 +16,7 @@ export const useFetchCommissions = (): ActionResponse<number> => {
     try {
       setStatus('loading');
 
-      const response = await protectedGet<BackendCommissionResponse>({
+      const response = await protectedGet<number>({
         endpoint: PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS,
       });
 
@@ -40,7 +35,7 @@ export const useFetchCommissions = (): ActionResponse<number> => {
         return;
       }
 
-      setData(response.data.commission);
+      setData(response.data);
       setStatus('success');
     } catch (error) {
       const errorMsg =

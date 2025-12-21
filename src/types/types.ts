@@ -520,7 +520,7 @@ export interface MyOffers {
 
 export interface CustomArticleLiveAuto extends Pick<
   Article,
-  'id' | 'estimatedValue' | 'title' | 'images'
+  'id' | 'startingPrice' | 'brand' | 'estimatedValue' | 'title' | 'images'
 > {
   ArticleBid: Pick<ArticleBid, 'currentValue' | 'available'>;
   Bids: {

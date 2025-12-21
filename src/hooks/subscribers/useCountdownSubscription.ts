@@ -1,36 +1,30 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SubscribeStatus } from '@/types/types';
+import { useHighestBidderContext } from '@/context/highest-bidder-context';
 
 type Options = {
   table: string;
   articleId: string | number;
   filter?: string;
-  onFirstBid: (currentValue: number) => void;
   enabled?: boolean;
+  updateFinish: (finishIso: string) => void;
+  autoLive?: boolean;
+  onFirstBid: (localValue: number) => void;
 };
 
-export const useArticleBidSubscription = ({
+export const useCountdownSubscription = ({
   table,
   articleId,
   filter,
-  onFirstBid,
   enabled = true,
+  updateFinish,
+  autoLive = false,
+  onFirstBid,
 }: Options) => {
   const { setState } = useHighestBidderContext({});
   const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const onFirstBidRef = useRef(onFirstBid);
-  useEffect(() => {
-    onFirstBidRef.current = onFirstBid;
-  }, [onFirstBid]);
-
-  const setStateRef = useRef(setState);
-  useEffect(() => {
-    setStateRef.current = setState;
-  }, [setState]);
 
   // Include filter in the key so changing it forces a rebind
   const topic = useMemo(
@@ -68,27 +62,49 @@ export const useArticleBidSubscription = ({
         table,
         filter: filter,
       },
-      (payload) => {
-        const { new: newData, old: oldData } = payload as {
-          new: {
-            highestBidderUsername?: string | null;
-            highestBidderImage?: string | null;
-            currentValue?: number | null;
-            available?: boolean | null;
-            highestBidderId?: string | null;
-          };
-          old: { highestBidderId?: string | null };
-        };
+      ({ old: oldData, new: newData }) => {
+        const oldFinish = oldData.countdownFinish as string | null;
+        const newFinish = newData.countdownFinish as string | null;
 
-        setStateRef.current({
-          highestBidder: newData.highestBidderUsername ?? null,
-          highestBidderImage: newData.highestBidderImage ?? null,
-          currentValue: newData.currentValue ?? 0,
-          available: newData.available ?? true,
+        // On initial start
+        if (
+          !autoLive &&
+          newFinish &&
+          (!oldFinish || new Date(oldFinish) < new Date(newFinish))
+        ) {
+          updateFinish(newFinish);
+        }
+
+        if (autoLive) {
+          const isFirstStart =
+            oldData.countdownActive === false &&
+            newData.countdownActive === true;
+          const isContinuation =
+            oldData.countdownActive === true &&
+            newData.countdownActive === true;
+          let finish = '';
+
+          if (isFirstStart && oldFinish) {
+            finish = oldFinish;
+          } else if (isContinuation && newFinish) {
+            finish = newFinish;
+          }
+
+          if (finish) {
+            updateFinish(finish);
+          }
+        }
+
+        // Always propagate bid state
+        setState({
+          highestBidder: newData.highestBidderUsername,
+          highestBidderImage: newData.highestBidderImage,
+          currentValue: newData.currentValue,
+          available: newData.available,
         });
 
         if (!oldData.highestBidderId && newData.highestBidderId) {
-          onFirstBidRef.current?.(newData.currentValue ?? 0);
+          onFirstBid(newData.currentValue);
         }
       }
     ).subscribe((status: SubscribeStatus) => {
@@ -111,7 +127,17 @@ export const useArticleBidSubscription = ({
       }
       setIsSubscribed(false);
     };
-  }, [enabled, topic, table, articleId, filter]);
+  }, [
+    enabled,
+    topic,
+    table,
+    articleId,
+    filter,
+    updateFinish,
+    autoLive,
+    setState,
+    onFirstBid,
+  ]);
 
   return { isSubscribed };
 };

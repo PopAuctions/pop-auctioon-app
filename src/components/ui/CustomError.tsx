@@ -32,14 +32,14 @@ export const CustomError = ({
     >
       <View className='flex h-full w-full flex-col items-center justify-center text-center'>
         <CustomText
-          type='h2'
+          type='h3'
           className='mb-4 text-center text-cinnabar'
         >
           {t('commonErrors.generic')}
         </CustomText>
         {message && (
           <CustomText
-            type='h4'
+            type='h3'
             className='mb-2 text-center'
           >
             {message}
@@ -56,13 +56,13 @@ export const CustomError = ({
             mode='primary'
             onPress={handleRefresh}
           >
-            Refresh page
+            {t('globals.refreshPage')}
           </Button>
           <CustomLink
-            href='/home'
+            href='/(tabs)/home'
             mode='secondary'
           >
-            Go to home page
+            {t('globals.goToHome')}
           </CustomLink>
         </View>
       </View>

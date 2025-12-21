@@ -1,187 +1,247 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { WebView } from 'react-native-webview';
+import React, { useMemo, useState } from 'react';
+import { View } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
-import { Chat } from '@/components/chat/Chat';
-import { Ionicons } from '@expo/vector-icons';
-import { ShareButton } from '@/components/ui/ShareButton';
-import { StreamInfoModal } from '@/components/live-auction/StreamInfoModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { StreamWebView } from '@/components/live-auction/StreamWebView';
+import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
+import { useFetchArticlesOrder } from '@/hooks/pages/live/useFetchArticlesOrder';
+import { useFetchCurrentArticle } from '@/hooks/pages/live/useFetchCurrentArticle';
+import { CustomArticleLiveAuto } from '@/types/types';
+import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmounts';
+import { CustomToast } from '@/providers/ToastProvider';
+import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
+import { LiveAuctionSubscriber } from '@/components/subscribers/LiveAuctionSubscribe';
+
+const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: currentUser, status } = useGetCurrentUser();
   const { locale } = useTranslation();
+  const insets = useSafeAreaInsets();
+  const auctionId = id;
+
+  const { data: currentUser, status: userStatus } = useGetCurrentUser();
+  const {
+    data: liveAuctionData,
+    status: auctionStatus,
+    errorMessage,
+    refetch: refetchLiveAuction,
+  } = useGetLiveAuction({
+    auctionId: auctionId,
+    validateIsLive: true,
+  });
+
+  const articlesOrderKey = (liveAuctionData?.articlesOrder ?? []).join(',');
+
+  const { data: articles } = useFetchArticlesOrder({
+    articlesOrderKey: articlesOrderKey,
+    locale: locale,
+  });
+
+  // Fetch current article being bid on
+  const { data: currentArticle, status: currentArticleStatus } =
+    useFetchCurrentArticle({
+      articleId: liveAuctionData?.ArticleBid.articleId || 0,
+    });
+
+  const {
+    data: biddingAmounts,
+    status: biddingAmountsStatus,
+    refetch: refetchBiddingAmounts,
+  } = useFetchBiddingAmounts({
+    articleId: liveAuctionData?.ArticleBid.articleId || null,
+    currentPrice: currentArticle?.ArticleBid.currentValue || null,
+    startingPrice: currentArticle?.startingPrice || null,
+  });
+
+  const orderedArticles = useMemo(
+    () =>
+      (liveAuctionData?.articlesOrder ?? [])
+        .map((id) => articles.find((a) => a.id === id))
+        .filter(Boolean) as CustomArticleLiveAuto[],
+    [liveAuctionData?.articlesOrder, articles]
+  );
+
   const [streamLoaded, setStreamLoaded] = useState(false);
   const [streamError, setStreamError] = useState(false);
-  const [showInfoModal, setShowInfoModal] = useState(false);
 
-  // Validar que existe el auction ID
-  if (!id) {
+  const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
+  const showLoading =
+    userStatus === REQUEST_STATUS.loading ||
+    userStatus === REQUEST_STATUS.idle ||
+    auctionStatus === REQUEST_STATUS.loading ||
+    auctionStatus === REQUEST_STATUS.idle;
+  // add currentArticleStatus if needed
+
+  const showError =
+    auctionStatus === REQUEST_STATUS.error ||
+    currentArticleStatus === REQUEST_STATUS.error ||
+    biddingAmountsStatus === REQUEST_STATUS.error ||
+    (auctionStatus !== REQUEST_STATUS.loading && !liveAuctionData);
+
+  const username = currentUser?.username || '';
+  const streamUrl = `${STREAM_BASE_URL}/${locale}/stream/${auctionId}?username=${encodeURIComponent(
+    username
+  )}`;
+
+  // Extract highest bidder details (only safe to read when liveAuctionData exists)
+  const highestBidderUsername =
+    liveAuctionData?.ArticleBid.highestBidderUsername;
+  const highestBidderImage = liveAuctionData?.ArticleBid.highestBidderImage;
+  const articleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+
+  const showUnifiedLoader = showLoading || !streamLoaded;
+
+  if (invalidAuctionId) {
     return (
-      <CustomError
-        refreshRoute='/(tabs)/auctions'
-        customMessage={{
-          es: 'No se proporcionó el ID de la subasta',
-          en: 'Auction ID was not provided',
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
-      />
+      >
+        <CustomError
+          refreshRoute={`/(tabs)/auctions/live/index`}
+          customMessage={{
+            es: 'ID de subasta inválido',
+            en: 'Invalid auction ID',
+          }}
+        />
+      </View>
     );
   }
 
-  const auctionId = id;
-
-  // Mostrar loader mientras carga el usuario
-  if (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) {
-    return <Loading locale={locale} />;
+  if (showError) {
+    return (
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      >
+        <CustomError
+          refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
+          customMessage={
+            errorMessage ?? {
+              es: 'Hubo un error al cargar la información',
+              en: 'There was an error loading information',
+            }
+          }
+        />
+      </View>
+    );
   }
 
-  // Usar username del usuario, o vacío si no hay o hubo error
-  const username = currentUser?.username || '';
-
-  // Construir la URL del stream (usando variable de entorno para desarrollo local)
-  const streamBaseUrl = process.env.EXPO_PUBLIC_STREAM_URL;
-  const streamUrl = `${streamBaseUrl}/${locale}/stream/${auctionId}?username=${username}`;
-
-  // Si el stream falló, mostrar error
   if (streamError) {
     return (
-      <CustomError
-        refreshRoute='/(tabs)/auctions'
-        customMessage={{
-          es: 'Error al cargar el stream de la subasta',
-          en: 'Error loading auction stream',
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
-      />
+      >
+        <CustomError
+          refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
+          customMessage={{
+            es: 'Error al cargar el stream de la subasta',
+            en: 'Error loading auction stream',
+          }}
+        />
+      </View>
     );
   }
 
   return (
-    <View className='flex-1'>
-      {/* WebView ocupando todo el espacio disponible */}
-      <WebView
-        source={{ uri: streamUrl }}
-        style={{ flex: 1 }}
-        allowsInlineMediaPlayback={true}
-        mediaPlaybackRequiresUserAction={false}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        startInLoadingState={true}
-        scalesPageToFit={true}
-        scrollEnabled={false}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        // Propiedades de rendimiento
-        androidLayerType='hardware'
-        androidHardwareAccelerationDisabled={false}
-        mixedContentMode='always'
-        cacheEnabled={true}
-        cacheMode='LOAD_DEFAULT'
-        // Eventos
-        onLoad={() => {
-          setStreamLoaded(true);
-          setStreamError(false);
-        }}
-        onError={(syntheticEvent) => {
-          const { nativeEvent } = syntheticEvent;
-          console.error('[STREAM] WebView error:', nativeEvent);
-          setStreamError(true);
-        }}
-        onHttpError={(syntheticEvent) => {
-          const { nativeEvent } = syntheticEvent;
-          console.error('[STREAM] HTTP error:', nativeEvent.statusCode);
-        }}
-        onLoadProgress={({ nativeEvent }) => {
-          if (nativeEvent.progress === 1) {
-            setStreamLoaded(true);
-          }
-        }}
-      />
+    <>
+      <View className='flex-1'>
+        <StreamWebView
+          streamUrl={streamUrl}
+          setStreamLoaded={setStreamLoaded}
+          setStreamError={setStreamError}
+        />
 
-      {/* Overlay con controles flotantes */}
-      <View
-        className='absolute inset-0'
-        pointerEvents='box-none'
-      >
-        {/* Botón de Back - Arriba izquierda */}
-        <View
-          className='absolute left-4 top-12'
-          pointerEvents='auto'
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className='h-10 w-10 items-center justify-center rounded-full bg-black/50'
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name='arrow-back'
-              size={24}
-              color='white'
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* Chat flotante - Lado izquierdo (solo visible cuando stream carga) */}
-        {streamLoaded && (
-          <View
-            className='absolute bottom-4 left-4 h-[25%] w-72'
-            pointerEvents='auto'
-          >
-            <Chat
-              auctionId={auctionId}
-              username={username}
-              enabled={true}
-            />
-          </View>
-        )}
-
-        {/* Botones de Share e Info - Lado derecho del chat */}
-        {streamLoaded && (
-          <View
-            className='absolute bottom-4 right-4 gap-2'
-            pointerEvents='auto'
-          >
-            {/* Botón de Info */}
-            <TouchableOpacity
-              onPress={() => setShowInfoModal(true)}
-              className='h-12 w-12 items-center justify-center rounded-full bg-black/60'
-              activeOpacity={0.7}
+        <HighestBidderProvider key={currentArticle?.id || 'no-article'}>
+          {showUnifiedLoader ? (
+            <View
+              pointerEvents='auto'
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
             >
-              <Ionicons
-                name='information-circle-outline'
-                size={28}
-                color='white'
+              <Loading
+                locale={locale}
+                customMessage={
+                  showLoading
+                    ? {
+                        es: 'Cargando información de la subasta...',
+                        en: 'Loading auction info...',
+                      }
+                    : {
+                        es: 'Cargando stream de la subasta...',
+                        en: 'Loading auction stream...',
+                      }
+                }
               />
-            </TouchableOpacity>
-
-            {/* Botón de Compartir */}
-            <ShareButton
-              mode='empty'
-              className='h-12 w-12 items-center justify-center rounded-full bg-black/60'
-              lang={locale}
-            >
-              <Ionicons
-                name='share-outline'
-                size={24}
-                color='white'
+            </View>
+          ) : (
+            <>
+              <LiveAuctionOverlay
+                orderedArticles={orderedArticles}
+                insetsTop={insets.top}
+                insetsBottom={insets.bottom}
+                auctionId={auctionId}
+                username={username}
+                onBack={() => router.back()}
+                biddingAmounts={biddingAmounts}
+                articleServerState={{
+                  highestBidder: highestBidderUsername ?? '',
+                  highestBidderImage: highestBidderImage ?? null,
+                  currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
+                  available: currentArticle?.ArticleBid.available ?? false,
+                }}
+                articleId={articleId}
+                refetch={refetchBiddingAmounts}
               />
-            </ShareButton>
-          </View>
-        )}
+            </>
+          )}
+        </HighestBidderProvider>
       </View>
 
-      {/* Modal de Stream Info */}
-      <StreamInfoModal
-        visible={showInfoModal}
-        onClose={() => setShowInfoModal(false)}
-        auctionId={auctionId}
-        username={username}
-        streamUrl={streamUrl}
+      <LiveAuctionSubscriber
+        auctionId={Number(auctionId)}
+        refetch={refetchLiveAuction}
       />
-    </View>
+      <AuctionSubscriber
+        auctionId={Number(auctionId)}
+        refetch={refetchLiveAuction}
+      />
+      <CustomToast />
+    </>
   );
 }

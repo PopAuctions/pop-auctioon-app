@@ -1,8 +1,8 @@
 import Toast from 'react-native-toast-message';
-import * as Haptics from 'expo-haptics';
 import type { Lang, LangMap } from '@/types/types';
 import { TOAST_TEXTS, ToastVariant } from '@/providers/ToastProvider';
 import { t } from '@/i18n';
+import { triggerHaptic } from '@/utils/triggerHaptic';
 
 type ToastPosition = 'top' | 'bottom';
 
@@ -25,13 +25,18 @@ export function useToast(lang: Lang) {
     onAction?: () => void;
   }) => {
     if (haptics) {
-      const type =
+      const hapticType =
         variant === 'success'
-          ? Haptics.NotificationFeedbackType.Success
+          ? 'success'
           : variant === 'error'
-            ? Haptics.NotificationFeedbackType.Error
-            : Haptics.NotificationFeedbackType.Warning;
-      Haptics.notificationAsync(type).catch(() => {});
+            ? 'error'
+            : variant === 'warning'
+              ? 'warning' // or 'selection' if you want it softer
+              : 'selection'; // info
+
+      triggerHaptic(hapticType, {
+        throttleMs: 120,
+      });
     }
 
     // Handle description: can be LangMap, translation key string, or null
@@ -53,7 +58,7 @@ export function useToast(lang: Lang) {
       text1: TOAST_TEXTS[lang][variant],
       text2,
       visibilityTime: durationMs,
-      // props: { actionLabel, onAction },
+      props: { actionLabel, onAction },
     });
   };
 

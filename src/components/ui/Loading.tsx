@@ -1,4 +1,4 @@
-import { Lang } from '@/types/types';
+import { Lang, LangMap } from '@/types/types';
 import { View } from '../Themed';
 import { CustomText } from './CustomText';
 import { ActivityIndicator } from 'react-native';
@@ -10,7 +10,13 @@ const TEXTS = {
   },
 };
 
-export const Loading = ({ locale }: { locale: Lang }) => {
+export const Loading = ({
+  locale,
+  customMessage,
+}: {
+  locale: Lang;
+  customMessage?: LangMap;
+}) => {
   return (
     <View className='flex-1 items-center justify-center'>
       <ActivityIndicator
@@ -21,7 +27,7 @@ export const Loading = ({ locale }: { locale: Lang }) => {
         type='body'
         className='text-gray-600 mt-4 text-center'
       >
-        {TEXTS.loading?.[locale] ?? 'Loading...'}
+        {customMessage?.[locale] ?? TEXTS.loading[locale]}
       </CustomText>
     </View>
   );

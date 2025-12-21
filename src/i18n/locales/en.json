@@ -47,6 +47,8 @@
       "subtitle": "Participate in exciting auctions",
       "noAuctions": "No auctions available at the moment",
       "detail": "Auction Details",
+      "liveAuction": "Live Auction",
+      "allArticles": "All Articles",
       "categories": "Categories",
       "search": "Search Auctions",
       "calendar": "Auction Calendar",
@@ -146,6 +148,17 @@
         "bags": "Bags",
         "jewelry": "Jewelry"
       }
+    },
+    "onlineStoreArticle": {
+      "title": "Online Store",
+      "price": "Price",
+      "buy": "Buy",
+      "offer": "Make an offer to the seller!",
+      "makeOffer": "Make offer",
+      "ask": "Ask",
+      "minOffer": "The minimum offer is:",
+      "penalty": "If your offer is accepted, you will receive an email with the next steps and you will have 24 hours to make the payment.",
+      "noArticlesFound": "No articles found"
     },
     "myAuctions": {
       "title": "My auctions",
@@ -611,13 +624,14 @@
       "subtitle": "We're here to help"
     },
     "liveAuction": {
-      "streamInfo": "Stream Information",
-      "auctionId": "Auction ID",
-      "username": "Username",
-      "chatStatus": "Chat Status",
-      "connected": "Connected",
-      "anonymous": "Anonymous",
-      "url": "URL",
+      "articles": "Articles",
+      "currentBid": "Current bid",
+      "liveNow": "Live now",
+      "customBid": "Custom bid",
+      "placeBid": "Place bid",
+      "cancel": "Cancel",
+      "bids": "Bid",
+      "estimatedPrice": "Estimated price",
       "close": "Close"
     }
   },
@@ -631,10 +645,14 @@
       "maxBid": "Maximum bid is:"
     }
   },
+  "globals": {
+    "refreshPage": "Refresh page",
+    "goToHome": "Go to home page"
+  },
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",
-    "defaultMessage": "If the problem persists, contact support.",
+    "defaultMessage": "If you think this is a mistake, contact support.",
     "tryAgain": "Try again",
     "generic": "Something went wrong",
     "loadFailedTitle": "Loading Error",
