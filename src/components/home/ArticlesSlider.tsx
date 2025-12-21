@@ -31,7 +31,6 @@ export const ArticlesSlider = ({
   const [page, setPage] = useState(0);
 
   const CARD_W = Math.min(width - 48, Math.round(width * 0.95));
-  const SIDE_PADDING = Math.round((width - CARD_W) / 2);
 
   const scrollToPage = (index: number) => {
     const clamped = Math.max(0, Math.min(articles.length - 1, index));
@@ -47,7 +46,7 @@ export const ArticlesSlider = ({
   };
 
   return (
-    <View className='w-full'>
+    <View className='w-full px-2'>
       <FlatList<SimpleArticle>
         ref={listRef}
         data={articles}
@@ -57,9 +56,6 @@ export const ArticlesSlider = ({
         snapToInterval={CARD_W + ITEMS_GAP}
         snapToAlignment='start'
         decelerationRate='fast'
-        contentContainerStyle={{
-          paddingHorizontal: SIDE_PADDING,
-        }}
         ItemSeparatorComponent={() => <View style={{ width: ITEMS_GAP }} />}
         onMomentumScrollEnd={onMomentumEnd}
         renderItem={({ item }) => (

@@ -43,80 +43,74 @@ export const ArticlesSection = ({
       className='mt-5 w-full'
       style={{ gap: 32 }}
     >
-      {newestArticles.length > 0 ? (
-        <View style={{ gap: 12 }}>
-          <CustomText
-            type='h2'
-            className='text-left'
-          >
-            {texts.newestArticlesText}
-          </CustomText>
+      <View style={{ gap: 12 }}>
+        <CustomText
+          type='h2'
+          className='text-left'
+        >
+          {texts.newestArticlesText}
+        </CustomText>
 
-          <View className='w-full'>
-            {newestArticlesReady ? (
-              <ArticlesSlider
-                articles={newestArticles}
-                lang={lang}
-                texts={{ currentBid: texts.currentBid }}
-                formatter={formatter}
-                commissionValue={commissionValue}
-              />
-            ) : (
-              <ArticleSliderSkeleton />
-            )}
-          </View>
+        <View className='w-full'>
+          {newestArticlesReady ? (
+            <ArticlesSlider
+              articles={newestArticles}
+              lang={lang}
+              texts={{ currentBid: texts.currentBid }}
+              formatter={formatter}
+              commissionValue={commissionValue}
+            />
+          ) : (
+            <ArticleSliderSkeleton />
+          )}
         </View>
-      ) : null}
+      </View>
 
-      {featuredArticles.length > 0 ? (
-        <View style={{ gap: 12 }}>
-          <CustomText
-            type='h2'
-            className='text-left'
-          >
-            {texts.featuredArticlesText}
-          </CustomText>
+      <View style={{ gap: 12 }}>
+        <CustomText
+          type='h2'
+          className='text-left'
+        >
+          {texts.featuredArticlesText}
+        </CustomText>
 
-          <View className='w-full'>
-            {featuredArticlesReady ? (
-              <ArticlesSlider
-                articles={featuredArticles}
-                lang={lang}
-                texts={{ currentBid: texts.currentBid }}
-                formatter={formatter}
-                commissionValue={commissionValue}
-              />
-            ) : (
-              <ArticleSliderSkeleton />
-            )}
-          </View>
+        <View className='w-full'>
+          {featuredArticlesReady ? (
+            <ArticlesSlider
+              articles={featuredArticles}
+              lang={lang}
+              texts={{ currentBid: texts.currentBid }}
+              formatter={formatter}
+              commissionValue={commissionValue}
+            />
+          ) : (
+            <ArticleSliderSkeleton />
+          )}
         </View>
-      ) : null}
+      </View>
 
-      {mostViewedArticles.length > 0 ? (
-        <View style={{ gap: 12 }}>
-          <CustomText
-            type='h2'
-            className='text-left'
-          >
-            {texts.mostViewedArticlesText}
-          </CustomText>
+      <View style={{ gap: 12 }}>
+        <CustomText
+          type='h2'
+          className='text-left'
+        >
+          {texts.mostViewedArticlesText}
+        </CustomText>
 
-          <View className='w-full'>
-            {mostViewedArticlesReady ? (
-              <ArticlesSlider
-                articles={mostViewedArticles}
-                lang={lang}
-                texts={{ currentBid: texts.currentBid }}
-                formatter={formatter}
-                commissionValue={commissionValue}
-              />
-            ) : (
-              <ArticleSliderSkeleton />
-            )}
-          </View>
+        <View className='w-full'>
+          {mostViewedArticlesReady ? (
+            <ArticlesSlider
+              articles={mostViewedArticles}
+              lang={lang}
+              texts={{ currentBid: texts.currentBid }}
+              formatter={formatter}
+              commissionValue={commissionValue}
+            />
+          ) : (
+            <ArticleSliderSkeleton />
+          )}
         </View>
-      ) : null}
+      </View>
     </View>
   );
 };
