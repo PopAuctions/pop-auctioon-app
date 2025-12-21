@@ -11,6 +11,7 @@ type Options = {
   enabled?: boolean;
   updateFinish: (finishIso: string) => void;
   autoLive?: boolean;
+  onFirstBid: (localValue: number) => void;
 };
 
 export const useCountdownSubscription = ({
@@ -20,6 +21,7 @@ export const useCountdownSubscription = ({
   enabled = true,
   updateFinish,
   autoLive = false,
+  onFirstBid,
 }: Options) => {
   const { setState } = useHighestBidderContext({});
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -101,9 +103,9 @@ export const useCountdownSubscription = ({
           available: newData.available,
         });
 
-        // if (!oldData.highestBidderId && newData.highestBidderId) {
-        //   safeRefresh(router);
-        // }
+        if (!oldData.highestBidderId && newData.highestBidderId) {
+          onFirstBid(newData.currentValue);
+        }
       }
     ).subscribe((status: SubscribeStatus) => {
       if (status === 'SUBSCRIBED') setIsSubscribed(true);
@@ -134,6 +136,7 @@ export const useCountdownSubscription = ({
     updateFinish,
     autoLive,
     setState,
+    onFirstBid,
   ]);
 
   return { isSubscribed };

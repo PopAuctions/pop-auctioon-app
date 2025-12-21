@@ -51,12 +51,15 @@ export default function LiveAuctionScreen() {
       articleId: liveAuctionData?.ArticleBid.articleId || 0,
     });
 
-  const { data: biddingAmounts, status: biddingAmountsStatus } =
-    useFetchBiddingAmounts({
-      articleId: liveAuctionData?.ArticleBid.articleId || null,
-      currentPrice: currentArticle?.ArticleBid.currentValue || null,
-      startingPrice: currentArticle?.startingPrice || null,
-    });
+  const {
+    data: biddingAmounts,
+    status: biddingAmountsStatus,
+    refetch: refetchBiddingAmounts,
+  } = useFetchBiddingAmounts({
+    articleId: liveAuctionData?.ArticleBid.articleId || null,
+    currentPrice: currentArticle?.ArticleBid.currentValue || null,
+    startingPrice: currentArticle?.startingPrice || null,
+  });
 
   const orderedArticles = useMemo(
     () =>
@@ -223,6 +226,7 @@ export default function LiveAuctionScreen() {
                   available: currentArticle?.ArticleBid.available ?? false,
                 }}
                 articleId={articleId}
+                refetch={refetchBiddingAmounts}
               />
             </>
           )}

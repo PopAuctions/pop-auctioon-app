@@ -6,10 +6,12 @@ export const ArticleCountdownUser = ({
   articleId,
   COUNTDOWN_STEPS,
   autoLive = false,
+  refetch,
 }: {
   articleId: number;
   COUNTDOWN_STEPS: number;
   autoLive?: boolean;
+  refetch: (localValue: number) => void;
 }) => {
   // const mocked15SecondsLater = new Date(Date.now() + 15 * 1000).toISOString();
   const [currentFinishIso, setCurrentFinishIso] = useState<string>('');
@@ -26,6 +28,7 @@ export const ArticleCountdownUser = ({
     updateFinish: handleStart,
     filter: `articleId=eq.${articleId}`,
     autoLive,
+    onFirstBid: refetch,
   });
 
   if (!currentFinishIso) return null;

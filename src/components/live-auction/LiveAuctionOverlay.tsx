@@ -33,6 +33,7 @@ type OverlayProps = {
   articleServerState: HighestBidderState | null;
   articleId: number;
   onBack: () => void;
+  refetch: (localValue: number) => void;
 };
 
 const UI = {
@@ -66,6 +67,7 @@ export const LiveAuctionOverlay = ({
   articleServerState,
   articleId,
   onBack,
+  refetch,
 }: OverlayProps) => {
   const { t, locale } = useTranslation();
   const { data: commissionData, status: commissionStatus } =
@@ -248,6 +250,7 @@ export const LiveAuctionOverlay = ({
         <ArticleCountdownUser
           articleId={articleId}
           COUNTDOWN_STEPS={10}
+          refetch={refetch}
         />
       </View>
 
