@@ -38,9 +38,24 @@
     "back": "Back"
   },
   "screens": {
-    "home": {
-      "title": "Welcome to Pop Auctions",
-      "subtitle": "Discover amazing auctions and exclusive products"
+    "homePage": {
+      "upcomingAuctionsTitle": "Upcoming auctions",
+      "upcomingAuctionsSubTitle": "GLORIOUS VICTORIES!",
+      "auctionCategoriesTitle": "Find your auction",
+      "auctionCategoriesSubTitle": "What are you interested in?",
+      "auctioneer": "Become an auctioneer",
+      "auctions": "Upcoming auctions",
+      "featuredArticles": "Featured articles",
+      "newestArticles": "Newest articles",
+      "mostViewedArticles": "Most viewed articles",
+      "bags": "Bags",
+      "getToKnowUs": "Get to know us",
+      "onlineAuction": "Online auctions",
+      "allAuctions": "See all auctions",
+      "sectionBackground": "Section background",
+      "noAuctions": "We are preparing exciting auctions for you. Stay tuned!",
+      "register": "Register",
+      "blogSectionTitle": "We work for you, we make the difference!"
     },
     "auctions": {
       "title": "Auctions",

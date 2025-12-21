@@ -38,9 +38,24 @@
     "back": "Atrás"
   },
   "screens": {
-    "home": {
-      "title": "Bienvenido a Pop Auctions",
-      "subtitle": "Descubre subastas increíbles y productos exclusivos"
+    "homePage": {
+      "upcomingAuctionsTitle": "Próximas subastas",
+      "upcomingAuctionsSubTitle": "¡VICTORIAS GLORIOSAS!",
+      "auctionCategoriesTitle": "Encuentra tu subasta",
+      "auctionCategoriesSubTitle": "¿Qué te interesa?",
+      "auctioneer": "Conviértete en Subastador",
+      "auctions": "Próximas subastas",
+      "featuredArticles": "Artículos destacados",
+      "newestArticles": "Artículos más recientes",
+      "mostViewedArticles": "Artículos más vistos",
+      "bags": "Bolsos",
+      "getToKnowUs": "Conócenos",
+      "onlineAuction": "Subastas online",
+      "allAuctions": "Ver todas las subastas",
+      "sectionBackground": "Fondo de la sección",
+      "noAuctions": "Estamos preparando emocionantes subastas para ti. ¡Mantente atento!",
+      "register": "Regístrate",
+      "blogSectionTitle": "¡Trabajamos para ti, marcamos la diferencia!"
     },
     "auctions": {
       "title": "Subastas",
