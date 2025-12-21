@@ -64,11 +64,7 @@ export function ArticleItem({
           <View className='flex flex-col pr-2'>
             {article.whenInAuction && (
               <SimpleCountdown
-                dateString={
-                  typeof article.whenInAuction === 'string'
-                    ? article.whenInAuction
-                    : article.whenInAuction.toISOString()
-                }
+                dateString={article.whenInAuction}
                 locale={lang}
                 texts={{
                   completed: { es: 'Ya comenzó', en: 'Already started' },

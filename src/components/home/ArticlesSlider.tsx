@@ -80,6 +80,8 @@ export const ArticlesSlider = ({
           }}
           disabled={page <= 0}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
+          accessibilityLabel='Previous article'
+          accessibilityHint='Navigates to the previous article in the slider'
         >
           <FontAwesomeIcon
             variant='bold'
@@ -93,14 +95,16 @@ export const ArticlesSlider = ({
           className='flex-row items-center'
           style={{ gap: 8 }}
         >
-          {articles.map((_, idx) => (
+          {articles.map((article, idx) => (
             <View
-              key={idx}
+              key={article.id}
               className={
                 idx === page
                   ? 'h-2 w-2 rounded-full bg-cinnabar'
                   : 'h-2 w-2 rounded-full bg-neutral-600'
               }
+              accessibilityRole='progressbar'
+              accessibilityLabel={`Page ${page + 1} of ${articles.length}`}
             />
           ))}
         </View>
@@ -111,6 +115,8 @@ export const ArticlesSlider = ({
           }}
           disabled={page >= articles.length - 1}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
+          accessibilityHint='Next article'
+          accessibilityLabel='Navigates to the next article in the slider'
         >
           <FontAwesomeIcon
             variant='bold'

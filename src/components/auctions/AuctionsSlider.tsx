@@ -75,6 +75,8 @@ export const AuctionsSlider = ({
           }}
           disabled={page <= 0}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
+          accessibilityLabel='Previous auction'
+          accessibilityHint='Navigates to the previous auction in the slider'
         >
           <FontAwesomeIcon
             variant='bold'
@@ -88,14 +90,16 @@ export const AuctionsSlider = ({
           className='flex-row items-center'
           style={{ gap: 8 }}
         >
-          {auctions.map((_, idx) => (
+          {auctions.map((auction, idx) => (
             <View
-              key={idx}
+              key={auction.id}
               className={
                 idx === page
                   ? 'h-2 w-2 rounded-full bg-cinnabar'
                   : 'h-2 w-2 rounded-full bg-neutral-600'
               }
+              accessibilityRole='progressbar'
+              accessibilityLabel={`Page ${page + 1} of ${auctions.length}`}
             />
           ))}
         </View>
@@ -106,6 +110,8 @@ export const AuctionsSlider = ({
           }}
           disabled={page >= auctions.length - 1}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
+          accessibilityLabel='Next auction'
+          accessibilityHint='Navigates to the next auction in the slider'
         >
           <FontAwesomeIcon
             variant='bold'

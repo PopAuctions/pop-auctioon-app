@@ -1,5 +1,11 @@
 import { getProxiedImageUrl } from '@/utils/getProxiedImageUrl';
-import { Image, ImagePropsBase, ImageResizeMode } from 'react-native';
+import {
+  Image,
+  ImagePropsBase,
+  ImageResizeMode,
+  ImageStyle,
+  StyleProp,
+} from 'react-native';
 
 interface CustomImageProps extends ImagePropsBase {
   src: string;
@@ -7,7 +13,7 @@ interface CustomImageProps extends ImagePropsBase {
   className?: string;
   resizeMode?: ImageResizeMode;
   plainUrl?: boolean;
-  style?: object;
+  style?: StyleProp<ImageStyle>;
 }
 
 export const CustomImage = ({

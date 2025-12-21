@@ -153,7 +153,9 @@ export function SendBid({
         minBid={computedMinBid}
         maxBid={computedMaxBid}
         bidLang={bidLang}
-        onPress={sendBid}
+        onPress={() => {
+          sendBid();
+        }}
         articleAvailable={articleAvailable}
       />
     </View>

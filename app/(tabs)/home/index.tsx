@@ -26,7 +26,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView
       className='flex-1'
-      edges={['top']}
+      edges={['top', 'bottom']}
     >
       <ScrollView className='flex-1 px-4'>
         <UpcomingAuctionsSection
