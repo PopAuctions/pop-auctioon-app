@@ -9,7 +9,7 @@ export function SimpleCountdown({
   locale,
   texts,
 }: {
-  dateString: string;
+  dateString: string | Date;
   locale: Lang;
   texts: { completed: { es: string; en: string } };
 }) {
