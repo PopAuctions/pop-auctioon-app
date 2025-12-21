@@ -16,8 +16,8 @@ type ArticleItemProps = {
   };
   formatter: Intl.NumberFormat;
   lang: Lang;
-  userFollows: boolean;
   commissionValue: number | null;
+  userFollows?: boolean;
   showFollowButton?: boolean;
   actionAfterFollow?: () => void;
 };
@@ -27,8 +27,8 @@ export function ArticleItem({
   auctionLang,
   formatter,
   lang,
-  userFollows,
   commissionValue,
+  userFollows = false,
   showFollowButton = true,
   actionAfterFollow = () => {},
 }: ArticleItemProps) {
@@ -64,7 +64,7 @@ export function ArticleItem({
           <View className='flex flex-col pr-2'>
             {article.whenInAuction && (
               <SimpleCountdown
-                dateString={article.whenInAuction.toUTCString()}
+                dateString={article.whenInAuction}
                 locale={lang}
                 texts={{
                   completed: { es: 'Ya comenzó', en: 'Already started' },
