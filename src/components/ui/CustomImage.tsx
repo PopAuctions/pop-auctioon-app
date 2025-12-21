@@ -7,6 +7,7 @@ interface CustomImageProps extends ImagePropsBase {
   className?: string;
   resizeMode?: ImageResizeMode;
   plainUrl?: boolean;
+  style?: object;
 }
 
 export const CustomImage = ({
@@ -15,6 +16,7 @@ export const CustomImage = ({
   className,
   resizeMode,
   plainUrl = false,
+  style = {},
   ...rest
 }: CustomImageProps) => {
   const finalSrc = getProxiedImageUrl(src, plainUrl);
@@ -25,6 +27,7 @@ export const CustomImage = ({
       alt={alt}
       className={className}
       resizeMode={resizeMode}
+      style={style}
       {...rest}
     />
   );
