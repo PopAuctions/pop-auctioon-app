@@ -56,13 +56,13 @@ export const CustomError = ({
             mode='primary'
             onPress={handleRefresh}
           >
-            Refresh page
+            {t('globals.refreshPage')}
           </Button>
           <CustomLink
             href='/(tabs)/home'
             mode='secondary'
           >
-            Go to home page
+            {t('globals.goToHome')}
           </CustomLink>
         </View>
       </View>

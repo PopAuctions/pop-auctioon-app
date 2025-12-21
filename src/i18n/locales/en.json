@@ -645,6 +645,10 @@
       "maxBid": "Maximum bid is:"
     }
   },
+  "globals": {
+    "refreshPage": "Refresh page",
+    "goToHome": "Go to home page"
+  },
   "commonErrors": {
     "networkError": "Internet connection error",
     "applicationError": "An error occurred while loading the application",

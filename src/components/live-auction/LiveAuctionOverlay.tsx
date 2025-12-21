@@ -21,6 +21,7 @@ import {
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
 import { ArticleCountdownUser } from './ArticleCountdownUser';
+import { BidSliderSkeleton } from './BidSliderSkeleton';
 
 type OverlayProps = {
   insetsTop: number;
@@ -232,10 +233,9 @@ export const LiveAuctionOverlay = ({
             height: UI.BID_HEIGHT,
           }}
         >
-          {/* add loading skeleton */}
-          {!isCommissionReady ||
-          !biddingAmounts ||
-          !articleServerState ? null : (
+          {!isCommissionReady || !biddingAmounts || !articleServerState ? (
+            <BidSliderSkeleton height={UI.BID_HEIGHT} />
+          ) : (
             <BidSlider
               biddingAmounts={biddingAmounts}
               articleServerState={articleServerState}

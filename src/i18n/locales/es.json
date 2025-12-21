@@ -655,6 +655,10 @@
       "maxBid": "La puja máxima es de:"
     }
   },
+  "globals": {
+    "refreshPage": "Refrescar página",
+    "goToHome": "Ir a la página principal"
+  },
   "commonErrors": {
     "networkError": "Error de conexión a internet",
     "applicationError": "Ocurrió un error al cargar la aplicación",
