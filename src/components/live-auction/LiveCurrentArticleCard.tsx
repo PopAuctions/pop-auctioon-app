@@ -91,11 +91,11 @@ export const LiveCurrentArticleCard = ({
           type='h4'
           className=''
         >
-          {t('screens.article.actualBid')}
+          {t('screens.article.actualBid')}:
         </CustomText>
         <CustomText
           type='h4'
-          className=''
+          className='text-cinnabar'
         >
           {currentLabel}
         </CustomText>

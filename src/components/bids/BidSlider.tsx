@@ -119,10 +119,11 @@ export const BidSlider = ({
             key={swipeKey}
             disabled={isDisabled}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
-            title={`${t('screens.liveAuction.bids')}: ${formatter.format(slideAmount)}`}
+            title={`Min. ${t('screens.liveAuction.bids')}: ${formatter.format(slideAmount)}`}
             titleStyles={{
               paddingLeft: UI.THUMB_WIDTH,
               textAlign: 'right',
+              color: isDisabled ? COLORS.BLACK : COLORS.PRIMARY,
             }}
             onSwipeSuccess={() => handleBid(tenPercent)}
             titleFontSize={18}
@@ -172,7 +173,7 @@ const SwipeThumb = ({ loading }: { loading: boolean }) => {
       ) : (
         <CustomText
           type='h4'
-          className='text-cinnabar'
+          className='text-black'
         >
           {'>>'}
         </CustomText>
