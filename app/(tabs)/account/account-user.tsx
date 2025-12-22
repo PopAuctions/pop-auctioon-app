@@ -507,6 +507,93 @@ export default function Account({ currentUser }: { currentUser: User }) {
             />
           </CustomLink>
 
+          {/* Línea divisoria */}
+          <Divider className='my-2' />
+
+          {/* Terms and Conditions */}
+          <CustomLink
+            href='/(tabs)/account/info/terms-and-conditions'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='file-text'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.termsAndConditions')}
+              </CustomText>
+            </View>
+            <FontAwesomeIcon
+              variant='bold'
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
+          {/* Privacy Policy */}
+          <CustomLink
+            href='/(tabs)/account/info/privacy-policy'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='shield'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.privacyPolicy')}
+              </CustomText>
+            </View>
+            <FontAwesomeIcon
+              variant='bold'
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
+          {/* Cookies Policy */}
+          <CustomLink
+            href='/(tabs)/account/info/cookies-policy'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='file'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.cookiesPolicy')}
+              </CustomText>
+            </View>
+            <FontAwesomeIcon
+              variant='bold'
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
           {/* Sign Out Button */}
           <View className='mt-6'>
             <Button

@@ -256,6 +256,55 @@ export default function Auth() {
                   </CustomText>
                 </CustomLink>
               </View>
+
+              {/* Segunda línea con Terms, Privacy y Cookies */}
+              <View className='mt-2 flex-row flex-wrap justify-center gap-3'>
+                <CustomLink
+                  href='/(tabs)/auth/info/terms-and-conditions'
+                  mode='plainText'
+                >
+                  <CustomText
+                    type='bodysmall'
+                    className='text-cinnabar'
+                  >
+                    {t('screens.account.termsAndConditions')}
+                  </CustomText>
+                </CustomLink>
+                <CustomText
+                  type='bodysmall'
+                  className='text-cinnabar'
+                >
+                  •
+                </CustomText>
+                <CustomLink
+                  href='/(tabs)/auth/info/privacy-policy'
+                  mode='plainText'
+                >
+                  <CustomText
+                    type='bodysmall'
+                    className='text-cinnabar'
+                  >
+                    {t('screens.account.privacyPolicy')}
+                  </CustomText>
+                </CustomLink>
+                <CustomText
+                  type='bodysmall'
+                  className='text-cinnabar'
+                >
+                  •
+                </CustomText>
+                <CustomLink
+                  href='/(tabs)/auth/info/cookies-policy'
+                  mode='plainText'
+                >
+                  <CustomText
+                    type='bodysmall'
+                    className='text-cinnabar'
+                  >
+                    {t('screens.account.cookiesPolicy')}
+                  </CustomText>
+                </CustomLink>
+              </View>
             </View>
           </View>
         </ScrollView>
