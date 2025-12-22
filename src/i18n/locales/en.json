@@ -674,7 +674,11 @@
     "loadFailedTitle": "Loading Error",
     "loadFailedMessage": "Could not load information. Please try again.",
     "retryButton": "Retry",
-    "missingAuctionId": "Auction ID was not provided"
+    "missingAuctionId": "Auction ID was not provided",
+    "invalidLoginCredentials": "Invalid login credentials",
+    "emailNotConfirmed": "Email not confirmed",
+    "userNotFound": "User not found",
+    "tooManyRequests": "Too many login attempts. Please try again later."
   },
   "errorLoading": {
     "title": "Loading Error",

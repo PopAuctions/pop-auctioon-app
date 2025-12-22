@@ -684,7 +684,11 @@
     "loadFailedTitle": "Error al cargar",
     "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
     "retryButton": "Reintentar",
-    "missingAuctionId": "No se proporcionó el ID de la subasta"
+    "missingAuctionId": "No se proporcionó el ID de la subasta",
+    "invalidLoginCredentials": "Credenciales de acceso inválidas",
+    "emailNotConfirmed": "Email no confirmado",
+    "userNotFound": "Usuario no encontrado",
+    "tooManyRequests": "Demasiados intentos de inicio de sesión. Por favor, intenta más tarde."
   },
   "errorLoading": {
     "title": "Error de Carga",
