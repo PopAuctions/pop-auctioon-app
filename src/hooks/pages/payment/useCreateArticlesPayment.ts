@@ -24,10 +24,16 @@ interface CreateArticlesPaymentResponse {
   userPaymentId: number;
 }
 
-export function useCreateArticlesPayment() {
-  const { securePost } = useSecureApi();
+interface RejectArticlesPaymentParams {
+  userPaymentId: number;
+  errorCode?: string;
+  errorDescription?: string;
+}
+
+export function useArticlesPayment() {
   const [status, setStatus] = useState<string>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const { securePost } = useSecureApi();
 
   const createPayment = async (
     params: CreateArticlesPaymentParams
@@ -71,8 +77,44 @@ export function useCreateArticlesPayment() {
     }
   };
 
+  const rejectPayment = async (
+    params: RejectArticlesPaymentParams
+  ): Promise<{ success: boolean; error: LangMap | null }> => {
+    setStatus(REQUEST_STATUS.loading);
+    setErrorMessage(null);
+
+    try {
+      const response = await securePost({
+        endpoint: SECURE_ENDPOINTS.PAYMENT.REJECT_ARTICLES_PAYMENT,
+        data: params,
+      });
+
+      if (response.error) {
+        setStatus(REQUEST_STATUS.error);
+        setErrorMessage(response.error);
+        return { success: false, error: response.error };
+      }
+
+      setStatus(REQUEST_STATUS.success);
+      return { success: true, error: null };
+    } catch (error) {
+      const errorMsg: LangMap = {
+        es: 'Error al revertir el pago',
+        en: 'Error reverting payment',
+      };
+      console.error('[useRejectArticlesPayment] Unexpected error:', error);
+      setStatus(REQUEST_STATUS.error);
+      setErrorMessage(errorMsg);
+      return {
+        success: false,
+        error: errorMsg,
+      };
+    }
+  };
+
   return {
     createPayment,
+    rejectPayment,
     status,
     errorMessage,
   };

@@ -18,8 +18,7 @@ import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useStripePayment } from '@/hooks/payment/useStripePayment';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
-import { useCreateArticlesPayment } from '@/hooks/pages/payment/useCreateArticlesPayment';
-import { useRejectArticlesPayment } from '@/hooks/pages/payment/useRejectArticlesPayment';
+import { useArticlesPayment } from '@/hooks/pages/payment/useCreateArticlesPayment';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomText } from '@/components/ui/CustomText';
@@ -63,8 +62,7 @@ export default function PaymentScreen() {
     isLoading: paymentLoading,
   } = useStripePayment();
 
-  const { createPayment } = useCreateArticlesPayment();
-  const { rejectPayment } = useRejectArticlesPayment();
+  const { createPayment, rejectPayment } = useArticlesPayment();
 
   // Hook para obtener porcentaje de comisión y costos de envío dinámicos
   const { data: paymentConfig, status: commissionStatus } =
