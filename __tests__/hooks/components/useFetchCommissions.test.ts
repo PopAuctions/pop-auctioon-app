@@ -45,7 +45,7 @@ describe('useFetchCommissions', () => {
         expect(result.current.status).toBe('success');
       });
 
-      expect(result.current.data).toBe(12.5);
+      expect(result.current.data).toEqual({ commission: 12.5 });
       expect(result.current.errorMessage).toBeNull();
       expect(mockProtectedGet).toHaveBeenCalledWith({
         endpoint: PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS,
@@ -158,13 +158,13 @@ describe('useFetchCommissions', () => {
       const { result } = renderHook(() => useFetchCommissions());
 
       await waitFor(() => {
-        expect(result.current.data).toBe(10);
+        expect(result.current.data).toEqual({ commission: 10 });
       });
 
       result.current.refetch?.();
 
       await waitFor(() => {
-        expect(result.current.data).toBe(15);
+        expect(result.current.data).toEqual({ commission: 15 });
       });
 
       expect(mockProtectedGet).toHaveBeenCalledTimes(2);

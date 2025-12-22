@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import CalendarScreen from '@/app/(tabs)/auctions/calendar';
+import CalendarScreen from '@/app/(tabs)/auctions/index';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 
 // Mock de Supabase y dependencias
@@ -97,8 +97,8 @@ describe('CalendarScreen', () => {
     });
 
     const { getByText } = render(<CalendarScreen />);
-    expect(getByText('Error loading auctions')).toBeTruthy();
-    expect(getByText('Retry')).toBeTruthy();
+    expect(getByText('Failed to load auctions.')).toBeTruthy();
+    expect(getByText('globals.refreshPage')).toBeTruthy();
   });
 
   describe('Calendar Content Scenarios', () => {

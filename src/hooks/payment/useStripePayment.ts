@@ -87,7 +87,9 @@ export const useStripePayment = (): UseStripePaymentReturn => {
           merchantDisplayName: 'PopAuction',
           paymentIntentClientSecret: response.data.clientSecret,
           defaultBillingDetails: {
-            // Opcional: pre-llenar con datos del usuario
+            address: {
+              country: 'ES',
+            },
           },
         });
 

@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-native';
 import { useToast } from '@/hooks/useToast';
 import Toast from 'react-native-toast-message';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/triggerHaptic';
 
 // Mock dependencies
 jest.mock('react-native-toast-message', () => ({
@@ -9,13 +9,8 @@ jest.mock('react-native-toast-message', () => ({
   hide: jest.fn(),
 }));
 
-jest.mock('expo-haptics', () => ({
-  NotificationFeedbackType: {
-    Success: 'success',
-    Error: 'error',
-    Warning: 'warning',
-  },
-  notificationAsync: jest.fn().mockResolvedValue(undefined),
+jest.mock('@/utils/triggerHaptic', () => ({
+  triggerHaptic: jest.fn(),
 }));
 
 // Mock ToastProvider constants
@@ -66,15 +61,19 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith(
-        Haptics.NotificationFeedbackType.Success
-      );
+      expect(triggerHaptic).toHaveBeenCalledWith('success', {
+        throttleMs: 120,
+      });
       expect(Toast.show).toHaveBeenCalledWith({
         type: 'success',
         position: 'top',
         text1: 'Éxito',
         text2: 'Operación exitosa',
         visibilityTime: undefined,
+        props: {
+          actionLabel: undefined,
+          onAction: undefined,
+        },
       });
     });
 
@@ -88,15 +87,17 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith(
-        Haptics.NotificationFeedbackType.Error
-      );
+      expect(triggerHaptic).toHaveBeenCalledWith('error', { throttleMs: 120 });
       expect(Toast.show).toHaveBeenCalledWith({
         type: 'error',
         position: 'top',
         text1: 'Error',
         text2: 'Hubo un error',
         visibilityTime: undefined,
+        props: {
+          actionLabel: undefined,
+          onAction: undefined,
+        },
       });
     });
 
@@ -110,15 +111,19 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith(
-        Haptics.NotificationFeedbackType.Warning
-      );
+      expect(triggerHaptic).toHaveBeenCalledWith('warning', {
+        throttleMs: 120,
+      });
       expect(Toast.show).toHaveBeenCalledWith({
         type: 'warning',
         position: 'top',
         text1: 'Warning',
         text2: 'Warning message',
         visibilityTime: undefined,
+        props: {
+          actionLabel: undefined,
+          onAction: undefined,
+        },
       });
     });
 
@@ -132,16 +137,20 @@ describe('useToast', () => {
         });
       });
 
-      // Info uses warning haptic feedback
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith(
-        Haptics.NotificationFeedbackType.Warning
-      );
+      // Info uses selection haptic feedback
+      expect(triggerHaptic).toHaveBeenCalledWith('selection', {
+        throttleMs: 120,
+      });
       expect(Toast.show).toHaveBeenCalledWith({
         type: 'info',
         position: 'top',
         text1: 'Información',
         text2: 'Información',
         visibilityTime: undefined,
+        props: {
+          actionLabel: undefined,
+          onAction: undefined,
+        },
       });
     });
 
@@ -192,7 +201,7 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).not.toHaveBeenCalled();
+      expect(triggerHaptic).not.toHaveBeenCalled();
       expect(Toast.show).toHaveBeenCalled();
     });
 
@@ -230,8 +239,9 @@ describe('useToast', () => {
     });
 
     it('should handle haptics failure gracefully', () => {
-      const mockError = new Error('Haptics not available');
-      (Haptics.notificationAsync as jest.Mock).mockRejectedValueOnce(mockError);
+      (triggerHaptic as jest.Mock).mockImplementationOnce(() => {
+        // Haptic fails silently in the implementation
+      });
 
       const { result } = renderHook(() => useToast('es'));
 
@@ -344,8 +354,12 @@ describe('useToast', () => {
         text1: 'Éxito',
         text2: 'Éxito',
         visibilityTime: 3000,
+        props: {
+          actionLabel: undefined,
+          onAction: undefined,
+        },
       });
-      expect(Haptics.notificationAsync).not.toHaveBeenCalled();
+      expect(triggerHaptic).not.toHaveBeenCalled();
     });
   });
 
@@ -436,7 +450,9 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith('success');
+      expect(triggerHaptic).toHaveBeenCalledWith('success', {
+        throttleMs: 120,
+      });
     });
 
     it('should use Error haptic for error toast', () => {
@@ -448,7 +464,7 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith('error');
+      expect(triggerHaptic).toHaveBeenCalledWith('error', { throttleMs: 120 });
     });
 
     it('should use Warning haptic for warning toast', () => {
@@ -460,7 +476,9 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith('warning');
+      expect(triggerHaptic).toHaveBeenCalledWith('warning', {
+        throttleMs: 120,
+      });
     });
 
     it('should use Warning haptic for info toast', () => {
@@ -472,7 +490,9 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalledWith('warning');
+      expect(triggerHaptic).toHaveBeenCalledWith('selection', {
+        throttleMs: 120,
+      });
     });
   });
 
@@ -520,7 +540,7 @@ describe('useToast', () => {
         });
       });
 
-      expect(Haptics.notificationAsync).toHaveBeenCalled();
+      expect(triggerHaptic).toHaveBeenCalled();
     });
   });
 
@@ -662,6 +682,10 @@ describe('useToast', () => {
         text1: 'Success',
         text2: 'Profile updated successfully',
         visibilityTime: undefined,
+        props: {
+          actionLabel: undefined,
+          onAction: undefined,
+        },
       });
     });
 

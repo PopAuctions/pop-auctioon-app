@@ -21,12 +21,14 @@ interface ChatProps {
   auctionId: string;
   enabled?: boolean;
   username?: string;
+  profilePicture?: string;
 }
 
 export const Chat = ({
   auctionId,
   enabled = true,
   username: propUsername,
+  profilePicture = '',
 }: ChatProps) => {
   const { auth } = useAuth();
   const { t, locale } = useTranslation();
@@ -51,6 +53,7 @@ export const Chat = ({
   const { sendMessage, isSending, sendError } = useSendMessage({
     room,
     isConnected,
+    profilePicture,
   });
 
   // Auto-scroll al recibir nuevos mensajes

@@ -28,6 +28,7 @@ type OverlayProps = {
   insetsBottom: number;
   auctionId: string;
   username: string;
+  profilePicture?: string;
   orderedArticles: CustomArticleLiveAuto[];
   biddingAmounts: BiddingAmounts | null;
   articleServerState: HighestBidderState | null;
@@ -62,6 +63,7 @@ export const LiveAuctionOverlay = ({
   insetsBottom,
   auctionId,
   username,
+  profilePicture = '',
   orderedArticles,
   biddingAmounts,
   articleServerState,
@@ -150,6 +152,7 @@ export const LiveAuctionOverlay = ({
               <Chat
                 auctionId={auctionId}
                 username={username}
+                profilePicture={profilePicture}
                 enabled
               />
             </View>

@@ -87,6 +87,7 @@ export default function LiveAuctionScreen() {
     (auctionStatus !== REQUEST_STATUS.loading && !liveAuctionData);
 
   const username = currentUser?.username || '';
+  const profilePicture = currentUser?.profilePicture || '';
   const streamUrl = `${STREAM_BASE_URL}/${locale}/stream/${auctionId}?username=${encodeURIComponent(
     username
   )}`;
@@ -217,6 +218,7 @@ export default function LiveAuctionScreen() {
                 insetsBottom={insets.bottom}
                 auctionId={auctionId}
                 username={username}
+                profilePicture={profilePicture}
                 onBack={() => router.back()}
                 biddingAmounts={biddingAmounts}
                 articleServerState={{

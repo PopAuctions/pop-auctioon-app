@@ -78,6 +78,7 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
                       "uri": "https://example.com/test.jpg",
                     }
                   }
+                  style={{}}
                 />
               </View>
               <View
