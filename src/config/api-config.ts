@@ -60,6 +60,11 @@ export const PROTECTED_ENDPOINTS = {
   PAYMENT: {
     COMMISSIONS: '/payments/commission', // GET - Solo valor de comisión
   },
+
+  // Legal content (Terms, Privacy, Cookies)
+  LEGAL: {
+    CONTENT: '/legal', // GET - Todo el contenido legal (cookies, privacy, terms PDF)
+  },
 } as const;
 
 // ========================================

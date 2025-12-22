@@ -1,9 +1,17 @@
 import { View, ScrollView } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
+import type { PrivacyPolicyData, Lang } from '@/types/types';
 
-export function PrivacyPolicyContent() {
-  const { t } = useTranslation();
+interface PrivacyPolicyContentProps {
+  data: PrivacyPolicyData;
+  locale: Lang;
+}
+
+export function PrivacyPolicyContent({
+  data,
+  locale,
+}: PrivacyPolicyContentProps) {
+  const content = data[locale];
 
   return (
     <ScrollView className='flex-1'>
@@ -12,71 +20,49 @@ export function PrivacyPolicyContent() {
           type='h1'
           className='mb-4 text-black'
         >
-          {t('screens.privacyPolicy.title')}
-        </CustomText>
-        
-        <CustomText
-          type='subtitle'
-          className='mb-6'
-        >
-          {t('screens.privacyPolicy.subtitle')}
+          {content.title}
         </CustomText>
 
-        {/* Sección 1: Información que recopilamos */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
-        >
-          {t('screens.privacyPolicy.section1.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.privacyPolicy.section1.content')}
-        </CustomText>
+        {/* Renderizar todas las secciones dinámicamente */}
+        {content.sections.map((section, sectionIndex) => (
+          <View
+            key={sectionIndex}
+            className='mb-6'
+          >
+            <CustomText
+              type='h3'
+              className='mb-3 text-black'
+            >
+              {section.title}
+            </CustomText>
 
-        {/* Sección 2: Cómo usamos la información */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
-        >
-          {t('screens.privacyPolicy.section2.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.privacyPolicy.section2.content')}
-        </CustomText>
+            {section.content.map((item, itemIndex) => (
+              <View
+                key={itemIndex}
+                className='mb-4'
+              >
+                {item.subtitle && (
+                  <CustomText
+                    type='h4'
+                    className='mb-2 text-black'
+                  >
+                    {item.subtitle}
+                  </CustomText>
+                )}
 
-        {/* Sección 3: Compartir información */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
-        >
-          {t('screens.privacyPolicy.section3.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.privacyPolicy.section3.content')}
-        </CustomText>
-
-        {/* Sección 4: Seguridad de los datos */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
-        >
-          {t('screens.privacyPolicy.section4.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.privacyPolicy.section4.content')}
-        </CustomText>
+                {item.content.map((text, textIndex) => (
+                  <CustomText
+                    key={textIndex}
+                    type='body'
+                    className='mb-1'
+                  >
+                    {text}
+                  </CustomText>
+                ))}
+              </View>
+            ))}
+          </View>
+        ))}
 
         {/* Espacio adicional al final */}
         <View className='h-8' />

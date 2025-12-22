@@ -8,10 +8,15 @@ import { ContactUsContent } from '@/components/info/ContactUsContent';
 import { TermsAndConditionsContent } from '@/components/info/TermsAndConditionsContent';
 import { PrivacyPolicyContent } from '@/components/info/PrivacyPolicyContent';
 import { CookiesPolicyContent } from '@/components/info/CookiesPolicyContent';
+import { useFetchLegalContent } from '@/hooks/pages/useFetchLegalContent';
+import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
+import { REQUEST_STATUS } from '@/constants';
 
 export default function InfoScreen() {
   const { page } = useLocalSearchParams<{ page: string }>();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const { data: legalContent, status, errorMessage } = useFetchLegalContent();
 
   const getTitle = () => {
     switch (page) {
@@ -34,6 +39,12 @@ export default function InfoScreen() {
     }
   };
 
+  // Solo cargar legal content para páginas legales
+  const isLegalPage =
+    page === 'terms-and-conditions' ||
+    page === 'privacy-policy' ||
+    page === 'cookies-policy';
+
   const renderContent = () => {
     switch (page) {
       case 'about-us':
@@ -45,15 +56,49 @@ export default function InfoScreen() {
       case 'contact-us':
         return <ContactUsContent />;
       case 'terms-and-conditions':
-        return <TermsAndConditionsContent />;
+        if (!legalContent) return null;
+        return (
+          <TermsAndConditionsContent
+            data={legalContent.termsAndConditions}
+            locale={locale}
+          />
+        );
       case 'privacy-policy':
-        return <PrivacyPolicyContent />;
+        if (!legalContent) return null;
+        return (
+          <PrivacyPolicyContent
+            data={legalContent.privacyPolicy}
+            locale={locale}
+          />
+        );
       case 'cookies-policy':
-        return <CookiesPolicyContent />;
+        if (!legalContent) return null;
+        return (
+          <CookiesPolicyContent
+            data={legalContent.cookiesPolicy}
+            locale={locale}
+          />
+        );
       default:
         return <AboutUsContent />;
     }
   };
+
+  // Show loading/error only for legal pages
+  if (isLegalPage) {
+    if (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) {
+      return <Loading locale={locale} />;
+    }
+
+    if (status === REQUEST_STATUS.error || !legalContent) {
+      return (
+        <CustomError
+          customMessage={errorMessage}
+          refreshRoute={`/(tabs)/auth/info/${page}`}
+        />
+      );
+    }
+  }
 
   return (
     <>

@@ -315,6 +315,9 @@
       "faqs": "Preguntas Frecuentes",
       "contactUs": "Contáctanos",
       "termsAndConditions": "Términos y Condiciones",
+      "termsAndConditionsDescription": "Para ver nuestros términos y condiciones completos, descarga el documento oficial en PDF.",
+      "openPDF": "Abrir PDF",
+      "pdfWillOpen": "El documento se abrirá en tu navegador o aplicación de PDF.",
       "privacyPolicy": "Política de Privacidad",
       "cookiesPolicy": "Política de Cookies",
       "signOut": "Cerrar Sesión",
@@ -659,66 +662,6 @@
     "contactUs": {
       "title": "Contacto",
       "subtitle": "Estamos aquí para ayudarte"
-    },
-    "termsAndConditions": {
-      "title": "Términos y Condiciones",
-      "subtitle": "Última actualización: Diciembre 2025",
-      "section1": {
-        "title": "1. Aceptación de los Términos",
-        "content": "Al acceder y utilizar PopAuction, aceptas estar legalmente vinculado por estos términos y condiciones. Si no estás de acuerdo con alguna parte de estos términos, no deberás utilizar nuestra aplicación."
-      },
-      "section2": {
-        "title": "2. Uso del Servicio",
-        "content": "PopAuction es una plataforma de subastas en línea. Te comprometes a usar el servicio de manera legal y ética, respetando los derechos de otros usuarios y cumpliendo con todas las leyes aplicables. No está permitido el uso fraudulento o abusivo de la plataforma."
-      },
-      "section3": {
-        "title": "3. Responsabilidades del Usuario",
-        "content": "Eres responsable de mantener la confidencialidad de tu cuenta y contraseña. Todas las actividades realizadas bajo tu cuenta serán tu responsabilidad. Debes notificarnos inmediatamente cualquier uso no autorizado de tu cuenta."
-      },
-      "section4": {
-        "title": "4. Limitaciones de Responsabilidad",
-        "content": "PopAuction no se hace responsable de daños indirectos, incidentales o consecuentes derivados del uso de la plataforma. Nos reservamos el derecho de modificar o descontinuar el servicio en cualquier momento sin previo aviso."
-      }
-    },
-    "privacyPolicy": {
-      "title": "Política de Privacidad",
-      "subtitle": "Última actualización: Diciembre 2025",
-      "section1": {
-        "title": "1. Información que Recopilamos",
-        "content": "Recopilamos información personal que nos proporcionas directamente, como nombre, correo electrónico, número de teléfono y dirección. También recopilamos información sobre tu uso de la aplicación, incluyendo historial de pujas y preferencias."
-      },
-      "section2": {
-        "title": "2. Cómo Usamos la Información",
-        "content": "Utilizamos tu información para proporcionar y mejorar nuestros servicios, procesar transacciones, enviarte notificaciones sobre subastas y comunicarnos contigo. También podemos usar la información para fines de análisis y seguridad."
-      },
-      "section3": {
-        "title": "3. Compartir Información",
-        "content": "No vendemos tu información personal a terceros. Podemos compartir información con proveedores de servicios que nos ayudan a operar la plataforma, siempre bajo acuerdos de confidencialidad. También podemos compartir información cuando sea requerido por ley."
-      },
-      "section4": {
-        "title": "4. Seguridad de los Datos",
-        "content": "Implementamos medidas de seguridad técnicas y organizativas para proteger tu información personal. Sin embargo, ningún sistema es completamente seguro. Te recomendamos usar contraseñas seguras y mantener tu información de acceso confidencial."
-      }
-    },
-    "cookiesPolicy": {
-      "title": "Política de Cookies",
-      "subtitle": "Última actualización: Diciembre 2025",
-      "section1": {
-        "title": "1. ¿Qué son las Cookies?",
-        "content": "Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas nuestra aplicación. Nos ayudan a mejorar tu experiencia recordando tus preferencias y proporcionando funcionalidades personalizadas."
-      },
-      "section2": {
-        "title": "2. Tipos de Cookies que Usamos",
-        "content": "Usamos cookies esenciales para el funcionamiento de la aplicación, cookies de rendimiento para analizar cómo se usa la plataforma, y cookies de funcionalidad para recordar tus preferencias como el idioma seleccionado."
-      },
-      "section3": {
-        "title": "3. Gestión de Cookies",
-        "content": "Puedes configurar tu dispositivo para rechazar cookies, aunque esto puede afectar la funcionalidad de algunas características de la aplicación. La mayoría de los navegadores permiten gestionar las preferencias de cookies en su configuración."
-      },
-      "section4": {
-        "title": "4. Más Información",
-        "content": "Si tienes preguntas sobre cómo usamos las cookies, puedes contactarnos a través de nuestra sección de contacto. Actualizamos esta política periódicamente para reflejar cambios en nuestras prácticas."
-      }
     },
     "liveAuction": {
       "articles": "Artículos",

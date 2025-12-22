@@ -70,6 +70,99 @@ export interface BlogArticleJsonArray {
   es: string[];
 }
 
+// Legal Content Types
+export type CookiesPolicyData = {
+  es: {
+    title: string;
+    description: string;
+    whatAreCookies: {
+      title: string;
+      content: string;
+    };
+    cookiesTypes: {
+      title: string;
+      types: {
+        name: string;
+        description: string;
+      }[];
+    };
+    thirdPartyCookies: {
+      title: string;
+      content: string;
+    };
+    manageCookies: {
+      title: string;
+      content: string;
+      browsers: {
+        name: string;
+        url: string;
+      }[];
+      note: string;
+    };
+  };
+  en: {
+    title: string;
+    description: string;
+    whatAreCookies: {
+      title: string;
+      content: string;
+    };
+    cookiesTypes: {
+      title: string;
+      types: {
+        name: string;
+        description: string;
+      }[];
+    };
+    thirdPartyCookies: {
+      title: string;
+      content: string;
+    };
+    manageCookies: {
+      title: string;
+      content: string;
+      browsers: {
+        name: string;
+        url: string;
+      }[];
+      note: string;
+    };
+  };
+};
+
+export type PrivacyPolicyData = {
+  es: {
+    title: string;
+    sections: {
+      title: string;
+      content: {
+        subtitle?: string;
+        content: string[];
+      }[];
+    }[];
+  };
+  en: {
+    title: string;
+    sections: {
+      title: string;
+      content: {
+        subtitle?: string;
+        content: string[];
+      }[];
+    }[];
+  };
+};
+
+export type TermsAndConditionsData = {
+  pdfUrl: string;
+};
+
+export type LegalContentData = {
+  cookiesPolicy: CookiesPolicyData;
+  privacyPolicy: PrivacyPolicyData;
+  termsAndConditions: TermsAndConditionsData;
+};
+
 export type UserIVS = Database['public']['Tables']['UserIVS']['Row'];
 
 export type ArticleBid = Database['public']['Tables']['ArticleBid']['Row'];

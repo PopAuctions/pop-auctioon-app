@@ -1,9 +1,24 @@
-import { View, ScrollView } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { View, ScrollView, Linking, Pressable } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
+import type { CookiesPolicyData, Lang } from '@/types/types';
 
-export function CookiesPolicyContent() {
-  const { t } = useTranslation();
+interface CookiesPolicyContentProps {
+  data: CookiesPolicyData;
+  locale: Lang;
+}
+
+export function CookiesPolicyContent({
+  data,
+  locale,
+}: CookiesPolicyContentProps) {
+  const content = data[locale];
+
+  const handleOpenLink = async (url: string) => {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    }
+  };
 
   return (
     <ScrollView className='flex-1'>
@@ -12,70 +27,101 @@ export function CookiesPolicyContent() {
           type='h1'
           className='mb-4 text-black'
         >
-          {t('screens.cookiesPolicy.title')}
+          {content.title}
         </CustomText>
-        
+
         <CustomText
           type='subtitle'
           className='mb-6'
         >
-          {t('screens.cookiesPolicy.subtitle')}
+          {content.description}
         </CustomText>
 
-        {/* Sección 1: ¿Qué son las cookies? */}
+        {/* ¿Qué son las cookies? */}
         <CustomText
           type='h3'
           className='mb-2 text-black'
         >
-          {t('screens.cookiesPolicy.section1.title')}
+          {content.whatAreCookies.title}
         </CustomText>
         <CustomText
           type='body'
           className='mb-6'
         >
-          {t('screens.cookiesPolicy.section1.content')}
+          {content.whatAreCookies.content}
         </CustomText>
 
-        {/* Sección 2: Tipos de cookies que usamos */}
+        {/* Tipos de cookies */}
         <CustomText
           type='h3'
-          className='mb-2 text-black'
+          className='mb-3 text-black'
         >
-          {t('screens.cookiesPolicy.section2.title')}
+          {content.cookiesTypes.title}
+        </CustomText>
+        {content.cookiesTypes.types.map((type, index) => (
+          <View
+            key={index}
+            className='mb-4'
+          >
+            <CustomText
+              type='h4'
+              className='mb-1 text-black'
+            >
+              {type.name}
+            </CustomText>
+            <CustomText type='body'>{type.description}</CustomText>
+          </View>
+        ))}
+
+        {/* Cookies de terceros */}
+        <CustomText
+          type='h3'
+          className='mb-2 mt-4 text-black'
+        >
+          {content.thirdPartyCookies.title}
         </CustomText>
         <CustomText
           type='body'
           className='mb-6'
         >
-          {t('screens.cookiesPolicy.section2.content')}
+          {content.thirdPartyCookies.content}
         </CustomText>
 
-        {/* Sección 3: Gestión de cookies */}
+        {/* Gestión de cookies */}
         <CustomText
           type='h3'
           className='mb-2 text-black'
         >
-          {t('screens.cookiesPolicy.section3.title')}
+          {content.manageCookies.title}
         </CustomText>
         <CustomText
           type='body'
-          className='mb-6'
+          className='mb-4'
         >
-          {t('screens.cookiesPolicy.section3.content')}
+          {content.manageCookies.content}
         </CustomText>
 
-        {/* Sección 4: Más información */}
+        {/* Links a navegadores */}
+        {content.manageCookies.browsers.map((browser, index) => (
+          <Pressable
+            key={index}
+            onPress={() => handleOpenLink(browser.url)}
+            className='mb-2 active:opacity-70'
+          >
+            <CustomText
+              type='body'
+              className='text-cinnabar underline'
+            >
+              • {browser.name}
+            </CustomText>
+          </Pressable>
+        ))}
+
         <CustomText
-          type='h3'
-          className='mb-2 text-black'
+          type='bodysmall'
+          className='text-gray-600 mt-4'
         >
-          {t('screens.cookiesPolicy.section4.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.cookiesPolicy.section4.content')}
+          {content.manageCookies.note}
         </CustomText>
 
         {/* Espacio adicional al final */}

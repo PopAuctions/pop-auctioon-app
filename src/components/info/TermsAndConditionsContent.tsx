@@ -1,9 +1,37 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Pressable, Linking } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useToast } from '@/hooks/useToast';
 import { CustomText } from '@/components/ui/CustomText';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import type { TermsAndConditionsData, Lang } from '@/types/types';
 
-export function TermsAndConditionsContent() {
+interface TermsAndConditionsContentProps {
+  data: TermsAndConditionsData;
+  locale: Lang;
+}
+
+export function TermsAndConditionsContent({
+  data,
+  locale,
+}: TermsAndConditionsContentProps) {
   const { t } = useTranslation();
+  const { callToast } = useToast(locale);
+
+  const handleOpenPDF = async () => {
+    const supported = await Linking.canOpenURL(data.pdfUrl);
+
+    if (supported) {
+      await Linking.openURL(data.pdfUrl);
+    } else {
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'No se pudo abrir el documento PDF',
+          en: 'Could not open PDF document',
+        },
+      });
+    }
+  };
 
   return (
     <ScrollView className='flex-1'>
@@ -12,70 +40,48 @@ export function TermsAndConditionsContent() {
           type='h1'
           className='mb-4 text-black'
         >
-          {t('screens.termsAndConditions.title')}
+          {t('screens.account.termsAndConditions')}
         </CustomText>
-        
+
         <CustomText
           type='subtitle'
           className='mb-6'
         >
-          {t('screens.termsAndConditions.subtitle')}
+          {t('screens.account.termsAndConditionsDescription')}
         </CustomText>
 
-        {/* Sección 1: Aceptación de los términos */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
+        {/* Botón para abrir PDF */}
+        <Pressable
+          onPress={handleOpenPDF}
+          className='mb-6 flex-row items-center justify-between rounded-lg bg-cinnabar px-6 py-4 active:opacity-80'
         >
-          {t('screens.termsAndConditions.section1.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.termsAndConditions.section1.content')}
-        </CustomText>
+          <View className='flex-row items-center gap-3'>
+            <FontAwesomeIcon
+              variant='bold'
+              name='file-text'
+              size={24}
+              color='#ffffff'
+            />
+            <CustomText
+              type='h3'
+              className='text-white'
+            >
+              {t('screens.account.openPDF')}
+            </CustomText>
+          </View>
+          <FontAwesomeIcon
+            variant='bold'
+            name='chevron-right'
+            size={16}
+            color='#ffffff'
+          />
+        </Pressable>
 
-        {/* Sección 2: Uso del servicio */}
         <CustomText
-          type='h3'
-          className='mb-2 text-black'
+          type='bodysmall'
+          className='text-gray-600'
         >
-          {t('screens.termsAndConditions.section2.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.termsAndConditions.section2.content')}
-        </CustomText>
-
-        {/* Sección 3: Responsabilidades del usuario */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
-        >
-          {t('screens.termsAndConditions.section3.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.termsAndConditions.section3.content')}
-        </CustomText>
-
-        {/* Sección 4: Limitaciones de responsabilidad */}
-        <CustomText
-          type='h3'
-          className='mb-2 text-black'
-        >
-          {t('screens.termsAndConditions.section4.title')}
-        </CustomText>
-        <CustomText
-          type='body'
-          className='mb-6'
-        >
-          {t('screens.termsAndConditions.section4.content')}
+          {t('screens.account.pdfWillOpen')}
         </CustomText>
 
         {/* Espacio adicional al final */}
