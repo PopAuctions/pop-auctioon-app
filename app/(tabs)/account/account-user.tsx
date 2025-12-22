@@ -366,6 +366,34 @@ export default function Account({ currentUser }: { currentUser: User }) {
             />
           </CustomLink>
 
+          {/* Settings */}
+          <CustomLink
+            href='/(tabs)/account/settings'
+            mode='empty'
+            hoverEffect={false}
+            className='mb-3 flex-row items-center justify-between py-4'
+          >
+            <View className='flex-row items-center'>
+              <View className='mr-4 h-10 w-10 items-center justify-center rounded-full'>
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='gear'
+                  size={20}
+                  color='#4d4d4d'
+                />
+              </View>
+              <CustomText type='body'>
+                {t('screens.account.settings')}
+              </CustomText>
+            </View>
+            <FontAwesomeIcon
+              variant='bold'
+              name='chevron-right'
+              size={16}
+              color='#9ca3af'
+            />
+          </CustomLink>
+
           {/* Línea divisoria */}
           <Divider className='my-2' />
 

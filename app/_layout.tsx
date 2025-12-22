@@ -31,6 +31,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from '@/providers/ToastProvider';
 import { StripeProvider } from '@/providers/StripeProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { TranslationProvider } from '@/context/translation-context';
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -101,12 +102,14 @@ export default Sentry.wrap(function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <DeepLinkListener />
-      <ProtectedRoute>
-        <RootLayoutNav />
-      </ProtectedRoute>
-    </AuthProvider>
+    <TranslationProvider>
+      <AuthProvider>
+        <DeepLinkListener />
+        <ProtectedRoute>
+          <RootLayoutNav />
+        </ProtectedRoute>
+      </AuthProvider>
+    </TranslationProvider>
   );
 });
 
