@@ -177,18 +177,30 @@ export type HowItWorksData = {
   es: {
     intro: string;
     sections: {
-      subtitle: string;
-      text: string;
+      title: string;
+      content: {
+        text?: string;
+        children?: string[];
+      }[];
     }[];
-    outro: string;
+    outro: {
+      title: string;
+      content: string;
+    };
   };
   en: {
     intro: string;
     sections: {
-      subtitle: string;
-      text: string;
+      title: string;
+      content: {
+        text?: string;
+        children?: string[];
+      }[];
     }[];
-    outro: string;
+    outro: {
+      title: string;
+      content: string;
+    };
   };
 };
 
