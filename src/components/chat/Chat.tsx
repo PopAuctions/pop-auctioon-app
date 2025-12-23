@@ -81,7 +81,7 @@ export const Chat = ({
   // Estado de carga inicial (idle o loading del hook)
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return (
-      <View className='flex-1 items-center justify-center rounded-xl bg-white p-6'>
+      <View className='flex-1 items-center justify-center rounded-xl bg-white/70 p-6'>
         <ActivityIndicator
           size='large'
           color='#DC2626'
@@ -118,7 +118,7 @@ export const Chat = ({
           es: 'Error al conectar con el chat',
           en: 'Failed to connect to chat',
         }}
-        refreshRoute='/(tabs)/auctions'
+        refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
       />
     );
   }

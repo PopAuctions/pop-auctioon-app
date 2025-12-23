@@ -17,6 +17,7 @@ import { CustomText } from '../ui/CustomText';
 import { toTotal } from '@/utils/toTotal';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { hapticImpact } from '@/utils/triggerHaptic';
+import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 
 type BidSliderProps = {
   biddingAmounts: BiddingAmounts;
@@ -74,8 +75,13 @@ export const BidSlider = ({
   const isDisabled = isPending || !articleAvailable;
 
   const renderThumb = useCallback(
-    () => <SwipeThumb loading={isPending} />,
-    [isPending]
+    () => (
+      <SwipeThumb
+        loading={isPending}
+        articleAvailable={articleAvailable}
+      />
+    ),
+    [isPending, articleAvailable]
   );
 
   const handleBid = async (bidAmount: number) => {
@@ -162,21 +168,36 @@ export const BidSlider = ({
   );
 };
 
-const SwipeThumb = ({ loading }: { loading: boolean }) => {
+const SwipeThumb = ({
+  loading,
+  articleAvailable,
+}: {
+  loading: boolean;
+  articleAvailable: boolean;
+}) => {
   return (
-    <View className='h-full w-full items-center justify-center'>
+    <View
+      className={`h-full w-full items-center justify-center bg-transparent`}
+      style={{ borderRadius: 9999 }}
+    >
       {loading ? (
         <ActivityIndicator
           size='small'
           color={COLORS.PRIMARY}
         />
+      ) : articleAvailable ? (
+        <FontAwesomeIcon
+          name='angle-double-right'
+          size={24}
+          color='cinnabar'
+        />
       ) : (
-        <CustomText
-          type='h4'
-          className='text-black'
-        >
-          {'>>'}
-        </CustomText>
+        <FontAwesomeIcon
+          variant='bold'
+          name='ban'
+          size={24}
+          color='cinnabar'
+        />
       )}
     </View>
   );

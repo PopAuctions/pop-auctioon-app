@@ -22,6 +22,8 @@ import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
 import { ArticleCountdownUser } from './ArticleCountdownUser';
 import { BidSliderSkeleton } from './BidSliderSkeleton';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
 
 type OverlayProps = {
   insetsTop: number;
@@ -40,7 +42,7 @@ type OverlayProps = {
 const UI = {
   SCREEN_PADDING: 8,
   HUD_BOTTOM_GAP: 20,
-  ROW_GAP: 12,
+  ROW_GAP: 24,
 
   BACK_TOP_GAP: 12,
   BACK_SIZE: 40,
@@ -56,6 +58,7 @@ const UI = {
   BID_HEIGHT: 36,
 
   KEYBOARD_OFFSET_IOS: 0,
+  CHAT_OFFSET: 10,
 } as const;
 
 export const LiveAuctionOverlay = ({
@@ -89,7 +92,8 @@ export const LiveAuctionOverlay = ({
   const articleHudBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
 
   // Chat sits above article HUD
-  const chatBottom = articleHudBottom + UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP;
+  const chatBottom =
+    articleHudBottom + UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
 
   return (
     <>
@@ -209,52 +213,56 @@ export const LiveAuctionOverlay = ({
           </View>
         </KeyboardAvoidingView>
 
-        {/* Article HUD (not keyboard-aware, fixed slot) */}
-        <View
-          pointerEvents='auto'
-          style={{
-            position: 'absolute',
-            left: UI.SCREEN_PADDING,
-            right: UI.SCREEN_PADDING,
-            bottom: articleHudBottom,
-            height: UI.ARTICLE_HUD_HEIGHT,
-          }}
-        >
-          {currentArticle ? (
-            <LiveCurrentArticleCard
-              article={currentArticle}
-              lang={locale}
-            />
-          ) : null}
-        </View>
+        <HighestBidderProvider key={currentArticle?.id}>
+          {/* Article HUD */}
+          <View
+            pointerEvents='auto'
+            style={{
+              position: 'absolute',
+              left: UI.SCREEN_PADDING,
+              right: UI.SCREEN_PADDING,
+              bottom: articleHudBottom,
+              height: UI.ARTICLE_HUD_HEIGHT,
+            }}
+          >
+            {currentArticle ? (
+              <LiveCurrentArticleCard
+                article={currentArticle}
+                lang={locale}
+              />
+            ) : (
+              <LiveCurrentArticleCardSkeleton height={75} />
+            )}
+          </View>
 
-        <View
-          pointerEvents='auto'
-          style={{
-            position: 'absolute',
-            left: UI.SCREEN_PADDING,
-            right: UI.SCREEN_PADDING,
-            bottom: bidBottom,
-            height: UI.BID_HEIGHT,
-          }}
-        >
-          {!isCommissionReady || !biddingAmounts || !articleServerState ? (
-            <BidSliderSkeleton height={UI.BID_HEIGHT} />
-          ) : (
-            <BidSlider
-              biddingAmounts={biddingAmounts}
-              articleServerState={articleServerState}
-              articleId={articleId}
-              commissionPercentage={commissionData}
-            />
-          )}
-        </View>
+          <View
+            pointerEvents='auto'
+            style={{
+              position: 'absolute',
+              left: UI.SCREEN_PADDING,
+              right: UI.SCREEN_PADDING,
+              bottom: bidBottom,
+              height: UI.BID_HEIGHT,
+            }}
+          >
+            {!isCommissionReady || !biddingAmounts || !articleServerState ? (
+              <BidSliderSkeleton height={UI.BID_HEIGHT} />
+            ) : (
+              <BidSlider
+                biddingAmounts={biddingAmounts}
+                articleServerState={articleServerState}
+                articleId={articleId}
+                commissionPercentage={commissionData}
+              />
+            )}
+          </View>
 
-        <ArticleCountdownUser
-          articleId={articleId}
-          COUNTDOWN_STEPS={10}
-          refetch={refetch}
-        />
+          <ArticleCountdownUser
+            articleId={articleId}
+            COUNTDOWN_STEPS={10}
+            refetch={refetch}
+          />
+        </HighestBidderProvider>
       </View>
 
       <LiveArticlesModal
