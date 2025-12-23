@@ -126,9 +126,10 @@ export const BidSlider = ({
             disabled={isDisabled}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
             title={`Min. ${t('screens.liveAuction.bids')}: ${formatter.format(slideAmount)}`}
+            titleMaxLines={2}
             titleStyles={{
               paddingLeft: UI.THUMB_WIDTH,
-              textAlign: 'right',
+              textAlign: 'center',
               color: isDisabled ? COLORS.BLACK : COLORS.PRIMARY,
             }}
             onSwipeSuccess={() => handleBid(tenPercent)}

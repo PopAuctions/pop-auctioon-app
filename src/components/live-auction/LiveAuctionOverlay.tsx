@@ -246,7 +246,7 @@ export const LiveAuctionOverlay = ({
             }}
           >
             {!isCommissionReady || !biddingAmounts || !articleServerState ? (
-              <BidSliderSkeleton height={UI.BID_HEIGHT} />
+              <BidSliderSkeleton height={UI.BID_HEIGHT + 16} />
             ) : (
               <BidSlider
                 biddingAmounts={biddingAmounts}
