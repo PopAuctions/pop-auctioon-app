@@ -33,7 +33,7 @@ type OverlayProps = {
   profilePicture?: string;
   orderedArticles: CustomArticleLiveAuto[];
   biddingAmounts: BiddingAmounts | null;
-  articleServerState: HighestBidderState | null;
+  articleServerState: HighestBidderState | undefined;
   articleId: number;
   onBack: () => void;
   refetch: (localValue: number) => void;
@@ -213,7 +213,7 @@ export const LiveAuctionOverlay = ({
           </View>
         </KeyboardAvoidingView>
 
-        <HighestBidderProvider key={currentArticle?.id}>
+        <HighestBidderProvider key={articleId}>
           {/* Article HUD */}
           <View
             pointerEvents='auto'

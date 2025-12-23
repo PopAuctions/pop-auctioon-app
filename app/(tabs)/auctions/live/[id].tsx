@@ -8,7 +8,6 @@ import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
-import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { StreamWebView } from '@/components/live-auction/StreamWebView';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import { useFetchArticlesOrder } from '@/hooks/pages/live/useFetchArticlesOrder';
@@ -96,7 +95,11 @@ export default function LiveAuctionScreen() {
   const highestBidderUsername =
     liveAuctionData?.ArticleBid.highestBidderUsername;
   const highestBidderImage = liveAuctionData?.ArticleBid.highestBidderImage;
-  const articleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+  const liveArticleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+
+  const isCurrentArticleReady =
+    currentArticleStatus === REQUEST_STATUS.success &&
+    currentArticle?.id === liveArticleId;
 
   const showUnifiedLoader = showLoading || !streamLoaded;
 
@@ -219,13 +222,17 @@ export default function LiveAuctionScreen() {
             profilePicture={profilePicture}
             onBack={() => router.back()}
             biddingAmounts={biddingAmounts}
-            articleServerState={{
-              highestBidder: highestBidderUsername ?? '',
-              highestBidderImage: highestBidderImage ?? null,
-              currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
-              available: currentArticle?.ArticleBid.available ?? false,
-            }}
-            articleId={articleId}
+            articleServerState={
+              isCurrentArticleReady
+                ? {
+                    highestBidder: highestBidderUsername ?? '',
+                    highestBidderImage: highestBidderImage ?? null,
+                    currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
+                    available: currentArticle?.ArticleBid.available ?? false,
+                  }
+                : undefined
+            }
+            articleId={liveArticleId}
             refetch={refetchBiddingAmounts}
           />
         )}

@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -55,9 +56,11 @@ export function HighestBidderProvider({ children }: { children: ReactNode }) {
  */
 export function useHighestBidderContext({
   initialValue,
+  resetKey,
 }: {
   initialValue?: Partial<HighestBidderState>;
-}): HighestBidderContextProps {
+  resetKey?: number | string;
+} = {}): HighestBidderContextProps {
   const context = useContext(HighestBidderContext);
 
   if (!context) {
@@ -66,12 +69,25 @@ export function useHighestBidderContext({
 
   const { state, setState } = context;
 
+  // tracks which key has been hydrated
+  const hydratedKeyRef = useRef<number | string | null>(null);
+
+  // If resetKey changes, mark as not hydrated (but only when resetKey is being used)
   useEffect(() => {
-    if (initialValue) {
-      setState(initialValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (resetKey == null) return;
+    hydratedKeyRef.current = null;
+  }, [resetKey]);
+
+  // Hydrate exactly once per resetKey, when initialValue is available (even if it arrives later)
+  useEffect(() => {
+    if (resetKey == null) return;
+    if (!initialValue) return;
+
+    if (hydratedKeyRef.current === resetKey) return;
+
+    setState(initialValue);
+    hydratedKeyRef.current = resetKey;
+  }, [resetKey, initialValue, setState]);
 
   return { state, setState };
 }
