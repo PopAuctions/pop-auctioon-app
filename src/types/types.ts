@@ -163,6 +163,58 @@ export type LegalContentData = {
   termsAndConditions: TermsAndConditionsData;
 };
 
+// Info Content Types
+export type AboutUsData = {
+  es: {
+    text: string;
+  };
+  en: {
+    text: string;
+  };
+};
+
+export type HowItWorksData = {
+  es: {
+    intro: string;
+    sections: {
+      subtitle: string;
+      text: string;
+    }[];
+    outro: string;
+  };
+  en: {
+    intro: string;
+    sections: {
+      subtitle: string;
+      text: string;
+    }[];
+    outro: string;
+  };
+};
+
+export type FAQsData = {
+  es: {
+    subtitle: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
+  }[];
+  en: {
+    subtitle: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
+  }[];
+};
+
+export type InfoContentData = {
+  aboutUs: AboutUsData;
+  howItWorks: HowItWorksData;
+  faqs: FAQsData;
+};
+
 export type UserIVS = Database['public']['Tables']['UserIVS']['Row'];
 
 export type ArticleBid = Database['public']['Tables']['ArticleBid']['Row'];

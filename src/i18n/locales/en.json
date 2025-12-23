@@ -651,7 +651,20 @@
     },
     "contactUs": {
       "title": "Contact Us",
-      "subtitle": "We're here to help"
+      "subtitle": "Do you have any question or need help?",
+      "name": "Name",
+      "namePlaceholder": "Name",
+      "email": "Email",
+      "emailPlaceholder": "Email",
+      "phone": "Phone",
+      "phonePlaceholder": "Phone",
+      "message": "Message",
+      "messagePlaceholder": "Message",
+      "wantToSell": "I want to sell an article",
+      "send": "Send",
+      "sending": "Sending...",
+      "successMessage": "Message sent successfully. We will contact you soon.",
+      "errorMessage": "An error occurred while sending the message. Please try again."
     },
     "liveAuction": {
       "articles": "Articles",

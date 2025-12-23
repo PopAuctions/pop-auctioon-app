@@ -1,26 +1,56 @@
-import { View } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { View, ScrollView } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
+import type { FAQsData, Lang } from '@/types/types';
 
-export function FAQsContent() {
-  const { t } = useTranslation();
+interface FAQsContentProps {
+  data: FAQsData;
+  locale: Lang;
+}
+
+export function FAQsContent({ data, locale }: FAQsContentProps) {
+  const content = data[locale];
 
   return (
-    <View className='flex-1'>
+    <ScrollView className='flex-1'>
       <View className='p-6'>
-        <CustomText
-          type='h1'
-          className='mb-2 text-black'
-        >
-          {t('screens.faqs.title')}
-        </CustomText>
-        <CustomText
-          type='subtitle'
-          className=''
-        >
-          {t('screens.faqs.subtitle')}
-        </CustomText>
+        {content.map((category, categoryIndex) => (
+          <View
+            key={categoryIndex}
+            className='mb-6'
+          >
+            {/* Category subtitle */}
+            <CustomText
+              type='h2'
+              className='mb-4 text-cinnabar'
+            >
+              {category.subtitle}
+            </CustomText>
+
+            {/* Questions */}
+            {category.questions.map((item, questionIndex) => (
+              <View
+                key={questionIndex}
+                className='mb-4'
+              >
+                <CustomText
+                  type='h4'
+                  className='mb-2 text-black'
+                >
+                  {item.question}
+                </CustomText>
+                <CustomText
+                  type='body'
+                  className='leading-6'
+                >
+                  {item.answer}
+                </CustomText>
+              </View>
+            ))}
+          </View>
+        ))}
+
+        <View className='h-8' />
       </View>
-    </View>
+    </ScrollView>
   );
 }

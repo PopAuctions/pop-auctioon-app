@@ -1,26 +1,27 @@
-import { View } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { View, ScrollView } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
+import type { AboutUsData, Lang } from '@/types/types';
 
-export function AboutUsContent() {
-  const { t } = useTranslation();
+interface AboutUsContentProps {
+  data: AboutUsData;
+  locale: Lang;
+}
+
+export function AboutUsContent({ data, locale }: AboutUsContentProps) {
+  const content = data[locale];
 
   return (
-    <View className='flex-1'>
+    <ScrollView className='flex-1'>
       <View className='p-6'>
         <CustomText
-          type='h1'
-          className='mb-2 text-black'
+          type='body'
+          className='leading-6'
         >
-          {t('screens.aboutUs.title')}
+          {content.text}
         </CustomText>
-        <CustomText
-          type='subtitle'
-          className=''
-        >
-          {t('screens.aboutUs.subtitle')}
-        </CustomText>
+
+        <View className='h-8' />
       </View>
-    </View>
+    </ScrollView>
   );
 }
