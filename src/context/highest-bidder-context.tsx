@@ -69,25 +69,30 @@ export function useHighestBidderContext({
 
   const { state, setState } = context;
 
-  // tracks which key has been hydrated
   const hydratedKeyRef = useRef<number | string | null>(null);
 
-  // If resetKey changes, mark as not hydrated (but only when resetKey is being used)
-  useEffect(() => {
-    if (resetKey == null) return;
-    hydratedKeyRef.current = null;
-  }, [resetKey]);
+  const isValidKey =
+    resetKey !== undefined &&
+    resetKey !== null &&
+    resetKey !== 0 &&
+    resetKey !== '';
 
-  // Hydrate exactly once per resetKey, when initialValue is available (even if it arrives later)
+  // Reset hydration ONLY when we are using a valid key
   useEffect(() => {
-    if (resetKey == null) return;
+    if (!isValidKey) return;
+    hydratedKeyRef.current = null;
+  }, [resetKey, isValidKey]);
+
+  // Seed initialValue ONCE per key, when available
+  useEffect(() => {
+    if (!isValidKey) return;
     if (!initialValue) return;
 
     if (hydratedKeyRef.current === resetKey) return;
 
     setState(initialValue);
     hydratedKeyRef.current = resetKey;
-  }, [resetKey, initialValue, setState]);
+  }, [resetKey, isValidKey, initialValue, setState]);
 
   return { state, setState };
 }
