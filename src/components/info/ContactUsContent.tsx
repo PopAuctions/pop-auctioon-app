@@ -13,7 +13,7 @@ import {
   ContactUsSchema,
   type ContactUsSchemaType,
 } from '@/utils/schemas/contact-us-schema';
-import Checkbox from 'expo-checkbox';
+import { Checkbox } from 'expo-checkbox';
 
 export function ContactUsContent() {
   const { t, locale } = useTranslation();
@@ -34,7 +34,7 @@ export function ContactUsContent() {
       phone: '',
       message: '',
       wantToSell: false,
-    },
+    } as ContactUsSchemaType,
   });
 
   const onSubmit = async (data: ContactUsSchemaType) => {
@@ -67,7 +67,7 @@ export function ContactUsContent() {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: t('screens.contactUs.successMessage'),
+          description: 'screens.contactUs.successMessage',
         });
         reset();
       }
@@ -75,7 +75,7 @@ export function ContactUsContent() {
       console.error('ERROR_SEND_CONTACT', error);
       callToast({
         variant: 'error',
-        description: t('screens.contactUs.errorMessage'),
+        description: 'screens.contactUs.errorMessage',
       });
     } finally {
       setIsSubmitting(false);

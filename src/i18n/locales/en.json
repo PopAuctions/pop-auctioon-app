@@ -1,6 +1,7 @@
 {
   "commonActions": {
     "loading": "Loading...",
+    "inDevelopment": "Screen under development",
     "error": "Error",
     "ok": "OK",
     "cancel": "Cancel",
@@ -288,6 +289,7 @@
     },
     "account": {
       "title": "My Account",
+      "account": "Account",
       "editProfile": "Edit Profile Information",
       "resetPassword": "Reset Password",
       "offersMade": "Offers Made",
@@ -309,6 +311,8 @@
       "changingLanguage": "Changing language...",
       "languageChanged": "Language changed",
       "aboutUs": "About Us",
+      "login": "Login",
+      "register": "Register",
       "phoneVerified": "Phone Verified",
       "phoneNotVerified": "Phone Not Verified",
       "howItWorks": "How it Works",

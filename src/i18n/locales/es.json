@@ -1,6 +1,7 @@
 {
   "commonActions": {
     "loading": "Cargando...",
+    "inDevelopment": "Pantalla en desarrollo",
     "error": "Error",
     "ok": "OK",
     "cancel": "Cancelar",
@@ -288,6 +289,7 @@
     },
     "account": {
       "title": "Mi Cuenta",
+      "account": "Cuenta",
       "editProfile": "Editar Información del Perfil",
       "resetPassword": "Restablecer Contraseña",
       "offersMade": "Ofertas realizadas",
@@ -309,6 +311,8 @@
       "changingLanguage": "Cambiando idioma...",
       "languageChanged": "Idioma cambiado",
       "aboutUs": "Acerca de Nosotros",
+      "login": "Iniciar Sesión",
+      "register": "Registrarse",
       "phoneVerified": "Teléfono Verificado",
       "phoneNotVerified": "Teléfono No Verificado",
       "howItWorks": "Cómo Funciona",

@@ -20,7 +20,7 @@ export const ContactUsSchema = z.object({
       es: 'El mensaje debe tener al menos 10 caracteres',
     }),
   }),
-  wantToSell: z.boolean().default(false),
+  wantToSell: z.boolean(),
 });
 
 export type ContactUsSchemaType = z.infer<typeof ContactUsSchema>;
