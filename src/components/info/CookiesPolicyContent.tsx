@@ -14,9 +14,15 @@ export function CookiesPolicyContent({
   const content = data[locale];
 
   const handleOpenLink = async (url: string) => {
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
-      await Linking.openURL(url);
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.error('Cannot open URL:', url);
+      }
+    } catch (error) {
+      console.error('Error opening URL:', error);
     }
   };
 

@@ -24,7 +24,7 @@ export default function Account({ currentUser }: { currentUser: User }) {
   const handleSignOut = async () => {
     setLoading(true);
     await signOut();
-    router.replace('/(tabs)/home');
+    router.replace('/(tabs)/auth');
     setLoading(false);
   };
 

@@ -15,6 +15,20 @@ import {
 } from '@/utils/schemas/contact-us-schema';
 import { Checkbox } from 'expo-checkbox';
 
+// Helper function to safely parse bilingual error messages
+const parseErrorMessage = (
+  message: string | undefined,
+  locale: Lang
+): string => {
+  if (!message) return '';
+  try {
+    const parsed = JSON.parse(message);
+    return parsed[locale] || message;
+  } catch {
+    return message;
+  }
+};
+
 export function ContactUsContent() {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
@@ -72,7 +86,6 @@ export function ContactUsContent() {
         reset();
       }
     } catch (error) {
-      console.error('ERROR_SEND_CONTACT', error);
       callToast({
         variant: 'error',
         description: 'screens.contactUs.errorMessage',
@@ -124,8 +137,7 @@ export function ContactUsContent() {
               type='error'
               className='mt-1'
             >
-              {JSON.parse(errors.name.message || '{}')[locale] ||
-                errors.name.message}
+              {parseErrorMessage(errors.name.message, locale)}
             </CustomText>
           )}
         </View>
@@ -157,8 +169,7 @@ export function ContactUsContent() {
               type='error'
               className='mt-1'
             >
-              {JSON.parse(errors.email.message || '{}')[locale] ||
-                errors.email.message}
+              {parseErrorMessage(errors.email.message, locale)}
             </CustomText>
           )}
         </View>
@@ -214,8 +225,7 @@ export function ContactUsContent() {
               type='error'
               className='mt-1'
             >
-              {JSON.parse(errors.message.message || '{}')[locale] ||
-                errors.message.message}
+              {parseErrorMessage(errors.message.message, locale)}
             </CustomText>
           )}
         </View>
