@@ -665,6 +665,7 @@
       "message": "Message",
       "messagePlaceholder": "Message",
       "wantToSell": "I want to sell an article",
+      "userWantsToSellNote": "User wants to sell an article",
       "send": "Send",
       "sending": "Sending...",
       "successMessage": "Message sent successfully. We will contact you soon.",

@@ -63,9 +63,7 @@ export function ContactUsContent() {
           phone: data.phone || undefined,
           message: data.message,
           sellNote: data.wantToSell
-            ? locale === 'es'
-              ? 'Usuario quiere vender un artículo'
-              : 'User wants to sell an article'
+            ? t('screens.contactUs.userWantsToSellNote')
             : undefined,
         },
       });

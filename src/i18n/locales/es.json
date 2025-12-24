@@ -675,6 +675,7 @@
       "message": "Mensaje",
       "messagePlaceholder": "Mensaje",
       "wantToSell": "Quiero vender un artículo",
+      "userWantsToSellNote": "Usuario quiere vender un artículo",
       "send": "Enviar",
       "sending": "Enviando...",
       "successMessage": "Mensaje enviado exitosamente. Nos pondremos en contacto contigo pronto.",
