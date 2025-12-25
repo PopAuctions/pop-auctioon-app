@@ -47,7 +47,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
             type='bodysmall'
             className={cn(
               'font-bold drop-shadow-md',
-              isMine ? 'text-cinnabar' : 'text-white'
+              isMine ? 'text-cinnabar' : 'text-black'
             )}
           >
             {message.sender.userId}

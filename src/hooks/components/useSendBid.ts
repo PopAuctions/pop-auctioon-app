@@ -38,6 +38,7 @@ export const useSendBid = ({
 
   const { state } = useHighestBidderContext({
     initialValue: articleServerState,
+    resetKey: articleId,
   });
   const { currentValue, available: articleAvailable } = state;
 
