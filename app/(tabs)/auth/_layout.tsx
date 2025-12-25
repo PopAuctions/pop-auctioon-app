@@ -23,6 +23,7 @@ export default function AuthLayout() {
           title: t('screens.account.login'),
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
@@ -31,6 +32,7 @@ export default function AuthLayout() {
           title: t('screens.account.register'),
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
@@ -39,6 +41,7 @@ export default function AuthLayout() {
           title: t('screens.account.settings'),
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
@@ -46,6 +49,7 @@ export default function AuthLayout() {
         options={{
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
           // El título se establece dinámicamente desde el componente
         }}
       />
