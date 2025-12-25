@@ -14,6 +14,7 @@ import {
   type ContactUsSchemaType,
 } from '@/utils/schemas/contact-us-schema';
 import { Checkbox } from 'expo-checkbox';
+import { Lang } from '@/types/types';
 
 // Helper function to safely parse bilingual error messages
 const parseErrorMessage = (
