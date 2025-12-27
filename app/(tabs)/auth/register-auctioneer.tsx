@@ -1,7 +1,6 @@
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { RegisterAuctioneerForm } from '@/components/forms/RegisterAuctioneerForm';

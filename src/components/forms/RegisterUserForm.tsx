@@ -6,7 +6,6 @@ import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { Divider } from '@/components/ui/Divider';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
 import type { UserRegisterSchemaType } from '@/utils/schemas';
-import * as Linking from 'expo-linking';
 
 // Helper para parsear errores bilingües
 const parseErrorMessage = (
