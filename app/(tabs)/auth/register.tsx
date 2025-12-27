@@ -14,7 +14,6 @@ export default function RegisterScreen() {
 
   const providers = [
     { name: 'Google', icon: 'google', color: '#DB4437' },
-    { name: 'Facebook', icon: 'facebook-f', color: '#4267B2' },
     { name: 'Apple', icon: 'apple', color: '#000000' },
   ];
 
