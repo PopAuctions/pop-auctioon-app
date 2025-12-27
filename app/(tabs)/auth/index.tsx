@@ -1,10 +1,11 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { Divider } from '@/components/ui/Divider';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { useOpenTerms } from '@/hooks/useOpenTerms';
 import {
   FIRST_SECTION,
   FOURTH_SECTION,
@@ -14,6 +15,7 @@ import {
 
 export default function AuthMenuScreen() {
   const { t } = useTranslation();
+  const { handleOpenTerms } = useOpenTerms();
 
   return (
     <SafeAreaView
@@ -167,44 +169,88 @@ export default function AuthMenuScreen() {
 
         {/* Legal Pages */}
         <View className='mx-2 p-4'>
-          {FOURTH_SECTION.map(({ name, icon, labelKey, href }) => (
-            <CustomLink
-              key={name}
-              href={href}
-              mode='empty'
-              hoverEffect={false}
-              className='mb-3 flex-row items-center justify-between py-4'
-            >
-              <View className='flex-row items-center'>
-                <View className='mr-4 h-10 w-10 items-center justify-center'>
-                  <FontAwesomeIcon
-                    variant='bold'
-                    name={icon}
-                    size={20}
-                    color='#4d4d4d'
-                  />
+          {FOURTH_SECTION.map(({ name, icon, labelKey, href }) => {
+            // Terms and Conditions abre directamente el PDF, los demás usan navegación normal
+            const isTerms = name === 'terms-and-conditions';
+
+            if (isTerms) {
+              return (
+                <Pressable
+                  key={name}
+                  onPress={handleOpenTerms}
+                  className='mb-3 flex-row items-center justify-between py-4'
+                >
+                  <View className='flex-row items-center'>
+                    <View className='mr-4 h-10 w-10 items-center justify-center'>
+                      <FontAwesomeIcon
+                        variant='bold'
+                        name={icon}
+                        size={20}
+                        color='#4d4d4d'
+                      />
+                    </View>
+
+                    <View className='h-10 justify-center'>
+                      <CustomText
+                        type='body'
+                        className='leading-[20px]'
+                      >
+                        {t(labelKey as any)}
+                      </CustomText>
+                    </View>
+                  </View>
+
+                  <View className='h-10 justify-center'>
+                    <FontAwesomeIcon
+                      variant='bold'
+                      name='chevron-right'
+                      size={16}
+                      color='#9ca3af'
+                    />
+                  </View>
+                </Pressable>
+              );
+            }
+
+            return (
+              <CustomLink
+                key={name}
+                href={href}
+                mode='empty'
+                hoverEffect={false}
+                className='mb-3 flex-row items-center justify-between py-4'
+              >
+                <View className='flex-row items-center'>
+                  <View className='mr-4 h-10 w-10 items-center justify-center'>
+                    <FontAwesomeIcon
+                      variant='bold'
+                      name={icon}
+                      size={20}
+                      color='#4d4d4d'
+                    />
+                  </View>
+
+                  <View className='h-10 justify-center'>
+                    <CustomText
+                      type='body'
+                      className='leading-[20px]'
+                    >
+                      {t(labelKey as any)}
+                    </CustomText>
+                  </View>
                 </View>
 
                 <View className='h-10 justify-center'>
-                  <CustomText
-                    type='body'
-                    className='leading-[20px]'
-                  >
-                    {t(labelKey as any)}
-                  </CustomText>
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='chevron-right'
+                    size={16}
+                    color='#9ca3af'
+                  />
                 </View>
-              </View>
-
-              <View className='h-10 justify-center'>
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='chevron-right'
-                  size={16}
-                  color='#9ca3af'
-                />
-              </View>
-            </CustomLink>
-          ))}
+              </CustomLink>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>

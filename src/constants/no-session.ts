@@ -54,7 +54,7 @@ export const FOURTH_SECTION = [
     name: 'terms-and-conditions',
     icon: 'file-text',
     labelKey: 'screens.account.termsAndConditions',
-    href: '/(tabs)/auth/info/terms-and-conditions',
+    href: '', // No se usa navegación - se abre directamente el PDF
   },
   {
     name: 'privacy-policy',

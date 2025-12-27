@@ -1,6 +1,7 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { supabase } from '@/utils/supabase/supabase-store';
 import type {
   ActionResponse,
   LangMap,
@@ -47,6 +48,18 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       if (response.error) {
         setStatus('error');
         setErrorMessage(response.error);
+
+        // Si el usuario fue eliminado de la BD, cerrar sesión automáticamente
+        const isUserNotFound =
+          response.error.en?.toLowerCase().includes('user not found') ||
+          response.error.es?.toLowerCase().includes('usuario no encontrado') ||
+          response.error.en?.toLowerCase().includes('not found');
+
+        if (isUserNotFound) {
+          console.log('USER_NOT_FOUND - Closing session automatically');
+          await supabase.auth.signOut();
+        }
+
         return;
       }
 
