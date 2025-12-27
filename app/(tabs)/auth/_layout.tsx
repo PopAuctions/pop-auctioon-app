@@ -47,7 +47,7 @@ export default function AuthLayout() {
       <Stack.Screen
         name='register-auctioneer'
         options={{
-          title: t('screens.account.registerAsAuctioneer'),
+          title: t('screens.account.registerAsAuctioneerTitle'),
           presentation: 'card',
           headerShown: true,
           headerBackTitle: t('tabsNames.back'),

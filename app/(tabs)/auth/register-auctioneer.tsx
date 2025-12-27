@@ -2,7 +2,6 @@ import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Button } from '@/components/ui/Button';
-import { CustomLink } from '@/components/ui/CustomLink';
 import { RegisterAuctioneerForm } from '@/components/forms/RegisterAuctioneerForm';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -106,11 +105,11 @@ export default function RegisterAuctioneerScreen() {
   };
 
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <ScrollView
-        className='flex-1 px-6'
-        showsVerticalScrollIndicator={false}
-      >
+    <SafeAreaView
+      className='flex-1 bg-white'
+      edges={[]}
+    >
+      <ScrollView className='flex-1 px-4 pb-2 pt-4'>
         {/* Formulario */}
         <RegisterAuctioneerForm
           control={control}
@@ -131,13 +130,6 @@ export default function RegisterAuctioneerScreen() {
           >
             {t('screens.account.createAccount')}
           </Button>
-
-          <CustomLink
-            href='/(tabs)/auth/login'
-            mode='plainText'
-          >
-            {t('globals.back')}
-          </CustomLink>
         </View>
       </ScrollView>
     </SafeAreaView>

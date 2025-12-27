@@ -28,22 +28,7 @@ export function RegisterAuctioneerForm({
   const { t, locale } = useTranslation();
 
   return (
-    <View className='py-6'>
-      {/* Title */}
-      <CustomText
-        type='h3'
-        className='text-gray-900 mb-2 text-center'
-      >
-        {t('screens.account.registerAsAuctioneer')}
-      </CustomText>
-
-      <CustomText
-        type='bodysmall'
-        className='text-gray-600 mb-8 text-center'
-      >
-        {t('screens.account.createAccount')}
-      </CustomText>
-
+    <View>
       {/* Profile Picture */}
       <View className='mb-6'>
         <CustomText

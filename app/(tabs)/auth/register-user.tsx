@@ -3,7 +3,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
-import { CustomLink } from '@/components/ui/CustomLink';
 import { RegisterUserForm } from '@/components/forms/RegisterUserForm';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -93,26 +92,9 @@ export default function RegisterUserScreen() {
   return (
     <SafeAreaView
       className='flex-1 bg-white'
-      edges={['bottom']}
+      edges={[]}
     >
-      <ScrollView
-        className='flex-1'
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-          paddingTop: 20,
-          paddingBottom: 40,
-        }}
-      >
-        {/* Título */}
-        <View className='mb-6'>
-          <CustomText
-            type='h1'
-            className='mb-2 text-center text-cinnabar'
-          >
-            {t('screens.account.registerFormTitle')}
-          </CustomText>
-        </View>
-
+      <ScrollView className='flex-1 px-4 pb-2 pt-4'>
         {/* Formulario */}
         <RegisterUserForm
           control={control}
@@ -138,13 +120,6 @@ export default function RegisterUserScreen() {
               {t('screens.account.createAccount')}
             </CustomText>
           </Button>
-
-          <CustomLink
-            href='/(tabs)/auth/register'
-            mode='secondary'
-          >
-            {t('globals.back')}
-          </CustomLink>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -320,6 +320,7 @@
       "orRegisterWith": "Choose how you want to register",
       "registerAsUser": "Register as User",
       "registerAsAuctioneer": "Want to join as auctioneer?",
+      "registerAsAuctioneerTitle": "Auctioneer Registration",
       "createAccount": "Create Account",
       "registerFormTitle": "User Registration",
       "acceptTerms": "I accept the",

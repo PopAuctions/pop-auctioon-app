@@ -11,7 +11,7 @@ export const useOpenTerms = () => {
   const { callToast } = useToast(locale);
 
   const handleOpenTerms = async () => {
-    const termsUrl = 'https://www.popauction.com/documents/TC-2025-07-14.pdf';
+    const termsUrl = 'https://www.popauctioon.com/documents/TC-2025-07-14.pdf';
     const supported = await Linking.canOpenURL(termsUrl);
 
     if (supported) {
