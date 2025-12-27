@@ -2,10 +2,8 @@
  * Hook para manejar el registro de usuarios con el endpoint /api/mobile/protected/auth/signup
  * Soporta registro de USER, AUCTIONEER y HOST_AUCTIONEER
  *
- * Maneja automáticamente:
- * - Envío como JSON cuando no hay imagen
- * - Envío como FormData cuando hay imagen (más eficiente para archivos)
- * - Timeout extendido para uploads de imágenes
+ * NOTA: Este endpoint es PROTECTED (no SECURE), por lo que SIEMPRE usa JSON.
+ * Si hay imagen, se convierte a base64 y se envía como objeto UploadFile en el JSON.
  */
 
 import { useState, useCallback } from 'react';
@@ -18,8 +16,38 @@ import type {
   SignupData,
   SignupResponse,
   UseSignupReturn,
+  UploadFile,
 } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
+import { File } from 'expo-file-system';
+
+/**
+ * Convierte una URI de imagen local a un objeto UploadFile con base64
+ */
+const convertImageToUploadFile = async (
+  uri: string
+): Promise<UploadFile | null> => {
+  try {
+    const file = new File(uri);
+    const base64 = await file.base64();
+
+    const uriParts = uri.split('.');
+    const fileExtension = uriParts[uriParts.length - 1].toLowerCase();
+    const fileName = `profile.${fileExtension}`;
+    const mimeType = `image/${fileExtension === 'jpg' ? 'jpeg' : fileExtension}`;
+
+    return {
+      src: uri,
+      name: fileName,
+      type: mimeType,
+      arrayBuffer: base64,
+    };
+  } catch (error) {
+    console.error('ERROR_CONVERT_IMAGE', error);
+    Sentry.captureException(error);
+    return null;
+  }
+};
 
 export const useSignup = (): UseSignupReturn => {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,122 +68,72 @@ export const useSignup = (): UseSignupReturn => {
       setErrorMessage(null);
 
       try {
-        // Detectar si hay imagen para decidir entre FormData o JSON
-        const hasImage =
-          data.profilePicture && data.profilePicture.trim() !== '';
+        // Convertir imagen a UploadFile si existe
+        let uploadFileData: SignupData = { ...data };
 
-        if (hasImage) {
-          // CASO 1: Con imagen - usar FormData
-          const formData = new FormData();
+        if (data.profilePicture && data.profilePicture.trim() !== '') {
+          const uploadFile = await convertImageToUploadFile(
+            data.profilePicture
+          );
 
-          // Metadatos de la request
-          formData.append('role', role);
-          formData.append('lang', lang);
-
-          // Campos básicos (USER)
-          formData.append('name', data.name);
-          formData.append('lastName', data.lastName);
-          formData.append('username', data.username);
-          formData.append('email', data.email);
-          formData.append('password', data.password);
-          formData.append('confirmPassword', data.confirmPassword);
-          formData.append('dni', data.dni || '');
-          formData.append('phoneNumber', data.phoneNumber || '');
-
-          // Campos adicionales (AUCTIONEER)
-          if ('storeName' in data) {
-            formData.append('storeName', data.storeName || '');
-            formData.append('webPage', data.webPage || '');
-            formData.append('socialMedia', data.socialMedia || '');
-            formData.append('address', data.address || '');
-            formData.append('town', data.town || '');
-            formData.append('province', data.province || '');
-            formData.append('country', data.country || '');
-            formData.append('postalCode', data.postalCode || '');
-          }
-
-          // Agregar archivo de imagen
-          if (data.profilePicture) {
-            const uriParts = data.profilePicture.split('.');
-            const fileType = uriParts[uriParts.length - 1];
-
-            formData.append('profilePicture', {
-              uri: data.profilePicture,
-              name: `profile.${fileType}`,
-              type: `image/${fileType}`,
-            } as any);
-          }
-
-          const response = await protectedPost<SignupResponse>({
-            endpoint: PROTECTED_ENDPOINTS.AUTH.SIGNUP,
-            data: formData,
-            options: {
-              timeout: 30000, // 30 segundos para uploads
-            },
-          });
-
-          if (response.error) {
-            setErrorMessage(response.error);
+          if (!uploadFile) {
+            const imageError: LangMap = {
+              es: 'Error al procesar la imagen de perfil',
+              en: 'Error processing profile picture',
+            };
+            setErrorMessage(imageError);
             return {
               success: false,
-              error: response.error,
+              error: imageError,
             };
           }
 
-          if (response.data?.data?.email) {
-            return {
-              success: true,
-              email: response.data.data.email,
-            };
-          }
-
-          // Caso inesperado: no hay error pero tampoco datos
-          const fallbackError: LangMap = {
-            es: 'Error inesperado durante el registro',
-            en: 'Unexpected error during registration',
-          };
-          setErrorMessage(fallbackError);
-          return {
-            success: false,
-            error: fallbackError,
-          };
-        } else {
-          // CASO 2: Sin imagen - usar JSON (más eficiente)
-          const response = await protectedPost<SignupResponse>({
-            endpoint: PROTECTED_ENDPOINTS.AUTH.SIGNUP,
-            data: {
-              role,
-              lang,
-              userData: data,
-            },
-          });
-
-          if (response.error) {
-            setErrorMessage(response.error);
-            return {
-              success: false,
-              error: response.error,
-            };
-          }
-
-          if (response.data?.data?.email) {
-            return {
-              success: true,
-              email: response.data.data.email,
-            };
-          }
-
-          // Caso inesperado: no hay error pero tampoco datos
-          const fallbackError: LangMap = {
-            es: 'Error inesperado durante el registro',
-            en: 'Unexpected error during registration',
-          };
-          setErrorMessage(fallbackError);
-          return {
-            success: false,
-            error: fallbackError,
+          // Reemplazar la URI con el objeto UploadFile
+          uploadFileData = {
+            ...data,
+            profilePicture: uploadFile as any, // TypeScript espera string, pero enviamos UploadFile
           };
         }
+
+        // SIEMPRE usar JSON (el endpoint PROTECTED no soporta FormData)
+        // Aplanar los campos con spread operator - backend espera campos en nivel raíz
+        const response = await protectedPost<SignupResponse>({
+          endpoint: PROTECTED_ENDPOINTS.AUTH.SIGNUP,
+          data: {
+            role,
+            lang,
+            ...uploadFileData, // Spread para aplanar campos
+          },
+          options: {
+            timeout: 30000, // Timeout extendido por si hay imagen
+          },
+        });
+
+        if (response.error) {
+          setErrorMessage(response.error);
+          return {
+            success: false,
+            error: response.error,
+          };
+        }
+
+        if (response.data?.data?.email) {
+          return {
+            success: true,
+            email: response.data.data.email,
+          };
+        }
+
+        // Caso inesperado: no hay error pero tampoco datos
+        const fallbackError: LangMap = {
+          es: 'Error inesperado durante el registro',
+          en: 'Unexpected error during registration',
+        };
+        setErrorMessage(fallbackError);
+        return {
+          success: false,
+          error: fallbackError,
+        };
       } catch (error: any) {
         Sentry.captureException(
           `SIGNUP_ERROR: ${error?.message ?? 'Unknown error'}`
