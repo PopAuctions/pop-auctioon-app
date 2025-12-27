@@ -97,7 +97,7 @@ export const useSignup = (): UseSignupReturn => {
 
         // SIEMPRE usar JSON (el endpoint PROTECTED no soporta FormData)
         // Aplanar los campos con spread operator - backend espera campos en nivel raíz
-        const response = await protectedPost<SignupResponse>({
+        const response = await protectedPost<any>({
           endpoint: PROTECTED_ENDPOINTS.AUTH.SIGNUP,
           data: {
             role,
@@ -109,6 +109,7 @@ export const useSignup = (): UseSignupReturn => {
           },
         });
 
+        // Si hay error del API (network, timeout, etc.) - useSecureApi lo detecta
         if (response.error) {
           setErrorMessage(response.error);
           return {
@@ -117,14 +118,43 @@ export const useSignup = (): UseSignupReturn => {
           };
         }
 
-        if (response.data?.data?.email) {
+        // Status 201 = éxito
+        // Backend devuelve toda la respuesta en response.data:
+        // { error: null, success: { en: "...", es: "..." }, data: { email: "..." } }
+        if (response.status === 201 && response.data) {
+          const fullResponse = response.data as SignupResponse;
+
+          // Verificar si hay email en la estructura anidada
+          if (fullResponse.data?.email) {
+            return {
+              success: true,
+              email: fullResponse.data.email,
+            };
+          }
+
+          // O directamente en response.data si useSecureApi lo extrajo
+          if ((response.data as any).email) {
+            return {
+              success: true,
+              email: (response.data as any).email,
+            };
+          }
+        }
+
+        // Status 400+ = error del backend
+        if (response.status && response.status >= 400) {
+          const errorMsg = response.error || {
+            es: 'Error en el registro',
+            en: 'Registration error',
+          };
+          setErrorMessage(errorMsg);
           return {
-            success: true,
-            email: response.data.data.email,
+            success: false,
+            error: errorMsg,
           };
         }
 
-        // Caso inesperado: no hay error pero tampoco datos
+        // Caso inesperado
         const fallbackError: LangMap = {
           es: 'Error inesperado durante el registro',
           en: 'Unexpected error during registration',

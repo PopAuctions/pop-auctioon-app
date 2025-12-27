@@ -80,7 +80,7 @@ export default function RegisterUserScreen() {
         },
       });
 
-      router.replace('/(tabs)/auth/login');
+      router.replace('/(tabs)/account');
     } else if (result.error) {
       callToast({
         variant: 'error',
