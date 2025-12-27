@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
@@ -11,10 +11,12 @@ import { User } from '@/types/types';
 import { Divider } from '@/components/ui/Divider';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { useOpenTerms } from '@/hooks/useOpenTerms';
 
 export default function Account({ currentUser }: { currentUser: User }) {
   const { signOut } = useAuth();
   const { t } = useTranslation();
+  const { handleOpenTerms } = useOpenTerms();
   const [loading, setLoading] = useState(false);
 
   const userInitials = useMemo(() => {
@@ -510,11 +512,9 @@ export default function Account({ currentUser }: { currentUser: User }) {
           {/* Línea divisoria */}
           <Divider className='my-2' />
 
-          {/* Terms and Conditions */}
-          <CustomLink
-            href='/(tabs)/account/info/terms-and-conditions'
-            mode='empty'
-            hoverEffect={false}
+          {/* Terms and Conditions - Abre directamente el PDF sin renderizar pantalla */}
+          <Pressable
+            onPress={handleOpenTerms}
             className='mb-3 flex-row items-center justify-between py-4'
           >
             <View className='flex-row items-center'>
@@ -536,7 +536,7 @@ export default function Account({ currentUser }: { currentUser: User }) {
               size={16}
               color='#9ca3af'
             />
-          </CustomLink>
+          </Pressable>
 
           {/* Privacy Policy */}
           <CustomLink

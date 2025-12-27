@@ -5,7 +5,6 @@ import { AboutUsContent } from '@/components/info/AboutUsContent';
 import { HowItWorksContent } from '@/components/info/HowItWorksContent';
 import { FAQsContent } from '@/components/info/FAQsContent';
 import { ContactUsContent } from '@/components/info/ContactUsContent';
-import { TermsAndConditionsContent } from '@/components/info/TermsAndConditionsContent';
 import { PrivacyPolicyContent } from '@/components/info/PrivacyPolicyContent';
 import { CookiesPolicyContent } from '@/components/info/CookiesPolicyContent';
 import { useFetchLegalContent } from '@/hooks/pages/useFetchLegalContent';
@@ -34,8 +33,6 @@ export default function InfoScreen() {
         return t('screens.account.faqs');
       case 'contact-us':
         return t('screens.account.contactUs');
-      case 'terms-and-conditions':
-        return t('screens.account.termsAndConditions');
       case 'privacy-policy':
         return t('screens.account.privacyPolicy');
       case 'cookies-policy':
@@ -46,10 +43,7 @@ export default function InfoScreen() {
   };
 
   // Determinar tipo de página
-  const isLegalPage =
-    page === 'terms-and-conditions' ||
-    page === 'privacy-policy' ||
-    page === 'cookies-policy';
+  const isLegalPage = page === 'privacy-policy' || page === 'cookies-policy';
 
   const isInfoPage =
     page === 'about-us' || page === 'how-it-works' || page === 'faqs';
@@ -82,14 +76,6 @@ export default function InfoScreen() {
         );
       case 'contact-us':
         return <ContactUsContent />;
-      case 'terms-and-conditions':
-        if (!legalContent) return null;
-        return (
-          <TermsAndConditionsContent
-            data={legalContent.termsAndConditions}
-            locale={locale}
-          />
-        );
       case 'privacy-policy':
         if (!legalContent) return null;
         return (
