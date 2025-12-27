@@ -8,12 +8,29 @@ import {
 import RegisterUserScreen from '@/app/(tabs)/auth/register-user';
 import { useSignup } from '@/hooks/auth/useSignup';
 import { useToast } from '@/hooks/useToast';
+import { useOpenTerms } from '@/hooks/useOpenTerms';
 import { router } from 'expo-router';
 import * as Linking from 'expo-linking';
 
 // Mock dependencies
 jest.mock('@/hooks/auth/useSignup');
 jest.mock('@/hooks/useToast');
+jest.mock('@/hooks/useOpenTerms');
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: () =>
+        Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+    },
+  },
+}));
+jest.mock('@/context/auth-context', () => ({
+  useAuth: () => ({
+    auth: { state: 'unauthenticated' },
+    getSession: () => [null, null],
+  }),
+}));
 jest.mock('expo-router', () => ({
   router: {
     replace: jest.fn(),
@@ -25,6 +42,7 @@ jest.mock('expo-linking');
 describe('RegisterUserScreen', () => {
   const mockSignup = jest.fn();
   const mockCallToast = jest.fn();
+  const mockHandleOpenTerms = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -36,20 +54,23 @@ describe('RegisterUserScreen', () => {
     (useToast as jest.Mock).mockReturnValue({
       callToast: mockCallToast,
     });
+    (useOpenTerms as jest.Mock).mockReturnValue({
+      handleOpenTerms: mockHandleOpenTerms,
+    });
   });
 
   it('should render registration form', () => {
     render(<RegisterUserScreen />);
 
-    expect(screen.getByText(/registerFormTitle/i)).toBeTruthy();
-    expect(screen.getByText(/createAccount/i)).toBeTruthy();
-    expect(screen.getByText(/globals.back/i)).toBeTruthy();
+    expect(screen.getByText('User Registration')).toBeTruthy();
+    expect(screen.getByText('Create Account')).toBeTruthy();
+    expect(screen.getByText('Back')).toBeTruthy();
   });
 
   it('should show error toast when terms not accepted', async () => {
     render(<RegisterUserScreen />);
 
-    const submitButton = screen.getByText(/createAccount/i);
+    const submitButton = screen.getByText('Create Account');
     fireEvent.press(submitButton);
 
     await waitFor(() => {
@@ -117,11 +138,14 @@ describe('RegisterUserScreen', () => {
 
     const { getByText } = render(<RegisterUserScreen />);
 
-    // Accept terms
-    const termsCheckbox = screen.getByTestId('terms-checkbox');
-    fireEvent.press(termsCheckbox);
+    // Accept terms - find by checking for disabled false checkbox
+    const checkboxes = screen.getAllByA11yState({ disabled: false });
+    const termsCheckbox = checkboxes.find(
+      (el) => el.props.accessibilityRole === undefined
+    );
+    if (termsCheckbox) fireEvent.press(termsCheckbox);
 
-    const submitButton = getByText(/createAccount/i);
+    const submitButton = getByText('Create Account');
     fireEvent.press(submitButton);
 
     await waitFor(() => {
@@ -150,43 +174,18 @@ describe('RegisterUserScreen', () => {
   it('should disable submit button when terms not accepted', () => {
     render(<RegisterUserScreen />);
 
-    const submitButton = screen.getByText(/createAccount/i);
+    const submitButton = screen.getByText('Create Account');
     expect(submitButton.props.accessibilityState?.disabled).toBe(true);
   });
 
   it('should open terms PDF when link pressed', async () => {
-    (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
-    (Linking.openURL as jest.Mock).mockResolvedValue(true);
-
     render(<RegisterUserScreen />);
 
-    const termsLink = screen.getByText(/termsAndConditions/i);
+    const termsLink = screen.getByText('Terms and Conditions');
     fireEvent.press(termsLink);
 
     await waitFor(() => {
-      expect(Linking.canOpenURL).toHaveBeenCalled();
-      expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://www.popauction.com/documents/TC-2025-07-14.pdf'
-      );
-    });
-  });
-
-  it('should show error toast when terms PDF cannot be opened', async () => {
-    (Linking.canOpenURL as jest.Mock).mockResolvedValue(false);
-
-    render(<RegisterUserScreen />);
-
-    const termsLink = screen.getByText(/termsAndConditions/i);
-    fireEvent.press(termsLink);
-
-    await waitFor(() => {
-      expect(mockCallToast).toHaveBeenCalledWith({
-        variant: 'error',
-        description: {
-          es: 'No se pudo abrir el documento',
-          en: 'Could not open document',
-        },
-      });
+      expect(mockHandleOpenTerms).toHaveBeenCalled();
     });
   });
 
@@ -199,7 +198,7 @@ describe('RegisterUserScreen', () => {
 
     render(<RegisterUserScreen />);
 
-    const submitButton = screen.getByText(/createAccount/i);
-    expect(submitButton.props.isLoading).toBe(true);
+    const submitButton = screen.getByText('Create Account');
+    expect(submitButton.props.accessibilityState?.busy).toBe(true);
   });
 });

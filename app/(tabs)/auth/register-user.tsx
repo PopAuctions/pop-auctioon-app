@@ -16,12 +16,13 @@ import {
 import { useSignup } from '@/hooks/auth/useSignup';
 import { useToast } from '@/hooks/useToast';
 import { APP_USER_ROLES } from '@/constants/user';
-import * as Linking from 'expo-linking';
+import { useOpenTerms } from '@/hooks/useOpenTerms';
 
 export default function RegisterUserScreen() {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { signup, isLoading } = useSignup();
+  const { handleOpenTerms } = useOpenTerms();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const {
@@ -85,23 +86,6 @@ export default function RegisterUserScreen() {
       callToast({
         variant: 'error',
         description: result.error,
-      });
-    }
-  };
-
-  const handleOpenTerms = async () => {
-    const termsUrl = 'https://www.popauction.com/documents/TC-2025-07-14.pdf';
-    const supported = await Linking.canOpenURL(termsUrl);
-
-    if (supported) {
-      await Linking.openURL(termsUrl);
-    } else {
-      callToast({
-        variant: 'error',
-        description: {
-          es: 'No se pudo abrir el documento',
-          en: 'Could not open document',
-        },
       });
     }
   };

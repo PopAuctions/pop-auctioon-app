@@ -19,8 +19,8 @@ export default function RegisterScreen() {
 
   const handleProviderPress = (providerName: string) => {
     setSelectedProvider(providerName);
-    // TODO: Implementar auth con providers en el futuro
-    console.log(`Provider seleccionado: ${providerName}`);
+    // TODO: Implement auth with providers in the future
+    console.log(`Selected provider: ${providerName}`);
   };
 
   const handleRegisterAsUser = () => {
@@ -74,7 +74,7 @@ export default function RegisterScreen() {
                 type='body'
                 className='text-gray-800'
               >
-                {t('screens.account.registerWithEmail')} {provider.name}
+                {t('screens.account.continueWith')} {provider.name}
               </CustomText>
             </Pressable>
           ))}

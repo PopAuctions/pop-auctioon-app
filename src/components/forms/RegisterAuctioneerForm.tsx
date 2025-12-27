@@ -6,20 +6,7 @@ import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { Divider } from '@/components/ui/Divider';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
 import type { AuctioneerRegisterSchemaType } from '@/utils/schemas';
-
-// Helper para parsear errores bilingües
-const parseErrorMessage = (
-  message: string | undefined,
-  locale: 'es' | 'en'
-): string => {
-  if (!message) return '';
-  try {
-    const parsed = JSON.parse(message);
-    return parsed[locale] || message;
-  } catch {
-    return message;
-  }
-};
+import { getErrorMessage } from '@/utils/form-errors';
 
 interface RegisterAuctioneerFormProps {
   control: Control<AuctioneerRegisterSchemaType>;
@@ -113,7 +100,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.name.message, locale)}
+            {getErrorMessage(errors.name.message, locale)}
           </CustomText>
         )}
       </View>
@@ -144,7 +131,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.lastName.message, locale)}
+            {getErrorMessage(errors.lastName.message, locale)}
           </CustomText>
         )}
       </View>
@@ -175,7 +162,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.username.message, locale)}
+            {getErrorMessage(errors.username.message, locale)}
           </CustomText>
         )}
       </View>
@@ -207,7 +194,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.email.message, locale)}
+            {getErrorMessage(errors.email.message, locale)}
           </CustomText>
         )}
       </View>
@@ -239,7 +226,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.password.message, locale)}
+            {getErrorMessage(errors.password.message, locale)}
           </CustomText>
         )}
       </View>
@@ -271,7 +258,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.confirmPassword.message, locale)}
+            {getErrorMessage(errors.confirmPassword.message, locale)}
           </CustomText>
         )}
       </View>
@@ -301,7 +288,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.dni.message, locale)}
+            {getErrorMessage(errors.dni.message, locale)}
           </CustomText>
         )}
       </View>
@@ -338,7 +325,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.phoneNumber.message, locale)}
+            {getErrorMessage(errors.phoneNumber.message, locale)}
           </CustomText>
         )}
       </View>
@@ -370,7 +357,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.storeName.message, locale)}
+            {getErrorMessage(errors.storeName.message, locale)}
           </CustomText>
         )}
       </View>
@@ -408,7 +395,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.webPage.message, locale)}
+            {getErrorMessage(errors.webPage.message, locale)}
           </CustomText>
         )}
       </View>
@@ -446,7 +433,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.socialMedia.message, locale)}
+            {getErrorMessage(errors.socialMedia.message, locale)}
           </CustomText>
         )}
       </View>
@@ -478,7 +465,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.address.message, locale)}
+            {getErrorMessage(errors.address.message, locale)}
           </CustomText>
         )}
       </View>
@@ -508,7 +495,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.town.message, locale)}
+            {getErrorMessage(errors.town.message, locale)}
           </CustomText>
         )}
       </View>
@@ -538,7 +525,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.province.message, locale)}
+            {getErrorMessage(errors.province.message, locale)}
           </CustomText>
         )}
       </View>
@@ -568,7 +555,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.country.message, locale)}
+            {getErrorMessage(errors.country.message, locale)}
           </CustomText>
         )}
       </View>
@@ -598,7 +585,7 @@ export function RegisterAuctioneerForm({
             type='bodysmall'
             className='mt-1 text-red-500'
           >
-            {parseErrorMessage(errors.postalCode.message, locale)}
+            {getErrorMessage(errors.postalCode.message, locale)}
           </CustomText>
         )}
       </View>

@@ -316,7 +316,7 @@
       "login": "Login",
       "register": "Register",
       "registerOptions": "Register Options",
-      "registerWithEmail": "Continue with",
+      "continueWith": "Continue with",
       "orRegisterWith": "Choose how you want to register",
       "registerAsUser": "Register as User",
       "registerAsAuctioneer": "Want to join as auctioneer?",

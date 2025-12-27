@@ -735,7 +735,7 @@ export type SubscribeStatus =
 
 // Auth - Signup Types
 export interface SignupData {
-  // Campos comunes para todos los roles
+  // Common fields for all roles
   name: string;
   lastName: string;
   username: string;
@@ -743,12 +743,12 @@ export interface SignupData {
   password: string;
   confirmPassword: string;
 
-  // Campos opcionales según el rol
+  // Optional fields depending on role
   dni?: string;
   phoneNumber?: string;
   profilePicture?: string;
 
-  // Campos adicionales para AUCTIONEER
+  // Additional fields for AUCTIONEER
   storeName?: string;
   webPage?: string;
   socialMedia?: string;
