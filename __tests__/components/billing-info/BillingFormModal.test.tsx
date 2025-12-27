@@ -56,8 +56,8 @@ describe('BillingFormModal', () => {
     );
     fireEvent.press(getByText(/save/i));
     await waitFor(() => {
-      // All required fields should show 'Required' error
-      expect(getAllByText('Required').length).toBeGreaterThanOrEqual(1);
+      // All required fields should show 'Requerido' error (Spanish)
+      expect(getAllByText('Requerido').length).toBeGreaterThanOrEqual(1);
     });
   });
 

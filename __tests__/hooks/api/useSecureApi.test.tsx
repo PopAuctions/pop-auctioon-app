@@ -233,7 +233,7 @@ describe('useSecureApi - Simple Tests', () => {
     });
 
     expect(response).toEqual({
-      data: undefined,
+      data: { error: 'Bad request' },
       status: 400,
       error: {
         es: 'Bad request',
@@ -260,9 +260,16 @@ describe('useSecureApi - Simple Tests', () => {
       endpoint: '/test-endpoint',
     });
 
-    // Non-JSON responses currently return undefined data (this seems like a bug but that's current behavior)
+    // Non-JSON responses return data with error, responseText and contentType
     expect(response).toEqual({
-      data: undefined,
+      data: {
+        error: {
+          en: 'Error getting information',
+          es: 'Error al obtener información',
+        },
+        responseText: 'Plain text response',
+        contentType: 'text/plain',
+      },
       status: 200,
       error: undefined,
     });
@@ -622,9 +629,16 @@ describe('useSecureApi - Simple Tests', () => {
 
       const response = await result.current.protectedGet({ endpoint: '/test' });
 
-      // Non-JSON responses currently return undefined data (this seems like a bug but that's current behavior)
+      // Now returns responseData completo when not ok
       expect(response).toEqual({
-        data: undefined,
+        data: {
+          error: {
+            en: 'Error getting information',
+            es: 'Error al obtener información',
+          },
+          responseText: longText.substring(0, 200) + '...',
+          contentType: 'text/html',
+        },
         status: 200,
         error: undefined,
       });
