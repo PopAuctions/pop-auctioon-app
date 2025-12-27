@@ -75,6 +75,11 @@ export const PROTECTED_ENDPOINTS = {
   CONTACT_US: {
     SEND: '/contact-us', // POST - Enviar formulario de contacto
   },
+
+  // Auth
+  AUTH: {
+    SIGNUP: '/auth/signup', // POST - Registro de usuario
+  },
 } as const;
 
 // ========================================

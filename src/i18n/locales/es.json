@@ -10,7 +10,8 @@
     "delete": "Eliminar",
     "confirm": "Confirmar",
     "close": "Cerrar",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "or": "o"
   },
   "loginPage": {
     "login": "Iniciar sesión",
@@ -314,6 +315,18 @@
       "aboutUs": "Acerca de Nosotros",
       "login": "Iniciar Sesión",
       "register": "Registrarse",
+      "registerOptions": "Opciones de Registro",
+      "registerWithEmail": "Continuar con",
+      "orRegisterWith": "Elige cómo deseas registrarte",
+      "registerAsUser": "Registrarse como Usuario",
+      "registerAsAuctioneer": "¿Deseas unirte como subastador?",
+      "createAccount": "Crear Cuenta",
+      "registerFormTitle": "Registro de Usuario",
+      "acceptTerms": "Acepto los",
+      "uploadImage": "Subir Foto de Perfil",
+      "removeImage": "Eliminar Imagen",
+      "imageFormats": "Formatos: JPG, PNG, WEBP",
+      "confirmPassword": "Confirmar Contraseña",
       "phoneVerified": "Teléfono Verificado",
       "phoneNotVerified": "Teléfono No Verificado",
       "howItWorks": "Cómo Funciona",
@@ -369,7 +382,9 @@
       "compressionFailed": "Error al comprimir la imagen. Por favor intenta con otra.",
       "onlineStore": "Tienda online",
       "update": "Actualizar",
-      "back": "Volver"
+      "back": "Volver",
+      "dni": "DNI (opcional)",
+      "includeCountryCode": "Incluir código de país"
     },
     "payment": {
       "paymentDate": "Fecha de pago:",
@@ -705,6 +720,7 @@
     }
   },
   "globals": {
+    "back": "Volver",
     "refreshPage": "Refrescar página",
     "goToHome": "Ir a la página principal"
   },

@@ -10,7 +10,8 @@
     "delete": "Delete",
     "confirm": "Confirm",
     "close": "Close",
-    "retry": "Retry"
+    "retry": "Retry",
+    "or": "or"
   },
   "loginPage": {
     "login": "Login",
@@ -314,6 +315,18 @@
       "aboutUs": "About Us",
       "login": "Login",
       "register": "Register",
+      "registerOptions": "Register Options",
+      "registerWithEmail": "Continue with",
+      "orRegisterWith": "Choose how you want to register",
+      "registerAsUser": "Register as User",
+      "registerAsAuctioneer": "Want to join as auctioneer?",
+      "createAccount": "Create Account",
+      "registerFormTitle": "User Registration",
+      "acceptTerms": "I accept the",
+      "uploadImage": "Upload Profile Picture",
+      "removeImage": "Remove Image",
+      "imageFormats": "Formats: JPG, PNG, WEBP",
+      "confirmPassword": "Confirm Password",
       "phoneVerified": "Phone Verified",
       "phoneNotVerified": "Phone Not Verified",
       "howItWorks": "How it Works",
@@ -369,7 +382,9 @@
       "compressionFailed": "Failed to compress image. Please try another one.",
       "onlineStore": "Online Store",
       "update": "Update",
-      "back": "Back"
+      "back": "Back",
+      "dni": "DNI (optional)",
+      "includeCountryCode": "Include country code"
     },
     "payment": {
       "paymentDate": "Payment Date:",
@@ -695,6 +710,7 @@
     }
   },
   "globals": {
+    "back": "Back",
     "refreshPage": "Refresh page",
     "goToHome": "Go to home page"
   },
