@@ -1,24 +1,11 @@
-/**
- * Pantalla de pago con Stripe
- * Patrón similar a Next.js web:
- * 1. Recibe auctionId como query param
- * 2. Carga artículos ganados y direcciones
- * 3. Permite seleccionar dirección de envío
- * 4. Calcula breakdown de costos (subtotal, comisión, envío, descuento)
- * 5. Aplica códigos de descuento
- * 6. Pasa datos a Stripe Payment Sheet
- */
-
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useStripePayment } from '@/hooks/payment/useStripePayment';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
-import { useArticlesPayment } from '@/hooks/pages/payment/useArticlesPayment';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomText } from '@/components/ui/CustomText';
@@ -34,21 +21,26 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
+import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
+import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
 
-export default function PaymentScreen() {
+export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
   const { callToast } = useToast(locale);
-  const { auctionId } = useLocalSearchParams<{ auctionId: string }>();
+  const didInitRef = useRef(false);
 
-  // Cargar artículos ganados (equivalente a getUserWonAuctionArticles en web)
+  const { articleId } = useLocalSearchParams<{
+    articleId: string;
+  }>();
+
   const {
-    data: articles,
-    status: articlesStatus,
-    errorMessage: articlesError,
-  } = useGetWonArticles({ auctionId: auctionId || '' });
+    data: buyData,
+    status: articleStatus,
+    errorMessage: articleError,
+  } = useFetchBuyArticle({ articleId });
 
-  // Cargar direcciones (equivalente a getUserAddresses en web)
+  // Addresses
   const {
     data: addresses,
     status: addressesStatus,
@@ -62,26 +54,18 @@ export default function PaymentScreen() {
     isLoading: paymentLoading,
   } = useStripePayment();
 
-  const { createPayment, rejectPayment } = useArticlesPayment();
+  const { createPayment, rejectPayment } = useSingleArticlePayment();
 
-  // Hook para obtener porcentaje de comisión y costos de envío dinámicos
+  // Payment config
   const { data: paymentConfig, status: commissionStatus } =
     useFetchPaymentConfig();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
-  const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
-
-  // Inicializar artículos seleccionados cuando se cargan (como en web)
-  useEffect(() => {
-    if (articles.length > 0 && selectedArticleIds.length === 0) {
-      const allIds = articles.map((a) => a.id);
-      setSelectedArticleIds(allIds);
-    }
-  }, [articles, selectedArticleIds.length]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null
   );
   const [showAddressModal, setShowAddressModal] = useState(false);
+
   const [discountCode, setDiscountCode] = useState('');
   const [isInitializingPayment, setIsInitializingPayment] =
     useState<boolean>(false);
@@ -98,23 +82,28 @@ export default function PaymentScreen() {
 
   const paymentTranslations = t('screens.payment');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
+  const userLimitTimeDate = new Date(buyData?.userLimitTime ?? '');
+  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
 
-  // Obtener dirección seleccionada
+  const article = buyData?.article ?? null;
+
+  // Always the single article id (or empty if not loaded)
+  const selectedArticleId = article?.id ?? null;
+
+  // Selected address object
   const selectedAddress = useMemo(() => {
     if (!selectedAddressId || !addresses) return null;
     return addresses.find((addr) => addr.id === selectedAddressId) || null;
   }, [selectedAddressId, addresses]);
 
-  // Calcular subtotal de artículos seleccionados
+  // Subtotal = single article sold price
   const subtotal = useMemo(() => {
-    return articles
-      .filter((article) => selectedArticleIds.includes(article.id))
-      .reduce((sum, article) => sum + (article.soldPrice || 0), 0);
-  }, [articles, selectedArticleIds]);
+    if (!article) return 0;
+    return article.soldPrice || 0;
+  }, [article]);
 
-  // Calcular el breakdown completo de pago
+  // Full payment breakdown
   const paymentDetails = useMemo(() => {
-    // Siempre mostrar el subtotal aunque no tengamos comisión
     if (!isCommissionReady) {
       return {
         subtotal,
@@ -125,15 +114,13 @@ export default function PaymentScreen() {
       };
     }
 
-    const details = calculatePaymentDetails({
+    return calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
       commissionPercentage: paymentConfig.commission || 0,
       shippingTaxes: paymentConfig.shippingTaxes || {},
       discount: appliedDiscount?.amount || 0,
     });
-
-    return details;
   }, [
     subtotal,
     selectedAddress,
@@ -142,22 +129,19 @@ export default function PaymentScreen() {
     paymentConfig,
   ]);
 
-  // Inicializar Payment Sheet una sola vez al montar (como en web antes de React 18)
-  // NOTA: A diferencia de web, NO re-inicializamos en cada cambio porque crea loops
-  // El monto se actualiza solo en el momento de handlePayment
+  // Init Payment Sheet once on mount, only if article is already present
+  // (If the article loads async, you can switch this to depend on article?.id)
   useEffect(() => {
-    // Solo inicializar si hay artículos seleccionados
-    if (selectedArticleIds.length === 0) {
-      return;
-    }
+    if (!article?.id) return;
+    if (didInitRef.current) return;
+    didInitRef.current = true;
 
     const initPaymentSheet = async () => {
       try {
         setIsInitializingPayment(true);
-
         const paymentIntentId = await initializePaymentSheet(
           paymentDetails.total,
-          selectedArticleIds
+          [article.id]
         );
 
         if (!paymentIntentId) {
@@ -184,30 +168,13 @@ export default function PaymentScreen() {
 
     initPaymentSheet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Solo al montar, NO escuchar cambios
+  }, [article?.id]);
 
-  // Toggle selección de artículo
-  const toggleArticleSelection = useCallback(
-    (articleId: number) => {
-      setSelectedArticleIds((prev) => {
-        if (prev.includes(articleId)) {
-          // Prevenir deselección del último artículo (como en web)
-          if (prev.length === 1) {
-            callToast({
-              variant: 'error',
-              description: 'screens.payment.cannotDeselectLastItem',
-            });
-            return prev;
-          }
-          return prev.filter((id) => id !== articleId);
-        }
-        return [...prev, articleId];
-      });
-    },
-    [callToast]
-  );
+  useEffect(() => {
+    didInitRef.current = false;
+  }, [articleId]);
 
-  // Manejar aplicación de código de descuento
+  // Apply discount
   const handleApplyDiscount = useCallback(async () => {
     if (!discountCode.trim()) {
       callToast({
@@ -233,7 +200,6 @@ export default function PaymentScreen() {
         },
       });
     } else {
-      // Mostrar error específico del backend si existe
       callToast({
         variant: 'error',
         description:
@@ -242,7 +208,6 @@ export default function PaymentScreen() {
     }
   }, [discountCode, validateCode, discountErrorMessage, callToast, formatter]);
 
-  // Remover descuento aplicado
   const handleRemoveDiscount = useCallback(() => {
     setAppliedDiscount(null);
     callToast({
@@ -254,14 +219,14 @@ export default function PaymentScreen() {
     });
   }, [callToast]);
 
-  // Manejar el pago (flujo completo idéntico a web)
+  // Payment flow
   const handlePayment = useCallback(async () => {
-    if (selectedArticleIds.length === 0) {
+    if (!article?.id) {
       callToast({
         variant: 'warning',
         description: {
-          es: paymentTranslations.noItemsSelected,
-          en: paymentTranslations.noItemsSelected,
+          es: paymentTranslations.noPendingItems,
+          en: paymentTranslations.noPendingItems,
         },
       });
       return;
@@ -279,10 +244,10 @@ export default function PaymentScreen() {
     }
 
     try {
-      // PASO 1: Re-inicializar Payment Sheet con monto final actualizado
+      // 1) Re-init with final amount
       const paymentIntentId = await initializePaymentSheet(
         paymentDetails.total,
-        selectedArticleIds
+        [Number(articleId)]
       );
 
       if (!paymentIntentId) {
@@ -296,12 +261,11 @@ export default function PaymentScreen() {
         return;
       }
 
-      // PASO 2: CRÍTICO - Crear registro en BD ANTES de confirmar pago
+      // 2) Create DB record
       const { userPaymentId, error: createPaymentError } = await createPayment({
-        auctionId: auctionId || '',
-        articlesIds: selectedArticleIds,
+        articleId: articleId,
         clientTotalAmount: paymentDetails.total,
-        clientIntent: paymentIntentId, // Usar el ID devuelto directamente
+        clientIntent: paymentIntentId,
         country: selectedAddress.country,
         userAddressId: selectedAddressId,
         discount: appliedDiscount,
@@ -318,18 +282,17 @@ export default function PaymentScreen() {
         return;
       }
 
-      // PASO 3: Presentar Payment Sheet al usuario
+      // 3) Present sheet
       const { success, error: presentError } = await presentPaymentSheet();
 
       if (!success && presentError) {
-        // PASO 4: CRÍTICO - Revertir registro en BD si el pago falla
+        // 4) Reject if failed
         await rejectPayment({
           userPaymentId,
           errorCode: presentError.code,
           errorDescription: presentError.message,
         });
 
-        // Mostrar error solo si NO fue cancelación del usuario
         if (presentError.code !== 'Canceled') {
           callToast({
             variant: 'error',
@@ -342,7 +305,7 @@ export default function PaymentScreen() {
         return;
       }
 
-      // PASO 5: Pago exitoso
+      // 5) Success
       callToast({
         variant: 'success',
         description: {
@@ -363,11 +326,11 @@ export default function PaymentScreen() {
       });
     }
   }, [
-    selectedArticleIds,
+    article?.id,
+    articleId,
     selectedAddressId,
     selectedAddress,
     paymentDetails.total,
-    auctionId,
     appliedDiscount,
     initializePaymentSheet,
     createPayment,
@@ -378,33 +341,32 @@ export default function PaymentScreen() {
     paymentTranslations,
   ]);
 
-  // Validar que existe auctionId (después de todos los hooks)
-  if (!auctionId) {
+  if (!articleId) {
     return (
       <CustomError
         customMessage={{
-          es: 'ID de subasta requerido',
-          en: 'Auction ID required',
+          es: 'ID de artículo requerido',
+          en: 'Article ID required',
         }}
         refreshRoute='/(tabs)/account'
       />
     );
   }
 
-  // Estados de carga y error (ambos hooks deben cargar primero)
+  // Loading states (buy article + addresses)
   if (
-    articlesStatus === REQUEST_STATUS.loading ||
-    articlesStatus === REQUEST_STATUS.idle ||
+    articleStatus === REQUEST_STATUS.loading ||
+    articleStatus === REQUEST_STATUS.idle ||
     addressesStatus === REQUEST_STATUS.loading ||
     addressesStatus === REQUEST_STATUS.idle
   ) {
     return <Loading locale={locale} />;
   }
 
-  if (articlesStatus === REQUEST_STATUS.error) {
+  if (articleStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={articlesError}
+        customMessage={articleError}
         refreshRoute='/(tabs)/account/payment'
       />
     );
@@ -419,8 +381,8 @@ export default function PaymentScreen() {
     );
   }
 
-  // Sin artículos pendientes
-  if (articles.length === 0) {
+  // No article returned (or not payable)
+  if (!article) {
     return (
       <SafeAreaView
         className='flex-1 bg-white'
@@ -460,8 +422,31 @@ export default function PaymentScreen() {
         className='flex-1'
         contentContainerClassName='px-6 py-6'
       >
-        {/* Alerta de verificación */}
-        <View className='border-hairline mb-6 flex-row items-start rounded-lg border-black  p-4'>
+        <View className='py-5'>
+          <CustomText
+            type='subtitle'
+            className='text-center'
+          >
+            {paymentTranslations.until}{' '}
+            <CustomText
+              type='subtitle'
+              className='text-cinnabar'
+            >
+              {userLimitTimeDate.toLocaleDateString(dateLang, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+              })}
+            </CustomText>{' '}
+            {paymentTranslations.toPay}
+          </CustomText>
+        </View>
+
+        {/* Alert */}
+        <View className='border-hairline mb-6 flex-row items-start rounded-lg border-black p-4'>
           <View className='mr-3 mt-1'>
             <FontAwesomeIcon
               variant='bold'
@@ -478,7 +463,7 @@ export default function PaymentScreen() {
           </CustomText>
         </View>
 
-        {/* Selector de dirección */}
+        {/* Address selector */}
         <AddressSelector
           addresses={addresses || []}
           selectedAddressId={selectedAddressId}
@@ -487,14 +472,15 @@ export default function PaymentScreen() {
           onAddNewAddress={() => setShowAddressModal(true)}
         />
 
-        {/* Lista de artículos */}
+        {/* Single article (reuse list component with 1 item) */}
         <PaymentArticlesList
-          articles={articles}
-          selectedArticleIds={selectedArticleIds}
-          onToggleArticle={toggleArticleSelection}
+          articles={[article]}
+          selectedArticleIds={selectedArticleId ? [selectedArticleId] : []}
+          onToggleArticle={() => {}}
+          showCheckBoxes={false}
         />
 
-        {/* Resumen de pago con código de descuento */}
+        {/* Summary + discount */}
         <PaymentCheckoutSummary
           paymentDetails={paymentDetails}
           appliedDiscount={appliedDiscount}
@@ -505,12 +491,12 @@ export default function PaymentScreen() {
           isValidatingDiscount={isValidatingDiscount}
         />
 
-        {/* Botón de pago */}
+        {/* Pay button */}
         <Button
           mode='primary'
           onPress={handlePayment}
           disabled={
-            selectedArticleIds.length === 0 ||
+            !article?.id ||
             !selectedAddress ||
             paymentLoading ||
             isInitializingPayment
@@ -520,17 +506,17 @@ export default function PaymentScreen() {
         >
           {isInitializingPayment
             ? paymentTranslations.processing
-            : `${paymentTranslations.confirmAndPay} ${formatter.format(paymentDetails.total)}`}
+            : `${paymentTranslations.confirmAndPay} ${formatter.format(
+                paymentDetails.total
+              )}`}
         </Button>
       </ScrollView>
 
-      {/* Modal para agregar dirección */}
       <AddressFormModal
         visible={showAddressModal}
         onClose={() => setShowAddressModal(false)}
         onSuccess={() => {
           setShowAddressModal(false);
-          // Refetch addresses para actualizar la lista
           refetchAddresses();
         }}
         countries={isCommissionReady ? paymentConfig.countries : null}
