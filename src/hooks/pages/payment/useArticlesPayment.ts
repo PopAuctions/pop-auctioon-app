@@ -30,7 +30,7 @@ interface RejectArticlesPaymentParams {
   errorDescription?: string;
 }
 
-export function useArticlesPayment() {
+export const useArticlesPayment = () => {
   const [status, setStatus] = useState<string>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { securePost } = useSecureApi();
@@ -118,4 +118,4 @@ export function useArticlesPayment() {
     status,
     errorMessage,
   };
-}
+};
