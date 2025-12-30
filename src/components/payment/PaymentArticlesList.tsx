@@ -15,6 +15,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { cn } from '@/utils/cn';
 import type { UserArticlesWon } from '@/types/types';
+import { ARTICLE_BRANDS_LABELS } from '@/constants/articles';
 
 interface PaymentArticlesListProps {
   articles: UserArticlesWon[];
@@ -73,7 +74,9 @@ export function PaymentArticlesList({
                   type='bodysmall'
                   className='text-gray-500 mb-2'
                 >
-                  {article.brand}
+                  {ARTICLE_BRANDS_LABELS[
+                    article.brand as keyof typeof ARTICLE_BRANDS_LABELS
+                  ] || article.brand}
                 </CustomText>
               )}
               <CustomText
