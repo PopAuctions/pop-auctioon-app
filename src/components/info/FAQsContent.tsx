@@ -60,7 +60,7 @@ export function FAQsContent({ data, locale }: FAQsContentProps) {
                     {/* Question Button */}
                     <TouchableOpacity
                       onPress={() => toggleItem(categoryIndex, questionIndex)}
-                      className='flex-row items-start justify-between'
+                      className='flex-row items-center justify-between'
                       activeOpacity={0.7}
                     >
                       <CustomText
@@ -75,7 +75,7 @@ export function FAQsContent({ data, locale }: FAQsContentProps) {
                         <FontAwesomeIcon
                           name={expanded ? 'minus' : 'plus'}
                           size={16}
-                          color='#E74C3C'
+                          color='cinnabar'
                         />
                       </View>
                     </TouchableOpacity>
