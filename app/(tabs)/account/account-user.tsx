@@ -38,7 +38,7 @@ export default function Account({ currentUser }: { currentUser: User }) {
 
   return (
     <SafeAreaView
-      className='flex-1 '
+      className='flex-1'
       edges={['top']}
     >
       <ScrollView className='flex-1'>
