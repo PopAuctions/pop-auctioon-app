@@ -36,14 +36,14 @@ export default function AuthMenuScreen() {
         <Divider />
 
         {/* Opciones de auth - Login y Register */}
-        <View className='mx-2 p-4'>
+        <View className='mx-2 p-2'>
           {FIRST_SECTION.map(({ name, icon, labelKey, href }) => (
             <CustomLink
               key={name}
               href={href}
               mode='empty'
               hoverEffect={false}
-              className='mb-3 flex-row items-center justify-between py-4'
+              className='flex-row items-center justify-between py-4'
             >
               <View className='flex-row items-center'>
                 <View className='mr-4 h-10 w-10 items-center justify-center'>
@@ -80,14 +80,14 @@ export default function AuthMenuScreen() {
         <Divider />
 
         {/* Settings */}
-        <View className='mx-2 p-4'>
+        <View className='mx-2 p-2'>
           {SECOND_SECTION.map(({ name, icon, labelKey, href }) => (
             <CustomLink
               key={name}
               href={href}
               mode='empty'
               hoverEffect={false}
-              className='mb-3 flex-row items-center justify-between py-4'
+              className='flex-row items-center justify-between py-4'
             >
               <View className='flex-row items-center'>
                 <View className='mr-4 h-10 w-10 items-center justify-center'>
@@ -124,14 +124,14 @@ export default function AuthMenuScreen() {
         <Divider />
 
         {/* Info Pages */}
-        <View className='mx-2 p-4'>
+        <View className='mx-2 p-2'>
           {THIRD_SECTION.map(({ name, icon, labelKey, href }) => (
             <CustomLink
               key={name}
               href={href}
               mode='empty'
               hoverEffect={false}
-              className='mb-3 flex-row items-center justify-between py-4'
+              className='flex-row items-center justify-between py-4'
             >
               <View className='flex-row items-center'>
                 <View className='mr-4 h-10 w-10 items-center justify-center'>
@@ -168,7 +168,7 @@ export default function AuthMenuScreen() {
         <Divider />
 
         {/* Legal Pages */}
-        <View className='mx-2 p-4'>
+        <View className='mx-2 p-2'>
           {FOURTH_SECTION.map(({ name, icon, labelKey, href }) => {
             // Terms and Conditions abre directamente el PDF, los demás usan navegación normal
             const isTerms = name === 'terms-and-conditions';
@@ -178,7 +178,7 @@ export default function AuthMenuScreen() {
                 <Pressable
                   key={name}
                   onPress={handleOpenTerms}
-                  className='mb-3 flex-row items-center justify-between py-4'
+                  className='flex-row items-center justify-between py-4'
                 >
                   <View className='flex-row items-center'>
                     <View className='mr-4 h-10 w-10 items-center justify-center'>
@@ -218,7 +218,7 @@ export default function AuthMenuScreen() {
                 href={href}
                 mode='empty'
                 hoverEffect={false}
-                className='mb-3 flex-row items-center justify-between py-4'
+                className='flex-row items-center justify-between py-4'
               >
                 <View className='flex-row items-center'>
                   <View className='mr-4 h-10 w-10 items-center justify-center'>

@@ -398,6 +398,8 @@
       "commission2": "(IVA included)",
       "taxes": "IVA (On commission)",
       "total": "Total",
+      "until": "You have until",
+      "toPay": "to pay",
       "shippingInformation": "Shipping Information",
       "download": "Download",
       "view": "View",

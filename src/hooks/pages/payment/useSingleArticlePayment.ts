@@ -1,18 +1,11 @@
-/**
- * Hook para crear el registro de pago en la base de datos
- * Debe llamarse ANTES de presentar el Payment Sheet
- * Patrón idéntico a web (createArticlesPayment)
- */
-
 import { useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { LangMap } from '@/types/types';
 import { REQUEST_STATUS } from '@/constants';
 
-interface CreateArticlesPaymentParams {
-  auctionId: string;
-  articlesIds: number[];
+interface CreateArticlePaymentParams {
+  articleId: string;
   clientTotalAmount: number;
   clientIntent: string;
   country: string;
@@ -20,30 +13,30 @@ interface CreateArticlesPaymentParams {
   discount?: { code: string; amount: number } | null;
 }
 
-interface CreateArticlesPaymentResponse {
+interface CreateArticlePaymentResponse {
   userPaymentId: number;
 }
 
-interface RejectArticlesPaymentParams {
+interface RejectArticlePaymentParams {
   userPaymentId: number;
   errorCode?: string;
   errorDescription?: string;
 }
 
-export const useArticlesPayment = () => {
+export const useSingleArticlePayment = () => {
   const [status, setStatus] = useState<string>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { securePost } = useSecureApi();
 
   const createPayment = async (
-    params: CreateArticlesPaymentParams
+    params: CreateArticlePaymentParams
   ): Promise<{ userPaymentId: number | null; error: LangMap | null }> => {
     setStatus(REQUEST_STATUS.loading);
     setErrorMessage(null);
 
     try {
-      const response = await securePost<CreateArticlesPaymentResponse>({
-        endpoint: SECURE_ENDPOINTS.PAYMENT.CREATE_ARTICLES_PAYMENT,
+      const response = await securePost<CreateArticlePaymentResponse>({
+        endpoint: SECURE_ENDPOINTS.PAYMENT.CREATE_SINGLE_ARTICLE_PAYMENT,
         data: params,
       });
 
@@ -78,14 +71,14 @@ export const useArticlesPayment = () => {
   };
 
   const rejectPayment = async (
-    params: RejectArticlesPaymentParams
+    params: RejectArticlePaymentParams
   ): Promise<{ success: boolean; error: LangMap | null }> => {
     setStatus(REQUEST_STATUS.loading);
     setErrorMessage(null);
 
     try {
       const response = await securePost({
-        endpoint: SECURE_ENDPOINTS.PAYMENT.REJECT_ARTICLES_PAYMENT,
+        endpoint: SECURE_ENDPOINTS.PAYMENT.REJECT_SINGLE_ARTICLE_PAYMENT,
         data: params,
       });
 
