@@ -32,6 +32,28 @@ import { ToastProvider } from '@/providers/ToastProvider';
 import { StripeProvider } from '@/providers/StripeProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TranslationProvider } from '@/context/translation-context';
+import * as Notifications from 'expo-notifications';
+import { NotificationProvider } from '@/context/notification-context';
+
+// Configure notification handler
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    // 🔔 shouldShowAlert: Show alert/banner when app is in foreground
+    shouldShowAlert: true, // ✅ Shows banner at the top
+
+    // 🔊 shouldPlaySound: Play notification sound
+    shouldPlaySound: true, // ✅ Plays the sound configured in the channel
+
+    // 🔴 shouldSetBadge: Update counter on app icon (iOS)
+    shouldSetBadge: false, // ✅ Updates the badge number (e.g., red "3")
+
+    // 📱 shouldShowBanner: Show heads-up banner (Android)
+    shouldShowBanner: false, // ✅ Floating banner that appears over the app
+
+    // 📋 shouldShowList: Add to notification list
+    shouldShowList: true, // ✅ Appears in the notification panel
+  }),
+});
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -104,10 +126,12 @@ export default Sentry.wrap(function RootLayout() {
   return (
     <TranslationProvider>
       <AuthProvider>
-        <DeepLinkListener />
-        <ProtectedRoute>
-          <RootLayoutNav />
-        </ProtectedRoute>
+        <NotificationProvider>
+          <DeepLinkListener />
+          <ProtectedRoute>
+            <RootLayoutNav />
+          </ProtectedRoute>
+        </NotificationProvider>
       </AuthProvider>
     </TranslationProvider>
   );

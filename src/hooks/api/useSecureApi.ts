@@ -3,7 +3,6 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import {
   API_CONFIG,
   HEADERS_CONFIG,
-  DEV_CONFIG,
   buildProtectedUrl,
   buildSecureUrl,
 } from '@/config/api-config';
@@ -69,10 +68,6 @@ export const useSecureApi = () => {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-          if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
-            console.log(`🚀 API Request: ${options.method} ${url}`);
-          }
-
           const response = await fetch(url, {
             ...options,
             signal: controller.signal,
@@ -117,13 +112,6 @@ export const useSecureApi = () => {
             if (response.ok) {
               const arrayBuffer = await response.arrayBuffer();
 
-              if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
-                console.log(`✅ API Binary Response: ${response.status}`, {
-                  contentType,
-                  size: arrayBuffer.byteLength,
-                });
-              }
-
               return {
                 data: arrayBuffer as T,
                 status: response.status,
@@ -150,14 +138,6 @@ export const useSecureApi = () => {
               } catch {
                 // ignore – keep default error + empty responseText
               }
-            }
-
-            if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
-              console.log(`⚠️ API Binary Error Response: ${response.status}`, {
-                errorMessage,
-                responseText,
-                contentType,
-              });
             }
 
             return {
@@ -187,10 +167,6 @@ export const useSecureApi = () => {
             };
           }
 
-          if (DEV_CONFIG.ENABLE_RESPONSE_LOGGING) {
-            //console.log(`✅ API Response: ${response.status}`, responseData);
-          }
-
           return {
             // Si responseData tiene .data, usarlo; si no, usar responseData completo
             data: (responseData.data ?? responseData) as T | undefined,
@@ -198,10 +174,6 @@ export const useSecureApi = () => {
             error: response.ok ? undefined : getErrorMessage(responseData),
           };
         } catch (error) {
-          if (DEV_CONFIG.ENABLE_REQUEST_LOGGING) {
-            console.error(`❌ API Error (attempt ${attempt + 1}):`, error);
-          }
-
           if (attempt === retries) {
             break;
           }

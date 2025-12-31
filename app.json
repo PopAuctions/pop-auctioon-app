@@ -29,7 +29,11 @@
       },
       "package": "com.popauctioon.popauctioonapp",
       "predictiveBackGestureEnabled": false,
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "notification": {
+        "icon": "./assets/images/notification-icon.png",
+        "color": "#d75639"
+      }
     },
     "web": {
       "bundler": "metro",
