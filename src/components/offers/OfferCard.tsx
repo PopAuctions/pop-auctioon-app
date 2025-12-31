@@ -102,7 +102,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
                 </CustomText>
               ) : (
                 <CustomLink
-                  href={`/single-payment?articleId=${articleSecondChance.id}`}
+                  href={`/(tabs)/account/single-payment?articleId=${articleSecondChance.id}`}
                   mode='primary'
                   size='small'
                 >

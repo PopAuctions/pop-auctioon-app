@@ -60,6 +60,26 @@ export const PROTECTED_ENDPOINTS = {
   PAYMENT: {
     COMMISSIONS: '/payments/commission', // GET - Solo valor de comisión
   },
+
+  // Legal content (Terms, Privacy, Cookies)
+  LEGAL: {
+    CONTENT: '/legal', // GET - Todo el contenido legal (cookies, privacy, terms PDF)
+  },
+
+  // Info content (About Us, How It Works, FAQs)
+  INFO: {
+    CONTENT: '/info', // GET - Todo el contenido informativo (aboutUs, howItWorks, faqs)
+  },
+
+  // Contact Us form
+  CONTACT_US: {
+    SEND: '/contact-us', // POST - Enviar formulario de contacto
+  },
+
+  // Auth
+  AUTH: {
+    SIGNUP: '/auth/signup', // POST - Registro de usuario
+  },
 } as const;
 
 // ========================================
@@ -77,6 +97,8 @@ export const SECURE_ENDPOINTS = {
   ARTICLES: {
     ID: (articleId: string | number): ApiEndpoint => `/articles/${articleId}`,
     FOLLOWED_ARTICLES: '/articles/followed',
+    BUY: (articleId: string): ApiEndpoint =>
+      `/articles/${articleId}/buy` as ApiEndpoint, // POST - Comprar artículo
     NEW_ARTICLE: (auctionId: string | number): ApiEndpoint =>
       `/auctions/${auctionId}/articles/new`,
     EDIT_ARTICLE: (
@@ -184,6 +206,10 @@ export const SECURE_ENDPOINTS = {
     CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
     CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
     REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
+    CREATE_SINGLE_ARTICLE_PAYMENT:
+      '/user/payments/create-single-article-payment', // POST - Create payment record in DB
+    REJECT_SINGLE_ARTICLE_PAYMENT:
+      '/user/payments/reject-single-article-payment', // POST - Reject/revert payment on failure
     INFO: '/payment-info', // GET - Complete payment configuration (commission, taxes, countries)
   },
 

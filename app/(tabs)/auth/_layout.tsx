@@ -14,33 +14,60 @@ export default function AuthLayout() {
       <Stack.Screen
         name='index'
         options={{
-          title: t('tabsNames.login'),
           headerShown: false,
         }}
       />
-      {/* Pantallas futuras para autenticación - COMENTADAS HASTA IMPLEMENTAR
+      <Stack.Screen
+        name='login'
+        options={{
+          title: t('screens.account.login'),
+          presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
       <Stack.Screen
         name='register'
         options={{
-          title: 'Registrarse',
+          title: t('screens.account.register'),
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
       <Stack.Screen
-        name='forgot-password'
+        name='register-user'
         options={{
-          title: 'Recuperar Contraseña',
+          title: t('screens.account.registerFormTitle'),
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
         }}
       />
-      */}
+      <Stack.Screen
+        name='register-auctioneer'
+        options={{
+          title: t('screens.account.registerAsAuctioneerTitle'),
+          presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
+      <Stack.Screen
+        name='settings'
+        options={{
+          title: t('screens.account.settings'),
+          presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
       <Stack.Screen
         name='info/[page]'
         options={{
           presentation: 'card',
           headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
           // El título se establece dinámicamente desde el componente
         }}
       />

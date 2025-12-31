@@ -88,9 +88,30 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
+        name='payment'
+        options={{
+          title: t('screens.account.payment'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
         name='payment/[id]'
         options={{
           title: t('screens.account.payment'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='single-payment'
+        options={{
+          title: t('screens.account.singlePayment'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='settings'
+        options={{
+          title: t('screens.account.settings'),
           presentation: 'card',
         }}
       />

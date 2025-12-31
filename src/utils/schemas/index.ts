@@ -219,6 +219,8 @@ export const UserRegisterSchema = z
     }
   );
 
+export type UserRegisterSchemaType = z.infer<typeof UserRegisterSchema>;
+
 export const AuctioneerRegisterSchema = z
   .object({
     name: z.string().min(1, {
@@ -363,6 +365,10 @@ export const AuctioneerRegisterSchema = z
       }),
     }
   );
+
+export type AuctioneerRegisterSchemaType = z.infer<
+  typeof AuctioneerRegisterSchema
+>;
 
 export const HostAuctioneerRegisterSchema = z
   .object({

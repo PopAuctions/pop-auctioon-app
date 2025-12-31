@@ -58,7 +58,7 @@ export const ChatInput = ({
         className={cn(
           'h-10 flex-1 pt-2 text-[15px]',
           (disabled || isSending) && 'opacity-50',
-          'bg-transparent text-black'
+          'bg-white text-black'
         )}
         placeholderTextColor='#d1d5db'
       />

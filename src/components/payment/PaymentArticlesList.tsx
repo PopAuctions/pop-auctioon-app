@@ -15,17 +15,20 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { cn } from '@/utils/cn';
 import type { UserArticlesWon } from '@/types/types';
+import { ARTICLE_BRANDS_LABELS } from '@/constants/articles';
 
 interface PaymentArticlesListProps {
   articles: UserArticlesWon[];
   selectedArticleIds: number[];
   onToggleArticle: (articleId: number) => void;
+  showCheckBoxes?: boolean;
 }
 
 export function PaymentArticlesList({
   articles,
   selectedArticleIds,
   onToggleArticle,
+  showCheckBoxes = true,
 }: PaymentArticlesListProps) {
   const { locale } = useTranslation();
   const formatter = euroFormatter(locale, 2);
@@ -44,11 +47,13 @@ export function PaymentArticlesList({
             )}
           >
             {/* Checkbox */}
-            <Checkbox
-              value={isSelected}
-              onValueChange={() => onToggleArticle(article.id)}
-              color={isSelected ? '#d75639' : undefined}
-            />
+            {showCheckBoxes && (
+              <Checkbox
+                value={isSelected}
+                onValueChange={() => onToggleArticle(article.id)}
+                color={isSelected ? '#d75639' : undefined}
+              />
+            )}
 
             {/* Imagen del artículo */}
             <View className='aspect-square w-20 overflow-hidden rounded-lg'>
@@ -73,7 +78,9 @@ export function PaymentArticlesList({
                   type='bodysmall'
                   className='text-gray-500 mb-2'
                 >
-                  {article.brand}
+                  {ARTICLE_BRANDS_LABELS[
+                    article.brand as keyof typeof ARTICLE_BRANDS_LABELS
+                  ] || article.brand}
                 </CustomText>
               )}
               <CustomText

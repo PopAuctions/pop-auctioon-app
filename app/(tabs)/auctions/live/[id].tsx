@@ -8,7 +8,6 @@ import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
-import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { StreamWebView } from '@/components/live-auction/StreamWebView';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import { useFetchArticlesOrder } from '@/hooks/pages/live/useFetchArticlesOrder';
@@ -87,6 +86,7 @@ export default function LiveAuctionScreen() {
     (auctionStatus !== REQUEST_STATUS.loading && !liveAuctionData);
 
   const username = currentUser?.username || '';
+  const profilePicture = currentUser?.profilePicture || '';
   const streamUrl = `${STREAM_BASE_URL}/${locale}/stream/${auctionId}?username=${encodeURIComponent(
     username
   )}`;
@@ -95,7 +95,11 @@ export default function LiveAuctionScreen() {
   const highestBidderUsername =
     liveAuctionData?.ArticleBid.highestBidderUsername;
   const highestBidderImage = liveAuctionData?.ArticleBid.highestBidderImage;
-  const articleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+  const liveArticleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+
+  const isCurrentArticleReady =
+    currentArticleStatus === REQUEST_STATUS.success &&
+    currentArticle?.id === liveArticleId;
 
   const showUnifiedLoader = showLoading || !streamLoaded;
 
@@ -178,59 +182,60 @@ export default function LiveAuctionScreen() {
           setStreamLoaded={setStreamLoaded}
           setStreamError={setStreamError}
         />
-
-        <HighestBidderProvider key={currentArticle?.id || 'no-article'}>
-          {showUnifiedLoader ? (
-            <View
-              pointerEvents='auto'
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Loading
-                locale={locale}
-                customMessage={
-                  showLoading
-                    ? {
-                        es: 'Cargando información de la subasta...',
-                        en: 'Loading auction info...',
-                      }
-                    : {
-                        es: 'Cargando stream de la subasta...',
-                        en: 'Loading auction stream...',
-                      }
-                }
-              />
-            </View>
-          ) : (
-            <>
-              <LiveAuctionOverlay
-                orderedArticles={orderedArticles}
-                insetsTop={insets.top}
-                insetsBottom={insets.bottom}
-                auctionId={auctionId}
-                username={username}
-                onBack={() => router.back()}
-                biddingAmounts={biddingAmounts}
-                articleServerState={{
-                  highestBidder: highestBidderUsername ?? '',
-                  highestBidderImage: highestBidderImage ?? null,
-                  currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
-                  available: currentArticle?.ArticleBid.available ?? false,
-                }}
-                articleId={articleId}
-                refetch={refetchBiddingAmounts}
-              />
-            </>
-          )}
-        </HighestBidderProvider>
+        {/* Mover dentro del overlay sin incluir el chat para que no se rerenderize cuando cambie el */}
+        {showUnifiedLoader ? (
+          <View
+            pointerEvents='auto'
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Loading
+              locale={locale}
+              customMessage={
+                showLoading
+                  ? {
+                      es: 'Cargando información de la subasta...',
+                      en: 'Loading auction info...',
+                    }
+                  : {
+                      es: 'Cargando stream de la subasta...',
+                      en: 'Loading auction stream...',
+                    }
+              }
+            />
+          </View>
+        ) : (
+          <LiveAuctionOverlay
+            orderedArticles={orderedArticles}
+            insetsTop={insets.top}
+            insetsBottom={insets.bottom}
+            auctionId={auctionId}
+            username={username}
+            profilePicture={profilePicture}
+            onBack={() => router.back()}
+            biddingAmounts={biddingAmounts}
+            articleServerState={
+              isCurrentArticleReady
+                ? {
+                    highestBidder: highestBidderUsername ?? '',
+                    highestBidderImage: highestBidderImage ?? null,
+                    currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
+                    available: currentArticle?.ArticleBid.available ?? false,
+                  }
+                : undefined
+            }
+            articleId={liveArticleId}
+            refetch={refetchBiddingAmounts}
+          />
+        )}
       </View>
 
       <LiveAuctionSubscriber

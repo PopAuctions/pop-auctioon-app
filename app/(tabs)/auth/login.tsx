@@ -11,6 +11,7 @@ import { router } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { useToast } from '@/hooks/useToast';
+import { useLogin } from '@/hooks/auth/useLogin';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -28,27 +29,31 @@ export default function Auth() {
   // WIP: remove states and use useForm from react-hook-form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
+  const { login, isLoading } = useLogin();
 
   async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+    const { success, error } = await login(email, password);
 
-    if (error) {
+    if (!success && error) {
+      // Mapear códigos de error a translation keys
+      const errorKeys = {
+        INVALID_CREDENTIALS: 'commonErrors.invalidLoginCredentials',
+        EMAIL_NOT_CONFIRMED: 'commonErrors.emailNotConfirmed',
+        USER_NOT_FOUND: 'commonErrors.userNotFound',
+        TOO_MANY_REQUESTS: 'commonErrors.tooManyRequests',
+        NETWORK_ERROR: 'commonErrors.networkError',
+      };
+
       callToast({
         variant: 'error',
-        description: error.message,
+        description: errorKeys[error],
       });
-    } else {
+    } else if (success) {
       // Login exitoso - redirigir al home y reemplazar la pantalla de login
       router.replace('/(tabs)/home');
     }
-    setLoading(false);
   }
 
   // async function signUpWithEmail() {
@@ -114,7 +119,7 @@ export default function Auth() {
                   autoCapitalize='none'
                   keyboardType='email-address'
                   autoComplete='email'
-                  editable={!loading}
+                  editable={!isLoading}
                 />
               </View>
 
@@ -132,7 +137,7 @@ export default function Auth() {
                   placeholder={t('loginPage.password')}
                   autoCapitalize='none'
                   autoComplete='password'
-                  editable={!loading}
+                  editable={!isLoading}
                 />
               </View>
 
@@ -155,8 +160,8 @@ export default function Auth() {
               <View className='mb-4'>
                 <Button
                   mode='primary'
-                  isLoading={loading}
-                  disabled={loading}
+                  isLoading={isLoading}
+                  disabled={isLoading}
                   onPress={signInWithEmail}
                 >
                   {t('loginPage.logIn')}
@@ -164,10 +169,10 @@ export default function Auth() {
               </View>
 
               <View className='mb-4'>
-                {loading ? (
+                {isLoading ? (
                   <Button
                     mode='secondary'
-                    disabled={loading}
+                    disabled={isLoading}
                   >
                     {t('loginPage.newAccount')}
                   </Button>
@@ -179,77 +184,6 @@ export default function Auth() {
                     {t('loginPage.newAccount')}
                   </CustomLink>
                 )}
-              </View>
-            </View>
-
-            {/* Spacer para empujar el footer hacia abajo */}
-            <View className='flex-1' />
-
-            {/* Footer con links */}
-            <View className='mb-6 mt-6 items-center rounded-lg bg-white/60 px-4 py-2 backdrop-blur-3xl'>
-              <View className='flex-row flex-wrap justify-center gap-3'>
-                <CustomLink
-                  href='/(tabs)/auth/info/about-us'
-                  mode='plainText'
-                >
-                  <CustomText
-                    type='bodysmall'
-                    className='text-cinnabar'
-                  >
-                    {t('screens.account.aboutUs')}
-                  </CustomText>
-                </CustomLink>
-                <CustomText
-                  type='bodysmall'
-                  className='text-cinnabar'
-                >
-                  •
-                </CustomText>
-                <CustomLink
-                  href='/(tabs)/auth/info/how-it-works'
-                  mode='plainText'
-                >
-                  <CustomText
-                    type='bodysmall'
-                    className='text-cinnabar'
-                  >
-                    {t('screens.account.howItWorks')}
-                  </CustomText>
-                </CustomLink>
-                <CustomText
-                  type='bodysmall'
-                  className='text-cinnabar'
-                >
-                  •
-                </CustomText>
-                <CustomLink
-                  href='/(tabs)/auth/info/faqs'
-                  mode='plainText'
-                >
-                  <CustomText
-                    type='bodysmall'
-                    className='text-cinnabar'
-                  >
-                    {t('screens.account.faqs')}
-                  </CustomText>
-                </CustomLink>
-                <CustomText
-                  type='bodysmall'
-                  className='text-cinnabar'
-                >
-                  •
-                </CustomText>
-                <CustomLink
-                  href='/(tabs)/auth/info/contact-us'
-                  mode='plainText'
-                >
-                  <CustomText
-                    type='bodysmall'
-                    className='text-cinnabar'
-                  >
-                    {t('screens.account.contactUs')}
-                  </CustomText>
-                </CustomLink>
               </View>
             </View>
           </View>

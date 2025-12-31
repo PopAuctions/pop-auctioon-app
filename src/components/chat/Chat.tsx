@@ -21,12 +21,14 @@ interface ChatProps {
   auctionId: string;
   enabled?: boolean;
   username?: string;
+  profilePicture?: string;
 }
 
 export const Chat = ({
   auctionId,
   enabled = true,
   username: propUsername,
+  profilePicture = '',
 }: ChatProps) => {
   const { auth } = useAuth();
   const { t, locale } = useTranslation();
@@ -51,6 +53,7 @@ export const Chat = ({
   const { sendMessage, isSending, sendError } = useSendMessage({
     room,
     isConnected,
+    profilePicture,
   });
 
   // Auto-scroll al recibir nuevos mensajes
@@ -78,7 +81,7 @@ export const Chat = ({
   // Estado de carga inicial (idle o loading del hook)
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return (
-      <View className='flex-1 items-center justify-center rounded-xl bg-white p-6'>
+      <View className='flex-1 items-center justify-center rounded-xl bg-white/70 p-6'>
         <ActivityIndicator
           size='large'
           color='#DC2626'
@@ -115,7 +118,7 @@ export const Chat = ({
           es: 'Error al conectar con el chat',
           en: 'Failed to connect to chat',
         }}
-        refreshRoute='/(tabs)/auctions'
+        refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
       />
     );
   }

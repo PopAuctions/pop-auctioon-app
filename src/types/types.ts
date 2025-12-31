@@ -70,6 +70,163 @@ export interface BlogArticleJsonArray {
   es: string[];
 }
 
+// Legal Content Types
+export type CookiesPolicyData = {
+  es: {
+    title: string;
+    description: string;
+    whatAreCookies: {
+      title: string;
+      content: string;
+    };
+    cookiesTypes: {
+      title: string;
+      types: {
+        name: string;
+        description: string;
+      }[];
+    };
+    thirdPartyCookies: {
+      title: string;
+      content: string;
+    };
+    manageCookies: {
+      title: string;
+      content: string;
+      browsers: {
+        name: string;
+        url: string;
+      }[];
+      note: string;
+    };
+  };
+  en: {
+    title: string;
+    description: string;
+    whatAreCookies: {
+      title: string;
+      content: string;
+    };
+    cookiesTypes: {
+      title: string;
+      types: {
+        name: string;
+        description: string;
+      }[];
+    };
+    thirdPartyCookies: {
+      title: string;
+      content: string;
+    };
+    manageCookies: {
+      title: string;
+      content: string;
+      browsers: {
+        name: string;
+        url: string;
+      }[];
+      note: string;
+    };
+  };
+};
+
+export type PrivacyPolicyData = {
+  es: {
+    title: string;
+    sections: {
+      title: string;
+      content: {
+        subtitle?: string;
+        content: string[];
+      }[];
+    }[];
+  };
+  en: {
+    title: string;
+    sections: {
+      title: string;
+      content: {
+        subtitle?: string;
+        content: string[];
+      }[];
+    }[];
+  };
+};
+
+export type TermsAndConditionsData = {
+  pdfUrl: string;
+};
+
+export type LegalContentData = {
+  cookiesPolicy: CookiesPolicyData;
+  privacyPolicy: PrivacyPolicyData;
+  termsAndConditions: TermsAndConditionsData;
+};
+
+// Info Content Types
+export type AboutUsData = {
+  es: {
+    text: string;
+  };
+  en: {
+    text: string;
+  };
+};
+
+export type HowItWorksData = {
+  es: {
+    intro: string;
+    sections: {
+      title: string;
+      content: {
+        text?: string;
+        children?: string[];
+      }[];
+    }[];
+    outro: {
+      title: string;
+      content: string;
+    };
+  };
+  en: {
+    intro: string;
+    sections: {
+      title: string;
+      content: {
+        text?: string;
+        children?: string[];
+      }[];
+    }[];
+    outro: {
+      title: string;
+      content: string;
+    };
+  };
+};
+
+export type FAQsData = {
+  es: {
+    subtitle: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
+  }[];
+  en: {
+    subtitle: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
+  }[];
+};
+
+export type InfoContentData = {
+  aboutUs: AboutUsData;
+  howItWorks: HowItWorksData;
+  faqs: FAQsData;
+};
+
 export type UserIVS = Database['public']['Tables']['UserIVS']['Row'];
 
 export type ArticleBid = Database['public']['Tables']['ArticleBid']['Row'];
@@ -575,3 +732,51 @@ export type SubscribeStatus =
   | 'TIMED_OUT'
   | 'CLOSED'
   | 'CHANNEL_ERROR';
+
+// Auth - Signup Types
+export interface SignupData {
+  // Common fields for all roles
+  name: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+
+  // Optional fields depending on role
+  dni?: string;
+  phoneNumber?: string;
+  profilePicture?: string;
+
+  // Additional fields for AUCTIONEER
+  storeName?: string;
+  webPage?: string;
+  socialMedia?: string;
+  address?: string;
+  town?: string;
+  province?: string;
+  country?: string;
+  postalCode?: string;
+}
+
+export interface SignupResponse {
+  error: LangMap | null;
+  success: LangMap | null;
+  data: {
+    email: string;
+  } | null;
+}
+
+export interface UseSignupReturn {
+  signup: (
+    data: SignupData,
+    role: UserRoles,
+    lang: Lang
+  ) => Promise<{
+    success: boolean;
+    email?: string;
+    error?: LangMap;
+  }>;
+  isLoading: boolean;
+  errorMessage: LangMap | null;
+}

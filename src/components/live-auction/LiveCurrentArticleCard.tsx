@@ -5,6 +5,7 @@ import type { CustomArticleLiveAuto, Lang } from '@/types/types';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { CustomText } from '../ui/CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { ARTICLE_BRANDS_LABELS } from '@/constants';
 
 interface LiveCurrentArticleCardProps {
   article: CustomArticleLiveAuto;
@@ -25,7 +26,9 @@ export const LiveCurrentArticleCard = ({
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   const title = article.title;
-  const brand = article.brand;
+  const brand = article.brand
+    ? ARTICLE_BRANDS_LABELS[article.brand as keyof typeof ARTICLE_BRANDS_LABELS]
+    : '--';
   const estimatedValue = article?.estimatedValue ?? null;
   const currentValue = state.currentValue ?? null;
 
@@ -91,11 +94,11 @@ export const LiveCurrentArticleCard = ({
           type='h4'
           className=''
         >
-          {t('screens.article.actualBid')}
+          {t('screens.article.actualBid')}:
         </CustomText>
         <CustomText
           type='h4'
-          className=''
+          className='text-cinnabar'
         >
           {currentLabel}
         </CustomText>

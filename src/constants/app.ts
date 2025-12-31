@@ -58,3 +58,8 @@ export const REQUEST_STATUS = {
 } as const;
 
 export const AMOUNT_PLACEHOLDER = '--.-- €';
+
+export const LANGUAGE_OPTIONS = [
+  { label: 'Español', value: 'es' },
+  { label: 'English', value: 'en' },
+];

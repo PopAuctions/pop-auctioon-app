@@ -23,7 +23,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
   return (
     <View className='mx-2 my-0.5 flex-row items-start'>
       {/* Contenido del mensaje - siempre transparente */}
-      <View className='max-w-[85%] rounded-lg bg-black/30 px-2 py-1'>
+      <View className='max-w-[85%] rounded-lg bg-white/70 px-2 py-1'>
         {/* Username con avatar inline */}
         <View className='mb-0.5 flex-row items-center gap-1'>
           {avatar ? (
@@ -34,7 +34,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
               resizeMode='cover'
             />
           ) : (
-            <View className='h-6 w-6 items-center justify-center rounded-full bg-white/30'>
+            <View className='h-6 w-6 items-center justify-center rounded-full bg-white'>
               <CustomText
                 type='bodysmall'
                 className={`text-sm font-semibold ${isMine ? 'text-cinnabar' : 'text-white'}`}
@@ -47,7 +47,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
             type='bodysmall'
             className={cn(
               'font-bold drop-shadow-md',
-              isMine ? 'text-cinnabar' : 'text-white'
+              isMine ? 'text-cinnabar' : 'text-black'
             )}
           >
             {message.sender.userId}
@@ -57,7 +57,7 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
         {/* Mensaje */}
         <CustomText
           type='body'
-          className='mt-1 pl-1 text-[13px] text-white drop-shadow-lg'
+          className='mt-1 pl-1 text-[13px] text-black drop-shadow-lg'
         >
           {message.content}
         </CustomText>

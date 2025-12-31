@@ -57,7 +57,10 @@ export default function ArticlesWonScreen() {
         />
       ) : (
         <View className='flex-1 items-center justify-center px-6'>
-          <CustomText type='body'>
+          <CustomText
+            type='h4'
+            className='text-center text-cinnabar'
+          >
             {t('screens.account.noArticlesWon')}
           </CustomText>
         </View>
