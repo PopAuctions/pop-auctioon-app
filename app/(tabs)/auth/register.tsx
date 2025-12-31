@@ -2,26 +2,13 @@ import { View, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { GoogleButton } from '@/components/auth/GoogleButton';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
-
-  const providers = [
-    { name: 'Google', icon: 'google', color: '#DB4437' },
-    { name: 'Apple', icon: 'apple', color: '#000000' },
-  ];
-
-  const handleProviderPress = (providerName: string) => {
-    setSelectedProvider(providerName);
-    // TODO: Implement auth with providers in the future
-    console.log(`Selected provider: ${providerName}`);
-  };
 
   const handleRegisterAsUser = () => {
     router.push('/(tabs)/auth/register-user');
@@ -58,26 +45,7 @@ export default function RegisterScreen() {
 
         {/* Providers (Google, Facebook, Apple) */}
         <View className='mb-6 gap-3'>
-          {providers.map((provider) => (
-            <Pressable
-              key={provider.name}
-              onPress={() => handleProviderPress(provider.name)}
-              className='border-gray-300 flex-row items-center justify-center gap-3 rounded-lg border bg-white px-4 py-3'
-            >
-              <FontAwesomeIcon
-                name={provider.icon as any}
-                variant='bold'
-                size={20}
-                color={provider.color as `#${string}`}
-              />
-              <CustomText
-                type='body'
-                className='text-gray-800'
-              >
-                {t('screens.account.continueWith')} {provider.name}
-              </CustomText>
-            </Pressable>
-          ))}
+          <GoogleButton buttonText={t('screens.account.continueWith')} />
         </View>
 
         {/* Divider */}
