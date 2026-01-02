@@ -11,17 +11,18 @@ export function DeepLinkListener() {
       const url = event.url;
 
       if (url.includes('expo-development-client')) return;
+      if (url.includes('/auth/callback')) return;
+      if (status === 'loading') return;
 
       console.log('🔗 Deep link received:', url);
 
-      if (url.includes('/account') && status !== 'authenticated') {
-        console.log(
-          '🔒 Deep link a cuenta sin auth, ProtectedRoute redirigirá a login'
-        );
-      } else if (url.includes('/auth') && status === 'authenticated') {
-        console.log(
-          '✅ Deep link a auth con sesión, ProtectedRoute redirigirá a home'
-        );
+      const isAccountRoute = url.includes('/account');
+      const isAuthRoute = url.includes('/auth/');
+
+      if (isAccountRoute && status !== 'authenticated') {
+        console.log('🔒 Deep link to protected account route without auth');
+      } else if (isAuthRoute && status === 'authenticated') {
+        console.log('✅ Deep link to auth route with active session');
       }
     };
 
