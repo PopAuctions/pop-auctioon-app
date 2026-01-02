@@ -551,6 +551,8 @@
       "loading": "Cargando...",
       "offer": "Offer",
       "alreadySold": "Already sold",
+      "noOffersMade": "No offers made yet",
+      "goToOnlineStore": "Go to online store",
       "offerExpired": "Offer expired",
       "payNow": "Pay now",
       "article": "Article",

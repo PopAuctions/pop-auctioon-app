@@ -659,6 +659,8 @@
       "loading": "Cargando...",
       "offer": "Offer",
       "alreadySold": "Ya fue vendido",
+      "noOffersMade": "No has realizado ninguna oferta",
+      "goToOnlineStore": "Ir a la tienda online",
       "offerExpired": "La oferta ha expirado",
       "payNow": "Pagar ahora",
       "article": "Article",
