@@ -27,6 +27,8 @@ export const AppleButton = ({
     oauthInFlightRef.current = true;
 
     try {
+      await WebBrowser.dismissBrowser();
+
       const redirectTo = Linking.createURL('auth/callback');
 
       const { data, error } = await supabase.auth.signInWithOAuth({
