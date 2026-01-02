@@ -34,7 +34,6 @@ export default function ResetPasswordScreen() {
     },
   });
 
-  // popauctioon@gmail.com
   const onSubmit = async (values: z.infer<typeof ResetSchema>) => {
     setLoading(true);
 
