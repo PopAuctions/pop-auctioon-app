@@ -1,23 +1,14 @@
-import { View, ScrollView, Pressable } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
-import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
-import { router } from 'expo-router';
 import { GoogleButton } from '@/components/auth/GoogleButton';
 import { AppleButton } from '@/components/auth/AppleButton';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
-
-  const handleRegisterAsUser = () => {
-    router.push('/(tabs)/auth/register-user');
-  };
-
-  const handleRegisterAsAuctioneer = () => {
-    router.push('/(tabs)/auth/register-auctioneer');
-  };
 
   return (
     <SafeAreaView
@@ -69,8 +60,8 @@ export default function RegisterScreen() {
 
         {/* Email register */}
         <View className='mb-4'>
-          <Button
-            onPress={handleRegisterAsUser}
+          <CustomLink
+            href='/(tabs)/auth/register-user'
             mode='primary'
             className='w-full'
           >
@@ -80,16 +71,16 @@ export default function RegisterScreen() {
             >
               {t('screens.account.registerAsUser')}
             </CustomText>
-          </Button>
+          </CustomLink>
         </View>
 
         <Divider />
 
         {/* Auctioneer CTA */}
         <View className='mt-6'>
-          <Pressable
-            onPress={handleRegisterAsAuctioneer}
-            className='flex-row items-center justify-center rounded-lg border border-cinnabar px-4 py-3'
+          <CustomLink
+            href='/(tabs)/auth/register-auctioneer'
+            mode='secondary'
           >
             <CustomText
               type='body'
@@ -97,7 +88,7 @@ export default function RegisterScreen() {
             >
               {t('screens.account.registerAsAuctioneer')}
             </CustomText>
-          </Pressable>
+          </CustomLink>
         </View>
       </ScrollView>
     </SafeAreaView>
