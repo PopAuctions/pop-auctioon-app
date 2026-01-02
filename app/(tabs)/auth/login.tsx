@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { View, AppState, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  AppState,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -12,99 +18,77 @@ import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { useToast } from '@/hooks/useToast';
 import { useLogin } from '@/hooks/auth/useLogin';
+import { GoogleButton } from '@/components/auth/GoogleButton';
+import { AppleButton } from '@/components/auth/AppleButton';
+import { Divider } from '@/components/ui/Divider';
 
-// Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh();
-  } else {
-    supabase.auth.stopAutoRefresh();
-  }
-});
+const errorKeys = {
+  INVALID_CREDENTIALS: 'commonErrors.invalidLoginCredentials',
+  EMAIL_NOT_CONFIRMED: 'commonErrors.emailNotConfirmed',
+  USER_NOT_FOUND: 'commonErrors.userNotFound',
+  TOO_MANY_REQUESTS: 'commonErrors.tooManyRequests',
+  NETWORK_ERROR: 'commonErrors.networkError',
+} as const;
 
 export default function Auth() {
-  // WIP: remove states and use useForm from react-hook-form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { login, isLoading } = useLogin();
 
-  async function signInWithEmail() {
+  const signInWithEmail = async () => {
     const { success, error } = await login(email, password);
 
     if (!success && error) {
-      // Mapear códigos de error a translation keys
-      const errorKeys = {
-        INVALID_CREDENTIALS: 'commonErrors.invalidLoginCredentials',
-        EMAIL_NOT_CONFIRMED: 'commonErrors.emailNotConfirmed',
-        USER_NOT_FOUND: 'commonErrors.userNotFound',
-        TOO_MANY_REQUESTS: 'commonErrors.tooManyRequests',
-        NETWORK_ERROR: 'commonErrors.networkError',
-      };
-
-      callToast({
-        variant: 'error',
-        description: errorKeys[error],
-      });
-    } else if (success) {
-      // Login exitoso - redirigir al home y reemplazar la pantalla de login
-      router.replace('/(tabs)/home');
+      callToast({ variant: 'error', description: errorKeys[error] });
+      return;
     }
-  }
 
-  // async function signUpWithEmail() {
-  //   setLoading(true);
-  //   const {
-  //     data: { session },
-  //     error,
-  //   } = await supabase.auth.signUp({
-  //     email: email,
-  //     password: password,
-  //   });
+    router.replace('/(tabs)/home');
+  };
 
-  //   if (error) {
-  //     Alert.alert(error.message);
-  //   } else if (!session) {
-  //     Alert.alert('Please check your inbox for email verification!');
-  //   } else {
-  //     setEmail('');
-  //     setPassword('');
-  //     // Registro exitoso con sesión activa - redirigir al home y reemplazar login
-  //     router.replace('/(tabs)/home');
-  //   }
-  //   setLoading(false);
-  // }
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') supabase.auth.startAutoRefresh();
+      else supabase.auth.stopAutoRefresh();
+    });
+
+    return () => sub.remove();
+  }, []);
 
   return (
     <BackgroundImage source={require('@/components/icons/bg-image.webp')}>
       <SafeAreaView
         className='flex-1'
-        edges={['top']}
+        edges={[]}
       >
-        <ScrollView
+        <KeyboardAvoidingView
           className='flex-1'
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
-          <View className='w-full flex-1 px-4 pt-10'>
-            {/* Logo/Title Section */}
-            <View className='items-center'>
+          <ScrollView
+            className='flex-1'
+            keyboardShouldPersistTaps='handled'
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingTop: 24,
+              paddingBottom: 24,
+            }}
+          >
+            {/* Logo */}
+            <View className='mb-6 items-center'>
               <View className='h-20 w-80'>
                 <PopAuctioonIcon
                   className='h-full w-full text-white'
-                  centered={true}
+                  centered
                 />
               </View>
             </View>
-            {/* Form Container */}
+
+            {/* Card */}
             <View className='w-full rounded-2xl bg-white p-6 shadow-2xl'>
+              {/* Email */}
               <View className='mb-5'>
                 <CustomText
                   type='body'
@@ -113,8 +97,8 @@ export default function Auth() {
                   {t('loginPage.email')}
                 </CustomText>
                 <Input
-                  onChangeText={(text: string) => setEmail(text)}
                   value={email}
+                  onChangeText={setEmail}
                   placeholder={t('loginPage.email')}
                   autoCapitalize='none'
                   keyboardType='email-address'
@@ -123,7 +107,8 @@ export default function Auth() {
                 />
               </View>
 
-              <View>
+              {/* Password */}
+              <View className='mb-1'>
                 <CustomText
                   type='body'
                   className='text-gray-700 mb-2 font-medium'
@@ -131,63 +116,74 @@ export default function Auth() {
                   {t('loginPage.password')}
                 </CustomText>
                 <Input
-                  onChangeText={(text: string) => setPassword(text)}
                   value={password}
-                  secureTextEntry={true}
+                  onChangeText={setPassword}
                   placeholder={t('loginPage.password')}
+                  secureTextEntry
                   autoCapitalize='none'
                   autoComplete='password'
                   editable={!isLoading}
                 />
               </View>
 
-              {/* Forgot Password Link */}
+              {/* Forgot password */}
               <View className='mb-4 items-end'>
                 <CustomLink
-                  href='/(tabs)/account/reset-password'
+                  href='/(tabs)/auth/reset-password'
                   mode='plainText'
+                  isDisabled={isLoading}
                 >
                   <CustomText
                     type='body'
-                    className='text-cinnabar'
+                    className='text-cinnabar underline'
                   >
                     {t('loginPage.forgotPassword')}
                   </CustomText>
                 </CustomLink>
               </View>
 
-              {/* Buttons */}
-              <View className='mb-4'>
+              {/* Primary */}
+              <View>
                 <Button
                   mode='primary'
                   isLoading={isLoading}
                   disabled={isLoading}
                   onPress={signInWithEmail}
                 >
-                  {t('loginPage.logIn')}
+                  {t('loginPage.signIn')}
                 </Button>
               </View>
 
-              <View className='mb-4'>
-                {isLoading ? (
-                  <Button
-                    mode='secondary'
-                    disabled={isLoading}
-                  >
-                    {t('loginPage.newAccount')}
-                  </Button>
-                ) : (
-                  <CustomLink
-                    mode='secondary'
-                    href='/(tabs)/auth/register'
-                  >
-                    {t('loginPage.newAccount')}
-                  </CustomLink>
-                )}
+              <View className='my-4 flex-row items-center'>
+                <View className='h-px flex-1' />
+                <CustomText type='body'>{t('commonActions.or')}</CustomText>
+                <View className='bg-gray-200 h-px flex-1' />
               </View>
+
+              <View className='gap-2'>
+                <GoogleButton
+                  buttonText={t('screens.account.continueWith')}
+                  isDisabled={isLoading}
+                />
+                <AppleButton
+                  buttonText={t('screens.account.continueWith')}
+                  isDisabled={isLoading}
+                />
+              </View>
+
+              <Divider className='my-4' />
+
+              {/* Secondary */}
+              <CustomLink
+                mode='secondary'
+                href='/(tabs)/auth/register'
+                isDisabled={isLoading}
+              >
+                {t('loginPage.newAccount')}
+              </CustomLink>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </BackgroundImage>
   );
