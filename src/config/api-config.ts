@@ -188,6 +188,9 @@ export const SECURE_ENDPOINTS = {
   LIVE: {
     ARTICLES: '/live/articles',
   },
+  'NO-AUTH': {
+    RESET_PASSWORD: '/reset-password', // POST - Reset password
+  },
 
   // Server Actions y operaciones complejas
   ACTIONS: {

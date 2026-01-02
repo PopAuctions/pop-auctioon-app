@@ -20,7 +20,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 export default function ResetPasswordScreen() {
   const { t, locale } = useTranslation();
   const [loading, setLoading] = useState(false);
-  const { securePost } = useSecureApi();
+  const { protectedPost } = useSecureApi();
   const { callToast } = useToast(locale);
 
   const {
@@ -34,23 +34,24 @@ export default function ResetPasswordScreen() {
     },
   });
 
+  // popauctioon@gmail.com
   const onSubmit = async (values: z.infer<typeof ResetSchema>) => {
     setLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.USER.RESET_PASSWORD,
+      const response = await protectedPost<LangMap>({
+        endpoint: SECURE_ENDPOINTS['NO-AUTH'].RESET_PASSWORD,
         data: {
           email: values.email,
         },
       });
 
-      const data = response?.data;
-
       if (response.error) {
         callToast({ variant: 'error', description: response.error });
         return;
       }
+
+      const data = response?.data;
 
       callToast({ variant: 'success', description: data });
     } catch (e: any) {
