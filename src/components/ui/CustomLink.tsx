@@ -78,7 +78,7 @@ export const CustomLink = forwardRef<
       className,
       style,
       outsideRedirect = false,
-      isDisabled,
+      isDisabled = false,
     },
     ref
   ) => {
@@ -141,16 +141,16 @@ export const CustomLink = forwardRef<
         font-normal
         text-white
         ${className || ''}
-        ${isDisabled ? 'pointer-events-none opacity-50' : ''}
       `}
         style={style}
-        onPress={isDisabled ? undefined : handlePress}
+        onPress={handlePress}
+        disabled={isDisabled}
       >
         {mode === 'empty' ? (
           children
         ) : (
           <Text
-            className={`text-center text-lg font-normal ${TEXT_COLOR_BY_MODE[mode]} ${mode === 'plainText' ? 'underline' : ''}`}
+            className={`text-center text-lg font-normal ${TEXT_COLOR_BY_MODE[mode]} ${mode === 'plainText' ? 'underline' : ''} ${isDisabled ? 'opacity-50' : ''}`}
           >
             {children}
           </Text>
