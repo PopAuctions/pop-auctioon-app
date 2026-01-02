@@ -16,6 +16,7 @@ export const FIRST_SECTION = [
     icon: 'lock',
     labelKey: 'screens.account.resetPassword',
     href: '/(tabs)/account/reset-password',
+    showIfOAuth: false,
   },
   {
     name: 'verify-phone',
