@@ -21,6 +21,7 @@ interface CustomLinkProps {
   mode?: 'empty' | 'primary' | 'secondary' | 'plainText';
   size?: 'small' | 'large';
   className?: string;
+  isDisabled?: boolean;
   style?: ViewStyle;
   hoverEffect?: boolean;
   outsideRedirect?: boolean;
@@ -77,6 +78,7 @@ export const CustomLink = forwardRef<
       className,
       style,
       outsideRedirect = false,
+      isDisabled,
     },
     ref
   ) => {
@@ -139,9 +141,10 @@ export const CustomLink = forwardRef<
         font-normal
         text-white
         ${className || ''}
+        ${isDisabled ? 'pointer-events-none opacity-50' : ''}
       `}
         style={style}
-        onPress={handlePress}
+        onPress={isDisabled ? undefined : handlePress}
       >
         {mode === 'empty' ? (
           children
