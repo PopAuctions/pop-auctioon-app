@@ -7,7 +7,13 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { ProviderButton } from './ProviderButton';
 
-export const AppleButton = ({ buttonText }: { buttonText: string }) => {
+export const AppleButton = ({
+  buttonText,
+  isDisabled,
+}: {
+  buttonText: string;
+  isDisabled?: boolean;
+}) => {
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
   const router = useRouter();
@@ -80,6 +86,7 @@ export const AppleButton = ({ buttonText }: { buttonText: string }) => {
       iconColor={isIOS ? '#FFFFFF' : '#000000'}
       onPress={handleApplePress}
       variant={isIOS ? 'dark' : 'light'}
+      isDisabled={isDisabled}
     />
   );
 };

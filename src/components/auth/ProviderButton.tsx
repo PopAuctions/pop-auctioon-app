@@ -8,21 +8,25 @@ export const ProviderButton = ({
   iconColor,
   onPress,
   variant = 'light',
+  isDisabled,
 }: {
   buttonText: string;
   icon: string;
   iconColor: `#${string}`;
   onPress: () => void;
   variant?: 'light' | 'dark';
+  isDisabled?: boolean;
 }) => {
   const isDark = variant === 'dark';
 
   return (
     <Pressable
       onPress={onPress}
+      disabled={isDisabled}
       className={[
         'w-full flex-row items-center rounded-lg border px-4 py-3',
         isDark ? 'border-black bg-black' : 'border-gray-300 bg-white',
+        isDisabled ? 'opacity-50' : 'opacity-100',
       ].join(' ')}
     >
       {/* Left fixed slot */}
