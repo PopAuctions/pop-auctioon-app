@@ -17,7 +17,7 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
-    "newAccount": "New account!",
+    "newAccount": "Create account",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm password",
@@ -27,7 +27,7 @@
     "registerSuccess": "User registered successfully",
     "registerError": "Registration error",
     "title": "Sign In",
-    "logIn": "Log In"
+    "signIn": "Sign In"
   },
   "tabsNames": {
     "home": "Home",
@@ -313,7 +313,7 @@
       "changingLanguage": "Changing language...",
       "languageChanged": "Language changed",
       "aboutUs": "About Us",
-      "login": "Login",
+      "login": "Sign in",
       "register": "Register",
       "registerOptions": "Register Options",
       "continueWith": "Continue with",

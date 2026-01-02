@@ -17,7 +17,7 @@
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
     "register": "Registrarse",
-    "newAccount": "¡Nueva cuenta!",
+    "newAccount": "Crear cuenta",
     "email": "Correo electrónico",
     "password": "Contraseña",
     "confirmPassword": "Confirmar contraseña",
@@ -27,7 +27,7 @@
     "registerSuccess": "Usuario registrado correctamente",
     "registerError": "Error al registrar usuario",
     "title": "Iniciar Sesión",
-    "logIn": "Iniciar Sesión"
+    "signIn": "Iniciar Sesión"
   },
   "tabsNames": {
     "home": "Inicio",
