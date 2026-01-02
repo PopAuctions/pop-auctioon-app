@@ -27,7 +27,6 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'followed-articles': {},
   'offers-made': {},
   'payments-history': {},
-  'reset-password': {},
   'verify-phone': {},
   'payment/[id]': {},
 
