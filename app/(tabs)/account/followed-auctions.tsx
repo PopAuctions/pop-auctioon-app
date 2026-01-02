@@ -27,30 +27,32 @@ export default function FollowedAuctionsScreen() {
     );
   }
 
+  if (auctions.length === 0) {
+    return (
+      <View className='flex-1 items-center justify-center p-6'>
+        <CustomText
+          type='h2'
+          className='text-center text-cinnabar'
+        >
+          {t('screens.auction.noFollowedAuctions')}
+        </CustomText>
+      </View>
+    );
+  }
+
   return (
     <ScrollView className='w-full flex-1 p-4'>
-      {auctions.length === 0 ? (
-        <View className='mt-5'>
-          <CustomText
-            type='h2'
-            className='text-center text-cinnabar'
-          >
-            {t('screens.auction.noFollowedAuctions')}
-          </CustomText>
-        </View>
-      ) : (
-        <View className='flex flex-col gap-4'>
-          {auctions.map((item) => (
-            <AuctionItem
-              key={item.id}
-              auction={item.Auction}
-              locale={locale}
-              userFollows={true}
-              actionAfterFollow={refetch}
-            />
-          ))}
-        </View>
-      )}
+      <View className='flex flex-col gap-4'>
+        {auctions.map((item) => (
+          <AuctionItem
+            key={item.id}
+            auction={item.Auction}
+            locale={locale}
+            userFollows={true}
+            actionAfterFollow={refetch}
+          />
+        ))}
+      </View>
     </ScrollView>
   );
 }
