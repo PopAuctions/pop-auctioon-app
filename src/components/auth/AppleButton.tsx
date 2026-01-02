@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useRouter } from 'expo-router';
 import { useToast } from '@/hooks/useToast';
@@ -6,16 +7,18 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { ProviderButton } from './ProviderButton';
 
-export const GoogleButton = ({ buttonText }: { buttonText: string }) => {
+export const AppleButton = ({ buttonText }: { buttonText: string }) => {
   const { locale } = useTranslation();
-  const router = useRouter();
   const { callToast } = useToast(locale);
+  const router = useRouter();
 
-  const handleGooglePress = async () => {
+  const isIOS = Platform.OS === 'ios';
+
+  const handleApplePress = async () => {
     const redirectTo = Linking.createURL('auth/callback');
 
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: 'apple',
       options: { redirectTo },
     });
 
@@ -72,11 +75,11 @@ export const GoogleButton = ({ buttonText }: { buttonText: string }) => {
 
   return (
     <ProviderButton
-      buttonText={`${buttonText} Google`}
-      icon='google'
-      iconColor='#4285F4'
-      onPress={handleGooglePress}
-      variant='light'
+      buttonText={`${buttonText} Apple`}
+      icon='apple'
+      iconColor={isIOS ? '#FFFFFF' : '#000000'}
+      onPress={handleApplePress}
+      variant={isIOS ? 'dark' : 'light'}
     />
   );
 };

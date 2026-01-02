@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
 import { router } from 'expo-router';
 import { GoogleButton } from '@/components/auth/GoogleButton';
+import { AppleButton } from '@/components/auth/AppleButton';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
@@ -25,9 +26,13 @@ export default function RegisterScreen() {
     >
       <ScrollView
         className='flex-1'
-        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 20 }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 20,
+          paddingBottom: 24,
+        }}
       >
-        {/* Título */}
+        {/* Header */}
         <View className='mb-8'>
           <CustomText
             type='h1'
@@ -39,13 +44,15 @@ export default function RegisterScreen() {
             type='body'
             className='text-gray-600 text-center'
           >
+            {/* Si quieres un copy más “premium”, cambia esta key o el texto */}
             {t('screens.account.orRegisterWith')}
           </CustomText>
         </View>
 
-        {/* Providers (Google, Facebook, Apple) */}
-        <View className='mb-6 gap-3'>
+        {/* Providers */}
+        <View className='gap-4'>
           <GoogleButton buttonText={t('screens.account.continueWith')} />
+          <AppleButton buttonText={t('screens.account.continueWith')} />
         </View>
 
         {/* Divider */}
@@ -60,7 +67,7 @@ export default function RegisterScreen() {
           <View className='bg-gray-300 h-px flex-1' />
         </View>
 
-        {/* Botón: Registrarse como Usuario */}
+        {/* Email register */}
         <View className='mb-4'>
           <Button
             onPress={handleRegisterAsUser}
@@ -78,12 +85,15 @@ export default function RegisterScreen() {
 
         <Divider />
 
-        {/* Link: ¿Deseas unirte como auctioneer? */}
-        <View className='my-6'>
-          <Pressable onPress={handleRegisterAsAuctioneer}>
+        {/* Auctioneer CTA */}
+        <View className='mt-6'>
+          <Pressable
+            onPress={handleRegisterAsAuctioneer}
+            className='flex-row items-center justify-center rounded-lg border border-cinnabar px-4 py-3'
+          >
             <CustomText
               type='body'
-              className='text-center text-cinnabar underline'
+              className='text-center text-cinnabar'
             >
               {t('screens.account.registerAsAuctioneer')}
             </CustomText>

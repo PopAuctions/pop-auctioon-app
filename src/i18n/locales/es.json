@@ -11,7 +11,7 @@
     "confirm": "Confirmar",
     "close": "Cerrar",
     "retry": "Reintentar",
-    "or": "o"
+    "or": "ó"
   },
   "loginPage": {
     "login": "Iniciar sesión",
@@ -317,7 +317,7 @@
       "register": "Registrarse",
       "registerOptions": "Opciones de Registro",
       "continueWith": "Continuar con",
-      "orRegisterWith": "Elige cómo deseas registrarte",
+      "orRegisterWith": "Selecciona el método que prefieras para crear tu cuenta",
       "registerAsUser": "Registrarse como Usuario",
       "registerAsAuctioneer": "¿Deseas unirte como subastador?",
       "registerAsAuctioneerTitle": "Registro de Subastador",
