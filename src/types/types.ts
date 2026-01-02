@@ -18,7 +18,9 @@ export interface ApiResponse {
   success: string;
 }
 
-export type User = Database['public']['Tables']['User']['Row'];
+export type User = Database['public']['Tables']['User']['Row'] & {
+  provider: string;
+};
 
 export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
 
