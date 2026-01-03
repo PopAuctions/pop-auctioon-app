@@ -11,6 +11,7 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import type { Session } from '@supabase/supabase-js';
 import type { UserRoles } from '@/types/types';
 import { getUserRole } from '@/lib/auth/get-user-role';
+import { useNotification } from '@/context/notification-context';
 
 export type AuthState =
   | { state: 'loading' }
@@ -42,8 +43,17 @@ function scheduleRefresh(session: Session | null, onExpire: () => void) {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<AuthState>({ state: 'loading' });
   const clearTimer = useRef<null | (() => void)>(null);
+  const { deletePushToken } = useNotification();
 
   const signOut = async (): Promise<void> => {
+    // 🗑️ Delete push token before logout
+    try {
+      await deletePushToken();
+    } catch (error) {
+      console.warn('[signOut] Error deleting push token:', error);
+      // Continue with logout even if token deletion fails
+    }
+
     const { error } = await supabase.auth.signOut();
     if (error) {
       // optional: log/sentry

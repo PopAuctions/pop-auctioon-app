@@ -11,11 +11,15 @@ import { registerForPushNotificationsAsync } from '@/utils/notifications/registe
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { router } from 'expo-router';
 import { getNotificationRouteFromResponse } from '@/utils/notifications/getNotificationRoute';
+import { useAuth } from '@/context/auth-context';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 
 interface NotificationContextType {
   expoPushToken: string | null;
   notification: Notifications.Notification | null;
   error: Error | null;
+  deletePushToken: () => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -43,6 +47,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const [notification, setNotification] =
     useState<Notifications.Notification | null>(null);
   const [error, setError] = useState<Error | null>(null);
+
+  const { auth } = useAuth();
+  const { protectedPost } = useSecureApi();
 
   const notificationListener = useRef<
     Notifications.EventSubscription | undefined
@@ -110,16 +117,45 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
     checkLastNotification();
 
+    // � Function to register push token via backend API
+    const registerPushToken = async (token: string) => {
+      try {
+        console.log('📡 Registering push token via backend...');
+
+        const response = await protectedPost({
+          endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
+          data: { token },
+        });
+
+        if (response.error) {
+          console.error('ERROR_REGISTER_PUSH_TOKEN', response.error);
+          sentryErrorReport(
+            new Error(JSON.stringify(response.error)),
+            'REGISTER_PUSH_TOKEN_ERROR'
+          );
+        } else {
+          console.log('✅ Push token registered successfully');
+        }
+      } catch (error) {
+        console.error('ERROR_REGISTER_PUSH_TOKEN_CATCH', error);
+        sentryErrorReport(error as Error, 'REGISTER_PUSH_TOKEN_CATCH_ERROR');
+      }
+    };
+
     // Register for push notifications and get token
     registerForPushNotificationsAsync().then(
       (token) => {
         if (token) {
           setExpoPushToken(token);
-          // TODO: Send token to backend to store in database
-          // await securePost({
-          //   endpoint: SECURE_ENDPOINTS.NOTIFICATIONS.REGISTER,
-          //   data: { token }
-          // });
+
+          // 📡 Register token via backend if user is authenticated
+          if (auth.state === 'authenticated' && auth.session?.user?.id) {
+            registerPushToken(token);
+          } else {
+            console.log(
+              '⚠️ User not authenticated, token will be registered after login'
+            );
+          }
         }
       },
       (error) => {
@@ -200,11 +236,80 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         responseListener.current.remove();
       }
     };
-  }, []);
+  }, [auth, protectedPost]);
+
+  // 🔄 Register token when user authenticates (if token was obtained before login)
+  useEffect(() => {
+    if (
+      expoPushToken &&
+      auth.state === 'authenticated' &&
+      auth.session?.user?.id
+    ) {
+      console.log('🔄 User authenticated, registering push token...');
+
+      // Call registerPushToken function from first useEffect
+      const registerToken = async () => {
+        try {
+          console.log('📡 Registering push token via backend...');
+
+          const response = await protectedPost({
+            endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
+            data: { token: expoPushToken },
+          });
+
+          if (response.error) {
+            console.error('ERROR_REGISTER_PUSH_TOKEN', response.error);
+            sentryErrorReport(
+              new Error(JSON.stringify(response.error)),
+              'REGISTER_PUSH_TOKEN_ERROR'
+            );
+          } else {
+            console.log('✅ Push token registered successfully');
+          }
+        } catch (error) {
+          console.error('ERROR_REGISTER_PUSH_TOKEN_CATCH', error);
+          sentryErrorReport(error as Error, 'REGISTER_PUSH_TOKEN_CATCH_ERROR');
+        }
+      };
+
+      registerToken();
+    }
+  }, [auth, expoPushToken, protectedPost]);
+
+  // 🗑️ Function to delete push token (called on logout)
+  const deletePushToken = async () => {
+    if (!expoPushToken) {
+      console.log('⚠️ No push token to delete');
+      return;
+    }
+
+    try {
+      console.log('🗑️ Deleting push token from database...');
+
+      const response = await protectedPost({
+        endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.UNREGISTER,
+        data: { token: expoPushToken },
+      });
+
+      if (response.error) {
+        console.error('ERROR_DELETE_PUSH_TOKEN', response.error);
+        sentryErrorReport(
+          new Error(JSON.stringify(response.error)),
+          'DELETE_PUSH_TOKEN_ERROR'
+        );
+      } else {
+        console.log('✅ Push token deleted successfully');
+        setExpoPushToken(null); // Clear local state
+      }
+    } catch (error) {
+      console.error('ERROR_DELETE_PUSH_TOKEN_CATCH', error);
+      sentryErrorReport(error as Error, 'DELETE_PUSH_TOKEN_CATCH_ERROR');
+    }
+  };
 
   return (
     <NotificationContext.Provider
-      value={{ expoPushToken, notification, error }}
+      value={{ expoPushToken, notification, error, deletePushToken }}
     >
       {children}
     </NotificationContext.Provider>
