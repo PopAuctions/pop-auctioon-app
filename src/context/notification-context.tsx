@@ -19,7 +19,6 @@ interface NotificationContextType {
   expoPushToken: string | null;
   notification: Notifications.Notification | null;
   error: Error | null;
-  deletePushToken: () => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -276,40 +275,42 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     }
   }, [auth, expoPushToken, protectedPost]);
 
-  // 🗑️ Function to delete push token (called on logout)
-  const deletePushToken = async () => {
-    if (!expoPushToken) {
-      console.log('⚠️ No push token to delete');
-      return;
+  // 🗑️ Delete token when user logs out
+  useEffect(() => {
+    // Detect logout: auth was authenticated, now is unauthenticated
+    if (auth.state === 'unauthenticated' && expoPushToken) {
+      console.log('🗑️ User logged out, deleting push token...');
+
+      const deleteToken = async () => {
+        try {
+          const response = await protectedPost({
+            endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.UNREGISTER,
+            data: { token: expoPushToken },
+          });
+
+          if (response.error) {
+            console.error('ERROR_DELETE_PUSH_TOKEN', response.error);
+            sentryErrorReport(
+              new Error(JSON.stringify(response.error)),
+              'DELETE_PUSH_TOKEN_ERROR'
+            );
+          } else {
+            console.log('✅ Push token deleted successfully');
+            setExpoPushToken(null); // Clear local state
+          }
+        } catch (error) {
+          console.error('ERROR_DELETE_PUSH_TOKEN_CATCH', error);
+          sentryErrorReport(error as Error, 'DELETE_PUSH_TOKEN_CATCH_ERROR');
+        }
+      };
+
+      deleteToken();
     }
-
-    try {
-      console.log('🗑️ Deleting push token from database...');
-
-      const response = await protectedPost({
-        endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.UNREGISTER,
-        data: { token: expoPushToken },
-      });
-
-      if (response.error) {
-        console.error('ERROR_DELETE_PUSH_TOKEN', response.error);
-        sentryErrorReport(
-          new Error(JSON.stringify(response.error)),
-          'DELETE_PUSH_TOKEN_ERROR'
-        );
-      } else {
-        console.log('✅ Push token deleted successfully');
-        setExpoPushToken(null); // Clear local state
-      }
-    } catch (error) {
-      console.error('ERROR_DELETE_PUSH_TOKEN_CATCH', error);
-      sentryErrorReport(error as Error, 'DELETE_PUSH_TOKEN_CATCH_ERROR');
-    }
-  };
+  }, [auth.state, expoPushToken, protectedPost]);
 
   return (
     <NotificationContext.Provider
-      value={{ expoPushToken, notification, error, deletePushToken }}
+      value={{ expoPushToken, notification, error }}
     >
       {children}
     </NotificationContext.Provider>
