@@ -9,6 +9,8 @@ import React, {
 import * as Notifications from 'expo-notifications';
 import { registerForPushNotificationsAsync } from '@/utils/notifications/registerForPushNotifications';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { router } from 'expo-router';
+import { getNotificationRouteFromResponse } from '@/utils/notifications/getNotificationRoute';
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -50,6 +52,37 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   );
 
   useEffect(() => {
+    // 🚀 Check if app was opened from a notification (when app was closed)
+    const checkLastNotification = () => {
+      try {
+        const response = Notifications.getLastNotificationResponse();
+        if (response) {
+          console.log(
+            '🔔 App opened from notification (closed state):',
+            response
+          );
+
+          // Navigate to route from notification
+          const route = getNotificationRouteFromResponse(response);
+          if (route) {
+            console.log('🧭 Navigating to route from notification:', route);
+            // Small delay to ensure app is fully loaded
+            setTimeout(() => {
+              router.push(route as any);
+            }, 1000);
+          }
+        }
+      } catch (error) {
+        console.error('ERROR_GET_LAST_NOTIFICATION_RESPONSE', error);
+        sentryErrorReport(
+          error as Error,
+          'GET_LAST_NOTIFICATION_RESPONSE_ERROR'
+        );
+      }
+    };
+
+    checkLastNotification();
+
     // Register for push notifications and get token
     registerForPushNotificationsAsync().then(
       (token) => {
@@ -91,21 +124,20 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       });
 
     // Listener for when user taps on a notification
+    // 🎯 Handles: Foreground + Background scenarios
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         try {
-          console.log('🔔 Notification Response:', response);
+          console.log('🔔 Notification Response (user tapped):', response);
 
-          // TODO: Navigate based on notification data
-          // Example:
-          // const data = response.notification.request.content.data;
-          // if (data?.type === 'auction') {
-          //   router.push(`/(tabs)/auctions/${data.auctionId}`);
-          // } else if (data?.type === 'bid') {
-          //   router.push(`/(tabs)/my-auctions/${data.auctionId}`);
-          // } else if (data?.type === 'payment') {
-          //   router.push(`/(tabs)/account/payment-history`);
-          // }
+          // Navigate to route from notification
+          const route = getNotificationRouteFromResponse(response);
+          if (route) {
+            console.log('🧭 Navigating to route:', route);
+            router.push(route as any);
+          } else {
+            console.log('⚠️ No route found in notification data');
+          }
         } catch (error) {
           console.error('ERROR_NOTIFICATION_RESPONSE_LISTENER', error);
           sentryErrorReport(
