@@ -757,5 +757,11 @@
     "sendError": "No se pudo enviar el mensaje",
     "connectionError": "Error al conectar con el chat",
     "send": "Enviar"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "pageNotFound": "¡Ups! Esta página no existe",
+    "description": "La página que buscas no está disponible o ha sido movida",
+    "goHome": "Ir al inicio"
   }
 }

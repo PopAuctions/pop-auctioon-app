@@ -747,5 +747,11 @@
     "sendError": "Could not send the message",
     "connectionError": "Error connecting to chat",
     "send": "Send"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "pageNotFound": "Oops! This page doesn't exist",
+    "description": "The page you're looking for is not available or has been moved",
+    "goHome": "Go to home"
   }
 }

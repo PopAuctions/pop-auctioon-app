@@ -52,6 +52,18 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   );
 
   useEffect(() => {
+    // 🧭 Helper function to detect if route is nested and get parent tab
+    const getParentTab = (route: string): string | null => {
+      // Match pattern: /(tabs)/TABNAME/nested-route
+      const tabMatch = route.match(/\/\(tabs\)\/([^\/]+)\/.+/);
+      if (tabMatch && tabMatch[1]) {
+        const tabName = tabMatch[1];
+        // Return parent tab route
+        return `/(tabs)/${tabName}`;
+      }
+      return null; // Not a nested route
+    };
+
     // 🚀 Check if app was opened from a notification (when app was closed)
     const checkLastNotification = () => {
       try {
@@ -66,9 +78,24 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           const route = getNotificationRouteFromResponse(response);
           if (route) {
             console.log('🧭 Navigating to route from notification:', route);
-            // Small delay to ensure app is fully loaded
+
+            // 🔧 Fix for nested routes: Navigate to parent tab first
             setTimeout(() => {
-              router.push(route as any);
+              const parentTab = getParentTab(route);
+              if (parentTab) {
+                // It's a nested route - navigate to parent first
+                console.log(
+                  '🔧 Nested route detected, navigating to parent:',
+                  parentTab
+                );
+                router.replace(parentTab as any);
+                setTimeout(() => {
+                  router.push(route as any);
+                }, 100);
+              } else {
+                // Direct navigation for top-level routes
+                router.push(route as any);
+              }
             }, 1000);
           }
         }
@@ -134,7 +161,24 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           const route = getNotificationRouteFromResponse(response);
           if (route) {
             console.log('🧭 Navigating to route:', route);
-            router.push(route as any);
+
+            // 🔧 Fix for nested routes: Navigate to parent tab first to build proper stack
+            // This ensures back button works and data loads correctly for ALL tabs
+            const parentTab = getParentTab(route);
+            if (parentTab) {
+              // It's a nested route - navigate to parent first
+              console.log(
+                '🔧 Nested route detected, navigating to parent:',
+                parentTab
+              );
+              router.replace(parentTab as any);
+              setTimeout(() => {
+                router.push(route as any);
+              }, 100);
+            } else {
+              // Direct navigation for top-level routes
+              router.push(route as any);
+            }
           } else {
             console.log('⚠️ No route found in notification data');
           }
