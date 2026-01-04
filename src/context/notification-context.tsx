@@ -51,6 +51,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const { auth } = useAuth();
   const { protectedPost } = useSecureApi();
 
+  // Refs to prevent duplicate registrations
+  const hasRegisteredToken = useRef(false);
+  const previousAuthState = useRef<string | null>(null);
+
   const notificationListener = useRef<
     Notifications.EventSubscription | undefined
   >(undefined);
@@ -130,7 +134,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         });
 
         if (response.error) {
-          console.error('ERROR_REGISTER_PUSH_TOKEN', response.error);
+          console.log('ERROR_REGISTER_PUSH_TOKEN', response.error);
           sentryErrorReport(
             new Error(JSON.stringify(response.error)),
             'REGISTER_PUSH_TOKEN_ERROR'
@@ -147,8 +151,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     // Register for push notifications and get token
     registerForPushNotificationsAsync().then(
       (token) => {
-        if (token) {
+        if (token && !hasRegisteredToken.current) {
+          hasRegisteredToken.current = true; // Mark as registered
           setExpoPushToken(token);
+          console.log('\n🎯 ============================================');
+          console.log('📱 EXPO PUSH TOKEN (copy for testing):');
+          console.log(token);
+          console.log('🎯 ============================================\n');
 
           // 📡 Register token via backend (with user_id if authenticated)
           if (auth.state === 'authenticated' && auth.session?.user?.id) {
@@ -330,8 +339,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   // 🗑️ Disable token when user logs out (NOT delete - allows reactivation)
   useEffect(() => {
-    // Detect logout: auth was authenticated, now is unauthenticated
-    if (auth.state === 'unauthenticated' && expoPushToken) {
+    // Only disable if we had a previous authenticated state
+    // This prevents false logout detection during initial load
+    const wasAuthenticated = previousAuthState.current === 'authenticated';
+    const isNowUnauthenticated = auth.state === 'unauthenticated';
+
+    // Update previous state
+    previousAuthState.current = auth.state;
+
+    // Detect actual logout: was authenticated, now is unauthenticated
+    if (wasAuthenticated && isNowUnauthenticated && expoPushToken) {
       console.log('🗑️ User logged out, disabling push token...');
 
       const disableToken = async () => {
