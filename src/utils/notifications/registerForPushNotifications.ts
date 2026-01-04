@@ -26,9 +26,9 @@ export async function registerForPushNotificationsAsync(): Promise<
   // 📱 Check if device is physical (not simulator/emulator)
   // NOTE: Push notifications DO NOT work on simulators/emulators
   // ⚠️ COMMENTED FOR DEVELOPMENT - Uncomment for production
-  // if (!Device.isDevice) {
-  //   return undefined;
-  // }
+  if (!Device.isDevice) {
+    return undefined;
+  }
 
   // 🔐 Request permissions
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
