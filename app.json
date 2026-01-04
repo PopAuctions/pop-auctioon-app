@@ -5,12 +5,12 @@
     "slug": "pop-auctioon-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/notification-icon.png",
+    "icon": "./assets/icons/pop-auctioon-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/icons/pop-auctioon-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -24,14 +24,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/notification-icon.png",
+        "foregroundImage": "./assets/icons/pop-auctioon-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
       "notification": {
-        "icon": "./assets/images/notification-icon.png",
+        "icon": "./assets/icons/pop-auctioon-icon.png",
         "color": "#d75639"
       }
     },
