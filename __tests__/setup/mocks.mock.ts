@@ -4,6 +4,21 @@
  */
 
 /**
+ * Mock for @react-native-async-storage/async-storage
+ * This is automatically applied via jest-setup.ts
+ */
+export const mockAsyncStorage = {
+  getItem: jest.fn(() => Promise.resolve(null)),
+  setItem: jest.fn(() => Promise.resolve()),
+  removeItem: jest.fn(() => Promise.resolve()),
+  clear: jest.fn(() => Promise.resolve()),
+  getAllKeys: jest.fn(() => Promise.resolve([])),
+  multiGet: jest.fn(() => Promise.resolve([])),
+  multiSet: jest.fn(() => Promise.resolve()),
+  multiRemove: jest.fn(() => Promise.resolve()),
+};
+
+/**
  * Mock for Supabase client with authentication and realtime features
  * Use this in tests that interact with Supabase (auth, subscriptions, etc.)
  *

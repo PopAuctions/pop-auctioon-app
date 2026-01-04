@@ -5,11 +5,13 @@ Complete list of Sentry error identifiers for the push notification system in `n
 ## Error Format
 
 All errors follow this pattern:
+
 ```
 [NotificationContext.L{line}] {method/scenario} - {description}
 ```
 
 Where:
+
 - **L{line}**: Approximate line number in notification-context.tsx
 - **{method/scenario}**: Function or context where error occurred
 - **{description}**: Brief description of what failed
@@ -27,6 +29,7 @@ Where:
 **Cause**: Error checking if app was opened from notification (getLastNotificationResponse failed)
 
 **Common scenarios**:
+
 - Notification data corrupted
 - Expo notifications API error
 - Invalid notification format
@@ -44,6 +47,7 @@ Where:
 **Cause**: Backend `/api/mobile/protected/notifications/register` returned error
 
 **Common scenarios**:
+
 - Backend endpoint down
 - Invalid API key
 - Database connection error
@@ -60,6 +64,7 @@ Where:
 **Cause**: Network error, timeout, or unexpected exception
 
 **Common scenarios**:
+
 - No internet connection
 - Request timeout (>10 seconds)
 - JavaScript error in request building
@@ -77,6 +82,7 @@ Where:
 **Cause**: Backend `/api/mobile/protected/notifications/unregister` returned error
 
 **Common scenarios**:
+
 - Old token not found in database
 - Backend endpoint error
 - Token already disabled
@@ -92,6 +98,7 @@ Where:
 **Cause**: AsyncStorage read/write error
 
 **Common scenarios**:
+
 - AsyncStorage quota exceeded (very rare)
 - Permission denied (Android)
 - Storage corruption
@@ -109,6 +116,7 @@ Where:
 **Cause**: Cannot obtain Expo push token
 
 **Common scenarios**:
+
 - Permissions denied
 - Invalid projectId in app.json
 - Expo push service unavailable
@@ -127,6 +135,7 @@ Where:
 **Cause**: Error processing notification in foreground listener
 
 **Common scenarios**:
+
 - Invalid notification data structure
 - React state update error
 - Navigation error
@@ -142,6 +151,7 @@ Where:
 **Cause**: Error extracting route or navigating
 
 **Common scenarios**:
+
 - Invalid route in notification data
 - Route doesn't exist in app
 - Navigation error (Expo Router)
@@ -160,6 +170,7 @@ Where:
 **Cause**: Backend `/api/mobile/protected/notifications/register` returned error when updating user_id
 
 **Common scenarios**:
+
 - Backend endpoint error
 - Token not found in database
 - user_id validation error
@@ -175,6 +186,7 @@ Where:
 **Cause**: Network error or unexpected exception
 
 **Common scenarios**:
+
 - Network timeout
 - Invalid user_id format
 - React effect error
@@ -192,6 +204,7 @@ Where:
 **Cause**: Backend `/api/mobile/protected/notifications/unregister` returned error
 
 **Common scenarios**:
+
 - Token not found
 - Already disabled
 - Backend endpoint error
@@ -207,6 +220,7 @@ Where:
 **Cause**: Network error or unexpected exception
 
 **Common scenarios**:
+
 - Network timeout
 - React effect error
 
@@ -230,7 +244,7 @@ These errors indicate degraded functionality:
 
 1. **L161** - Old token not cleaned up (orphaned tokens accumulate)
 2. **L347/L353** - Token not disabled on logout (notifications sent to logged out user)
-4. **L219** - Navigation failed (user can't reach destination)
+3. **L219** - Navigation failed (user can't reach destination)
 
 ### Low Priority (Acceptable Failures)
 
