@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import * as Notifications from 'expo-notifications';
 import { AppState, AppStateStatus } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerForPushNotificationsAsync } from '@/utils/notifications/registerForPushNotifications';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { router } from 'expo-router';
@@ -15,6 +16,9 @@ import { getNotificationRouteFromResponse } from '@/utils/notifications/getNotif
 import { useAuth } from '@/context/auth-context';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
+
+// AsyncStorage key for last known push token
+const LAST_PUSH_TOKEN_KEY = '@lastExpoPushToken';
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -150,7 +154,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
     // Register for push notifications and get token
     registerForPushNotificationsAsync().then(
-      (token) => {
+      async (token) => {
         if (token && !hasRegisteredToken.current) {
           hasRegisteredToken.current = true; // Mark as registered
           setExpoPushToken(token);
@@ -158,6 +162,52 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           console.log('📱 EXPO PUSH TOKEN (copy for testing):');
           console.log(token);
           console.log('🎯 ============================================\n');
+
+          // 🔄 Check if token changed (reinstallation detection)
+          try {
+            const lastToken = await AsyncStorage.getItem(LAST_PUSH_TOKEN_KEY);
+
+            if (lastToken && lastToken !== token) {
+              // Token changed - app was reinstalled or data cleared
+              console.log('🔄 Token change detected (reinstallation)');
+              console.log('  Previous token:', lastToken);
+              console.log('  New token:', token);
+
+              // Deactivate old token in backend
+              console.log('📡 Deactivating old token...');
+              const unregisterResponse = await protectedPost({
+                endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.UNREGISTER,
+                data: { token: lastToken },
+              });
+
+              if (unregisterResponse.error) {
+                console.error(
+                  'ERROR_UNREGISTER_OLD_TOKEN',
+                  unregisterResponse.error
+                );
+                sentryErrorReport(
+                  new Error(JSON.stringify(unregisterResponse.error)),
+                  'UNREGISTER_OLD_TOKEN_ERROR'
+                );
+              } else {
+                console.log('✅ Old token deactivated successfully');
+              }
+
+              // Reset registration flag to allow new registration
+              hasRegisteredToken.current = false;
+            } else if (lastToken === token) {
+              console.log('✅ Token unchanged - using existing registration');
+            } else {
+              console.log('🆕 First time registration - no previous token');
+            }
+
+            // Save new token to AsyncStorage
+            await AsyncStorage.setItem(LAST_PUSH_TOKEN_KEY, token);
+            console.log('💾 Token saved to AsyncStorage');
+          } catch (error) {
+            console.error('ERROR_TOKEN_CHANGE_DETECTION', error);
+            sentryErrorReport(error as Error, 'TOKEN_CHANGE_DETECTION_ERROR');
+          }
 
           // 📡 Register token via backend (with user_id if authenticated)
           if (auth.state === 'authenticated' && auth.session?.user?.id) {
