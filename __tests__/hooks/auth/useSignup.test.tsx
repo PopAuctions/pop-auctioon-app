@@ -5,6 +5,15 @@ import * as Sentry from '@sentry/react-native';
 import { File } from 'expo-file-system';
 
 // Mock dependencies
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: () =>
+        Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+    },
+  },
+}));
 jest.mock('@/hooks/api/useSecureApi');
 jest.mock('@sentry/react-native');
 jest.mock('expo-file-system', () => ({

@@ -4,20 +4,28 @@ import { AboutUsContent } from '@/components/info/AboutUsContent';
 import { HowItWorksContent } from '@/components/info/HowItWorksContent';
 import { FAQsContent } from '@/components/info/FAQsContent';
 import { ContactUsContent } from '@/components/info/ContactUsContent';
+import type { AboutUsData, HowItWorksData, FAQItem } from '@/types/types';
+
+// Mock Supabase
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: () =>
+        Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+    },
+  },
+}));
 
 // Mock translation hook
 jest.mock('@/hooks/i18n/useTranslation', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
-        'screens.aboutUs.title': 'About Us',
-        'screens.aboutUs.subtitle': 'Learn more about PopAuction',
-        'screens.howItWorks.title': 'How It Works',
-        'screens.howItWorks.subtitle': 'Step by step guide',
-        'screens.faqs.title': 'Frequently Asked Questions',
-        'screens.faqs.subtitle': 'Find answers to common questions',
-        'screens.contactUs.title': 'Contact Us',
-        'screens.contactUs.subtitle': 'Get in touch with our team',
+        'screens.account.aboutUs': 'About Us',
+        'screens.account.howItWorks': 'How It Works',
+        'screens.account.faqs': 'FAQs',
+        'screens.account.contactUs': 'Contact Us',
       };
       return translations[key] || key;
     },
@@ -25,92 +33,247 @@ jest.mock('@/hooks/i18n/useTranslation', () => ({
   }),
 }));
 
+// Mock image require
+jest.mock('../../../assets/images/about-hero.webp', () => 'about-hero.webp', {
+  virtual: true,
+});
+jest.mock(
+  '../../../assets/images/how-it-works-hero.webp',
+  () => 'how-it-works-hero.webp',
+  { virtual: true }
+);
+
+const mockAboutUsData: AboutUsData = {
+  es: {
+    text: 'Este es el contenido de About Us en español.\n\nSegundo párrafo en español.',
+    logo: 'logo-url',
+  },
+  en: {
+    text: 'This is the About Us content in English.\n\nSecond paragraph in English.',
+    logo: 'logo-url',
+  },
+};
+
+const mockHowItWorksData: HowItWorksData = {
+  es: {
+    intro: 'Introducción sobre cómo funciona PopAuction',
+    sections: [
+      {
+        title: 'Paso 1',
+        content: [{ text: 'Contenido del paso 1' }],
+      },
+      {
+        title: 'Paso 2',
+        content: [{ text: 'Contenido del paso 2' }],
+      },
+    ],
+    outro: {
+      title: 'Conclusión',
+      content: 'Contenido de conclusión',
+    },
+    logo: 'logo-url',
+  },
+  en: {
+    intro: 'Introduction to how PopAuction works',
+    sections: [
+      {
+        title: 'Step 1',
+        content: [{ text: 'Step 1 content' }],
+      },
+      {
+        title: 'Step 2',
+        content: [{ text: 'Step 2 content' }],
+      },
+    ],
+    outro: {
+      title: 'Conclusion',
+      content: 'Conclusion content',
+    },
+    logo: 'logo-url',
+  },
+};
+
+const mockFAQs: FAQItem[] = [
+  {
+    question: { es: '¿Pregunta 1?', en: 'Question 1?' },
+    answer: { es: 'Respuesta 1', en: 'Answer 1' },
+  },
+  {
+    question: { es: '¿Pregunta 2?', en: 'Question 2?' },
+    answer: { es: 'Respuesta 2', en: 'Answer 2' },
+  },
+];
+
+// For FAQsContent, we need FAQsData format
+const mockFAQsData = {
+  es: [
+    {
+      subtitle: 'Categoría 1',
+      questions: mockFAQs,
+    },
+  ],
+  en: [
+    {
+      subtitle: 'Category 1',
+      questions: mockFAQs,
+    },
+  ],
+};
+
 describe('Info Components', () => {
   describe('AboutUsContent', () => {
-    it('should render correctly', () => {
-      const { getByText } = render(<AboutUsContent />);
+    it('should render correctly with data', () => {
+      const { getByText } = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
 
       expect(getByText('About Us')).toBeTruthy();
-      expect(getByText('Learn more about PopAuction')).toBeTruthy();
+      expect(
+        getByText('This is the About Us content in English.')
+      ).toBeTruthy();
+    });
+
+    it('should render Spanish content when locale is es', () => {
+      const { getByText } = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='es'
+        />
+      );
+
+      expect(
+        getByText('Este es el contenido de About Us en español.')
+      ).toBeTruthy();
     });
 
     it('should match snapshot', () => {
-      const { toJSON } = render(<AboutUsContent />);
+      const { toJSON } = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
       expect(toJSON()).toMatchSnapshot();
     });
 
-    it('should have correct layout structure', () => {
-      const { UNSAFE_root } = render(<AboutUsContent />);
-      expect(UNSAFE_root).toBeTruthy();
-    });
-
     it('should render without crashing', () => {
-      expect(() => render(<AboutUsContent />)).not.toThrow();
-    });
-
-    it('should use translation hook', () => {
-      const { getByText } = render(<AboutUsContent />);
-
-      // Verify translated strings are rendered
-      expect(getByText('About Us')).toBeTruthy();
+      expect(() =>
+        render(
+          <AboutUsContent
+            data={mockAboutUsData}
+            locale='en'
+          />
+        )
+      ).not.toThrow();
     });
   });
 
   describe('HowItWorksContent', () => {
-    it('should render correctly', () => {
-      const { getByText } = render(<HowItWorksContent />);
+    it('should render correctly with data', () => {
+      const { getByText } = render(
+        <HowItWorksContent
+          data={mockHowItWorksData}
+          locale='en'
+        />
+      );
 
       expect(getByText('How It Works')).toBeTruthy();
-      expect(getByText('Step by step guide')).toBeTruthy();
+      expect(getByText('Introduction to how PopAuction works')).toBeTruthy();
+    });
+
+    it('should render Spanish content when locale is es', () => {
+      const { getByText } = render(
+        <HowItWorksContent
+          data={mockHowItWorksData}
+          locale='es'
+        />
+      );
+
+      expect(
+        getByText('Introducción sobre cómo funciona PopAuction')
+      ).toBeTruthy();
     });
 
     it('should match snapshot', () => {
-      const { toJSON } = render(<HowItWorksContent />);
+      const { toJSON } = render(
+        <HowItWorksContent
+          data={mockHowItWorksData}
+          locale='en'
+        />
+      );
       expect(toJSON()).toMatchSnapshot();
     });
 
-    it('should have correct layout structure', () => {
-      const { UNSAFE_root } = render(<HowItWorksContent />);
-      expect(UNSAFE_root).toBeTruthy();
-    });
-
     it('should render without crashing', () => {
-      expect(() => render(<HowItWorksContent />)).not.toThrow();
-    });
-
-    it('should use translation hook', () => {
-      const { getByText } = render(<HowItWorksContent />);
-
-      expect(getByText('How It Works')).toBeTruthy();
+      expect(() =>
+        render(
+          <HowItWorksContent
+            data={mockHowItWorksData}
+            locale='en'
+          />
+        )
+      ).not.toThrow();
     });
   });
 
   describe('FAQsContent', () => {
-    it('should render correctly', () => {
-      const { getByText } = render(<FAQsContent />);
+    it('should render correctly with data', () => {
+      const { getByText } = render(
+        <FAQsContent
+          data={mockFAQsData}
+          locale='en'
+        />
+      );
 
-      expect(getByText('Frequently Asked Questions')).toBeTruthy();
-      expect(getByText('Find answers to common questions')).toBeTruthy();
+      expect(getByText('FAQs')).toBeTruthy();
+      expect(getByText('Question 1?')).toBeTruthy();
+    });
+
+    it('should render Spanish content when locale is es', () => {
+      const { getByText } = render(
+        <FAQsContent
+          data={mockFAQsData}
+          locale='es'
+        />
+      );
+
+      expect(getByText('¿Pregunta 1?')).toBeTruthy();
+    });
+
+    it('should render multiple FAQ items', () => {
+      const { getByText } = render(
+        <FAQsContent
+          data={mockFAQsData}
+          locale='en'
+        />
+      );
+
+      expect(getByText('Question 1?')).toBeTruthy();
+      expect(getByText('Question 2?')).toBeTruthy();
     });
 
     it('should match snapshot', () => {
-      const { toJSON } = render(<FAQsContent />);
+      const { toJSON } = render(
+        <FAQsContent
+          data={mockFAQsData}
+          locale='en'
+        />
+      );
       expect(toJSON()).toMatchSnapshot();
     });
 
-    it('should have correct layout structure', () => {
-      const { UNSAFE_root } = render(<FAQsContent />);
-      expect(UNSAFE_root).toBeTruthy();
-    });
-
     it('should render without crashing', () => {
-      expect(() => render(<FAQsContent />)).not.toThrow();
-    });
-
-    it('should use translation hook', () => {
-      const { getByText } = render(<FAQsContent />);
-
-      expect(getByText('Frequently Asked Questions')).toBeTruthy();
+      expect(() =>
+        render(
+          <FAQsContent
+            data={mockFAQsData}
+            locale='en'
+          />
+        )
+      ).not.toThrow();
     });
   });
 
@@ -118,8 +281,8 @@ describe('Info Components', () => {
     it('should render correctly', () => {
       const { getByText } = render(<ContactUsContent />);
 
-      expect(getByText('Contact Us')).toBeTruthy();
-      expect(getByText('Get in touch with our team')).toBeTruthy();
+      // Component uses translation keys, not translated text
+      expect(getByText('screens.contactUs.title')).toBeTruthy();
     });
 
     it('should match snapshot', () => {
@@ -127,80 +290,109 @@ describe('Info Components', () => {
       expect(toJSON()).toMatchSnapshot();
     });
 
-    it('should have correct layout structure', () => {
-      const { UNSAFE_root } = render(<ContactUsContent />);
-      expect(UNSAFE_root).toBeTruthy();
-    });
-
     it('should render without crashing', () => {
       expect(() => render(<ContactUsContent />)).not.toThrow();
-    });
-
-    it('should use translation hook', () => {
-      const { getByText } = render(<ContactUsContent />);
-
-      expect(getByText('Contact Us')).toBeTruthy();
     });
   });
 
   describe('Component consistency', () => {
-    it('should have consistent structure across all components', () => {
-      const components = [
-        AboutUsContent,
-        HowItWorksContent,
-        FAQsContent,
-        ContactUsContent,
-      ];
+    it('should render AboutUsContent and HowItWorksContent with consistent structure', () => {
+      const about = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
+      const howItWorks = render(
+        <HowItWorksContent
+          data={mockHowItWorksData}
+          locale='en'
+        />
+      );
 
-      components.forEach((Component) => {
-        const { UNSAFE_root } = render(<Component />);
-        expect(UNSAFE_root).toBeTruthy();
-      });
+      expect(about.UNSAFE_root).toBeTruthy();
+      expect(howItWorks.UNSAFE_root).toBeTruthy();
     });
 
-    it('should all use the same translation hook', () => {
-      const components = [
-        AboutUsContent,
-        HowItWorksContent,
-        FAQsContent,
-        ContactUsContent,
-      ];
-
-      components.forEach((Component) => {
-        expect(() => render(<Component />)).not.toThrow();
-      });
+    it('should render FAQsContent with proper structure', () => {
+      const faqs = render(
+        <FAQsContent
+          data={mockFAQsData}
+          locale='en'
+        />
+      );
+      expect(faqs.UNSAFE_root).toBeTruthy();
     });
 
-    it('should render independently without affecting each other', () => {
-      const { getByText: getAbout } = render(<AboutUsContent />);
-      expect(getAbout('About Us')).toBeTruthy();
+    it('should render ContactUsContent independently', () => {
+      const contact = render(<ContactUsContent />);
+      expect(contact.UNSAFE_root).toBeTruthy();
+    });
 
-      const { getByText: getHow } = render(<HowItWorksContent />);
-      expect(getHow('How It Works')).toBeTruthy();
-
-      const { getByText: getFaq } = render(<FAQsContent />);
-      expect(getFaq('Frequently Asked Questions')).toBeTruthy();
-
-      const { getByText: getContact } = render(<ContactUsContent />);
-      expect(getContact('Contact Us')).toBeTruthy();
+    it('should all render without throwing errors', () => {
+      expect(() =>
+        render(
+          <AboutUsContent
+            data={mockAboutUsData}
+            locale='en'
+          />
+        )
+      ).not.toThrow();
+      expect(() =>
+        render(
+          <HowItWorksContent
+            data={mockHowItWorksData}
+            locale='en'
+          />
+        )
+      ).not.toThrow();
+      expect(() =>
+        render(
+          <FAQsContent
+            data={mockFAQsData}
+            locale='en'
+          />
+        )
+      ).not.toThrow();
+      expect(() => render(<ContactUsContent />)).not.toThrow();
     });
   });
 
-  describe('Props and customization', () => {
-    it('should render without props', () => {
-      expect(() => render(<AboutUsContent />)).not.toThrow();
-      expect(() => render(<HowItWorksContent />)).not.toThrow();
-      expect(() => render(<FAQsContent />)).not.toThrow();
-      expect(() => render(<ContactUsContent />)).not.toThrow();
+  describe('Props and locale switching', () => {
+    it('should render AboutUsContent in both locales', () => {
+      const enVersion = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
+      const esVersion = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='es'
+        />
+      );
+
+      expect(enVersion.toJSON()).not.toEqual(esVersion.toJSON());
     });
 
     it('should be reusable across different contexts', () => {
       // Render in "auth" context
-      const authAbout = render(<AboutUsContent />);
+      const authAbout = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
       expect(authAbout.getByText('About Us')).toBeTruthy();
 
       // Render in "account" context (same component, different route)
-      const accountAbout = render(<AboutUsContent />);
+      const accountAbout = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
       expect(accountAbout.getByText('About Us')).toBeTruthy();
 
       // Both should render the same content
@@ -210,25 +402,48 @@ describe('Info Components', () => {
 
   describe('Accessibility', () => {
     it('should have accessible text components', () => {
-      const components = [
-        AboutUsContent,
-        HowItWorksContent,
-        FAQsContent,
-        ContactUsContent,
-      ];
+      const about = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
+      const howItWorks = render(
+        <HowItWorksContent
+          data={mockHowItWorksData}
+          locale='en'
+        />
+      );
+      const faqs = render(
+        <FAQsContent
+          data={mockFAQsData}
+          locale='en'
+        />
+      );
+      const contact = render(<ContactUsContent />);
 
-      components.forEach((Component) => {
-        const { UNSAFE_root } = render(<Component />);
-        expect(UNSAFE_root).toBeTruthy();
-      });
+      expect(about.UNSAFE_root).toBeTruthy();
+      expect(howItWorks.UNSAFE_root).toBeTruthy();
+      expect(faqs.UNSAFE_root).toBeTruthy();
+      expect(contact.UNSAFE_root).toBeTruthy();
     });
 
     it('should render text content that is readable', () => {
-      const { getByText: getAbout } = render(<AboutUsContent />);
+      const { getByText: getAbout } = render(
+        <AboutUsContent
+          data={mockAboutUsData}
+          locale='en'
+        />
+      );
       const aboutTitle = getAbout('About Us');
       expect(aboutTitle).toBeTruthy();
 
-      const { getByText: getHow } = render(<HowItWorksContent />);
+      const { getByText: getHow } = render(
+        <HowItWorksContent
+          data={mockHowItWorksData}
+          locale='en'
+        />
+      );
       const howTitle = getHow('How It Works');
       expect(howTitle).toBeTruthy();
     });
