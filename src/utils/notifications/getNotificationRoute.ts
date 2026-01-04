@@ -39,7 +39,6 @@ export function getNotificationRoute(
 
     // Check if route exists in data
     if (!data || typeof data !== 'object') {
-      console.log('⚠️ Notification data is missing or invalid');
       return null;
     }
 
@@ -47,20 +46,16 @@ export function getNotificationRoute(
     const route = (data.route as string) || (data.path as string);
 
     if (!route || typeof route !== 'string') {
-      console.log('⚠️ Notification route is missing or invalid');
       return null;
     }
 
     // Validate route format (should start with / or be a valid Expo Router path)
     if (!route.startsWith('/') && !route.startsWith('(')) {
-      console.warn('⚠️ Invalid route format:', route);
       return null;
     }
 
-    console.log('🧭 Extracted route from notification:', route);
     return route;
   } catch (error) {
-    console.error('ERROR_GET_NOTIFICATION_ROUTE', error);
     sentryErrorReport(error as Error, 'GET_NOTIFICATION_ROUTE_ERROR');
     return null;
   }

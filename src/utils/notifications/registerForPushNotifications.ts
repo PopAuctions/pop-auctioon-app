@@ -25,9 +25,10 @@ export async function registerForPushNotificationsAsync(): Promise<
 
   // 📱 Check if device is physical (not simulator/emulator)
   // NOTE: Push notifications DO NOT work on simulators/emulators
-  if (!Device.isDevice) {
-    return undefined;
-  }
+  // ⚠️ COMMENTED FOR DEVELOPMENT - Uncomment for production
+  // if (!Device.isDevice) {
+  //   return undefined;
+  // }
 
   // 🔐 Request permissions
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -40,8 +41,7 @@ export async function registerForPushNotificationsAsync(): Promise<
 
   if (finalStatus !== 'granted') {
     const error = new Error('Permission not granted to get push token');
-    console.error('ERROR_PUSH_NOTIFICATION_PERMISSION', error);
-    // sentryErrorReport(error, 'PUSH_NOTIFICATION_PERMISSION_DENIED');
+    sentryErrorReport(error, 'PUSH_NOTIFICATION_PERMISSION_DENIED');
     return undefined;
   }
 
@@ -52,7 +52,6 @@ export async function registerForPushNotificationsAsync(): Promise<
 
   if (!projectId) {
     const error = new Error('Project ID not found in app config');
-    console.error('ERROR_PUSH_NOTIFICATION_PROJECT_ID', error);
     sentryErrorReport(error, 'PUSH_NOTIFICATION_NO_PROJECT_ID');
     return undefined;
   }
@@ -64,11 +63,9 @@ export async function registerForPushNotificationsAsync(): Promise<
       })
     ).data;
 
-    console.log('📱 Expo Push Token:', pushTokenString);
     return pushTokenString;
   } catch (e: unknown) {
     const error = new Error(`Failed to get push token: ${e}`);
-    console.error('ERROR_GET_PUSH_TOKEN', error);
     sentryErrorReport(error, 'PUSH_NOTIFICATION_GET_TOKEN_FAILED');
     return undefined;
   }

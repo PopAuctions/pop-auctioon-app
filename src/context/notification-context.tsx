@@ -83,31 +83,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     try {
       const response = Notifications.getLastNotificationResponse();
       if (response) {
-        console.log(
-          '🔔 App opened from notification (closed state):',
-          response
-        );
-
-        // Navigate to route from notification
         const route = getNotificationRouteFromResponse(response);
         if (route) {
-          console.log('🧭 Navigating to route from notification:', route);
-
-          // 🔧 Fix for nested routes: Navigate to parent tab first
           setTimeout(() => {
             const parentTab = getParentTab(route);
             if (parentTab) {
-              // It's a nested route - navigate to parent first
-              console.log(
-                '🔧 Nested route detected, navigating to parent:',
-                parentTab
-              );
               router.replace(parentTab as any);
               setTimeout(() => {
                 router.push(route as any);
               }, 100);
             } else {
-              // Direct navigation for top-level routes
               router.push(route as any);
             }
           }, 1000);
@@ -115,7 +100,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       }
     } catch (error) {
       console.error('ERROR_GET_LAST_NOTIFICATION_RESPONSE', error);
-      sentryErrorReport(error as Error, 'GET_LAST_NOTIFICATION_RESPONSE_ERROR');
+      sentryErrorReport(
+        error as Error,
+        '[NotificationContext.L104] getLastNotificationResponse - App opened from closed state'
+      );
     }
 
     // �📡 Function to register push token via backend API
@@ -138,17 +126,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         });
 
         if (response.error) {
-          console.log('ERROR_REGISTER_PUSH_TOKEN', response.error);
           sentryErrorReport(
             new Error(JSON.stringify(response.error)),
-            'REGISTER_PUSH_TOKEN_ERROR'
+            '[NotificationContext.L127] registerPushToken - Initial token registration API error'
           );
-        } else {
-          console.log('✅ Push token registered successfully');
         }
       } catch (error) {
-        console.error('ERROR_REGISTER_PUSH_TOKEN_CATCH', error);
-        sentryErrorReport(error as Error, 'REGISTER_PUSH_TOKEN_CATCH_ERROR');
+        sentryErrorReport(
+          error as Error,
+          '[NotificationContext.L133] registerPushToken - Initial token registration catch'
+        );
       }
     };
 
@@ -168,45 +155,27 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
             const lastToken = await AsyncStorage.getItem(LAST_PUSH_TOKEN_KEY);
 
             if (lastToken && lastToken !== token) {
-              // Token changed - app was reinstalled or data cleared
-              console.log('🔄 Token change detected (reinstallation)');
-              console.log('  Previous token:', lastToken);
-              console.log('  New token:', token);
-
-              // Deactivate old token in backend
-              console.log('📡 Deactivating old token...');
               const unregisterResponse = await protectedPost({
                 endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.UNREGISTER,
                 data: { token: lastToken },
               });
 
               if (unregisterResponse.error) {
-                console.error(
-                  'ERROR_UNREGISTER_OLD_TOKEN',
-                  unregisterResponse.error
-                );
                 sentryErrorReport(
                   new Error(JSON.stringify(unregisterResponse.error)),
-                  'UNREGISTER_OLD_TOKEN_ERROR'
+                  '[NotificationContext.L161] AsyncStorage - Unregister old token after reinstall detection'
                 );
-              } else {
-                console.log('✅ Old token deactivated successfully');
               }
 
-              // Reset registration flag to allow new registration
               hasRegisteredToken.current = false;
-            } else if (lastToken === token) {
-              console.log('✅ Token unchanged - using existing registration');
-            } else {
-              console.log('🆕 First time registration - no previous token');
             }
 
-            // Save new token to AsyncStorage
             await AsyncStorage.setItem(LAST_PUSH_TOKEN_KEY, token);
-            console.log('💾 Token saved to AsyncStorage');
           } catch (error) {
-            console.error('ERROR_TOKEN_CHANGE_DETECTION', error);
-            sentryErrorReport(error as Error, 'TOKEN_CHANGE_DETECTION_ERROR');
+            sentryErrorReport(
+              error as Error,
+              '[NotificationContext.L171] AsyncStorage - Token change detection or save failed'
+            );
           }
 
           // 📡 Register token via backend (with user_id if authenticated)
@@ -219,8 +188,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         }
       },
       (error) => {
-        console.error('ERROR_REGISTER_PUSH_NOTIFICATIONS', error);
-        sentryErrorReport(error, 'REGISTER_PUSH_NOTIFICATIONS_ERROR');
+        sentryErrorReport(
+          error,
+          '[NotificationContext.L183] registerForPushNotificationsAsync - Failed to get Expo push token'
+        );
         setError(error);
       }
     );
@@ -229,60 +200,35 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         try {
-          console.log('🔔 Notification Received:', notification);
           setNotification(notification);
-
-          // TODO: Handle notification based on type/data
-          // Example: Navigate to specific screen based on notification data
-          // if (notification.request.content.data?.type === 'auction') {
-          //   router.push(`/(tabs)/auctions/${notification.request.content.data.auctionId}`);
-          // }
         } catch (error) {
-          console.error('ERROR_NOTIFICATION_RECEIVED_LISTENER', error);
           sentryErrorReport(
             error as Error,
-            'NOTIFICATION_RECEIVED_LISTENER_ERROR'
+            '[NotificationContext.L197] addNotificationReceivedListener - Foreground notification handling failed'
           );
         }
       });
 
     // Listener for when user taps on a notification
-    // 🎯 Handles: Foreground + Background scenarios
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         try {
-          console.log('🔔 Notification Response (user tapped):', response);
-
-          // Navigate to route from notification
           const route = getNotificationRouteFromResponse(response);
           if (route) {
-            console.log('🧭 Navigating to route:', route);
-
-            // 🔧 Fix for nested routes: Navigate to parent tab first to build proper stack
-            // This ensures back button works and data loads correctly for ALL tabs
             const parentTab = getParentTab(route);
             if (parentTab) {
-              // It's a nested route - navigate to parent first
-              console.log(
-                '🔧 Nested route detected, navigating to parent:',
-                parentTab
-              );
               router.replace(parentTab as any);
               setTimeout(() => {
                 router.push(route as any);
               }, 100);
             } else {
-              // Direct navigation for top-level routes
               router.push(route as any);
             }
-          } else {
-            console.log('⚠️ No route found in notification data');
           }
         } catch (error) {
-          console.error('ERROR_NOTIFICATION_RESPONSE_LISTENER', error);
           sentryErrorReport(
             error as Error,
-            'NOTIFICATION_RESPONSE_LISTENER_ERROR'
+            '[NotificationContext.L219] addNotificationResponseReceivedListener - User tap navigation failed'
           );
         }
       });
@@ -305,12 +251,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       auth.state === 'authenticated' &&
       auth.session?.user?.id
     ) {
-      console.log('🔄 User authenticated, updating push token with user_id...');
-
       const registerToken = async () => {
         try {
-          console.log('📡 Registering push token via backend with user_id...');
-
           const response = await protectedPost({
             endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
             data: {
@@ -320,17 +262,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
-            console.error('ERROR_REGISTER_PUSH_TOKEN', response.error);
             sentryErrorReport(
               new Error(JSON.stringify(response.error)),
-              'REGISTER_PUSH_TOKEN_ERROR'
+              '[NotificationContext.L262] useEffect[auth] - Associate user_id after login API error'
             );
-          } else {
-            console.log('✅ Push token registered with user_id successfully');
           }
         } catch (error) {
-          console.error('ERROR_REGISTER_PUSH_TOKEN_CATCH', error);
-          sentryErrorReport(error as Error, 'REGISTER_PUSH_TOKEN_CATCH_ERROR');
+          sentryErrorReport(
+            error as Error,
+            '[NotificationContext.L268] useEffect[auth] - Associate user_id after login catch'
+          );
         }
       };
 
@@ -340,23 +281,22 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   // 🔄 Update token when app comes to foreground (Escenario 3: Abre app)
   useEffect(() => {
-    if (!expoPushToken || auth.state !== 'authenticated') {
+    // Only run if we have a token (works for both authenticated and unauthenticated)
+    if (!expoPushToken) {
       return;
     }
 
-    // TypeScript narrowing: We know auth.state is 'authenticated' here
-    const userId = auth.session?.user?.id;
+    // Get user_id if authenticated
+    const userId =
+      auth.state === 'authenticated' ? auth.session?.user?.id : undefined;
 
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {
-        console.log('🔄 App became active, updating token last_seen_at...');
-
         try {
           const requestData: { token: string; user_id?: string } = {
             token: expoPushToken,
           };
 
-          // Include user_id if authenticated
           if (userId) {
             requestData.user_id = userId;
           }
@@ -367,12 +307,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
-            console.error('ERROR_UPDATE_TOKEN_ON_FOREGROUND', response.error);
-          } else {
-            console.log('✅ Token last_seen_at updated');
+            console.log('ERROR_UPDATE_TOKEN_ON_FOREGROUND', response.error);
           }
         } catch (error) {
-          console.error('ERROR_UPDATE_TOKEN_CATCH', error);
+          console.log('ERROR_UPDATE_TOKEN_CATCH', error);
         }
       }
     };
@@ -399,8 +337,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
     // Detect actual logout: was authenticated, now is unauthenticated
     if (wasAuthenticated && isNowUnauthenticated && expoPushToken) {
-      console.log('🗑️ User logged out, disabling push token...');
-
       const disableToken = async () => {
         try {
           const response = await protectedPost({
@@ -409,18 +345,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
-            console.error('ERROR_DISABLE_PUSH_TOKEN', response.error);
             sentryErrorReport(
               new Error(JSON.stringify(response.error)),
-              'DISABLE_PUSH_TOKEN_ERROR'
+              '[NotificationContext.L347] useEffect[logout] - Disable token on logout API error'
             );
-          } else {
-            console.log('✅ Push token disabled successfully');
-            // Don't clear expoPushToken - keep it for potential reactivation
           }
         } catch (error) {
-          console.error('ERROR_DISABLE_PUSH_TOKEN_CATCH', error);
-          sentryErrorReport(error as Error, 'DISABLE_PUSH_TOKEN_CATCH_ERROR');
+          sentryErrorReport(
+            error as Error,
+            '[NotificationContext.L353] useEffect[logout] - Disable token on logout catch'
+          );
         }
       };
 
