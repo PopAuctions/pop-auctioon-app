@@ -25,7 +25,7 @@ export async function registerForPushNotificationsAsync(): Promise<
 
   // 📱 Check if device is physical (not simulator/emulator)
   // NOTE: Push notifications DO NOT work on simulators/emulators
-  if (Device.isDevice) {
+  if (!Device.isDevice) {
     return undefined;
   }
 

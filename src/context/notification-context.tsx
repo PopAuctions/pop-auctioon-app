@@ -7,6 +7,7 @@ import React, {
   ReactNode,
 } from 'react';
 import * as Notifications from 'expo-notifications';
+import { AppState, AppStateStatus } from 'react-native';
 import { registerForPushNotificationsAsync } from '@/utils/notifications/registerForPushNotifications';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { router } from 'expo-router';
@@ -71,59 +72,61 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     };
 
     // 🚀 Check if app was opened from a notification (when app was closed)
-    const checkLastNotification = () => {
-      try {
-        const response = Notifications.getLastNotificationResponse();
-        if (response) {
-          console.log(
-            '🔔 App opened from notification (closed state):',
-            response
-          );
-
-          // Navigate to route from notification
-          const route = getNotificationRouteFromResponse(response);
-          if (route) {
-            console.log('🧭 Navigating to route from notification:', route);
-
-            // 🔧 Fix for nested routes: Navigate to parent tab first
-            setTimeout(() => {
-              const parentTab = getParentTab(route);
-              if (parentTab) {
-                // It's a nested route - navigate to parent first
-                console.log(
-                  '🔧 Nested route detected, navigating to parent:',
-                  parentTab
-                );
-                router.replace(parentTab as any);
-                setTimeout(() => {
-                  router.push(route as any);
-                }, 100);
-              } else {
-                // Direct navigation for top-level routes
-                router.push(route as any);
-              }
-            }, 1000);
-          }
-        }
-      } catch (error) {
-        console.error('ERROR_GET_LAST_NOTIFICATION_RESPONSE', error);
-        sentryErrorReport(
-          error as Error,
-          'GET_LAST_NOTIFICATION_RESPONSE_ERROR'
+    try {
+      const response = Notifications.getLastNotificationResponse();
+      if (response) {
+        console.log(
+          '🔔 App opened from notification (closed state):',
+          response
         );
+
+        // Navigate to route from notification
+        const route = getNotificationRouteFromResponse(response);
+        if (route) {
+          console.log('🧭 Navigating to route from notification:', route);
+
+          // 🔧 Fix for nested routes: Navigate to parent tab first
+          setTimeout(() => {
+            const parentTab = getParentTab(route);
+            if (parentTab) {
+              // It's a nested route - navigate to parent first
+              console.log(
+                '🔧 Nested route detected, navigating to parent:',
+                parentTab
+              );
+              router.replace(parentTab as any);
+              setTimeout(() => {
+                router.push(route as any);
+              }, 100);
+            } else {
+              // Direct navigation for top-level routes
+              router.push(route as any);
+            }
+          }, 1000);
+        }
       }
-    };
+    } catch (error) {
+      console.error('ERROR_GET_LAST_NOTIFICATION_RESPONSE', error);
+      sentryErrorReport(error as Error, 'GET_LAST_NOTIFICATION_RESPONSE_ERROR');
+    }
 
-    checkLastNotification();
-
-    // � Function to register push token via backend API
-    const registerPushToken = async (token: string) => {
+    // �📡 Function to register push token via backend API
+    const registerPushToken = async (token: string, userId?: string) => {
       try {
         console.log('📡 Registering push token via backend...');
 
+        // Build request data - include user_id only if provided
+        const requestData: { token: string; user_id?: string } = { token };
+        if (userId) {
+          requestData.user_id = userId;
+          console.log('📡 Registering with user_id:', userId);
+        } else {
+          console.log('📡 Registering without user_id (unauthenticated)');
+        }
+
         const response = await protectedPost({
           endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
-          data: { token },
+          data: requestData,
         });
 
         if (response.error) {
@@ -147,13 +150,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         if (token) {
           setExpoPushToken(token);
 
-          // 📡 Register token via backend if user is authenticated
+          // 📡 Register token via backend (with user_id if authenticated)
           if (auth.state === 'authenticated' && auth.session?.user?.id) {
-            registerPushToken(token);
+            registerPushToken(token, auth.session.user.id);
           } else {
-            console.log(
-              '⚠️ User not authenticated, token will be registered after login'
-            );
+            // Register token without user_id (will be updated after login)
+            registerPushToken(token);
           }
         }
       },
@@ -244,16 +246,18 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       auth.state === 'authenticated' &&
       auth.session?.user?.id
     ) {
-      console.log('🔄 User authenticated, registering push token...');
+      console.log('🔄 User authenticated, updating push token with user_id...');
 
-      // Call registerPushToken function from first useEffect
       const registerToken = async () => {
         try {
-          console.log('📡 Registering push token via backend...');
+          console.log('📡 Registering push token via backend with user_id...');
 
           const response = await protectedPost({
             endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
-            data: { token: expoPushToken },
+            data: {
+              token: expoPushToken,
+              user_id: auth.session.user.id, // Include user_id to associate token
+            },
           });
 
           if (response.error) {
@@ -263,7 +267,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
               'REGISTER_PUSH_TOKEN_ERROR'
             );
           } else {
-            console.log('✅ Push token registered successfully');
+            console.log('✅ Push token registered with user_id successfully');
           }
         } catch (error) {
           console.error('ERROR_REGISTER_PUSH_TOKEN_CATCH', error);
@@ -275,13 +279,62 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     }
   }, [auth, expoPushToken, protectedPost]);
 
-  // 🗑️ Delete token when user logs out
+  // 🔄 Update token when app comes to foreground (Escenario 3: Abre app)
+  useEffect(() => {
+    if (!expoPushToken || auth.state !== 'authenticated') {
+      return;
+    }
+
+    // TypeScript narrowing: We know auth.state is 'authenticated' here
+    const userId = auth.session?.user?.id;
+
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        console.log('🔄 App became active, updating token last_seen_at...');
+
+        try {
+          const requestData: { token: string; user_id?: string } = {
+            token: expoPushToken,
+          };
+
+          // Include user_id if authenticated
+          if (userId) {
+            requestData.user_id = userId;
+          }
+
+          const response = await protectedPost({
+            endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
+            data: requestData,
+          });
+
+          if (response.error) {
+            console.error('ERROR_UPDATE_TOKEN_ON_FOREGROUND', response.error);
+          } else {
+            console.log('✅ Token last_seen_at updated');
+          }
+        } catch (error) {
+          console.error('ERROR_UPDATE_TOKEN_CATCH', error);
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [expoPushToken, auth, protectedPost]);
+
+  // 🗑️ Disable token when user logs out (NOT delete - allows reactivation)
   useEffect(() => {
     // Detect logout: auth was authenticated, now is unauthenticated
     if (auth.state === 'unauthenticated' && expoPushToken) {
-      console.log('🗑️ User logged out, deleting push token...');
+      console.log('🗑️ User logged out, disabling push token...');
 
-      const deleteToken = async () => {
+      const disableToken = async () => {
         try {
           const response = await protectedPost({
             endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.UNREGISTER,
@@ -289,22 +342,22 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
-            console.error('ERROR_DELETE_PUSH_TOKEN', response.error);
+            console.error('ERROR_DISABLE_PUSH_TOKEN', response.error);
             sentryErrorReport(
               new Error(JSON.stringify(response.error)),
-              'DELETE_PUSH_TOKEN_ERROR'
+              'DISABLE_PUSH_TOKEN_ERROR'
             );
           } else {
-            console.log('✅ Push token deleted successfully');
-            setExpoPushToken(null); // Clear local state
+            console.log('✅ Push token disabled successfully');
+            // Don't clear expoPushToken - keep it for potential reactivation
           }
         } catch (error) {
-          console.error('ERROR_DELETE_PUSH_TOKEN_CATCH', error);
-          sentryErrorReport(error as Error, 'DELETE_PUSH_TOKEN_CATCH_ERROR');
+          console.error('ERROR_DISABLE_PUSH_TOKEN_CATCH', error);
+          sentryErrorReport(error as Error, 'DISABLE_PUSH_TOKEN_CATCH_ERROR');
         }
       };
 
-      deleteToken();
+      disableToken();
     }
   }, [auth.state, expoPushToken, protectedPost]);
 

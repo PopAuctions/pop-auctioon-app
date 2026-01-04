@@ -5,7 +5,7 @@
     "slug": "pop-auctioon-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/notification-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -24,7 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/notification-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
