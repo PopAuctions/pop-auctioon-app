@@ -701,7 +701,8 @@
       "cancel": "Cancel",
       "bids": "Bid",
       "estimatedPrice": "Estimated price",
-      "close": "Close"
+      "close": "Close",
+      "currentArticle": "Current article"
     }
   },
   "components": {

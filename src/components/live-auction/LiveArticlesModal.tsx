@@ -11,7 +11,7 @@ type StreamInfoModalProps = {
   onClose: () => void;
   articles: CustomArticleLiveAuto[];
   currentArticleId: number;
-  lang: Lang;
+  locale: Lang;
   commissionValue: number;
   texts: {
     bids: string;
@@ -26,13 +26,13 @@ export const LiveArticlesModal = ({
   onClose,
   articles,
   currentArticleId,
-  lang,
+  locale,
   commissionValue,
   texts,
 }: StreamInfoModalProps) => {
   const listRef = useRef<FlatList<CustomArticleLiveAuto>>(null);
 
-  const formatter = useMemo(() => euroFormatter(lang), [lang]);
+  const formatter = useMemo(() => euroFormatter(locale), [locale]);
 
   const liveIndex = useMemo(() => {
     return articles.findIndex((a) => a.id === currentArticleId);
@@ -58,11 +58,12 @@ export const LiveArticlesModal = ({
       transparent
       animationType='fade'
       onRequestClose={onClose}
+      className='backdrop-opacity-60'
     >
       <View className='flex-1 items-center justify-center bg-black/70'>
-        <View className='mx-4 w-full max-w-md overflow-hidden rounded-2xl bg-white'>
+        <View className='mx-4 w-full max-w-md overflow-hidden rounded-2xl bg-white/50'>
           {/* Header */}
-          <View className='border-gray-200 flex-row items-center justify-between border-b px-6 py-4'>
+          <View className='border-gray-200 flex-row items-center justify-between border-b bg-white/70 px-6 py-4'>
             <CustomText
               type='subtitle'
               className='text-xl'
