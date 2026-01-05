@@ -38,7 +38,7 @@ export const LiveArticlesListItem = ({
     <View
       className={[
         'border-gray-200 relative border-b p-4',
-        isLive ? 'bg-red-100/50' : 'bg-white',
+        isLive ? 'bg-red-100/50' : 'bg-white/50',
         !isAvailable ? 'opacity-50' : '',
       ].join(' ')}
     >

@@ -711,7 +711,8 @@
       "cancel": "Cancelar",
       "bids": "Pujas",
       "estimatedPrice": "Precio estimado",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "currentArticle": "Artículo actual"
     }
   },
   "components": {
