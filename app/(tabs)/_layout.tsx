@@ -68,7 +68,6 @@ export default function TabLayout() {
             <FontAwesome
               name='home'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
@@ -91,7 +90,6 @@ export default function TabLayout() {
             <FontAwesome
               name='gavel'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
@@ -160,7 +158,6 @@ export default function TabLayout() {
             <FontAwesome
               name='shopping-bag'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
@@ -184,7 +181,6 @@ export default function TabLayout() {
             <FontAwesome
               name='user'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
@@ -208,7 +204,6 @@ export default function TabLayout() {
             <FontAwesome
               name='sign-in'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
