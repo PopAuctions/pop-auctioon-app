@@ -37,6 +37,7 @@
     "articleDetails": "Article Details",
     "store": "Online Store",
     "myAuctions": "My Auctions",
+    "myOnlineStore": "My Online Store",
     "back": "Back"
   },
   "screens": {
@@ -186,6 +187,10 @@
       "edit": "Edita",
       "oldAuctions": "Old auctions",
       "noAuctionsFound": "No auctions found"
+    },
+    "myOnlineStore": {
+      "title": "My Online Store",
+      "welcome": "Welcome to your online store. Here you can manage your products and sales."
     },
     "myAuction": {
       "pageTitle": "Auction",
