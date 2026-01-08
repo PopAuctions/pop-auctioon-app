@@ -37,6 +37,7 @@
     "articleDetails": "Detalles del Artículo",
     "store": "Tienda Online",
     "myAuctions": "Mis Subastas",
+    "myOnlineStore": "Mi Tienda Online",
     "back": "Atrás"
   },
   "screens": {
@@ -186,6 +187,10 @@
       "edit": "Editar",
       "oldAuctions": "Subastas antiguas",
       "noAuctionsFound": "No se encontraron subastas"
+    },
+    "myOnlineStore": {
+      "title": "Mi Tienda Online",
+      "welcome": "Bienvenido a tu tienda online. Aquí podrás gestionar tus productos y ventas."
     },
     "myAuction": {
       "pageTitle": "Subasta",

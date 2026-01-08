@@ -50,6 +50,9 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'my-auctions/[id]/edit-article/[slug]': {
     requiredRole: 'AUCTIONEER',
   },
+  'my-online-store': {
+    requiredRole: 'AUCTIONEER',
+  },
   'my-auctions/[id]/rearrange-article-images/[slug]': {
     requiredRole: 'AUCTIONEER',
   },
