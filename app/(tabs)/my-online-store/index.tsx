@@ -1,36 +1,46 @@
-import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useCallback } from 'react';
+import { View } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { CustomText } from '@/components/ui/CustomText';
+import { useLocalSearchParams } from 'expo-router';
+import { MyOnlineStoreArticleFilters } from '@/components/my-online-store/MyOnlineStoreArticleFilters';
+import { MyOnlineStoreArticlesInfiniteScroll } from '@/components/my-online-store/MyOnlineStoreArticlesInfiniteScroll';
+
+export interface Filters {
+  brand?: string;
+  model?: string;
+  codeNumber?: string;
+  status?: string;
+  offersStatus?: string;
+}
 
 export default function MyOnlineStoreScreen() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const params = useLocalSearchParams();
+  const { brand, model, codeNumber, status, offersStatus } = params as Filters;
+  const filtersKey = `${brand ?? ''}${model ?? ''}${codeNumber ?? ''}${status ?? ''}${offersStatus ?? ''}`;
+
+  const renderAuctionHeader = useCallback(() => {
+    return (
+      <View className='mb-4 mt-2 flex w-full flex-col'>
+        <MyOnlineStoreArticleFilters
+          locale={locale}
+          texts={{ newArticle: t('screens.myOnlineStore.createArticle') }}
+        />
+      </View>
+    );
+  }, [locale, t]);
 
   return (
-    <SafeAreaView
-      className='flex-1 bg-white'
-      edges={['bottom']}
-    >
-      <ScrollView
-        className='flex-1'
-        contentContainerClassName='px-6 py-6'
-      >
-        <View className='flex-1 items-center justify-center'>
-          <CustomText
-            type='h1'
-            className='mb-4 text-center'
-          >
-            {t('screens.myOnlineStore.title')}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='text-center text-gray-600'
-          >
-            {t('screens.myOnlineStore.welcome')}
-          </CustomText>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View className='flex-1'>
+      <MyOnlineStoreArticlesInfiniteScroll
+        lang={locale}
+        ListHeaderComponent={renderAuctionHeader()}
+        filtersKey={filtersKey}
+        texts={{
+          price: t('screens.store.price'),
+          offersText: t('screens.myOnlineStore.offers'),
+        }}
+      />
+    </View>
   );
 }
