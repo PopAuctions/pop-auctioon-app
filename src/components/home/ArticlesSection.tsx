@@ -40,7 +40,7 @@ export const ArticlesSection = ({
 
   return (
     <View
-      className='mt-5 w-full'
+      className='mt-5 w-full pb-10'
       style={{ gap: 32 }}
     >
       <View style={{ gap: 12 }}>
