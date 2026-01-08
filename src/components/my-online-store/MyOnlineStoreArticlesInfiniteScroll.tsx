@@ -36,6 +36,8 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
   texts: {
     price: string;
     offersText: string;
+    checkDetails: string;
+    viewInStore: string;
   };
 }) => {
   const { locale } = useTranslation();

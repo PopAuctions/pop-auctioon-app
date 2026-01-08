@@ -39,6 +39,8 @@ export default function MyOnlineStoreScreen() {
         texts={{
           price: t('screens.store.price'),
           offersText: t('screens.myOnlineStore.offers'),
+          checkDetails: t('screens.myOnlineStore.viewDetails'),
+          viewInStore: t('screens.myOnlineStore.viewInStore'),
         }}
       />
     </View>

@@ -22,6 +22,8 @@ type MyOnlineStoreArticleItemProps = {
   texts: {
     price: string;
     offersText: string;
+    checkDetails: string;
+    viewInStore: string;
   };
   lang: Lang;
   commissionValue: number | null;
@@ -38,6 +40,8 @@ export function MyOnlineStoreArticleItem({
   const article = onlineStoreArticle.Article;
   const price = onlineStoreArticle.price;
   const articleOffers = onlineStoreArticle?.ArticleOffer?.length ?? 0;
+  const isSold =
+    onlineStoreArticle.status === ArticleSecondChanceStatusConst.SOLD;
 
   const commissionedPrice = useMemo(
     () => getArticleCommissionedPrice(price, commissionValue ?? 0),
@@ -50,16 +54,8 @@ export function MyOnlineStoreArticleItem({
 
   return (
     <View className='w-full gap-2'>
-      <CustomLink
-        className='flex w-full flex-row gap-5'
-        href={
-          onlineStoreArticle.status === 'SOLD'
-            ? `/(tabs)/my-online-store/articles/${articleId}`
-            : '/(tabs)/account'
-        }
-        mode='empty'
-      >
-        <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl'>
+      <View className='flex w-full flex-row gap-2'>
+        <View className='aspect-square w-2/5 items-center overflow-hidden rounded-xl'>
           <CustomImage
             src={article.images[0]}
             alt={article.title}
@@ -68,17 +64,10 @@ export function MyOnlineStoreArticleItem({
           />
         </View>
 
-        <View className='w-1/2 flex-col items-start justify-between'>
+        <View className='w-3/5 flex-col items-start justify-between'>
           <View className='flex flex-col pr-2'>
             <CustomText type='subtitle'>
               {`${texts.price} ${commissionValue !== null ? formatter.format(commissionedPrice) : AMOUNT_PLACEHOLDER}`}
-            </CustomText>
-
-            <CustomText
-              type='h4'
-              className='text-black'
-            >
-              {article.title}
             </CustomText>
 
             <CustomText
@@ -91,8 +80,13 @@ export function MyOnlineStoreArticleItem({
                 article.brand ??
                 ''}
             </CustomText>
-          </View>
-          <View>
+            <CustomText
+              type='h4'
+              className='text-black'
+            >
+              {article.title}
+            </CustomText>
+
             <CustomText
               type='subtitle'
               className='text-start text-cinnabar'
@@ -103,25 +97,49 @@ export function MyOnlineStoreArticleItem({
                 ]
               }
             </CustomText>
-            {articleOffers > 0 &&
-              onlineStoreArticle.status !==
-                ArticleSecondChanceStatusConst.SOLD && (
+            {articleOffers > 0 && !isSold && (
+              <CustomText
+                type='body'
+                className='text-start'
+              >
+                {texts.offersText}:{' '}
                 <CustomText
-                  type='body'
-                  className='text-start'
+                  type='bodysmall'
+                  className='text-cinnabar'
                 >
-                  {texts.offersText}:{' '}
-                  <CustomText
-                    type='bodysmall'
-                    className='text-cinnabar'
-                  >
-                    {articleOffers}
-                  </CustomText>
+                  {articleOffers}
                 </CustomText>
-              )}
+              </CustomText>
+            )}
+          </View>
+          <View className='flex flex-row gap-1'>
+            <CustomLink
+              href={
+                isSold
+                  ? `/(tabs)/my-online-store/articles/${articleId}`
+                  : '/(tabs)/account'
+              }
+              mode='primary'
+              size='small'
+              textClassName='text-sm'
+              className='w-1/2'
+            >
+              {texts.checkDetails}
+            </CustomLink>
+            {!isSold && (
+              <CustomLink
+                href={`/(tabs)/online-store/articles/${articleId}`}
+                mode='secondary'
+                size='small'
+                textClassName='text-sm'
+                className='w-1/2'
+              >
+                {texts.viewInStore}
+              </CustomLink>
+            )}
           </View>
         </View>
-      </CustomLink>
+      </View>
     </View>
   );
 }
