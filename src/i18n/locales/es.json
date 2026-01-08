@@ -189,8 +189,18 @@
       "noAuctionsFound": "No se encontraron subastas"
     },
     "myOnlineStore": {
-      "title": "Mi Tienda Online",
-      "welcome": "Bienvenido a tu tienda online. Aquí podrás gestionar tus productos y ventas."
+      "title": "Artículos tienda online",
+      "noArticles": "Aún no tienes artículos para vender en la tienda online",
+      "noArticlesFound": "No se encontraron artículos",
+      "status": "Estado",
+      "changePrice": "Cambiar precio",
+      "noDecimals": "No se permiten decimales",
+      "viewInStore": "Ver en tienda",
+      "offers": "Ofertas",
+      "viewDetails": "Ver detalles",
+      "createArticle": "Crear artículo",
+      "delete": "Eliminar",
+      "enable": "Habilitar"
     },
     "myAuction": {
       "pageTitle": "Subasta",

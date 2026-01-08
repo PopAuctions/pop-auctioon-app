@@ -189,8 +189,18 @@
       "noAuctionsFound": "No auctions found"
     },
     "myOnlineStore": {
-      "title": "My Online Store",
-      "welcome": "Welcome to your online store. Here you can manage your products and sales."
+      "title": "Online store articles",
+      "noArticles": "You don't have any articles to sell in the online store yet",
+      "noArticlesFound": "No articles found",
+      "status": "Status",
+      "changePrice": "Change price",
+      "noDecimals": "No decimals allowed",
+      "viewInStore": "View in store",
+      "offers": "Offers",
+      "viewDetails": "View details",
+      "createArticle": "Create article",
+      "delete": "Delete",
+      "enable": "Enable"
     },
     "myAuction": {
       "pageTitle": "Auction",

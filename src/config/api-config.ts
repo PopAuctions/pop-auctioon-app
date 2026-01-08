@@ -119,6 +119,9 @@ export const SECURE_ENDPOINTS = {
     LIST: '/my-auctions',
     OLD_LIST: '/my-auctions/old',
   },
+  MY_ONLINE_STORE: {
+    ARTICLES: '/my-online-store/articles',
+  },
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',

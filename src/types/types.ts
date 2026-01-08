@@ -1,3 +1,4 @@
+import { OFFERS_OPTIONS_VALUES } from '@/constants';
 import { type Database } from '@/types/supabase';
 
 export type Lang = 'es' | 'en';
@@ -767,6 +768,13 @@ export interface SignupResponse {
   data: {
     email: string;
   } | null;
+}
+
+export type OffersOptionValue = keyof typeof OFFERS_OPTIONS_VALUES;
+
+export interface OfferOption {
+  value: OffersOptionValue;
+  label: string;
 }
 
 export interface UseSignupReturn {
