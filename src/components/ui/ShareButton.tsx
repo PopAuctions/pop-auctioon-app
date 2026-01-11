@@ -26,9 +26,20 @@ export function ShareButton({
 
   const copyCurrentPath = async () => {
     try {
-      const fullUrl = `${baseUrl}${pathname ?? ''}`;
-      await Clipboard.setStringAsync(fullUrl);
-      console.log('Copied URL:', fullUrl);
+      // Generate smart share URL that redirects based on device type
+      // Endpoint detects if opened from mobile/browser and redirects accordingly:
+      // - Mobile: popauctioonapp:///(tabs)/path (deep link to app)
+      // - Browser: https://popauctioon.com/lang/path (web version with locale)
+      let path = pathname ?? '';
+
+      // Ensure path includes (tabs) group for proper routing
+      if (!path.includes('(tabs)')) {
+        path = `/(tabs)${path}`;
+      }
+
+      // Send locale as query param for backend to use in web redirect
+      const shareUrl = `${baseUrl}/api/share?url=${encodeURIComponent(path)}&locale=${lang}`;
+      await Clipboard.setStringAsync(shareUrl);
       callToast({
         variant: 'success',
         description: { es: '¡Enlace copiado!', en: 'Link copied!' },

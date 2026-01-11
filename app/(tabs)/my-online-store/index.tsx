@@ -25,7 +25,7 @@ export default function MyOnlineStoreScreen() {
           </CustomText>
           <CustomText
             type='body'
-            className='text-center text-gray-600'
+            className='text-gray-600 text-center'
           >
             {t('screens.myOnlineStore.welcome')}
           </CustomText>
