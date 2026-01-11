@@ -6,6 +6,7 @@ export default function AccountLayout() {
 
   return (
     <Stack
+      initialRouteName='index'
       screenOptions={{
         headerShown: true,
         headerBackTitle: t('tabsNames.back'),
