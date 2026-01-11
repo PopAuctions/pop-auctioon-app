@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import * as Linking from 'expo-linking';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
 import {
   getParentRoute,
@@ -33,11 +33,11 @@ export function DeepLinkListener() {
           console.log('🔄 Building navigation stack for nested route');
 
           // Navigate to parent first to build stack
-          router.push(parentRoute as any);
+          router.push(parentRoute as Href);
 
           // Then navigate to final destination
           setTimeout(() => {
-            router.push(url.replace(parsedUrl.scheme + '://', '') as any);
+            router.push(path as Href);
           }, 100);
 
           return;
@@ -45,7 +45,7 @@ export function DeepLinkListener() {
       }
 
       // Direct navigation for root tab routes
-      router.push(url.replace(parsedUrl.scheme + '://', '') as any);
+      router.push(path as Href);
     };
 
     const subscription = Linking.addEventListener('url', handleDeepLink);
