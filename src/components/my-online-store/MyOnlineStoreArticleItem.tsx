@@ -116,8 +116,8 @@ export function MyOnlineStoreArticleItem({
             <CustomLink
               href={
                 isSold
-                  ? `/(tabs)/my-online-store/articles/${articleId}`
-                  : '/(tabs)/account'
+                  ? '/(tabs)/account'
+                  : `/(tabs)/my-online-store/articles/${articleId}`
               }
               mode='primary'
               size='small'

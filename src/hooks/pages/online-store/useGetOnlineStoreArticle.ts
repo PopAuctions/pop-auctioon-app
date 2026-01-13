@@ -3,6 +3,7 @@ import {
   ActionResponse,
   CustomFullArticleSecondChance,
   LangMap,
+  RefetchReturn,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
@@ -11,7 +12,9 @@ export const useGetOnlineStoreArticle = ({
   articleId,
 }: {
   articleId: number;
-}): ActionResponse<CustomFullArticleSecondChance | null> => {
+}): Omit<ActionResponse<CustomFullArticleSecondChance | null>, 'refetch'> & {
+  refetch: () => RefetchReturn;
+} => {
   const [article, setArticle] = useState<CustomFullArticleSecondChance | null>(
     null
   );
@@ -67,9 +70,10 @@ export const useGetOnlineStoreArticle = ({
     setArticle(res.data || null);
 
     return {
-      error: null,
-      success: null,
-      res,
+      message: {
+        es: 'Artículo actualizado correctamente',
+        en: 'Article updated successfully',
+      },
     };
   };
 
