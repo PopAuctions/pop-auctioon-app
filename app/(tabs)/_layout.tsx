@@ -89,7 +89,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='gavel'
-              size={28}
+              size={26}
               color={color}
             />
           ),
@@ -111,7 +111,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='shopping-cart'
-              size={28}
+              size={27}
               color={color}
             />
           ),
@@ -157,7 +157,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='shopping-bag'
-              size={28}
+              size={24}
               color={color}
             />
           ),
@@ -180,7 +180,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='user'
-              size={28}
+              size={26}
               color={color}
             />
           ),
