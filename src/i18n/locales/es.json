@@ -202,6 +202,32 @@
       "delete": "Eliminar",
       "enable": "Habilitar"
     },
+    "articleOSDetails": {
+      "title": "Detalles del artículo",
+      "message": "¿Este artículo está disponible para la venta?",
+      "subMessage": "Una vez confirmado, te pedimos que apartes este artículo mientras esperas el comprador hace el pago. De no hace el pago en 24h se cancelará la venta y puedes volver a poner el artículo a la disponible en tu tienda.",
+      "actions": "Acciones",
+      "offers": "Ofertas",
+      "noOffers": "No hay ofertas",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "changePrice": "Cambiar precio",
+      "assignToAuction": "Asignar a subasta",
+      "orderImages": "Reordenar imágenes",
+      "editImages": "Editar imágenes",
+      "price": "Precio",
+      "confirm": "Confirmar",
+      "remove": "Eliminar",
+      "code": "Código",
+      "articleNotFound": "Artículo no encontrado",
+      "commissionedPrice": "Precio con comisión"
+    },
+    "editImages": {
+      "title": "Editar imágenes"
+    },
+    "rearrangeImages": {
+      "title": "Reordenar imágenes"
+    },
     "myAuction": {
       "pageTitle": "Subasta",
       "pageSubTitle": "Artículos",

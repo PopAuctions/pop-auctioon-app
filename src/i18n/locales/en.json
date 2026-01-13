@@ -202,6 +202,32 @@
       "delete": "Delete",
       "enable": "Enable"
     },
+    "articleOSDetails": {
+      "title": "Article details",
+      "message": "Is this article still available?",
+      "subMessage": "Once confirmed, we ask that you set this article aside while waiting for the buyer to make the payment. If the payment is not made within 24 hours, the sale will be canceled and you can make the article available again in your store.",
+      "actions": "Actions",
+      "offers": "Offers",
+      "noOffers": "No offers yet",
+      "accept": "Accept",
+      "reject": "Reject",
+      "changePrice": "Change price",
+      "assignToAuction": "Assign to auction",
+      "orderImages": "Rearrange images",
+      "editImages": "Edit images",
+      "price": "Price",
+      "confirm": "Confirm",
+      "remove": "Delete",
+      "code": "Code",
+      "articleNotFound": "Article not found",
+      "commissionedPrice": "Commissioned price"
+    },
+    "editImages": {
+      "title": "Edit images"
+    },
+    "rearrangeImages": {
+      "title": "Rearrange images"
+    },
     "myAuction": {
       "pageTitle": "Auction",
       "pageSubTitle": "Articles",
