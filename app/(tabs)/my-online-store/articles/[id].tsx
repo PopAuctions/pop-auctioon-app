@@ -114,7 +114,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
               {articleOSDetailsLang.actions}
             </CustomText>
 
-            <View className='flex-col gap-4'>
+            <View className='w-full flex-1'>
               <ArticleDetailsActions
                 articleSecondChanceId={onlineStoreArticle.id}
                 currentPrice={onlineStoreArticlePrice}

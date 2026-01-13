@@ -113,6 +113,17 @@ export function MyOnlineStoreArticleItem({
             )}
           </View>
           <View className='flex flex-row gap-1'>
+            {!isSold && (
+              <CustomLink
+                href={`/(tabs)/online-store/articles/${articleId}`}
+                mode='secondary'
+                size='small'
+                textClassName='text-sm'
+                className='w-1/2'
+              >
+                {texts.viewInStore}
+              </CustomLink>
+            )}
             <CustomLink
               href={
                 isSold
@@ -126,17 +137,6 @@ export function MyOnlineStoreArticleItem({
             >
               {texts.checkDetails}
             </CustomLink>
-            {!isSold && (
-              <CustomLink
-                href={`/(tabs)/online-store/articles/${articleId}`}
-                mode='secondary'
-                size='small'
-                textClassName='text-sm'
-                className='w-1/2'
-              >
-                {texts.viewInStore}
-              </CustomLink>
-            )}
           </View>
         </View>
       </View>

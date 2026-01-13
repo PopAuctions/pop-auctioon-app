@@ -1,16 +1,17 @@
+import { useState } from 'react';
+import { View } from 'react-native';
+import { ChangePriceModal } from '@/components/modal/ChangePriceModal';
+import { CustomLink } from '@/components/ui/CustomLink';
+import { Button } from '@/components/ui/Button';
+import { useToast } from '@/hooks/useToast';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 import {
   ArticleSecondChanceStatus,
   Lang,
   LangMap,
   RefetchReturn,
 } from '@/types/types';
-import { ChangePriceModal } from '@/components/modal/ChangePriceModal';
-import { useState } from 'react';
-import { View } from 'react-native';
-import { Button } from '@/components/ui/Button';
-import { useToast } from '@/hooks/useToast';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 const DESCRIPTIONS = {
   es: {
@@ -32,6 +33,7 @@ const DESCRIPTIONS = {
       'You can assign the article to an auction that is in "Available" status.',
   },
 };
+
 export const ArticleDetailsActions = ({
   TEXTS: { assignToAuction, remove, changePrice, orderImages, editImages },
   articleSecondChanceId,
@@ -88,13 +90,42 @@ export const ArticleDetailsActions = ({
 
   return (
     <>
-      <View>
-        <Button
-          mode='primary'
-          onPress={() => setChangePriceModalOpen(true)}
-        >
-          {changePrice}
-        </Button>
+      <View className='-mx-1 w-full flex-row flex-wrap'>
+        <View className='mb-2 w-1/2 px-1'>
+          <CustomLink
+            mode='primary'
+            href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/rearrange-images`}
+          >
+            {orderImages}
+          </CustomLink>
+        </View>
+        <View className='mb-2 w-1/2 px-1'>
+          <CustomLink
+            mode='primary'
+            href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/edit-images`}
+          >
+            {editImages}
+          </CustomLink>
+        </View>
+        <View className='mb-2 w-1/2 px-1'>
+          <Button
+            mode='primary'
+            onPress={() => setChangePriceModalOpen(true)}
+          >
+            {changePrice}
+          </Button>
+        </View>
+        <View className='mb-2 w-1/2 px-1'>
+          <Button
+            mode='primary'
+            onPress={() => setChangePriceModalOpen(true)}
+          >
+            {assignToAuction}
+          </Button>
+        </View>
+        <View className='mb-2 w-1/2 px-1'>
+          <Button mode='primary'>{remove}</Button>
+        </View>
       </View>
 
       <ChangePriceModal
