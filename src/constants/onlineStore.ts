@@ -1,4 +1,4 @@
-import { ArticleSecondChanceStatus } from '@/types/types';
+import type { ArticleSecondChanceStatus, OfferStatus } from '@/types/types';
 
 export const SORT_BY = {
   es: [
@@ -44,5 +44,21 @@ export const ONLINE_STORE_ARTICLE_STATUS_LABELS: {
     NOT_AVAILABLE: 'Not available',
     AVAILABLE: 'Available',
     SOLD: 'Sold',
+  },
+};
+
+export const OFFER_STATUS_LABELS: {
+  es: Record<OfferStatus, string>;
+  en: Record<OfferStatus, string>;
+} = {
+  es: {
+    PENDING: 'Pendiente',
+    ACCEPTED: 'Aceptada',
+    REJECTED: 'Rechazada',
+  },
+  en: {
+    PENDING: 'Pending',
+    ACCEPTED: 'Accepted',
+    REJECTED: 'Rejected',
   },
 };

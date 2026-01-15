@@ -13,6 +13,7 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticleDetailsActions } from '@/components/my-online-store/ArticleDetailsActions';
+import { ArticleOffersCards } from '@/components/my-online-store/ArticleOffersCards';
 
 export default function MyOnlineStoreArticleDetailsScreen() {
   const { t, locale } = useTranslation();
@@ -149,15 +150,16 @@ export default function MyOnlineStoreArticleDetailsScreen() {
             </CustomText>
 
             <View className='mt-4'>
-              {/* <ArticleOffersList
-                offers={articleSecondChance?.ArticleOffer ?? []}
-                locale={locale}
-                articleOSDetailsLang{{
+              <ArticleOffersCards
+                offers={onlineStoreArticle?.ArticleOffer ?? []}
+                commissionValue={isCommissionReady ? commissionAmount : null}
+                lang={locale}
+                texts={{
                   noOffers: articleOSDetailsLang.noOffers,
                   accept: articleOSDetailsLang.accept,
                   reject: articleOSDetailsLang.reject,
                 }}
-              /> */}
+              />
             </View>
           </View>
         </View>
