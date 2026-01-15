@@ -118,6 +118,7 @@ export const SECURE_ENDPOINTS = {
   MY_AUCTIONS: {
     LIST: '/my-auctions',
     OLD_LIST: '/my-auctions/old',
+    AVAILABLE: '/my-auctions/available',
   },
   MY_ONLINE_STORE: {
     ARTICLES: '/my-online-store/articles',
