@@ -9,10 +9,12 @@ import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
 import { LANGUAGE_OPTIONS } from '@/constants/app';
 import { Lang } from '@/types/types';
+import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+  const { resetOnboarding } = useOnboarding();
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
@@ -77,6 +79,38 @@ export default function SettingsScreen() {
               </CustomText>
             </Button>
           </View>
+        </View>
+
+        <Divider />
+
+        {/* Onboarding Reset */}
+        <View className='mb-4 mt-4'>
+          <CustomText
+            type='h3'
+            className='mb-3'
+          >
+            {t('screens.account.tutorial')}
+          </CustomText>
+
+          <Button
+            onPress={resetOnboarding}
+            mode='secondary'
+            className='w-full'
+          >
+            <CustomText
+              type='body'
+              className='text-cinnabar'
+            >
+              {t('screens.account.viewTutorialAgain')}
+            </CustomText>
+          </Button>
+
+          <CustomText
+            type='bodysmall'
+            className='text-gray-500 mt-2'
+          >
+            {t('screens.account.tutorialDescription')}
+          </CustomText>
         </View>
 
         <Divider />
