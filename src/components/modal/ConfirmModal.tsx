@@ -23,6 +23,7 @@ interface ConfirmModalProps<TConfirmResult = void> {
   locale: Lang;
   importantMessage?: LangMap;
   mode: ButtonMode;
+  isDisabled?: boolean;
 }
 
 export function ConfirmModal<TConfirmResult = void>({
@@ -33,6 +34,7 @@ export function ConfirmModal<TConfirmResult = void>({
   locale,
   importantMessage,
   mode,
+  isDisabled = false,
 }: ConfirmModalProps<TConfirmResult>) {
   const [visible, setVisible] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -59,7 +61,7 @@ export function ConfirmModal<TConfirmResult = void>({
         mode={mode}
         onPress={openModal}
         size='small'
-        disabled={confirming}
+        disabled={confirming || isDisabled}
         textClassName='text-center'
       >
         {children}

@@ -8,6 +8,7 @@ import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { REQUEST_STATUS } from '@/constants';
 
 export const useFetchMyAuctionArticles = ({
   auctionId,
@@ -19,13 +20,13 @@ export const useFetchMyAuctionArticles = ({
   refetch: () => Promise<void>;
 } => {
   const [data, setData] = useState<Article[]>([]);
-  const [status, setStatus] = useState<RequestStatus>('loading');
+  const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchArticles = useCallback(async () => {
     try {
-      setStatus('loading');
+      setStatus(REQUEST_STATUS.loading);
       const params = new URLSearchParams();
 
       if (name) params.append('name', name);
@@ -38,13 +39,13 @@ export const useFetchMyAuctionArticles = ({
       });
 
       if (response.error) {
-        setStatus('error');
+        setStatus(REQUEST_STATUS.error);
         setErrorMessage(response.error);
         return;
       }
 
       setData(response.data ?? []);
-      setStatus('success');
+      setStatus(REQUEST_STATUS.success);
     } catch (error) {
       const errorMsg =
         error instanceof Error ? error.message : 'Unknown error occurred';
@@ -61,7 +62,7 @@ export const useFetchMyAuctionArticles = ({
         es: 'Error al cargar los artículos de la subasta',
       };
 
-      setStatus('error');
+      setStatus(REQUEST_STATUS.error);
       setErrorMessage(message);
     }
   }, [protectedGet, auctionId, name]);

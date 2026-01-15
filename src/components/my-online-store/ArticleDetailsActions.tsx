@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ChangePriceModal } from '@/components/modal/ChangePriceModal';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { Button } from '@/components/ui/Button';
+import { ConfirmModal } from '@/components/modal/ConfirmModal';
+import { AssignToAuctionModal } from '@/components/modal/AssignToAuctionModal';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
@@ -12,8 +15,6 @@ import {
   LangMap,
   RefetchReturn,
 } from '@/types/types';
-import { ConfirmModal } from '../modal/ConfirmModal';
-import { useRouter } from 'expo-router';
 
 const DESCRIPTIONS = {
   es: {
@@ -60,9 +61,11 @@ export const ArticleDetailsActions = ({
   refetch: () => RefetchReturn;
 }) => {
   const [isChangePriceModalOpen, setChangePriceModalOpen] = useState(false);
+  const [isAssignToAuctionModalOpen, setAssignToAuctionModalOpen] =
+    useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { callToast } = useToast(locale);
-  const { securePatch, secureDelete } = useSecureApi();
+  const { securePatch, secureDelete, securePost } = useSecureApi();
   const router = useRouter();
 
   const handlePriceChange = async (newPrice: string) => {
@@ -94,6 +97,37 @@ export const ArticleDetailsActions = ({
     return true;
   };
 
+  const handleAssignToAuction = async (auctionId: string, price: string) => {
+    setIsLoading(true);
+    const response = await securePost<LangMap>({
+      endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.CHAGE_TO_AUCTION(
+        articleSecondChanceId
+      ),
+      data: {
+        price: price,
+        auctionId: auctionId,
+      },
+    });
+
+    if (response.error) {
+      callToast({
+        variant: 'error',
+        description: response.error,
+      });
+      setIsLoading(false);
+      return false;
+    }
+
+    callToast({
+      variant: 'success',
+      description: response.data,
+    });
+    router.replace('/(tabs)/my-online-store');
+    setIsLoading(false);
+
+    return true;
+  };
+
   const handleRemoveArticle = async () => {
     setIsLoading(true);
     const response = await secureDelete<LangMap>({
@@ -106,7 +140,7 @@ export const ArticleDetailsActions = ({
         description: response.error,
       });
       setIsLoading(false);
-      return;
+      return false;
     }
 
     callToast({
@@ -116,7 +150,7 @@ export const ArticleDetailsActions = ({
 
     setIsLoading(false);
     router.replace('/(tabs)/my-online-store');
-    return;
+    return true;
   };
 
   return (
@@ -143,7 +177,10 @@ export const ArticleDetailsActions = ({
         <View className='mb-2 w-1/2 px-1'>
           <Button
             mode='primary'
-            onPress={() => setChangePriceModalOpen(true)}
+            onPress={() => {
+              setChangePriceModalOpen(true);
+              setAssignToAuctionModalOpen(false);
+            }}
             disabled={isLoading}
           >
             {changePrice}
@@ -152,7 +189,10 @@ export const ArticleDetailsActions = ({
         <View className='mb-2 w-1/2 px-1'>
           <Button
             mode='primary'
-            onPress={() => setChangePriceModalOpen(true)}
+            onPress={() => {
+              setAssignToAuctionModalOpen(true);
+              setChangePriceModalOpen(false);
+            }}
             disabled={isLoading}
           >
             {assignToAuction}
@@ -163,6 +203,7 @@ export const ArticleDetailsActions = ({
             mode='primary'
             onConfirm={handleRemoveArticle}
             title={{ es: 'Eliminar artículo', en: 'Remove article' }}
+            isDisabled={isLoading}
             description={{
               es: '¿Estás seguro de que quieres eliminar este artículo de la tienda online?',
               en: 'Are you sure you want to remove this article from the online store?',
@@ -174,16 +215,30 @@ export const ArticleDetailsActions = ({
         </View>
       </View>
 
+      <AssignToAuctionModal
+        id='selected-auction'
+        visible={isAssignToAuctionModalOpen}
+        onClose={() => setAssignToAuctionModalOpen(false)}
+        onConfirm={handleAssignToAuction}
+        title={{ es: 'Asignar a una subasta', en: 'Assign to auction' }}
+        description={{
+          en: 'You can only assign the article to an auction that is in "Available" status.',
+          es: 'Solo puedes asignar el artículo a una subasta que esté en estado "Disponible".',
+        }}
+        locale={locale}
+        defaultValue={currentPrice.toString()}
+        helperText={DESCRIPTIONS[locale].noDecimalsText}
+      />
       <ChangePriceModal
+        id='price'
         visible={isChangePriceModalOpen}
         onClose={() => setChangePriceModalOpen(false)}
-        onConfirm={(newPrice: string) => handlePriceChange(newPrice)}
+        onConfirm={handlePriceChange}
         title={{ es: 'Cambiar precio', en: 'Change price' }}
         description={{
-          es: 'Solo puedrás cambiar el precio si el artículo no tiene ofertas.',
+          es: 'Solo puedes cambiar el precio si el artículo no tiene ofertas.',
           en: 'You can only change the price if the article has no offers.',
         }}
-        id='price'
         label={{
           es: 'Precio (€)',
           en: 'Price (€)',
