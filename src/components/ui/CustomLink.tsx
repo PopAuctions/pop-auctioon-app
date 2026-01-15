@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { TouchableOpacity, Text, Linking, ViewStyle } from 'react-native';
+import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { requiresAuth as checkRequiresAuth } from '@/components/navigation/routeConfig';
 import { cn } from '@/utils/cn';
@@ -67,7 +67,7 @@ const LINK_SIZE_STYLES = {
 };
 
 export const CustomLink = forwardRef<
-  React.ElementRef<typeof TouchableOpacity>,
+  React.ElementRef<typeof Pressable>,
   CustomLinkProps
 >(
   (
@@ -112,6 +112,8 @@ export const CustomLink = forwardRef<
     };
 
     const handlePress = async () => {
+      if (isDisabled) return;
+
       if (outsideRedirect) {
         // Para enlaces externos
         const canOpen = await Linking.canOpenURL(href);
@@ -135,15 +137,10 @@ export const CustomLink = forwardRef<
     };
 
     return (
-      <TouchableOpacity
+      <Pressable
         ref={ref}
-        className={cn(
-          'text-center font-normal text-white',
-          modeStyle,
-          hoverEffects,
-          className || ''
-        )}
-        style={style}
+        className={cn(modeStyle, hoverEffects, className ?? '')}
+        style={[style, isDisabled ? { opacity: 0.5 } : null]}
         onPress={handlePress}
         disabled={isDisabled}
       >
@@ -161,7 +158,7 @@ export const CustomLink = forwardRef<
             {children}
           </Text>
         )}
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 );
