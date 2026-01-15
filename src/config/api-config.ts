@@ -122,6 +122,8 @@ export const SECURE_ENDPOINTS = {
   },
   MY_ONLINE_STORE: {
     ARTICLES: '/my-online-store/articles',
+    ARTICLE: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}` as ApiEndpoint,
     UPDATE_PRICE: (id: string | number): ApiEndpoint =>
       `/my-online-store/articles/${id}/update-price` as ApiEndpoint,
     CHAGE_TO_AUCTION: (id: string | number): ApiEndpoint =>
@@ -132,6 +134,8 @@ export const SECURE_ENDPOINTS = {
       `/my-online-store/articles/${id}/edit-images` as ApiEndpoint,
     REARRANGE_IMAGES: (id: string | number): ApiEndpoint =>
       `/my-online-store/articles/${id}/rearrange-images` as ApiEndpoint,
+    OFFERS: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/offers` as ApiEndpoint,
   },
   // Subastas
   AUCTIONS: {

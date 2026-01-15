@@ -1,3 +1,5 @@
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { REQUEST_STATUS } from '@/constants';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
@@ -18,19 +20,19 @@ export const useGetOnlineStoreArticle = ({
   const [article, setArticle] = useState<CustomFullArticleSecondChance | null>(
     null
   );
-  const [status, setStatus] = useState<RequestStatus>('idle');
+  const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
-  const { protectedGet } = useSecureApi();
+  const { secureGet } = useSecureApi();
 
   const fetchArticle = useCallback(async () => {
-    setStatus('loading');
+    setStatus(REQUEST_STATUS.loading);
 
-    const res = await protectedGet<CustomFullArticleSecondChance>({
-      endpoint: `/online-store/articles/${articleId}`,
+    const res = await secureGet<CustomFullArticleSecondChance>({
+      endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.ARTICLE(articleId),
     });
 
     if (res.error) {
-      setStatus('error');
+      setStatus(REQUEST_STATUS.error);
       setErrorMessage({
         en: 'Error fetching article',
         es: 'Error al obtener el artículo',
@@ -44,18 +46,18 @@ export const useGetOnlineStoreArticle = ({
     }
 
     setArticle(res.data || null);
-    setStatus('success');
+    setStatus(REQUEST_STATUS.success);
 
     return {
       error: null,
       success: null,
       res,
     };
-  }, [articleId, protectedGet]);
+  }, [articleId, secureGet]);
 
   const refetch = async () => {
-    const res = await protectedGet<CustomFullArticleSecondChance>({
-      endpoint: `/online-store/articles/${articleId}`,
+    const res = await secureGet<CustomFullArticleSecondChance>({
+      endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.ARTICLE(articleId),
     });
 
     if (res.error) {
