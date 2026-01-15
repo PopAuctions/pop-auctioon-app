@@ -12,6 +12,8 @@ import {
   LangMap,
   RefetchReturn,
 } from '@/types/types';
+import { ConfirmModal } from '../modal/ConfirmModal';
+import { useRouter } from 'expo-router';
 
 const DESCRIPTIONS = {
   es: {
@@ -58,10 +60,13 @@ export const ArticleDetailsActions = ({
   refetch: () => RefetchReturn;
 }) => {
   const [isChangePriceModalOpen, setChangePriceModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { callToast } = useToast(locale);
-  const { securePatch } = useSecureApi();
+  const { securePatch, secureDelete } = useSecureApi();
+  const router = useRouter();
 
   const handlePriceChange = async (newPrice: string) => {
+    setIsLoading(true);
     const response = await securePatch<LangMap>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.UPDATE_PRICE(
         articleSecondChanceId
@@ -76,6 +81,7 @@ export const ArticleDetailsActions = ({
         variant: 'error',
         description: response.error,
       });
+      setIsLoading(false);
       return false;
     }
 
@@ -84,8 +90,33 @@ export const ArticleDetailsActions = ({
       description: response.data,
     });
     refetch();
-
+    setIsLoading(false);
     return true;
+  };
+
+  const handleRemoveArticle = async () => {
+    setIsLoading(true);
+    const response = await secureDelete<LangMap>({
+      endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.DELETE(articleSecondChanceId),
+    });
+
+    if (response.error) {
+      callToast({
+        variant: 'error',
+        description: response.error,
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    callToast({
+      variant: 'success',
+      description: response.data,
+    });
+
+    setIsLoading(false);
+    router.replace('/(tabs)/my-online-store');
+    return;
   };
 
   return (
@@ -95,6 +126,7 @@ export const ArticleDetailsActions = ({
           <CustomLink
             mode='primary'
             href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/rearrange-images`}
+            isDisabled={isLoading}
           >
             {orderImages}
           </CustomLink>
@@ -103,6 +135,7 @@ export const ArticleDetailsActions = ({
           <CustomLink
             mode='primary'
             href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/edit-images`}
+            isDisabled={isLoading}
           >
             {editImages}
           </CustomLink>
@@ -111,6 +144,7 @@ export const ArticleDetailsActions = ({
           <Button
             mode='primary'
             onPress={() => setChangePriceModalOpen(true)}
+            disabled={isLoading}
           >
             {changePrice}
           </Button>
@@ -119,12 +153,24 @@ export const ArticleDetailsActions = ({
           <Button
             mode='primary'
             onPress={() => setChangePriceModalOpen(true)}
+            disabled={isLoading}
           >
             {assignToAuction}
           </Button>
         </View>
         <View className='mb-2 w-1/2 px-1'>
-          <Button mode='primary'>{remove}</Button>
+          <ConfirmModal
+            mode='primary'
+            onConfirm={handleRemoveArticle}
+            title={{ es: 'Eliminar artículo', en: 'Remove article' }}
+            description={{
+              es: '¿Estás seguro de que quieres eliminar este artículo de la tienda online?',
+              en: 'Are you sure you want to remove this article from the online store?',
+            }}
+            locale={locale}
+          >
+            {remove}
+          </ConfirmModal>
         </View>
       </View>
 

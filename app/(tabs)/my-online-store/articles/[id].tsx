@@ -91,14 +91,20 @@ export default function MyOnlineStoreArticleDetailsScreen() {
                   {formatter.format(commissionedPrice)}
                 </CustomText>
 
-                <CustomText type='body'>
+                <CustomText
+                  type='body'
+                  className='text-xl'
+                >
                   {articleOSDetailsLang.price}:{' '}
                   {formatter.format(onlineStoreArticlePrice)}
                 </CustomText>
               </View>
 
               {!!article?.codeNumber && (
-                <CustomText type='body'>
+                <CustomText
+                  type='body'
+                  className='text-xl'
+                >
                   {articleOSDetailsLang.code}: {article.codeNumber}
                 </CustomText>
               )}
