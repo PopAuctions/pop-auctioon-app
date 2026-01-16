@@ -1,50 +1,84 @@
-import React from 'react';
-import { ScrollView, View } from 'react-native';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useLocalSearchParams } from 'expo-router';
-import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlineStoreArticle';
-import { parseNumber } from '@/utils/parse-number';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { useLocalSearchParams, router } from 'expo-router';
+import { ArticleImagesOrderList } from '@/components/articles/ArticleImagesOrderList';
 import { Loading } from '@/components/ui/Loading';
-import { REQUEST_STATUS } from '@/constants/app';
-import { CustomText } from '@/components/ui/CustomText';
+import { REQUEST_STATUS } from '@/constants';
+import { CustomError } from '@/components/ui/CustomError';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useToast } from '@/hooks/useToast';
+import { useOnlineStoreArticle } from '@/hooks/pages/online-store/useOnlineStoreArticle';
+import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlineStoreArticle';
 
 export default function MyOnlineStoreArticleRearrangeImagesScreen() {
-  const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const articleId = parseNumber(id);
+  const { locale } = useTranslation();
+  const [isSaving, setIsSaving] = useState(false);
+  const { callToast } = useToast(locale);
+
+  const articleId = Number(id);
 
   const {
     data: onlineStoreArticle,
     status,
     errorMessage,
-  } = useGetOnlineStoreArticle({
-    articleId,
-  });
+  } = useGetOnlineStoreArticle({ articleId: articleId });
+  const { editArticleImagesOrder } = useOnlineStoreArticle();
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }
 
   const article = onlineStoreArticle?.Article;
-
   if (
     status === REQUEST_STATUS.error ||
     !onlineStoreArticle ||
     !article?.images
   ) {
     return (
-      <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
-      </View>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute={`/(tabs)/my-online-store/articles/${articleId}/rearrange-images`}
+      />
     );
   }
 
+  const handleSaveChanges = async (newOrder: string[]) => {
+    setIsSaving(true);
+
+    if (JSON.stringify(newOrder) === JSON.stringify(article.images)) {
+      setIsSaving(false);
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'No changes to save',
+          es: 'No hay cambios para guardar',
+        },
+      });
+      return;
+    }
+
+    const response = await editArticleImagesOrder({
+      articleId: articleId,
+      newOrder: newOrder,
+    });
+
+    if (response.status === 'error') {
+      setIsSaving(false);
+      return;
+    }
+
+    router.navigate(`/(tabs)/my-online-store/articles/${articleId}`);
+    setIsSaving(false);
+  };
+
   return (
-    <ScrollView className='flex-1'>
-      <View className='mx-auto w-full px-5 py-4 pb-16'>
-        {/* Main */}
-        <View className='w-full items-center'></View>
-      </View>
-    </ScrollView>
+    <View className='flex-1'>
+      <ArticleImagesOrderList
+        images={article.images}
+        isSaving={isSaving}
+        onSaveOrder={handleSaveChanges}
+      />
+    </View>
   );
 }

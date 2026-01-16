@@ -124,6 +124,11 @@ export const SECURE_ENDPOINTS = {
     ARTICLES: '/my-online-store/articles',
     ARTICLE: (id: string | number): ApiEndpoint =>
       `/my-online-store/articles/${id}` as ApiEndpoint,
+    NEW_ARTICLE: '/my-online-store/articles',
+    EDIT_ARTICLE: (articleId: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${articleId}/edit`,
+    EDIT_ARTICLE_IMAGES_ORDER: (articleId: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${articleId}/update-images-order`,
     UPDATE_PRICE: (id: string | number): ApiEndpoint =>
       `/my-online-store/articles/${id}/update-price` as ApiEndpoint,
     CHAGE_TO_AUCTION: (id: string | number): ApiEndpoint =>
