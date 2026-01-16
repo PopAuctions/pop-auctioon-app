@@ -220,6 +220,10 @@ export const SECURE_ENDPOINTS = {
   OFFERS: {
     CREATE: '/online-store/offers',
     MADE: '/user/offers-made',
+    ACCEPT: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/accept` as ApiEndpoint,
+    REJECT: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/reject` as ApiEndpoint,
   },
 
   // Payments (Stripe)

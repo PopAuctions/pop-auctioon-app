@@ -60,8 +60,11 @@ export default function MyOnlineStoreArticleDetailsScreen() {
   );
 
   return (
-    <ScrollView className='flex-1'>
-      <View className='mx-auto w-full px-5 py-4 pb-16'>
+    <ScrollView
+      className='flex-1'
+      contentContainerClassName='px-5 py-4 pb-16'
+    >
+      <View className='w-full'>
         {/* Main */}
         <View className='w-full items-center'>
           <View className='w-full max-w-4xl'>
@@ -121,7 +124,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
               {articleOSDetailsLang.actions}
             </CustomText>
 
-            <View className='w-full flex-1'>
+            <View className='w-full'>
               <ArticleDetailsActions
                 articleSecondChanceId={onlineStoreArticle.id}
                 currentPrice={onlineStoreArticlePrice}
@@ -149,11 +152,12 @@ export default function MyOnlineStoreArticleDetailsScreen() {
               {articleOSDetailsLang.offers}
             </CustomText>
 
-            <View className='mt-4'>
+            <View className='mt-2'>
               <ArticleOffersCards
                 offers={onlineStoreArticle?.ArticleOffer ?? []}
                 commissionValue={isCommissionReady ? commissionAmount : null}
-                lang={locale}
+                locale={locale}
+                refetch={refetch}
                 texts={{
                   noOffers: articleOSDetailsLang.noOffers,
                   accept: articleOSDetailsLang.accept,

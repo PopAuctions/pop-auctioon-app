@@ -155,7 +155,7 @@ export const ArticleDetailsActions = ({
 
   return (
     <>
-      <View className='-mx-1 w-full flex-row flex-wrap'>
+      <View className='-mx-1 mt-2 w-full flex-row flex-wrap'>
         <View className='mb-2 w-1/2 px-1'>
           <CustomLink
             mode='primary'
