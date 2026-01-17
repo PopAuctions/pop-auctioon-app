@@ -165,7 +165,7 @@ export const ArticleDetailsActions = ({
             {orderImages}
           </CustomLink>
         </View>
-        <View className='mb-2 w-1/2 px-1'>
+        {/* <View className='mb-2 w-1/2 px-1'>
           <CustomLink
             mode='primary'
             href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/edit-images`}
@@ -173,7 +173,7 @@ export const ArticleDetailsActions = ({
           >
             {editImages}
           </CustomLink>
-        </View>
+        </View> */}
         <View className='mb-2 w-1/2 px-1'>
           <Button
             mode='primary'

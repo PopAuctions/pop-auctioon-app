@@ -35,14 +35,14 @@ export default function MyOnlineStoreLayout() {
           headerBackTitle: t('tabsNames.back'),
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name='articles/[id]/edit-images'
         options={{
           title: t('screens.editImages.title'),
           headerShown: true,
           headerBackTitle: t('tabsNames.back'),
         }}
-      />
+      /> */}
       <Stack.Screen
         name='articles/[id]/rearrange-images'
         options={{
