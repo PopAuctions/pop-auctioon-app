@@ -23,6 +23,7 @@ interface ArticleExtraFieldsProps {
   errors: FieldErrors<any>;
   auctionCategory: AuctionCategories;
   isLoading: boolean;
+  auctionView?: boolean;
 }
 
 export const ArticleExtraFields = ({
@@ -30,6 +31,7 @@ export const ArticleExtraFields = ({
   errors,
   auctionCategory,
   isLoading,
+  auctionView = true,
 }: ArticleExtraFieldsProps) => {
   const { t, locale } = useTranslation();
   const isBags = auctionCategory === AuctionCategoriesConst.BAGS;
@@ -40,42 +42,44 @@ export const ArticleExtraFields = ({
   return (
     <>
       {/* RESERVE PRICE */}
-      <View className='mb-4'>
-        <View className='flex flex-row gap-2'>
-          <Tooltip content={t('screens.newArticle.reservePriceTooltip')} />
-          <CustomText
-            type='body'
-            className='mb-2'
-          >
-            {t('screens.newArticle.reservePrice')}
-          </CustomText>
-        </View>
-        <Controller
-          control={control}
-          name='reservePrice'
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              value={value || ''}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder={t('screens.newArticle.reservePrice')}
-              keyboardType='number-pad'
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.reservePrice && (
-          <CustomText
-            type='error'
-            className='mt-1'
-          >
-            {getErrorMessage(
-              errors.reservePrice?.message as string | undefined,
-              locale
+      {auctionView && (
+        <View className='mb-4'>
+          <View className='flex flex-row gap-2'>
+            <Tooltip content={t('screens.newArticle.reservePriceTooltip')} />
+            <CustomText
+              type='body'
+              className='mb-2'
+            >
+              {t('screens.newArticle.reservePrice')}
+            </CustomText>
+          </View>
+          <Controller
+            control={control}
+            name='reservePrice'
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                value={value || ''}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder={t('screens.newArticle.reservePrice')}
+                keyboardType='number-pad'
+                editable={!isLoading}
+              />
             )}
-          </CustomText>
-        )}
-      </View>
+          />
+          {errors.reservePrice && (
+            <CustomText
+              type='error'
+              className='mt-1'
+            >
+              {getErrorMessage(
+                errors.reservePrice?.message as string | undefined,
+                locale
+              )}
+            </CustomText>
+          )}
+        </View>
+      )}
 
       {/* MATERIAL (BAGS / JEWELRY)  / ART TYPE (ART) */}
       {(isBags || isJewelry) && (

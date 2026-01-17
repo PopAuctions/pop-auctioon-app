@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Controller } from 'react-hook-form';
@@ -20,12 +20,19 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
 import {
+  AMOUNT_PLACEHOLDER,
   ARTICLE_IMAGES_MAX,
   ARTICLE_STATE,
   ARTICLE_STATE_DESCRIPTION,
   ARTICLE_STATE_LABELS,
+  REQUEST_STATUS,
 } from '@/constants';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
+import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { euroFormatter } from '@/utils/euroFormatter';
+import { Loading } from '@/components/ui/Loading';
+import { CustomError } from '@/components/ui/CustomError';
 
 export default function NewOnlineStoreArticleScreen() {
   const params = useLocalSearchParams<{
@@ -54,6 +61,12 @@ export default function NewOnlineStoreArticleScreen() {
     callToast: callToast,
   });
 
+  const {
+    data: commissionValue = 0,
+    status,
+    errorMessage,
+  } = useFetchCommissions();
+
   const auctionCategory = category
     ? AuctionCategoriesConst[category]
     : AuctionCategoriesConst.BAGS;
@@ -61,11 +74,33 @@ export default function NewOnlineStoreArticleScreen() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useArticleForm({
     category: auctionCategory,
     mode: 'create',
   });
+
+  const startingPrice = watch('startingPrice');
+  const commissionedPrice = useMemo(() => {
+    if (!startingPrice) return null;
+    return getArticleCommissionedPrice(Number(startingPrice), commissionValue);
+  }, [startingPrice, commissionValue]);
+
+  if (status === REQUEST_STATUS.loading) {
+    return <Loading locale={locale} />;
+  }
+
+  if (status === REQUEST_STATUS.error) {
+    return (
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute='/(tabs)/my-online-store/articles/new'
+      />
+    );
+  }
+
+  const formatter = euroFormatter(locale, 2);
 
   const tooltipContent = (
     <View className='gap-2'>
@@ -253,6 +288,22 @@ export default function NewOnlineStoreArticleScreen() {
               </CustomText>
             )}
           </View>
+          <View className='mb-4 flex flex-row gap-2'>
+            <Tooltip
+              content={t('screens.newArticle.commissionedPriceTooltip')}
+            />
+            <CustomText
+              type='body'
+              className='text-black/70'
+            >
+              {t('screens.newArticle.commissionedPrice')}:{' '}
+              <Text className='font-bold text-black'>
+                {commissionedPrice !== null
+                  ? formatter.format(commissionedPrice)
+                  : AMOUNT_PLACEHOLDER}
+              </Text>
+            </CustomText>
+          </View>
 
           {/* Estimated Value */}
           <View className='mb-4'>
@@ -293,6 +344,7 @@ export default function NewOnlineStoreArticleScreen() {
             errors={errors}
             isLoading={isLoading}
             auctionCategory={auctionCategory}
+            auctionView={false}
           />
 
           {/* Description */}
