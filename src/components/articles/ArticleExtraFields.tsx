@@ -21,7 +21,7 @@ import { Tooltip } from '../ui/Tooltip';
 interface ArticleExtraFieldsProps {
   control: Control<any>;
   errors: FieldErrors<any>;
-  auctionCategory: AuctionCategories;
+  category: AuctionCategories;
   isLoading: boolean;
   auctionView?: boolean;
 }
@@ -29,15 +29,15 @@ interface ArticleExtraFieldsProps {
 export const ArticleExtraFields = ({
   control,
   errors,
-  auctionCategory,
+  category,
   isLoading,
   auctionView = true,
 }: ArticleExtraFieldsProps) => {
   const { t, locale } = useTranslation();
-  const isBags = auctionCategory === AuctionCategoriesConst.BAGS;
-  const isJewelry = auctionCategory === AuctionCategoriesConst.JEWERLY;
-  const isWatches = auctionCategory === AuctionCategoriesConst.WATCHES;
-  const isArt = auctionCategory === AuctionCategoriesConst.ART;
+  const isBags = category === AuctionCategoriesConst.BAGS;
+  const isJewelry = category === AuctionCategoriesConst.JEWERLY;
+  const isWatches = category === AuctionCategoriesConst.WATCHES;
+  const isArt = category === AuctionCategoriesConst.ART;
 
   return (
     <>

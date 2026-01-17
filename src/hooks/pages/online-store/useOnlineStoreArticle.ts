@@ -1,22 +1,22 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import type { LangMap } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { AnyArticleFormValues, LangMap } from '@/types/types';
 
 interface FunctionResponse {
   status: 'success' | 'error';
 }
 
 interface CreateArticleArgs {
-  values: any;
+  values: AnyArticleFormValues;
   images: string[];
 }
 
 interface EditArticleArgs {
   articleId: number;
-  values: any;
+  values: AnyArticleFormValues;
   images: string[];
   removedImages: string[];
   articleAuctionId: string;

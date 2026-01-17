@@ -42,7 +42,7 @@ export default function NewOnlineStoreArticleScreen() {
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
 
-  const category = params.category;
+  const categoryParam = params.category;
 
   const { createArticle } = useOnlineStoreArticle();
 
@@ -67,8 +67,8 @@ export default function NewOnlineStoreArticleScreen() {
     errorMessage,
   } = useFetchCommissions();
 
-  const auctionCategory = category
-    ? AuctionCategoriesConst[category]
+  const category = categoryParam
+    ? AuctionCategoriesConst[categoryParam]
     : AuctionCategoriesConst.BAGS;
 
   const {
@@ -77,7 +77,7 @@ export default function NewOnlineStoreArticleScreen() {
     watch,
     formState: { errors, isSubmitting },
   } = useArticleForm({
-    category: auctionCategory,
+    category: category,
     mode: 'create',
   });
 
@@ -172,11 +172,7 @@ export default function NewOnlineStoreArticleScreen() {
               type='subtitle'
               className='mb-4 text-center text-3xl text-cinnabar'
             >
-              {
-                AUCTION_CATEGORIES_LABEL[locale][
-                  auctionCategory as AuctionCategories
-                ]
-              }
+              {AUCTION_CATEGORIES_LABEL[locale][category as AuctionCategories]}
             </CustomText>
 
             {/* Info: category / required fields */}
@@ -343,7 +339,7 @@ export default function NewOnlineStoreArticleScreen() {
             control={control}
             errors={errors}
             isLoading={isLoading}
-            auctionCategory={auctionCategory}
+            category={category}
             auctionView={false}
           />
 
