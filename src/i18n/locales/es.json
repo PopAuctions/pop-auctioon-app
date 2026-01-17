@@ -37,6 +37,7 @@
     "articleDetails": "Detalles del Artículo",
     "store": "Tienda Online",
     "myAuctions": "Mis Subastas",
+    "myOnlineStore": "Mi Tienda Online",
     "back": "Atrás"
   },
   "screens": {
@@ -186,6 +187,46 @@
       "edit": "Editar",
       "oldAuctions": "Subastas antiguas",
       "noAuctionsFound": "No se encontraron subastas"
+    },
+    "myOnlineStore": {
+      "title": "Artículos tienda online",
+      "noArticles": "Aún no tienes artículos para vender en la tienda online",
+      "noArticlesFound": "No se encontraron artículos",
+      "status": "Estado",
+      "changePrice": "Cambiar precio",
+      "noDecimals": "No se permiten decimales",
+      "viewInStore": "Ver en tienda",
+      "offers": "Ofertas",
+      "viewDetails": "Ver detalles",
+      "createArticle": "Crear artículo",
+      "delete": "Eliminar",
+      "enable": "Habilitar"
+    },
+    "articleOSDetails": {
+      "title": "Detalles del artículo",
+      "message": "¿Este artículo está disponible para la venta?",
+      "subMessage": "Una vez confirmado, te pedimos que apartes este artículo mientras esperas el comprador hace el pago. De no hace el pago en 24h se cancelará la venta y puedes volver a poner el artículo a la disponible en tu tienda.",
+      "actions": "Acciones",
+      "offers": "Ofertas",
+      "noOffers": "No hay ofertas",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "changePrice": "Cambiar precio",
+      "assignToAuction": "Asignar a subasta",
+      "orderImages": "Reordenar imágenes",
+      "editImages": "Editar imágenes",
+      "price": "Precio",
+      "confirm": "Confirmar",
+      "remove": "Eliminar",
+      "code": "Código",
+      "articleNotFound": "Artículo no encontrado",
+      "commissionedPrice": "Precio con comisión"
+    },
+    "editImages": {
+      "title": "Editar imágenes"
+    },
+    "rearrangeImages": {
+      "title": "Reordenar imágenes"
     },
     "myAuction": {
       "pageTitle": "Subasta",

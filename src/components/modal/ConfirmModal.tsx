@@ -1,8 +1,8 @@
 import { Lang, LangMap } from '@/types/types';
 import React, { useState, type ReactNode } from 'react';
 import { Modal, View } from 'react-native';
-import { CustomText } from '../ui/CustomText';
-import { Button, ButtonMode } from '../ui/Button';
+import { CustomText } from '@/components/ui/CustomText';
+import { Button, ButtonMode } from '@/components/ui/Button';
 
 const TEXTS = {
   es: {
@@ -15,17 +15,18 @@ const TEXTS = {
   },
 };
 
-interface ConfirmModalProps {
+interface ConfirmModalProps<TConfirmResult = void> {
   children: ReactNode;
-  onConfirm: () => void | Promise<void>;
+  onConfirm: () => TConfirmResult | Promise<TConfirmResult>;
   title: LangMap;
   description: LangMap;
   locale: Lang;
   importantMessage?: LangMap;
   mode: ButtonMode;
+  isDisabled?: boolean;
 }
 
-export const ConfirmModal = ({
+export function ConfirmModal<TConfirmResult = void>({
   children,
   onConfirm,
   title,
@@ -33,7 +34,8 @@ export const ConfirmModal = ({
   locale,
   importantMessage,
   mode,
-}: ConfirmModalProps) => {
+  isDisabled = false,
+}: ConfirmModalProps<TConfirmResult>) {
   const [visible, setVisible] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
@@ -59,6 +61,7 @@ export const ConfirmModal = ({
         mode={mode}
         onPress={openModal}
         size='small'
+        disabled={confirming || isDisabled}
         textClassName='text-center'
       >
         {children}
@@ -99,6 +102,7 @@ export const ConfirmModal = ({
                 className='w-1/2'
                 onPress={handleConfirm}
                 disabled={confirming}
+                isLoading={confirming}
               >
                 {TEXTS[locale].confirm}
               </Button>
@@ -117,4 +121,4 @@ export const ConfirmModal = ({
       </Modal>
     </>
   );
-};
+}

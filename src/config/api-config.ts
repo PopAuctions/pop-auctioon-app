@@ -118,6 +118,29 @@ export const SECURE_ENDPOINTS = {
   MY_AUCTIONS: {
     LIST: '/my-auctions',
     OLD_LIST: '/my-auctions/old',
+    AVAILABLE: '/my-auctions/available',
+  },
+  MY_ONLINE_STORE: {
+    ARTICLES: '/my-online-store/articles',
+    ARTICLE: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}` as ApiEndpoint,
+    NEW_ARTICLE: '/my-online-store/articles',
+    EDIT_ARTICLE: (articleId: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${articleId}/edit`,
+    EDIT_ARTICLE_IMAGES_ORDER: (articleId: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${articleId}/update-images-order`,
+    UPDATE_PRICE: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/update-price` as ApiEndpoint,
+    CHAGE_TO_AUCTION: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/change-to-auction` as ApiEndpoint,
+    DELETE: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/delete` as ApiEndpoint,
+    EDIT_IMAGES: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/edit-images` as ApiEndpoint,
+    REARRANGE_IMAGES: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/rearrange-images` as ApiEndpoint,
+    OFFERS: (id: string | number): ApiEndpoint =>
+      `/my-online-store/articles/${id}/offers` as ApiEndpoint,
   },
   // Subastas
   AUCTIONS: {
@@ -202,6 +225,10 @@ export const SECURE_ENDPOINTS = {
   OFFERS: {
     CREATE: '/online-store/offers',
     MADE: '/user/offers-made',
+    ACCEPT: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/accept` as ApiEndpoint,
+    REJECT: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/reject` as ApiEndpoint,
   },
 
   // Payments (Stripe)

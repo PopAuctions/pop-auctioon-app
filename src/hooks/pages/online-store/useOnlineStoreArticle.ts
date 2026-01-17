@@ -3,16 +3,20 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import type { AnyArticleFormValues, LangMap } from '@/types/types';
+import type {
+  AnyArticleFormValues,
+  AuctionCategories,
+  LangMap,
+} from '@/types/types';
 
 interface FunctionResponse {
   status: 'success' | 'error';
 }
 
 interface CreateArticleArgs {
-  auctionId: string;
   values: AnyArticleFormValues;
   images: string[];
+  category: AuctionCategories;
 }
 
 interface EditArticleArgs {
@@ -28,11 +32,7 @@ interface EditArticleImagesOrderArgs {
   newOrder: string[];
 }
 
-export const useArticle = ({
-  auctionId,
-}: {
-  auctionId: string;
-}): {
+export const useOnlineStoreArticle = (): {
   createArticle: (args: CreateArticleArgs) => Promise<FunctionResponse>;
   editArticle: (args: EditArticleArgs) => Promise<FunctionResponse>;
   editArticleImagesOrder: (
@@ -44,21 +44,21 @@ export const useArticle = ({
   const { securePost } = useSecureApi();
 
   const createArticle = async ({
-    auctionId,
     values,
     images,
+    category,
   }: CreateArticleArgs): Promise<FunctionResponse> => {
     try {
       const payload = {
-        auctionId,
         images,
         data: {
           ...values,
         },
+        category,
       };
 
       const response = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.ARTICLES.NEW_ARTICLE(auctionId),
+        endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.NEW_ARTICLE,
         data: payload,
         options: {
           timeout: 30000,
@@ -74,9 +74,12 @@ export const useArticle = ({
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
-      sentryErrorReport(msg, 'USE_ARTICLE_MUTATION_CREATE - Unexpected error');
+      sentryErrorReport(
+        msg,
+        'USE_ONLINE_STORE_ARTICLE_MUTATION_CREATE - Unexpected error'
+      );
 
-      console.error('ERROR_CREATE_ARTICLE_CATCH', msg);
+      console.error('ERROR_CREATE_ONLINE_STORE_ARTICLE_CATCH', msg);
 
       const message: LangMap = {
         en: 'Error creating article',
@@ -97,7 +100,6 @@ export const useArticle = ({
   }: EditArticleArgs): Promise<FunctionResponse> => {
     try {
       const payload = {
-        articleId,
         images,
         removedImages: removedImages,
         articleAuctionId,
@@ -107,8 +109,10 @@ export const useArticle = ({
       };
 
       const response = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.ARTICLES.EDIT_ARTICLE(auctionId, articleId),
-        data: payload,
+        endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.EDIT_ARTICLE(articleId),
+        data: {
+          ...payload,
+        },
       });
 
       if (response.error) {
@@ -120,9 +124,12 @@ export const useArticle = ({
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
-      sentryErrorReport(msg, 'USE_ARTICLE_MUTATION_EDIT - Unexpected error');
+      sentryErrorReport(
+        msg,
+        'USE_ONLINE_STORE_ARTICLE_MUTATION_EDIT - Unexpected error'
+      );
 
-      console.error('ERROR_EDIT_ARTICLE_CATCH', msg);
+      console.error('ERROR_EDIT_ONLINE_STORE_ARTICLE_CATCH', msg);
 
       const message: LangMap = {
         en: 'Error updating article',
@@ -139,17 +146,12 @@ export const useArticle = ({
     newOrder,
   }: EditArticleImagesOrderArgs): Promise<FunctionResponse> => {
     try {
-      const payload = {
-        articleId,
-        newOrder,
-      };
-
       const response = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.ARTICLES.EDIT_ARTICLE_IMAGES_ORDER(
-          auctionId,
-          articleId
-        ),
-        data: payload,
+        endpoint:
+          SECURE_ENDPOINTS.MY_ONLINE_STORE.EDIT_ARTICLE_IMAGES_ORDER(articleId),
+        data: {
+          newImagesOrder: newOrder,
+        },
       });
 
       if (response.error) {
@@ -163,14 +165,14 @@ export const useArticle = ({
       const msg = error instanceof Error ? error.message : 'Unknown error';
       sentryErrorReport(
         msg,
-        'USE_ARTICLE_MUTATION_EDIT_IMAGES_ORDER - Unexpected error'
+        'USE_ONLINE_STORE_ARTICLE_MUTATION_EDIT_IMAGES_ORDER - Unexpected error'
       );
 
-      console.error('ERROR_EDIT_IMAGES_ORDER_ARTICLE_CATCH', msg);
+      console.error('ERROR_EDIT_IMAGES_ORDER_ONLINE_STORE_ARTICLE_CATCH', msg);
 
       const message: LangMap = {
-        en: 'Error updating article',
-        es: 'Error al actualizar el artículo',
+        en: 'Error updating article images order',
+        es: 'Error al actualizar el orden de las imágenes del artículo',
       };
 
       callToast({ variant: 'error', description: message });
