@@ -18,11 +18,13 @@ export default function MyOnlineStoreLayout() {
         }}
       />
       <Stack.Screen
-        name='new'
+        name='articles/new'
         options={{
-          title: t('screens.newArticle.title'),
+          title: t('screens.newArticle.pageTitle'),
           headerShown: true,
           headerBackTitle: t('tabsNames.back'),
+          presentation: 'card',
+          animation: 'slide_from_bottom',
         }}
       />
       <Stack.Screen

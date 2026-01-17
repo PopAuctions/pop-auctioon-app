@@ -79,3 +79,21 @@ export const AUCTION_CATEGORIES_LABEL: Record<
     ART: 'Art',
   },
 };
+
+export const AUCTION_CATEGORIES_LANG: Record<
+  Lang,
+  { value: AuctionCategories; label: string }[]
+> = {
+  es: [
+    { value: 'BAGS', label: 'Bolsos' },
+    { value: 'JEWERLY', label: 'Joyería' },
+    { value: 'WATCHES', label: 'Relojes' },
+    { value: 'ART', label: 'Arte' },
+  ],
+  en: [
+    { value: 'BAGS', label: 'Bags' },
+    { value: 'JEWERLY', label: 'Jewelry' },
+    { value: 'WATCHES', label: 'Watches' },
+    { value: 'ART', label: 'Art' },
+  ],
+};

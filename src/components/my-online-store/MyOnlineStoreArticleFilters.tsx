@@ -10,8 +10,8 @@ import {
 } from '@/constants';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
-import { CustomLink } from '@/components/ui/CustomLink';
 import { Filters } from '@/app/(tabs)/my-online-store';
+import { SelectCategoryModal } from '../modal/SelectCategoryModal';
 
 interface Props {
   locale: Lang;
@@ -92,17 +92,22 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
 
         <Button
           mode='secondary'
+          size='small'
           onPress={() => setIsFiltersModalOpen(true)}
         >
           {labels.filters}
         </Button>
 
-        <CustomLink
-          href='/my-online-store/new'
-          mode='primary'
+        <SelectCategoryModal
+          title={{ es: 'Seleccionar categoría', en: 'Select category' }}
+          description={{
+            es: 'Selecciona la categoría del artículo a crear',
+            en: 'Select the category of the article to create',
+          }}
+          locale={locale}
         >
           {texts.newArticle}
-        </CustomLink>
+        </SelectCategoryModal>
       </View>
       <View className='mt-1'>
         {activeFiltersCount > 0 && (
