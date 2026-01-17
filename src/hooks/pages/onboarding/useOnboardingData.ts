@@ -4,11 +4,8 @@ import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import type { OnboardingSlide, OnboardingTexts } from '@/types/types';
 
 type OnboardingApiResponse = {
-  error: any;
-  data: {
-    slides: OnboardingSlide[];
-    texts: OnboardingTexts;
-  } | null;
+  slides: OnboardingSlide[];
+  texts: OnboardingTexts;
 };
 
 type UseOnboardingDataReturn = {
@@ -53,23 +50,23 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
           return;
         }
 
-        if (response.data?.data) {
+        if (response.data) {
           // Sort slides by order field
-          const sortedSlides = response.data.data.slides.sort(
+          const sortedSlides = response.data.slides.sort(
             (a, b) => (a.order || 0) - (b.order || 0)
           );
 
           // Transform API slides to add images
           const transformedSlides = sortedSlides.map((slide) => ({
             ...slide,
-            // Convert imageUrl to React Native image format
+            // Use Supabase Storage URLs directly (no proxy needed)
             image: slide.imageUrl
               ? { uri: slide.imageUrl }
-              : require('@/assets/images/icon.png'),
+              : require('../../../../assets/images/icon.png'),
           }));
 
           setSlides(transformedSlides);
-          setTexts(response.data.data.texts);
+          setTexts(response.data.texts);
         }
       } catch (err) {
         console.error('ERROR_FETCH_ONBOARDING_CATCH', err);
