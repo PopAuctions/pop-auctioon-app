@@ -85,32 +85,35 @@ export default function SettingsScreen() {
 
         {/* Onboarding Reset */}
         <View className='mb-4 mt-4'>
-          <CustomText
-            type='h3'
-            className='mb-3'
-          >
-            {t('screens.account.tutorial')}
-          </CustomText>
+          <View className='flex-row items-center justify-between gap-3'>
+            <View className='flex-1'>
+              <CustomText
+                type='h3'
+                className='mb-1'
+              >
+                {t('screens.account.tutorial')}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-gray-500'
+              >
+                {t('screens.account.tutorialDescription')}
+              </CustomText>
+            </View>
 
-          <Button
-            onPress={resetOnboarding}
-            mode='secondary'
-            className='w-full'
-          >
-            <CustomText
-              type='body'
-              className='text-cinnabar'
+            <Button
+              onPress={resetOnboarding}
+              mode='primary'
+              className='px-6'
             >
-              {t('screens.account.viewTutorialAgain')}
-            </CustomText>
-          </Button>
-
-          <CustomText
-            type='bodysmall'
-            className='text-gray-500 mt-2'
-          >
-            {t('screens.account.tutorialDescription')}
-          </CustomText>
+              <CustomText
+                type='body'
+                className='text-white'
+              >
+                {t('screens.account.viewTutorialAgain')}
+              </CustomText>
+            </Button>
+          </View>
         </View>
 
         <Divider />
