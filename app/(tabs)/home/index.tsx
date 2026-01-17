@@ -12,8 +12,6 @@ import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticlesSection } from '@/components/home/ArticlesSection';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Button } from '@/components/ui/Button';
-import { CustomText } from '@/components/ui/CustomText';
 
 export default function HomeScreen() {
   const router = useRouter();
