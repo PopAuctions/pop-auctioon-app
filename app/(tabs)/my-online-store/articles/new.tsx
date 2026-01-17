@@ -27,7 +27,11 @@ import {
   ARTICLE_STATE_LABELS,
   REQUEST_STATUS,
 } from '@/constants';
-import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
+import {
+  AnyArticleFormValues,
+  AuctionCategories,
+  AuctionCategoriesConst,
+} from '@/types/types';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { euroFormatter } from '@/utils/euroFormatter';
@@ -124,7 +128,7 @@ export default function NewOnlineStoreArticleScreen() {
     </View>
   );
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: AnyArticleFormValues) => {
     setIsUploadingArticle(true);
     if (!validateMinImages()) {
       callToast({
@@ -143,6 +147,7 @@ export default function NewOnlineStoreArticleScreen() {
     const response = await createArticle({
       values: { ...data },
       images: publicUrls,
+      category: category,
     });
 
     if (response.status === 'error') {

@@ -3,7 +3,11 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import type { AnyArticleFormValues, LangMap } from '@/types/types';
+import type {
+  AnyArticleFormValues,
+  AuctionCategories,
+  LangMap,
+} from '@/types/types';
 
 interface FunctionResponse {
   status: 'success' | 'error';
@@ -12,6 +16,7 @@ interface FunctionResponse {
 interface CreateArticleArgs {
   values: AnyArticleFormValues;
   images: string[];
+  category: AuctionCategories;
 }
 
 interface EditArticleArgs {
@@ -41,6 +46,7 @@ export const useOnlineStoreArticle = (): {
   const createArticle = async ({
     values,
     images,
+    category,
   }: CreateArticleArgs): Promise<FunctionResponse> => {
     try {
       const payload = {
@@ -48,6 +54,7 @@ export const useOnlineStoreArticle = (): {
         data: {
           ...values,
         },
+        category,
       };
 
       const response = await securePost<LangMap>({
