@@ -39,7 +39,7 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
         const response = await protectedGet<OnboardingApiResponse>({
           endpoint: PROTECTED_ENDPOINTS.ONBOARDING.SLIDES,
           options: {
-            timeout: 15000, // 15 seconds (may include image URLs)
+            timeout: 5000, // 5 seconds for JSON data
           },
         });
 
@@ -62,7 +62,7 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
             // Use Supabase Storage URLs directly (no proxy needed)
             image: slide.imageUrl
               ? { uri: slide.imageUrl }
-              : require('../../../../assets/images/icon.png'),
+              : require('../../../../assets/icons/pop-auctioon-icon.png'),
           }));
 
           setSlides(transformedSlides);

@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PagerView from 'react-native-pager-view';
 import { useRef, useState } from 'react';
-import { Image, Pressable, View, ActivityIndicator } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
+import { Loading } from '@/components/ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
@@ -17,7 +18,7 @@ export default function OnboardingScreen() {
   const { locale, t } = useTranslation();
 
   // Fetch onboarding data from API (with fallback to local data)
-  const { slides, texts, isLoading } = useOnboardingData();
+  const { slides, texts, isLoading, error } = useOnboardingData();
 
   const isLast = index === slides.length - 1;
 
@@ -46,17 +47,70 @@ export default function OnboardingScreen() {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <View className='flex-1 items-center justify-center bg-black'>
-          <ActivityIndicator
-            size='large'
-            color='#ffffff'
-          />
+        <Loading
+          locale={locale}
+          customMessage={{
+            es: 'Cargando tutorial...',
+            en: 'Loading tutorial...',
+          }}
+        />
+      </>
+    );
+  }
+
+  // Show error state if fetch failed
+  if (error || slides.length === 0) {
+    const handleGoHome = () => {
+      // Don't mark as seen - let user try again later from settings
+      // Use params to tell home to skip onboarding check
+      router.replace({
+        pathname: '/(tabs)/home',
+        params: { skipOnboardingCheck: 'true' },
+      });
+    };
+
+    const handleRetry = () => {
+      router.replace('/onboarding');
+    };
+
+    return (
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className='flex-1 items-center justify-center bg-white px-8'>
+          <CustomText
+            type='h3'
+            className='mb-4 text-center text-cinnabar'
+          >
+            {t('commonErrors.generic')}
+          </CustomText>
+          <CustomText
+            type='h3'
+            className='mb-2 text-center'
+          >
+            {locale === 'es'
+              ? 'No se pudo cargar el tutorial'
+              : 'Could not load tutorial'}
+          </CustomText>
           <CustomText
             type='body'
-            className='mt-4 text-white/80'
+            className='mb-6 text-center text-base'
           >
-            {t('commonActions.loading')}
+            {t('commonErrors.defaultMessage')}
           </CustomText>
+          <View className='flex-row gap-4'>
+            <Button
+              mode='primary'
+              onPress={handleRetry}
+            >
+              {t('globals.refreshPage')}
+            </Button>
+            <Button
+              mode='secondary'
+              onPress={handleGoHome}
+            >
+              {t('globals.goToHome')}
+            </Button>
+          </View>
         </View>
       </>
     );

@@ -13,6 +13,9 @@
     "retry": "Reintentar",
     "or": "o"
   },
+  "onboarding": {
+    "errorLoadingTutorial": "No se pudo cargar el tutorial"
+  },
   "loginPage": {
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",

@@ -11,10 +11,13 @@ import { useFetchNewestArticles } from '@/hooks/pages/article/useFetchNewestArti
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticlesSection } from '@/components/home/ArticlesSection';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { Button } from '@/components/ui/Button';
+import { CustomText } from '@/components/ui/CustomText';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const { hasSeenOnboarding } = useOnboarding();
   const { t, locale } = useTranslation();
   const [checkingOnboarding, setCheckingOnboarding] = useState(true);
@@ -32,6 +35,12 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const checkAndShowOnboarding = async () => {
+      // Skip check if coming from onboarding error
+      if (params.skipOnboardingCheck === 'true') {
+        setCheckingOnboarding(false);
+        return;
+      }
+
       const seen = await hasSeenOnboarding();
       if (!seen) {
         // Navigate to onboarding
@@ -41,7 +50,7 @@ export default function HomeScreen() {
     };
 
     checkAndShowOnboarding();
-  }, [hasSeenOnboarding, router]);
+  }, [hasSeenOnboarding, router, params.skipOnboardingCheck]);
 
   // Show loading while checking onboarding status
   if (checkingOnboarding) {

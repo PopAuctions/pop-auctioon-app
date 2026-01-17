@@ -13,6 +13,9 @@
     "retry": "Retry",
     "or": "or"
   },
+  "onboarding": {
+    "errorLoadingTutorial": "Could not load tutorial"
+  },
   "loginPage": {
     "login": "Login",
     "logout": "Logout",
