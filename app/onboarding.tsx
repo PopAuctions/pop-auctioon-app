@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -87,9 +88,7 @@ export default function OnboardingScreen() {
             type='h3'
             className='mb-2 text-center'
           >
-            {locale === 'es'
-              ? 'No se pudo cargar el tutorial'
-              : 'Could not load tutorial'}
+            {t('onboarding.errorLoadingTutorial')}
           </CustomText>
           <CustomText
             type='body'
@@ -125,6 +124,9 @@ export default function OnboardingScreen() {
           <Pressable
             onPress={onSkip}
             hitSlop={10}
+            accessibilityRole='button'
+            accessibilityLabel={texts.skip[locale]}
+            accessibilityHint={t('onboarding.skipHint')}
           >
             <View className='rounded-full bg-white px-4 py-2'>
               <CustomText
@@ -143,6 +145,7 @@ export default function OnboardingScreen() {
           style={{ flex: 1 }}
           initialPage={0}
           onPageSelected={(e) => setIndex(e.nativeEvent.position)}
+          accessibilityLabel={t('onboarding.slidesLabel')}
         >
           {slides.map((slide) => (
             <View
@@ -155,6 +158,12 @@ export default function OnboardingScreen() {
                   source={slide.image}
                   resizeMode='cover'
                   style={{ width: '100%', height: '100%' }}
+                  onError={(error) =>
+                    sentryErrorReport(
+                      error.nativeEvent.error,
+                      `Failed to load onboarding image for slide ${slide.id}`
+                    )
+                  }
                 />
                 {/* Dark overlay for better text readability */}
                 <View className='absolute inset-0 bg-black/40' />

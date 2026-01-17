@@ -3,8 +3,12 @@ import { useRouter } from 'expo-router';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 
 /**
- * Hook to reset onboarding state
- * Useful for testing or allowing users to view onboarding again
+ * Hook to manage onboarding state.
+ *
+ * Provides:
+ * - `resetOnboarding`: clears the persisted onboarding flag and navigates back to the onboarding flow,
+ *   useful for testing or allowing users to view onboarding again.
+ * - `hasSeenOnboarding`: checks whether the user has previously completed onboarding.
  */
 export const useOnboarding = () => {
   const router = useRouter();
@@ -24,7 +28,8 @@ export const useOnboarding = () => {
       return value === 'true';
     } catch (error) {
       console.error('Error checking onboarding:', error);
-      return true; // Default to true on error
+      // On error, default to false so onboarding is shown rather than silently skipped
+      return false;
     }
   };
 

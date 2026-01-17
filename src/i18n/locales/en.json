@@ -14,7 +14,9 @@
     "or": "or"
   },
   "onboarding": {
-    "errorLoadingTutorial": "Could not load tutorial"
+    "errorLoadingTutorial": "Could not load tutorial",
+    "skipHint": "Skip the tutorial and continue to the app",
+    "slidesLabel": "Tutorial slides"
   },
   "loginPage": {
     "login": "Login",
