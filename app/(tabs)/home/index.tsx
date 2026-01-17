@@ -1,5 +1,5 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { UpcomingAuctionsSection } from '@/components/home/UpcomingAuctions';
@@ -10,9 +10,17 @@ import { useFetchFeaturedArticles } from '@/hooks/pages/article/useFetchFeatured
 import { useFetchNewestArticles } from '@/hooks/pages/article/useFetchNewestArticles';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticlesSection } from '@/components/home/ArticlesSection';
+import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const { hasSeenOnboarding } = useOnboarding();
   const { t, locale } = useTranslation();
+  const [checkingOnboarding, setCheckingOnboarding] = useState(true);
+
+  // All hooks must be called before any conditional returns
   const { data: upcomingAuctions, status: upcomingAuctionsStatus } =
     useFetchUpcomingAuctions();
   const { data: mostViewedArticles, status: mostViewedArticlesStatus } =
@@ -22,6 +30,37 @@ export default function HomeScreen() {
   const { data: newestArticles, status: newestArticlesStatus } =
     useFetchNewestArticles();
   const { data: commission, status: commissionsStatus } = useFetchCommissions();
+
+  useEffect(() => {
+    const checkAndShowOnboarding = async () => {
+      // Skip check if coming from onboarding error
+      if (params.skipOnboardingCheck === 'true') {
+        setCheckingOnboarding(false);
+        return;
+      }
+
+      const seen = await hasSeenOnboarding();
+      if (!seen) {
+        // Navigate to onboarding
+        router.replace('/onboarding');
+      }
+      setCheckingOnboarding(false);
+    };
+
+    checkAndShowOnboarding();
+  }, [hasSeenOnboarding, router, params.skipOnboardingCheck]);
+
+  // Show loading while checking onboarding status
+  if (checkingOnboarding) {
+    return (
+      <View className='flex-1 items-center justify-center bg-white'>
+        <ActivityIndicator
+          size='large'
+          color='#e63946'
+        />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView

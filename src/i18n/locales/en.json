@@ -13,6 +13,11 @@
     "retry": "Retry",
     "or": "or"
   },
+  "onboarding": {
+    "errorLoadingTutorial": "Could not load tutorial",
+    "skipHint": "Skip the tutorial and continue to the app",
+    "slidesLabel": "Tutorial slides"
+  },
   "loginPage": {
     "login": "Login",
     "logout": "Logout",
@@ -317,6 +322,9 @@
       "changeLanguage": "Change language",
       "changingLanguage": "Changing language...",
       "languageChanged": "Language changed",
+      "tutorial": "Tutorial",
+      "viewTutorialAgain": "View tutorial again",
+      "tutorialDescription": "View the app introduction tutorial again",
       "aboutUs": "About Us",
       "login": "Login",
       "register": "Register",

@@ -3,11 +3,12 @@ import { useAuth } from '@/context/auth-context';
 
 /**
  * Index route that redirects based on authentication status
- * Redirects authenticated users to home, unauthenticated to auth
+ * Onboarding is now handled within the home screen
  */
 export default function TabsIndex() {
   const { auth } = useAuth();
 
+  // Check auth status and redirect
   if (auth.state === 'unauthenticated') {
     return <Redirect href='/(tabs)/auth' />;
   }

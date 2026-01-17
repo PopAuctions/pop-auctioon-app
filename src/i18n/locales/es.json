@@ -13,6 +13,11 @@
     "retry": "Reintentar",
     "or": "o"
   },
+  "onboarding": {
+    "errorLoadingTutorial": "No se pudo cargar el tutorial",
+    "skipHint": "Omitir el tutorial y continuar a la aplicación",
+    "slidesLabel": "Diapositivas del tutorial"
+  },
   "loginPage": {
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
@@ -317,6 +322,9 @@
       "changeLanguage": "Cambiar idioma",
       "changingLanguage": "Cambiando idioma...",
       "languageChanged": "Idioma cambiado",
+      "tutorial": "Tutorial",
+      "viewTutorialAgain": "Ver tutorial de nuevo",
+      "tutorialDescription": "Vuelve a ver el tutorial de introducción a la aplicación",
       "aboutUs": "Acerca de Nosotros",
       "login": "Iniciar Sesión",
       "register": "Registrarse",
