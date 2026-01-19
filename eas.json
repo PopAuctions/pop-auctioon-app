@@ -15,10 +15,7 @@
     "development-device": {
       "developmentClient": true,
       "distribution": "internal",
-      "autoIncrement": true,
-      "env": {
-        "EXPO_NO_CAPABILITY_SYNC": "1"
-      }
+      "autoIncrement": true
     },
     "preview": {
       "distribution": "internal",

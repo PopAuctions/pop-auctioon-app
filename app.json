@@ -46,6 +46,7 @@
       "expo-secure-store",
       "expo-notifications",
       "expo-font",
+      "expo-apple-authentication",
       [
         "@sentry/react-native/expo",
         {
