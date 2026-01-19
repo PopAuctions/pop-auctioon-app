@@ -3,7 +3,6 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 
 import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/ui/useColorScheme';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { APP_USER_ROLES } from '@/constants';
@@ -26,7 +25,6 @@ const TabLabel = ({ label, color }: { label: string; color: string }) => {
 };
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const { getSession } = useAuth();
   const [session, role] = getSession();
@@ -36,7 +34,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors.light.tint,
         headerShown: false,
         tabBarShowLabel: true,
         tabBarStyle: {

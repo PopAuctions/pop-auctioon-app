@@ -1,9 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -19,7 +15,6 @@ import {
 } from '@expo-google-fonts/poppins';
 import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
-import { useColorScheme } from '@/hooks/ui/useColorScheme';
 import SplashLottie from '@/components/loading/splash-lottie';
 import * as Sentry from '@sentry/react-native';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
@@ -141,11 +136,9 @@ export default Sentry.wrap(function RootLayout() {
 });
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
     <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={DefaultTheme}>
         <StripeProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <Stack>
