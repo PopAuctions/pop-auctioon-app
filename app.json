@@ -47,14 +47,12 @@
       "expo-notifications",
       "expo-font",
       [
-        [
-          "@sentry/react-native/expo",
-          {
-            "url": "https://sentry.io/",
-            "project": "react-native-pop-auctioon",
-            "organization": "pop-auctioon"
-          }
-        ]
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native-pop-auctioon",
+          "organization": "pop-auctioon"
+        }
       ],
       [
         "expo-localization",
