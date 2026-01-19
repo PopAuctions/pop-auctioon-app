@@ -53,6 +53,7 @@ export default function ArticlesWonScreen() {
             winningBid: t('screens.account.winningBid'),
             payArticles: t('screens.account.payArticles'),
             view: t('screens.account.viewArticle'),
+            noArticlesWon: t('screens.account.noArticlesWon'),
           }}
         />
       ) : (

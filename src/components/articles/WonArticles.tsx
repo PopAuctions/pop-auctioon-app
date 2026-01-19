@@ -2,29 +2,36 @@ import React, { useMemo } from 'react';
 import { View, SectionList } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
-import { CustomLink } from '../ui/CustomLink';
-import { CustomText } from '../ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
+import { CustomText } from '@/components/ui/CustomText';
 import { AuctionUserWonArticles, CustomArticle, Lang } from '@/types/types';
-import { CustomImage } from '../ui/CustomImage';
+import { CustomImage } from '@/components/ui/CustomImage';
 
 type WonArticlesProps = {
-  wonArticles: Record<string, AuctionUserWonArticles>;
+  wonArticles: Record<string, AuctionUserWonArticles> | null;
   lang: Lang;
   commissionValue: number;
-  texts: { winningBid: string; payArticles: string; view: string };
+  texts: {
+    winningBid: string;
+    payArticles: string;
+    view: string;
+    noArticlesWon: string;
+  };
 };
 
-type SectionItemRow = CustomArticle[]; // row of 1 or 2 items
+type SectionItemRow = CustomArticle[];
 
 export const WonArticles = ({
   wonArticles,
   lang,
   commissionValue,
-  texts: { winningBid, payArticles, view },
+  texts: { winningBid, payArticles, view, noArticlesWon },
 }: WonArticlesProps) => {
   const formatter = euroFormatter(lang);
 
   const sections = useMemo(() => {
+    if (!wonArticles?.data) return [];
+
     return Object.entries(wonArticles).map(([auctionId, data]) => {
       // chunk into rows of 2 for a grid look
       const rows: SectionItemRow[] = [];
@@ -39,6 +46,19 @@ export const WonArticles = ({
       };
     });
   }, [wonArticles]);
+
+  if (sections.length === 0) {
+    return (
+      <View className='flex-1 items-center justify-center p-6'>
+        <CustomText
+          type='h2'
+          className='text-center text-cinnabar'
+        >
+          {noArticlesWon}
+        </CustomText>
+      </View>
+    );
+  }
 
   return (
     <SectionList

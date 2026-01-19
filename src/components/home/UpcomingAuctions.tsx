@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import type { Auction, Lang } from '@/types/types';
-import { AuctionsSlider } from '../auctions/AuctionsSlider';
-import { AuctionsSliderSkeleton } from '../auctions/AuctionsSliderSkeleton';
+import { AuctionsSlider } from '@/components/auctions/AuctionsSlider';
+import { AuctionsSliderSkeleton } from '@/components/auctions/AuctionsSliderSkeleton';
 
 export const UpcomingAuctionsSection = ({
   locale,
@@ -17,7 +17,7 @@ export const UpcomingAuctionsSection = ({
   isLoading: boolean;
 }) => {
   return (
-    <View className='my-5 w-full'>
+    <View className='w-full'>
       <CustomText
         type='h2'
         className='text-center'

@@ -4,7 +4,13 @@
  * - Categorías y tipos de productos
  * - Filtros de precio y categorías
  */
-import type { LabelsByLanguage, CategoryFilter } from '@/types/types';
+import type {
+  LabelsByLanguage,
+  CategoryFilter,
+  ArticleSecondChanceStatus,
+  Lang,
+  OfferOption,
+} from '@/types/types';
 
 export const ARTICLE_STATE_LABELS: LabelsByLanguage = {
   es: {
@@ -947,5 +953,49 @@ export const ARTICLE_CATEGORIES_FILTER_LIST: Record<string, CategoryFilter[]> =
       { value: 'ART', label: 'Art' },
     ],
   };
+
+export const ONLINE_STORE_ARTICLE_STATUS_LABELS: {
+  es: Record<ArticleSecondChanceStatus, string>;
+  en: Record<ArticleSecondChanceStatus, string>;
+} = {
+  es: {
+    NOT_AVAILABLE: 'No disponible',
+    AVAILABLE: 'Disponible',
+    SOLD: 'Vendido',
+  },
+  en: {
+    NOT_AVAILABLE: 'Not available',
+    AVAILABLE: 'Available',
+    SOLD: 'Sold',
+  },
+};
+
+export const ONLINE_STORE_ARTICLE_STATUS = {
+  es: [
+    { value: 'NOT_AVAILABLE', label: 'No disponible' },
+    { value: 'AVAILABLE', label: 'Disponible' },
+    { value: 'SOLD', label: 'Vendido' },
+  ],
+  en: [
+    { value: 'NOT_AVAILABLE', label: 'Not available' },
+    { value: 'AVAILABLE', label: 'Available' },
+    { value: 'SOLD', label: 'Sold' },
+  ],
+};
+
+export const OFFERS_OPTIONS: Record<Lang, OfferOption[]> = {
+  es: [
+    { value: 'ALL', label: 'Todos' },
+    { value: 'WITH_ACCEPTED_OFFERS', label: 'Con ofertas aceptadas' },
+    { value: 'WITH_PENDING_OFFERS', label: 'Con ofertas pendientes' },
+    { value: 'WITHOUT_OFFERS', label: 'Sin ofertas' },
+  ],
+  en: [
+    { value: 'ALL', label: 'All' },
+    { value: 'WITH_ACCEPTED_OFFERS', label: 'With accepted offers' },
+    { value: 'WITH_PENDING_OFFERS', label: 'With pending offers' },
+    { value: 'WITHOUT_OFFERS', label: 'Without offers' },
+  ],
+};
 
 export const ARTICLE_IMAGES_MAX = 10;

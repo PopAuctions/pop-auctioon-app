@@ -6,12 +6,32 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/ui/useColorScheme';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { APP_USER_ROLES } from '@/constants';
+import { Text } from 'react-native';
+
+const TabLabel = ({ label, color }: { label: string; color: string }) => {
+  return (
+    <Text
+      numberOfLines={2}
+      className='text-center'
+      style={{
+        color,
+        fontSize: 11,
+        lineHeight: 13,
+      }}
+    >
+      {label}
+    </Text>
+  );
+};
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const { getSession } = useAuth();
   const [session, role] = getSession();
+
+  const isAuctioneer = role === APP_USER_ROLES.AUCTIONEER;
 
   return (
     <Tabs
@@ -37,13 +57,17 @@ export default function TabLayout() {
         name='home'
         options={{
           title: t('tabsNames.home'),
-          tabBarLabel: t('tabsNames.home'),
           headerShown: false,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.home')}
+              color={color}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='home'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),
@@ -56,11 +80,16 @@ export default function TabLayout() {
         options={{
           title: t('tabsNames.auctions'),
           headerShown: false,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.auctions')}
+              color={color}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='gavel'
-              size={28}
-              style={{ marginBottom: -3 }}
+              size={26}
               color={color}
             />
           ),
@@ -73,11 +102,16 @@ export default function TabLayout() {
         options={{
           title: t('tabsNames.store'),
           headerShown: false,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.store')}
+              color={color}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='shopping-cart'
-              size={28}
-              style={{ marginBottom: -3 }}
+              size={27}
               color={color}
             />
           ),
@@ -90,12 +124,40 @@ export default function TabLayout() {
         options={{
           title: t('tabsNames.myAuctions'),
           headerShown: false,
-          href: session && role === 'AUCTIONEER' ? undefined : null,
+          href: session && isAuctioneer ? undefined : null,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.myAuctions')}
+              color={color}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='list'
               size={28}
-              style={{ marginBottom: -3 }}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* MY ONLINE STORE tab - only visible for AUCTIONEER */}
+      <Tabs.Screen
+        name='my-online-store'
+        options={{
+          title: t('tabsNames.myOnlineStore'),
+          headerShown: false,
+          href: session && isAuctioneer ? undefined : null,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.myOnlineStore')}
+              color={color}
+            />
+          ),
+          tabBarIcon: ({ color }) => (
+            <FontAwesome
+              name='shopping-bag'
+              size={24}
               color={color}
             />
           ),
@@ -109,11 +171,16 @@ export default function TabLayout() {
           title: t('tabsNames.account'),
           headerShown: false,
           href: session ? undefined : null,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.account')}
+              color={color}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='user'
-              size={28}
-              style={{ marginBottom: -3 }}
+              size={26}
               color={color}
             />
           ),
@@ -127,11 +194,16 @@ export default function TabLayout() {
           title: t('tabsNames.login'),
           headerShown: false,
           href: !session ? undefined : null,
+          tabBarLabel: ({ color }) => (
+            <TabLabel
+              label={t('tabsNames.login')}
+              color={color}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name='sign-in'
               size={28}
-              style={{ marginBottom: -3 }}
               color={color}
             />
           ),

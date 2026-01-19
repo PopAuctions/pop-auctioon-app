@@ -25,7 +25,7 @@ export const Loading = ({
       />
       <CustomText
         type='body'
-        className='text-gray-600 mt-4 text-center'
+        className='mt-4 text-center text-black'
       >
         {customMessage?.[locale] ?? TEXTS.loading[locale]}
       </CustomText>

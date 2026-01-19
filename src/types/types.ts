@@ -1,4 +1,6 @@
+import { OFFERS_OPTIONS_VALUES } from '@/constants';
 import { type Database } from '@/types/supabase';
+import { ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
 export type Lang = 'es' | 'en';
 
@@ -18,7 +20,9 @@ export interface ApiResponse {
   success: string;
 }
 
-export type User = Database['public']['Tables']['User']['Row'];
+export type User = Database['public']['Tables']['User']['Row'] & {
+  provider: string;
+};
 
 export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
 
@@ -554,6 +558,8 @@ export const AuctionCategoriesConst: Record<
 
 export type AuctionCategories = Database['public']['Enums']['AuctionCategory'];
 
+export type AnyArticleFormValues = ArticleFormValues<AuctionCategories>;
+
 export const OfferStatusConst: Record<OfferStatus, string> = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -765,6 +771,13 @@ export interface SignupResponse {
   data: {
     email: string;
   } | null;
+}
+
+export type OffersOptionValue = keyof typeof OFFERS_OPTIONS_VALUES;
+
+export interface OfferOption {
+  value: OffersOptionValue;
+  label: string;
 }
 
 export interface UseSignupReturn {

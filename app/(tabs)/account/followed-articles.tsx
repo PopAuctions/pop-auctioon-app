@@ -35,33 +35,35 @@ export default function FollowedArticlesScreen() {
     );
   }
 
+  if (articles.length === 0) {
+    return (
+      <View className='flex-1 items-center justify-center p-6'>
+        <CustomText
+          type='h2'
+          className='text-center text-cinnabar'
+        >
+          {t('screens.article.noFollowedArticles')}
+        </CustomText>
+      </View>
+    );
+  }
+
   return (
     <ScrollView className='w-full flex-1 p-4'>
-      {articles.length === 0 ? (
-        <View className='mt-5'>
-          <CustomText
-            type='h2'
-            className='text-center text-cinnabar'
-          >
-            {t('screens.article.noFollowedArticles')}
-          </CustomText>
-        </View>
-      ) : (
-        <View className='flex flex-col gap-4'>
-          {articles.map((item) => (
-            <ArticleItem
-              key={item.id}
-              article={item.Article}
-              auctionLang={{ currentBid: articleLang.actualBid }}
-              formatter={formatter}
-              lang={locale}
-              userFollows={true}
-              commissionValue={isCommissionReady ? commissionData : null}
-              actionAfterFollow={refetch}
-            />
-          ))}
-        </View>
-      )}
+      <View className='flex flex-col gap-4'>
+        {articles.map((item) => (
+          <ArticleItem
+            key={item.id}
+            article={item.Article}
+            auctionLang={{ currentBid: articleLang.actualBid }}
+            formatter={formatter}
+            lang={locale}
+            userFollows={true}
+            commissionValue={isCommissionReady ? commissionData : null}
+            actionAfterFollow={refetch}
+          />
+        ))}
+      </View>
     </ScrollView>
   );
 }

@@ -27,7 +27,6 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'followed-articles': {},
   'offers-made': {},
   'payments-history': {},
-  'reset-password': {},
   'verify-phone': {},
   'payment/[id]': {},
 
@@ -48,6 +47,9 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
     requiredRole: 'AUCTIONEER',
   },
   'my-auctions/[id]/edit-article/[slug]': {
+    requiredRole: 'AUCTIONEER',
+  },
+  'my-online-store': {
     requiredRole: 'AUCTIONEER',
   },
   'my-auctions/[id]/rearrange-article-images/[slug]': {

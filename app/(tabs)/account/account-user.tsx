@@ -93,44 +93,50 @@ export default function Account({ currentUser }: { currentUser: User }) {
         <Divider />
 
         <View className='mx-2 p-2'>
-          {FIRST_SECTION.map(({ name, icon, labelKey, href }) => (
-            <CustomLink
-              key={name}
-              href={href}
-              mode='empty'
-              hoverEffect={false}
-              className='flex-row items-center justify-between py-4'
-            >
-              <View className='flex-row items-center'>
-                <View className='mr-4 h-10 w-10 items-center justify-center'>
-                  <FontAwesomeIcon
-                    variant='bold'
-                    name={icon}
-                    size={20}
-                    color='#4d4d4d'
-                  />
+          {FIRST_SECTION.map(({ name, icon, labelKey, href, showIfOAuth }) => {
+            if (showIfOAuth === false && currentUser.provider !== 'email') {
+              return null;
+            }
+
+            return (
+              <CustomLink
+                key={name}
+                href={href}
+                mode='empty'
+                hoverEffect={false}
+                className='flex-row items-center justify-between py-4'
+              >
+                <View className='flex-row items-center'>
+                  <View className='mr-4 h-10 w-10 items-center justify-center'>
+                    <FontAwesomeIcon
+                      variant='bold'
+                      name={icon}
+                      size={20}
+                      color='#4d4d4d'
+                    />
+                  </View>
+
+                  <View className='h-10 justify-center'>
+                    <CustomText
+                      type='body'
+                      className='leading-[20px]'
+                    >
+                      {t(labelKey as any)}
+                    </CustomText>
+                  </View>
                 </View>
 
                 <View className='h-10 justify-center'>
-                  <CustomText
-                    type='body'
-                    className='leading-[20px]'
-                  >
-                    {t(labelKey as any)}
-                  </CustomText>
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='chevron-right'
+                    size={16}
+                    color='#9ca3af'
+                  />
                 </View>
-              </View>
-
-              <View className='h-10 justify-center'>
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='chevron-right'
-                  size={16}
-                  color='#9ca3af'
-                />
-              </View>
-            </CustomLink>
-          ))}
+              </CustomLink>
+            );
+          })}
         </View>
 
         <Divider />

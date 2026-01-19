@@ -7,6 +7,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CustomError } from '@/components/ui/CustomError';
 import { useCallback, useState } from 'react';
 import { OfferCard } from '@/components/offers/OfferCard';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function OffersMadeScreen() {
   const { t, locale } = useTranslation();
@@ -29,6 +31,26 @@ export default function OffersMadeScreen() {
         customMessage={errorMessage}
         refreshRoute='/(tabs)/account/payments-history'
       />
+    );
+  }
+
+  if (offers.length === 0) {
+    return (
+      <View className='flex-1 items-center justify-center p-6'>
+        <CustomText
+          type='h2'
+          className='text-center text-cinnabar'
+        >
+          {t('screens.myOffers.noOffersMade')}
+        </CustomText>
+        <CustomLink
+          href='/(tabs)/online-store/'
+          mode='secondary'
+          className='mt-4'
+        >
+          {t('screens.myOffers.goToOnlineStore')}
+        </CustomLink>
+      </View>
     );
   }
 
