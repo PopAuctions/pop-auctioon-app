@@ -7,7 +7,7 @@ export default function SplashLottie() {
       source={require('../../../assets/lottie/loading-bubbles.json')}
       autoPlay
       loop
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: 'white' }}
     />
   );
 }
