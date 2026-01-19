@@ -1,35 +1,14 @@
-import { View, ScrollView, Pressable } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
-import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
-import { router } from 'expo-router';
-import { useState } from 'react';
+import { GoogleButton } from '@/components/auth/GoogleButton';
+import { AppleButton } from '@/components/auth/AppleButton';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
-
-  const providers = [
-    { name: 'Google', icon: 'google', color: '#DB4437' },
-    { name: 'Apple', icon: 'apple', color: '#000000' },
-  ];
-
-  const handleProviderPress = (providerName: string) => {
-    setSelectedProvider(providerName);
-    // TODO: Implement auth with providers in the future
-    console.log(`Selected provider: ${providerName}`);
-  };
-
-  const handleRegisterAsUser = () => {
-    router.push('/(tabs)/auth/register-user');
-  };
-
-  const handleRegisterAsAuctioneer = () => {
-    router.push('/(tabs)/auth/register-auctioneer');
-  };
 
   return (
     <SafeAreaView
@@ -38,9 +17,13 @@ export default function RegisterScreen() {
     >
       <ScrollView
         className='flex-1'
-        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 20 }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 20,
+          paddingBottom: 24,
+        }}
       >
-        {/* Título */}
+        {/* Header */}
         <View className='mb-8'>
           <CustomText
             type='h1'
@@ -52,32 +35,15 @@ export default function RegisterScreen() {
             type='body'
             className='text-gray-600 text-center'
           >
+            {/* Si quieres un copy más “premium”, cambia esta key o el texto */}
             {t('screens.account.orRegisterWith')}
           </CustomText>
         </View>
 
-        {/* Providers (Google, Facebook, Apple) */}
-        <View className='mb-6 gap-3'>
-          {providers.map((provider) => (
-            <Pressable
-              key={provider.name}
-              onPress={() => handleProviderPress(provider.name)}
-              className='border-gray-300 flex-row items-center justify-center gap-3 rounded-lg border bg-white px-4 py-3'
-            >
-              <FontAwesomeIcon
-                name={provider.icon as any}
-                variant='bold'
-                size={20}
-                color={provider.color as `#${string}`}
-              />
-              <CustomText
-                type='body'
-                className='text-gray-800'
-              >
-                {t('screens.account.continueWith')} {provider.name}
-              </CustomText>
-            </Pressable>
-          ))}
+        {/* Providers */}
+        <View className='gap-4'>
+          <GoogleButton buttonText={t('screens.account.continueWith')} />
+          <AppleButton buttonText={t('screens.account.continueWith')} />
         </View>
 
         {/* Divider */}
@@ -92,10 +58,10 @@ export default function RegisterScreen() {
           <View className='bg-gray-300 h-px flex-1' />
         </View>
 
-        {/* Botón: Registrarse como Usuario */}
+        {/* Email register */}
         <View className='mb-4'>
-          <Button
-            onPress={handleRegisterAsUser}
+          <CustomLink
+            href='/(tabs)/auth/register-user'
             mode='primary'
             className='w-full'
           >
@@ -105,21 +71,24 @@ export default function RegisterScreen() {
             >
               {t('screens.account.registerAsUser')}
             </CustomText>
-          </Button>
+          </CustomLink>
         </View>
 
         <Divider />
 
-        {/* Link: ¿Deseas unirte como auctioneer? */}
-        <View className='my-6'>
-          <Pressable onPress={handleRegisterAsAuctioneer}>
+        {/* Auctioneer CTA */}
+        <View className='mt-6'>
+          <CustomLink
+            href='/(tabs)/auth/register-auctioneer'
+            mode='secondary'
+          >
             <CustomText
               type='body'
-              className='text-center text-cinnabar underline'
+              className='text-center text-cinnabar'
             >
               {t('screens.account.registerAsAuctioneer')}
             </CustomText>
-          </Pressable>
+          </CustomLink>
         </View>
       </ScrollView>
     </SafeAreaView>

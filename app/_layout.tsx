@@ -32,8 +32,11 @@ import { ToastProvider } from '@/providers/ToastProvider';
 import { StripeProvider } from '@/providers/StripeProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TranslationProvider } from '@/context/translation-context';
+import * as WebBrowser from 'expo-web-browser';
 import * as Notifications from 'expo-notifications';
 import { NotificationProvider } from '@/context/notification-context';
+
+WebBrowser.maybeCompleteAuthSession();
 
 // Configure notification handler
 Notifications.setNotificationHandler({

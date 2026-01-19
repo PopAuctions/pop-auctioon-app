@@ -194,6 +194,10 @@ export default function AuctionDetailScreen() {
                 lang={locale}
                 className='w-1/2'
                 mode='secondary'
+                title={{
+                  es: 'Compartir Subasta',
+                  en: 'Share Auction',
+                }}
               >
                 {auctionLang.share}
               </ShareButton>

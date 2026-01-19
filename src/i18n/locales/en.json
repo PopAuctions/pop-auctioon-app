@@ -22,7 +22,7 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
-    "newAccount": "New account!",
+    "newAccount": "Create account",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm password",
@@ -32,7 +32,7 @@
     "registerSuccess": "User registered successfully",
     "registerError": "Registration error",
     "title": "Sign In",
-    "logIn": "Log In"
+    "signIn": "Sign In"
   },
   "tabsNames": {
     "home": "Home",
@@ -194,8 +194,44 @@
       "noAuctionsFound": "No auctions found"
     },
     "myOnlineStore": {
-      "title": "My Online Store",
-      "welcome": "Welcome to your online store. Here you can manage your products and sales."
+      "title": "Online store articles",
+      "noArticles": "You don't have any articles to sell in the online store yet",
+      "noArticlesFound": "No articles found",
+      "status": "Status",
+      "changePrice": "Change price",
+      "noDecimals": "No decimals allowed",
+      "viewInStore": "View in store",
+      "offers": "Offers",
+      "viewDetails": "View details",
+      "createArticle": "Create article",
+      "delete": "Delete",
+      "enable": "Enable"
+    },
+    "articleOSDetails": {
+      "title": "Article details",
+      "message": "Is this article still available?",
+      "subMessage": "Once confirmed, we ask that you set this article aside while waiting for the buyer to make the payment. If the payment is not made within 24 hours, the sale will be canceled and you can make the article available again in your store.",
+      "actions": "Actions",
+      "offers": "Offers",
+      "noOffers": "No offers yet",
+      "accept": "Accept",
+      "reject": "Reject",
+      "changePrice": "Change price",
+      "assignToAuction": "Assign to auction",
+      "orderImages": "Rearrange images",
+      "editImages": "Edit images",
+      "price": "Price",
+      "confirm": "Confirm",
+      "remove": "Delete",
+      "code": "Code",
+      "articleNotFound": "Article not found",
+      "commissionedPrice": "Commissioned price"
+    },
+    "editImages": {
+      "title": "Edit images"
+    },
+    "rearrangeImages": {
+      "title": "Rearrange images"
     },
     "myAuction": {
       "pageTitle": "Auction",
@@ -326,11 +362,11 @@
       "viewTutorialAgain": "View tutorial again",
       "tutorialDescription": "View the app introduction tutorial again",
       "aboutUs": "About Us",
-      "login": "Login",
+      "login": "Sign in",
       "register": "Register",
       "registerOptions": "Register Options",
       "continueWith": "Continue with",
-      "orRegisterWith": "Choose how you want to register",
+      "orRegisterWith": "Choose your preferred way to create your account",
       "registerAsUser": "Register as User",
       "registerAsAuctioneer": "Want to join as auctioneer?",
       "registerAsAuctioneerTitle": "Auctioneer Registration",
@@ -564,6 +600,8 @@
       "loading": "Cargando...",
       "offer": "Offer",
       "alreadySold": "Already sold",
+      "noOffersMade": "No offers made yet",
+      "goToOnlineStore": "Go to online store",
       "offerExpired": "Offer expired",
       "payNow": "Pay now",
       "article": "Article",
@@ -712,7 +750,8 @@
       "cancel": "Cancel",
       "bids": "Bid",
       "estimatedPrice": "Estimated price",
-      "close": "Close"
+      "close": "Close",
+      "currentArticle": "Current article"
     }
   },
   "components": {

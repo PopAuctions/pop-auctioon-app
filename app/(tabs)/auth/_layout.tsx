@@ -36,6 +36,15 @@ export default function AuthLayout() {
         }}
       />
       <Stack.Screen
+        name='reset-password'
+        options={{
+          title: t('screens.account.resetPassword'),
+          presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
+      <Stack.Screen
         name='register-user'
         options={{
           title: t('screens.account.registerFormTitle'),

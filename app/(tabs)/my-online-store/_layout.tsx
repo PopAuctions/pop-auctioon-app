@@ -17,6 +17,40 @@ export default function MyOnlineStoreLayout() {
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name='articles/new'
+        options={{
+          title: t('screens.newArticle.pageTitle'),
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+          presentation: 'card',
+          animation: 'slide_from_bottom',
+        }}
+      />
+      <Stack.Screen
+        name='articles/[id]'
+        options={{
+          title: t('screens.articleOSDetails.title'),
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
+      {/* <Stack.Screen
+        name='articles/[id]/edit-images'
+        options={{
+          title: t('screens.editImages.title'),
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      /> */}
+      <Stack.Screen
+        name='articles/[id]/rearrange-images'
+        options={{
+          title: t('screens.rearrangeImages.title'),
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
     </Stack>
   );
 }

@@ -9,6 +9,7 @@ import type {
   User,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '@/context/auth-context';
 
 /**
  * Hook para obtener los datos del usuario actual autenticado
@@ -36,6 +37,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
   // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureGet } = useSecureApi();
+  const { auth } = useAuth();
 
   const fetchCurrentUser = useCallback(async () => {
     try {
@@ -91,8 +93,14 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
   }, [secureGet]);
 
   useEffect(() => {
+    if (auth.state !== 'authenticated') {
+      setStatus('idle');
+      setCurrentUser(null);
+      return;
+    }
+
     fetchCurrentUser();
-  }, [fetchCurrentUser]);
+  }, [auth.state, fetchCurrentUser]);
 
   return {
     data: currentUser,

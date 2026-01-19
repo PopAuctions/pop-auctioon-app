@@ -24,6 +24,7 @@ import { ArticleCountdownUser } from './ArticleCountdownUser';
 import { BidSliderSkeleton } from './BidSliderSkeleton';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
+import { LiveCurrentArticleModal } from './LiveCurrentArticleModal';
 
 type OverlayProps = {
   insetsTop: number;
@@ -80,6 +81,7 @@ export const LiveAuctionOverlay = ({
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
 
   const currentArticle = useMemo(() => {
     return orderedArticles.find((a) => a.id === articleId) ?? null;
@@ -167,6 +169,25 @@ export const LiveAuctionOverlay = ({
               style={{ gap: UI.ACTION_GAP }}
             >
               <TouchableOpacity
+                onPress={() => setShowCurrentArticleModal(true)}
+                activeOpacity={0.7}
+                style={{
+                  height: UI.ACTION_BTN_SIZE,
+                  width: UI.ACTION_BTN_SIZE,
+                  borderRadius: UI.ACTION_BTN_SIZE / 2,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(0,0,0,0.6)',
+                }}
+              >
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='shopping-bag'
+                  size={24}
+                  color='#FFFFFF'
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => setShowInfoModal(true)}
                 activeOpacity={0.7}
                 style={{
@@ -190,6 +211,10 @@ export const LiveAuctionOverlay = ({
                 mode='empty'
                 className='items-center justify-center'
                 lang={locale}
+                title={{
+                  es: 'Compartir Subasta',
+                  en: 'Share Auction',
+                }}
               >
                 <View
                   style={{
@@ -268,7 +293,7 @@ export const LiveAuctionOverlay = ({
       <LiveArticlesModal
         articles={orderedArticles}
         currentArticleId={articleId}
-        lang={locale}
+        locale={locale}
         commissionValue={commissionData || 0}
         texts={{
           bids: t('screens.liveAuction.bids'),
@@ -278,6 +303,15 @@ export const LiveAuctionOverlay = ({
         }}
         visible={showInfoModal}
         onClose={() => setShowInfoModal(false)}
+      />
+
+      <LiveCurrentArticleModal
+        currentArticleId={articleId}
+        texts={{
+          currentArticle: t('screens.liveAuction.currentArticle'),
+        }}
+        visible={showCurrentArticleModal}
+        onClose={() => setShowCurrentArticleModal(false)}
       />
     </>
   );

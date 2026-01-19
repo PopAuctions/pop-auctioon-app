@@ -1,7 +1,8 @@
 import React, { forwardRef } from 'react';
-import { TouchableOpacity, Text, Linking, ViewStyle } from 'react-native';
+import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { requiresAuth as checkRequiresAuth } from '@/components/navigation/routeConfig';
+import { cn } from '@/utils/cn';
 
 /**
  * CustomLink - Componente inteligente de navegación
@@ -21,6 +22,8 @@ interface CustomLinkProps {
   mode?: 'empty' | 'primary' | 'secondary' | 'plainText';
   size?: 'small' | 'large';
   className?: string;
+  textClassName?: string;
+  isDisabled?: boolean;
   style?: ViewStyle;
   hoverEffect?: boolean;
   outsideRedirect?: boolean;
@@ -64,7 +67,7 @@ const LINK_SIZE_STYLES = {
 };
 
 export const CustomLink = forwardRef<
-  React.ElementRef<typeof TouchableOpacity>,
+  React.ElementRef<typeof Pressable>,
   CustomLinkProps
 >(
   (
@@ -75,8 +78,10 @@ export const CustomLink = forwardRef<
       size = 'large',
       hoverEffect = true,
       className,
+      textClassName,
       style,
       outsideRedirect = false,
+      isDisabled = false,
     },
     ref
   ) => {
@@ -107,6 +112,8 @@ export const CustomLink = forwardRef<
     };
 
     const handlePress = async () => {
+      if (isDisabled) return;
+
       if (outsideRedirect) {
         // Para enlaces externos
         const canOpen = await Linking.canOpenURL(href);
@@ -130,29 +137,28 @@ export const CustomLink = forwardRef<
     };
 
     return (
-      <TouchableOpacity
+      <Pressable
         ref={ref}
-        className={`
-        ${modeStyle}
-        ${hoverEffects}
-        text-center
-        font-normal
-        text-white
-        ${className || ''}
-      `}
-        style={style}
+        className={cn(modeStyle, hoverEffects, className ?? '')}
+        style={[style, isDisabled ? { opacity: 0.5 } : null]}
         onPress={handlePress}
+        disabled={isDisabled}
       >
         {mode === 'empty' ? (
           children
         ) : (
           <Text
-            className={`text-center text-lg font-normal ${TEXT_COLOR_BY_MODE[mode]} ${mode === 'plainText' ? 'underline' : ''}`}
+            className={cn(
+              'text-center text-lg font-normal',
+              TEXT_COLOR_BY_MODE[mode],
+              mode === 'plainText' ? 'underline' : '',
+              textClassName
+            )}
           >
             {children}
           </Text>
         )}
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 );

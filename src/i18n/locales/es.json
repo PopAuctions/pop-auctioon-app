@@ -11,7 +11,7 @@
     "confirm": "Confirmar",
     "close": "Cerrar",
     "retry": "Reintentar",
-    "or": "o"
+    "or": "ó"
   },
   "onboarding": {
     "errorLoadingTutorial": "No se pudo cargar el tutorial",
@@ -22,7 +22,7 @@
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
     "register": "Registrarse",
-    "newAccount": "¡Nueva cuenta!",
+    "newAccount": "Crear cuenta",
     "email": "Correo electrónico",
     "password": "Contraseña",
     "confirmPassword": "Confirmar contraseña",
@@ -32,7 +32,7 @@
     "registerSuccess": "Usuario registrado correctamente",
     "registerError": "Error al registrar usuario",
     "title": "Iniciar Sesión",
-    "logIn": "Iniciar Sesión"
+    "signIn": "Iniciar Sesión"
   },
   "tabsNames": {
     "home": "Inicio",
@@ -194,8 +194,44 @@
       "noAuctionsFound": "No se encontraron subastas"
     },
     "myOnlineStore": {
-      "title": "Mi Tienda Online",
-      "welcome": "Bienvenido a tu tienda online. Aquí podrás gestionar tus productos y ventas."
+      "title": "Artículos tienda online",
+      "noArticles": "Aún no tienes artículos para vender en la tienda online",
+      "noArticlesFound": "No se encontraron artículos",
+      "status": "Estado",
+      "changePrice": "Cambiar precio",
+      "noDecimals": "No se permiten decimales",
+      "viewInStore": "Ver en tienda",
+      "offers": "Ofertas",
+      "viewDetails": "Ver detalles",
+      "createArticle": "Crear artículo",
+      "delete": "Eliminar",
+      "enable": "Habilitar"
+    },
+    "articleOSDetails": {
+      "title": "Detalles del artículo",
+      "message": "¿Este artículo está disponible para la venta?",
+      "subMessage": "Una vez confirmado, te pedimos que apartes este artículo mientras esperas el comprador hace el pago. De no hace el pago en 24h se cancelará la venta y puedes volver a poner el artículo a la disponible en tu tienda.",
+      "actions": "Acciones",
+      "offers": "Ofertas",
+      "noOffers": "No hay ofertas",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "changePrice": "Cambiar precio",
+      "assignToAuction": "Asignar a subasta",
+      "orderImages": "Reordenar imágenes",
+      "editImages": "Editar imágenes",
+      "price": "Precio",
+      "confirm": "Confirmar",
+      "remove": "Eliminar",
+      "code": "Código",
+      "articleNotFound": "Artículo no encontrado",
+      "commissionedPrice": "Precio con comisión"
+    },
+    "editImages": {
+      "title": "Editar imágenes"
+    },
+    "rearrangeImages": {
+      "title": "Reordenar imágenes"
     },
     "myAuction": {
       "pageTitle": "Subasta",
@@ -330,7 +366,7 @@
       "register": "Registrarse",
       "registerOptions": "Opciones de Registro",
       "continueWith": "Continuar con",
-      "orRegisterWith": "Elige cómo deseas registrarte",
+      "orRegisterWith": "Selecciona el método que prefieras para crear tu cuenta",
       "registerAsUser": "Registrarse como Usuario",
       "registerAsAuctioneer": "¿Deseas unirte como subastador?",
       "registerAsAuctioneerTitle": "Registro de Subastador",
@@ -672,6 +708,8 @@
       "loading": "Cargando...",
       "offer": "Offer",
       "alreadySold": "Ya fue vendido",
+      "noOffersMade": "No has realizado ninguna oferta",
+      "goToOnlineStore": "Ir a la tienda online",
       "offerExpired": "La oferta ha expirado",
       "payNow": "Pagar ahora",
       "article": "Article",
@@ -722,7 +760,8 @@
       "cancel": "Cancelar",
       "bids": "Pujas",
       "estimatedPrice": "Precio estimado",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "currentArticle": "Artículo actual"
     }
   },
   "components": {
