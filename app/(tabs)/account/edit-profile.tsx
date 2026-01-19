@@ -623,17 +623,6 @@ export default function EditProfileScreen() {
             </Button>
           </View>
 
-          {/* Back Button */}
-          <View className='mb-4'>
-            <Button
-              mode='secondary'
-              onPress={handleBack}
-              disabled={isLoading}
-            >
-              {t('screens.editProfile.back')}
-            </Button>
-          </View>
-
           {/* Espacio adicional al final */}
           <View className='h-8' />
         </View>
