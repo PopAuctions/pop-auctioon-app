@@ -116,7 +116,7 @@ export default function EditProfileScreen() {
         variant: 'success',
         description: 'screens.editProfile.updateSuccess',
       });
-      router.back();
+      router.push('/(tabs)/account');
       isSubmittingRef.current = false;
     } else if (updateStatus === REQUEST_STATUS.error && updateError) {
       callToast({
