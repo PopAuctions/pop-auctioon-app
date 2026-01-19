@@ -54,6 +54,11 @@ const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 const mockUseSegments = useSegments as jest.MockedFunction<typeof useSegments>;
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
+// Type fix: useSegments returns string[] but expo-router types are strict
+type SegmentsReturn = ReturnType<typeof useSegments>;
+const mockSegments = (segments: string[]) =>
+  mockUseSegments.mockReturnValue(segments as SegmentsReturn);
+
 describe('ProtectedRoute', () => {
   const mockRouter = {
     replace: jest.fn(),
@@ -89,7 +94,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [null, null],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'account']);
+      mockSegments(['(tabs)', 'account']);
 
       render(
         <ProtectedRoute>
@@ -111,7 +116,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should redirect to auth when accessing protected route without session', async () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'account']);
+      mockSegments(['(tabs)', 'account']);
 
       render(
         <ProtectedRoute>
@@ -125,7 +130,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should redirect to auth when accessing role-protected route without session', async () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'my-auctions']);
+      mockSegments(['(tabs)', 'my-auctions']);
 
       render(
         <ProtectedRoute>
@@ -139,7 +144,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should allow access to public routes without session', () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'auctions', 'calendar']);
+      mockSegments(['(tabs)', 'auctions', 'calendar']);
 
       render(
         <ProtectedRoute>
@@ -162,7 +167,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'account']);
+      mockSegments(['(tabs)', 'account']);
 
       render(
         <ProtectedRoute>
@@ -183,7 +188,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'AUCTIONEER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'my-auctions']);
+      mockSegments(['(tabs)', 'my-auctions']);
 
       render(
         <ProtectedRoute>
@@ -204,7 +209,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'my-auctions']);
+      mockSegments(['(tabs)', 'my-auctions']);
 
       render(
         <ProtectedRoute>
@@ -227,7 +232,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, null],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'my-auctions']);
+      mockSegments(['(tabs)', 'my-auctions']);
 
       render(
         <ProtectedRoute>
@@ -249,7 +254,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'auth', 'login']);
+      mockSegments(['(tabs)', 'auth', 'login']);
 
       render(
         <ProtectedRoute>
@@ -274,7 +279,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'account', 'edit-profile']);
+      mockSegments(['(tabs)', 'account', 'edit-profile']);
 
       render(
         <ProtectedRoute>
@@ -295,7 +300,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'account', 'info', '[page]']);
+      mockSegments(['(tabs)', 'account', 'info', '[page]']);
 
       render(
         <ProtectedRoute>
@@ -318,7 +323,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should allow access to home', () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'home']);
+      mockSegments(['(tabs)', 'home']);
 
       render(
         <ProtectedRoute>
@@ -330,7 +335,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should allow access to auctions', () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'auctions']);
+      mockSegments(['(tabs)', 'auctions']);
 
       render(
         <ProtectedRoute>
@@ -342,7 +347,7 @@ describe('ProtectedRoute', () => {
     });
 
     it('should allow access to store', () => {
-      mockUseSegments.mockReturnValue(['(tabs)', 'online-store']);
+      mockSegments(['(tabs)', 'online-store']);
 
       render(
         <ProtectedRoute>
@@ -361,7 +366,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [null, null],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'home']);
+      mockSegments(['(tabs)', 'account']);
 
       const { getByText } = render(
         <ProtectedRoute>
@@ -382,7 +387,7 @@ describe('ProtectedRoute', () => {
         getSession: () => [mockSession, 'USER' as UserRoles],
         signOut: jest.fn(),
       });
-      mockUseSegments.mockReturnValue(['(tabs)', 'account']);
+      mockSegments(['(tabs)', 'account']);
 
       const { getByText } = render(
         <ProtectedRoute>

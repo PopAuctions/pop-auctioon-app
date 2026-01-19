@@ -80,6 +80,11 @@ export const PROTECTED_ENDPOINTS = {
   AUTH: {
     SIGNUP: '/auth/signup', // POST - Registro de usuario
   },
+
+  // Onboarding (tutorial de primera vez)
+  ONBOARDING: {
+    SLIDES: '/onboarding/slides', // GET - Slides del tutorial
+  },
 } as const;
 
 // ========================================

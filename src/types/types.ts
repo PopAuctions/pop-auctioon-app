@@ -398,6 +398,21 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
 
 export type LangMap = Record<Lang, string>;
 
+export type OnboardingSlide = {
+  id: string;
+  title: LangMap;
+  description: LangMap;
+  imageUrl?: string; // URL from API
+  image?: any; // Local image (require('@/assets/...'))
+  order?: number; // Order from API
+};
+
+export type OnboardingTexts = {
+  skip: LangMap;
+  next: LangMap;
+  start: LangMap;
+};
+
 /**
  * Response type for React hooks that manage stateful data fetching
  * Includes React state setters and refetch capabilities

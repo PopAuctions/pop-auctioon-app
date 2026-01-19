@@ -16,6 +16,9 @@ export * from './onlineStore';
 // Localización e idiomas
 export * from './locales';
 
+// Onboarding
+export * from './onboarding';
+
 // Códigos de error
 export * from './errors';
 

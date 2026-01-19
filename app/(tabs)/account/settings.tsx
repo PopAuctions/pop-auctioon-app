@@ -9,10 +9,12 @@ import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
 import { LANGUAGE_OPTIONS } from '@/constants/app';
 import { Lang } from '@/types/types';
+import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+  const { resetOnboarding } = useOnboarding();
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
@@ -74,6 +76,41 @@ export default function SettingsScreen() {
                 className='text-white'
               >
                 {t('commonActions.confirm')}
+              </CustomText>
+            </Button>
+          </View>
+        </View>
+
+        <Divider />
+
+        {/* Onboarding Reset */}
+        <View className='mb-4 mt-4'>
+          <View className='flex-row items-center justify-between gap-3'>
+            <View className='flex-1'>
+              <CustomText
+                type='h3'
+                className='mb-1'
+              >
+                {t('screens.account.tutorial')}
+              </CustomText>
+              <CustomText
+                type='bodysmall'
+                className='text-gray-500'
+              >
+                {t('screens.account.tutorialDescription')}
+              </CustomText>
+            </View>
+
+            <Button
+              onPress={resetOnboarding}
+              mode='primary'
+              className='px-6'
+            >
+              <CustomText
+                type='body'
+                className='text-white'
+              >
+                {t('screens.account.viewTutorialAgain')}
               </CustomText>
             </Button>
           </View>

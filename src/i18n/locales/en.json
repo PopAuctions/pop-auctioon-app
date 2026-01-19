@@ -13,6 +13,11 @@
     "retry": "Retry",
     "or": "or"
   },
+  "onboarding": {
+    "errorLoadingTutorial": "Could not load tutorial",
+    "skipHint": "Skip the tutorial and continue to the app",
+    "slidesLabel": "Tutorial slides"
+  },
   "loginPage": {
     "login": "Login",
     "logout": "Logout",
@@ -353,6 +358,9 @@
       "changeLanguage": "Change language",
       "changingLanguage": "Changing language...",
       "languageChanged": "Language changed",
+      "tutorial": "Tutorial",
+      "viewTutorialAgain": "View tutorial again",
+      "tutorialDescription": "View the app introduction tutorial again",
       "aboutUs": "About Us",
       "login": "Sign in",
       "register": "Register",
@@ -791,5 +799,11 @@
     "sendError": "Could not send the message",
     "connectionError": "Error connecting to chat",
     "send": "Send"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "pageNotFound": "Oops! This page doesn't exist",
+    "description": "The page you're looking for is not available or has been moved",
+    "goHome": "Go to home"
   }
 }

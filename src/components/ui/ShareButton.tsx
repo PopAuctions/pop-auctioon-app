@@ -32,25 +32,37 @@ export function ShareButton({
   const { callToast } = useToast(lang);
 
   const handleShare = async () => {
-    const fullUrl = `${baseUrl}${pathname ?? ''}`;
-    const shareTitle = title?.[lang] ?? text[lang].fallback;
-
     try {
+      // Generate smart share URL that redirects based on device type
+      let path = pathname ?? '';
+
+      // Ensure path includes (tabs) group for proper routing
+      if (!path.includes('(tabs)')) {
+        path = `/(tabs)${path}`;
+      }
+
+      // Generate smart share URL with locale
+      const shareUrl = `${baseUrl}/api/share?url=${encodeURIComponent(path)}&locale=${lang}`;
+      const shareTitle = title?.[lang] ?? text[lang].fallback;
+
+      // Add haptic feedback
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
+      // Use native share modal (different payloads for iOS vs Android)
       const payload =
         Platform.OS === 'ios'
           ? {
-              message: `${shareTitle}\n${fullUrl}`,
-              url: fullUrl,
+              message: `${shareTitle}\n${shareUrl}`,
+              url: shareUrl,
             }
           : {
-              message: fullUrl,
-              shareTitle,
+              message: shareUrl,
+              title: shareTitle,
             };
 
       await Share.share(payload);
-    } catch {
+    } catch (error) {
+      console.error('Error sharing URL', error);
       callToast({
         variant: 'error',
         description: {

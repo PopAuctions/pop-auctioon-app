@@ -13,6 +13,11 @@
     "retry": "Reintentar",
     "or": "ó"
   },
+  "onboarding": {
+    "errorLoadingTutorial": "No se pudo cargar el tutorial",
+    "skipHint": "Omitir el tutorial y continuar a la aplicación",
+    "slidesLabel": "Diapositivas del tutorial"
+  },
   "loginPage": {
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
@@ -353,6 +358,9 @@
       "changeLanguage": "Cambiar idioma",
       "changingLanguage": "Cambiando idioma...",
       "languageChanged": "Idioma cambiado",
+      "tutorial": "Tutorial",
+      "viewTutorialAgain": "Ver tutorial de nuevo",
+      "tutorialDescription": "Vuelve a ver el tutorial de introducción a la aplicación",
       "aboutUs": "Acerca de Nosotros",
       "login": "Iniciar Sesión",
       "register": "Registrarse",
@@ -801,5 +809,11 @@
     "sendError": "No se pudo enviar el mensaje",
     "connectionError": "Error al conectar con el chat",
     "send": "Enviar"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "pageNotFound": "¡Ups! Esta página no existe",
+    "description": "La página que buscas no está disponible o ha sido movida",
+    "goHome": "Ir al inicio"
   }
 }

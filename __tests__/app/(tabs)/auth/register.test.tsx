@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import RegisterScreen from '@/app/(tabs)/auth/register';
 import { router } from 'expo-router';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 // Mock dependencies
 jest.mock('expo-router', () => ({
@@ -11,16 +12,26 @@ jest.mock('expo-router', () => ({
   },
 }));
 
+jest.mock('@/hooks/i18n/useTranslation', () => ({
+  useTranslation: jest.fn(),
+}));
+
 describe('RegisterScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (useTranslation as jest.Mock).mockReturnValue({
+      t: (key: string) => key,
+      locale: 'en',
+      changeLanguage: jest.fn(),
+      isPending: false,
+    });
   });
 
   it('should render registration options screen', () => {
     render(<RegisterScreen />);
 
-    expect(screen.getByText('Register Options')).toBeTruthy();
-    expect(screen.getByText('Choose how you want to register')).toBeTruthy();
+    expect(screen.getByText('screens.account.registerOptions')).toBeTruthy();
+    expect(screen.getByText('screens.account.orRegisterWith')).toBeTruthy();
   });
 
   it('should render provider buttons (Google, Apple)', () => {
@@ -38,7 +49,7 @@ describe('RegisterScreen', () => {
     const googleButton = screen.getByText(/Google/i);
     fireEvent.press(googleButton);
 
-    expect(consoleSpy).toHaveBeenCalledWith('Provider seleccionado: Google');
+    expect(consoleSpy).toHaveBeenCalledWith('Selected provider: Google');
 
     consoleSpy.mockRestore();
   });
@@ -46,7 +57,9 @@ describe('RegisterScreen', () => {
   it('should navigate to register-user when user registration pressed', () => {
     render(<RegisterScreen />);
 
-    const registerUserButton = screen.getByText('Register as User');
+    const registerUserButton = screen.getByText(
+      'screens.account.registerAsUser'
+    );
     fireEvent.press(registerUserButton);
 
     expect(router.push).toHaveBeenCalledWith('/(tabs)/auth/register-user');
@@ -56,7 +69,7 @@ describe('RegisterScreen', () => {
     render(<RegisterScreen />);
 
     const registerAuctioneerLink = screen.getByText(
-      'Want to join as auctioneer?'
+      'screens.account.registerAsAuctioneer'
     );
     fireEvent.press(registerAuctioneerLink);
 
@@ -68,14 +81,14 @@ describe('RegisterScreen', () => {
   it('should render divider between sections', () => {
     render(<RegisterScreen />);
 
-    // Verify divider text exists
-    expect(screen.getByText('or')).toBeTruthy();
+    // Verify divider text exists (uses translation key)
+    expect(screen.getByText('commonActions.or')).toBeTruthy();
   });
 
   it('should render register as user button as primary mode', () => {
     render(<RegisterScreen />);
 
-    const registerUserButton = screen.getByText('Register as User');
+    const registerUserButton = screen.getByTestId('ui-button');
     // Button component wraps text, so we just verify it renders
     expect(registerUserButton).toBeTruthy();
   });
@@ -83,17 +96,20 @@ describe('RegisterScreen', () => {
   it('should render both provider buttons', () => {
     render(<RegisterScreen />);
 
-    expect(screen.getByText(/Continue with.*Google/)).toBeTruthy();
-    expect(screen.getByText(/Continue with.*Apple/)).toBeTruthy();
+    // Providers render their names directly (not translated)
+    expect(screen.getByText(/Google/i)).toBeTruthy();
+    expect(screen.getByText(/Apple/i)).toBeTruthy();
   });
 
   it('should render all main sections', () => {
     render(<RegisterScreen />);
 
-    // Verify all main content is rendered
-    expect(screen.getByText('Register Options')).toBeTruthy();
-    expect(screen.getByText(/Continue with.*Google/)).toBeTruthy();
-    expect(screen.getByText('Register as User')).toBeTruthy();
-    expect(screen.getByText('Want to join as auctioneer?')).toBeTruthy();
+    // Verify all main content is rendered (using translation keys)
+    expect(screen.getByText('screens.account.registerOptions')).toBeTruthy();
+    expect(screen.getByText(/Google/i)).toBeTruthy();
+    expect(screen.getByText('screens.account.registerAsUser')).toBeTruthy();
+    expect(
+      screen.getByText('screens.account.registerAsAuctioneer')
+    ).toBeTruthy();
   });
 });

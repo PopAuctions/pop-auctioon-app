@@ -5,6 +5,16 @@ import InfoScreen from '@/app/(tabs)/account/info/[page]';
 
 const mockUseLocalSearchParams = jest.fn();
 
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: () =>
+        Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+    },
+  },
+}));
+
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockUseLocalSearchParams(),
   Stack: {
@@ -14,6 +24,34 @@ jest.mock('expo-router', () => ({
 
 jest.mock('@/hooks/i18n/useTranslation', () => ({
   useTranslation: () => mockTranslation,
+}));
+
+jest.mock('@/hooks/pages/useFetchLegalContent', () => ({
+  useFetchLegalContent: () => ({
+    data: {
+      privacyPolicy: { es: 'Privacy Policy ES', en: 'Privacy Policy EN' },
+      cookiesPolicy: { es: 'Cookies Policy ES', en: 'Cookies Policy EN' },
+    },
+    status: 'success',
+    errorMessage: null,
+  }),
+}));
+
+jest.mock('@/hooks/pages/useFetchInfo', () => ({
+  useFetchInfo: () => ({
+    data: {
+      aboutUs: { es: 'About Us ES', en: 'About Us EN' },
+      howItWorks: { es: 'How It Works ES', en: 'How It Works EN' },
+      faqs: [
+        {
+          question: { es: 'Q1 ES', en: 'Q1 EN' },
+          answer: { es: 'A1 ES', en: 'A1 EN' },
+        },
+      ],
+    },
+    status: 'success',
+    errorMessage: null,
+  }),
 }));
 
 jest.mock('@/components/info/AboutUsContent', () => {

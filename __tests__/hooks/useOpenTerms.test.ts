@@ -4,6 +4,15 @@ import { useToast } from '@/hooks/useToast';
 import * as Linking from 'expo-linking';
 
 // Mock dependencies
+jest.mock('@/utils/supabase/supabase-store', () => ({
+  supabase: {
+    auth: {
+      getSession: () =>
+        Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+    },
+  },
+}));
 jest.mock('@/hooks/useToast');
 jest.mock('expo-linking');
 
