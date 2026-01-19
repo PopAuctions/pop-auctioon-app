@@ -164,24 +164,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* MY ONLINE STORE tab - only visible for AUCTIONEER */}
-      <Tabs.Screen
-        name='my-online-store'
-        options={{
-          title: t('tabsNames.myOnlineStore'),
-          headerShown: false,
-          href: session && role === 'AUCTIONEER' ? undefined : null,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome
-              name='shopping-bag'
-              size={28}
-              style={{ marginBottom: -3 }}
-              color={color}
-            />
-          ),
-        }}
-      />
-
       {/* ACCOUNT tab - only visible for logged users */}
       <Tabs.Screen
         name='account'
