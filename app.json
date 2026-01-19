@@ -47,20 +47,19 @@
       "expo-notifications",
       "expo-font",
       [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "expo-pop-auctioon",
-          "organization": "pop-auctioon"
-        }
+        [
+          "@sentry/react-native/expo",
+          {
+            "url": "https://sentry.io/",
+            "project": "react-native-pop-auctioon",
+            "organization": "pop-auctioon"
+          }
+        ]
       ],
       [
         "expo-localization",
         {
-          "supportedLocales": [
-            "es",
-            "en"
-          ]
+          "supportedLocales": ["es", "en"]
         }
       ],
       [
@@ -71,10 +70,7 @@
         }
       ],
       "@sentry/react-native",
-      [
-        "@stripe/stripe-react-native",
-        {}
-      ],
+      ["@stripe/stripe-react-native", {}],
       "expo-web-browser"
     ],
     "experiments": {
