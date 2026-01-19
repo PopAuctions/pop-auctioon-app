@@ -7,7 +7,7 @@ import React, {
   ReactNode,
 } from 'react';
 import * as Notifications from 'expo-notifications';
-import { AppState, AppStateStatus } from 'react-native';
+import { AppState, AppStateStatus, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerForPushNotificationsAsync } from '@/utils/notifications/registerForPushNotifications';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
@@ -111,13 +111,18 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       try {
         console.log('📡 Registering push token via backend...');
 
-        // Build request data - include user_id only if provided
-        const requestData: { token: string; user_id?: string } = { token };
+        // Build request data - include platform and user_id if provided
+        const requestData: {
+          token: string;
+          platform: 'ios' | 'android' | 'web';
+          user_id?: string;
+        } = {
+          token,
+          platform: Platform.OS as 'ios' | 'android' | 'web',
+        };
+
         if (userId) {
           requestData.user_id = userId;
-          console.log('📡 Registering with user_id:', userId);
-        } else {
-          console.log('📡 Registering without user_id (unauthenticated)');
         }
 
         const response = await protectedPost({
@@ -145,10 +150,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         if (token && !hasRegisteredToken.current) {
           hasRegisteredToken.current = true; // Mark as registered
           setExpoPushToken(token);
-          console.log('\n🎯 ============================================');
-          console.log('📱 EXPO PUSH TOKEN (copy for testing):');
-          console.log(token);
-          console.log('🎯 ============================================\n');
 
           // 🔄 Check if token changed (reinstallation detection)
           try {
@@ -307,10 +308,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
-            console.log('ERROR_UPDATE_TOKEN_ON_FOREGROUND', response.error);
+            // Error already captured by Sentry in registerPushToken
           }
         } catch (error) {
-          console.log('ERROR_UPDATE_TOKEN_CATCH', error);
+          // Error already captured by Sentry
         }
       }
     };
