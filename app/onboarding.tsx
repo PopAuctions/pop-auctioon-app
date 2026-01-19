@@ -165,8 +165,6 @@ export default function OnboardingScreen() {
                     )
                   }
                 />
-                {/* Dark overlay for better text readability */}
-                <View className='absolute inset-0 bg-black/40' />
               </View>
 
               {/* Text Content - Overlay on top */}

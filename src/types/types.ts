@@ -404,7 +404,6 @@ export type OnboardingSlide = {
   description: LangMap;
   imageUrl?: string; // URL from API
   image?: any; // Local image (require('@/assets/...'))
-  bgColor: string;
   order?: number; // Order from API
 };
 

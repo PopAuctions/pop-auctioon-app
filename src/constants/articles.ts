@@ -954,22 +954,6 @@ export const ARTICLE_CATEGORIES_FILTER_LIST: Record<string, CategoryFilter[]> =
     ],
   };
 
-export const ONLINE_STORE_ARTICLE_STATUS_LABELS: {
-  es: Record<ArticleSecondChanceStatus, string>;
-  en: Record<ArticleSecondChanceStatus, string>;
-} = {
-  es: {
-    NOT_AVAILABLE: 'No disponible',
-    AVAILABLE: 'Disponible',
-    SOLD: 'Vendido',
-  },
-  en: {
-    NOT_AVAILABLE: 'Not available',
-    AVAILABLE: 'Available',
-    SOLD: 'Sold',
-  },
-};
-
 export const ONLINE_STORE_ARTICLE_STATUS = {
   es: [
     { value: 'NOT_AVAILABLE', label: 'No disponible' },
