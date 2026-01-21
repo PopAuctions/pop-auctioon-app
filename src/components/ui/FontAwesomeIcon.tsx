@@ -6,8 +6,15 @@ type FA4Props = ComponentProps<typeof FontAwesome>;
 type FA5Props = ComponentProps<typeof FontAwesome5>;
 type FA6Props = ComponentProps<typeof FontAwesome6>;
 
+export enum VariantEnum {
+  NORMAL = 'normal',
+  LIGHT = 'light',
+  BOLD = 'bold',
+}
+export type Variant = `${VariantEnum}`;
+
 type NormalIconProps = {
-  variant?: 'normal';
+  variant?: `${VariantEnum.NORMAL}`;
   name: FA4Props['name'];
   size?: FA4Props['size'];
   color?: `#${string}` | 'cinnabar';
@@ -15,7 +22,7 @@ type NormalIconProps = {
 };
 
 type LightIconProps = {
-  variant: 'light';
+  variant: `${VariantEnum.LIGHT}`;
   name: FA5Props['name'];
   size?: FA5Props['size'];
   color?: `#${string}` | 'cinnabar';
@@ -23,7 +30,7 @@ type LightIconProps = {
 };
 
 type BoldIconProps = {
-  variant: 'bold';
+  variant: `${VariantEnum.BOLD}`;
   name: FA6Props['name'];
   size?: FA6Props['size'];
   color?: `#${string}` | 'cinnabar';
