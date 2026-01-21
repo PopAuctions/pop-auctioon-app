@@ -1,3 +1,6 @@
+import { Variant, VariantEnum } from '@/components/ui/FontAwesomeIcon';
+import { APP_USER_ROLES } from './user';
+
 export const FIRST_SECTION = [
   {
     name: 'articles-won',
@@ -62,10 +65,26 @@ export const FIRST_SECTION = [
   },
 ];
 
-export const SECOND_SECTION = [
+export const SECOND_SECTION: {
+  name: string;
+  icon: string;
+  variant: Variant;
+  labelKey: string;
+  href: string;
+  role?: keyof typeof APP_USER_ROLES;
+}[] = [
+  {
+    name: 'sold-articles',
+    icon: 'money-bill-wave-alt',
+    variant: VariantEnum.NORMAL,
+    labelKey: 'screens.account.soldArticles',
+    href: '/(tabs)/account/sold-articles',
+    role: APP_USER_ROLES.AUCTIONEER,
+  },
   {
     name: 'settings',
     icon: 'gear',
+    variant: VariantEnum.BOLD,
     labelKey: 'screens.account.settings',
     href: '/(tabs)/account/settings',
   },

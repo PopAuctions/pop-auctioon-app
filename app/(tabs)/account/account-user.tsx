@@ -18,6 +18,7 @@ import {
   SECOND_SECTION,
   THIRD_SECTION,
 } from '@/constants/session';
+import { APP_USER_ROLES } from '@/constants';
 
 export default function Account({ currentUser }: { currentUser: User }) {
   const { signOut } = useAuth();
@@ -143,44 +144,52 @@ export default function Account({ currentUser }: { currentUser: User }) {
 
         {/* Settings */}
         <View className='mx-2 p-2'>
-          {SECOND_SECTION.map(({ name, icon, labelKey, href }) => (
-            <CustomLink
-              key={name}
-              href={href}
-              mode='empty'
-              hoverEffect={false}
-              className='flex-row items-center justify-between py-4'
-            >
-              <View className='flex-row items-center'>
-                <View className='mr-4 h-10 w-10 items-center justify-center'>
-                  <FontAwesomeIcon
-                    variant='bold'
-                    name={icon}
-                    size={20}
-                    color='#4d4d4d'
-                  />
-                </View>
+          {SECOND_SECTION.map(
+            ({ name, icon, labelKey, href, role, variant }) => {
+              if (role && currentUser.role !== APP_USER_ROLES.AUCTIONEER) {
+                return null;
+              }
 
-                <View className='h-10 justify-center'>
-                  <CustomText
-                    type='body'
-                    className='leading-[20px]'
-                  >
-                    {t(labelKey as any)}
-                  </CustomText>
-                </View>
-              </View>
+              return (
+                <CustomLink
+                  key={name}
+                  href={href}
+                  mode='empty'
+                  hoverEffect={false}
+                  className='flex-row items-center justify-between py-4'
+                >
+                  <View className='flex-row items-center'>
+                    <View className='mr-4 h-10 w-10 items-center justify-center'>
+                      <FontAwesomeIcon
+                        variant={variant as any}
+                        name={icon}
+                        size={20}
+                        color='#4d4d4d'
+                      />
+                    </View>
 
-              <View className='h-10 justify-center'>
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='chevron-right'
-                  size={16}
-                  color='#9ca3af'
-                />
-              </View>
-            </CustomLink>
-          ))}
+                    <View className='h-10 justify-center'>
+                      <CustomText
+                        type='body'
+                        className='leading-[20px]'
+                      >
+                        {t(labelKey as any)}
+                      </CustomText>
+                    </View>
+                  </View>
+
+                  <View className='h-10 justify-center'>
+                    <FontAwesomeIcon
+                      variant='bold'
+                      name='chevron-right'
+                      size={16}
+                      color='#9ca3af'
+                    />
+                  </View>
+                </CustomLink>
+              );
+            }
+          )}
         </View>
 
         <Divider />
