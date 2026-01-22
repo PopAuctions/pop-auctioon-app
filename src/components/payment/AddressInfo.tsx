@@ -35,7 +35,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-2/3'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.name}:
             </CustomText>
@@ -50,7 +50,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-1/3'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.phone}:
             </CustomText>
@@ -65,7 +65,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-2/3'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.email}:
             </CustomText>
@@ -80,7 +80,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-1/3'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.dni}:
             </CustomText>
@@ -98,7 +98,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-full'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.address}:
             </CustomText>
@@ -113,7 +113,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-1/2'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.country}:
             </CustomText>
@@ -128,7 +128,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-1/2'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.city}:
             </CustomText>
@@ -143,7 +143,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-1/2'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.state}:
             </CustomText>
@@ -158,7 +158,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='mb-2 w-1/2'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.postalCode}:
             </CustomText>
@@ -178,7 +178,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='w-1/2'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.shippingCourier}:
             </CustomText>
@@ -193,7 +193,7 @@ export function AddressInfo({ userAddress, user, paymentCourierInfo }: Props) {
           <View className='w-1/2'>
             <CustomText
               type='body'
-              className='text-base font-bold'
+              className='text-lg font-bold'
             >
               {paymentsDict.trackingNumber}:
             </CustomText>

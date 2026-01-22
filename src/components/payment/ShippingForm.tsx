@@ -4,11 +4,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/useToast';
-import { CustomText } from '../ui/CustomText';
-import { Input } from '../ui/Input';
+import { CustomText } from '@/components/ui/CustomText';
+import { Input } from '@/components/ui/Input';
 import { getErrorMessage } from '@/utils/form-errors';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { Button } from '../ui/Button';
+import { Button } from '@/components/ui/Button';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { LangMap } from '@/types/types';
 
 interface PaymentCourierInfo {
   courier?: string | null;
@@ -23,6 +26,7 @@ const ShippingInfoSchema = z.object({
 type ShippingInfoSchemaType = z.infer<typeof ShippingInfoSchema>;
 
 type ShippingFormProps = {
+  articleId: string;
   paymentId: string;
   paymentCourierInfo: PaymentCourierInfo;
   paymentsDict: {
@@ -38,12 +42,14 @@ type ShippingFormProps = {
 };
 
 export function ShippingForm({
+  articleId,
   paymentId,
   paymentCourierInfo,
   paymentsDict,
 }: ShippingFormProps) {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
+  const { securePost } = useSecureApi();
   const [isLoading, setIsLoading] = useState(false);
 
   const defaultValues = useMemo(
@@ -67,18 +73,29 @@ export function ShippingForm({
     try {
       setIsLoading(true);
 
-      // const { error, success } = await updateShippingInfo({
-      //   paymentId,
-      //   shippingCourier: values.shippingCourier ?? '',
-      //   shippingNumber: values.shippingNumber ?? '',
-      // });
+      const params = {
+        paymentId,
+        shippingCourier: values.shippingCourier ?? '',
+        shippingNumber: values.shippingNumber ?? '',
+      };
 
-      // if (error) {
-      //   callToast({ variant: 'error', description: error });
-      //   return;
-      // }
+      const response = await securePost<LangMap | null>({
+        endpoint: SECURE_ENDPOINTS.USER.UPDATE_SHIPPING_INFORMATION(articleId),
+        data: params,
+      });
 
-      // callToast({ variant: 'success', description: success });
+      if (response.error) {
+        callToast({ variant: 'error', description: response.error });
+        return;
+      }
+
+      callToast({
+        variant: 'success',
+        description: response?.data ?? {
+          es: 'Información de envío actualizada correctamente.',
+          en: 'Shipping information updated successfully.',
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -114,7 +131,6 @@ export function ShippingForm({
                 onChangeText={onChange}
                 onBlur={onBlur}
                 placeholder={t('screens.payments.shippingCourier')}
-                keyboardType='number-pad'
                 editable={!isLoading}
               />
             )}
@@ -148,7 +164,6 @@ export function ShippingForm({
                 onChangeText={onChange}
                 onBlur={onBlur}
                 placeholder={t('screens.payments.trackingNumber')}
-                keyboardType='number-pad'
                 editable={!isLoading}
               />
             )}

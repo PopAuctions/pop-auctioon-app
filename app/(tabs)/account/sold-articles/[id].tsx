@@ -122,6 +122,7 @@ export default function SoldArticleScreen() {
 
                   <View>
                     <ShippingForm
+                      articleId={String(article.Article.id)}
                       paymentId={String(payment.id)}
                       paymentCourierInfo={paymentCourierInfo}
                       paymentsDict={paymentsDict}

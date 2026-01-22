@@ -198,6 +198,8 @@ export const SECURE_ENDPOINTS = {
     SOLD_ARTICLES: '/user/sold-articles', // GET - Artículos vendidos
     SOLD_ARTICLE: (articleId: string): ApiEndpoint =>
       `/user/sold-articles/${articleId}` as ApiEndpoint, // GET - Artículo vendido
+    UPDATE_SHIPPING_INFORMATION: (articleId: string): ApiEndpoint =>
+      `/user/sold-articles/${articleId}/update-shipping-information` as ApiEndpoint, // GET - Artículo vendido
     RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
