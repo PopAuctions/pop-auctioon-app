@@ -65,7 +65,7 @@ export default function SoldArticlesScreen() {
             <SoldArticleItem
               key={article.id}
               article={article}
-              reviewUrl={`/(tabs)/account/sold-articles/${article.id}`}
+              reviewUrl={`/(tabs)/account/sold-articles/${article.Article.id}`}
               lang={locale}
               texts={{
                 soldPrice: t('screens.soldArticles.soldPrice'),

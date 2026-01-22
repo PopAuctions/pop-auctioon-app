@@ -619,6 +619,43 @@ export interface CustomPaidArticle {
   };
 }
 
+export interface CustomPaidArticleFull {
+  id: string;
+  status: WonArticleStatus;
+  changedBidder: boolean;
+  Article: CustomArticle & {
+    Auction: Pick<Auction, 'id' | 'title'>;
+  };
+  User?: Pick<
+    User,
+    | 'id'
+    | 'username'
+    | 'email'
+    | 'name'
+    | 'lastName'
+    | 'phoneNumber'
+    | 'dni'
+    | 'phoneNumber'
+  >;
+  Owner?: ArticleOwner;
+  payment?: UserPayment & {
+    UserAddress: Pick<
+      UserAddress,
+      'address' | 'city' | 'country' | 'state' | 'postalCode'
+    >;
+    User: Pick<
+      User,
+      'username' | 'email' | 'name' | 'lastName' | 'phoneNumber'
+    >;
+    Auction?: Pick<Auction, 'id' | 'title'>;
+  };
+}
+
+export type CustomUser = Pick<
+  User,
+  'id' | 'username' | 'email' | 'name' | 'lastName' | 'dni' | 'phoneNumber'
+>;
+
 export const ArticleSecondChanceStatusConst: Record<
   ArticleSecondChanceStatus,
   string
