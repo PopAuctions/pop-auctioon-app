@@ -54,6 +54,8 @@ export const useAuthNavigation = () => {
         );
       }
 
+      setIsNavigating(true);
+
       // 🔄 Auto-detect if we need to build navigation stack
       if (shouldBuildStack(href)) {
         const parentRoute = getParentRoute(href);
@@ -65,15 +67,22 @@ export const useAuthNavigation = () => {
           console.log('  Parent:', parentRoute);
           console.log('  Destination:', href);
 
-          // Mount stack and navigate in single synchronous operation
-          router.replace(parentRoute as Href);
-          router.push(href as Href);
+          // Navigate to parent first to mount the stack
+          router.push(parentRoute as Href);
+
+          // Then navigate to final destination
+          setTimeout(() => {
+            if (options?.replace) {
+              router.replace(href as Href);
+            } else {
+              router.push(href as Href);
+            }
+            setIsNavigating(false);
+          }, 100);
 
           return true;
         }
       }
-
-      setIsNavigating(true);
 
       // Direct navigation for same-stack or root routes
       if (options?.replace) {
