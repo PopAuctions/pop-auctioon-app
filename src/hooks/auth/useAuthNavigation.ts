@@ -65,13 +65,9 @@ export const useAuthNavigation = () => {
           console.log('  Parent:', parentRoute);
           console.log('  Destination:', href);
 
-          // Use replace for parent to avoid visual flash (no history entry)
+          // Mount stack and navigate in single synchronous operation
           router.replace(parentRoute as Href);
-
-          // Immediately navigate to final destination
-          setTimeout(() => {
-            router.push(href as Href);
-          }, 10);
+          router.push(href as Href);
 
           return true;
         }
