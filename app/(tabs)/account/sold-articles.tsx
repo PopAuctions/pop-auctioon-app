@@ -60,7 +60,7 @@ export default function SoldArticlesScreen() {
       </View>
 
       {articlesSold ? (
-        <>
+        <View className='gap-4'>
           {articlesSold.map((article) => (
             <SoldArticleItem
               key={article.id}
@@ -76,7 +76,7 @@ export default function SoldArticlesScreen() {
               }}
             />
           ))}
-        </>
+        </View>
       ) : (
         <View className='flex-1 items-center justify-center px-6'>
           <CustomText
