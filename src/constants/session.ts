@@ -75,7 +75,7 @@ export const SECOND_SECTION: {
 }[] = [
   {
     name: 'sold-articles',
-    icon: 'money-bill-wave-alt',
+    icon: 'money-bill',
     variant: VariantEnum.NORMAL,
     labelKey: 'screens.account.soldArticles',
     href: '/(tabs)/account/sold-articles',

@@ -1,4 +1,4 @@
-import { OFFERS_OPTIONS_VALUES } from '@/constants';
+import { OFFERS_OPTIONS_VALUES, WonArticleStatus } from '@/constants';
 import { type Database } from '@/types/supabase';
 import { ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
@@ -604,6 +604,20 @@ export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
 } as const;
 
 export type ArticleCategories = Database['public']['Enums']['ArticleCategory'];
+
+export interface CustomPaidArticle {
+  id: string;
+  status: WonArticleStatus;
+  Article: Pick<CustomArticle, 'id' | 'title' | 'images' | 'soldPrice'> & {
+    Auction: Pick<Auction, 'id' | 'title'>;
+  };
+  payment?: {
+    id: string;
+    status: string;
+  } & {
+    Auction?: Pick<Auction, 'id' | 'title'>;
+  };
+}
 
 export const ArticleSecondChanceStatusConst: Record<
   ArticleSecondChanceStatus,
