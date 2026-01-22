@@ -14,6 +14,7 @@ import { PaymentSummary } from '@/components/payment/PaymentSummary';
 import { AddressInfo } from '@/components/payment/AddressInfo';
 import { Button } from '@/components/ui/Button';
 import { ShippingForm } from '@/components/payment/ShippingForm';
+import { ConfirmModal } from '@/components/modal/ConfirmModal';
 
 export default function SoldArticleScreen() {
   const { t, locale } = useTranslation();
@@ -212,10 +213,29 @@ export default function SoldArticleScreen() {
                         </View>
 
                         <View className='items-center'>
-                          {/* Replace with <SecondHighestBidderButton ... /> */}
-                          <Button mode='secondary'>
+                          <ConfirmModal
+                            mode='primary'
+                            // onConfirm={async () => {
+                            //   await handleAcceptOffer(offer.id);
+                            // }}
+                            onConfirm={() => {}}
+                            // isDisabled={isLoading}
+                            title={{
+                              es: 'Otorgar a segundo mayor postor',
+                              en: 'Grant to second highest bidder',
+                            }}
+                            description={{
+                              es: '¿Está seguro de que desea otorgar el artículo al segundo mayor postor?',
+                              en: 'Are you sure you want to grant the article to the second highest bidder?',
+                            }}
+                            importantMessage={{
+                              es: 'No podrás revertir esta acción.',
+                              en: 'You will not be able to revert this action.',
+                            }}
+                            locale={locale}
+                          >
                             {paymentsDict.grantToSecondUser}
-                          </Button>
+                          </ConfirmModal>
                         </View>
                       </View>
                     ) : (
