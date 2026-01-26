@@ -3,6 +3,9 @@
  */
 import type { Lang, LocaleLabels, Country } from '@/types/types';
 
+// AsyncStorage key for user's language preference
+export const LANGUAGE_STORAGE_KEY = '@app_language';
+
 export const LOCALES: LocaleLabels = {
   es: { value: 'es', label: 'Es', ariaLabel: 'Cambiar a español' },
   en: { value: 'en', label: 'En', ariaLabel: 'Change to english' },

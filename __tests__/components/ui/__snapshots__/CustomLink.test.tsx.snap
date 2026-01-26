@@ -6,7 +6,7 @@ exports[`CustomLink Custom styling should apply custom className 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -20,9 +20,12 @@ exports[`CustomLink Custom styling should apply custom className 1`] = `
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out custom-link-class"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -30,9 +33,10 @@ exports[`CustomLink Custom styling should apply custom className 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   Custom Class Link
@@ -45,7 +49,7 @@ exports[`CustomLink Custom styling should apply custom style 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -59,9 +63,12 @@ exports[`CustomLink Custom styling should apply custom style 1`] = `
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -69,11 +76,13 @@ exports[`CustomLink Custom styling should apply custom style 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "backgroundColor": "red",
-      "opacity": 1,
-      "padding": 20,
-    }
+    [
+      {
+        "backgroundColor": "red",
+        "padding": 20,
+      },
+      null,
+    ]
   }
 >
   Custom Style Link
@@ -86,7 +95,7 @@ exports[`CustomLink Custom styling should combine custom className and style 1`]
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -100,9 +109,12 @@ exports[`CustomLink Custom styling should combine custom className and style 1`]
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out rounded-xl"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -110,10 +122,12 @@ exports[`CustomLink Custom styling should combine custom className and style 1`]
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "borderWidth": 2,
-      "opacity": 1,
-    }
+    [
+      {
+        "borderWidth": 2,
+      },
+      null,
+    ]
   }
 >
   Combined Styling
@@ -126,7 +140,7 @@ exports[`CustomLink Custom styling should handle undefined className 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -140,9 +154,12 @@ exports[`CustomLink Custom styling should handle undefined className 1`] = `
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -150,9 +167,10 @@ exports[`CustomLink Custom styling should handle undefined className 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   Undefined Class
@@ -165,7 +183,7 @@ exports[`CustomLink Edge cases and error handling should handle boolean children
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -179,9 +197,12 @@ exports[`CustomLink Edge cases and error handling should handle boolean children
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -189,9 +210,10 @@ exports[`CustomLink Edge cases and error handling should handle boolean children
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 />
 `;
@@ -202,7 +224,7 @@ exports[`CustomLink Edge cases and error handling should handle null children gr
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -216,9 +238,12 @@ exports[`CustomLink Edge cases and error handling should handle null children gr
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -226,9 +251,10 @@ exports[`CustomLink Edge cases and error handling should handle null children gr
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 />
 `;
@@ -239,7 +265,7 @@ exports[`CustomLink External redirect prop should render with outsideRedirect pr
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -253,9 +279,12 @@ exports[`CustomLink External redirect prop should render with outsideRedirect pr
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -263,9 +292,10 @@ exports[`CustomLink External redirect prop should render with outsideRedirect pr
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   External Link
@@ -278,7 +308,7 @@ exports[`CustomLink External redirect prop should render without outsideRedirect
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -292,9 +322,12 @@ exports[`CustomLink External redirect prop should render without outsideRedirect
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -302,9 +335,10 @@ exports[`CustomLink External redirect prop should render without outsideRedirect
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   Internal Link
@@ -317,7 +351,7 @@ exports[`CustomLink Hover and interaction effects should apply hover effects by 
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -331,9 +365,12 @@ exports[`CustomLink Hover and interaction effects should apply hover effects by 
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80 px-7 py-3 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -341,13 +378,14 @@ exports[`CustomLink Hover and interaction effects should apply hover effects by 
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-white "
+    className="text-center text-lg font-normal text-white"
   >
     Hover Link
   </Text>
@@ -360,7 +398,7 @@ exports[`CustomLink Hover and interaction effects should disable hover effects w
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -374,9 +412,12 @@ exports[`CustomLink Hover and interaction effects should disable hover effects w
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80 px-7 py-3"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -384,13 +425,14 @@ exports[`CustomLink Hover and interaction effects should disable hover effects w
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-white "
+    className="text-center text-lg font-normal text-white"
   >
     No Hover Link
   </Text>
@@ -403,7 +445,7 @@ exports[`CustomLink Link modes and styling should render empty mode (default) 1`
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -417,9 +459,12 @@ exports[`CustomLink Link modes and styling should render empty mode (default) 1`
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -427,9 +472,10 @@ exports[`CustomLink Link modes and styling should render empty mode (default) 1`
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   Empty Mode
@@ -442,7 +488,7 @@ exports[`CustomLink Link modes and styling should render plainText mode 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -456,9 +502,12 @@ exports[`CustomLink Link modes and styling should render plainText mode 1`] = `
     }
   }
   accessible={true}
+  className="active:opacity-70 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -466,9 +515,10 @@ exports[`CustomLink Link modes and styling should render plainText mode 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
@@ -485,7 +535,7 @@ exports[`CustomLink Link modes and styling should render primary mode 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -499,9 +549,12 @@ exports[`CustomLink Link modes and styling should render primary mode 1`] = `
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80 px-7 py-3 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -509,13 +562,14 @@ exports[`CustomLink Link modes and styling should render primary mode 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-white "
+    className="text-center text-lg font-normal text-white"
   >
     Primary Link
   </Text>
@@ -528,7 +582,7 @@ exports[`CustomLink Link modes and styling should render secondary mode 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -542,9 +596,12 @@ exports[`CustomLink Link modes and styling should render secondary mode 1`] = `
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-white border border-silver active:opacity-80 px-[27px] py-[11px] active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -552,13 +609,14 @@ exports[`CustomLink Link modes and styling should render secondary mode 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-cinnabar "
+    className="text-center text-lg font-normal text-cinnabar"
   >
     Secondary Link
   </Text>
@@ -571,7 +629,7 @@ exports[`CustomLink Link sizes should handle plainText size variations 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -585,9 +643,12 @@ exports[`CustomLink Link sizes should handle plainText size variations 1`] = `
     }
   }
   accessible={true}
+  className="active:opacity-70 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -595,9 +656,10 @@ exports[`CustomLink Link sizes should handle plainText size variations 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
@@ -614,7 +676,7 @@ exports[`CustomLink Link sizes should render large size by default 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -628,9 +690,12 @@ exports[`CustomLink Link sizes should render large size by default 1`] = `
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80 px-7 py-3 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -638,13 +703,14 @@ exports[`CustomLink Link sizes should render large size by default 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-white "
+    className="text-center text-lg font-normal text-white"
   >
     Large Link
   </Text>
@@ -657,7 +723,7 @@ exports[`CustomLink Link sizes should render small primary link 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -671,9 +737,12 @@ exports[`CustomLink Link sizes should render small primary link 1`] = `
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80 px-4 py-2 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -681,13 +750,14 @@ exports[`CustomLink Link sizes should render small primary link 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-white "
+    className="text-center text-lg font-normal text-white"
   >
     Small Primary
   </Text>
@@ -700,7 +770,7 @@ exports[`CustomLink Link sizes should render small secondary link 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -714,9 +784,12 @@ exports[`CustomLink Link sizes should render small secondary link 1`] = `
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-white border border-silver active:opacity-80 px-[15px] py-[7px] active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -724,13 +797,14 @@ exports[`CustomLink Link sizes should render small secondary link 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-cinnabar "
+    className="text-center text-lg font-normal text-cinnabar"
   >
     Small Secondary
   </Text>
@@ -743,7 +817,7 @@ exports[`CustomLink Text rendering modes should apply underline for plainText mo
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -757,9 +831,12 @@ exports[`CustomLink Text rendering modes should apply underline for plainText mo
     }
   }
   accessible={true}
+  className="active:opacity-70 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -767,9 +844,10 @@ exports[`CustomLink Text rendering modes should apply underline for plainText mo
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
@@ -786,7 +864,7 @@ exports[`CustomLink Text rendering modes should render raw children for empty mo
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -800,9 +878,12 @@ exports[`CustomLink Text rendering modes should render raw children for empty mo
     }
   }
   accessible={true}
+  className="active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -810,9 +891,10 @@ exports[`CustomLink Text rendering modes should render raw children for empty mo
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   Custom Content
@@ -825,7 +907,7 @@ exports[`CustomLink Text rendering modes should wrap children in Text component 
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": undefined,
+      "disabled": false,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -839,9 +921,12 @@ exports[`CustomLink Text rendering modes should wrap children in Text component 
     }
   }
   accessible={true}
+  className="rounded-lg flex-row gap-3 items-center justify-center bg-cinnabar active:opacity-80 px-7 py-3 active:scale-105 transition-all duration-300 ease-out"
   collapsable={false}
   focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
@@ -849,13 +934,14 @@ exports[`CustomLink Text rendering modes should wrap children in Text component 
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    {
-      "opacity": 1,
-    }
+    [
+      undefined,
+      null,
+    ]
   }
 >
   <Text
-    className="text-center text-lg font-normal text-white "
+    className="text-center text-lg font-normal text-white"
   >
     Styled Text Content
   </Text>
