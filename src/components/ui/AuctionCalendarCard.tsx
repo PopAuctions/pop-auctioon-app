@@ -39,22 +39,18 @@ export function AuctionCalendarCard({
                 className='h-full w-full'
                 resizeMode='cover'
               />
-            ) : (
-              <View className='bg-gray-200 h-full w-full items-center justify-center'>
-                <CustomText type='h1'>🏺</CustomText>
-              </View>
-            )}
+            ) : null}
           </View>
 
           {/* Grid de contenido a la derecha */}
           <View className='flex-1 pr-2'>
             {/* Fila superior: Fecha y Hora con espacio entre ellas */}
-            <View className='mb-4 flex-row items-end  gap-2'>
+            <View className='mb-2 flex-row items-end gap-2'>
               {/* Fecha a la izquierda */}
               <View>
                 <CustomText
                   type='subtitle'
-                  className=''
+                  className='text-xl text-cinnabar'
                 >
                   {getMonthName(
                     new Date(auction.startDate).getMonth() + 1,
@@ -62,8 +58,8 @@ export function AuctionCalendarCard({
                   ).toUpperCase()}
                 </CustomText>
                 <CustomText
-                  type='h4'
-                  className=''
+                  type='subtitle'
+                  className='text-xl text-cinnabar'
                 >
                   {new Date(auction.startDate).getDate()},{' '}
                   {new Date(auction.startDate).getFullYear()}
@@ -72,8 +68,8 @@ export function AuctionCalendarCard({
               {/* Hora a la derecha */}
               <View>
                 <CustomText
-                  type='h3'
-                  className='text-right'
+                  type='subtitle'
+                  className='text-right text-xl text-cinnabar'
                 >
                   {formatTime(auction.startDate)}
                 </CustomText>
@@ -81,7 +77,7 @@ export function AuctionCalendarCard({
             </View>
 
             {/* Título de la subasta abajo */}
-            <View className=' pr-2'>
+            <View className='pr-2'>
               <CustomText
                 type='h3'
                 className=''

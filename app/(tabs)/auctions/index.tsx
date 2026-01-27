@@ -8,6 +8,7 @@ import { AuctionCalendarCard } from '@/components/ui/AuctionCalendarCard';
 import { Loading } from '@/components/ui/Loading';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
+import { Divider } from '@/components/ui/Divider';
 
 export default function IndexScreen() {
   const { data: auctions, status } = useAuctionsCalendar();
@@ -50,47 +51,43 @@ export default function IndexScreen() {
   return (
     <ScrollView className='flex-1'>
       <View className='p-4'>
-        <View className='mb-8'>
-          <CustomText
-            type='h1'
-            className='text-center'
-          >
-            {t('screens.calendar.thisMonth')}{' '}
-            {getMonthName(thisMonth.value, locale)}
-          </CustomText>
-          <CustomText
-            type='subtitle'
-            className='mb-4 text-center'
-          >
-            {t('screens.calendar.subtitle').toUpperCase()}
-          </CustomText>
+        <CustomText
+          type='h1'
+          className='text-center'
+        >
+          {t('screens.calendar.thisMonth')}{' '}
+          {getMonthName(thisMonth.value, locale)}
+        </CustomText>
+        <CustomText
+          type='subtitle'
+          className='mb-4 text-center'
+        >
+          {t('screens.calendar.subtitle').toUpperCase()}
+        </CustomText>
 
-          {auctions?.this_month && auctions.this_month.length > 0 ? (
-            <View className='space-y-6'>
-              {auctions.this_month.map((auction) => (
-                <AuctionCalendarCard
-                  key={auction.id}
-                  auction={auction}
-                  locale={locale}
-                  formatTime={formatTime}
-                />
-              ))}
-            </View>
-          ) : (
-            <CustomText
-              type='h2'
-              className='py-4 text-center text-cinnabar'
-            >
-              {t('screens.calendar.noAuctionsFound')}
-            </CustomText>
-          )}
-        </View>
+        {auctions?.this_month && auctions.this_month.length > 0 ? (
+          <View className='space-y-6'>
+            {auctions.this_month.map((auction) => (
+              <AuctionCalendarCard
+                key={auction.id}
+                auction={auction}
+                locale={locale}
+                formatTime={formatTime}
+              />
+            ))}
+          </View>
+        ) : (
+          <CustomText
+            type='h2'
+            className='py-4 text-center text-cinnabar'
+          >
+            {t('screens.calendar.noAuctionsFound')}
+          </CustomText>
+        )}
 
         {hasAuctionsNextMonth && (
           <>
-            <View className='mx-4 my-3'>
-              <View className='border-gray-200 w-full border-b' />
-            </View>
+            <Divider className='my-4' />
 
             <View className='mb-8'>
               <CustomText
