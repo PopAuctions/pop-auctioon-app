@@ -41,6 +41,7 @@ export function CustomText({ type, className, children, ...props }: TextProps) {
   return (
     <Text
       className={cn(TEXT_TYPE_STYLES[type], baseColor, className)}
+      allowFontScaling={false}
       {...props}
     >
       {children}

@@ -30,6 +30,10 @@ import { TranslationProvider } from '@/context/translation-context';
 import * as WebBrowser from 'expo-web-browser';
 import * as Notifications from 'expo-notifications';
 import { NotificationProvider } from '@/context/notification-context';
+import { disableFontScaling } from '@/utils/disableFontScaling';
+
+// Disable font scaling globally to maintain consistent design
+disableFontScaling();
 
 WebBrowser.maybeCompleteAuthSession();
 

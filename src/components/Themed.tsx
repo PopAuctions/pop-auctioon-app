@@ -44,6 +44,7 @@ export function Text(props: TextProps) {
   return (
     <DefaultText
       style={[color ? { color } : {}, style]}
+      allowFontScaling={false}
       {...otherProps}
     />
   );
