@@ -19,7 +19,11 @@
       "bundleIdentifier": "com.popauctioon.popauctioonapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait"
+        ]
       },
       "usesAppleSignIn": true
     },
@@ -29,6 +33,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
+      "screenOrientation": "portrait",
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
       "notification": {
