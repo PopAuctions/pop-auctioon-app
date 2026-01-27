@@ -33,7 +33,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
-      "screenOrientation": "portrait",
+      "screenOrientation": "sensorPortrait",
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
       "notification": {
@@ -52,6 +52,7 @@
       "expo-notifications",
       "expo-font",
       "expo-apple-authentication",
+      "expo-screen-orientation",
       [
         "@sentry/react-native/expo",
         {
