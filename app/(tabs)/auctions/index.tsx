@@ -10,7 +10,7 @@ import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 
 export default function IndexScreen() {
-  const { auctions, status } = useAuctionsCalendar();
+  const { data: auctions, status } = useAuctionsCalendar();
   const { t, locale } = useTranslation();
 
   // Obtener meses directamente
@@ -99,12 +99,6 @@ export default function IndexScreen() {
               >
                 {t('screens.calendar.nextMonth')}{' '}
                 {getMonthName(nextMonth.value, locale)}
-              </CustomText>
-              <CustomText
-                type='subtitle'
-                className='mb-4 text-center'
-              >
-                {t('screens.calendar.subtitle').toUpperCase()}
               </CustomText>
 
               <View className='space-y-6'>

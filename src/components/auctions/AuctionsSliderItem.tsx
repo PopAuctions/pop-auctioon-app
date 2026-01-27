@@ -30,7 +30,7 @@ export const AuctionsSliderItem = ({
           <CustomImage
             src={auction.image}
             alt={auction.title}
-            resizeMode='cover'
+            resizeMode='contain'
             style={{ width: '100%', height: imageHeight }}
           />
         </View>
