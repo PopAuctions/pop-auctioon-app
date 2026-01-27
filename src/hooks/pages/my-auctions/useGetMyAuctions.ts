@@ -8,7 +8,9 @@ import type {
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useGetMyAuctions = (): ActionResponse<Auction[] | null> & {
+export const useGetMyAuctions = ({
+  getFinished = false,
+}: { getFinished?: boolean } = {}): ActionResponse<Auction[] | null> & {
   refetch: () => Promise<void>;
 } => {
   const [auctions, setAuctions] = useState<Auction[] | null>(null);
@@ -20,7 +22,7 @@ export const useGetMyAuctions = (): ActionResponse<Auction[] | null> & {
     setStatus('loading');
 
     const res = await secureGet<Auction[]>({
-      endpoint: SECURE_ENDPOINTS.MY_AUCTIONS.LIST,
+      endpoint: `${SECURE_ENDPOINTS.MY_AUCTIONS.LIST}?finished=${getFinished}`,
     });
 
     if (res.error) {
@@ -45,11 +47,11 @@ export const useGetMyAuctions = (): ActionResponse<Auction[] | null> & {
       success: null,
       res,
     };
-  }, [secureGet]);
+  }, [secureGet, getFinished]);
 
   const refetchAuctionsMade = useCallback(async () => {
     const res = await secureGet<Auction[]>({
-      endpoint: SECURE_ENDPOINTS.MY_AUCTIONS.LIST,
+      endpoint: `${SECURE_ENDPOINTS.MY_AUCTIONS.LIST}?finished=${getFinished}`,
     });
 
     if (res.error) {
@@ -59,7 +61,7 @@ export const useGetMyAuctions = (): ActionResponse<Auction[] | null> & {
     setAuctions(res.data || null);
 
     return;
-  }, [secureGet]);
+  }, [secureGet, getFinished]);
 
   useEffect(() => {
     fetchAuctionsMade();

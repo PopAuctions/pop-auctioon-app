@@ -252,29 +252,30 @@ export default function ArticlesDetailScreen() {
                   price: articleLang.price,
                 }}
               />
-              {[
-                AuctionStatus.PARTIALLY_AVAILABLE,
-                AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE,
-                AuctionStatus.AVAILABLE,
-                AuctionStatus.LIVE,
-              ].includes(auction.status) && (
-                <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
-                  <SendBid
-                    articleId={article.id}
-                    articleServerState={{
-                      currentValue: articleBid.currentValue,
-                      highestBidder: '',
-                      highestBidderImage: '',
-                      available: articleBid.available,
-                    }}
-                    bidLang={bidsLang}
-                    biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
-                    commissionPercentage={
-                      isCommissionReady ? commissionData : null
-                    }
-                  />
-                </View>
-              )}
+              <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
+                {auction.status === AuctionStatus.FINISHED && (
+                  <CustomText
+                    type='h4'
+                    className='text-center text-cinnabar'
+                  >
+                    {auctionLang.ended}
+                  </CustomText>
+                )}
+                <SendBid
+                  articleId={article.id}
+                  articleServerState={{
+                    currentValue: articleBid.currentValue,
+                    highestBidder: '',
+                    highestBidderImage: '',
+                    available: articleBid.available,
+                  }}
+                  bidLang={bidsLang}
+                  biddingAmounts={extraDataIsLoaded ? biddingAmounts : {}}
+                  commissionPercentage={
+                    isCommissionReady ? commissionData : null
+                  }
+                />
+              </View>
             </View>
 
             {/* SECTION: Specifications & Description & Observations */}

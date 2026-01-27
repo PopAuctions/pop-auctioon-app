@@ -7,7 +7,6 @@
 import type {
   LabelsByLanguage,
   CategoryFilter,
-  ArticleSecondChanceStatus,
   Lang,
   OfferOption,
 } from '@/types/types';
@@ -983,3 +982,9 @@ export const OFFERS_OPTIONS: Record<Lang, OfferOption[]> = {
 };
 
 export const ARTICLE_IMAGES_MAX = 10;
+
+export enum WonArticleStatus {
+  NOT_PAID = 'NOT_PAID',
+  DRAFT = 'DRAFT',
+  PAID = 'PAID',
+}

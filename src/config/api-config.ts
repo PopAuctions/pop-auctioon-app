@@ -195,6 +195,11 @@ export const SECURE_ENDPOINTS = {
     WON_ARTICLES: (auctionId: string): ApiEndpoint =>
       `/user/won-articles?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados en subasta
     WON_ARTICLES_BY_AUCTION: '/user/won-articles-by-auction', // GET - Artículos ganados agrupados por subasta
+    SOLD_ARTICLES: '/user/sold-articles', // GET - Artículos vendidos
+    SOLD_ARTICLE: (articleId: string): ApiEndpoint =>
+      `/user/sold-articles/${articleId}` as ApiEndpoint, // GET - Artículo vendido
+    UPDATE_SHIPPING_INFORMATION: (articleId: string): ApiEndpoint =>
+      `/user/sold-articles/${articleId}/update-shipping-information` as ApiEndpoint, // GET - Artículo vendido
     RESET_PASSWORD: '/user/reset-password', // POST - Reset password
     OTP: {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
@@ -218,6 +223,16 @@ export const SECURE_ENDPOINTS = {
   },
   'NO-AUTH': {
     RESET_PASSWORD: '/reset-password', // POST - Reset password
+  },
+  'SOLD-ARTICLES': {
+    CANCEL_ACQUISITION: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/cancel-acquisition` as ApiEndpoint, // POST - Cancelar adquisición
+    SEND_TO_ONLINE_STORE: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/change-to-online-store` as ApiEndpoint, // POST - Enviar a tienda online
+    GRANT_TO_SECOND_BIDDER: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/grant-article-second-bidder` as ApiEndpoint, // POST - Otorgar al segundo postor
+    NOTIFY_AGAIN: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/notify-again` as ApiEndpoint, // POST - Notificar de nuevo al comprador
   },
 
   // Server Actions y operaciones complejas

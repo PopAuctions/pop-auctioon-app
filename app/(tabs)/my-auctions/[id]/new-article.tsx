@@ -320,7 +320,7 @@ export default function NewAuctionArticleScreen() {
             control={control}
             errors={errors}
             isLoading={isLoading}
-            auctionCategory={auctionCategory}
+            category={auctionCategory}
           />
 
           {/* Description */}

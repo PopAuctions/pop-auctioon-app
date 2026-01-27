@@ -88,7 +88,7 @@ export function ConfirmModal<TConfirmResult = void>({
               {importantMessage && (
                 <CustomText
                   type='body'
-                  className='mt-2 text-sm'
+                  className='text-sm text-cinnabar'
                 >
                   {importantMessage[locale]}
                 </CustomText>

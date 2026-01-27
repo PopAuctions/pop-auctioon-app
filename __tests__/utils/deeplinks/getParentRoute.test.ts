@@ -279,4 +279,45 @@ describe('shouldBuildStack', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('Cross-stack navigation scenarios', () => {
+    it('should build stack for account/sold-articles/[id]', () => {
+      const result = shouldBuildStack('/(tabs)/account/sold-articles/123');
+      expect(result).toBe(true);
+      expect(getParentRoute('/(tabs)/account/sold-articles/123')).toBe(
+        '/(tabs)/account'
+      );
+    });
+
+    it('should build stack for online-store/product/[id]', () => {
+      const result = shouldBuildStack('/(tabs)/online-store/product-456');
+      expect(result).toBe(true);
+      expect(getParentRoute('/(tabs)/online-store/product-456')).toBe(
+        '/(tabs)/online-store'
+      );
+    });
+
+    it('should build stack for my-auctions/[id]/edit', () => {
+      const result = shouldBuildStack('/(tabs)/my-auctions/789/edit');
+      expect(result).toBe(true);
+      expect(getParentRoute('/(tabs)/my-auctions/789/edit')).toBe(
+        '/(tabs)/my-auctions'
+      );
+    });
+
+    it('should NOT build stack for same-stack navigation (account → account/edit-profile)', () => {
+      // This is a same-stack navigation, but still needs parent
+      const result = shouldBuildStack('/(tabs)/account/edit-profile');
+      expect(result).toBe(true); // Still true because it's nested
+      expect(getParentRoute('/(tabs)/account/edit-profile')).toBe(
+        '/(tabs)/account'
+      );
+    });
+
+    it('should NOT build stack for root tab navigation', () => {
+      const result = shouldBuildStack('/(tabs)/home');
+      expect(result).toBe(false);
+      expect(getParentRoute('/(tabs)/home')).toBeNull();
+    });
+  });
 });

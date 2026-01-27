@@ -1,4 +1,4 @@
-import { OFFERS_OPTIONS_VALUES } from '@/constants';
+import { OFFERS_OPTIONS_VALUES, WonArticleStatus } from '@/constants';
 import { type Database } from '@/types/supabase';
 import { ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
@@ -604,6 +604,57 @@ export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
 } as const;
 
 export type ArticleCategories = Database['public']['Enums']['ArticleCategory'];
+
+export interface CustomPaidArticle {
+  id: string;
+  status: WonArticleStatus;
+  Article: Pick<CustomArticle, 'id' | 'title' | 'images' | 'soldPrice'> & {
+    Auction: Pick<Auction, 'id' | 'title'>;
+  };
+  payment?: {
+    id: string;
+    status: string;
+  } & {
+    Auction?: Pick<Auction, 'id' | 'title'>;
+  };
+}
+
+export interface CustomPaidArticleFull {
+  id: string;
+  status: WonArticleStatus;
+  changedBidder: boolean;
+  Article: CustomArticle & {
+    Auction: Pick<Auction, 'id' | 'title'>;
+  };
+  User?: Pick<
+    User,
+    | 'id'
+    | 'username'
+    | 'email'
+    | 'name'
+    | 'lastName'
+    | 'phoneNumber'
+    | 'dni'
+    | 'phoneNumber'
+  >;
+  Owner?: ArticleOwner;
+  payment?: UserPayment & {
+    UserAddress: Pick<
+      UserAddress,
+      'address' | 'city' | 'country' | 'state' | 'postalCode'
+    >;
+    User: Pick<
+      User,
+      'username' | 'email' | 'name' | 'lastName' | 'phoneNumber'
+    >;
+    Auction?: Pick<Auction, 'id' | 'title'>;
+  };
+}
+
+export type CustomUser = Pick<
+  User,
+  'id' | 'username' | 'email' | 'name' | 'lastName' | 'dni' | 'phoneNumber'
+>;
 
 export const ArticleSecondChanceStatusConst: Record<
   ArticleSecondChanceStatus,

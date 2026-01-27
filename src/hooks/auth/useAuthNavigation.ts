@@ -1,17 +1,22 @@
 import { useCallback, useState } from 'react';
 import { router } from 'expo-router';
+import type { Href } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
 import {
   PROTECTED_ROUTES,
   normalizeRoutePath,
 } from '@/components/navigation/routeConfig';
+import {
+  shouldBuildStack,
+  getParentRoute,
+} from '@/utils/deeplinks/getParentRoute';
 
 export const useAuthNavigation = () => {
   const { getSession } = useAuth();
   const [session, role] = getSession();
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // Refactor para revisar rutas anidadas (ej: 'my-auctions/[id]')
+  // Smart navigation with auto-detection of stack building needs
   const navigateWithAuth = useCallback(
     (href: string, options?: { replace?: boolean }) => {
       // Normalizar la ruta para manejar parámetros dinámicos
@@ -49,12 +54,36 @@ export const useAuthNavigation = () => {
         );
       }
 
+      // 🔄 Auto-detect if we need to build navigation stack
+      if (shouldBuildStack(href)) {
+        const parentRoute = getParentRoute(href);
+
+        if (parentRoute) {
+          console.log(
+            '🔄 Auto-detected cross-stack navigation - building stack'
+          );
+          console.log('  Parent:', parentRoute);
+          console.log('  Destination:', href);
+
+          // Navigate to parent silently with replace (no visual)
+          router.replace(parentRoute as Href);
+
+          // Use 0ms timeout to execute on next tick (faster than requestAnimationFrame)
+          setTimeout(() => {
+            router.push(href as Href);
+          }, 0);
+
+          return true;
+        }
+      }
+
       setIsNavigating(true);
 
+      // Direct navigation for same-stack or root routes
       if (options?.replace) {
-        router.replace(href as any);
+        router.replace(href as Href);
       } else {
-        router.push(href as any);
+        router.push(href as Href);
       }
 
       // Reset loading state after navigation

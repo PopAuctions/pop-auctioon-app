@@ -374,7 +374,7 @@ export default function EditAuctionArticleScreen() {
             control={control}
             errors={errors}
             isLoading={isLoading}
-            auctionCategory={auctionCategory}
+            category={auctionCategory}
           />
 
           {/* Description */}
