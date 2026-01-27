@@ -3,18 +3,18 @@ import { ScrollView, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { PaidArticleItem } from '@/components/payment/PaidArticleItem';
-import { euroFormatter } from '@/utils/euroFormatter';
-import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { useGetSoldArticle } from '@/hooks/pages/article/useGetSoldArticle';
-import { REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { Divider } from '@/components/ui/Divider';
 import { PaymentSummary } from '@/components/payment/PaymentSummary';
 import { AddressInfo } from '@/components/payment/AddressInfo';
-import { Button } from '@/components/ui/Button';
 import { ShippingForm } from '@/components/payment/ShippingForm';
-import { ConfirmModal } from '@/components/modal/ConfirmModal';
+import { ActionButtons } from '@/components/sold-articles/ActionButtons';
+import { SecondHighestBidderInfo } from '@/components/sold-articles/SecondHighestBidderInfo';
+import { euroFormatter } from '@/utils/euroFormatter';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useGetSoldArticle } from '@/hooks/pages/article/useGetSoldArticle';
+import { REQUEST_STATUS } from '@/constants';
 
 export default function SoldArticleScreen() {
   const { t, locale } = useTranslation();
@@ -37,6 +37,7 @@ export default function SoldArticleScreen() {
   }
 
   const article = data.article;
+  const articleId = article.Article.id;
   const secondHighestBidUser = data.secondHighestBidUser;
   const payment = article?.payment;
   const userAddress = payment?.UserAddress;
@@ -141,16 +142,15 @@ export default function SoldArticleScreen() {
                 </CustomText>
 
                 {/* Actions: on mobile, stacked cards is better than 3 inline buttons */}
-                <View className='mt-4 gap-3'>
-                  {/* Replace DeleteButton components later */}
-                  <Button mode='primary'>{paymentsDict.notifyAgain}</Button>
-                  <Button mode='primary'>
-                    {paymentsDict.sendToOnlineStore}
-                  </Button>
-                  <Button mode='primary'>
-                    {paymentsDict.cancelAcquisition}
-                  </Button>
-                </View>
+                <ActionButtons
+                  articleId={articleId}
+                  locale={locale}
+                  texts={{
+                    notifyAgain: paymentsDict.notifyAgain,
+                    sendToOnlineStore: paymentsDict.sendToOnlineStore,
+                    cancelAcquisition: paymentsDict.cancelAcquisition,
+                  }}
+                />
 
                 <Divider className='my-5' />
 
@@ -188,56 +188,15 @@ export default function SoldArticleScreen() {
                     </View>
 
                     {secondHighestBidUser ? (
-                      <View className='gap-3'>
-                        <CustomText
-                          type='subtitle'
-                          className='text-center text-xl text-cinnabar'
-                        >
-                          {paymentsDict.secondUser}
-                        </CustomText>
-
-                        <View className='items-center'>
-                          <CustomText
-                            type='h4'
-                            className='text-center'
-                          >
-                            {secondHighestBidUser.username}
-                          </CustomText>
-                          <CustomText
-                            type='h4'
-                            className='text-center'
-                          >
-                            {secondHighestBidUser.name}{' '}
-                            {secondHighestBidUser.lastName}
-                          </CustomText>
-                        </View>
-
-                        <View className='items-center'>
-                          <ConfirmModal
-                            mode='primary'
-                            // onConfirm={async () => {
-                            //   await handleAcceptOffer(offer.id);
-                            // }}
-                            onConfirm={() => {}}
-                            // isDisabled={isLoading}
-                            title={{
-                              es: 'Otorgar a segundo mayor postor',
-                              en: 'Grant to second highest bidder',
-                            }}
-                            description={{
-                              es: '¿Está seguro de que desea otorgar el artículo al segundo mayor postor?',
-                              en: 'Are you sure you want to grant the article to the second highest bidder?',
-                            }}
-                            importantMessage={{
-                              es: 'No podrás revertir esta acción.',
-                              en: 'You will not be able to revert this action.',
-                            }}
-                            locale={locale}
-                          >
-                            {paymentsDict.grantToSecondUser}
-                          </ConfirmModal>
-                        </View>
-                      </View>
+                      <SecondHighestBidderInfo
+                        articleId={articleId}
+                        locale={locale}
+                        texts={{
+                          secondUser: paymentsDict.secondUser,
+                          grantToSecondUser: paymentsDict.grantToSecondUser,
+                        }}
+                        secondHighestBidUser={secondHighestBidUser}
+                      />
                     ) : (
                       <CustomText
                         type='h4'

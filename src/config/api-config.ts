@@ -224,6 +224,16 @@ export const SECURE_ENDPOINTS = {
   'NO-AUTH': {
     RESET_PASSWORD: '/reset-password', // POST - Reset password
   },
+  'SOLD-ARTICLES': {
+    CANCEL_ACQUISITION: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/cancel-acquisition` as ApiEndpoint, // POST - Cancelar adquisición
+    SEND_TO_ONLINE_STORE: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/change-to-online-store` as ApiEndpoint, // POST - Enviar a tienda online
+    GRANT_TO_SECOND_BIDDER: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/grant-article-second-bidder` as ApiEndpoint, // POST - Otorgar al segundo postor
+    NOTIFY_AGAIN: (articleId: string | number): ApiEndpoint =>
+      `/sold-articles/${articleId}/notify-again` as ApiEndpoint, // POST - Notificar de nuevo al comprador
+  },
 
   // Server Actions y operaciones complejas
   ACTIONS: {
