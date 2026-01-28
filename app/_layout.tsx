@@ -31,9 +31,13 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Notifications from 'expo-notifications';
 import { NotificationProvider } from '@/context/notification-context';
 import { disableFontScaling } from '@/utils/disableFontScaling';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
+
+// Lock screen orientation to portrait
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 
 WebBrowser.maybeCompleteAuthSession();
 
