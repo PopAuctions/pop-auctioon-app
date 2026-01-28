@@ -80,7 +80,12 @@ export default function RegisterUserScreen() {
         },
       });
 
-      router.replace('/(tabs)/account');
+      router.push({
+        pathname: '/(tabs)/auth/confirm-email',
+        params: {
+          email: result.email,
+        },
+      });
     } else if (result.error) {
       callToast({
         variant: 'error',

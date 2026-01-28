@@ -63,3 +63,5 @@ export const LANGUAGE_OPTIONS = [
   { label: 'Español', value: 'es' },
   { label: 'English', value: 'en' },
 ];
+
+export const REQUEST_EMAIL_COOLDOWN = 60; // 1 minute

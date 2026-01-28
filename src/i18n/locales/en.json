@@ -341,6 +341,7 @@
       "soldArticles": "Sold Articles",
       "soldArticle": "Sold Article",
       "resetPassword": "Reset Password",
+      "confirmEmail": "Confirmar Email",
       "offersMade": "Offers Made",
       "verifyPhone": "Verify Phone",
       "followedAuctions": "Followed Auctions",
@@ -620,6 +621,14 @@
       "back": "Back",
       "successMessage": "A reset link has been sent to your email",
       "errorMessage": "Error sending reset link"
+    },
+    "confirmEmail": {
+      "title": "Account Created Successfully!",
+      "p1": "Thank you for signing up! We've sent a confirmation email to:",
+      "p2": "Please check your inbox (and spam/junk folder just in case) to confirm your email address and activate your account.",
+      "didntReceive": "Didn't receive the email?",
+      "resendEmail": "Click here to resend the email",
+      "goToLogin": "Go to Login"
     },
     "verifyPhone": {
       "title": "Verify your phone number",
