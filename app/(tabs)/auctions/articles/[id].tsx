@@ -231,30 +231,27 @@ export default function ArticlesDetailScreen() {
 
             {/* SECTION: Image slider */}
             <View className='mt-10 w-full flex-row justify-center gap-10 px-5 md:px-0'>
-              {/* <ArticleImagesSlider images={article.images} /> */}
               <ImagesCarousel images={article.images} />
             </View>
 
             {/* SECTION: Bidding */}
-            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5 md:flex-row md:items-start'>
-              <View className='flex-1'>
-                <CurrentBidInfoArticlePage
-                  lang={locale}
-                  currentValue={articleBid.currentValue}
-                  estimatedValue={article.estimatedValue}
-                  reservePrice={article.reservePrice}
-                  commissionValue={isCommissionReady ? commissionData : null}
-                  texts={{
-                    highestBid: articleLang.highestBid,
-                    estimatedValue: articleLang.estimatedValue,
-                    reservePrice: articleLang.hasReservePrice,
-                    commission: articleLang.commission,
-                    shipping: articleLang.shippingCosts,
-                    price: articleLang.price,
-                  }}
-                />
-              </View>
-              <View className='w-full md:w-auto md:min-w-[300px] md:max-w-[400px] md:flex-1'>
+            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5'>
+              <CurrentBidInfoArticlePage
+                lang={locale}
+                currentValue={articleBid.currentValue}
+                estimatedValue={article.estimatedValue}
+                reservePrice={article.reservePrice}
+                commissionValue={isCommissionReady ? commissionData : null}
+                texts={{
+                  highestBid: articleLang.highestBid,
+                  estimatedValue: articleLang.estimatedValue,
+                  reservePrice: articleLang.hasReservePrice,
+                  commission: articleLang.commission,
+                  shipping: articleLang.shippingCosts,
+                  price: articleLang.price,
+                }}
+              />
+              <View className='w-full md:mx-auto md:w-4/5'>
                 {auction.status === AuctionStatus.FINISHED && (
                   <CustomText
                     type='h4'
