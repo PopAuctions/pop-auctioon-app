@@ -143,9 +143,18 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         });
 
         if (response.error) {
+          // Create detailed error message for Sentry
+          const errorMessage = `Push token registration failed: ${response.error.en || response.error.es || 'Unknown error'}. Token: ${token.substring(0, 20)}..., Platform: ${Platform.OS}, User ID: ${userId || 'anonymous'}`;
+
+          console.error('ERROR_REGISTER_PUSH_TOKEN', {
+            error: response.error,
+            platform: Platform.OS,
+            hasUserId: !!userId,
+          });
+
           sentryErrorReport(
-            new Error(JSON.stringify(response.error)),
-            '[NotificationContext.L127] registerPushToken - Initial token registration API error'
+            new Error(errorMessage),
+            '[NotificationContext] registerPushToken - Initial token registration API error'
           );
         }
       } catch (error) {
@@ -174,9 +183,17 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
               });
 
               if (unregisterResponse.error) {
+                // Create detailed error message for Sentry
+                const errorMessage = `Failed to unregister old push token after reinstall: ${unregisterResponse.error.en || unregisterResponse.error.es || 'Unknown error'}. Old token: ${lastToken?.substring(0, 20)}..., New token: ${token?.substring(0, 20)}...`;
+
+                console.error('ERROR_UNREGISTER_OLD_TOKEN', {
+                  error: unregisterResponse.error,
+                  hadOldToken: !!lastToken,
+                });
+
                 sentryErrorReport(
-                  new Error(JSON.stringify(unregisterResponse.error)),
-                  '[NotificationContext.L161] AsyncStorage - Unregister old token after reinstall detection'
+                  new Error(errorMessage),
+                  '[NotificationContext] AsyncStorage - Unregister old token after reinstall detection'
                 );
               }
 
@@ -275,9 +292,17 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
+            // Create detailed error message for Sentry
+            const errorMessage = `Failed to associate push token with user: ${response.error.en || response.error.es || 'Unknown error'}. Token: ${expoPushToken?.substring(0, 20)}..., User ID: ${auth.session.user.id}`;
+
+            console.error('ERROR_ASSOCIATE_PUSH_TOKEN_USER', {
+              error: response.error,
+              userId: auth.session.user.id,
+            });
+
             sentryErrorReport(
-              new Error(JSON.stringify(response.error)),
-              '[NotificationContext.L262] useEffect[auth] - Associate user_id after login API error'
+              new Error(errorMessage),
+              '[NotificationContext] useEffect[auth] - Associate user_id after login API error'
             );
           }
         } catch (error) {
@@ -358,9 +383,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           });
 
           if (response.error) {
+            // Create detailed error message for Sentry
+            const errorMessage = `Failed to unregister push token on logout: ${response.error.en || response.error.es || 'Unknown error'}. Token: ${expoPushToken?.substring(0, 20)}...`;
+
+            console.error('ERROR_UNREGISTER_PUSH_TOKEN', {
+              error: response.error,
+            });
+
             sentryErrorReport(
-              new Error(JSON.stringify(response.error)),
-              '[NotificationContext.L347] useEffect[logout] - Disable token on logout API error'
+              new Error(errorMessage),
+              '[NotificationContext] useEffect[logout] - Disable token on logout API error'
             );
           }
         } catch (error) {
