@@ -236,23 +236,25 @@ export default function ArticlesDetailScreen() {
             </View>
 
             {/* SECTION: Bidding */}
-            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5 md:w-4/5 md:flex-row'>
-              <CurrentBidInfoArticlePage
-                lang={locale}
-                currentValue={articleBid.currentValue}
-                estimatedValue={article.estimatedValue}
-                reservePrice={article.reservePrice}
-                commissionValue={isCommissionReady ? commissionData : null}
-                texts={{
-                  highestBid: articleLang.highestBid,
-                  estimatedValue: articleLang.estimatedValue,
-                  reservePrice: articleLang.hasReservePrice,
-                  commission: articleLang.commission,
-                  shipping: articleLang.shippingCosts,
-                  price: articleLang.price,
-                }}
-              />
-              <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
+            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5 md:flex-row md:items-start'>
+              <View className='flex-1'>
+                <CurrentBidInfoArticlePage
+                  lang={locale}
+                  currentValue={articleBid.currentValue}
+                  estimatedValue={article.estimatedValue}
+                  reservePrice={article.reservePrice}
+                  commissionValue={isCommissionReady ? commissionData : null}
+                  texts={{
+                    highestBid: articleLang.highestBid,
+                    estimatedValue: articleLang.estimatedValue,
+                    reservePrice: articleLang.hasReservePrice,
+                    commission: articleLang.commission,
+                    shipping: articleLang.shippingCosts,
+                    price: articleLang.price,
+                  }}
+                />
+              </View>
+              <View className='w-full md:w-auto md:min-w-[300px] md:max-w-[400px] md:flex-1'>
                 {auction.status === AuctionStatus.FINISHED && (
                   <CustomText
                     type='h4'
