@@ -13,39 +13,36 @@ import { Input } from '@/components/ui/Input';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { PopAuctioonIcon } from '@/components/icons';
 import { BackgroundImage } from '@/components/ui/BackgroundImage';
-import { router } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { useToast } from '@/hooks/useToast';
-import { useLogin } from '@/hooks/auth/useLogin';
 import { GoogleButton } from '@/components/auth/GoogleButton';
 import { AppleButton } from '@/components/auth/AppleButton';
 import { Divider } from '@/components/ui/Divider';
-
-const errorKeys = {
-  INVALID_CREDENTIALS: 'commonErrors.invalidLoginCredentials',
-  EMAIL_NOT_CONFIRMED: 'commonErrors.emailNotConfirmed',
-  USER_NOT_FOUND: 'commonErrors.userNotFound',
-  TOO_MANY_REQUESTS: 'commonErrors.tooManyRequests',
-  NETWORK_ERROR: 'commonErrors.networkError',
-} as const;
+import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/hooks/useToast';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { t, locale } = useTranslation();
+  const { signInWithPassword, isLoading } = useAuth();
   const { callToast } = useToast(locale);
-  const { login, isLoading } = useLogin();
 
   const signInWithEmail = async () => {
-    const { success, error } = await login(email, password);
+    const res = await signInWithPassword({ email, password });
 
-    if (!success && error) {
-      callToast({ variant: 'error', description: errorKeys[error] });
+    if (!res.success) {
+      callToast({
+        variant: 'error',
+        description: res.message,
+      });
       return;
     }
 
-    router.replace('/(tabs)/home');
+    callToast({
+      variant: 'success',
+      description: res.message,
+    });
   };
 
   useEffect(() => {
