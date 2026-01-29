@@ -29,6 +29,8 @@ export const Input: React.FC<InputProps> = ({
         shadow-sm
         focus:border-cinnabar
         disabled:opacity-50
+        md:h-14
+        md:text-lg
         ${editable ? '' : 'opacity-50'}
       `,
         className

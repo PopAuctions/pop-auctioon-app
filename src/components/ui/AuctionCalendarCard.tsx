@@ -29,9 +29,9 @@ export function AuctionCalendarCard({
       mode='empty'
     >
       <View className='overflow-hidden rounded-xl shadow-sm'>
-        <View className='min-h-[220px] flex-row py-6'>
+        <View className='min-h-[220px] flex-row py-6 md:min-h-[280px] md:py-8'>
           {/* Imagen grande a la izquierda */}
-          <View className='bg-gray-100 mr-3 h-56 w-44 overflow-hidden rounded-lg'>
+          <View className='bg-gray-100 mr-3 h-56 w-44 overflow-hidden rounded-lg md:mr-6 md:h-64 md:w-56'>
             {auction.image && auction.image.trim() !== '' ? (
               <CustomImage
                 src={auction.image}
