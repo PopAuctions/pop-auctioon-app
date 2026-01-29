@@ -25,8 +25,8 @@ export async function registerForPushNotificationsAsync(): Promise<
 
   // 📱 Check if device is physical (not simulator/emulator)
   // NOTE: Push notifications DO NOT work on simulators/emulators
-  // ⚠️ COMMENTED FOR DEVELOPMENT - Uncomment for production
   if (!Device.isDevice) {
+    console.log('📱 Skipping push token registration: Device is not physical');
     return undefined;
   }
 
@@ -65,6 +65,22 @@ export async function registerForPushNotificationsAsync(): Promise<
 
     return pushTokenString;
   } catch (e: unknown) {
+    const errorMessage = String(e);
+
+    // 🔥 Handle TOO_MANY_REGISTRATIONS specifically
+    if (errorMessage.includes('TOO_MANY_REGISTRATIONS')) {
+      console.warn(
+        '⚠️ TOO_MANY_REGISTRATIONS: Device has too many FCM tokens registered.\n' +
+          'This can happen after multiple app reinstalls or rapid re-registrations.\n' +
+          'Solution: User should clear app data or wait 24h for automatic cleanup.'
+      );
+
+      // Don't report to Sentry for this expected error
+      // Firebase will auto-cleanup old tokens after 24-48h
+      return undefined;
+    }
+
+    // Report other push notification errors to Sentry
     const error = new Error(`Failed to get push token: ${e}`);
     sentryErrorReport(error, 'PUSH_NOTIFICATION_GET_TOKEN_FAILED');
     return undefined;

@@ -58,6 +58,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   // Refs to prevent duplicate registrations
   const hasRegisteredToken = useRef(false);
   const previousAuthState = useRef<string | null>(null);
+  const lastRegistrationTime = useRef<number>(0);
+  const REGISTRATION_COOLDOWN_MS = 5000; // 5 seconds between registrations
 
   const notificationListener = useRef<
     Notifications.EventSubscription | undefined
@@ -109,6 +111,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     // �📡 Function to register push token via backend API
     const registerPushToken = async (token: string, userId?: string) => {
       try {
+        // ⏱️ Throttle: Prevent registration spam (protect against TOO_MANY_REGISTRATIONS)
+        const now = Date.now();
+        if (now - lastRegistrationTime.current < REGISTRATION_COOLDOWN_MS) {
+          console.log(
+            '⏱️ Skipping token registration: Too soon since last registration'
+          );
+          return;
+        }
+
+        lastRegistrationTime.current = now;
         console.log('📡 Registering push token via backend...');
 
         // Build request data - include platform and user_id if provided
