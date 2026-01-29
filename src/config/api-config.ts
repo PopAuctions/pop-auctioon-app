@@ -221,8 +221,10 @@ export const SECURE_ENDPOINTS = {
   LIVE: {
     ARTICLES: '/live/articles',
   },
-  'NO-AUTH': {
-    RESET_PASSWORD: '/reset-password', // POST - Reset password
+  NO_AUTH: {
+    RESET_PASSWORD: '/no-auth/reset-password', // POST - Reset password
+    REQUEST_EMAIL_CONFIRMATION_TOKEN:
+      '/no-auth/request-email-confirmation-token', // POST - Solicitar token de confirmación de email
   },
   'SOLD-ARTICLES': {
     CANCEL_ACQUISITION: (articleId: string | number): ApiEndpoint =>
