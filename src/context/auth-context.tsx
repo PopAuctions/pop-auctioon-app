@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { ToastVariant } from '@/providers/ToastProvider';
 
 type LoginError =
   | 'INVALID_CREDENTIALS'
@@ -22,11 +23,12 @@ type LoginError =
   | 'USER_NOT_FOUND'
   | 'TOO_MANY_REQUESTS'
   | 'NETWORK_ERROR'
+  | 'TOO_MANY_EMAIL_REQUESTS'
   | 'UNKNOWN_ERROR'
   | 'EMAIL_NOT_VERIFIED'
   | null;
 
-type SignInResult = { success: boolean; message: LangMap };
+type SignInResult = { success: boolean; message: LangMap; type?: ToastVariant };
 
 export type AuthState =
   | { state: 'loading' }
@@ -53,6 +55,7 @@ const AuthContext = createContext<AuthContextType>({
   signInWithPassword: async () => ({
     success: false,
     message: { es: '', en: '' },
+    type: undefined,
   }),
 });
 
@@ -132,6 +135,10 @@ const getErrorMessage = (errorCode: LoginError): LangMap => {
       es: 'Correo no verificado. Revisa tu bandeja de entrada.',
       en: 'Email not verified. Check your inbox.',
     },
+    TOO_MANY_EMAIL_REQUESTS: {
+      en: 'Wait a few moments before requesting another confirmation email.',
+      es: 'Espera unos momentos antes de solicitar otro correo de confirmación.',
+    },
     UNKNOWN_ERROR: {
       es: 'Error desconocido. Por favor, intenta de nuevo.',
       en: 'Unknown error. Please try again.',
@@ -140,6 +147,8 @@ const getErrorMessage = (errorCode: LoginError): LangMap => {
 
   return errorCode ? errorMessages[errorCode] : { es: '', en: '' };
 };
+
+const EMAIL_CONFIRM_COOLDOWN_MS = 120_000;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { locale } = useTranslation();
@@ -151,6 +160,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const clearTimer = useRef<null | (() => void)>(null);
   const callToastRef = useRef(callToast);
 
+  const lastConfirmEmailSentAtRef = useRef<Record<string, number>>({});
+  const sendConfirmInFlightRef = useRef<Record<string, boolean>>({});
+
   const isLoading =
     manualSignInLoading || auth.state === 'loading' || auth.state === 'pending';
 
@@ -158,12 +170,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email?: string) => {
       if (!email) return;
 
+      const key = email.trim().toLowerCase();
+      const now = Date.now();
+
+      const lastAt = lastConfirmEmailSentAtRef.current[key] ?? 0;
+      const inCooldown = now - lastAt < EMAIL_CONFIRM_COOLDOWN_MS;
+      const inFlight = sendConfirmInFlightRef.current[key] === true;
+
+      if (inFlight || inCooldown) {
+        return 'TOO_MANY_EMAIL_REQUESTS' as const;
+      }
+
+      sendConfirmInFlightRef.current[key] = true;
+
       try {
         const response = await protectedPost<LangMap>({
           endpoint: SECURE_ENDPOINTS.NO_AUTH.REQUEST_EMAIL_CONFIRMATION_TOKEN,
-          data: {
-            email: email,
-          },
+          data: { email: key },
         });
 
         if (response.error) {
@@ -171,12 +194,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             variant: 'error',
             description: response.error,
           });
+          return null;
         }
+
+        lastConfirmEmailSentAtRef.current[key] = Date.now();
       } catch (e) {
-        console.warn(
-          '[sendEmailConfirmation] exception sending confirmation email:',
-          e
-        );
+        console.warn('[sendEmailConfirmation] exception:', e);
+        return 'UNKNOWN_ERROR';
+      } finally {
+        sendConfirmInFlightRef.current[key] = false;
       }
     },
     [protectedPost]
@@ -206,19 +232,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const session = data.session ?? null;
         if (!session) {
-          return { success: false, message: getErrorMessage('UNKNOWN_ERROR') };
+          return {
+            success: false,
+            message: getErrorMessage('UNKNOWN_ERROR'),
+          };
         }
 
         setAuth({ state: 'pending', session });
 
         const ok = await checkIsValidated(session);
         if (!ok) {
-          await sendEmailConfirmation(email);
+          const result = await sendEmailConfirmation(email);
           await supabase.auth.signOut().catch(() => {});
           setAuth({ state: 'unauthenticated' });
           return {
             success: false,
-            message: getErrorMessage('EMAIL_NOT_VERIFIED'),
+            message: getErrorMessage(result ?? 'EMAIL_NOT_VERIFIED'),
+            type: result === 'TOO_MANY_EMAIL_REQUESTS' ? 'warning' : 'error',
           };
         }
 

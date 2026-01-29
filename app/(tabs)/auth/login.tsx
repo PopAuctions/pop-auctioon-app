@@ -33,14 +33,14 @@ export default function Auth() {
 
     if (!res.success) {
       callToast({
-        variant: 'error',
+        variant: res.type ?? 'error',
         description: res.message,
       });
       return;
     }
 
     callToast({
-      variant: 'success',
+      variant: res.type ?? 'success',
       description: res.message,
     });
   };
