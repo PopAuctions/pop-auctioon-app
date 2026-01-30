@@ -36,8 +36,16 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
 
-// Lock screen orientation to portrait
-ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+// Lock screen orientation to portrait (async IIFE to ensure it executes immediately)
+(async () => {
+  try {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP
+    );
+  } catch (error) {
+    console.error('ERROR_LOCK_SCREEN_ORIENTATION', error);
+  }
+})();
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -103,6 +111,38 @@ export default Sentry.wrap(function RootLayout() {
 
   const [showSplash, setShowSplash] = useState(true);
   const [fontError, setFontError] = useState<Error | null>(null);
+
+  // Force portrait orientation on mount
+  useEffect(() => {
+    const lockOrientation = async () => {
+      try {
+        await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP
+        );
+      } catch (error) {
+        console.error('ERROR_LOCK_ORIENTATION_USEEFFECT', error);
+      }
+    };
+
+    lockOrientation();
+
+    // Also listen for any orientation changes and force lock again
+    const subscription = ScreenOrientation.addOrientationChangeListener(
+      async () => {
+        try {
+          await ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.PORTRAIT_UP
+          );
+        } catch (error) {
+          console.error('ERROR_RE_LOCK_ORIENTATION', error);
+        }
+      }
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (error) {
