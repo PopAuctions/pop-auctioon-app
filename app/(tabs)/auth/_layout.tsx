@@ -45,6 +45,15 @@ export default function AuthLayout() {
         }}
       />
       <Stack.Screen
+        name='confirm-email'
+        options={{
+          title: t('screens.account.confirmEmail'),
+          presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
+      <Stack.Screen
         name='register-user'
         options={{
           title: t('screens.account.registerFormTitle'),

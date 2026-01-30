@@ -341,6 +341,7 @@
       "soldArticles": "Artículos Vendidos",
       "soldArticle": "Artículo Vendido",
       "resetPassword": "Restablecer Contraseña",
+      "confirmEmail": "Confirmar Email",
       "offersMade": "Ofertas realizadas",
       "verifyPhone": "Verificar Teléfono",
       "followedAuctions": "Subastas Seguidas",
@@ -500,6 +501,14 @@
       "back": "Volver",
       "successMessage": "Se ha enviado un enlace a tu correo",
       "errorMessage": "Error al enviar el enlace"
+    },
+    "confirmEmail": {
+      "title": "¡Cuenta creada con éxito!",
+      "p1": "¡Gracias por registrarte! Hemos enviado un correo de confirmación a:",
+      "p2": "Por favor, revisa tu bandeja de entrada (y la carpeta de spam o correo no deseado, por si acaso) para confirmar tu dirección de correo electrónico y activar tu cuenta.",
+      "didntReceive": "¿No recibiste el correo?",
+      "resendEmail": "Haz clic aquí para reenviar el correo",
+      "goToLogin": "Ir a inicio de sesión"
     },
     "verifyPhone": {
       "title": "Verificar tu número de teléfono",

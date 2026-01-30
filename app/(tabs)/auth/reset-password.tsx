@@ -39,7 +39,7 @@ export default function ResetPasswordScreen() {
 
     try {
       const response = await protectedPost<LangMap>({
-        endpoint: SECURE_ENDPOINTS['NO-AUTH'].RESET_PASSWORD,
+        endpoint: SECURE_ENDPOINTS.NO_AUTH.RESET_PASSWORD,
         data: {
           email: values.email,
         },
