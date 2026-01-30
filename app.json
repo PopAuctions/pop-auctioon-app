@@ -33,7 +33,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
-      "screenOrientation": "sensorPortrait",
+      "screenOrientation": "portrait",
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
       "notification": {
