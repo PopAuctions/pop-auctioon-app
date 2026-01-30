@@ -10,10 +10,11 @@ module.exports = function withScreenOrientation(config) {
     );
 
     if (mainActivity) {
-      // Force portrait at the Activity level (strongest place)
-      mainActivity.$['android:screenOrientation'] = 'portrait';
+      // Force portrait - use 'locked' which is more restrictive than 'portrait'
+      mainActivity.$['android:screenOrientation'] = 'locked';
 
-      // DO NOT modify configChanges
+      // Disable screen compatibility mode (forces full control)
+      mainActivity.$['android:resizeableActivity'] = 'false';
     }
 
     return config;
