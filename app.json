@@ -47,6 +47,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./plugins/withScreenOrientation",
       "expo-router",
       "expo-secure-store",
       "expo-notifications",
