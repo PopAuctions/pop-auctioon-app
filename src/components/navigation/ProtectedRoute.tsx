@@ -20,7 +20,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const currentRoute = normalizeRoutePath(segmentsKey);
     const routeConfig = PROTECTED_ROUTES[currentRoute];
 
-    if (auth.state === 'loading') return;
+    if (auth.state === 'loading' || auth.state === 'pending') return;
 
     if (routeConfig) {
       if (auth.state !== 'authenticated') {

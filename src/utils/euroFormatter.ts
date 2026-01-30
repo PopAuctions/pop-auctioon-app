@@ -4,7 +4,7 @@ export function euroFormatter(
   lang: Lang,
   digits: number = 0
 ): Intl.NumberFormat {
-  const locale = lang === 'es' ? 'es-ES' : 'en-EN';
+  const locale = lang === 'es' ? 'es-ES' : 'en-IE';
 
   return new Intl.NumberFormat(locale, {
     style: 'currency',

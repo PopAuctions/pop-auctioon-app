@@ -70,10 +70,14 @@ function scheduleRefresh(session: Session | null, onExpire: () => void) {
 }
 
 async function checkIsValidated(session: Session | null): Promise<boolean> {
+  if (!session) {
+    return false;
+  }
+
   const { data, error } = await supabase
     .from('User')
     .select('emailVerified')
-    .eq('id', session?.user.id)
+    .eq('id', session.user.id)
     .single();
 
   if (error) return false;
@@ -167,7 +171,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     manualSignInLoading || auth.state === 'loading' || auth.state === 'pending';
 
   const sendEmailConfirmation = useCallback(
-    async (email?: string) => {
+    async (email?: string): Promise<LoginError | undefined> => {
       if (!email) return;
 
       const key = email.trim().toLowerCase();
