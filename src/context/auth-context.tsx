@@ -300,13 +300,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setAuth({ state: 'pending', session: sess0 });
 
-      const ok = await checkIsValidated(sess0);
-      if (!alive) return;
+      const provider0 = sess0.user.app_metadata?.provider;
 
-      if (!ok) {
-        await supabase.auth.signOut().catch(() => {});
-        setAuth({ state: 'unauthenticated' });
-        return;
+      // Only enforce custom email verification for email/password users
+      if (provider0 === 'email') {
+        const ok = await checkIsValidated(sess0);
+        if (!alive) return;
+
+        if (!ok) {
+          await supabase.auth.signOut().catch(() => {});
+          setAuth({ state: 'unauthenticated' });
+          return;
+        }
       }
 
       // now you can proceed as authenticated
@@ -317,7 +322,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       clearTimer.current?.();
       clearTimer.current = scheduleRefresh(session, async () => {
         const { data, error } = await supabase.auth.refreshSession();
-        if (error || data.session) {
+
+        // Sign out only if refresh failed OR returned no session
+        if (error || !data.session) {
           await supabase.auth.signOut().catch(() => {});
           setAuth({ state: 'unauthenticated' });
           return;
@@ -349,7 +356,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const r = await getUserRole({ id: u.user.id });
           if (!alive) return;
 
-          // keep latest session from storage (could have been refreshed)
           const { data: s2 } = await supabase.auth.getSession();
           const sess = s2.session ?? sess0;
 
@@ -366,12 +372,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           });
         } catch (e) {
           console.log('[AuthProvider] initial getUserRole failed:', e);
-          // keep authenticated with role null
         }
       })();
     })();
 
-    // 3) Suscribirse a cambios de auth
+    // 3) Subscribe to auth changes
     const { data: sub } = supabase.auth.onAuthStateChange(
       async (ev, newSession) => {
         if (!alive) return;
@@ -391,9 +396,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
+        const provider = newSession.user.app_metadata?.provider;
+
+        // ✅ OAuth sign-ins: skip custom email verification gate
+        if (provider && provider !== 'email') {
+          setAuth((prev) => ({
+            state: 'authenticated',
+            session: newSession,
+            role: prev.state === 'authenticated' ? prev.role : null,
+          }));
+
+          // schedule refresh
+          clearTimer.current?.();
+          clearTimer.current = scheduleRefresh(newSession, () => {});
+
+          // fetch role in background
+          (async () => {
+            try {
+              const r = await getUserRole({ id: newSession.user.id });
+              if (!alive) return;
+
+              setAuth({
+                state: 'authenticated',
+                session: newSession,
+                role: r.data ?? null,
+              });
+            } catch (e) {
+              console.log('[AuthProvider] getUserRole failed:', e);
+            }
+          })();
+
+          return; // ✅ important
+        }
+
+        // Email/password sessions continue with verification gate
         setAuth({ state: 'pending', session: newSession });
 
-        // schedule refresh
         clearTimer.current?.();
         clearTimer.current = scheduleRefresh(newSession, () => {});
 
@@ -414,7 +452,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: prev.state === 'authenticated' ? prev.role : null,
         }));
 
-        // Fetch role in background
         (async () => {
           try {
             const r = await getUserRole({ id: newSession.user.id });
@@ -429,8 +466,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log('[AuthProvider] getUserRole failed:', e);
           }
         })();
-
-        return;
       }
     );
 
