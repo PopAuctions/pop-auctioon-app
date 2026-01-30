@@ -9,24 +9,54 @@ import {
 } from 'react';
 import { supabase } from '@/utils/supabase/supabase-store';
 import type { Session } from '@supabase/supabase-js';
-import type { UserRoles } from '@/types/types';
+import type { LangMap, UserRoles } from '@/types/types';
 import { getUserRole } from '@/lib/auth/get-user-role';
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { ToastVariant } from '@/providers/ToastProvider';
+
+type LoginError =
+  | 'INVALID_CREDENTIALS'
+  | 'EMAIL_NOT_CONFIRMED'
+  | 'USER_NOT_FOUND'
+  | 'TOO_MANY_REQUESTS'
+  | 'NETWORK_ERROR'
+  | 'TOO_MANY_EMAIL_REQUESTS'
+  | 'UNKNOWN_ERROR'
+  | 'EMAIL_NOT_VERIFIED'
+  | null;
+
+type SignInResult = { success: boolean; message: LangMap; type?: ToastVariant };
 
 export type AuthState =
   | { state: 'loading' }
   | { state: 'unauthenticated' }
+  | { state: 'pending'; session: Session }
   | { state: 'authenticated'; session: Session; role: UserRoles | null };
 
 type AuthContextType = {
+  isLoading: boolean;
   auth: AuthState;
   getSession: () => [Session | null, UserRoles | null];
   signOut: () => Promise<void>;
+  signInWithPassword: (args: {
+    email: string;
+    password: string;
+  }) => Promise<SignInResult>;
 };
 
 const AuthContext = createContext<AuthContextType>({
+  isLoading: false,
   auth: { state: 'loading' },
   getSession: () => [null, null],
   signOut: async () => {},
+  signInWithPassword: async () => ({
+    success: false,
+    message: { es: '', en: '' },
+    type: undefined,
+  }),
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -39,17 +69,213 @@ function scheduleRefresh(session: Session | null, onExpire: () => void) {
   return () => clearTimeout(id);
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [auth, setAuth] = useState<AuthState>({ state: 'loading' });
-  const clearTimer = useRef<null | (() => void)>(null);
+async function checkIsValidated(session: Session | null): Promise<boolean> {
+  if (!session) {
+    return false;
+  }
 
-  const signOut = async (): Promise<void> => {
+  const { data, error } = await supabase
+    .from('User')
+    .select('emailVerified')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error) return false;
+  return Boolean(data?.emailVerified);
+}
+
+const getErrorCode = (error: {
+  message: string;
+  status?: number;
+}): LoginError => {
+  // Mapear errores de Supabase a códigos consistentes
+  if (error.status === 400) {
+    // 400: Credenciales inválidas, email no confirmado, etc.
+    if (
+      error.message.toLowerCase().includes('email') &&
+      error.message.toLowerCase().includes('confirm')
+    ) {
+      return 'EMAIL_NOT_CONFIRMED';
+    }
+    // Por defecto, 400 = credenciales inválidas
+    return 'INVALID_CREDENTIALS';
+  }
+
+  if (error.status === 404) {
+    return 'USER_NOT_FOUND';
+  }
+
+  if (error.status === 429) {
+    return 'TOO_MANY_REQUESTS';
+  }
+
+  // Error de red o desconocido
+  return 'NETWORK_ERROR';
+};
+
+const getErrorMessage = (errorCode: LoginError): LangMap => {
+  const errorMessages: Record<Exclude<LoginError, null>, LangMap> = {
+    INVALID_CREDENTIALS: {
+      es: 'Email o contraseña incorrectos',
+      en: 'Invalid email or password',
+    },
+    EMAIL_NOT_CONFIRMED: {
+      es: 'Email no confirmado',
+      en: 'Email not confirmed',
+    },
+    USER_NOT_FOUND: {
+      es: 'Email o contraseña incorrectos',
+      en: 'Invalid email or password',
+    },
+    TOO_MANY_REQUESTS: {
+      es: 'Demasiados intentos de inicio de sesión. Por favor, intenta más tarde.',
+      en: 'Too many login attempts. Please try again later.',
+    },
+    NETWORK_ERROR: {
+      es: 'Error de conexión. Por favor, verifica tu internet.',
+      en: 'Connection error. Please check your internet.',
+    },
+    EMAIL_NOT_VERIFIED: {
+      es: 'Correo no verificado. Revisa tu bandeja de entrada.',
+      en: 'Email not verified. Check your inbox.',
+    },
+    TOO_MANY_EMAIL_REQUESTS: {
+      en: 'Wait a few moments before requesting another confirmation email.',
+      es: 'Espera unos momentos antes de solicitar otro correo de confirmación.',
+    },
+    UNKNOWN_ERROR: {
+      es: 'Error desconocido. Por favor, intenta de nuevo.',
+      en: 'Unknown error. Please try again.',
+    },
+  };
+
+  return errorCode ? errorMessages[errorCode] : { es: '', en: '' };
+};
+
+const EMAIL_CONFIRM_COOLDOWN_MS = 120_000;
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { locale } = useTranslation();
+  const { callToast } = useToast(locale);
+  const { protectedPost } = useSecureApi();
+  const [auth, setAuth] = useState<AuthState>({ state: 'loading' });
+  const [manualSignInLoading, setManualSignInLoading] = useState(false);
+  const isManualSignInRef = useRef(false);
+  const clearTimer = useRef<null | (() => void)>(null);
+  const callToastRef = useRef(callToast);
+
+  const lastConfirmEmailSentAtRef = useRef<Record<string, number>>({});
+  const sendConfirmInFlightRef = useRef<Record<string, boolean>>({});
+
+  const isLoading =
+    manualSignInLoading || auth.state === 'loading' || auth.state === 'pending';
+
+  const sendEmailConfirmation = useCallback(
+    async (email?: string): Promise<LoginError | undefined> => {
+      if (!email) return;
+
+      const key = email.trim().toLowerCase();
+      const now = Date.now();
+
+      const lastAt = lastConfirmEmailSentAtRef.current[key] ?? 0;
+      const inCooldown = now - lastAt < EMAIL_CONFIRM_COOLDOWN_MS;
+      const inFlight = sendConfirmInFlightRef.current[key] === true;
+
+      if (inFlight || inCooldown) {
+        return 'TOO_MANY_EMAIL_REQUESTS' as const;
+      }
+
+      sendConfirmInFlightRef.current[key] = true;
+
+      try {
+        const response = await protectedPost<LangMap>({
+          endpoint: SECURE_ENDPOINTS.NO_AUTH.REQUEST_EMAIL_CONFIRMATION_TOKEN,
+          data: { email: key },
+        });
+
+        if (response.error) {
+          callToastRef.current({
+            variant: 'error',
+            description: response.error,
+          });
+          return null;
+        }
+
+        lastConfirmEmailSentAtRef.current[key] = Date.now();
+      } catch (e) {
+        console.warn('[sendEmailConfirmation] exception:', e);
+        return 'UNKNOWN_ERROR';
+      } finally {
+        sendConfirmInFlightRef.current[key] = false;
+      }
+    },
+    [protectedPost]
+  );
+
+  const signInWithPassword = useCallback(
+    async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }): Promise<SignInResult> => {
+      isManualSignInRef.current = true;
+      setManualSignInLoading(true);
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          const code = getErrorCode(error);
+          return { success: false, message: getErrorMessage(code) };
+        }
+
+        const session = data.session ?? null;
+        if (!session) {
+          return {
+            success: false,
+            message: getErrorMessage('UNKNOWN_ERROR'),
+          };
+        }
+
+        setAuth({ state: 'pending', session });
+
+        const ok = await checkIsValidated(session);
+        if (!ok) {
+          const result = await sendEmailConfirmation(email);
+          await supabase.auth.signOut().catch(() => {});
+          setAuth({ state: 'unauthenticated' });
+          return {
+            success: false,
+            message: getErrorMessage(result ?? 'EMAIL_NOT_VERIFIED'),
+            type: result === 'TOO_MANY_EMAIL_REQUESTS' ? 'warning' : 'error',
+          };
+        }
+
+        setAuth({ state: 'authenticated', session, role: null });
+        return {
+          success: true,
+          message: { es: 'Sesión iniciada', en: 'Session started' },
+        };
+      } finally {
+        setManualSignInLoading(false);
+        isManualSignInRef.current = false;
+      }
+    },
+    [sendEmailConfirmation]
+  );
+
+  const signOut = useCallback(async (): Promise<void> => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       // optional: log/sentry
       console.warn('[signOut] error:', error.message);
     }
-  };
+  }, []);
 
   const getSession = useCallback(() => {
     if (auth.state === 'authenticated') {
@@ -58,6 +284,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return [null, null] as [null, null];
   }, [auth]);
+
+  useEffect(() => {
+    callToastRef.current = callToast;
+  }, [callToast]);
 
   useEffect(() => {
     let alive = true;
@@ -72,14 +302,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const session = sess0;
+      setAuth({ state: 'pending', session: sess0 });
 
-      setAuth({ state: 'authenticated', session, role: null });
+      const provider0 = sess0.user.app_metadata?.provider;
+
+      // Only enforce custom email verification for email/password users
+      if (provider0 === 'email') {
+        const ok = await checkIsValidated(sess0);
+        if (!alive) return;
+
+        if (!ok) {
+          await supabase.auth.signOut().catch(() => {});
+          setAuth({ state: 'unauthenticated' });
+          return;
+        }
+      }
+
+      // now you can proceed as authenticated
+      setAuth({ state: 'authenticated', session: sess0, role: null });
+
+      const session = sess0;
 
       clearTimer.current?.();
       clearTimer.current = scheduleRefresh(session, async () => {
         const { data, error } = await supabase.auth.refreshSession();
-        if (error || data.session) {
+
+        // Sign out only if refresh failed OR returned no session
+        if (error || !data.session) {
           await supabase.auth.signOut().catch(() => {});
           setAuth({ state: 'unauthenticated' });
           return;
@@ -111,7 +360,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const r = await getUserRole({ id: u.user.id });
           if (!alive) return;
 
-          // keep latest session from storage (could have been refreshed)
           const { data: s2 } = await supabase.auth.getSession();
           const sess = s2.session ?? sess0;
 
@@ -128,12 +376,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           });
         } catch (e) {
           console.log('[AuthProvider] initial getUserRole failed:', e);
-          // keep authenticated with role null
         }
       })();
     })();
 
-    // 3) Suscribirse a cambios de auth
+    // 3) Subscribe to auth changes
     const { data: sub } = supabase.auth.onAuthStateChange(
       async (ev, newSession) => {
         if (!alive) return;
@@ -145,45 +392,84 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        if (ev === 'SIGNED_IN' || ev === 'TOKEN_REFRESHED') {
-          if (!newSession) {
-            setAuth({ state: 'unauthenticated' });
-            return;
-          }
+        if (ev === 'SIGNED_IN' && isManualSignInRef.current) return;
+        if (ev !== 'SIGNED_IN' && ev !== 'TOKEN_REFRESHED') return;
 
-          // ✅ set authenticated IMMEDIATELY (no awaits before this)
-          setAuth((prev) => {
-            const prevRole = prev.state === 'authenticated' ? prev.role : null;
-            return {
-              state: 'authenticated',
-              session: newSession,
-              role: prevRole,
-            };
-          });
+        if (!newSession) {
+          setAuth({ state: 'unauthenticated' });
+          return;
+        }
+
+        const provider = newSession.user.app_metadata?.provider;
+
+        // ✅ OAuth sign-ins: skip custom email verification gate
+        if (provider && provider !== 'email') {
+          setAuth((prev) => ({
+            state: 'authenticated',
+            session: newSession,
+            role: prev.state === 'authenticated' ? prev.role : null,
+          }));
 
           // schedule refresh
           clearTimer.current?.();
           clearTimer.current = scheduleRefresh(newSession, () => {});
 
-          // Fetch role in background (do NOT block auth state)
+          // fetch role in background
           (async () => {
             try {
-              const userId = newSession.user.id;
-              const r = await getUserRole({ id: userId });
+              const r = await getUserRole({ id: newSession.user.id });
               if (!alive) return;
+
               setAuth({
                 state: 'authenticated',
                 session: newSession,
                 role: r.data ?? null,
               });
             } catch (e) {
-              // If role fails, keep authenticated with role null
               console.log('[AuthProvider] getUserRole failed:', e);
             }
           })();
 
+          return; // ✅ important
+        }
+
+        // Email/password sessions continue with verification gate
+        setAuth({ state: 'pending', session: newSession });
+
+        clearTimer.current?.();
+        clearTimer.current = scheduleRefresh(newSession, () => {});
+
+        const ok = await checkIsValidated(newSession);
+        if (!alive) return;
+
+        if (!ok) {
+          clearTimer.current?.();
+          clearTimer.current = null;
+          await supabase.auth.signOut().catch(() => {});
+          setAuth({ state: 'unauthenticated' });
           return;
         }
+
+        setAuth((prev) => ({
+          state: 'authenticated',
+          session: newSession,
+          role: prev.state === 'authenticated' ? prev.role : null,
+        }));
+
+        (async () => {
+          try {
+            const r = await getUserRole({ id: newSession.user.id });
+            if (!alive) return;
+
+            setAuth({
+              state: 'authenticated',
+              session: newSession,
+              role: r.data ?? null,
+            });
+          } catch (e) {
+            console.log('[AuthProvider] getUserRole failed:', e);
+          }
+        })();
       }
     );
 
@@ -199,8 +485,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       auth,
       getSession,
       signOut,
+      signInWithPassword,
+      isLoading,
     }),
-    [auth, getSession]
+    [auth, getSession, signInWithPassword, signOut, isLoading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

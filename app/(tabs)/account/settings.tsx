@@ -10,6 +10,7 @@ import { Divider } from '@/components/ui/Divider';
 import { LANGUAGE_OPTIONS } from '@/constants/app';
 import { Lang } from '@/types/types';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
+import { triggerHaptic } from '@/utils/triggerHaptic';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
@@ -19,6 +20,9 @@ export default function SettingsScreen() {
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
       changeLanguage(selectedLanguage as Lang);
+      triggerHaptic('success', {
+        throttleMs: 120,
+      });
     }
   };
 
