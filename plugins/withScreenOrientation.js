@@ -1,28 +1,21 @@
 const { withAndroidManifest } = require('@expo/config-plugins');
 
-const withScreenOrientation = (config) => {
+module.exports = function withScreenOrientation(config) {
   return withAndroidManifest(config, (config) => {
-    const mainActivity =
-      config.modResults.manifest.application[0].activity.find(
-        (activity) => activity.$['android:name'] === '.MainActivity'
-      );
+    const app = config.modResults.manifest.application?.[0];
+    if (!app?.activity) return config;
+
+    const mainActivity = app.activity.find(
+      (activity) => activity.$['android:name'] === '.MainActivity'
+    );
 
     if (mainActivity) {
-      // Set screenOrientation to nosensor (most restrictive - ignores accelerometer)
-      mainActivity.$['android:screenOrientation'] = 'nosensor';
+      // Force portrait at the Activity level (strongest place)
+      mainActivity.$['android:screenOrientation'] = 'portrait';
 
-      // Remove orientation from configChanges to prevent rotation handling
-      const configChanges = mainActivity.$['android:configChanges'];
-      if (configChanges) {
-        mainActivity.$['android:configChanges'] = configChanges
-          .split('|')
-          .filter((change) => change !== 'orientation')
-          .join('|');
-      }
+      // DO NOT modify configChanges
     }
 
     return config;
   });
 };
-
-module.exports = withScreenOrientation;

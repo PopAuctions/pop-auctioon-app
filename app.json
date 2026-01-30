@@ -34,6 +34,7 @@
       },
       "package": "com.popauctioon.popauctioonapp",
       "screenOrientation": "portrait",
+      "resizeableActivity": false,
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
       "notification": {
