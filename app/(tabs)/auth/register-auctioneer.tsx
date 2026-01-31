@@ -110,7 +110,7 @@ export default function RegisterAuctioneerScreen() {
       edges={[]}
     >
       <ScrollView className='flex-1 px-4 pb-2 pt-4'>
-        <View className='w-full md:max-w-[600px] md:self-center'>
+        <View className='w-full md:max-w-[700px] md:self-center'>
           {/* Formulario */}
           <RegisterAuctioneerForm
             control={control}

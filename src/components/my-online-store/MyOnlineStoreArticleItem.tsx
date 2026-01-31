@@ -112,7 +112,7 @@ export function MyOnlineStoreArticleItem({
               </CustomText>
             )}
           </View>
-          <View className='flex flex-row gap-1'>
+          <View className='flex flex-col gap-1 md:flex-row md:gap-2'>
             <CustomLink
               href={
                 isSold
@@ -122,7 +122,7 @@ export function MyOnlineStoreArticleItem({
               mode='primary'
               size='small'
               textClassName='text-sm'
-              className='w-1/2'
+              className='w-full md:w-1/2'
             >
               {texts.checkDetails}
             </CustomLink>
@@ -132,7 +132,7 @@ export function MyOnlineStoreArticleItem({
                 mode='secondary'
                 size='small'
                 textClassName='text-sm'
-                className='w-1/2'
+                className='w-full md:w-1/2'
               >
                 {texts.viewInStore}
               </CustomLink>

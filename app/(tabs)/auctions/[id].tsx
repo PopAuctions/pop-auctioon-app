@@ -164,7 +164,7 @@ export default function AuctionDetailScreen() {
           </View>
 
           {auction.status !== AuctionStatus.FINISHED && (
-            <View className='flex w-4/5 flex-row justify-center gap-5 md:w-1/2'>
+            <View className='flex w-11/12 flex-row justify-center gap-5 md:w-2/3'>
               {auction.status === AuctionStatus.LIVE ? (
                 <CustomLink
                   className='w-1/2'
