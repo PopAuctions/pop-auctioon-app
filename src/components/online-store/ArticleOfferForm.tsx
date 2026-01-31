@@ -97,7 +97,7 @@ export function ArticleOfferForm({
   };
 
   return (
-    <View className='flex flex-col space-y-2'>
+    <View className='flex flex-col space-y-2 p-6'>
       <View className='my-3'>
         <Input
           value={amount}
@@ -105,7 +105,7 @@ export function ArticleOfferForm({
           onSubmitEditing={handleSubmitEditing}
           keyboardType='numeric'
           placeholder='....'
-          className='mr-2 w-1/2 rounded px-3 py-2'
+          className='w-full rounded px-3 py-2'
           editable={!isLoading}
         />
 
@@ -122,7 +122,7 @@ export function ArticleOfferForm({
         size='small'
         disabled={isDisabled}
         isLoading={isLoading}
-        className='relative mt-2'
+        className='mt-2'
         onPress={() => {
           if (!isDisabled) {
             void validateAndSubmit();

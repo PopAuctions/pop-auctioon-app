@@ -175,7 +175,7 @@ export default function AuctionDetailScreen() {
                 </CustomLink>
               ) : (
                 <FollowButton
-                  className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
+                  className='w-1/2 enabled:hover:cursor-pointer disabled:opacity-50'
                   mode='primary'
                   size='large'
                   follows={userFollows}
