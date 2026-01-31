@@ -29,65 +29,68 @@ export function RegisterUserForm({
 
   return (
     <View className='gap-4'>
-      {/* Nombre */}
-      <Controller
-        control={control}
-        name='name'
-        render={({ field: { onChange, value } }) => (
-          <View>
-            <CustomText
-              type='h4'
-              className='mb-2'
-            >
-              {t('screens.editProfile.name')} *
-            </CustomText>
-            <Input
-              placeholder={t('screens.editProfile.name')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
-            {errors.name && (
+      {/* Name and Last Name Row */}
+      <View className='flex-row gap-3'>
+        {/* Nombre */}
+        <Controller
+          control={control}
+          name='name'
+          render={({ field: { onChange, value } }) => (
+            <View className='flex-1'>
               <CustomText
-                type='bodysmall'
-                className='mt-1 text-red-500'
+                type='h4'
+                className='mb-2'
               >
-                {getErrorMessage(errors.name.message, locale)}
+                {t('screens.editProfile.name')} *
               </CustomText>
-            )}
-          </View>
-        )}
-      />
+              <Input
+                placeholder={t('screens.editProfile.name')}
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+              />
+              {errors.name && (
+                <CustomText
+                  type='bodysmall'
+                  className='mt-1 text-red-500'
+                >
+                  {getErrorMessage(errors.name.message, locale)}
+                </CustomText>
+              )}
+            </View>
+          )}
+        />
 
-      {/* Apellido */}
-      <Controller
-        control={control}
-        name='lastName'
-        render={({ field: { onChange, value } }) => (
-          <View>
-            <CustomText
-              type='h4'
-              className='mb-2'
-            >
-              {t('screens.editProfile.lastName')} *
-            </CustomText>
-            <Input
-              placeholder={t('screens.editProfile.lastName')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
-            {errors.lastName && (
+        {/* Apellido */}
+        <Controller
+          control={control}
+          name='lastName'
+          render={({ field: { onChange, value } }) => (
+            <View className='flex-1'>
               <CustomText
-                type='bodysmall'
-                className='mt-1 text-red-500'
+                type='h4'
+                className='mb-2'
               >
-                {getErrorMessage(errors.lastName.message, locale)}
+                {t('screens.editProfile.lastName')} *
               </CustomText>
-            )}
-          </View>
-        )}
-      />
+              <Input
+                placeholder={t('screens.editProfile.lastName')}
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+              />
+              {errors.lastName && (
+                <CustomText
+                  type='bodysmall'
+                  className='mt-1 text-red-500'
+                >
+                  {getErrorMessage(errors.lastName.message, locale)}
+                </CustomText>
+              )}
+            </View>
+          )}
+        />
+      </View>
 
       {/* Username */}
       <Controller
@@ -152,67 +155,70 @@ export function RegisterUserForm({
         )}
       />
 
-      {/* Password */}
-      <Controller
-        control={control}
-        name='password'
-        render={({ field: { onChange, value } }) => (
-          <View>
-            <CustomText
-              type='h4'
-              className='mb-2'
-            >
-              {t('loginPage.password')} *
-            </CustomText>
-            <Input
-              placeholder='********'
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-              secureTextEntry
-            />
-            {errors.password && (
+      {/* Password and Confirm Password Row */}
+      <View className='flex-row gap-3'>
+        {/* Password */}
+        <Controller
+          control={control}
+          name='password'
+          render={({ field: { onChange, value } }) => (
+            <View className='flex-1'>
               <CustomText
-                type='bodysmall'
-                className='mt-1 text-red-500'
+                type='h4'
+                className='mb-2'
               >
-                {getErrorMessage(errors.password.message, locale)}
+                {t('loginPage.password')} *
               </CustomText>
-            )}
-          </View>
-        )}
-      />
+              <Input
+                placeholder='********'
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+                secureTextEntry
+              />
+              {errors.password && (
+                <CustomText
+                  type='bodysmall'
+                  className='mt-1 text-red-500'
+                >
+                  {getErrorMessage(errors.password.message, locale)}
+                </CustomText>
+              )}
+            </View>
+          )}
+        />
 
-      {/* Confirm Password */}
-      <Controller
-        control={control}
-        name='confirmPassword'
-        render={({ field: { onChange, value } }) => (
-          <View>
-            <CustomText
-              type='h4'
-              className='mb-2'
-            >
-              {t('screens.account.confirmPassword')} *
-            </CustomText>
-            <Input
-              placeholder='********'
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-              secureTextEntry
-            />
-            {errors.confirmPassword && (
+        {/* Confirm Password */}
+        <Controller
+          control={control}
+          name='confirmPassword'
+          render={({ field: { onChange, value } }) => (
+            <View className='flex-1'>
               <CustomText
-                type='bodysmall'
-                className='mt-1 text-red-500'
+                type='h4'
+                className='mb-2'
               >
-                {getErrorMessage(errors.confirmPassword.message, locale)}
+                {t('screens.account.confirmPassword')} *
               </CustomText>
-            )}
-          </View>
-        )}
-      />
+              <Input
+                placeholder='********'
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+                secureTextEntry
+              />
+              {errors.confirmPassword && (
+                <CustomText
+                  type='bodysmall'
+                  className='mt-1 text-red-500'
+                >
+                  {getErrorMessage(errors.confirmPassword.message, locale)}
+                </CustomText>
+              )}
+            </View>
+          )}
+        />
+      </View>
 
       {/* DNI (opcional) */}
       <Controller

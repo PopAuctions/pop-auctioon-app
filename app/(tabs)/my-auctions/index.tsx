@@ -51,6 +51,14 @@ export default function MyAuctionsScreen() {
           />
         }
       >
+        {/* Title */}
+        <CustomText
+          type='h1'
+          className='my-4 text-center'
+        >
+          {myAuctions.title}
+        </CustomText>
+
         {/* Payment cards list */}
         <View className='mt-4 flex flex-col items-center gap-4'>
           {/* Top actions */}
@@ -80,10 +88,10 @@ export default function MyAuctionsScreen() {
                 >
                   <CustomLink
                     href={`/my-auctions/${auction.id}`}
-                    className='flex w-full flex-row gap-5'
+                    className='flex w-full flex-row gap-5 md:gap-8'
                   >
                     {/* Image */}
-                    <View className='aspect-[3/4] w-full max-w-40 overflow-hidden rounded-lg'>
+                    <View className='aspect-[3/4] w-1/2 overflow-hidden rounded-lg md:w-2/5'>
                       <CustomImage
                         src={auction.image}
                         alt={auction.title}
@@ -93,7 +101,7 @@ export default function MyAuctionsScreen() {
                     </View>
 
                     {/* Info */}
-                    <View className='flex flex-1 flex-col items-start justify-center'>
+                    <View className='w-1/2 flex-col items-start justify-center md:w-3/5'>
                       <AuctionDisplayDateTime
                         locale={locale}
                         startDate={auction.startDate}

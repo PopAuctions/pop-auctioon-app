@@ -59,66 +59,69 @@ export function RegisterAuctioneerForm({
 
       <Divider className='mb-6' />
 
-      {/* Name */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.name')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='name'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.name')}
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize='words'
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.name && (
+      {/* Name and Last Name Row */}
+      <View className='mb-4 flex-row gap-3'>
+        {/* Name */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.name.message, locale)}
+            {t('screens.editProfile.name')} *
           </CustomText>
-        )}
-      </View>
+          <Controller
+            control={control}
+            name='name'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder={t('screens.editProfile.name')}
+                value={value}
+                onChangeText={onChange}
+                autoCapitalize='words'
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.name && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.name.message, locale)}
+            </CustomText>
+          )}
+        </View>
 
-      {/* Last Name */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.lastName')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='lastName'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.lastName')}
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize='words'
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.lastName && (
+        {/* Last Name */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.lastName.message, locale)}
+            {t('screens.editProfile.lastName')} *
           </CustomText>
-        )}
+          <Controller
+            control={control}
+            name='lastName'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder={t('screens.editProfile.lastName')}
+                value={value}
+                onChangeText={onChange}
+                autoCapitalize='words'
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.lastName && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.lastName.message, locale)}
+            </CustomText>
+          )}
+        </View>
       </View>
 
       {/* Username */}
@@ -184,68 +187,71 @@ export function RegisterAuctioneerForm({
         )}
       </View>
 
-      {/* Password */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('loginPage.password')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='password'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder='********'
-              value={value}
-              onChangeText={onChange}
-              secureTextEntry
-              autoCapitalize='none'
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.password && (
+      {/* Password and Confirm Password Row */}
+      <View className='mb-4 flex-row gap-3'>
+        {/* Password */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.password.message, locale)}
+            {t('loginPage.password')} *
           </CustomText>
-        )}
-      </View>
+          <Controller
+            control={control}
+            name='password'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder='********'
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry
+                autoCapitalize='none'
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.password && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.password.message, locale)}
+            </CustomText>
+          )}
+        </View>
 
-      {/* Confirm Password */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.account.confirmPassword')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='confirmPassword'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder='********'
-              value={value}
-              onChangeText={onChange}
-              secureTextEntry
-              autoCapitalize='none'
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.confirmPassword && (
+        {/* Confirm Password */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.confirmPassword.message, locale)}
+            {t('screens.account.confirmPassword')} *
           </CustomText>
-        )}
+          <Controller
+            control={control}
+            name='confirmPassword'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder='********'
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry
+                autoCapitalize='none'
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.confirmPassword && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.confirmPassword.message, locale)}
+            </CustomText>
+          )}
+        </View>
       </View>
 
       {/* DNI */}
@@ -455,124 +461,130 @@ export function RegisterAuctioneerForm({
         )}
       </View>
 
-      {/* Town */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.town')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='town'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.town')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.town && (
+      {/* Town and Province Row */}
+      <View className='mb-4 flex-row gap-3'>
+        {/* Town */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.town.message, locale)}
+            {t('screens.editProfile.town')} *
           </CustomText>
-        )}
+          <Controller
+            control={control}
+            name='town'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder={t('screens.editProfile.town')}
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.town && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.town.message, locale)}
+            </CustomText>
+          )}
+        </View>
+
+        {/* Province */}
+        <View className='flex-1'>
+          <CustomText
+            type='body'
+            className='text-gray-700 mb-2'
+          >
+            {t('screens.editProfile.province')} *
+          </CustomText>
+          <Controller
+            control={control}
+            name='province'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder={t('screens.editProfile.province')}
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.province && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.province.message, locale)}
+            </CustomText>
+          )}
+        </View>
       </View>
 
-      {/* Province */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.province')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='province'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.province')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.province && (
+      {/* Country and Postal Code Row */}
+      <View className='mb-6 flex-row gap-3'>
+        {/* Country */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.province.message, locale)}
+            {t('screens.editProfile.country')} *
           </CustomText>
-        )}
-      </View>
+          <Controller
+            control={control}
+            name='country'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder={t('screens.editProfile.country')}
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.country && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.country.message, locale)}
+            </CustomText>
+          )}
+        </View>
 
-      {/* Country */}
-      <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.country')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='country'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.country')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.country && (
+        {/* Postal Code */}
+        <View className='flex-1'>
           <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
+            type='body'
+            className='text-gray-700 mb-2'
           >
-            {getErrorMessage(errors.country.message, locale)}
+            {t('screens.editProfile.postalCode')} *
           </CustomText>
-        )}
-      </View>
-
-      {/* Postal Code */}
-      <View className='mb-6'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.postalCode')} *
-        </CustomText>
-        <Controller
-          control={control}
-          name='postalCode'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.postalCode')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
+          <Controller
+            control={control}
+            name='postalCode'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder={t('screens.editProfile.postalCode')}
+                value={value}
+                onChangeText={onChange}
+                editable={!isLoading}
+              />
+            )}
+          />
+          {errors.postalCode && (
+            <CustomText
+              type='bodysmall'
+              className='mt-1 text-red-500'
+            >
+              {getErrorMessage(errors.postalCode.message, locale)}
+            </CustomText>
           )}
-        />
-        {errors.postalCode && (
-          <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
-          >
-            {getErrorMessage(errors.postalCode.message, locale)}
-          </CustomText>
-        )}
+        </View>
       </View>
 
       <Divider className='mb-6' />

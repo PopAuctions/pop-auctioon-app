@@ -100,31 +100,33 @@ export default function RegisterUserScreen() {
       edges={[]}
     >
       <ScrollView className='flex-1 px-4 pb-2 pt-4'>
-        {/* Formulario */}
-        <RegisterUserForm
-          control={control}
-          errors={errors}
-          isLoading={isLoading}
-          acceptedTerms={acceptedTerms}
-          onTermsToggle={() => setAcceptedTerms(!acceptedTerms)}
-          onOpenTerms={handleOpenTerms}
-        />
-
-        {/* Botones */}
-        <View className='mt-4 gap-3'>
-          <Button
-            onPress={handleSubmit(onSubmit)}
-            mode='primary'
-            disabled={!acceptedTerms || isLoading}
+        <View className='w-full md:max-w-[600px] md:self-center'>
+          {/* Formulario */}
+          <RegisterUserForm
+            control={control}
+            errors={errors}
             isLoading={isLoading}
-          >
-            <CustomText
-              type='body'
-              className='text-white'
+            acceptedTerms={acceptedTerms}
+            onTermsToggle={() => setAcceptedTerms(!acceptedTerms)}
+            onOpenTerms={handleOpenTerms}
+          />
+
+          {/* Botones */}
+          <View className='mt-4 gap-3'>
+            <Button
+              onPress={handleSubmit(onSubmit)}
+              mode='primary'
+              disabled={!acceptedTerms || isLoading}
+              isLoading={isLoading}
             >
-              {t('screens.account.createAccount')}
-            </CustomText>
-          </Button>
+              <CustomText
+                type='body'
+                className='text-white'
+              >
+                {t('screens.account.createAccount')}
+              </CustomText>
+            </Button>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

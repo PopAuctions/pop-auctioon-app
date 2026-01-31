@@ -168,463 +168,465 @@ export default function EditProfileScreen() {
       edges={['bottom']}
     >
       <ScrollView className='flex-1'>
-        <View className='p-6'>
-          {/* Header */}
-          <CustomText
-            type='h1'
-            className='mb-4 text-center text-cinnabar'
-          >
-            {t('screens.editProfile.title')}
-          </CustomText>
+        <View className='p-6 md:px-0'>
+          <View className='w-full md:max-w-[700px] md:self-center'>
+            {/* Header */}
+            <CustomText
+              type='h1'
+              className='mb-4 text-center text-cinnabar'
+            >
+              {t('screens.editProfile.title')}
+            </CustomText>
 
-          {/* Name and Last Name Row */}
-          <View className='mb-4 flex-row gap-3'>
-            {/* Name Input */}
-            <View className='flex-1'>
+            {/* Name and Last Name Row */}
+            <View className='mb-4 flex-row gap-3'>
+              {/* Name Input */}
+              <View className='flex-1'>
+                <CustomText
+                  type='body'
+                  className='mb-2 '
+                >
+                  {t('screens.editProfile.name')}*
+                </CustomText>
+                <Controller
+                  control={control}
+                  name='name'
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      placeholder={t('screens.editProfile.name')}
+                      editable={!isLoading}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <CustomText
+                    type='error'
+                    className='mt-1'
+                  >
+                    {getErrorMessage(errors.name.message, locale)}
+                  </CustomText>
+                )}
+              </View>
+
+              {/* Last Name Input */}
+              <View className='flex-1'>
+                <CustomText
+                  type='body'
+                  className='mb-2 '
+                >
+                  {t('screens.editProfile.lastName')}*
+                </CustomText>
+                <Controller
+                  control={control}
+                  name='lastName'
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      placeholder={t('screens.editProfile.lastName')}
+                      editable={!isLoading}
+                    />
+                  )}
+                />
+                {errors.lastName && (
+                  <CustomText
+                    type='error'
+                    className='mt-1'
+                  >
+                    {getErrorMessage(errors.lastName.message, locale)}
+                  </CustomText>
+                )}
+              </View>
+            </View>
+
+            {/* Username Input */}
+            <View className='mb-4'>
               <CustomText
                 type='body'
                 className='mb-2 '
               >
-                {t('screens.editProfile.name')}*
+                {t('screens.editProfile.username')}*
               </CustomText>
               <Controller
                 control={control}
-                name='name'
+                name='username'
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder={t('screens.editProfile.name')}
+                    placeholder={t('screens.editProfile.username')}
                     editable={!isLoading}
                   />
                 )}
               />
-              {errors.name && (
+              {errors.username && (
                 <CustomText
                   type='error'
                   className='mt-1'
                 >
-                  {getErrorMessage(errors.name.message, locale)}
+                  {getErrorMessage(errors.username.message, locale)}
                 </CustomText>
               )}
             </View>
 
-            {/* Last Name Input */}
-            <View className='flex-1'>
+            {/* Phone Number Input */}
+            <View className='mb-4'>
               <CustomText
                 type='body'
                 className='mb-2 '
               >
-                {t('screens.editProfile.lastName')}*
+                {t('screens.editProfile.phoneNumber')}*
               </CustomText>
               <Controller
                 control={control}
-                name='lastName'
+                name='phoneNumber'
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    value={value}
+                    value={value || ''}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder={t('screens.editProfile.lastName')}
+                    placeholder={t('screens.editProfile.phoneNumber')}
+                    keyboardType='phone-pad'
                     editable={!isLoading}
                   />
                 )}
               />
-              {errors.lastName && (
+              {errors.phoneNumber && (
                 <CustomText
                   type='error'
                   className='mt-1'
                 >
-                  {getErrorMessage(errors.lastName.message, locale)}
+                  {getErrorMessage(errors.phoneNumber.message, locale)}
                 </CustomText>
               )}
             </View>
-          </View>
 
-          {/* Username Input */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2 '
-            >
-              {t('screens.editProfile.username')}*
-            </CustomText>
-            <Controller
-              control={control}
-              name='username'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.editProfile.username')}
-                  editable={!isLoading}
-                />
-              )}
-            />
-            {errors.username && (
-              <CustomText
-                type='error'
-                className='mt-1'
-              >
-                {getErrorMessage(errors.username.message, locale)}
-              </CustomText>
+            {/* Campos adicionales para AUCTIONEER */}
+            {userRole === 'AUCTIONEER' && (
+              <>
+                {/* Store Name Input */}
+                <View className='mb-4'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.storeName')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name='storeName'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.storeName')}
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+                  {'storeName' in errors && errors.storeName && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {getErrorMessage(errors.storeName.message, locale)}
+                    </CustomText>
+                  )}
+                </View>
+
+                {/* Web Page Input */}
+                <View className='mb-4'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.webPage')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name='webPage'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.webPage')}
+                        keyboardType='url'
+                        autoCapitalize='none'
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+                  <CustomText
+                    type='body'
+                    className='text-gray-500 mt-1 text-xs'
+                  >
+                    {t('screens.editProfile.keepUrlProtocol')}
+                  </CustomText>
+                  {'webPage' in errors && errors.webPage && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {getErrorMessage(errors.webPage.message, locale)}
+                    </CustomText>
+                  )}
+                </View>
+
+                {/* Social Media Input */}
+                <View className='mb-4'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.socialMedia')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name='socialMedia'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.socialMedia')}
+                        keyboardType='url'
+                        autoCapitalize='none'
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+                  <CustomText
+                    type='body'
+                    className='text-gray-500 mt-1 text-xs'
+                  >
+                    {t('screens.editProfile.keepUrlProtocol')}
+                  </CustomText>
+                  {'socialMedia' in errors && errors.socialMedia && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {getErrorMessage(errors.socialMedia.message, locale)}
+                    </CustomText>
+                  )}
+                </View>
+
+                {/* Address Input */}
+                <View className='mb-4'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.address')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name='address'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.address')}
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+                  {'address' in errors && errors.address && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {getErrorMessage(errors.address.message, locale)}
+                    </CustomText>
+                  )}
+                </View>
+
+                {/* Town and Province Row */}
+                <View className='mb-4 flex-row gap-3'>
+                  {/* Town Input */}
+                  <View className='flex-1'>
+                    <CustomText
+                      type='body'
+                      className='mb-2 '
+                    >
+                      {t('screens.editProfile.town')}*
+                    </CustomText>
+                    <Controller
+                      control={control}
+                      name='town'
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input
+                          value={value || ''}
+                          onChangeText={onChange}
+                          onBlur={onBlur}
+                          placeholder={t('screens.editProfile.town')}
+                          editable={!isLoading}
+                        />
+                      )}
+                    />
+                    {'town' in errors && errors.town && (
+                      <CustomText
+                        type='error'
+                        className='mt-1'
+                      >
+                        {getErrorMessage(errors.town.message, locale)}
+                      </CustomText>
+                    )}
+                  </View>
+
+                  {/* Province Input */}
+                  <View className='flex-1'>
+                    <CustomText
+                      type='body'
+                      className='mb-2 '
+                    >
+                      {t('screens.editProfile.province')}*
+                    </CustomText>
+                    <Controller
+                      control={control}
+                      name='province'
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input
+                          value={value || ''}
+                          onChangeText={onChange}
+                          onBlur={onBlur}
+                          placeholder={t('screens.editProfile.province')}
+                          editable={!isLoading}
+                        />
+                      )}
+                    />
+                    {'province' in errors && errors.province && (
+                      <CustomText
+                        type='error'
+                        className='mt-1'
+                      >
+                        {getErrorMessage(errors.province.message, locale)}
+                      </CustomText>
+                    )}
+                  </View>
+                </View>
+
+                {/* Country and Postal Code Row */}
+                <View className='mb-4 flex-row gap-3'>
+                  {/* Country Input */}
+                  <View className='flex-1'>
+                    <CustomText
+                      type='body'
+                      className='mb-2 '
+                    >
+                      {t('screens.editProfile.country')}*
+                    </CustomText>
+                    <Controller
+                      control={control}
+                      name='country'
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input
+                          value={value || ''}
+                          onChangeText={onChange}
+                          onBlur={onBlur}
+                          placeholder={t('screens.editProfile.country')}
+                          editable={!isLoading}
+                        />
+                      )}
+                    />
+                    {'country' in errors && errors.country && (
+                      <CustomText
+                        type='error'
+                        className='mt-1'
+                      >
+                        {getErrorMessage(errors.country.message, locale)}
+                      </CustomText>
+                    )}
+                  </View>
+
+                  {/* Postal Code Input */}
+                  <View className='flex-1'>
+                    <CustomText
+                      type='body'
+                      className='mb-2 '
+                    >
+                      {t('screens.editProfile.postalCode')}*
+                    </CustomText>
+                    <Controller
+                      control={control}
+                      name='postalCode'
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input
+                          value={value || ''}
+                          onChangeText={onChange}
+                          onBlur={onBlur}
+                          placeholder={t('screens.editProfile.postalCode')}
+                          editable={!isLoading}
+                        />
+                      )}
+                    />
+                    {'postalCode' in errors && errors.postalCode && (
+                      <CustomText
+                        type='error'
+                        className='mt-1'
+                      >
+                        {getErrorMessage(errors.postalCode.message, locale)}
+                      </CustomText>
+                    )}
+                  </View>
+                </View>
+              </>
             )}
-          </View>
 
-          {/* Phone Number Input */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2 '
-            >
-              {t('screens.editProfile.phoneNumber')}*
-            </CustomText>
-            <Controller
-              control={control}
-              name='phoneNumber'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={value || ''}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.editProfile.phoneNumber')}
-                  keyboardType='phone-pad'
-                  editable={!isLoading}
-                />
-              )}
-            />
-            {errors.phoneNumber && (
+            {/* Upload Image Section */}
+            <View className='mb-6'>
               <CustomText
-                type='error'
-                className='mt-1'
+                type='body'
+                className='mb-3 text-black'
               >
-                {getErrorMessage(errors.phoneNumber.message, locale)}
+                {t('screens.editProfile.uploadImage')}
               </CustomText>
-            )}
-          </View>
 
-          {/* Campos adicionales para AUCTIONEER */}
-          {userRole === 'AUCTIONEER' && (
-            <>
-              {/* Store Name Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.storeName')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name='storeName'
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.storeName')}
-                      editable={!isLoading}
-                    />
-                  )}
-                />
-                {'storeName' in errors && errors.storeName && (
-                  <CustomText
-                    type='error'
-                    className='mt-1'
-                  >
-                    {getErrorMessage(errors.storeName.message, locale)}
-                  </CustomText>
-                )}
-              </View>
-
-              {/* Web Page Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.webPage')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name='webPage'
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.webPage')}
-                      keyboardType='url'
-                      autoCapitalize='none'
-                      editable={!isLoading}
-                    />
-                  )}
-                />
-                <CustomText
-                  type='body'
-                  className='text-gray-500 mt-1 text-xs'
-                >
-                  {t('screens.editProfile.keepUrlProtocol')}
-                </CustomText>
-                {'webPage' in errors && errors.webPage && (
-                  <CustomText
-                    type='error'
-                    className='mt-1'
-                  >
-                    {getErrorMessage(errors.webPage.message, locale)}
-                  </CustomText>
-                )}
-              </View>
-
-              {/* Social Media Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.socialMedia')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name='socialMedia'
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.socialMedia')}
-                      keyboardType='url'
-                      autoCapitalize='none'
-                      editable={!isLoading}
-                    />
-                  )}
-                />
-                <CustomText
-                  type='body'
-                  className='text-gray-500 mt-1 text-xs'
-                >
-                  {t('screens.editProfile.keepUrlProtocol')}
-                </CustomText>
-                {'socialMedia' in errors && errors.socialMedia && (
-                  <CustomText
-                    type='error'
-                    className='mt-1'
-                  >
-                    {getErrorMessage(errors.socialMedia.message, locale)}
-                  </CustomText>
-                )}
-              </View>
-
-              {/* Address Input */}
-              <View className='mb-4'>
-                <CustomText
-                  type='body'
-                  className='mb-2 '
-                >
-                  {t('screens.editProfile.address')}*
-                </CustomText>
-                <Controller
-                  control={control}
-                  name='address'
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      value={value || ''}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={t('screens.editProfile.address')}
-                      editable={!isLoading}
-                    />
-                  )}
-                />
-                {'address' in errors && errors.address && (
-                  <CustomText
-                    type='error'
-                    className='mt-1'
-                  >
-                    {getErrorMessage(errors.address.message, locale)}
-                  </CustomText>
-                )}
-              </View>
-
-              {/* Town and Province Row */}
-              <View className='mb-4 flex-row gap-3'>
-                {/* Town Input */}
-                <View className='flex-1'>
-                  <CustomText
-                    type='body'
-                    className='mb-2 '
-                  >
-                    {t('screens.editProfile.town')}*
-                  </CustomText>
-                  <Controller
-                    control={control}
-                    name='town'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
-                        value={value || ''}
-                        onChangeText={onChange}
-                        onBlur={onBlur}
-                        placeholder={t('screens.editProfile.town')}
-                        editable={!isLoading}
-                      />
-                    )}
+              <Controller
+                control={control}
+                name='profilePicture'
+                render={({ field: { onChange, value } }) => (
+                  <ImageUploadButton
+                    selectedImage={value || null}
+                    onImageSelected={onChange}
+                    onImageRemoved={() => onChange('')}
+                    disabled={isLoading}
                   />
-                  {'town' in errors && errors.town && (
-                    <CustomText
-                      type='error'
-                      className='mt-1'
-                    >
-                      {getErrorMessage(errors.town.message, locale)}
-                    </CustomText>
-                  )}
-                </View>
-
-                {/* Province Input */}
-                <View className='flex-1'>
-                  <CustomText
-                    type='body'
-                    className='mb-2 '
-                  >
-                    {t('screens.editProfile.province')}*
-                  </CustomText>
-                  <Controller
-                    control={control}
-                    name='province'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
-                        value={value || ''}
-                        onChangeText={onChange}
-                        onBlur={onBlur}
-                        placeholder={t('screens.editProfile.province')}
-                        editable={!isLoading}
-                      />
-                    )}
-                  />
-                  {'province' in errors && errors.province && (
-                    <CustomText
-                      type='error'
-                      className='mt-1'
-                    >
-                      {getErrorMessage(errors.province.message, locale)}
-                    </CustomText>
-                  )}
-                </View>
-              </View>
-
-              {/* Country and Postal Code Row */}
-              <View className='mb-4 flex-row gap-3'>
-                {/* Country Input */}
-                <View className='flex-1'>
-                  <CustomText
-                    type='body'
-                    className='mb-2 '
-                  >
-                    {t('screens.editProfile.country')}*
-                  </CustomText>
-                  <Controller
-                    control={control}
-                    name='country'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
-                        value={value || ''}
-                        onChangeText={onChange}
-                        onBlur={onBlur}
-                        placeholder={t('screens.editProfile.country')}
-                        editable={!isLoading}
-                      />
-                    )}
-                  />
-                  {'country' in errors && errors.country && (
-                    <CustomText
-                      type='error'
-                      className='mt-1'
-                    >
-                      {getErrorMessage(errors.country.message, locale)}
-                    </CustomText>
-                  )}
-                </View>
-
-                {/* Postal Code Input */}
-                <View className='flex-1'>
-                  <CustomText
-                    type='body'
-                    className='mb-2 '
-                  >
-                    {t('screens.editProfile.postalCode')}*
-                  </CustomText>
-                  <Controller
-                    control={control}
-                    name='postalCode'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
-                        value={value || ''}
-                        onChangeText={onChange}
-                        onBlur={onBlur}
-                        placeholder={t('screens.editProfile.postalCode')}
-                        editable={!isLoading}
-                      />
-                    )}
-                  />
-                  {'postalCode' in errors && errors.postalCode && (
-                    <CustomText
-                      type='error'
-                      className='mt-1'
-                    >
-                      {getErrorMessage(errors.postalCode.message, locale)}
-                    </CustomText>
-                  )}
-                </View>
-              </View>
-            </>
-          )}
-
-          {/* Upload Image Section */}
-          <View className='mb-6'>
-            <CustomText
-              type='body'
-              className='mb-3 text-black'
-            >
-              {t('screens.editProfile.uploadImage')}
-            </CustomText>
-
-            <Controller
-              control={control}
-              name='profilePicture'
-              render={({ field: { onChange, value } }) => (
-                <ImageUploadButton
-                  selectedImage={value || null}
-                  onImageSelected={onChange}
-                  onImageRemoved={() => onChange('')}
-                  disabled={isLoading}
-                />
+                )}
+              />
+              {errors.profilePicture && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {getErrorMessage(errors.profilePicture.message, locale)}
+                </CustomText>
               )}
-            />
-            {errors.profilePicture && (
-              <CustomText
-                type='error'
-                className='mt-1'
+            </View>
+
+            {/* Action Buttons */}
+            <View className='mb-4'>
+              <Button
+                mode='primary'
+                onPress={handleSubmit(onSubmit)}
+                isLoading={isLoading}
+                disabled={isLoading}
               >
-                {getErrorMessage(errors.profilePicture.message, locale)}
-              </CustomText>
-            )}
-          </View>
+                {t('screens.editProfile.update')}
+              </Button>
+            </View>
 
-          {/* Action Buttons */}
-          <View className='mb-4'>
-            <Button
-              mode='primary'
-              onPress={handleSubmit(onSubmit)}
-              isLoading={isLoading}
-              disabled={isLoading}
-            >
-              {t('screens.editProfile.update')}
-            </Button>
+            {/* Espacio adicional al final */}
+            <View className='h-8' />
           </View>
-
-          {/* Espacio adicional al final */}
-          <View className='h-8' />
         </View>
       </ScrollView>
     </SafeAreaView>
