@@ -84,7 +84,7 @@ export default function Auth() {
             </View>
 
             {/* Card */}
-            <View className='w-full rounded-2xl bg-white p-6 shadow-2xl'>
+            <View className='w-full rounded-2xl bg-white p-6 shadow-2xl md:max-w-[600px] md:self-center'>
               {/* Email */}
               <View className='mb-5'>
                 <CustomText

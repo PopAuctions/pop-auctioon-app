@@ -159,247 +159,249 @@ export default function NewAuctionArticleScreen() {
       edges={['bottom']}
     >
       <ScrollView className='flex-1'>
-        <View className='p-6'>
-          <View className='mb-4'>
-            <CustomText
-              type='subtitle'
-              className='mb-4 text-center text-3xl text-cinnabar'
-            >
-              {
-                AUCTION_CATEGORIES_LABEL[locale][
-                  auctionCategory as AuctionCategories
-                ]
-              }
-            </CustomText>
-
-            {/* Info: category / required fields */}
-            <CustomText
-              type='body'
-              className='text-red-600'
-            >
-              {t('screens.newArticle.required')}
-            </CustomText>
-          </View>
-
-          {/* Title */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
-              {t('screens.newArticle.title')}*
-            </CustomText>
-            <Controller
-              control={control}
-              name='title'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={value || ''}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.newArticle.title')}
-                  editable={!isLoading}
-                />
-              )}
-            />
-            {errors.title && (
+        <View className='p-6 md:px-0'>
+          <View className='w-full md:max-w-[700px] md:self-center'>
+            <View className='mb-4'>
               <CustomText
-                type='error'
-                className='mt-1'
+                type='subtitle'
+                className='mb-4 text-center text-3xl text-cinnabar'
               >
-                {getErrorMessage(errors.title.message, locale)}
+                {
+                  AUCTION_CATEGORIES_LABEL[locale][
+                    auctionCategory as AuctionCategories
+                  ]
+                }
               </CustomText>
-            )}
-          </View>
 
-          {/* STATE */}
-          <View className='mb-4'>
-            <View className='flex flex-row gap-2'>
-              <Tooltip content={tooltipContent} />
+              {/* Info: category / required fields */}
+              <CustomText
+                type='body'
+                className='text-red-600'
+              >
+                {t('screens.newArticle.required')}
+              </CustomText>
+            </View>
+
+            {/* Title */}
+            <View className='mb-4'>
               <CustomText
                 type='body'
                 className='mb-2'
               >
-                {t('screens.newArticle.state')}*
+                {t('screens.newArticle.title')}*
               </CustomText>
+              <Controller
+                control={control}
+                name='title'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    value={value || ''}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('screens.newArticle.title')}
+                    editable={!isLoading}
+                  />
+                )}
+              />
+              {errors.title && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {getErrorMessage(errors.title.message, locale)}
+                </CustomText>
+              )}
             </View>
-            <Controller
-              control={control}
-              name='state'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <SelectField
-                  name='state'
-                  value={value ?? null}
-                  options={ARTICLE_STATE[locale]}
-                  placeholder={t('screens.newArticle.state')}
-                  isSearchable={true}
-                  isDisabled={isLoading}
-                  formField={true}
-                  isClearable={true}
-                  onChange={onChange}
-                />
+
+            {/* STATE */}
+            <View className='mb-4'>
+              <View className='flex flex-row gap-2'>
+                <Tooltip content={tooltipContent} />
+                <CustomText
+                  type='body'
+                  className='mb-2'
+                >
+                  {t('screens.newArticle.state')}*
+                </CustomText>
+              </View>
+              <Controller
+                control={control}
+                name='state'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <SelectField
+                    name='state'
+                    value={value ?? null}
+                    options={ARTICLE_STATE[locale]}
+                    placeholder={t('screens.newArticle.state')}
+                    isSearchable={true}
+                    isDisabled={isLoading}
+                    formField={true}
+                    isClearable={true}
+                    onChange={onChange}
+                  />
+                )}
+              />
+              {errors.state && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {getErrorMessage(errors.state?.message, locale)}
+                </CustomText>
               )}
-            />
-            {errors.state && (
-              <CustomText
-                type='error'
-                className='mt-1'
-              >
-                {getErrorMessage(errors.state?.message, locale)}
-              </CustomText>
-            )}
-          </View>
+            </View>
 
-          {/* Starting Price */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
-              {t('screens.newArticle.startingPrice')}*
-            </CustomText>
-            <Controller
-              control={control}
-              name='startingPrice'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={String(value ?? '')}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.newArticle.startingPrice')}
-                  keyboardType='number-pad'
-                  editable={!isLoading}
-                />
+            {/* Starting Price */}
+            <View className='mb-4'>
+              <CustomText
+                type='body'
+                className='mb-2'
+              >
+                {t('screens.newArticle.startingPrice')}*
+              </CustomText>
+              <Controller
+                control={control}
+                name='startingPrice'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    value={String(value ?? '')}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('screens.newArticle.startingPrice')}
+                    keyboardType='number-pad'
+                    editable={!isLoading}
+                  />
+                )}
+              />
+              {errors.startingPrice && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {getErrorMessage(errors.startingPrice.message, locale)}
+                </CustomText>
               )}
-            />
-            {errors.startingPrice && (
-              <CustomText
-                type='error'
-                className='mt-1'
-              >
-                {getErrorMessage(errors.startingPrice.message, locale)}
-              </CustomText>
-            )}
-          </View>
+            </View>
 
-          {/* Estimated Value */}
-          <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
-              {t('screens.newArticle.estimatedValue')}
-            </CustomText>
-            <Controller
-              control={control}
-              name='estimatedValue'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={
-                    value === null || value === undefined ? '' : String(value)
-                  }
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.newArticle.estimatedValue')}
-                  keyboardType='number-pad'
-                  editable={!isLoading}
-                />
+            {/* Estimated Value */}
+            <View className='mb-4'>
+              <CustomText
+                type='body'
+                className='mb-2'
+              >
+                {t('screens.newArticle.estimatedValue')}
+              </CustomText>
+              <Controller
+                control={control}
+                name='estimatedValue'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    value={
+                      value === null || value === undefined ? '' : String(value)
+                    }
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('screens.newArticle.estimatedValue')}
+                    keyboardType='number-pad'
+                    editable={!isLoading}
+                  />
+                )}
+              />
+              {errors.estimatedValue && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {getErrorMessage(errors.estimatedValue.message, locale)}
+                </CustomText>
               )}
-            />
-            {errors.estimatedValue && (
-              <CustomText
-                type='error'
-                className='mt-1'
-              >
-                {getErrorMessage(errors.estimatedValue.message, locale)}
-              </CustomText>
-            )}
-          </View>
+            </View>
 
-          <ArticleExtraFields
-            control={control}
-            errors={errors}
-            isLoading={isLoading}
-            category={auctionCategory}
-          />
-
-          {/* Description */}
-          <View className='mb-6'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
-              {t('screens.newArticle.description')}*
-            </CustomText>
-            <Controller
+            <ArticleExtraFields
               control={control}
-              name='description'
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  value={value || ''}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('screens.newArticle.description')}
-                  editable={!isLoading}
-                  multiline
-                  numberOfLines={4}
-                  textAlignVertical='top'
-                  className='h-28'
-                />
-              )}
-            />
-            {errors.description && (
-              <CustomText
-                type='error'
-                className='mt-1'
-              >
-                {getErrorMessage(errors.description.message, locale)}
-              </CustomText>
-            )}
-          </View>
-
-          <View className='mb-6'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
-              {t('screens.newArticle.images')}
-            </CustomText>
-
-            <ImageUploadButton
-              multiple
-              selectedImages={images}
-              onImagesSelected={handleImagesSelected}
-              onImageRemovedAt={handleRemoveImageAt}
-              maxImages={ARTICLE_IMAGES_MAX}
-              disabled={isLoading}
-            />
-          </View>
-
-          {/* Submit Button */}
-          <View className='mb-4'>
-            <Button
-              mode='primary'
-              onPress={handleSubmit(onSubmit)}
+              errors={errors}
               isLoading={isLoading}
-              disabled={isLoading}
-            >
-              {t('screens.newArticle.submit')}
-            </Button>
-          </View>
+              category={auctionCategory}
+            />
 
-          {/* Cancel Button */}
-          <View className='mb-4'>
-            <Button
-              mode='secondary'
-              onPress={handleCancel}
-              disabled={isLoading}
-            >
-              {t('screens.newArticle.cancel')}
-            </Button>
-          </View>
+            {/* Description */}
+            <View className='mb-6'>
+              <CustomText
+                type='body'
+                className='mb-2'
+              >
+                {t('screens.newArticle.description')}*
+              </CustomText>
+              <Controller
+                control={control}
+                name='description'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    value={value || ''}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('screens.newArticle.description')}
+                    editable={!isLoading}
+                    multiline
+                    numberOfLines={4}
+                    textAlignVertical='top'
+                    className='h-28'
+                  />
+                )}
+              />
+              {errors.description && (
+                <CustomText
+                  type='error'
+                  className='mt-1'
+                >
+                  {getErrorMessage(errors.description.message, locale)}
+                </CustomText>
+              )}
+            </View>
 
-          <View className='h-8' />
+            <View className='mb-6'>
+              <CustomText
+                type='body'
+                className='mb-2'
+              >
+                {t('screens.newArticle.images')}
+              </CustomText>
+
+              <ImageUploadButton
+                multiple
+                selectedImages={images}
+                onImagesSelected={handleImagesSelected}
+                onImageRemovedAt={handleRemoveImageAt}
+                maxImages={ARTICLE_IMAGES_MAX}
+                disabled={isLoading}
+              />
+            </View>
+
+            {/* Submit Button */}
+            <View className='mb-4'>
+              <Button
+                mode='primary'
+                onPress={handleSubmit(onSubmit)}
+                isLoading={isLoading}
+                disabled={isLoading}
+              >
+                {t('screens.newArticle.submit')}
+              </Button>
+            </View>
+
+            {/* Cancel Button */}
+            <View className='mb-4'>
+              <Button
+                mode='secondary'
+                onPress={handleCancel}
+                disabled={isLoading}
+              >
+                {t('screens.newArticle.cancel')}
+              </Button>
+            </View>
+
+            <View className='h-8' />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

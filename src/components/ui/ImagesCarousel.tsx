@@ -31,7 +31,7 @@ export function ImagesCarousel({ images }: { images: string[] }) {
 
   return (
     <View
-      className='w-full items-center'
+      className='w-full items-center md:max-w-[650px]'
       onLayout={handleLayout}
     >
       {containerWidth > 0 && (

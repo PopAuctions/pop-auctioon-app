@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
@@ -26,6 +27,7 @@ export default function LiveAuctionScreen() {
   const insets = useSafeAreaInsets();
   const auctionId = id;
 
+  const { auth } = useAuth();
   const { data: currentUser, status: userStatus } = useGetCurrentUser();
   const {
     data: liveAuctionData,
@@ -70,6 +72,65 @@ export default function LiveAuctionScreen() {
 
   const [streamLoaded, setStreamLoaded] = useState(false);
   const [streamError, setStreamError] = useState(false);
+  const [shouldDismiss, setShouldDismiss] = useState(false);
+
+  // Guardar referencia al estado de autenticación inicial
+  const wasAuthenticatedRef = useRef(false);
+  const wasUnauthenticatedRef = useRef(false);
+  const initialUserIdRef = useRef<string | null>(null);
+
+  // Rastrear estado de autenticación inicial
+  useEffect(() => {
+    // Primera vez que se monta el componente
+    if (!wasAuthenticatedRef.current && !wasUnauthenticatedRef.current) {
+      if (auth.state === 'authenticated' && currentUser?.id) {
+        wasAuthenticatedRef.current = true;
+        initialUserIdRef.current = currentUser.id;
+      } else if (auth.state === 'unauthenticated') {
+        wasUnauthenticatedRef.current = true;
+      }
+      return;
+    }
+
+    // Detectar cambios de estado de autenticación
+    // Caso 1: Usuario cerró sesión
+    if (wasAuthenticatedRef.current && auth.state === 'unauthenticated') {
+      setShouldDismiss(true);
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)/auctions');
+      }
+      return;
+    }
+
+    // Caso 2: Usuario cambió de cuenta
+    if (wasAuthenticatedRef.current && currentUser?.id && initialUserIdRef.current && currentUser.id !== initialUserIdRef.current) {
+      setShouldDismiss(true);
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)/auctions');
+      }
+      return;
+    }
+
+    // Caso 3: Usuario no autenticado inició sesión
+    if (wasUnauthenticatedRef.current && auth.state === 'authenticated' && currentUser?.id) {
+      setShouldDismiss(true);
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)/home');
+      }
+      return;
+    }
+  }, [auth.state, currentUser?.id]);
+
+  // Si se debe desmontar, retornar null
+  if (shouldDismiss) {
+    return null;
+  }
 
   const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
   const showLoading =

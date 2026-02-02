@@ -11,6 +11,7 @@ import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
 import { LiveArticlesModal } from '@/components/live-auction/LiveArticlesModal';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useDeviceType } from '@/hooks/useDeviceType';
 import { REQUEST_STATUS } from '@/constants';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import {
@@ -76,6 +77,7 @@ export const LiveAuctionOverlay = ({
   refetch,
 }: OverlayProps) => {
   const { t, locale } = useTranslation();
+  const deviceType = useDeviceType();
   const { data: commissionData, status: commissionStatus } =
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
@@ -86,6 +88,9 @@ export const LiveAuctionOverlay = ({
   const currentArticle = useMemo(() => {
     return orderedArticles.find((a) => a.id === articleId) ?? null;
   }, [orderedArticles, articleId]);
+
+  // Altura del chat ajustada según el dispositivo
+  const chatHeight = deviceType === 'tablet' ? 280 : UI.CHAT_HEIGHT;
 
   // Bid row pinned
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
@@ -153,7 +158,7 @@ export const LiveAuctionOverlay = ({
             {/* Chat */}
             <View
               pointerEvents='auto'
-              style={{ width: UI.CHAT_WIDTH, height: UI.CHAT_HEIGHT }}
+              style={{ width: UI.CHAT_WIDTH, height: chatHeight }}
             >
               <Chat
                 auctionId={auctionId}

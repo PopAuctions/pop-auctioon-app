@@ -1,4 +1,5 @@
 import { WebView } from 'react-native-webview';
+import { useEffect, useRef } from 'react';
 
 export const StreamWebView = ({
   streamUrl,
@@ -9,8 +10,21 @@ export const StreamWebView = ({
   setStreamLoaded: React.Dispatch<React.SetStateAction<boolean>>;
   setStreamError: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const webViewRef = useRef<WebView>(null);
+
+  // Cleanup: detener el stream cuando el componente se desmonte
+  useEffect(() => {
+    return () => {
+      // Resetear estados
+      setStreamLoaded(false);
+      setStreamError(false);
+      // El WebView se limpiará automáticamente al desmontarse
+    };
+  }, [setStreamLoaded, setStreamError]);
+
   return (
     <WebView
+      ref={webViewRef}
       source={{ uri: streamUrl }}
       style={{ flex: 1 }}
       allowsInlineMediaPlayback={true}
@@ -33,14 +47,8 @@ export const StreamWebView = ({
         setStreamLoaded(true);
         setStreamError(false);
       }}
-      onError={(syntheticEvent) => {
-        const { nativeEvent } = syntheticEvent;
-        console.error('[STREAM] WebView error:', nativeEvent);
+      onError={() => {
         setStreamError(true);
-      }}
-      onHttpError={(syntheticEvent) => {
-        const { nativeEvent } = syntheticEvent;
-        console.error('[STREAM] HTTP error:', nativeEvent.statusCode);
       }}
       onLoadProgress={({ nativeEvent }) => {
         if (nativeEvent.progress === 1) {

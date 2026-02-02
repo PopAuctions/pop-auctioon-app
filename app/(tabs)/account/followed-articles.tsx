@@ -49,8 +49,8 @@ export default function FollowedArticlesScreen() {
   }
 
   return (
-    <ScrollView className='w-full flex-1 p-4'>
-      <View className='flex flex-col gap-4'>
+    <ScrollView className='w-full flex-1 p-4 pb-8'>
+      <View className='flex flex-col gap-4 pb-10'>
         {articles.map((item) => (
           <ArticleItem
             key={item.id}

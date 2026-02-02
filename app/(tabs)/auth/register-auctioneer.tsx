@@ -110,26 +110,28 @@ export default function RegisterAuctioneerScreen() {
       edges={[]}
     >
       <ScrollView className='flex-1 px-4 pb-2 pt-4'>
-        {/* Formulario */}
-        <RegisterAuctioneerForm
-          control={control}
-          errors={errors}
-          isLoading={isLoading}
-          acceptedTerms={acceptedTerms}
-          onTermsToggle={() => setAcceptedTerms(!acceptedTerms)}
-          onOpenTerms={handleOpenTerms}
-        />
-
-        {/* Botones */}
-        <View className='gap-3 pb-6'>
-          <Button
-            mode='primary'
-            onPress={handleSubmit(onSubmit)}
+        <View className='w-full md:max-w-[700px] md:self-center'>
+          {/* Formulario */}
+          <RegisterAuctioneerForm
+            control={control}
+            errors={errors}
             isLoading={isLoading}
-            disabled={!acceptedTerms}
-          >
-            {t('screens.account.createAccount')}
-          </Button>
+            acceptedTerms={acceptedTerms}
+            onTermsToggle={() => setAcceptedTerms(!acceptedTerms)}
+            onOpenTerms={handleOpenTerms}
+          />
+
+          {/* Botones */}
+          <View className='gap-3 pb-6'>
+            <Button
+              mode='primary'
+              onPress={handleSubmit(onSubmit)}
+              isLoading={isLoading}
+              disabled={!acceptedTerms}
+            >
+              {t('screens.account.createAccount')}
+            </Button>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
