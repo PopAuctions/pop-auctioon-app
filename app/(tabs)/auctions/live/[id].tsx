@@ -75,6 +75,7 @@ export default function LiveAuctionScreen() {
   const showLoading =
     userStatus === REQUEST_STATUS.loading ||
     userStatus === REQUEST_STATUS.idle ||
+    userStatus === REQUEST_STATUS.error ||
     auctionStatus === REQUEST_STATUS.loading ||
     auctionStatus === REQUEST_STATUS.idle;
   // add currentArticleStatus if needed
