@@ -72,31 +72,67 @@ export default function LiveAuctionScreen() {
 
   const [streamLoaded, setStreamLoaded] = useState(false);
   const [streamError, setStreamError] = useState(false);
+  const [shouldDismiss, setShouldDismiss] = useState(false);
 
-  // Guardar referencia al estado de autenticación y usuario inicial
+  // Guardar referencia al estado de autenticación inicial
   const wasAuthenticatedRef = useRef(false);
+  const wasUnauthenticatedRef = useRef(false);
   const initialUserIdRef = useRef<string | null>(null);
 
   // Rastrear estado de autenticación inicial
   useEffect(() => {
-    if (auth.state === 'authenticated' && currentUser?.id) {
-      wasAuthenticatedRef.current = true;
-      if (!initialUserIdRef.current) {
+    // Primera vez que se monta el componente
+    if (!wasAuthenticatedRef.current && !wasUnauthenticatedRef.current) {
+      if (auth.state === 'authenticated' && currentUser?.id) {
+        wasAuthenticatedRef.current = true;
         initialUserIdRef.current = currentUser.id;
+      } else if (auth.state === 'unauthenticated') {
+        wasUnauthenticatedRef.current = true;
       }
+      return;
+    }
+
+    // Detectar cambios de estado de autenticación
+    // Caso 1: Usuario cerró sesión
+    if (wasAuthenticatedRef.current && auth.state === 'unauthenticated') {
+      console.log('[LIVE_AUCTION_DEBUG] Usuario cerró sesión, desmontando componente');
+      setShouldDismiss(true);
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)/auctions');
+      }
+      return;
+    }
+
+    // Caso 2: Usuario cambió de cuenta
+    if (wasAuthenticatedRef.current && currentUser?.id && initialUserIdRef.current && currentUser.id !== initialUserIdRef.current) {
+      console.log('[LIVE_AUCTION_DEBUG] Usuario cambió de cuenta, desmontando componente');
+      setShouldDismiss(true);
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)/auctions');
+      }
+      return;
+    }
+
+    // Caso 3: Usuario no autenticado inició sesión
+    if (wasUnauthenticatedRef.current && auth.state === 'authenticated' && currentUser?.id) {
+      console.log('[LIVE_AUCTION_DEBUG] Usuario inició sesión, desmontando componente');
+      setShouldDismiss(true);
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)/home');
+      }
+      return;
     }
   }, [auth.state, currentUser?.id]);
 
-  // Si el usuario cerró sesión o cambió de cuenta, desmontar el componente
-  if (wasAuthenticatedRef.current) {
-    if (auth.state === 'unauthenticated') {
-      console.log('[LIVE_AUCTION_DEBUG] Usuario cerró sesión, desmontando componente');
-      return null;
-    }
-    if (initialUserIdRef.current && currentUser?.id && currentUser.id !== initialUserIdRef.current) {
-      console.log('[LIVE_AUCTION_DEBUG] Usuario cambió de cuenta, desmontando componente');
-      return null;
-    }
+  // Si se debe desmontar, retornar null
+  if (shouldDismiss) {
+    return null;
   }
 
   const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
