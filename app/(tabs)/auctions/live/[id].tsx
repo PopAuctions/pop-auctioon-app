@@ -95,7 +95,6 @@ export default function LiveAuctionScreen() {
     // Detectar cambios de estado de autenticación
     // Caso 1: Usuario cerró sesión
     if (wasAuthenticatedRef.current && auth.state === 'unauthenticated') {
-      console.log('[LIVE_AUCTION_DEBUG] Usuario cerró sesión, desmontando componente');
       setShouldDismiss(true);
       if (router.canGoBack()) {
         router.back();
@@ -107,7 +106,6 @@ export default function LiveAuctionScreen() {
 
     // Caso 2: Usuario cambió de cuenta
     if (wasAuthenticatedRef.current && currentUser?.id && initialUserIdRef.current && currentUser.id !== initialUserIdRef.current) {
-      console.log('[LIVE_AUCTION_DEBUG] Usuario cambió de cuenta, desmontando componente');
       setShouldDismiss(true);
       if (router.canGoBack()) {
         router.back();
@@ -119,7 +117,6 @@ export default function LiveAuctionScreen() {
 
     // Caso 3: Usuario no autenticado inició sesión
     if (wasUnauthenticatedRef.current && auth.state === 'authenticated' && currentUser?.id) {
-      console.log('[LIVE_AUCTION_DEBUG] Usuario inició sesión, desmontando componente');
       setShouldDismiss(true);
       if (router.canGoBack()) {
         router.back();
@@ -166,26 +163,6 @@ export default function LiveAuctionScreen() {
     currentArticle?.id === liveArticleId;
 
   const showUnifiedLoader = showLoading || !streamLoaded;
-
-  // DEBUG: Log stream URL and loading states
-  console.log('[LIVE_AUCTION_DEBUG] =========================');
-  console.log('[LIVE_AUCTION_DEBUG] Stream URL:', streamUrl);
-  console.log('[LIVE_AUCTION_DEBUG] STREAM_BASE_URL:', STREAM_BASE_URL);
-  console.log('[LIVE_AUCTION_DEBUG] Locale:', locale);
-  console.log('[LIVE_AUCTION_DEBUG] Auction ID:', auctionId);
-  console.log('[LIVE_AUCTION_DEBUG] Username:', username);
-  console.log('[LIVE_AUCTION_DEBUG] --------------------------');
-  console.log('[LIVE_AUCTION_DEBUG] showLoading:', showLoading);
-  console.log('[LIVE_AUCTION_DEBUG] streamLoaded:', streamLoaded);
-  console.log('[LIVE_AUCTION_DEBUG] streamError:', streamError);
-  console.log('[LIVE_AUCTION_DEBUG] showUnifiedLoader:', showUnifiedLoader);
-  console.log('[LIVE_AUCTION_DEBUG] --------------------------');
-  console.log('[LIVE_AUCTION_DEBUG] userStatus:', userStatus);
-  console.log('[LIVE_AUCTION_DEBUG] auctionStatus:', auctionStatus);
-  console.log('[LIVE_AUCTION_DEBUG] currentArticleStatus:', currentArticleStatus);
-  console.log('[LIVE_AUCTION_DEBUG] biddingAmountsStatus:', biddingAmountsStatus);
-  console.log('[LIVE_AUCTION_DEBUG] liveAuctionData:', !!liveAuctionData);
-  console.log('[LIVE_AUCTION_DEBUG] =========================');
 
   if (invalidAuctionId) {
     return (
