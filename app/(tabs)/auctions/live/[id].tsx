@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
@@ -26,6 +27,7 @@ export default function LiveAuctionScreen() {
   const insets = useSafeAreaInsets();
   const auctionId = id;
 
+  const { auth } = useAuth();
   const { data: currentUser, status: userStatus } = useGetCurrentUser();
   const {
     data: liveAuctionData,
@@ -71,6 +73,32 @@ export default function LiveAuctionScreen() {
   const [streamLoaded, setStreamLoaded] = useState(false);
   const [streamError, setStreamError] = useState(false);
 
+  // Guardar referencia al estado de autenticación y usuario inicial
+  const wasAuthenticatedRef = useRef(false);
+  const initialUserIdRef = useRef<string | null>(null);
+
+  // Rastrear estado de autenticación inicial
+  useEffect(() => {
+    if (auth.state === 'authenticated' && currentUser?.id) {
+      wasAuthenticatedRef.current = true;
+      if (!initialUserIdRef.current) {
+        initialUserIdRef.current = currentUser.id;
+      }
+    }
+  }, [auth.state, currentUser?.id]);
+
+  // Si el usuario cerró sesión o cambió de cuenta, desmontar el componente
+  if (wasAuthenticatedRef.current) {
+    if (auth.state === 'unauthenticated') {
+      console.log('[LIVE_AUCTION_DEBUG] Usuario cerró sesión, desmontando componente');
+      return null;
+    }
+    if (initialUserIdRef.current && currentUser?.id && currentUser.id !== initialUserIdRef.current) {
+      console.log('[LIVE_AUCTION_DEBUG] Usuario cambió de cuenta, desmontando componente');
+      return null;
+    }
+  }
+
   const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
   const showLoading =
     userStatus === REQUEST_STATUS.loading ||
@@ -102,6 +130,26 @@ export default function LiveAuctionScreen() {
     currentArticle?.id === liveArticleId;
 
   const showUnifiedLoader = showLoading || !streamLoaded;
+
+  // DEBUG: Log stream URL and loading states
+  console.log('[LIVE_AUCTION_DEBUG] =========================');
+  console.log('[LIVE_AUCTION_DEBUG] Stream URL:', streamUrl);
+  console.log('[LIVE_AUCTION_DEBUG] STREAM_BASE_URL:', STREAM_BASE_URL);
+  console.log('[LIVE_AUCTION_DEBUG] Locale:', locale);
+  console.log('[LIVE_AUCTION_DEBUG] Auction ID:', auctionId);
+  console.log('[LIVE_AUCTION_DEBUG] Username:', username);
+  console.log('[LIVE_AUCTION_DEBUG] --------------------------');
+  console.log('[LIVE_AUCTION_DEBUG] showLoading:', showLoading);
+  console.log('[LIVE_AUCTION_DEBUG] streamLoaded:', streamLoaded);
+  console.log('[LIVE_AUCTION_DEBUG] streamError:', streamError);
+  console.log('[LIVE_AUCTION_DEBUG] showUnifiedLoader:', showUnifiedLoader);
+  console.log('[LIVE_AUCTION_DEBUG] --------------------------');
+  console.log('[LIVE_AUCTION_DEBUG] userStatus:', userStatus);
+  console.log('[LIVE_AUCTION_DEBUG] auctionStatus:', auctionStatus);
+  console.log('[LIVE_AUCTION_DEBUG] currentArticleStatus:', currentArticleStatus);
+  console.log('[LIVE_AUCTION_DEBUG] biddingAmountsStatus:', biddingAmountsStatus);
+  console.log('[LIVE_AUCTION_DEBUG] liveAuctionData:', !!liveAuctionData);
+  console.log('[LIVE_AUCTION_DEBUG] =========================');
 
   if (invalidAuctionId) {
     return (
