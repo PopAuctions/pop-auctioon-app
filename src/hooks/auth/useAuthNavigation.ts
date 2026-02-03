@@ -69,7 +69,10 @@ export const useAuthNavigation = () => {
           console.log('  Parent:', parentRoute);
           console.log('  Destination:', href);
 
-          router.replace(parentRoute as Href);
+          router.replace({
+            pathname: parentRoute,
+            params: { hideContent: 'true' },
+          } as Href);
           setTimeout(() => {
             router.push(href as Href);
           }, 0);
