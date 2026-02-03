@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { Divider } from '@/components/ui/Divider';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { useOpenTerms } from '@/hooks/useOpenTerms';
+import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 import {
   FIRST_SECTION,
   FOURTH_SECTION,
@@ -18,19 +17,9 @@ import {
 export default function AuthMenuScreen() {
   const { t } = useTranslation();
   const { handleOpenTerms } = useOpenTerms();
-  const { hideContent } = useLocalSearchParams<{ hideContent?: string }>();
+  const shouldHide = useHideWhileStackBuilds();
 
-  // Only read the param on mount — local state controls visibility from here on
-  const [shouldHideContent, setShouldHideContent] = useState(hideContent === 'true');
-
-  useEffect(() => {
-    if (!shouldHideContent) return;
-    // login/register is pushed via setTimeout(0) from onboarding; clear after that completes
-    const timer = setTimeout(() => setShouldHideContent(false), 50);
-    return () => clearTimeout(timer);
-  }, [shouldHideContent]);
-
-  if (shouldHideContent) {
+  if (shouldHide) {
     return <View className='flex-1 bg-white' />;
   }
 

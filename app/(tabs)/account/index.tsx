@@ -4,10 +4,16 @@ import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { View, ActivityIndicator } from 'react-native';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
+import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 
 export default function AccountTab() {
   const { data: currentUser, status, errorMessage } = useGetCurrentUser();
   const { isNavigating } = useAuthNavigation();
+  const shouldHide = useHideWhileStackBuilds();
+
+  if (shouldHide) {
+    return <View className='flex-1 bg-white' />;
+  }
 
   // Si no hay sesión, mostrar loading mientras ProtectedRoute maneja la redirección
   if (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) {

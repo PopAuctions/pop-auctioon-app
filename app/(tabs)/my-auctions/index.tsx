@@ -10,18 +10,24 @@ import { useGetMyAuctions } from '@/hooks/pages/my-auctions/useGetMyAuctions';
 import { REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
+import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 
 export default function MyAuctionsScreen() {
   const { locale, t } = useTranslation();
   const { data: auctions, status, errorMessage, refetch } = useGetMyAuctions();
   const [refreshing, setRefreshing] = useState(false);
   const myAuctions = t('screens.myAuctions');
+  const shouldHide = useHideWhileStackBuilds();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   }, [refetch]);
+
+  if (shouldHide) {
+    return <View className='flex-1 bg-white' />;
+  }
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
