@@ -263,6 +263,7 @@ export const SECURE_ENDPOINTS = {
       '/user/payments/create-single-article-payment', // POST - Create payment record in DB
     REJECT_SINGLE_ARTICLE_PAYMENT:
       '/user/payments/reject-single-article-payment', // POST - Reject/revert payment on failure
+    TOGGLE_ARTICLE_SELECTION: '/user/payments/toggle-article-selection', // POST - Toggle article selection in checkout (DRAFT/NOT_PAID)
     INFO: '/payment-info', // GET - Complete payment configuration (commission, taxes, countries)
   },
 

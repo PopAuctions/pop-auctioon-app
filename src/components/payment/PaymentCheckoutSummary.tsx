@@ -4,8 +4,11 @@
  * - Código de descuento (input + botón aplicar/quitar)
  * - Subtotal, comisión, envío, descuento
  * - Total con formato de euros
+ *
+ * Optimizado con React.memo para evitar re-renders innecesarios
  */
 
+import { memo } from 'react';
 import { View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
@@ -36,7 +39,7 @@ interface PaymentCheckoutSummaryProps {
   isValidatingDiscount: boolean;
 }
 
-export function PaymentCheckoutSummary({
+export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
   paymentDetails,
   appliedDiscount,
   discountCode,
@@ -206,4 +209,4 @@ export function PaymentCheckoutSummary({
       </View>
     </View>
   );
-}
+});
