@@ -1,4 +1,4 @@
-import { Video, ResizeMode } from 'expo-av';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { StyleSheet } from 'react-native';
 
 interface VideoPlayerProps {
@@ -6,14 +6,18 @@ interface VideoPlayerProps {
 }
 
 export const VideoPlayer = ({ uri }: VideoPlayerProps) => {
+  const player = useVideoPlayer(uri, (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
   return (
-    <Video
-      source={{ uri }}
+    <VideoView
+      player={player}
       style={StyleSheet.absoluteFillObject}
-      isLooping
-      isMuted
-      shouldPlay
-      resizeMode={ResizeMode.COVER}
+      nativeControls={false}
+      contentFit='cover'
     />
   );
 };
