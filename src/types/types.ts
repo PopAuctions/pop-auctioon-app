@@ -4,12 +4,11 @@ import { ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
 export type Lang = 'es' | 'en';
 
-export type UserRoles = 'ADMIN' | 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
+export type UserRoles = 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
 
 export type RequestStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export interface UserRolesTypes {
-  admin: 'ADMIN';
   user: 'USER';
   auctioneer: 'AUCTIONEER';
   hostAuctioneer: 'HOST_AUCTIONEER';
