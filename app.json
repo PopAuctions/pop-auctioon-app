@@ -4,7 +4,6 @@
     "name": "PopAuctioon",
     "slug": "pop-auctioon-app",
     "version": "1.0.0",
-    "orientation": "portrait",
     "icon": "./assets/icons/pop-auctioon-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
@@ -19,11 +18,7 @@
       "bundleIdentifier": "com.popauctioon.popauctioonapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "CFBundleAllowMixedLocalizations": true,
-        "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
-        "UISupportedInterfaceOrientations~ipad": [
-          "UIInterfaceOrientationPortrait"
-        ]
+        "CFBundleAllowMixedLocalizations": true
       },
       "usesAppleSignIn": true
     },
@@ -33,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.popauctioon.popauctioonapp",
-      "screenOrientation": "sensorPortrait",
+      "resizeableActivity": false,
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
       "notification": {

@@ -231,12 +231,11 @@ export default function ArticlesDetailScreen() {
 
             {/* SECTION: Image slider */}
             <View className='mt-10 w-full flex-row justify-center gap-10 px-5 md:px-0'>
-              {/* <ArticleImagesSlider images={article.images} /> */}
               <ImagesCarousel images={article.images} />
             </View>
 
             {/* SECTION: Bidding */}
-            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5 md:w-4/5 md:flex-row'>
+            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5'>
               <CurrentBidInfoArticlePage
                 lang={locale}
                 currentValue={articleBid.currentValue}
@@ -252,7 +251,7 @@ export default function ArticlesDetailScreen() {
                   price: articleLang.price,
                 }}
               />
-              <View className='w-full md:w-auto md:min-w-[300px] lg:min-w-[400px]'>
+              <View className='w-full md:mx-auto md:w-4/5'>
                 {auction.status === AuctionStatus.FINISHED && (
                   <CustomText
                     type='h4'

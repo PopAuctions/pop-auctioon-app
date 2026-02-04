@@ -33,12 +33,12 @@ export const BUTTON_SIZE_STYLES: Record<
   Record<ButtonSize, string>
 > = {
   primary: {
-    small: 'px-4 py-2',
-    large: 'px-7 py-3',
+    small: 'px-4 py-2 md:px-5 md:py-3',
+    large: 'px-7 py-3 md:px-9 md:py-4',
   },
   secondary: {
-    small: 'px-[15px] py-[7px]',
-    large: 'px-[27px] py-[11px]',
+    small: 'px-[15px] py-[7px] md:px-5 md:py-3',
+    large: 'px-[27px] py-[11px] md:px-9 md:py-4',
   },
   empty: {
     small: 'px-0 py-0',
@@ -108,7 +108,13 @@ export const Button = forwardRef<View, ButtonProps>(
           pointerEvents='none'
         >
           {typeof children === 'string' ? (
-            <Text className={cn('text-lg', textColorForMode, textClassName)}>
+            <Text
+              className={cn(
+                'text-lg md:text-xl',
+                textColorForMode,
+                textClassName
+              )}
+            >
               {children}
             </Text>
           ) : (

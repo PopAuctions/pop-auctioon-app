@@ -23,72 +23,74 @@ export default function RegisterScreen() {
           paddingBottom: 24,
         }}
       >
-        {/* Header */}
-        <View className='mb-8'>
-          <CustomText
-            type='h1'
-            className='mb-2 text-center text-cinnabar'
-          >
-            {t('screens.account.registerOptions')}
-          </CustomText>
-          <CustomText
-            type='body'
-            className='text-gray-600 text-center'
-          >
-            {/* Si quieres un copy más “premium”, cambia esta key o el texto */}
-            {t('screens.account.orRegisterWith')}
-          </CustomText>
-        </View>
-
-        {/* Providers */}
-        <View className='gap-4'>
-          <GoogleButton buttonText={t('screens.account.continueWith')} />
-          <AppleButton buttonText={t('screens.account.continueWith')} />
-        </View>
-
-        {/* Divider */}
-        <View className='my-6 flex-row items-center'>
-          <View className='bg-gray-300 h-px flex-1' />
-          <CustomText
-            type='body'
-            className='text-gray-500 mx-3'
-          >
-            {t('commonActions.or')}
-          </CustomText>
-          <View className='bg-gray-300 h-px flex-1' />
-        </View>
-
-        {/* Email register */}
-        <View className='mb-4'>
-          <CustomLink
-            href='/(tabs)/auth/register-user'
-            mode='primary'
-            className='w-full'
-          >
+        <View className='w-full md:max-w-[600px] md:self-center'>
+          {/* Header */}
+          <View className='mb-8'>
+            <CustomText
+              type='h1'
+              className='mb-2 text-center text-cinnabar'
+            >
+              {t('screens.account.registerOptions')}
+            </CustomText>
             <CustomText
               type='body'
-              className='text-white'
+              className='text-gray-600 text-center'
             >
-              {t('screens.account.registerAsUser')}
+              {/* Si quieres un copy más “premium”, cambia esta key o el texto */}
+              {t('screens.account.orRegisterWith')}
             </CustomText>
-          </CustomLink>
-        </View>
+          </View>
 
-        <Divider />
+          {/* Providers */}
+          <View className='gap-4'>
+            <GoogleButton buttonText={t('screens.account.continueWith')} />
+            <AppleButton buttonText={t('screens.account.continueWith')} />
+          </View>
 
-        {/* Auctioneer CTA */}
-        <View className='mt-6'>
-          <CustomLink
-            href='/(tabs)/auth/register-auctioneer'
-            mode='secondary'
-          >
+          {/* Divider */}
+          <View className='my-6 flex-row items-center'>
+            <View className='bg-gray-300 h-px flex-1' />
             <CustomText
               type='body'
-              className='text-center text-cinnabar'
+              className='text-gray-500 mx-3'
             >
-              {t('screens.account.registerAsAuctioneer')}
+              {t('commonActions.or')}
             </CustomText>
-          </CustomLink>
+            <View className='bg-gray-300 h-px flex-1' />
+          </View>
+
+          {/* Email register */}
+          <View className='mb-4'>
+            <CustomLink
+              href='/(tabs)/auth/register-user'
+              mode='primary'
+              className='w-full'
+            >
+              <CustomText
+                type='body'
+                className='text-white'
+              >
+                {t('screens.account.registerAsUser')}
+              </CustomText>
+            </CustomLink>
+          </View>
+
+          <Divider />
+
+          {/* Auctioneer CTA */}
+          <View className='mt-6'>
+            <CustomLink
+              href='/(tabs)/auth/register-auctioneer'
+              mode='secondary'
+            >
+              <CustomText
+                type='body'
+                className='text-center text-cinnabar'
+              >
+                {t('screens.account.registerAsAuctioneer')}
+              </CustomText>
+            </CustomLink>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

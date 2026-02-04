@@ -60,7 +60,7 @@ export function SoldArticleItem({
       {/* Image / Link */}
       <CustomLink
         href={reviewUrl}
-        className='w-full max-w-[208px]' // ~max-w-52 equivalent
+        className='w-full max-w-[240px] md:max-w-[280px]'
       >
         <View className='aspect-square w-full overflow-hidden rounded-lg bg-neutral-100'>
           {!!imageUri && (

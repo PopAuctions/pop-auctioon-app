@@ -73,7 +73,7 @@ export default function SettingsScreen() {
               mode='primary'
               disabled={!hasChanges || isPending}
               isLoading={isPending}
-              className='px-6'
+              className='shrink-0'
             >
               <CustomText
                 type='body'
@@ -108,7 +108,7 @@ export default function SettingsScreen() {
             <Button
               onPress={resetOnboarding}
               mode='primary'
-              className='px-6'
+              className='shrink-0'
             >
               <CustomText
                 type='body'

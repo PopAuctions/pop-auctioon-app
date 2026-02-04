@@ -60,7 +60,7 @@ export default function SoldArticlesScreen() {
       </View>
 
       {articlesSold ? (
-        <View className='gap-4'>
+        <View className='gap-4 py-10'>
           {articlesSold.map((article) => (
             <SoldArticleItem
               key={article.id}

@@ -58,7 +58,7 @@ export function SendBid({
             <Button
               mode='secondary'
               size='small'
-              className='w-1/3'
+              className='flex-1'
               disabled={!articleAvailable}
               onPress={() => {
                 setAmountToBid(tenPercent);
@@ -74,7 +74,7 @@ export function SendBid({
             <Button
               mode='secondary'
               size='small'
-              className='w-1/3'
+              className='flex-1'
               disabled={!articleAvailable}
               onPress={() => {
                 setAmountToBid(twentyFivePercent);
@@ -93,7 +93,7 @@ export function SendBid({
             <Button
               mode='secondary'
               size='small'
-              className='w-1/3'
+              className='flex-1'
               disabled={!articleAvailable}
               onPress={() => {
                 setAmountToBid(fiftyPercent);

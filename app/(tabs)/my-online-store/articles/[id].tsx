@@ -116,7 +116,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
           </View>
 
           {/* Actions */}
-          <View className='mt-4 w-full'>
+          <View className='mt-4 w-full max-w-2xl'>
             <CustomText
               type='subtitle'
               className='text-2xl text-cinnabar'

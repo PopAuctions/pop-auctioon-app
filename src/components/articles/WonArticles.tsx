@@ -8,7 +8,7 @@ import { AuctionUserWonArticles, CustomArticle, Lang } from '@/types/types';
 import { CustomImage } from '@/components/ui/CustomImage';
 
 type WonArticlesProps = {
-  wonArticles: Record<string, AuctionUserWonArticles> | null;
+  wonArticles: Record<string, AuctionUserWonArticles>;
   lang: Lang;
   commissionValue: number;
   texts: {
@@ -30,8 +30,6 @@ export const WonArticles = ({
   const formatter = euroFormatter(lang);
 
   const sections = useMemo(() => {
-    if (!wonArticles?.data) return [];
-
     return Object.entries(wonArticles).map(([auctionId, data]) => {
       // chunk into rows of 2 for a grid look
       const rows: SectionItemRow[] = [];

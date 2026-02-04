@@ -40,11 +40,11 @@ export function OnlineStoreArticleItem({
   return (
     <View className='w-full gap-2'>
       <CustomLink
-        className='flex w-full flex-row gap-5'
+        className='flex w-full flex-row gap-5 md:gap-8'
         href={`/(tabs)/online-store/articles/${articleId}`}
         mode='empty'
       >
-        <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl'>
+        <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl md:w-2/5'>
           <CustomImage
             src={article.images[0]}
             alt={article.title}
@@ -53,7 +53,7 @@ export function OnlineStoreArticleItem({
           />
         </View>
 
-        <View className='w-1/2 flex-col items-start justify-between'>
+        <View className='w-1/2 flex-col items-start justify-between md:w-3/5'>
           <View className='flex flex-col pr-2'>
             <CustomText type='subtitle'>
               {`${texts.price} ${commissionValue !== null ? formatter.format(commissionedPrice) : AMOUNT_PLACEHOLDER}`}
