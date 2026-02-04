@@ -186,6 +186,7 @@ export const SECURE_ENDPOINTS = {
     ADDRESSES: '/user/addresses',
     CREATE_ADDRESS: '/user/addresses/create',
     CURRENT_USER: '/user/current',
+    DELETE_USER: '/user/delete',
     BILLING: '/user/billing', // GET (list all) y POST (create new)
     BILLING_BY_ID: (id: string): ApiEndpoint =>
       `/user/billing/${id}` as ApiEndpoint, // PATCH (update) y DELETE

@@ -7,15 +7,18 @@ import { Loading } from '@/components/ui/Loading';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
-import { LANGUAGE_OPTIONS } from '@/constants/app';
+import { LANGUAGE_OPTIONS, REQUEST_STATUS } from '@/constants/app';
 import { Lang } from '@/types/types';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
+import { ConfirmModal } from '@/components/modal/ConfirmModal';
+import { useDeleteAccount } from '@/hooks/pages/user/useDeleteAccount';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
   const { resetOnboarding } = useOnboarding();
+  const { deleteAccount, status: deleteStatus } = useDeleteAccount(locale);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
@@ -71,6 +74,7 @@ export default function SettingsScreen() {
             <Button
               onPress={handleApplyLanguage}
               mode='primary'
+              size='small'
               disabled={!hasChanges || isPending}
               isLoading={isPending}
               className='shrink-0'
@@ -109,6 +113,7 @@ export default function SettingsScreen() {
               onPress={resetOnboarding}
               mode='primary'
               className='shrink-0'
+              size='small'
             >
               <CustomText
                 type='body'
@@ -122,7 +127,38 @@ export default function SettingsScreen() {
 
         <Divider />
 
-        {/* Future options can be added here */}
+        {/* Delete Account */}
+        <View className='mb-4 mt-4'>
+          <View className='flex-row items-center justify-between gap-3'>
+            <View className='flex-1'>
+              <CustomText
+                type='h3'
+                className='mb-1'
+              >
+                {t('screens.account.deleteAccount')}
+              </CustomText>
+            </View>
+
+            <ConfirmModal
+              mode='primary'
+              onConfirm={deleteAccount}
+              isDisabled={deleteStatus === REQUEST_STATUS.loading}
+              title={{ en: 'Delete Account', es: 'Eliminar Cuenta' }}
+              description={{
+                en: 'Are you sure you want to delete your account? This will permanently delete all your data.',
+                es: '¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.',
+              }}
+              importantMessage={{
+                en: 'This action cannot be undone.',
+                es: 'Esta acción no se puede deshacer.',
+              }}
+              locale={locale}
+            >
+              {t('screens.account.delete')}
+            </ConfirmModal>
+          </View>
+        </View>
+        <Divider />
       </ScrollView>
     </SafeAreaView>
   );

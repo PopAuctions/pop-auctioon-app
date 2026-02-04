@@ -6,10 +6,10 @@ export const getUserRole = async ({
   id,
 }: {
   id: string;
-}): Promise<AsyncResponse<UserRoles>> => {
+}): Promise<AsyncResponse<{ role: UserRoles; isDisabled: boolean }>> => {
   const { data, error } = await supabase
     .from('User')
-    .select('role')
+    .select('role, isDisabled')
     .eq('id', id)
     .single();
 
@@ -26,7 +26,10 @@ export const getUserRole = async ({
   }
 
   return {
-    data: data.role as UserRoles,
+    data: {
+      role: data.role,
+      isDisabled: data.isDisabled,
+    },
     success: true,
   };
 };

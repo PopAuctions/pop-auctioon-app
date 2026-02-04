@@ -41,6 +41,7 @@ type AuthContextType = {
   auth: AuthState;
   getSession: () => [Session | null, UserRoles | null];
   signOut: () => Promise<void>;
+  forceLogout: () => Promise<void>;
   signInWithPassword: (args: {
     email: string;
     password: string;
@@ -52,6 +53,7 @@ const AuthContext = createContext<AuthContextType>({
   auth: { state: 'loading' },
   getSession: () => [null, null],
   signOut: async () => {},
+  forceLogout: async () => {},
   signInWithPassword: async () => ({
     success: false,
     message: { es: '', en: '' },
@@ -277,6 +279,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const forceLogout = useCallback(async () => {
+    // 1) Stop refresh timers
+    clearTimer.current?.();
+    clearTimer.current = null;
+
+    // 2) Reset local auth state FIRST
+    setAuth({ state: 'unauthenticated' });
+
+    // 3) Best-effort Supabase cleanup (ignore errors)
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
+  }, []);
+
   const getSession = useCallback(() => {
     if (auth.state === 'authenticated') {
       return [auth.session, auth.role] as [Session, UserRoles];
@@ -312,8 +326,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!alive) return;
 
         if (!ok) {
-          await supabase.auth.signOut().catch(() => {});
-          setAuth({ state: 'unauthenticated' });
+          await forceLogout();
           return;
         }
       }
@@ -329,8 +342,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Sign out only if refresh failed OR returned no session
         if (error || !data.session) {
-          await supabase.auth.signOut().catch(() => {});
-          setAuth({ state: 'unauthenticated' });
+          await forceLogout();
           return;
         }
 
@@ -349,35 +361,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!alive) return;
 
       if (error || !u?.user) {
-        await supabase.auth.signOut().catch(() => {});
-        setAuth({ state: 'unauthenticated' });
+        await forceLogout();
         return;
       }
 
-      // 3) Fetch role in background (do NOT block auth state)
-      (async () => {
-        try {
-          const r = await getUserRole({ id: u.user.id });
-          if (!alive) return;
+      // ✅ Disabled guard + role fetch ONCE (reuse the result below)
+      let roleFromDb: any = null;
 
-          const { data: s2 } = await supabase.auth.getSession();
-          const sess = s2.session ?? sess0;
+      try {
+        const r = await getUserRole({ id: u.user.id });
+        if (!alive) return;
 
-          if (!sess) {
-            await supabase.auth.signOut().catch(() => {});
-            setAuth({ state: 'unauthenticated' });
-            return;
-          }
-
-          setAuth({
-            state: 'authenticated',
-            session: sess,
-            role: r.data ?? null,
-          });
-        } catch (e) {
-          console.log('[AuthProvider] initial getUserRole failed:', e);
+        if (r.data?.isDisabled) {
+          await forceLogout();
+          return;
         }
-      })();
+
+        roleFromDb = r.data?.role ?? null;
+      } catch {
+        await forceLogout();
+        return;
+      }
+
+      // ✅ Reuse the role we already fetched (no second getUserRole call)
+      const { data: s2 } = await supabase.auth.getSession();
+      const sess = s2.session ?? sess0;
+
+      if (!sess) {
+        await forceLogout();
+        return;
+      }
+
+      setAuth({
+        state: 'authenticated',
+        session: sess,
+        role: roleFromDb,
+      });
     })();
 
     // 3) Subscribe to auth changes
@@ -420,10 +439,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const r = await getUserRole({ id: newSession.user.id });
               if (!alive) return;
 
+              if (r.data?.isDisabled) {
+                await forceLogout();
+                return;
+              }
+
               setAuth({
                 state: 'authenticated',
                 session: newSession,
-                role: r.data ?? null,
+                role: r.data?.role ?? null,
               });
             } catch (e) {
               console.log('[AuthProvider] getUserRole failed:', e);
@@ -445,8 +469,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!ok) {
           clearTimer.current?.();
           clearTimer.current = null;
-          await supabase.auth.signOut().catch(() => {});
-          setAuth({ state: 'unauthenticated' });
+          await forceLogout();
           return;
         }
 
@@ -461,10 +484,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const r = await getUserRole({ id: newSession.user.id });
             if (!alive) return;
 
+            if (r.data?.isDisabled) {
+              await forceLogout();
+              return;
+            }
+
             setAuth({
               state: 'authenticated',
               session: newSession,
-              role: r.data ?? null,
+              role: r.data?.role ?? null,
             });
           } catch (e) {
             console.log('[AuthProvider] getUserRole failed:', e);
@@ -478,17 +506,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       sub?.subscription.unsubscribe();
       clearTimer.current?.();
     };
-  }, []);
+  }, [forceLogout]);
 
   const value = useMemo(
     () => ({
       auth,
       getSession,
       signOut,
+      forceLogout,
       signInWithPassword,
       isLoading,
     }),
-    [auth, getSession, signInWithPassword, signOut, isLoading]
+    [auth, getSession, signInWithPassword, signOut, forceLogout, isLoading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
