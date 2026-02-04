@@ -48,6 +48,11 @@ type AuthContextType = {
   }) => Promise<SignInResult>;
 };
 
+const ACCOUNT_DISABLED_MESSAGE: LangMap = {
+  en: 'Your account is deactivated. Please contact support if you think this is a mistake.',
+  es: 'Tu cuenta está desactivada. Contacta soporte si crees que es un error.',
+};
+
 const AuthContext = createContext<AuthContextType>({
   isLoading: false,
   auth: { state: 'loading' },
@@ -165,6 +170,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isManualSignInRef = useRef(false);
   const clearTimer = useRef<null | (() => void)>(null);
   const callToastRef = useRef(callToast);
+  const disabledToastShownRef = useRef(false);
 
   const lastConfirmEmailSentAtRef = useRef<Record<string, number>>({});
   const sendConfirmInFlightRef = useRef<Record<string, boolean>>({});
@@ -291,6 +297,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
   }, []);
 
+  const logoutBecauseDisabled = useCallback(async () => {
+    if (!disabledToastShownRef.current) {
+      disabledToastShownRef.current = true;
+
+      callToastRef.current({
+        variant: 'error',
+        description: ACCOUNT_DISABLED_MESSAGE,
+      });
+    }
+
+    await forceLogout();
+  }, [forceLogout]);
+
   const getSession = useCallback(() => {
     if (auth.state === 'authenticated') {
       return [auth.session, auth.role] as [Session, UserRoles];
@@ -302,6 +321,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     callToastRef.current = callToast;
   }, [callToast]);
+
+  useEffect(() => {
+    disabledToastShownRef.current = false;
+  }, [locale]);
 
   useEffect(() => {
     let alive = true;
@@ -373,7 +396,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!alive) return;
 
         if (r.data?.isDisabled) {
-          await forceLogout();
+          await logoutBecauseDisabled();
           return;
         }
 
@@ -440,7 +463,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               if (!alive) return;
 
               if (r.data?.isDisabled) {
-                await forceLogout();
+                await logoutBecauseDisabled();
                 return;
               }
 
@@ -485,7 +508,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (!alive) return;
 
             if (r.data?.isDisabled) {
-              await forceLogout();
+              await logoutBecauseDisabled();
               return;
             }
 
@@ -506,7 +529,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       sub?.subscription.unsubscribe();
       clearTimer.current?.();
     };
-  }, [forceLogout]);
+  }, [logoutBecauseDisabled, forceLogout]);
 
   const value = useMemo(
     () => ({
