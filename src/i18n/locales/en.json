@@ -364,6 +364,8 @@
       "tutorial": "Tutorial",
       "viewTutorialAgain": "View tutorial again",
       "tutorialDescription": "View the app introduction tutorial again",
+      "deleteAccount": "Delete Account",
+      "delete": "Delete",
       "aboutUs": "About Us",
       "login": "Sign in",
       "register": "Register",
