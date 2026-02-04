@@ -169,7 +169,9 @@ export const useSecureApi = () => {
 
           return {
             // Si responseData tiene .data, usarlo; si no, usar responseData completo
-            data: (responseData.data ?? responseData) as T | undefined,
+            data: (responseData.data === undefined
+              ? responseData
+              : responseData.data) as T | undefined,
             status: response.status,
             error: response.ok ? undefined : getErrorMessage(responseData),
           };

@@ -140,10 +140,6 @@ export default function EditProfileScreen() {
     });
   };
 
-  const handleBack = () => {
-    router.back();
-  };
-
   // Show loading while fetching user data
   if (fetchStatus === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
@@ -280,7 +276,7 @@ export default function EditProfileScreen() {
                 type='body'
                 className='mb-2 '
               >
-                {t('screens.editProfile.phoneNumber')}*
+                {t('screens.editProfile.phoneNumber')}
               </CustomText>
               <Controller
                 control={control}
