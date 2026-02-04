@@ -45,21 +45,30 @@ export function AddressSelector({
       {/* Selector de dirección + botón "+" */}
       <View className='mb-3 flex-row items-center gap-3'>
         <View className='flex-1'>
-          <SelectField
-            name=''
-            value={selectedAddressId || ''}
-            options={
-              addresses?.map((addr) => ({
-                label: addr.nameAddress || `${addr.city}, ${addr.country}`,
-                value: addr.id,
-              })) || []
-            }
-            placeholder={paymentTranslations.selectAddress}
-            formField={true}
-            onChange={(value: string | null) => {
-              if (value) onAddressChange(value);
-            }}
-          />
+          {addresses?.length === 0 ? (
+            <CustomText
+              type='bodysmall'
+              className='text-xl'
+            >
+              {paymentTranslations.noAddresses}
+            </CustomText>
+          ) : (
+            <SelectField
+              name=''
+              value={selectedAddressId || ''}
+              options={
+                addresses?.map((addr) => ({
+                  label: addr.nameAddress || `${addr.city}, ${addr.country}`,
+                  value: addr.id,
+                })) || []
+              }
+              placeholder={paymentTranslations.selectAddress}
+              formField={true}
+              onChange={(value: string | null) => {
+                if (value) onAddressChange(value);
+              }}
+            />
+          )}
         </View>
         <Button
           mode='secondary'

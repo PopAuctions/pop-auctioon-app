@@ -451,6 +451,7 @@
       "commission": "Comisión",
       "commission2": "(IVA incluido)",
       "taxes": "IVA (Sobre comisión)",
+      "noAddresses": "No tienes direcciones guardadas. Crea una",
       "total": "Total",
       "until": "Tienes hasta",
       "toPay": "para pagar",
@@ -553,6 +554,7 @@
       "form": {
         "title": "Dirección",
         "nameAddress": "Nombre de la dirección",
+        "nameAddressPlaceholder": "Ej: Casa, Trabajo, etc.",
         "address": "Dirección",
         "city": "Ciudad",
         "state": "Estado/Provincia",

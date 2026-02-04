@@ -451,6 +451,7 @@
       "commission": "Commission",
       "commission2": "(IVA included)",
       "taxes": "IVA (On commission)",
+      "noAddresses": "No saved addresses. Create one",
       "total": "Total",
       "until": "You have until",
       "toPay": "to pay",
@@ -673,6 +674,7 @@
       "form": {
         "title": "Address",
         "nameAddress": "Address name",
+        "nameAddressPlaceholder": "E.g: Home, Work, etc.",
         "address": "Address",
         "city": "City",
         "state": "State/Province",
