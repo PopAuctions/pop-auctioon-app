@@ -12,7 +12,7 @@ export const AuctionSubscriber = ({
     table: 'Auction',
     auctionId: auctionId,
     filter: `id=eq.${auctionId}`,
-    compareTo: AuctionStatus.LIVE,
+    compareTo: AuctionStatus.FINISHED,
     refetch: refetch,
   });
 
