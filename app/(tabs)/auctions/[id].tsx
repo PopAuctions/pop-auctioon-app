@@ -34,7 +34,7 @@ export default function AuctionDetailScreen() {
     price?: string;
   }>();
   const {
-    data: liveAuction,
+    data: liveAuctionData,
     status,
     errorMessage,
     refetch: refetchAuction,
@@ -46,6 +46,7 @@ export default function AuctionDetailScreen() {
       auctionId: id,
     });
   const { data: userArticlesFollowed } = useGetArticlesUserFollows();
+  const liveAuction = liveAuctionData?.auction;
   const auctionLang = t('screens.auction');
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {

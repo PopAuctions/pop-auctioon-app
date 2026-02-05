@@ -1,13 +1,16 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { View } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  useSafeAreaInsets,
+  SafeAreaView,
+} from 'react-native-safe-area-context';
 import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
 import { StreamWebView } from '@/components/live-auction/StreamWebView';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
@@ -18,12 +21,16 @@ import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmount
 import { CustomToast } from '@/providers/ToastProvider';
 import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { LiveAuctionSubscriber } from '@/components/subscribers/LiveAuctionSubscribe';
+import { AuctionStatus } from '@/constants/auctions';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 
 const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { locale } = useTranslation();
+  const { t, locale } = useTranslation();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const auctionId = id;
 
@@ -31,7 +38,7 @@ export default function LiveAuctionScreen() {
   const { data: currentUser, status: userStatus } = useGetCurrentUser();
   const {
     data: liveAuctionData,
-    status: auctionStatus,
+    status: auctionRequestStatus,
     errorMessage,
     refetch: refetchLiveAuction,
   } = useGetLiveAuction({
@@ -39,7 +46,8 @@ export default function LiveAuctionScreen() {
     validateIsLive: true,
   });
 
-  const articlesOrderKey = (liveAuctionData?.articlesOrder ?? []).join(',');
+  const liveAuction = liveAuctionData?.auction ?? null;
+  const articlesOrderKey = (liveAuction?.articlesOrder ?? []).join(',');
 
   const { data: articles } = useFetchArticlesOrder({
     articlesOrderKey: articlesOrderKey,
@@ -49,7 +57,7 @@ export default function LiveAuctionScreen() {
   // Fetch current article being bid on
   const { data: currentArticle, status: currentArticleStatus } =
     useFetchCurrentArticle({
-      articleId: liveAuctionData?.ArticleBid.articleId || 0,
+      articleId: liveAuction?.ArticleBid.articleId || 0,
     });
 
   const {
@@ -57,17 +65,17 @@ export default function LiveAuctionScreen() {
     status: biddingAmountsStatus,
     refetch: refetchBiddingAmounts,
   } = useFetchBiddingAmounts({
-    articleId: liveAuctionData?.ArticleBid.articleId || null,
+    articleId: liveAuction?.ArticleBid.articleId || null,
     currentPrice: currentArticle?.ArticleBid.currentValue || null,
     startingPrice: currentArticle?.startingPrice || null,
   });
 
   const orderedArticles = useMemo(
     () =>
-      (liveAuctionData?.articlesOrder ?? [])
+      (liveAuction?.articlesOrder ?? [])
         .map((id) => articles.find((a) => a.id === id))
         .filter(Boolean) as CustomArticleLiveAuto[],
-    [liveAuctionData?.articlesOrder, articles]
+    [liveAuction?.articlesOrder, articles]
   );
 
   const [streamLoaded, setStreamLoaded] = useState(false);
@@ -105,7 +113,12 @@ export default function LiveAuctionScreen() {
     }
 
     // Caso 2: Usuario cambió de cuenta
-    if (wasAuthenticatedRef.current && currentUser?.id && initialUserIdRef.current && currentUser.id !== initialUserIdRef.current) {
+    if (
+      wasAuthenticatedRef.current &&
+      currentUser?.id &&
+      initialUserIdRef.current &&
+      currentUser.id !== initialUserIdRef.current
+    ) {
       setShouldDismiss(true);
       if (router.canGoBack()) {
         router.back();
@@ -116,7 +129,11 @@ export default function LiveAuctionScreen() {
     }
 
     // Caso 3: Usuario no autenticado inició sesión
-    if (wasUnauthenticatedRef.current && auth.state === 'authenticated' && currentUser?.id) {
+    if (
+      wasUnauthenticatedRef.current &&
+      auth.state === 'authenticated' &&
+      currentUser?.id
+    ) {
       setShouldDismiss(true);
       if (router.canGoBack()) {
         router.back();
@@ -125,7 +142,7 @@ export default function LiveAuctionScreen() {
       }
       return;
     }
-  }, [auth.state, currentUser?.id]);
+  }, [auth.state, router, currentUser?.id]);
 
   // Si se debe desmontar, retornar null
   if (shouldDismiss) {
@@ -137,15 +154,15 @@ export default function LiveAuctionScreen() {
     userStatus === REQUEST_STATUS.loading ||
     userStatus === REQUEST_STATUS.idle ||
     userStatus === REQUEST_STATUS.error ||
-    auctionStatus === REQUEST_STATUS.loading ||
-    auctionStatus === REQUEST_STATUS.idle;
+    auctionRequestStatus === REQUEST_STATUS.loading ||
+    auctionRequestStatus === REQUEST_STATUS.idle;
   // add currentArticleStatus if needed
 
   const showError =
-    auctionStatus === REQUEST_STATUS.error ||
+    auctionRequestStatus === REQUEST_STATUS.error ||
     currentArticleStatus === REQUEST_STATUS.error ||
     biddingAmountsStatus === REQUEST_STATUS.error ||
-    (auctionStatus !== REQUEST_STATUS.loading && !liveAuctionData);
+    (auctionRequestStatus !== REQUEST_STATUS.loading && !liveAuction);
 
   const username = currentUser?.username || '';
   const profilePicture = currentUser?.profilePicture || '';
@@ -153,11 +170,10 @@ export default function LiveAuctionScreen() {
     username
   )}`;
 
-  // Extract highest bidder details (only safe to read when liveAuctionData exists)
-  const highestBidderUsername =
-    liveAuctionData?.ArticleBid.highestBidderUsername;
-  const highestBidderImage = liveAuctionData?.ArticleBid.highestBidderImage;
-  const liveArticleId = liveAuctionData?.ArticleBid.articleId ?? 0;
+  // Extract highest bidder details (only safe to read when liveAuction exists)
+  const highestBidderUsername = liveAuction?.ArticleBid.highestBidderUsername;
+  const highestBidderImage = liveAuction?.ArticleBid.highestBidderImage;
+  const liveArticleId = liveAuction?.ArticleBid.articleId ?? 0;
 
   const isCurrentArticleReady =
     currentArticleStatus === REQUEST_STATUS.success &&
@@ -184,6 +200,61 @@ export default function LiveAuctionScreen() {
             en: 'Invalid auction ID',
           }}
         />
+      </View>
+    );
+  }
+
+  if (liveAuctionData?.status === AuctionStatus.FINISHED) {
+    return (
+      <View
+        pointerEvents='auto'
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      >
+        <SafeAreaView
+          className='h-full w-full bg-white'
+          edges={[]}
+        >
+          <View className='flex h-full w-full flex-col items-center justify-center text-center'>
+            <CustomText
+              type='h3'
+              className='text-center'
+            >
+              {t('screens.liveAuction.finished')}
+            </CustomText>
+            <CustomText
+              type='h3'
+              className='text-center text-base'
+            >
+              {t('screens.liveAuction.thanksForWatching')}
+            </CustomText>
+            <CustomText
+              type='h4'
+              className='mt-2 text-center text-base text-cinnabar'
+            >
+              {t('screens.liveAuction.ifAnyArticleWon')}
+            </CustomText>
+            <View className='mt-6 flex w-1/2 flex-col gap-4'>
+              <CustomLink
+                href='/(tabs)/account/articles-won'
+                mode='primary'
+              >
+                {t('screens.liveAuction.goToArticlesWon')}
+              </CustomLink>
+              <CustomLink
+                href='/(tabs)/home'
+                mode='secondary'
+              >
+                {t('globals.goToHome')}
+              </CustomLink>
+            </View>
+          </View>
+        </SafeAreaView>
       </View>
     );
   }

@@ -61,13 +61,14 @@ export default function NewAuctionArticleScreen() {
   });
 
   const {
-    data: liveAuction,
+    data: liveAuctionData,
     status,
     errorMessage,
   } = useGetLiveAuction({
     auctionId,
   });
 
+  const liveAuction = liveAuctionData?.auction;
   const auctionCategory = liveAuction?.Auction.category
     ? AuctionCategoriesConst[liveAuction.Auction.category]
     : AuctionCategoriesConst.BAGS;

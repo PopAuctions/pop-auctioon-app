@@ -23,7 +23,7 @@ export default function MyAuctionDetailScreen() {
     id: string;
   }>();
   const {
-    data: liveAuction,
+    data: liveAuctionData,
     status,
     errorMessage,
     refetch,
@@ -31,6 +31,7 @@ export default function MyAuctionDetailScreen() {
     auctionId: id,
   });
   const auctionLang = t('screens.myAuction');
+  const liveAuction = liveAuctionData?.auction;
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;

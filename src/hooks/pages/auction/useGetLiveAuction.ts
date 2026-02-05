@@ -1,3 +1,5 @@
+import { REQUEST_STATUS } from '@/constants';
+import { AuctionStatus } from '@/constants/auctions';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
@@ -8,32 +10,38 @@ import {
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
+interface FetchLiveAuctionResponse {
+  auction: LiveAuction | null;
+  status: AuctionStatus | null;
+}
+
 export const useGetLiveAuction = ({
   auctionId,
   validateIsLive = false,
 }: {
   auctionId: string;
   validateIsLive?: boolean;
-}): ActionResponse<LiveAuction | null> & {
+}): ActionResponse<FetchLiveAuctionResponse | null> & {
   refetch: () => Promise<void>;
 } => {
-  const [auction, setAuction] = useState<LiveAuction | null>(null);
-  const [status, setStatus] = useState<RequestStatus>('idle');
+  const [auction, setAuction] = useState<FetchLiveAuctionResponse | null>(null);
+  const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchLiveAuction = useCallback(async () => {
     try {
-      setStatus('loading');
+      setStatus(REQUEST_STATUS.loading);
       const params = new URLSearchParams();
       params.append('validateIsLive', String(validateIsLive));
 
-      const res = await protectedGet<LiveAuction>({
+      const res = await protectedGet<FetchLiveAuctionResponse>({
         endpoint: `/auctions/${auctionId}?${params}`,
       });
 
+      console.log({ res });
       if (res.error) {
-        setStatus('error');
+        setStatus(REQUEST_STATUS.error);
         setErrorMessage(res.error);
         return {
           message: res.error,
@@ -41,7 +49,7 @@ export const useGetLiveAuction = ({
       }
 
       if (!res.data) {
-        setStatus('error');
+        setStatus(REQUEST_STATUS.error);
         setErrorMessage({
           en: 'Auction not found',
           es: 'Subasta no encontrada',
@@ -53,10 +61,9 @@ export const useGetLiveAuction = ({
           },
         };
       }
-
       const liveAuction = res.data;
 
-      setStatus('success');
+      setStatus(REQUEST_STATUS.success);
       setAuction(liveAuction);
 
       return {
@@ -89,18 +96,19 @@ export const useGetLiveAuction = ({
       const params = new URLSearchParams();
       params.append('validateIsLive', String(validateIsLive));
 
-      const res = await protectedGet<LiveAuction>({
+      const res = await protectedGet<FetchLiveAuctionResponse>({
         endpoint: `/auctions/${auctionId}?${params}`,
       });
+      const liveAuction = res.data;
 
       if (res.error) {
-        console.log('error', res.error);
-        setStatus('error');
+        setAuction(liveAuction ?? null);
+        setStatus(REQUEST_STATUS.error);
         setErrorMessage(res.error);
         return;
       }
 
-      if (!res.data) {
+      if (!liveAuction) {
         setErrorMessage({
           en: 'Auction not found',
           es: 'Subasta no encontrada',
@@ -108,9 +116,7 @@ export const useGetLiveAuction = ({
         return;
       }
 
-      const liveAuction = res.data;
-
-      setStatus('success');
+      setStatus(REQUEST_STATUS.success);
       setAuction(liveAuction);
     } catch (error) {
       const errorMessage =
@@ -128,7 +134,7 @@ export const useGetLiveAuction = ({
   }, [fetchLiveAuction]);
 
   return {
-    data: auction as LiveAuction | null,
+    data: auction,
     status,
     errorMessage,
     setErrorMessage,

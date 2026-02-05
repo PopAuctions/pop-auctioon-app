@@ -766,7 +766,11 @@
       "bids": "Bid",
       "estimatedPrice": "Estimated price",
       "close": "Close",
-      "currentArticle": "Current article"
+      "currentArticle": "Current article",
+      "finished": "The auction has ended",
+      "thanksForWatching": "Thanks for watching!",
+      "ifAnyArticleWon": "If you won any article, you can check it and pay for it in your account",
+      "goToArticlesWon": "Go to my won articles"
     }
   },
   "components": {

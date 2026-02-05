@@ -776,7 +776,11 @@
       "bids": "Pujas",
       "estimatedPrice": "Precio estimado",
       "close": "Cerrar",
-      "currentArticle": "Artículo actual"
+      "currentArticle": "Artículo actual",
+      "finished": "La subasta ha finalizado",
+      "thanksForWatching": "¡Gracias por ver!",
+      "ifAnyArticleWon": "Si has ganado algún artículo, podrás verlo y pagarlo desde tu perfil.",
+      "goToArticlesWon": "Ver artículos ganados"
     }
   },
   "components": {
