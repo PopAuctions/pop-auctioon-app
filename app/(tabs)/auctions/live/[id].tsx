@@ -35,7 +35,7 @@ export default function LiveAuctionScreen() {
   const auctionId = id;
 
   const { auth } = useAuth();
-  const { data: currentUser, status: userStatus } = useGetCurrentUser();
+  const { data: currentUser } = useGetCurrentUser();
   const {
     data: liveAuctionData,
     status: auctionRequestStatus,
@@ -151,9 +151,6 @@ export default function LiveAuctionScreen() {
 
   const invalidAuctionId = !auctionId || isNaN(Number(auctionId));
   const showLoading =
-    userStatus === REQUEST_STATUS.loading ||
-    userStatus === REQUEST_STATUS.idle ||
-    userStatus === REQUEST_STATUS.error ||
     auctionRequestStatus === REQUEST_STATUS.loading ||
     auctionRequestStatus === REQUEST_STATUS.idle;
   // add currentArticleStatus if needed

@@ -39,7 +39,6 @@ export const useGetLiveAuction = ({
         endpoint: `/auctions/${auctionId}?${params}`,
       });
 
-      console.log({ res });
       if (res.error) {
         setStatus(REQUEST_STATUS.error);
         setErrorMessage(res.error);
