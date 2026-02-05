@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Pressable, View } from 'react-native';
-import { useRouter, Stack } from 'expo-router';
+import { useRouter, Stack, type Href } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
@@ -9,6 +9,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
+import { getParentRoute } from '@/utils/deeplinks/getParentRoute';
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -20,22 +21,32 @@ export default function OnboardingScreen() {
     await AsyncStorage.setItem(HAS_SEEN_ONBOARDING_KEY, 'true');
   };
 
+  const navigateBuildingStack = (href: Href) => {
+    const parent = getParentRoute(href as string);
+    if (parent) {
+      router.replace(parent as Href);
+      setTimeout(() => router.push(href), 0);
+    } else {
+      router.replace(href);
+    }
+  };
+
   const onSkip = async () => {
     await triggerHaptic('impact');
     await markAsSeen();
-    router.replace('/(tabs)/auth');
+    router.replace('/(tabs)/home');
   };
 
   const onLogin = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    router.replace('/(tabs)/auth/login');
+    navigateBuildingStack('/(tabs)/auth/login');
   };
 
   const onRegister = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    router.replace('/(tabs)/auth/register');
+    navigateBuildingStack('/(tabs)/auth/register');
   };
 
   // Show loading state while fetching slides
@@ -111,7 +122,10 @@ export default function OnboardingScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <View className='flex-1' style={{ backgroundColor: video.bgColor }}>
+      <View
+        className='flex-1'
+        style={{ backgroundColor: video.bgColor }}
+      >
         {/* Video - Full screen, no controls */}
         <VideoPlayer uri={video.videoUrl} />
 

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
 import {
@@ -15,6 +15,7 @@ export const useAuthNavigation = () => {
   const { getSession } = useAuth();
   const [session, role] = getSession();
   const [isNavigating, setIsNavigating] = useState(false);
+  const pathname = usePathname();
 
   // Smart navigation with auto-detection of stack building needs
   const navigateWithAuth = useCallback(
@@ -59,16 +60,16 @@ export const useAuthNavigation = () => {
         const parentRoute = getParentRoute(href);
 
         if (parentRoute) {
-          console.log(
-            '🔄 Auto-detected cross-stack navigation - building stack'
-          );
+          // Ya estamos en el padre → solo push, sin replace
+          // usePathname() retorna sin grupos, ej: /auth vs /(tabs)/auth
+          if (pathname === parentRoute.replace(/\/\([^)]+\)/g, '')) {
+            router.push(href as Href);
+            return true;
+          }
           console.log('  Parent:', parentRoute);
           console.log('  Destination:', href);
 
-          // Navigate to parent silently with replace (no visual)
           router.replace(parentRoute as Href);
-
-          // Use 0ms timeout to execute on next tick (faster than requestAnimationFrame)
           setTimeout(() => {
             router.push(href as Href);
           }, 0);
@@ -93,7 +94,7 @@ export const useAuthNavigation = () => {
 
       return true;
     },
-    [session, role]
+    [session, role, pathname]
   );
 
   const navigateToAuth = useCallback(() => {

@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react';
 import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-import { requiresAuth as checkRequiresAuth } from '@/components/navigation/routeConfig';
 import { cn } from '@/utils/cn';
 
 /**
@@ -92,47 +91,16 @@ export const CustomLink = forwardRef<
       ? 'active:scale-105 transition-all duration-300 ease-out'
       : '';
 
-    // Extraer nombre de la ruta para verificar si requiere autenticación
-    const extractRouteName = (path: string): string => {
-      // Casos de ejemplo:
-      // '/(tabs)/my-auctions/create' -> 'create' (sub-ruta de my-auctions)
-      // '/(tabs)/account/about-us' -> 'about-us' (sub-ruta de account)
-      // '/(tabs)/auctions/calendar' -> 'calendar' (sub-ruta de auctions)
-      // '/(tabs)/auctions' -> 'auctions'
-      // '/home/api-testing' -> 'api-testing'
-
-      // Remover parámetros de ruta y grupos de Expo Router
-      const cleanPath = path.split('?')[0]; // Remover query params
-      const routeParts = cleanPath
-        .split('/')
-        .filter((part) => part && !part.includes('(') && !part.includes(')'));
-
-      // Tomar la ÚLTIMA parte significativa de la ruta (más específica)
-      return routeParts[routeParts.length - 1] || '';
-    };
-
     const handlePress = async () => {
       if (isDisabled) return;
 
       if (outsideRedirect) {
-        // Para enlaces externos
         const canOpen = await Linking.canOpenURL(href);
         if (canOpen) {
           await Linking.openURL(href);
         }
       } else {
-        // Para navegación interna - verificar automáticamente si requiere auth
-        const routeName = extractRouteName(href);
-        const needsAuth = checkRequiresAuth(routeName);
-
-        if (needsAuth) {
-          // Usar navigateWithAuth que maneja verificación de autenticación y roles
-          navigateWithAuth(href as any);
-        } else {
-          // Para rutas públicas, también usar navigateWithAuth por consistencia
-          // (navigateWithAuth maneja rutas públicas correctamente)
-          navigateWithAuth(href as any);
-        }
+        navigateWithAuth(href as any);
       }
     };
 
