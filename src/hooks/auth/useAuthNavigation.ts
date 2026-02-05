@@ -60,9 +60,10 @@ export const useAuthNavigation = () => {
         const parentRoute = getParentRoute(href);
 
         if (parentRoute) {
-          // Ya estamos en el padre → solo push, sin replace
+          // Ya estamos dentro del mismo stack → solo push, sin replace
           // usePathname() retorna sin grupos, ej: /auth vs /(tabs)/auth
-          if (pathname === parentRoute.replace(/\/\([^)]+\)/g, '')) {
+          const normalizedParent = parentRoute.replace(/\/\([^)]+\)/g, '');
+          if (pathname === normalizedParent) {
             router.push(href as Href);
             return true;
           }
