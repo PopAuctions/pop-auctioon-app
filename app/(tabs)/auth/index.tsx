@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
@@ -16,6 +18,21 @@ import {
 export default function AuthMenuScreen() {
   const { t } = useTranslation();
   const { handleOpenTerms } = useOpenTerms();
+  const { hideContent } = useLocalSearchParams<{ hideContent?: string }>();
+
+  // Only read the param on mount — local state controls visibility from here on
+  const [shouldHideContent, setShouldHideContent] = useState(hideContent === 'true');
+
+  useEffect(() => {
+    if (!shouldHideContent) return;
+    // login/register is pushed via setTimeout(0) from onboarding; clear after that completes
+    const timer = setTimeout(() => setShouldHideContent(false), 50);
+    return () => clearTimeout(timer);
+  }, [shouldHideContent]);
+
+  if (shouldHideContent) {
+    return <View className='flex-1 bg-white' />;
+  }
 
   return (
     <SafeAreaView
