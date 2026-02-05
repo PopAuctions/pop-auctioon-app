@@ -1,11 +1,11 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomText } from '@/components/ui/CustomText';
 import type { Auction, Lang } from '@/types/types';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { SimpleCountdown } from '../ui/SimpleCountdown';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export const AuctionsSliderItem = ({
   lang,
@@ -16,12 +16,12 @@ export const AuctionsSliderItem = ({
   auction: Auction;
   cardWidth: number;
 }) => {
-  const router = useRouter();
+  const { navigateWithAuth } = useAuthNavigation();
   const imageHeight = Math.round(cardWidth * 1.05);
 
   return (
     <Pressable
-      onPress={() => router.push(`/(tabs)/auctions/${auction.id}`)}
+      onPress={() => navigateWithAuth(`/(tabs)/auctions/${auction.id}`)}
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
     >
       <View style={{ gap: 10 }}>
