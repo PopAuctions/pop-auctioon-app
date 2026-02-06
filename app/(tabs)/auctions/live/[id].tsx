@@ -240,12 +240,16 @@ export default function LiveAuctionScreen() {
               <CustomLink
                 href='/(tabs)/account/articles-won'
                 mode='primary'
+                dismissFirst
+                replace
               >
                 {t('screens.liveAuction.goToArticlesWon')}
               </CustomLink>
               <CustomLink
                 href='/(tabs)/home'
                 mode='secondary'
+                dismissFirst
+                replace
               >
                 {t('globals.goToHome')}
               </CustomLink>

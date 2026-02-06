@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { cn } from '@/utils/cn';
+import { Href, useRouter } from 'expo-router';
 
 /**
  * CustomLink - Componente inteligente de navegación
@@ -67,7 +68,12 @@ const LINK_SIZE_STYLES = {
 
 export const CustomLink = forwardRef<
   React.ElementRef<typeof Pressable>,
-  CustomLinkProps
+  CustomLinkProps & {
+    dismissFirst?: boolean;
+    dismissFallbackHref?: Href; // if can't go back, where to go to close overlay context
+    replace?: boolean; // optional: use replace instead of push
+    onPressOverride?: () => void | Promise<void>; // optional escape hatch
+  }
 >(
   (
     {
@@ -81,9 +87,14 @@ export const CustomLink = forwardRef<
       style,
       outsideRedirect = false,
       isDisabled = false,
+      dismissFirst = false,
+      dismissFallbackHref = '/(tabs)/auctions',
+      replace = false,
+      onPressOverride,
     },
     ref
   ) => {
+    const router = useRouter();
     const { navigateWithAuth } = useAuthNavigation();
     const modeStyle = `${LINK_MODE_STYLES[mode]} ${LINK_SIZE_STYLES[mode][size]}`;
 
@@ -94,14 +105,33 @@ export const CustomLink = forwardRef<
     const handlePress = async () => {
       if (isDisabled) return;
 
+      if (onPressOverride) {
+        await onPressOverride();
+        return;
+      }
+
       if (outsideRedirect) {
         const canOpen = await Linking.canOpenURL(href);
-        if (canOpen) {
-          await Linking.openURL(href);
-        }
-      } else {
-        navigateWithAuth(href as any);
+        if (canOpen) await Linking.openURL(href);
+        return;
       }
+
+      const go = () => {
+        navigateWithAuth(href as any, { replace });
+      };
+
+      if (!dismissFirst) {
+        go();
+        return;
+      }
+
+      // dismissFirst === true from here on
+      if (router.canGoBack()) router.back();
+      else router.replace(dismissFallbackHref);
+
+      requestAnimationFrame(() => {
+        go();
+      });
     };
 
     return (
