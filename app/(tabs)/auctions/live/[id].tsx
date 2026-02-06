@@ -238,7 +238,7 @@ export default function LiveAuctionScreen() {
             </CustomText>
             <View className='mt-6 flex w-1/2 flex-col gap-4'>
               <CustomLink
-                href='/(tabs)/account/articles-won'
+                href='/(tabs)/account/articles-won?fromTab=true'
                 mode='primary'
                 dismissFirst
                 replace

@@ -48,35 +48,41 @@ export const useAuthNavigation = () => {
           return false;
         }
       } else {
-        // Ruta pública - permitir navegación sin verificaciones
         console.log(
           '🌐 Public route, navigating without auth check:',
           routeName
         );
       }
 
-      // 🔄 Auto-detect if we need to build navigation stack
+      // ✅ If destination is in a different tab and is a nested route,
+      // do NOT "build stack" (replace parent + push) because it causes a visible double transition.
+      // Navigate directly to the final route instead (single transition).
       if (shouldBuildStack(href)) {
         const parentRoute = getParentRoute(href);
 
         if (parentRoute) {
-          // Ya estamos dentro del mismo stack → solo push, sin replace
-          // usePathname() retorna sin grupos, ej: /auth vs /(tabs)/auth
           const normalizedParent = parentRoute.replace(/\/\([^)]+\)/g, '');
-          if (pathname === normalizedParent) {
+          const isSameStack = pathname === normalizedParent;
+
+          if (isSameStack) {
+            // Same stack → keep existing behavior
             router.push(href as Href);
             return true;
           }
-          console.log('  Parent:', parentRoute);
-          console.log('  Destination:', href);
 
-          router.replace({
-            pathname: parentRoute,
-            params: { hideContent: 'true' },
-          } as Href);
+          // Different stack (usually another tab) → avoid stack building
+          setIsNavigating(true);
+
+          if (options?.replace) {
+            router.replace(href as Href);
+          } else {
+            // navigate avoids stacking extra history across tabs and is a single transition
+            router.navigate(href as Href);
+          }
+
           setTimeout(() => {
-            router.push(href as Href);
-          }, 0);
+            setIsNavigating(false);
+          }, 500);
 
           return true;
         }

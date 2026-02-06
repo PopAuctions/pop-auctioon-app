@@ -1,5 +1,8 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { SmartBack } from '@/components/ui/SmartBack';
+
+const INDEX_ROUTE = '/(tabs)/account';
 
 export default function AccountLayout() {
   const { t } = useTranslation();
@@ -135,6 +138,14 @@ export default function AccountLayout() {
         options={{
           title: t('screens.account.articlesWon'),
           presentation: 'card',
+          headerLeft: () => {
+            return (
+              <SmartBack
+                fallbackHref={INDEX_ROUTE}
+                label={t('tabsNames.back')}
+              />
+            );
+          },
         }}
       />
       <Stack.Screen
