@@ -44,7 +44,7 @@ export default function OffersMadeScreen() {
           {t('screens.myOffers.noOffersMade')}
         </CustomText>
         <CustomLink
-          href='/(tabs)/online-store/'
+          href='/(tabs)/online-store'
           mode='secondary'
           className='mt-4'
         >
