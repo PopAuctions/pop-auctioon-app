@@ -379,6 +379,7 @@ export default function LiveAuctionScreen() {
       <AuctionSubscriber
         auctionId={Number(auctionId)}
         refetch={refetchLiveAuction}
+        compareTo={AuctionStatus.FINISHED}
       />
       <CustomToast />
     </>

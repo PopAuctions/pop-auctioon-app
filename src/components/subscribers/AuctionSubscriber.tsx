@@ -5,9 +5,11 @@ import { useIsFocused } from '@react-navigation/native';
 export const AuctionSubscriber = ({
   auctionId,
   refetch,
+  compareTo,
 }: {
   auctionId: number;
   refetch?: () => void;
+  compareTo: AuctionStatus;
 }) => {
   const isFocused = useIsFocused();
 
@@ -15,7 +17,7 @@ export const AuctionSubscriber = ({
     table: 'Auction',
     auctionId,
     filter: `id=eq.${auctionId}`,
-    compareTo: AuctionStatus.FINISHED,
+    compareTo,
     refetch,
     enabled: isFocused,
   });

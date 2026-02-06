@@ -314,6 +314,7 @@ export default function ArticlesDetailScreen() {
           <AuctionSubscriber
             auctionId={auction.id}
             refetch={refetchArticle}
+            compareTo={AuctionStatus.LIVE}
           />
           <ArticleBidSubscriber
             articleId={article.id}

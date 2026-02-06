@@ -247,6 +247,7 @@ export default function AuctionDetailScreen() {
       <AuctionSubscriber
         auctionId={auction.id}
         refetch={refetchAuction}
+        compareTo={AuctionStatus.LIVE}
       />
     </>
   );
