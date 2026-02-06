@@ -9,10 +9,12 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const { locale, t } = useTranslation();
+  const { navigateWithAuth } = useAuthNavigation();
 
   const { video, texts, isLoading, error } = useOnboardingData();
 
@@ -26,26 +28,16 @@ export default function OnboardingScreen() {
     router.replace('/(tabs)/home');
   };
 
-  const navigateIntoAuth = (screen: 'login' | 'register'): void => {
-    router.replace({
-      pathname: '/(tabs)/auth',
-      params: { hideContent: 'true' },
-    });
-    setTimeout(() => {
-      router.push(`/(tabs)/auth/${screen}`);
-    }, 0);
-  };
-
   const onLogin = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    navigateIntoAuth('login');
+    navigateWithAuth('/(tabs)/auth/login');
   };
 
   const onRegister = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    navigateIntoAuth('register');
+    navigateWithAuth('/(tabs)/auth/register-user');
   };
 
   // Show loading state while fetching slides

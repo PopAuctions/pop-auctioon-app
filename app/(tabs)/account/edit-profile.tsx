@@ -5,7 +5,6 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
-import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,11 +19,13 @@ import { APP_USER_ROLES } from '@/constants/user';
 import type * as z from 'zod';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
   const { auth } = useAuth();
   const { callToast } = useToast(locale);
+  const { navigateWithAuth } = useAuthNavigation();
   const isSubmittingRef = useRef(false);
 
   // Usar los nuevos hooks
@@ -116,7 +117,7 @@ export default function EditProfileScreen() {
         variant: 'success',
         description: 'screens.editProfile.updateSuccess',
       });
-      router.push('/(tabs)/account');
+      navigateWithAuth('/(tabs)/account');
       isSubmittingRef.current = false;
     } else if (updateStatus === REQUEST_STATUS.error && updateError) {
       callToast({
@@ -125,7 +126,7 @@ export default function EditProfileScreen() {
       });
       isSubmittingRef.current = false;
     }
-  }, [updateStatus, updateError, locale, callToast]);
+  }, [updateStatus, updateError, locale, callToast, navigateWithAuth]);
 
   const onSubmit = async (
     data: z.infer<typeof UserEditSchema> | z.infer<typeof AuctioneerEditSchema>

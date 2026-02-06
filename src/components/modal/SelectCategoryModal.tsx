@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Lang } from '@/types/types';
 import { AUCTION_CATEGORIES_LANG } from '@/constants/auctions';
-import { useRouter } from 'expo-router';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 interface SelectCategoryModalProps {
   children: ReactNode;
@@ -34,7 +34,7 @@ export function SelectCategoryModal({
 }: SelectCategoryModalProps) {
   const [visible, setVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const router = useRouter();
+  const { navigateWithAuth } = useAuthNavigation();
 
   const handleChange = (value: string | null) => {
     setSelectedCategory(value);
@@ -48,7 +48,7 @@ export function SelectCategoryModal({
   const handleConfirm = async () => {
     if (!selectedCategory) return;
 
-    router.push(
+    navigateWithAuth(
       `/(tabs)/my-online-store/articles/new?category=${selectedCategory}`
     );
 

@@ -38,7 +38,6 @@ export const StreamWebView = ({
       showsHorizontalScrollIndicator={false}
       // Propiedades de rendimiento
       androidLayerType='hardware'
-      androidHardwareAccelerationDisabled={false}
       mixedContentMode='always'
       cacheEnabled={true}
       cacheMode='LOAD_DEFAULT'

@@ -35,10 +35,12 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
+  const { navigateWithAuth } = useAuthNavigation();
   const { callToast } = useToast(locale);
   const { auctionId } = useLocalSearchParams<{ auctionId: string }>();
 
@@ -376,7 +378,7 @@ export default function PaymentScreen() {
         },
       });
 
-      router.replace('/(tabs)/account/payments-history');
+      navigateWithAuth('/(tabs)/account/payments-history');
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -399,8 +401,8 @@ export default function PaymentScreen() {
     rejectPayment,
     presentPaymentSheet,
     callToast,
-    router,
     paymentTranslations,
+    navigateWithAuth,
   ]);
 
   // Validar que existe auctionId (después de todos los hooks)

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { View, TextInput } from 'react-native';
-import { useRouter } from 'expo-router';
 import PhoneInput from 'react-native-international-phone-number';
 import type {
   IPhoneInputRef,
@@ -11,6 +10,7 @@ import { useVerifyPhone } from '@/hooks/pages/verify-phone/useVerifyPhone';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/hooks/useToast';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 type Step = 1 | 2 | 3;
 
@@ -24,8 +24,8 @@ export function VerifyPhoneWizard({
   isPhoneVerified,
 }: VerifyPhoneWizardProps) {
   const { t, locale } = useTranslation();
-  const router = useRouter();
   const { callToast } = useToast(locale);
+  const { navigateWithAuth } = useAuthNavigation();
   const { sendOtp, verifyOtp, errorMessage, canResend, remainingSeconds } =
     useVerifyPhone();
 
@@ -144,7 +144,7 @@ export function VerifyPhoneWizard({
 
   // Step 3: Navigate back to account
   const handleGoToProfile = () => {
-    router.push('/(tabs)/account');
+    navigateWithAuth('/(tabs)/account');
   };
 
   return (
