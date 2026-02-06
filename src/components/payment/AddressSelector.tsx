@@ -4,8 +4,11 @@
  * - SelectField con lista de direcciones
  * - Botón "+" para agregar nueva dirección
  * - Preview de la dirección seleccionada con detalles completos
+ *
+ * Optimizado con React.memo para evitar re-renders innecesarios
  */
 
+import { memo } from 'react';
 import { View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { SelectField } from '@/components/fields/SelectField';
@@ -23,7 +26,7 @@ interface AddressSelectorProps {
   onAddNewAddress: () => void;
 }
 
-export function AddressSelector({
+export const AddressSelector = memo(function AddressSelector({
   addresses,
   selectedAddressId,
   selectedAddress,
@@ -156,4 +159,4 @@ export function AddressSelector({
       )}
     </View>
   );
-}
+});

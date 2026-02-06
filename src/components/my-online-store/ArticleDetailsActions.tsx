@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { ChangePriceModal } from '@/components/modal/ChangePriceModal';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { Button } from '@/components/ui/Button';
@@ -15,6 +14,7 @@ import {
   LangMap,
   RefetchReturn,
 } from '@/types/types';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 const DESCRIPTIONS = {
   es: {
@@ -66,7 +66,7 @@ export const ArticleDetailsActions = ({
   const [isLoading, setIsLoading] = useState(false);
   const { callToast } = useToast(locale);
   const { securePatch, secureDelete, securePost } = useSecureApi();
-  const router = useRouter();
+  const { navigateWithAuth } = useAuthNavigation();
 
   const handlePriceChange = async (newPrice: string) => {
     setIsLoading(true);
@@ -122,7 +122,7 @@ export const ArticleDetailsActions = ({
       variant: 'success',
       description: response.data,
     });
-    router.replace('/(tabs)/my-online-store');
+    navigateWithAuth('/(tabs)/my-online-store');
     setIsLoading(false);
 
     return true;
@@ -149,7 +149,7 @@ export const ArticleDetailsActions = ({
     });
 
     setIsLoading(false);
-    router.replace('/(tabs)/my-online-store');
+    navigateWithAuth('/(tabs)/my-online-store');
     return true;
   };
 

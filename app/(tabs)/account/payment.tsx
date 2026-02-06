@@ -19,6 +19,7 @@ import { useStripePayment } from '@/hooks/payment/useStripePayment';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { useArticlesPayment } from '@/hooks/pages/payment/useArticlesPayment';
+import { useToggleArticleSelection } from '@/hooks/pages/payment/useToggleArticleSelection';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomText } from '@/components/ui/CustomText';
@@ -34,10 +35,12 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
+  const { navigateWithAuth } = useAuthNavigation();
   const { callToast } = useToast(locale);
   const { auctionId } = useLocalSearchParams<{ auctionId: string }>();
 
@@ -63,6 +66,12 @@ export default function PaymentScreen() {
   } = useStripePayment();
 
   const { createPayment, rejectPayment } = useArticlesPayment();
+
+  // Hook para toggle de selección de artículos (sincronizar con backend)
+  const {
+    toggleArticleSelection: toggleArticleSelectionBackend,
+    isLoading: isTogglingArticle,
+  } = useToggleArticleSelection();
 
   // Hook para obtener porcentaje de comisión y costos de envío dinámicos
   const { data: paymentConfig, status: commissionStatus } =
@@ -186,25 +195,43 @@ export default function PaymentScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Solo al montar, NO escuchar cambios
 
-  // Toggle selección de artículo
+  // Toggle selección de artículo (actualización optimística)
   const toggleArticleSelection = useCallback(
     (articleId: number) => {
-      setSelectedArticleIds((prev) => {
-        if (prev.includes(articleId)) {
-          // Prevenir deselección del último artículo (como en web)
-          if (prev.length === 1) {
-            callToast({
-              variant: 'error',
-              description: 'screens.payment.cannotDeselectLastItem',
-            });
-            return prev;
-          }
-          return prev.filter((id) => id !== articleId);
+      const isCurrentlySelected = selectedArticleIds.includes(articleId);
+
+      // Prevenir deselección del último artículo (como en web)
+      if (isCurrentlySelected && selectedArticleIds.length === 1) {
+        callToast({
+          variant: 'error',
+          description: 'screens.payment.cannotDeselectLastItem',
+        });
+        return;
+      }
+
+      // ✅ ACTUALIZACIÓN OPTIMÍSTICA: Actualizar UI inmediatamente
+      const newSelectedIds = isCurrentlySelected
+        ? selectedArticleIds.filter((id) => id !== articleId)
+        : [...selectedArticleIds, articleId];
+
+      setSelectedArticleIds(newSelectedIds);
+
+      // 👇 LLAMAR AL BACKEND en background (sin bloquear UI)
+      toggleArticleSelectionBackend({
+        articleId,
+        isSelected: !isCurrentlySelected,
+      }).then(({ error }) => {
+        if (error) {
+          // ❌ Si falla, revertir el cambio optimista
+          setSelectedArticleIds(selectedArticleIds);
+          callToast({
+            variant: 'error',
+            description: error,
+          });
         }
-        return [...prev, articleId];
       });
     },
-    [callToast]
+    [selectedArticleIds, callToast, toggleArticleSelectionBackend]
   );
 
   // Manejar aplicación de código de descuento
@@ -351,7 +378,7 @@ export default function PaymentScreen() {
         },
       });
 
-      router.replace('/(tabs)/account/payments-history');
+      navigateWithAuth('/(tabs)/account/payments-history');
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -374,8 +401,8 @@ export default function PaymentScreen() {
     rejectPayment,
     presentPaymentSheet,
     callToast,
-    router,
     paymentTranslations,
+    navigateWithAuth,
   ]);
 
   // Validar que existe auctionId (después de todos los hooks)
@@ -492,6 +519,7 @@ export default function PaymentScreen() {
           articles={articles}
           selectedArticleIds={selectedArticleIds}
           onToggleArticle={toggleArticleSelection}
+          isLoading={isTogglingArticle}
         />
 
         {/* Resumen de pago con código de descuento */}

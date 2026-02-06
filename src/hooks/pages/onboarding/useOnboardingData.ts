@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
-import type { OnboardingSlide, OnboardingTexts } from '@/types/types';
+import type { OnboardingSlide, OnboardingVideo, OnboardingTexts } from '@/types/types';
 
 type OnboardingApiResponse = {
   slides: OnboardingSlide[];
+  video: OnboardingVideo;
   texts: OnboardingTexts;
 };
 
 type UseOnboardingDataReturn = {
   slides: OnboardingSlide[];
+  video: OnboardingVideo | null;
   texts: OnboardingTexts;
   isLoading: boolean;
   error: string | null;
@@ -22,6 +24,7 @@ type UseOnboardingDataReturn = {
 export const useOnboardingData = (): UseOnboardingDataReturn => {
   const { protectedGet } = useSecureApi();
   const [slides, setSlides] = useState<OnboardingSlide[]>([]);
+  const [video, setVideo] = useState<OnboardingVideo | null>(null);
   const [texts, setTexts] = useState<OnboardingTexts>({
     skip: { es: 'Omitir', en: 'Skip' },
     next: { es: 'Siguiente', en: 'Next' },
@@ -66,6 +69,7 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
           }));
 
           setSlides(transformedSlides);
+          setVideo(response.data.video ?? null);
           setTexts(response.data.texts);
         }
       } catch (err) {
@@ -82,6 +86,7 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
 
   return {
     slides,
+    video,
     texts,
     isLoading,
     error,

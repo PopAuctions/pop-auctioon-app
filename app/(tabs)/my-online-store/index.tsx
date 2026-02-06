@@ -4,6 +4,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { MyOnlineStoreArticleFilters } from '@/components/my-online-store/MyOnlineStoreArticleFilters';
 import { MyOnlineStoreArticlesInfiniteScroll } from '@/components/my-online-store/MyOnlineStoreArticlesInfiniteScroll';
+import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 
 export interface Filters {
   brand?: string;
@@ -19,6 +20,8 @@ export default function MyOnlineStoreScreen() {
   const { brand, model, codeNumber, status, offersStatus } = params as Filters;
   const filtersKey = `${brand ?? ''}${model ?? ''}${codeNumber ?? ''}${status ?? ''}${offersStatus ?? ''}`;
 
+  const shouldHide = useHideWhileStackBuilds();
+
   const renderAuctionHeader = useCallback(() => {
     return (
       <View className='mb-4 mt-2 flex w-full flex-col'>
@@ -29,6 +32,10 @@ export default function MyOnlineStoreScreen() {
       </View>
     );
   }, [locale, t]);
+
+  if (shouldHide) {
+    return <View className='flex-1 bg-white' />;
+  }
 
   return (
     <View className='flex-1'>

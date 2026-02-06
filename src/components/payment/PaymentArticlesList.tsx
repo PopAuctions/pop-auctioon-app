@@ -5,8 +5,11 @@
  * - Imagen del artículo
  * - Título, marca y precio de venta
  * - Estilo condicional cuando está seleccionado
+ *
+ * Optimizado con React.memo para evitar re-renders innecesarios
  */
 
+import { memo } from 'react';
 import { View } from 'react-native';
 import { Checkbox } from 'expo-checkbox';
 import { CustomText } from '@/components/ui/CustomText';
@@ -22,13 +25,15 @@ interface PaymentArticlesListProps {
   selectedArticleIds: number[];
   onToggleArticle: (articleId: number) => void;
   showCheckBoxes?: boolean;
+  isLoading?: boolean; // Loading state para deshabilitar checkboxes durante toggle
 }
 
-export function PaymentArticlesList({
+export const PaymentArticlesList = memo(function PaymentArticlesList({
   articles,
   selectedArticleIds,
   onToggleArticle,
   showCheckBoxes = true,
+  isLoading = false,
 }: PaymentArticlesListProps) {
   const { locale } = useTranslation();
   const formatter = euroFormatter(locale, 2);
@@ -52,6 +57,7 @@ export function PaymentArticlesList({
                 value={isSelected}
                 onValueChange={() => onToggleArticle(article.id)}
                 color={isSelected ? '#d75639' : undefined}
+                disabled={isLoading}
               />
             )}
 
@@ -95,4 +101,4 @@ export function PaymentArticlesList({
       })}
     </View>
   );
-}
+});

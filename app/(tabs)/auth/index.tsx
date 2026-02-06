@@ -6,6 +6,7 @@ import { CustomLink } from '@/components/ui/CustomLink';
 import { Divider } from '@/components/ui/Divider';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { useOpenTerms } from '@/hooks/useOpenTerms';
+import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 import {
   FIRST_SECTION,
   FOURTH_SECTION,
@@ -16,6 +17,11 @@ import {
 export default function AuthMenuScreen() {
   const { t } = useTranslation();
   const { handleOpenTerms } = useOpenTerms();
+  const shouldHide = useHideWhileStackBuilds();
+
+  if (shouldHide) {
+    return <View className='flex-1 bg-white' />;
+  }
 
   return (
     <SafeAreaView

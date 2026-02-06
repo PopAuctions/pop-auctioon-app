@@ -1,46 +1,43 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PagerView from 'react-native-pager-view';
-import { useRef, useState } from 'react';
-import { Image, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
+import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
-import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const pagerRef = useRef<PagerView>(null);
-  const [index, setIndex] = useState(0);
   const { locale, t } = useTranslation();
+  const { navigateWithAuth } = useAuthNavigation();
 
-  // Fetch onboarding data from API (with fallback to local data)
-  const { slides, texts, isLoading, error } = useOnboardingData();
+  const { video, texts, isLoading, error } = useOnboardingData();
 
-  const isLast = index === slides.length - 1;
-
-  const finish = async () => {
-    await triggerHaptic('success');
+  const markAsSeen = async () => {
     await AsyncStorage.setItem(HAS_SEEN_ONBOARDING_KEY, 'true');
-    router.replace('/(tabs)/auth');
   };
 
   const onSkip = async () => {
     await triggerHaptic('impact');
-    await finish();
+    await markAsSeen();
+    router.replace('/(tabs)/home');
   };
 
-  const onNext = async () => {
+  const onLogin = async () => {
     await triggerHaptic('selection');
-    if (isLast) {
-      await finish();
-      return;
-    }
-    pagerRef.current?.setPage(index + 1);
+    await markAsSeen();
+    navigateWithAuth('/(tabs)/auth/login');
+  };
+
+  const onRegister = async () => {
+    await triggerHaptic('selection');
+    await markAsSeen();
+    navigateWithAuth('/(tabs)/auth/register-user');
   };
 
   // Show loading state while fetching slides
@@ -60,10 +57,8 @@ export default function OnboardingScreen() {
   }
 
   // Show error state if fetch failed
-  if (error || slides.length === 0) {
+  if (error || !video) {
     const handleGoHome = () => {
-      // Don't mark as seen - let user try again later from settings
-      // Use params to tell home to skip onboarding check
       router.replace({
         pathname: '/(tabs)/home',
         params: { skipOnboardingCheck: 'true' },
@@ -118,7 +113,13 @@ export default function OnboardingScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <View className='flex-1 bg-white'>
+      <View
+        className='flex-1'
+        style={{ backgroundColor: video.bgColor }}
+      >
+        {/* Video - Full screen, no controls */}
+        <VideoPlayer uri={video.videoUrl} />
+
         {/* Skip Button */}
         <View className='absolute right-0 top-0 z-10 px-6 pt-14'>
           <Pressable
@@ -139,80 +140,24 @@ export default function OnboardingScreen() {
           </Pressable>
         </View>
 
-        {/* Slides */}
-        <PagerView
-          ref={pagerRef}
-          style={{ flex: 1 }}
-          initialPage={0}
-          onPageSelected={(e) => setIndex(e.nativeEvent.position)}
-          accessibilityLabel={t('onboarding.slidesLabel')}
-        >
-          {slides.map((slide) => (
-            <View
-              key={slide.id}
+        {/* Footer: Login + Register */}
+        <View className='absolute bottom-0 left-0 right-0 px-8 pb-12'>
+          <View className='flex-row gap-4'>
+            <Button
+              mode='primary'
+              onPress={onLogin}
               className='flex-1'
             >
-              {/* Image Container - Full screen background */}
-              <View className='absolute inset-0'>
-                <Image
-                  source={slide.image}
-                  resizeMode='cover'
-                  style={{ width: '100%', height: '100%' }}
-                  onError={(error) =>
-                    sentryErrorReport(
-                      error.nativeEvent.error,
-                      `Failed to load onboarding image for slide ${slide.id}`
-                    )
-                  }
-                />
-              </View>
-
-              {/* Text Content - Overlay on top */}
-              <View className='absolute bottom-32 left-0 right-0 px-8'>
-                <CustomText
-                  type='h2'
-                  className='mb-4 text-white'
-                >
-                  {slide.title[locale]}
-                </CustomText>
-                <CustomText
-                  type='body'
-                  className='text-white/90'
-                >
-                  {slide.description[locale]}
-                </CustomText>
-              </View>
-            </View>
-          ))}
-        </PagerView>
-
-        {/* Footer: Dots + Next Button */}
-        <View className='absolute bottom-0 left-0 right-0 px-8 pb-12'>
-          {/* Dots Indicator */}
-          <View className='mb-8 flex-row items-center justify-center'>
-            {slides.map((_, i) => (
-              <View
-                key={i}
-                className={`mx-1 h-2 w-2 rounded-full ${
-                  i === index ? 'bg-white' : 'bg-white/30'
-                }`}
-              />
-            ))}
-          </View>
-
-          {/* Next/Start Button */}
-          <Button
-            mode='primary'
-            onPress={onNext}
-            className='w-full'
-          >
-            <CustomText
-              type='body'
-              className='font-semibold text-white'
+              {t('loginPage.signIn')}
+            </Button>
+            <Button
+              mode='secondary'
+              onPress={onRegister}
+              className='flex-1'
             >
-              {isLast ? texts.start[locale] : texts.next[locale]}
-            </CustomText>
-          </Button>
+              {t('loginPage.register')}
+            </Button>
+          </View>
         </View>
       </View>
     </>

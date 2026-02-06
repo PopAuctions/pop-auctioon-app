@@ -406,6 +406,14 @@ export type OnboardingSlide = {
   order?: number; // Order from API
 };
 
+export type OnboardingVideo = {
+  id: string;
+  title: LangMap;
+  description: LangMap;
+  videoUrl: string;
+  bgColor: string;
+};
+
 export type OnboardingTexts = {
   skip: LangMap;
   next: LangMap;

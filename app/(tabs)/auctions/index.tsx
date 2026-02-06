@@ -9,10 +9,16 @@ import { Loading } from '@/components/ui/Loading';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 import { Divider } from '@/components/ui/Divider';
+import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 
 export default function IndexScreen() {
   const { data: auctions, status } = useAuctionsCalendar();
   const { t, locale } = useTranslation();
+  const shouldHide = useHideWhileStackBuilds();
+
+  if (shouldHide) {
+    return <View className='flex-1 bg-white' />;
+  }
 
   // Obtener meses directamente
   const calendarMonths = getCalendarMonths();
