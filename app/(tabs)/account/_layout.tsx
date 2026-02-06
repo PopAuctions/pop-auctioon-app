@@ -13,6 +13,15 @@ export default function AccountLayout() {
       screenOptions={{
         headerShown: true,
         headerBackTitle: t('tabsNames.back'),
+        // TODO: update all other tabs to use the same headerLeft
+        headerLeft: () => {
+          return (
+            <SmartBack
+              fallbackHref={INDEX_ROUTE}
+              label={t('tabsNames.back')}
+            />
+          );
+        },
       }}
     >
       <Stack.Screen
@@ -138,14 +147,6 @@ export default function AccountLayout() {
         options={{
           title: t('screens.account.articlesWon'),
           presentation: 'card',
-          headerLeft: () => {
-            return (
-              <SmartBack
-                fallbackHref={INDEX_ROUTE}
-                label={t('tabsNames.back')}
-              />
-            );
-          },
         }}
       />
       <Stack.Screen
