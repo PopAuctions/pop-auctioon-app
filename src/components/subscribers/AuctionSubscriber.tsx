@@ -1,5 +1,6 @@
 import { AuctionStatus } from '@/constants/auctions';
 import { useAuctionSubscription } from '@/hooks/subscribers/useAuctionSubscription';
+import { useIsFocused } from '@react-navigation/native';
 
 export const AuctionSubscriber = ({
   auctionId,
@@ -8,12 +9,15 @@ export const AuctionSubscriber = ({
   auctionId: number;
   refetch?: () => void;
 }) => {
+  const isFocused = useIsFocused();
+
   useAuctionSubscription({
     table: 'Auction',
-    auctionId: auctionId,
+    auctionId,
     filter: `id=eq.${auctionId}`,
     compareTo: AuctionStatus.FINISHED,
-    refetch: refetch,
+    refetch,
+    enabled: isFocused,
   });
 
   return null;

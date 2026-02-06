@@ -22,7 +22,6 @@ export const useAuctionSubscription = ({
 }: Options) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  // Include filter in the key so changing it forces a rebind
   const topic = useMemo(
     () => `realtime:${table}:${auctionId}:${filter ?? ''}`,
     [table, auctionId, filter]
@@ -30,10 +29,24 @@ export const useAuctionSubscription = ({
 
   const chRef = useRef<RealtimeChannel | null>(null);
 
+  // ✅ always call latest refetch (prevents stale closures too)
+  const refetchRef = useRef<(() => void) | undefined>(refetch);
   useEffect(() => {
-    if (!enabled) return;
+    refetchRef.current = refetch;
+  }, [refetch]);
 
-    // tear down if we’re switching topic (table/id/filter)
+  useEffect(() => {
+    // ✅ if disabled, tear down any existing channel
+    if (!enabled) {
+      if (chRef.current) {
+        chRef.current.unsubscribe();
+        chRef.current = null;
+      }
+      setIsSubscribed(false);
+      return;
+    }
+
+    // tear down if switching topic
     if (chRef.current && chRef.current.topic !== topic) {
       chRef.current.unsubscribe();
       chRef.current = null;
@@ -42,27 +55,16 @@ export const useAuctionSubscription = ({
 
     if (chRef.current) return;
 
-    // Reuse existing channel if present (helps Fast Refresh / StrictMode)
-    const existing: RealtimeChannel | undefined = supabase
-      .getChannels()
-      .find((c: RealtimeChannel) => c.topic === topic);
-
-    const ch = existing ?? supabase.channel(topic);
+    const ch = supabase.channel(topic);
     chRef.current = ch;
 
     ch.on(
       'postgres_changes',
-      {
-        event: 'UPDATE',
-        schema: 'public',
-        table,
-        filter: filter,
-      },
+      { event: 'UPDATE', schema: 'public', table, filter },
       (payload) => {
         const { new: newData } = payload;
-
-        if (newData.status === compareTo) {
-          refetch?.();
+        if (newData?.status === compareTo) {
+          refetchRef.current?.();
         }
       }
     ).subscribe((status: SubscribeStatus) => {
@@ -76,16 +78,12 @@ export const useAuctionSubscription = ({
       }
     });
 
-    if (ch.state === 'joined') setIsSubscribed(true);
-
     return () => {
-      if (chRef.current) {
-        chRef.current.unsubscribe();
-        chRef.current = null;
-      }
+      chRef.current?.unsubscribe();
+      chRef.current = null;
       setIsSubscribed(false);
     };
-  }, [enabled, topic, table, auctionId, filter, compareTo, refetch]);
+  }, [enabled, topic, table, filter, compareTo]);
 
   return { isSubscribed };
 };

@@ -28,8 +28,22 @@ export const useLiveAuctionSubscription = ({
 
   const chRef = useRef<RealtimeChannel | null>(null);
 
+  // ✅ always call the latest refetch (avoid stale closures)
+  const refetchRef = useRef<(() => void) | undefined>(refetch);
   useEffect(() => {
-    if (!enabled) return;
+    refetchRef.current = refetch;
+  }, [refetch]);
+
+  useEffect(() => {
+    // ✅ if disabled, tear down any existing channel
+    if (!enabled) {
+      if (chRef.current) {
+        chRef.current.unsubscribe();
+        chRef.current = null;
+      }
+      setIsSubscribed(false);
+      return;
+    }
 
     // tear down if we’re switching topic (table/id/filter)
     if (chRef.current && chRef.current.topic !== topic) {
@@ -40,12 +54,8 @@ export const useLiveAuctionSubscription = ({
 
     if (chRef.current) return;
 
-    // Reuse existing channel if present (helps Fast Refresh / StrictMode)
-    const existing: RealtimeChannel | undefined = supabase
-      .getChannels()
-      .find((c: RealtimeChannel) => c.topic === topic);
-
-    const ch = existing ?? supabase.channel(topic);
+    // ✅ do NOT reuse channels from supabase.getChannels()
+    const ch = supabase.channel(topic);
     chRef.current = ch;
 
     ch.on(
@@ -54,10 +64,10 @@ export const useLiveAuctionSubscription = ({
         event: 'UPDATE',
         schema: 'public',
         table,
-        filter: filter,
+        filter,
       },
       () => {
-        refetch?.();
+        refetchRef.current?.();
       }
     ).subscribe((status: SubscribeStatus) => {
       if (status === 'SUBSCRIBED') setIsSubscribed(true);
@@ -70,16 +80,12 @@ export const useLiveAuctionSubscription = ({
       }
     });
 
-    if (ch.state === 'joined') setIsSubscribed(true);
-
     return () => {
-      if (chRef.current) {
-        chRef.current.unsubscribe();
-        chRef.current = null;
-      }
+      chRef.current?.unsubscribe();
+      chRef.current = null;
       setIsSubscribed(false);
     };
-  }, [enabled, topic, table, auctionId, filter, refetch]);
+  }, [enabled, topic, table, filter]);
 
   return { isSubscribed };
 };
