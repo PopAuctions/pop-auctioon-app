@@ -24,6 +24,7 @@ import { LiveAuctionSubscriber } from '@/components/subscribers/LiveAuctionSubsc
 import { AuctionStatus } from '@/constants/auctions';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
+import { useHideTabs } from '@/hooks/useHidetabs';
 
 const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
@@ -32,6 +33,8 @@ export default function LiveAuctionScreen() {
   const { t, locale } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  useHideTabs();
+
   const auctionId = id;
 
   const { auth } = useAuth();
