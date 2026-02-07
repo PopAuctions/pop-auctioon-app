@@ -5,6 +5,69 @@ import { cn } from '@/utils/cn';
 import { Href, useRouter } from 'expo-router';
 
 /**
+ * Tab routes (parent routes) - extracted from app/(tabs)/_layout.tsx
+ */
+const TAB_ROUTES = [
+  '/(tabs)/home',
+  '/(tabs)/auctions',
+  '/(tabs)/online-store',
+  '/(tabs)/my-auctions',
+  '/(tabs)/my-online-store',
+  '/(tabs)/account',
+  '/(tabs)/auth',
+] as const;
+
+/**
+ * Detecta si una ruta es anidada (tiene contenido después de la ruta padre)
+ * @example
+ * isNestedRoute('/(tabs)/account') // false - es ruta padre
+ * isNestedRoute('/(tabs)/account/edit-profile') // true - es anidada
+ * isNestedRoute('/(tabs)/auctions/[id]') // true - es anidada
+ */
+function isNestedRoute(href: string): boolean {
+  // Eliminar query params para análisis limpio
+  const [cleanPath] = href.split('?');
+
+  // Verificar si la ruta coincide exactamente con alguna ruta padre
+  const isParentRoute = TAB_ROUTES.some((tabRoute) => cleanPath === tabRoute);
+
+  if (isParentRoute) return false;
+
+  // Verificar si la ruta empieza con alguna ruta padre y tiene contenido adicional
+  const hasNestedContent = TAB_ROUTES.some((tabRoute) => {
+    return cleanPath.startsWith(tabRoute + '/');
+  });
+
+  return hasNestedContent;
+}
+
+/**
+ * Agrega el parámetro fromTab=true si la ruta es anidada
+ * Maneja correctamente query params existentes y hash fragments
+ * @example
+ * addFromTabParam('/(tabs)/account') // '/(tabs)/account' - sin cambios
+ * addFromTabParam('/(tabs)/account/edit-profile') // '/(tabs)/account/edit-profile?fromTab=true'
+ * addFromTabParam('/(tabs)/account/edit-profile?foo=bar') // '/(tabs)/account/edit-profile?foo=bar&fromTab=true'
+ * addFromTabParam('/(tabs)/account/settings#section-1') // '/(tabs)/account/settings?fromTab=true#section-1'
+ */
+function addFromTabParam(href: string): string {
+  if (!isNestedRoute(href)) return href;
+
+  // Verificar si ya tiene el parámetro fromTab
+  if (href.includes('fromTab=')) return href;
+
+  // Separar hash fragment si existe
+  const [pathAndQuery, hash] = href.split('#');
+
+  // Agregar el parámetro apropiado
+  const separator = pathAndQuery.includes('?') ? '&' : '?';
+  const result = `${pathAndQuery}${separator}fromTab=true`;
+
+  // Re-agregar hash fragment si existía
+  return hash ? `${result}#${hash}` : result;
+}
+
+/**
  * CustomLink - Componente inteligente de navegación
  *
  * Automáticamente determina si una ruta requiere autenticación consultando
@@ -116,8 +179,11 @@ export const CustomLink = forwardRef<
         return;
       }
 
+      // Agregar automáticamente fromTab=true si es ruta anidada
+      const finalHref = addFromTabParam(href);
+
       const go = () => {
-        navigateWithAuth(href as any, { replace });
+        navigateWithAuth(finalHref as any, { replace });
       };
 
       if (!dismissFirst) {
@@ -162,3 +228,6 @@ export const CustomLink = forwardRef<
 );
 
 CustomLink.displayName = 'CustomLink';
+
+// Exportar funciones helper para testing
+export { isNestedRoute, addFromTabParam };

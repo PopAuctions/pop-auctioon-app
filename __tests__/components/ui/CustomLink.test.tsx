@@ -4,7 +4,11 @@
  */
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { CustomLink } from '@/components/ui/CustomLink';
+import {
+  CustomLink,
+  isNestedRoute,
+  addFromTabParam,
+} from '@/components/ui/CustomLink';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { requiresAuth } from '@/components/navigation/routeConfig';
 
@@ -684,6 +688,192 @@ describe('CustomLink', () => {
 
       // Should call with empty string if no route name found
       expect(mockRequiresAuth).toHaveBeenCalled();
+    });
+  });
+
+  describe('isNestedRoute helper function', () => {
+    describe('Parent routes (should return false)', () => {
+      it('should return false for /(tabs)/home', () => {
+        expect(isNestedRoute('/(tabs)/home')).toBe(false);
+      });
+
+      it('should return false for /(tabs)/account', () => {
+        expect(isNestedRoute('/(tabs)/account')).toBe(false);
+      });
+
+      it('should return false for /(tabs)/auctions', () => {
+        expect(isNestedRoute('/(tabs)/auctions')).toBe(false);
+      });
+
+      it('should return false for /(tabs)/online-store', () => {
+        expect(isNestedRoute('/(tabs)/online-store')).toBe(false);
+      });
+
+      it('should return false for /(tabs)/my-auctions', () => {
+        expect(isNestedRoute('/(tabs)/my-auctions')).toBe(false);
+      });
+
+      it('should return false for /(tabs)/my-online-store', () => {
+        expect(isNestedRoute('/(tabs)/my-online-store')).toBe(false);
+      });
+
+      it('should return false for /(tabs)/auth', () => {
+        expect(isNestedRoute('/(tabs)/auth')).toBe(false);
+      });
+
+      it('should return false for parent route with query params', () => {
+        expect(isNestedRoute('/(tabs)/home?foo=bar')).toBe(false);
+      });
+    });
+
+    describe('Nested routes (should return true)', () => {
+      it('should return true for /(tabs)/account/edit-profile', () => {
+        expect(isNestedRoute('/(tabs)/account/edit-profile')).toBe(true);
+      });
+
+      it('should return true for /(tabs)/account/articles-won', () => {
+        expect(isNestedRoute('/(tabs)/account/articles-won')).toBe(true);
+      });
+
+      it('should return true for /(tabs)/auctions/[id]', () => {
+        expect(isNestedRoute('/(tabs)/auctions/[id]')).toBe(true);
+      });
+
+      it('should return true for /(tabs)/auctions/articles/123', () => {
+        expect(isNestedRoute('/(tabs)/auctions/articles/123')).toBe(true);
+      });
+
+      it('should return true for /(tabs)/my-auctions/new', () => {
+        expect(isNestedRoute('/(tabs)/my-auctions/new')).toBe(true);
+      });
+
+      it('should return true for deeply nested route', () => {
+        expect(
+          isNestedRoute('/(tabs)/my-auctions/[id]/edit-article/[slug]')
+        ).toBe(true);
+      });
+
+      it('should return true for nested route with query params', () => {
+        expect(isNestedRoute('/(tabs)/account/edit-profile?foo=bar')).toBe(
+          true
+        );
+      });
+
+      it('should return true for nested route with multiple query params', () => {
+        expect(
+          isNestedRoute('/(tabs)/account/addresses?fromTab=true&id=123')
+        ).toBe(true);
+      });
+    });
+
+    describe('Non-tab routes (should return false)', () => {
+      it('should return false for /some-other-route', () => {
+        expect(isNestedRoute('/some-other-route')).toBe(false);
+      });
+
+      it('should return false for /(other)/path', () => {
+        expect(isNestedRoute('/(other)/path')).toBe(false);
+      });
+
+      it('should return false for root route', () => {
+        expect(isNestedRoute('/')).toBe(false);
+      });
+    });
+  });
+
+  describe('addFromTabParam helper function', () => {
+    describe('Parent routes (should not add param)', () => {
+      it('should not add param to /(tabs)/home', () => {
+        expect(addFromTabParam('/(tabs)/home')).toBe('/(tabs)/home');
+      });
+
+      it('should not add param to /(tabs)/account', () => {
+        expect(addFromTabParam('/(tabs)/account')).toBe('/(tabs)/account');
+      });
+
+      it('should not add param to /(tabs)/auctions', () => {
+        expect(addFromTabParam('/(tabs)/auctions')).toBe('/(tabs)/auctions');
+      });
+
+      it('should not add param to parent route with existing query params', () => {
+        expect(addFromTabParam('/(tabs)/home?status=active')).toBe(
+          '/(tabs)/home?status=active'
+        );
+      });
+    });
+
+    describe('Nested routes (should add param)', () => {
+      it('should add ?fromTab=true to /(tabs)/account/edit-profile', () => {
+        expect(addFromTabParam('/(tabs)/account/edit-profile')).toBe(
+          '/(tabs)/account/edit-profile?fromTab=true'
+        );
+      });
+
+      it('should add ?fromTab=true to /(tabs)/auctions/[id]', () => {
+        expect(addFromTabParam('/(tabs)/auctions/123')).toBe(
+          '/(tabs)/auctions/123?fromTab=true'
+        );
+      });
+
+      it('should add ?fromTab=true to deeply nested route', () => {
+        expect(
+          addFromTabParam('/(tabs)/my-auctions/[id]/edit-article/[slug]')
+        ).toBe('/(tabs)/my-auctions/[id]/edit-article/[slug]?fromTab=true');
+      });
+    });
+
+    describe('Query params handling', () => {
+      it('should add &fromTab=true when query params exist', () => {
+        expect(addFromTabParam('/(tabs)/account/edit-profile?foo=bar')).toBe(
+          '/(tabs)/account/edit-profile?foo=bar&fromTab=true'
+        );
+      });
+
+      it('should add &fromTab=true with multiple existing params', () => {
+        expect(
+          addFromTabParam('/(tabs)/account/addresses?status=active&page=2')
+        ).toBe('/(tabs)/account/addresses?status=active&page=2&fromTab=true');
+      });
+
+      it('should not duplicate fromTab param if already present', () => {
+        expect(
+          addFromTabParam('/(tabs)/account/edit-profile?fromTab=true')
+        ).toBe('/(tabs)/account/edit-profile?fromTab=true');
+      });
+
+      it('should not duplicate fromTab param when mixed with other params', () => {
+        expect(
+          addFromTabParam(
+            '/(tabs)/account/addresses?foo=bar&fromTab=true&baz=qux'
+          )
+        ).toBe('/(tabs)/account/addresses?foo=bar&fromTab=true&baz=qux');
+      });
+
+      it('should handle fromTab=false (still considered present)', () => {
+        expect(
+          addFromTabParam('/(tabs)/account/edit-profile?fromTab=false')
+        ).toBe('/(tabs)/account/edit-profile?fromTab=false');
+      });
+    });
+
+    describe('Edge cases', () => {
+      it('should handle route with special characters', () => {
+        expect(
+          addFromTabParam('/(tabs)/account/edit-profile?name=John%20Doe')
+        ).toBe('/(tabs)/account/edit-profile?name=John%20Doe&fromTab=true');
+      });
+
+      it('should handle route with hash fragment', () => {
+        expect(addFromTabParam('/(tabs)/account/settings#section-1')).toBe(
+          '/(tabs)/account/settings?fromTab=true#section-1'
+        );
+      });
+
+      it('should not add param to non-tab nested routes', () => {
+        expect(addFromTabParam('/other/nested/route')).toBe(
+          '/other/nested/route'
+        );
+      });
     });
   });
 });

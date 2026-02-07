@@ -241,9 +241,7 @@ export default function LiveAuctionScreen() {
             </CustomText>
             <View className='mt-6 flex w-1/2 flex-col gap-4'>
               <CustomLink
-                // TODO: parametrizar href según si es anidado o no
-                // Verificar que no haya bug si enviamos del un tab al mismo tab
-                href='/(tabs)/account/articles-won?fromTab=true'
+                href='/(tabs)/account/articles-won'
                 mode='primary'
                 dismissFirst
                 replace
