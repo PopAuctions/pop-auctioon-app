@@ -70,14 +70,14 @@ describe('CalendarScreen', () => {
 
   it('renders loading state correctly', () => {
     mockUseAuctionsCalendar.mockReturnValue({
-      auctions: {
+      data: {
         today: [],
         this_month: [],
         next_month: [],
       },
       status: 'loading',
       refetch: jest.fn(),
-    });
+    } as any);
 
     const { getByText } = render(<CalendarScreen />);
     // El componente Loading muestra "Loading..." no "Loading auctions..."
@@ -87,14 +87,14 @@ describe('CalendarScreen', () => {
   it('renders error state correctly', () => {
     const mockRefetch = jest.fn();
     mockUseAuctionsCalendar.mockReturnValue({
-      auctions: {
+      data: {
         today: [],
         this_month: [],
         next_month: [],
       },
       status: 'error',
       refetch: mockRefetch,
-    });
+    } as any);
 
     const { getByText } = render(<CalendarScreen />);
     expect(getByText('Failed to load auctions.')).toBeTruthy();
@@ -104,14 +104,14 @@ describe('CalendarScreen', () => {
   describe('Calendar Content Scenarios', () => {
     it('ESCENARIO 1: No hay subastas en ningún mes', async () => {
       mockUseAuctionsCalendar.mockReturnValue({
-        auctions: {
+        data: {
           today: [],
           this_month: [],
           next_month: [],
         },
         status: 'loaded',
         refetch: jest.fn(),
-      });
+      } as any);
 
       const { getByText, queryAllByText, queryByText } = render(
         <CalendarScreen />
@@ -136,7 +136,7 @@ describe('CalendarScreen', () => {
 
     it('ESCENARIO 2: No hay subastas en este mes, sí en el siguiente', async () => {
       mockUseAuctionsCalendar.mockReturnValue({
-        auctions: {
+        data: {
           today: [],
           this_month: [], // Septiembre vacío
           next_month: [
@@ -157,7 +157,7 @@ describe('CalendarScreen', () => {
         },
         status: 'loaded',
         refetch: jest.fn(),
-      });
+      } as any);
 
       const { getByText, queryAllByText } = render(<CalendarScreen />);
 
@@ -178,7 +178,7 @@ describe('CalendarScreen', () => {
 
     it('ESCENARIO 3: Hay subastas en este mes, no en el siguiente', async () => {
       mockUseAuctionsCalendar.mockReturnValue({
-        auctions: {
+        data: {
           today: [],
           this_month: [
             // Septiembre con subastas
@@ -199,7 +199,7 @@ describe('CalendarScreen', () => {
         },
         status: 'loaded',
         refetch: jest.fn(),
-      });
+      } as any);
 
       const { getByText, queryByText } = render(<CalendarScreen />);
 
@@ -218,7 +218,7 @@ describe('CalendarScreen', () => {
 
     it('ESCENARIO 4: Hay subastas en ambos meses', async () => {
       mockUseAuctionsCalendar.mockReturnValue({
-        auctions: {
+        data: {
           today: [],
           this_month: [
             {
@@ -239,7 +239,7 @@ describe('CalendarScreen', () => {
         },
         status: 'loaded',
         refetch: jest.fn(),
-      });
+      } as any);
 
       const { getByText, queryAllByText } = render(<CalendarScreen />);
 

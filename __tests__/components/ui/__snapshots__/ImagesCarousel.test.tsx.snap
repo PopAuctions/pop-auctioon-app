@@ -2,14 +2,14 @@
 
 exports[`ImagesCarousel renders with multiple images 1`] = `
 <View
-  className="w-full items-center"
+  className="w-full items-center md:max-w-[650px]"
   onLayout={[Function]}
 />
 `;
 
 exports[`ImagesCarousel renders with no images 1`] = `
 <View
-  className="w-full items-center"
+  className="w-full items-center md:max-w-[650px]"
   onLayout={[Function]}
 />
 `;

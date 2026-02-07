@@ -9,7 +9,8 @@ exports[`Info Components AboutUsContent should match snapshot 1`] = `
       className="p-6"
     >
       <Text
-        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-6 text-center text-cinnabar"
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] mb-6 text-center text-cinnabar"
       >
         About Us
       </Text>
@@ -23,12 +24,14 @@ exports[`Info Components AboutUsContent should match snapshot 1`] = `
         />
       </View>
       <Text
-        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black mb-5 leading-8"
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-5 leading-8"
       >
         This is the About Us content in English.
       </Text>
       <Text
-        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black mb-5 leading-8"
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-5 leading-8"
       >
         Second paragraph in English.
       </Text>
@@ -49,12 +52,14 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
       className="p-6"
     >
       <Text
-        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-4 text-center text-cinnabar"
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] mb-4 text-center text-cinnabar"
       >
         screens.contactUs.title
       </Text>
       <Text
-        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black mb-6 text-center"
+        allowFontScaling={false}
+        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black mb-6 text-center"
       >
         screens.contactUs.subtitle
       </Text>
@@ -62,13 +67,14 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
         className="mb-4"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px] text-black mb-2"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
         >
           screens.contactUs.name
           *
         </Text>
         <TextInput
-          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50"
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
           editable={true}
           onChangeText={[Function]}
           placeholder="screens.contactUs.namePlaceholder"
@@ -80,14 +86,15 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
         className="mb-4"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px] text-black mb-2"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
         >
           screens.contactUs.email
           *
         </Text>
         <TextInput
           autoCapitalize="none"
-          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50"
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
           editable={true}
           keyboardType="email-address"
           onChangeText={[Function]}
@@ -100,12 +107,13 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
         className="mb-4"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px] text-black mb-2"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
         >
           screens.contactUs.phone
         </Text>
         <TextInput
-          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50"
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
           editable={true}
           keyboardType="phone-pad"
           onChangeText={[Function]}
@@ -118,13 +126,14 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
         className="mb-4"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px] text-black mb-2"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
         >
           screens.contactUs.message
           *
         </Text>
         <TextInput
-          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50"
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
           editable={true}
           multiline={true}
           numberOfLines={6}
@@ -187,7 +196,8 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
           }
         />
         <Text
-          className="grow-0 self-stretch font-rubik text-lg leading-[24px] tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black ml-3"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-lg leading-[24px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black ml-3"
         >
           screens.contactUs.wantToSell
         </Text>
@@ -212,7 +222,7 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
           }
         }
         accessible={true}
-        className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 w-full"
+        className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4 w-full"
         collapsable={false}
         focusable={true}
         onBlur={[Function]}
@@ -242,7 +252,7 @@ exports[`Info Components ContactUsContent should match snapshot 1`] = `
           pointerEvents="none"
         >
           <Text
-            className="text-lg text-white"
+            className="text-lg md:text-xl text-white"
           >
             screens.contactUs.send
           </Text>
@@ -286,7 +296,8 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
       className="p-6"
     >
       <Text
-        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black mb-6 leading-7"
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-6 leading-7"
       >
         Introduction to how PopAuction works
       </Text>
@@ -294,7 +305,8 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
         className="mb-6"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[40px] md:leading-[62px] mb-3 text-cinnabar"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] mb-3 text-cinnabar"
         >
           Step 1
         </Text>
@@ -302,7 +314,8 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
           className="mb-3"
         >
           <Text
-            className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black mb-2 leading-7"
+            allowFontScaling={false}
+            className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-2 leading-7"
           >
             Step 1 content
           </Text>
@@ -312,7 +325,8 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
         className="mb-6"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[40px] md:leading-[62px] mb-3 text-cinnabar"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] mb-3 text-cinnabar"
         >
           Step 2
         </Text>
@@ -320,7 +334,8 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
           className="mb-3"
         >
           <Text
-            className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black mb-2 leading-7"
+            allowFontScaling={false}
+            className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-2 leading-7"
           >
             Step 2 content
           </Text>
@@ -330,12 +345,14 @@ exports[`Info Components HowItWorksContent should match snapshot 1`] = `
         className="mb-6"
       >
         <Text
-          className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[30px] md:leading-[40px] mb-3 text-cinnabar"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[46px] mb-3 text-cinnabar"
         >
           Conclusion
         </Text>
         <Text
-          className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:leading-[27px] text-black leading-7"
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black leading-7"
         >
           Conclusion content
         </Text>

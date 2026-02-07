@@ -2,6 +2,7 @@
 
 exports[`MonoText Component should match snapshot 1`] = `
 <Text
+  allowFontScaling={false}
   style={
     [
       {},

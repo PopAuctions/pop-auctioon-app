@@ -21,6 +21,14 @@ jest.mock('@/utils/supabase/supabase-store', () => ({
       refreshSession: (...args: any[]) => mockRefreshSession(...args),
       onAuthStateChange: (...args: any[]) => mockOnAuthStateChange(...args),
     },
+    from: jest.fn(() => ({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({
+        data: { emailVerified: true },
+        error: null,
+      }),
+    })),
   },
 }));
 
@@ -125,8 +133,11 @@ describe('AuthContext', () => {
         data: { user: mockUser },
         error: null,
       });
-      const roleResponse: AsyncResponse<UserRoles> = {
-        data: 'USER',
+      const roleResponse: AsyncResponse<{
+        role: UserRoles;
+        isDisabled: boolean;
+      }> = {
+        data: { role: 'USER', isDisabled: false },
         success: true,
       };
       mockGetUserRole.mockResolvedValue(roleResponse);
@@ -153,7 +164,7 @@ describe('AuthContext', () => {
         error: null,
       });
       mockGetUserRole.mockResolvedValue({
-        data: 'AUCTIONEER' as UserRoles,
+        data: { role: 'AUCTIONEER', isDisabled: false },
         success: true,
       });
 
@@ -177,7 +188,10 @@ describe('AuthContext', () => {
         data: { user: mockUser },
         error: null,
       });
-      mockGetUserRole.mockResolvedValue({ data: null, success: true });
+      mockGetUserRole.mockResolvedValue({
+        data: { role: null, isDisabled: false },
+        success: true,
+      });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 

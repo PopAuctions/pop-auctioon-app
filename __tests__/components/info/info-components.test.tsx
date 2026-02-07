@@ -104,18 +104,36 @@ const mockFAQs: FAQItem[] = [
   },
 ];
 
-// For FAQsContent, we need FAQsData format
+// For FAQsContent, we need FAQsData format - structure by language
 const mockFAQsData = {
   es: [
     {
       subtitle: 'Categoría 1',
-      questions: mockFAQs,
+      questions: [
+        {
+          question: '¿Pregunta 1?',
+          answer: 'Respuesta 1',
+        },
+        {
+          question: '¿Pregunta 2?',
+          answer: 'Respuesta 2',
+        },
+      ],
     },
   ],
   en: [
     {
       subtitle: 'Category 1',
-      questions: mockFAQs,
+      questions: [
+        {
+          question: 'Question 1?',
+          answer: 'Answer 1',
+        },
+        {
+          question: 'Question 2?',
+          answer: 'Answer 2',
+        },
+      ],
     },
   ],
 };

@@ -7,6 +7,7 @@ import { mockSupabase } from '../../../setup/mocks.mock';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { REQUEST_STATUS } from '@/constants';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
@@ -71,8 +72,8 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       // Check initial state
-      expect(result.current.status).toBe('loading');
-      expect(result.current.auctions).toEqual({
+      expect(result.current.status).toBe(REQUEST_STATUS.loading);
+      expect(result.current.data).toEqual({
         today: [],
         this_month: [],
         next_month: [],
@@ -92,7 +93,7 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
       });
 
       expect(typeof result.current.refetch).toBe('function');
@@ -112,11 +113,11 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
       });
 
-      expect(result.current.auctions).toEqual(mockAuctionsData);
-      expect(result.current.status).toBe('loaded');
+      expect(result.current.data).toEqual(mockAuctionsData);
+      expect(result.current.status).toBe(REQUEST_STATUS.success);
     });
 
     it('should call RPC with correct function name and parameters', async () => {
@@ -161,7 +162,7 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
       });
 
       // Clear previous calls
@@ -171,7 +172,7 @@ describe('useAuctionsCalendar', () => {
       await result.current.refetch();
 
       expect(mockSupabaseInternal.rpc).toHaveBeenCalledTimes(1);
-      expect(result.current.status).toBe('loaded');
+      expect(result.current.status).toBe(REQUEST_STATUS.success);
     });
 
     it('should handle refetch errors', async () => {
@@ -187,7 +188,7 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
       });
 
       // Mock error for refetch
@@ -218,10 +219,10 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('error');
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
       });
 
-      expect(result.current.auctions).toEqual({
+      expect(result.current.data).toEqual({
         today: [],
         this_month: [],
         next_month: [],
@@ -244,10 +245,10 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('error');
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
       });
 
-      expect(result.current.auctions).toEqual({
+      expect(result.current.data).toEqual({
         today: [],
         this_month: [],
         next_month: [],
@@ -265,10 +266,10 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('error');
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
       });
 
-      expect(result.current.auctions).toEqual({
+      expect(result.current.data).toEqual({
         today: [],
         this_month: [],
         next_month: [],
@@ -290,10 +291,10 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       await waitFor(() => {
-        expect(result.current.status).toBe('error');
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
       });
 
-      expect(result.current.auctions).toEqual({
+      expect(result.current.data).toEqual({
         today: [],
         this_month: [],
         next_month: [],
@@ -365,8 +366,8 @@ describe('useAuctionsCalendar', () => {
       const { result } = renderHook(() => useAuctionsCalendar());
 
       // Should start as loading
-      expect(result.current.status).toBe('loading');
-      expect(result.current.auctions).toEqual({
+      expect(result.current.status).toBe(REQUEST_STATUS.loading);
+      expect(result.current.data).toEqual({
         today: [],
         this_month: [],
         next_month: [],
@@ -374,10 +375,10 @@ describe('useAuctionsCalendar', () => {
 
       // Wait for completion
       await waitFor(() => {
-        expect(result.current.status).toBe('loaded');
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
       });
 
-      expect(result.current.auctions).toEqual(mockAuctionsData);
+      expect(result.current.data).toEqual(mockAuctionsData);
     });
   });
 });

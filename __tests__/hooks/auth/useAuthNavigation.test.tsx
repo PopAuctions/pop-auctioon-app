@@ -7,7 +7,9 @@ jest.mock('expo-router', () => ({
   router: {
     push: jest.fn(),
     replace: jest.fn(),
+    navigate: jest.fn(),
   },
+  usePathname: jest.fn(() => '/'),
 }));
 
 // Mock de auth-context
