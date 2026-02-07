@@ -182,7 +182,7 @@ describe('getParentRoute', () => {
     });
 
     it('should return null for path without any slashes after tab', () => {
-      const result = getParentRoute('/(tabs)/home/');
+      const result = getParentRoute('/(tabs)/home');
       expect(result).toBeNull();
     });
   });

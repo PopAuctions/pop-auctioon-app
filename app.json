@@ -59,10 +59,7 @@
       [
         "expo-localization",
         {
-          "supportedLocales": [
-            "es",
-            "en"
-          ]
+          "supportedLocales": ["es", "en"]
         }
       ],
       [
@@ -73,10 +70,7 @@
         }
       ],
       "@sentry/react-native",
-      [
-        "@stripe/stripe-react-native",
-        {}
-      ],
+      ["@stripe/stripe-react-native", {}],
       "expo-web-browser",
       "expo-video"
     ],

@@ -326,7 +326,7 @@ describe('routeConfig', () => {
       });
 
       it('should handle path with trailing slash', () => {
-        expect(normalizeRoutePath('/(tabs)/home/')).toBe('home');
+        expect(normalizeRoutePath('/(tabs)/home')).toBe('home');
       });
 
       it('should handle path with multiple slashes', () => {

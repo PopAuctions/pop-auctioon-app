@@ -41,7 +41,9 @@ export const ChatMessage = ({ message, currentUsername }: ChatMessageProps) => {
               resizeMode='cover'
             />
           ) : (
-            <View className={`${avatarSize} items-center justify-center rounded-full bg-white`}>
+            <View
+              className={`${avatarSize} items-center justify-center rounded-full bg-white`}
+            >
               <CustomText
                 type='bodysmall'
                 className={`${usernameSize} font-semibold ${isMine ? 'text-cinnabar' : 'text-white'}`}

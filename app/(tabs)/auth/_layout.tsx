@@ -1,5 +1,8 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { SmartBack } from '@/components/ui/SmartBack';
+
+const INDEX_ROUTE = '/(tabs)/auth';
 
 export default function AuthLayout() {
   const { t } = useTranslation();
@@ -8,7 +11,17 @@ export default function AuthLayout() {
     <Stack
       initialRouteName='index'
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerBackTitle: t('tabsNames.back'),
+        headerTitleAlign: 'center',
+        headerLeft: () => {
+          return (
+            <SmartBack
+              fallbackHref={INDEX_ROUTE}
+              label={t('tabsNames.back')}
+            />
+          );
+        },
       }}
     >
       <Stack.Screen
