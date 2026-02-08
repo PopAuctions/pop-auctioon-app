@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { cn } from '@/utils/cn';
-import { Href, useRouter } from 'expo-router';
+import { Href, usePathname, useRouter } from 'expo-router';
 
 /**
  * Tab routes (parent routes) - extracted from app/(tabs)/_layout.tsx
@@ -17,53 +17,64 @@ const TAB_ROUTES = [
   '/(tabs)/auth',
 ] as const;
 
-/**
- * Detecta si una ruta es anidada (tiene contenido después de la ruta padre)
- * @example
- * isNestedRoute('/(tabs)/account') // false - es ruta padre
- * isNestedRoute('/(tabs)/account/edit-profile') // true - es anidada
- * isNestedRoute('/(tabs)/auctions/[id]') // true - es anidada
- */
-function isNestedRoute(href: string): boolean {
-  // Eliminar query params para análisis limpio
-  const [cleanPath] = href.split('?');
+type TabRoute = (typeof TAB_ROUTES)[number];
 
-  // Verificar si la ruta coincide exactamente con alguna ruta padre
-  const isParentRoute = TAB_ROUTES.some((tabRoute) => cleanPath === tabRoute);
+function normalizeTabsPath(pathname: string): string {
+  if (pathname.startsWith('/(tabs)/')) return pathname;
 
-  if (isParentRoute) return false;
+  // '/home' -> '/(tabs)/home', '/account/foo' -> '/(tabs)/account/foo'
+  for (const tabRoute of TAB_ROUTES) {
+    const tabName = tabRoute.replace('/(tabs)/', '');
+    if (pathname === `/${tabName}` || pathname.startsWith(`/${tabName}/`)) {
+      return `/(tabs)/${tabName}${pathname.slice(tabName.length + 1)}`;
+    }
+  }
 
-  // Verificar si la ruta empieza con alguna ruta padre y tiene contenido adicional
-  const hasNestedContent = TAB_ROUTES.some((tabRoute) => {
-    return cleanPath.startsWith(tabRoute + '/');
-  });
-
-  return hasNestedContent;
+  return pathname;
 }
 
 /**
- * Agrega el parámetro fromTab=true si la ruta es anidada
- * Maneja correctamente query params existentes y hash fragments
- * @example
- * addFromTabParam('/(tabs)/account') // '/(tabs)/account' - sin cambios
- * addFromTabParam('/(tabs)/account/edit-profile') // '/(tabs)/account/edit-profile?fromTab=true'
- * addFromTabParam('/(tabs)/account/edit-profile?foo=bar') // '/(tabs)/account/edit-profile?foo=bar&fromTab=true'
- * addFromTabParam('/(tabs)/account/settings#section-1') // '/(tabs)/account/settings?fromTab=true#section-1'
+ * Returns the tab root route for a given href, or null if it doesn't belong to a tab route.
+ * Works with both '/(tabs)/account/...' and group-less '/account/...'
  */
-function addFromTabParam(href: string): string {
-  if (!isNestedRoute(href)) return href;
+function getTabRootFromHref(href: string): TabRoute | null {
+  const [pathNoQuery] = href.split('?');
+  const clean = normalizeTabsPath(pathNoQuery);
 
-  // Verificar si ya tiene el parámetro fromTab
+  const match = TAB_ROUTES.find(
+    (tabRoute) => clean === tabRoute || clean.startsWith(tabRoute + '/')
+  );
+
+  return match ?? null;
+}
+
+/**
+ * Adds fromTab=true ONLY when:
+ * - destination belongs to a tab route AND is nested (not the tab root)
+ * - AND navigation is cross-tab (current tab root !== destination tab root)
+ */
+function addFromTabParamIfCrossTab(
+  href: string,
+  currentPathname: string
+): string {
   if (href.includes('fromTab=')) return href;
 
-  // Separar hash fragment si existe
-  const [pathAndQuery, hash] = href.split('#');
+  const currentTab = getTabRootFromHref(currentPathname);
+  const targetTab = getTabRootFromHref(href);
 
-  // Agregar el parámetro apropiado
+  if (!currentTab || !targetTab) return href;
+
+  // detect nested: same tab root but not exactly the root path
+  const [targetNoQuery] = href.split('?');
+  const targetNormalized = normalizeTabsPath(targetNoQuery);
+  const isTargetNested = targetNormalized !== targetTab;
+
+  if (!isTargetNested) return href; // not nested → no marker
+  if (currentTab === targetTab) return href; // same tab → no marker
+
+  const [pathAndQuery, hash] = href.split('#');
   const separator = pathAndQuery.includes('?') ? '&' : '?';
   const result = `${pathAndQuery}${separator}fromTab=true`;
-
-  // Re-agregar hash fragment si existía
   return hash ? `${result}#${hash}` : result;
 }
 
@@ -158,6 +169,7 @@ export const CustomLink = forwardRef<
     ref
   ) => {
     const router = useRouter();
+    const pathname = usePathname();
     const { navigateWithAuth } = useAuthNavigation();
     const modeStyle = `${LINK_MODE_STYLES[mode]} ${LINK_SIZE_STYLES[mode][size]}`;
 
@@ -180,7 +192,7 @@ export const CustomLink = forwardRef<
       }
 
       // Agregar automáticamente fromTab=true si es ruta anidada
-      const finalHref = addFromTabParam(href);
+      const finalHref = addFromTabParamIfCrossTab(href, pathname);
 
       const go = () => {
         navigateWithAuth(finalHref as any, { replace });
@@ -230,4 +242,4 @@ export const CustomLink = forwardRef<
 CustomLink.displayName = 'CustomLink';
 
 // Exportar funciones helper para testing
-export { isNestedRoute, addFromTabParam };
+export { normalizeTabsPath, getTabRootFromHref, addFromTabParamIfCrossTab };
