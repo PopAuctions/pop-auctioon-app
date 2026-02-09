@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { SmartBack } from '@/components/ui/SmartBack';
 
-const INDEX_ROUTE = '/(tabs)/my-auctions';
+const INDEX_ROUTE = '/(tabs)/home'; // Ruta raíz de este stack, usada como fallback en SmartBack
 
 export default function HomeLayout() {
   const { t } = useTranslation();
