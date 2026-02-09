@@ -1,4 +1,3 @@
-import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { REQUEST_STATUS } from '@/constants';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
@@ -22,15 +21,14 @@ export const useGetOnlineStoreArticle = ({
   );
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
-  const { secureGet } = useSecureApi();
+  const { protectedGet } = useSecureApi();
 
   const fetchArticle = useCallback(async () => {
     setStatus(REQUEST_STATUS.loading);
 
-    const res = await secureGet<CustomFullArticleSecondChance>({
-      endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.ARTICLE(articleId),
+    const res = await protectedGet<CustomFullArticleSecondChance>({
+      endpoint: `/online-store/articles/${articleId}`,
     });
-
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
       setErrorMessage({
@@ -53,11 +51,11 @@ export const useGetOnlineStoreArticle = ({
       success: null,
       res,
     };
-  }, [articleId, secureGet]);
+  }, [articleId, protectedGet]);
 
   const refetch = async () => {
-    const res = await secureGet<CustomFullArticleSecondChance>({
-      endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.ARTICLE(articleId),
+    const res = await protectedGet<CustomFullArticleSecondChance>({
+      endpoint: `/online-store/articles/${articleId}`,
     });
 
     if (res.error) {
