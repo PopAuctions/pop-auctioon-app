@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { FlatList, View } from 'react-native';
 import { ArticleItem } from './ArticleItem';
 import { euroFormatter } from '@/utils/euroFormatter';
@@ -50,105 +56,114 @@ export const ArticlesInfiniteScroll = ({
 
   const { fetchArticles } = useFetchAuctionArticlesInfinite();
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
-  const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [effectiveOrder, setEffectiveOrder] = useState<number[] | undefined>(
-    order
-  );
+
+  const offsetRef = useRef(0);
+  const loadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
+
+  const syncHasMore = (value: boolean) => {
+    hasMoreRef.current = value;
+    setHasMore(value);
+  };
+
+  const syncOffset = (value: number) => {
+    offsetRef.current = value;
+  };
+
+  const syncLoading = (value: boolean) => {
+    loadingRef.current = value;
+    setIsLoading(value);
+  };
 
   const formatter = euroFormatter(lang);
   const filtersActive = Boolean(brand || price);
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
+  const effectiveOrder = filtersActive ? undefined : order;
 
   const orderedArticles = useMemo(() => {
     if (!effectiveOrder || effectiveOrder.length === 0) return articles;
 
-    const map = new Map(articles.map((a) => [a.id.toString(), a]));
+    const map = new Map(
+      articles.map((article) => [article.id.toString(), article])
+    );
 
     return effectiveOrder
       .map((id) => map.get(id.toString()))
-      .filter((a): a is SimpleArticle => !!a);
+      .filter((article): article is SimpleArticle => !!article);
   }, [articles, effectiveOrder]);
 
   const loadInitial = useCallback(async () => {
+    if (loadingRef.current) return;
+    syncLoading(true);
+    syncHasMore(true);
+    syncOffset(0);
+
     try {
-      setIsLoading(true);
       const response = await fetchArticles({
         auctionId,
         brand,
         price,
         offset: 0,
         limit: ITEMS_PER_PAGE,
-        orderedIds: order,
+        orderedIds: filtersActive ? undefined : order,
       });
 
-      const data = response?.data;
-      if (!data) {
-        setArticles([]);
-        setOffset(0);
-        setHasMore(false);
-        setEffectiveOrder(filtersActive ? undefined : order);
-        return;
-      }
+      const data = response?.data ?? [];
 
       setArticles(data);
-      setOffset(data.length);
-      setHasMore(data.length >= ITEMS_PER_PAGE);
-      setEffectiveOrder(filtersActive ? undefined : order);
+      syncOffset(data.length);
+      syncHasMore(data.length === ITEMS_PER_PAGE);
     } catch (e) {
       console.warn('Error loading articles', e);
-      setHasMore(false);
-      setEffectiveOrder(filtersActive ? undefined : order);
+      syncHasMore(false);
     } finally {
-      setIsLoading(false);
+      syncLoading(false);
     }
   }, [auctionId, brand, price, order, fetchArticles, filtersActive]);
 
   const loadMore = useCallback(async () => {
-    if (isLoading || !hasMore) return;
-    setIsLoading(true);
+    if (loadingRef.current || !hasMoreRef.current) return;
+
+    syncLoading(true);
 
     try {
       const response = await fetchArticles({
         auctionId,
         brand,
         price,
-        offset,
+        offset: offsetRef.current,
         limit: ITEMS_PER_PAGE,
-        orderedIds: order,
+        orderedIds: filtersActive ? undefined : order,
       });
-      const newData = response.data;
 
-      if (!newData || newData.length === 0) {
-        setHasMore(false);
+      const newData = response?.data ?? [];
+
+      if (newData.length === 0) {
+        syncHasMore(false);
         return;
       }
 
+      let appendedCount = 0;
+
       setArticles((prev) => {
-        const existingIds = new Set(prev.map((a) => a.id));
-        const unique = newData.filter(
-          (a: SimpleArticle) => !existingIds.has(a.id)
-        );
+        const existing = new Set(prev.map((a) => a.id));
+        const unique = newData.filter((a) => !existing.has(a.id));
+        appendedCount = unique.length;
         return [...prev, ...unique];
       });
-      setOffset((prev) => prev + newData.length);
+
+      syncOffset(offsetRef.current + appendedCount);
+
+      // if server returns < limit
+      if (newData.length < ITEMS_PER_PAGE) syncHasMore(false);
     } catch (e) {
       console.warn('Error loading more', e);
     } finally {
-      setIsLoading(false);
+      syncLoading(false);
     }
-  }, [
-    auctionId,
-    brand,
-    price,
-    offset,
-    isLoading,
-    hasMore,
-    order,
-    fetchArticles,
-  ]);
-
+  }, [auctionId, brand, price, order, fetchArticles, filtersActive]);
   useEffect(() => {
     loadInitial();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,7 +230,8 @@ export const ArticlesInfiniteScroll = ({
       ListHeaderComponent={ListHeaderComponent}
       ListFooterComponent={renderFooter}
       onEndReached={loadMore}
-      onEndReachedThreshold={0.3}
+      onEndReachedThreshold={0.2}
+      onMomentumScrollBegin={() => {}}
     />
   );
 };
