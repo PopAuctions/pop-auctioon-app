@@ -13,6 +13,7 @@ import { Input } from '../ui/Input';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { parseNumber } from '@/utils/parse-number';
+import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 
 type ArticleOfferFormProps = {
   texts: { minOffer: string; submit: string; penalty: string };
@@ -27,6 +28,7 @@ export function ArticleOfferForm({
   minOffer,
   onlineStoreArticleId,
 }: ArticleOfferFormProps) {
+  const { openSignInAlertModal } = useSignInAlertModal();
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { securePost } = useSecureApi();
@@ -68,6 +70,9 @@ export function ArticleOfferForm({
       const data = response?.data;
 
       if (response.error) {
+        if (response.status === 401) {
+          openSignInAlertModal();
+        }
         callToast({ variant: 'error', description: response.error });
         return;
       }
