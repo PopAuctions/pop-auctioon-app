@@ -41,8 +41,8 @@
     "auctions": "Live Auctions",
     "articleDetails": "Article Details",
     "store": "Auctions",
-    "myAuctions": "My Auctions",
-    "myOnlineStore": "My Online Store",
+    "myAuctions": "My Live Auctions",
+    "myOnlineStore": "My Auctions",
     "back": "Back"
   },
   "screens": {
