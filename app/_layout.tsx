@@ -32,6 +32,8 @@ import * as Notifications from 'expo-notifications';
 import { NotificationProvider } from '@/context/notification-context';
 import { disableFontScaling } from '@/utils/disableFontScaling';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { SignInAlertModalProvider } from '@/context/sign-in-modal-context';
+import { SignInAlertModal } from '@/components/modal/SignInAlertModal';
 
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
@@ -146,10 +148,12 @@ export default Sentry.wrap(function RootLayout() {
     <TranslationProvider>
       <AuthProvider>
         <NotificationProvider>
-          <DeepLinkListener />
-          <ProtectedRoute>
-            <RootLayoutNav />
-          </ProtectedRoute>
+          <SignInAlertModalProvider>
+            <DeepLinkListener />
+            <ProtectedRoute>
+              <RootLayoutNav />
+            </ProtectedRoute>
+          </SignInAlertModalProvider>
         </NotificationProvider>
       </AuthProvider>
     </TranslationProvider>
@@ -172,6 +176,7 @@ function RootLayoutNav() {
                 options={{ presentation: 'modal' }}
               />
             </Stack>
+            <SignInAlertModal />
             <ToastProvider />
           </GestureHandlerRootView>
         </StripeProvider>
