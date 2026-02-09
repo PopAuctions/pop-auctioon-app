@@ -100,6 +100,8 @@ export default Sentry.wrap(function RootLayout() {
 
   const [showSplash, setShowSplash] = useState(true);
   const [fontError, setFontError] = useState<Error | null>(null);
+  const [fontsReady, setFontsReady] = useState(false);
+  const [animationFinished, setAnimationFinished] = useState(false);
 
   // Lock orientation to portrait immediately on mount
   useEffect(() => {
@@ -124,22 +126,33 @@ export default Sentry.wrap(function RootLayout() {
     }
   }, [error]);
 
+  // Ocultar splash nativo cuando fuentes estén listas
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      const timeout = setTimeout(() => {
-        setShowSplash(false);
-      }, 1500);
-      return () => clearTimeout(timeout);
+      setFontsReady(true);
     }
   }, [loaded]);
+
+  // Ocultar splash Lottie solo cuando AMBOS estén listos: fuentes Y animación
+  useEffect(() => {
+    if (fontsReady && animationFinished) {
+      // Pequeño delay para transición suave
+      const timeout = setTimeout(() => {
+        setShowSplash(false);
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [fontsReady, animationFinished]);
 
   if (fontError) {
     return <ErrorLoading />;
   }
 
   if (!loaded || showSplash) {
-    return <SplashLottie />;
+    return (
+      <SplashLottie onAnimationFinish={() => setAnimationFinished(true)} />
+    );
   }
 
   return (
