@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
-import type { OnboardingSlide, OnboardingVideo, OnboardingTexts } from '@/types/types';
+import type {
+  OnboardingSlide,
+  OnboardingVideo,
+  OnboardingTexts,
+} from '@/types/types';
 
 type OnboardingApiResponse = {
   slides: OnboardingSlide[];

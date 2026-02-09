@@ -21,7 +21,7 @@ exports[`Button Accessibility should be accessible when disabled 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -51,7 +51,7 @@ exports[`Button Accessibility should be accessible when disabled 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Disabled Accessible Button
     </Text>
@@ -80,7 +80,7 @@ exports[`Button Basic rendering should render with empty string children 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -110,7 +110,7 @@ exports[`Button Basic rendering should render with empty string children 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     />
   </View>
 </View>
@@ -137,7 +137,7 @@ exports[`Button Basic rendering should render without children 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -167,7 +167,7 @@ exports[`Button Basic rendering should render without children 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Default
     </Text>
@@ -196,7 +196,7 @@ exports[`Button Button modes should render primary mode by default 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -226,7 +226,7 @@ exports[`Button Button modes should render primary mode by default 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Primary Button
     </Text>
@@ -255,7 +255,7 @@ exports[`Button Button modes should render primary mode explicitly 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -285,7 +285,7 @@ exports[`Button Button modes should render primary mode explicitly 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Primary Button
     </Text>
@@ -314,7 +314,7 @@ exports[`Button Button modes should render secondary mode 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px]"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -344,7 +344,7 @@ exports[`Button Button modes should render secondary mode 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-cinnabar"
+      className="text-lg md:text-xl text-cinnabar"
     >
       Secondary Button
     </Text>
@@ -373,7 +373,7 @@ exports[`Button Button sizes should render large primary button explicitly 1`] =
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -403,7 +403,7 @@ exports[`Button Button sizes should render large primary button explicitly 1`] =
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Large Primary
     </Text>
@@ -432,7 +432,7 @@ exports[`Button Button sizes should render large secondary button explicitly 1`]
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px]"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -462,7 +462,7 @@ exports[`Button Button sizes should render large secondary button explicitly 1`]
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-cinnabar"
+      className="text-lg md:text-xl text-cinnabar"
     >
       Large Secondary
     </Text>
@@ -491,7 +491,7 @@ exports[`Button Button sizes should render large size by default 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -521,7 +521,7 @@ exports[`Button Button sizes should render large size by default 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Large Button
     </Text>
@@ -550,7 +550,7 @@ exports[`Button Button sizes should render small primary button 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-4 py-2"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-4 py-2 md:px-5 md:py-3"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -580,7 +580,7 @@ exports[`Button Button sizes should render small primary button 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Small Primary
     </Text>
@@ -609,7 +609,7 @@ exports[`Button Button sizes should render small secondary button 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[15px] py-[7px]"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[15px] py-[7px] md:px-5 md:py-3"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -639,7 +639,7 @@ exports[`Button Button sizes should render small secondary button 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-cinnabar"
+      className="text-lg md:text-xl text-cinnabar"
     >
       Small Secondary
     </Text>
@@ -668,7 +668,7 @@ exports[`Button Custom styling should apply custom className 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 custom-button-class"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4 custom-button-class"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -698,7 +698,7 @@ exports[`Button Custom styling should apply custom className 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Custom Class
     </Text>
@@ -727,7 +727,7 @@ exports[`Button Custom styling should apply custom style 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -752,7 +752,7 @@ exports[`Button Custom styling should apply custom style 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Custom Style
     </Text>
@@ -781,7 +781,7 @@ exports[`Button Custom styling should combine custom className and style 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] rounded-xl"
+  className="relative flex-row items-center justify-center gap-3 transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4 rounded-xl"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -805,7 +805,7 @@ exports[`Button Custom styling should combine custom className and style 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-cinnabar"
+      className="text-lg md:text-xl text-cinnabar"
     >
       Combined Styling
     </Text>
@@ -834,7 +834,7 @@ exports[`Button Custom styling should handle undefined className 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -864,7 +864,7 @@ exports[`Button Custom styling should handle undefined className 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Undefined Class
     </Text>
@@ -893,7 +893,7 @@ exports[`Button Disabled state should combine disabled and loading states 1`] = 
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -923,7 +923,7 @@ exports[`Button Disabled state should combine disabled and loading states 1`] = 
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Disabled Loading
     </Text>
@@ -961,7 +961,7 @@ exports[`Button Disabled state should render disabled styles 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -991,7 +991,7 @@ exports[`Button Disabled state should render disabled styles 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Disabled Button
     </Text>
@@ -1020,7 +1020,7 @@ exports[`Button Edge cases should handle boolean children 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1073,7 +1073,7 @@ exports[`Button Edge cases should handle null children gracefully 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1126,7 +1126,7 @@ exports[`Button Loading state should hide loading indicator when isLoading is fa
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1156,7 +1156,7 @@ exports[`Button Loading state should hide loading indicator when isLoading is fa
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Not Loading
     </Text>
@@ -1185,7 +1185,7 @@ exports[`Button Loading state should render loading with custom size 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-4 py-2"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-4 py-2 md:px-5 md:py-3"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1215,7 +1215,7 @@ exports[`Button Loading state should render loading with custom size 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Small Loading
     </Text>
@@ -1253,7 +1253,7 @@ exports[`Button Loading state should render loading with different modes 1`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1283,7 +1283,7 @@ exports[`Button Loading state should render loading with different modes 1`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Loading Primary
     </Text>
@@ -1321,7 +1321,7 @@ exports[`Button Loading state should render loading with different modes 2`] = `
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-white border border-silver text-cinnabar px-[27px] py-[11px]"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1351,7 +1351,7 @@ exports[`Button Loading state should render loading with different modes 2`] = `
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-cinnabar"
+      className="text-lg md:text-xl text-cinnabar"
     >
       Loading Secondary
     </Text>
@@ -1389,7 +1389,7 @@ exports[`Button Loading state should show loading indicator when isLoading is tr
     }
   }
   accessible={true}
-  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3"
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
   collapsable={false}
   focusable={true}
   onBlur={[Function]}
@@ -1419,7 +1419,7 @@ exports[`Button Loading state should show loading indicator when isLoading is tr
     pointerEvents="none"
   >
     <Text
-      className="text-lg text-white"
+      className="text-lg md:text-xl text-white"
     >
       Loading Button
     </Text>

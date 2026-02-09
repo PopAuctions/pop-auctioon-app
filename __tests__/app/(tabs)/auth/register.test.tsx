@@ -10,6 +10,12 @@ jest.mock('expo-router', () => ({
     push: jest.fn(),
     back: jest.fn(),
   },
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    back: jest.fn(),
+    replace: jest.fn(),
+  })),
+  usePathname: jest.fn(() => '/'),
 }));
 
 jest.mock('@/hooks/i18n/useTranslation', () => ({

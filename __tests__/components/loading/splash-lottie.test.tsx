@@ -33,7 +33,10 @@ describe('SplashLottie', () => {
   it('should have flex: 1 style', () => {
     const { getByTestId } = render(<SplashLottie />);
     const lottieView = getByTestId('lottie-view');
-    expect(lottieView.props.style).toEqual({ flex: 1 });
+    expect(lottieView.props.style).toEqual({
+      flex: 1,
+      backgroundColor: 'white',
+    });
   });
 
   it('should pass autoPlay prop', () => {

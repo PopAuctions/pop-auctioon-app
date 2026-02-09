@@ -1,13 +1,26 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { SmartBack } from '@/components/ui/SmartBack';
+
+const INDEX_ROUTE = '/(tabs)/online-store';
 
 export default function StoreLayout() {
   const { t } = useTranslation();
 
   return (
     <Stack
+      initialRouteName='index'
       screenOptions={{
-        headerShown: false, // Configuración global
+        headerShown: true, // Configuración global
+        headerTitleAlign: 'center',
+        headerLeft: () => {
+          return (
+            <SmartBack
+              fallbackHref={INDEX_ROUTE}
+              label={t('tabsNames.back')}
+            />
+          );
+        },
       }}
     >
       <Stack.Screen
@@ -15,6 +28,7 @@ export default function StoreLayout() {
         options={{
           title: t('screens.store.title'),
           headerShown: true,
+          headerLeft: () => null, // Oculta el botón de retroceso en la pantalla principal
         }}
       />
       <Stack.Screen

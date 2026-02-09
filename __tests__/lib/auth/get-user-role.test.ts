@@ -21,12 +21,13 @@ describe('getUserRole', () => {
 
   const createMockChain = (
     role: UserRoles | null,
+    isDisabled: boolean = false,
     error: { message: string } | null = null
   ) => ({
     select: jest.fn().mockReturnThis(),
     eq: jest.fn().mockReturnThis(),
     single: jest.fn().mockResolvedValue({
-      data: role ? { role } : null,
+      data: role ? { role, isDisabled } : null,
       error,
     }),
   });
@@ -39,11 +40,13 @@ describe('getUserRole', () => {
     it('should return USER role successfully', async () => {
       mockFrom.mockReturnValue(createMockChain('USER') as never);
 
-      const result: AsyncResponse<UserRoles> = await getUserRole({
-        id: 'user-123',
-      });
+      const result: AsyncResponse<{ role: UserRoles; isDisabled: boolean }> =
+        await getUserRole({
+          id: 'user-123',
+        });
 
-      expect(result.data).toBe('USER');
+      expect(result.data?.role).toBe('USER');
+      expect(result.data?.isDisabled).toBe(false);
       expect(result.error).toBeUndefined();
     });
 
@@ -52,7 +55,8 @@ describe('getUserRole', () => {
 
       const result = await getUserRole({ id: 'user-456' });
 
-      expect(result.data).toBe('AUCTIONEER');
+      expect(result.data?.role).toBe('AUCTIONEER');
+      expect(result.data?.isDisabled).toBe(false);
       expect(result.error).toBeUndefined();
     });
 
@@ -63,7 +67,7 @@ describe('getUserRole', () => {
       await getUserRole({ id: 'user-789' });
 
       expect(mockFrom).toHaveBeenCalledWith('User');
-      expect(mockChain.select).toHaveBeenCalledWith('role');
+      expect(mockChain.select).toHaveBeenCalledWith('role, isDisabled');
       expect(mockChain.eq).toHaveBeenCalledWith('id', 'user-789');
       expect(mockChain.single).toHaveBeenCalled();
     });
@@ -125,7 +129,7 @@ describe('getUserRole', () => {
 
     it('should handle malformed error object', async () => {
       const error = { message: '' };
-      mockFrom.mockReturnValue(createMockChain(null, error) as never);
+      mockFrom.mockReturnValue(createMockChain(null, false, error) as never);
 
       const result = await getUserRole({ id: 'user-123' });
 
@@ -139,7 +143,7 @@ describe('getUserRole', () => {
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
         single: jest.fn().mockResolvedValue({
-          data: {},
+          data: { isDisabled: undefined },
           error: null,
         }),
       };
@@ -147,9 +151,10 @@ describe('getUserRole', () => {
 
       const result = await getUserRole({ id: 'user-123' });
 
-      // Empty data object is still treated as valid data, returns role as undefined/null
+      // Data without role should still be returned with role as undefined
       expect(result.success).toBe(true);
-      expect(result.data).toBeUndefined();
+      expect(result.data?.role).toBeUndefined();
+      expect(result.data?.isDisabled).toBeUndefined();
     });
   });
 
@@ -157,16 +162,17 @@ describe('getUserRole', () => {
     it('should return correct shape for successful response', async () => {
       mockFrom.mockReturnValue(createMockChain('USER') as never);
 
-      const result: AsyncResponse<UserRoles> = await getUserRole({
-        id: 'user-123',
-      });
+      const result: AsyncResponse<{ role: UserRoles; isDisabled: boolean }> =
+        await getUserRole({
+          id: 'user-123',
+        });
 
       expect(result).toHaveProperty('data');
       expect(result).toHaveProperty('success');
       expect(result.success).toBe(true);
       expect(result.error).toBeUndefined();
-      // AsyncResponse: data and success are required, error is optional
-      expect(Object.keys(result).sort()).toEqual(['data', 'success']);
+      expect(result.data?.role).toBe('USER');
+      expect(result.data?.isDisabled).toBe(false);
     });
 
     it('should return correct shape for error response', async () => {
@@ -195,10 +201,12 @@ describe('getUserRole', () => {
       const result = await getUserRole({ id: 'user-123' });
 
       // Type checking - should compile without errors
-      const role: UserRoles | null = result.data;
+      const role: UserRoles | null | undefined = result.data?.role;
+      const isDisabled: boolean | undefined = result.data?.isDisabled;
       const error: { en: string; es: string } | undefined = result.error;
 
       expect(role).toBe('USER');
+      expect(isDisabled).toBe(false);
       expect(error).toBeUndefined();
     });
   });
@@ -212,7 +220,7 @@ describe('getUserRole', () => {
 
         const result = await getUserRole({ id: `user-${role}` });
 
-        expect(result.data).toBe(role);
+        expect(result.data?.role).toBe(role);
         expect(result.error).toBeUndefined();
       }
     });
@@ -228,8 +236,8 @@ describe('getUserRole', () => {
       const result2 = await getUserRole({ id: 'user-2' });
       const result3 = await getUserRole({ id: 'user-3' });
 
-      expect(result1.data).toBe('USER');
-      expect(result2.data).toBe('AUCTIONEER');
+      expect(result1.data?.role).toBe('USER');
+      expect(result2.data?.role).toBe('AUCTIONEER');
       expect(result3.data).toBeNull();
     });
 

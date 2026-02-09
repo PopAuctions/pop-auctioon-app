@@ -1,13 +1,27 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { SmartBack } from '@/components/ui/SmartBack';
+
+const INDEX_ROUTE = '/(tabs)/auctions';
 
 export default function AuctionsLayout() {
   const { t } = useTranslation();
 
   return (
     <Stack
+      initialRouteName='index'
       screenOptions={{
-        headerShown: false, // Configuración global para pantalla principal
+        headerShown: true, // Configuración global para pantalla principal
+        headerTitleAlign: 'center',
+        headerBackTitle: t('tabsNames.back'),
+        headerLeft: () => {
+          return (
+            <SmartBack
+              fallbackHref={INDEX_ROUTE}
+              label={t('tabsNames.back')}
+            />
+          );
+        },
       }}
     >
       <Stack.Screen
@@ -15,6 +29,7 @@ export default function AuctionsLayout() {
         options={{
           title: t('tabsNames.auctions'),
           headerShown: true,
+          headerLeft: () => null, // Oculta el botón de retroceso en la pantalla principal
         }}
       />
       {/* <Stack.Screen

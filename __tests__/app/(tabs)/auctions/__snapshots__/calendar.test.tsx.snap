@@ -8,27 +8,26 @@ exports[`CalendarScreen should match snapshot - empty state 1`] = `
     <View
       className="p-4"
     >
-      <View
-        className="mb-8"
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] text-black text-center"
       >
-        <Text
-          className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
-        >
-          Auctions of
-           
-          September
-        </Text>
-        <Text
-          className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black mb-4 text-center"
-        >
-          DON'T MISS ANYTHING!
-        </Text>
-        <Text
-          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[40px] md:leading-[62px] py-4 text-center text-cinnabar"
-        >
-          No auctions found
-        </Text>
-      </View>
+        Auctions of
+         
+        September
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black mb-4 text-center"
+      >
+        DON'T MISS ANYTHING!
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] py-4 text-center text-cinnabar"
+      >
+        No auctions found
+      </Text>
     </View>
   </View>
 </RCTScrollView>
@@ -42,88 +41,26 @@ exports[`CalendarScreen should match snapshot - with auctions 1`] = `
     <View
       className="p-4"
     >
-      <View
-        className="mb-8"
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] text-black text-center"
       >
-        <Text
-          className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] text-black text-center"
-        >
-          Auctions of
-           
-          September
-        </Text>
-        <Text
-          className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black mb-4 text-center"
-        >
-          DON'T MISS ANYTHING!
-        </Text>
-        <View
-          className="space-y-6"
-        >
-          <View
-            className="overflow-hidden rounded-xl shadow-sm"
-          >
-            <View
-              className="min-h-[220px] flex-row py-6"
-            >
-              <View
-                className="bg-gray-100 mr-3 h-56 w-44 overflow-hidden rounded-lg"
-              >
-                <Image
-                  alt="Test Auction"
-                  className="h-full w-full"
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "https://example.com/test.jpg",
-                    }
-                  }
-                  style={{}}
-                />
-              </View>
-              <View
-                className="flex-1 pr-2"
-              >
-                <View
-                  className="mb-4 flex-row items-end  gap-2"
-                >
-                  <View>
-                    <Text
-                      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
-                    >
-                      SEPTEMBER
-                    </Text>
-                    <Text
-                      className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:leading-[32px] text-black"
-                    >
-                      26
-                      ,
-                       
-                      2025
-                    </Text>
-                  </View>
-                  <View>
-                    <Text
-                      className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[30px] md:leading-[40px] text-black text-right"
-                    >
-                      6:00 AM
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  className=" pr-2"
-                >
-                  <Text
-                    className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[30px] md:leading-[40px] text-black"
-                  >
-                    TEST AUCTION
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
+        Auctions of
+         
+        September
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black mb-4 text-center"
+      >
+        DON'T MISS ANYTHING!
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] py-4 text-center text-cinnabar"
+      >
+        No auctions found
+      </Text>
     </View>
   </View>
 </RCTScrollView>

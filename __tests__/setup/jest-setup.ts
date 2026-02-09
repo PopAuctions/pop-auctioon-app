@@ -96,6 +96,86 @@ jest.mock('expo-device', () => ({
   osVersion: '15.0',
 }));
 
+// Mock @supabase/supabase-js to prevent "supabaseUrl is required" error
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn(() => ({
+    auth: {
+      getSession: jest.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+      getUser: jest.fn(() =>
+        Promise.resolve({ data: { user: null }, error: null })
+      ),
+      signOut: jest.fn(() => Promise.resolve({ error: null })),
+    },
+    rpc: jest.fn(() => Promise.resolve({ data: null, error: null })),
+    from: jest.fn(() => ({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockReturnThis(),
+      insert: jest.fn().mockReturnThis(),
+      update: jest.fn().mockReturnThis(),
+      delete: jest.fn().mockReturnThis(),
+      on: jest.fn(),
+      subscribe: jest.fn(() => ({
+        unsubscribe: jest.fn(),
+      })),
+      then: jest.fn(),
+    })),
+    getChannels: jest.fn(() => []),
+    channel: jest.fn(() => ({
+      on: jest.fn().mockReturnThis(),
+      subscribe: jest.fn(() => Promise.resolve()),
+      unsubscribe: jest.fn(() => Promise.resolve()),
+    })),
+  })),
+}));
+
+// Mock expo-video
+jest.mock('expo-video', () => ({
+  VideoPlayer: jest.fn(function () {
+    this.play = jest.fn();
+    this.pause = jest.fn();
+    this.seek = jest.fn();
+    this.replace = jest.fn();
+    this.pause = jest.fn();
+  }),
+  VideoView: ({ children }: any) => children,
+  useVideoPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    pause: jest.fn(),
+    seek: jest.fn(),
+    replace: jest.fn(),
+  })),
+}));
+
+// Mock expo-router
+jest.mock('expo-router', () => {
+  const mockRouter = {
+    push: jest.fn(),
+    back: jest.fn(),
+    replace: jest.fn(),
+    navigate: jest.fn(),
+    canGoBack: jest.fn(() => true),
+  };
+
+  return {
+    useRouter: jest.fn(() => mockRouter),
+    usePathname: jest.fn(() => '/'),
+    useLocalSearchParams: jest.fn(() => ({})),
+    useSegments: jest.fn(() => []),
+    router: mockRouter,
+    Href: jest.fn(),
+    Link: ({ href, children }: any) => children,
+    Stack: {
+      Screen: (props: any) => null,
+    },
+    Tabs: {
+      Screen: (props: any) => null,
+    },
+  };
+});
+
 // Suppress console warnings during tests
 global.console = {
   ...console,

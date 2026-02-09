@@ -1,5 +1,8 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { SmartBack } from '@/components/ui/SmartBack';
+
+const INDEX_ROUTE = '/(tabs)/home'; // Ruta raíz de este stack, usada como fallback en SmartBack
 
 export default function HomeLayout() {
   const { t } = useTranslation();
@@ -8,7 +11,16 @@ export default function HomeLayout() {
     <Stack
       initialRouteName='index'
       screenOptions={{
-        headerShown: false, // Configuración global para evitar headers
+        headerShown: true, // Configuración global para evitar headers
+        headerTitleAlign: 'center',
+        headerLeft: () => {
+          return (
+            <SmartBack
+              fallbackHref={INDEX_ROUTE}
+              label={t('tabsNames.back')}
+            />
+          );
+        },
       }}
     >
       <Stack.Screen

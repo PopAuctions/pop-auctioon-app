@@ -20,6 +20,7 @@ const mockToast = {
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
+  usePathname: jest.fn(() => '/'),
 }));
 
 jest.mock('@/hooks/pages/verify-phone/useVerifyPhone', () => ({

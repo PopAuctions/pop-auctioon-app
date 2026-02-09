@@ -19,6 +19,7 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   // Rutas que requieren LOGIN (cualquier rol)
   account: {},
   'account-user': {},
+  'account/reset-password': {}, // Cambiar contraseña en settings (protegido)
   addresses: {},
   'articles-won': {},
   'billing-info': {},
@@ -29,6 +30,7 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'payments-history': {},
   'verify-phone': {},
   'payment/[id]': {},
+  // NOTA: 'auth/reset-password' NO está aquí porque es pública (olvidé contraseña)
 
   // Rutas que requieren LOGIN + rol específico
   'my-auctions': {

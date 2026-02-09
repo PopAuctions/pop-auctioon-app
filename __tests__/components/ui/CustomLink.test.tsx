@@ -4,7 +4,12 @@
  */
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { CustomLink } from '@/components/ui/CustomLink';
+import {
+  CustomLink,
+  normalizeTabsPath,
+  getTabRootFromHref,
+  addFromTabParamIfCrossTab,
+} from '@/components/ui/CustomLink';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { requiresAuth } from '@/components/navigation/routeConfig';
 
@@ -684,6 +689,249 @@ describe('CustomLink', () => {
 
       // Should call with empty string if no route name found
       expect(mockRequiresAuth).toHaveBeenCalled();
+    });
+  });
+
+  describe('tabs navigation helper functions', () => {
+    describe('normalizeTabsPath helper function', () => {
+      it('should keep paths that already include /(tabs)/', () => {
+        expect(normalizeTabsPath('/(tabs)/home')).toBe('/(tabs)/home');
+        expect(normalizeTabsPath('/(tabs)/account/edit-profile')).toBe(
+          '/(tabs)/account/edit-profile'
+        );
+      });
+
+      it('should normalize group-less tab root paths', () => {
+        expect(normalizeTabsPath('/home')).toBe('/(tabs)/home');
+        expect(normalizeTabsPath('/account')).toBe('/(tabs)/account');
+        expect(normalizeTabsPath('/auctions')).toBe('/(tabs)/auctions');
+        expect(normalizeTabsPath('/online-store')).toBe('/(tabs)/online-store');
+        expect(normalizeTabsPath('/my-auctions')).toBe('/(tabs)/my-auctions');
+        expect(normalizeTabsPath('/my-online-store')).toBe(
+          '/(tabs)/my-online-store'
+        );
+        expect(normalizeTabsPath('/auth')).toBe('/(tabs)/auth');
+      });
+
+      it('should normalize group-less nested paths', () => {
+        expect(normalizeTabsPath('/account/edit-profile')).toBe(
+          '/(tabs)/account/edit-profile'
+        );
+        expect(normalizeTabsPath('/auctions/123')).toBe('/(tabs)/auctions/123');
+      });
+
+      it('should leave non-tab paths unchanged', () => {
+        expect(normalizeTabsPath('/some-other-route')).toBe(
+          '/some-other-route'
+        );
+        expect(normalizeTabsPath('/')).toBe('/');
+        expect(normalizeTabsPath('/(other)/path')).toBe('/(other)/path');
+      });
+    });
+
+    describe('getTabRootFromHref helper function', () => {
+      describe('Tab root detection for /(tabs) paths', () => {
+        it('should return the correct tab root for parent routes', () => {
+          expect(getTabRootFromHref('/(tabs)/home')).toBe('/(tabs)/home');
+          expect(getTabRootFromHref('/(tabs)/account')).toBe('/(tabs)/account');
+          expect(getTabRootFromHref('/(tabs)/auctions')).toBe(
+            '/(tabs)/auctions'
+          );
+          expect(getTabRootFromHref('/(tabs)/online-store')).toBe(
+            '/(tabs)/online-store'
+          );
+          expect(getTabRootFromHref('/(tabs)/my-auctions')).toBe(
+            '/(tabs)/my-auctions'
+          );
+          expect(getTabRootFromHref('/(tabs)/my-online-store')).toBe(
+            '/(tabs)/my-online-store'
+          );
+          expect(getTabRootFromHref('/(tabs)/auth')).toBe('/(tabs)/auth');
+        });
+
+        it('should return the correct tab root for nested routes', () => {
+          expect(getTabRootFromHref('/(tabs)/account/edit-profile')).toBe(
+            '/(tabs)/account'
+          );
+          expect(getTabRootFromHref('/(tabs)/account/articles-won')).toBe(
+            '/(tabs)/account'
+          );
+          expect(getTabRootFromHref('/(tabs)/auctions/123')).toBe(
+            '/(tabs)/auctions'
+          );
+          expect(getTabRootFromHref('/(tabs)/auctions/articles/123')).toBe(
+            '/(tabs)/auctions'
+          );
+        });
+
+        it('should ignore query params when detecting root', () => {
+          expect(getTabRootFromHref('/(tabs)/account?foo=bar')).toBe(
+            '/(tabs)/account'
+          );
+          expect(
+            getTabRootFromHref('/(tabs)/account/edit-profile?foo=bar')
+          ).toBe('/(tabs)/account');
+        });
+      });
+
+      describe('Tab root detection for group-less paths', () => {
+        it('should return the correct tab root for group-less parent routes', () => {
+          expect(getTabRootFromHref('/home')).toBe('/(tabs)/home');
+          expect(getTabRootFromHref('/account')).toBe('/(tabs)/account');
+          expect(getTabRootFromHref('/auctions')).toBe('/(tabs)/auctions');
+        });
+
+        it('should return the correct tab root for group-less nested routes', () => {
+          expect(getTabRootFromHref('/account/edit-profile')).toBe(
+            '/(tabs)/account'
+          );
+          expect(getTabRootFromHref('/auctions/123')).toBe('/(tabs)/auctions');
+        });
+      });
+
+      describe('Non-tab routes (should return null)', () => {
+        it('should return null for /some-other-route', () => {
+          expect(getTabRootFromHref('/some-other-route')).toBeNull();
+        });
+
+        it('should return null for /(other)/path', () => {
+          expect(getTabRootFromHref('/(other)/path')).toBeNull();
+        });
+
+        it('should return null for root route', () => {
+          expect(getTabRootFromHref('/')).toBeNull();
+        });
+      });
+    });
+
+    describe('addFromTabParamIfCrossTab helper function', () => {
+      describe('Should NOT add param', () => {
+        it('should not add param to tab parent routes (even cross-tab)', () => {
+          // home -> account (root), not nested => no marker
+          expect(
+            addFromTabParamIfCrossTab('/(tabs)/account', '/(tabs)/home')
+          ).toBe('/(tabs)/account');
+        });
+
+        it('should not add param when navigating within the same tab', () => {
+          // account -> account nested => same tab, no marker
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/edit-profile',
+              '/(tabs)/account'
+            )
+          ).toBe('/(tabs)/account/edit-profile');
+        });
+
+        it('should not add param when fromTab is already present', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/edit-profile?fromTab=true',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/edit-profile?fromTab=true');
+        });
+
+        it('should not add param for non-tab routes', () => {
+          expect(
+            addFromTabParamIfCrossTab('/other/nested/route', '/(tabs)/home')
+          ).toBe('/other/nested/route');
+        });
+
+        it('should be conservative if current tab cannot be detected', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/edit-profile',
+              '/unknown'
+            )
+          ).toBe('/(tabs)/account/edit-profile');
+        });
+
+        it('should be conservative if target tab cannot be detected', () => {
+          expect(
+            addFromTabParamIfCrossTab('/unknown/path', '/(tabs)/home')
+          ).toBe('/unknown/path');
+        });
+      });
+
+      describe('Should add param (cross-tab nested)', () => {
+        it('should add ?fromTab=true when going from home tab to account nested route', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/edit-profile',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/edit-profile?fromTab=true');
+        });
+
+        it('should add &fromTab=true when query params exist', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/payment?auctionId=28',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/payment?auctionId=28&fromTab=true');
+        });
+
+        it('should handle multiple existing query params', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/addresses?status=active&page=2',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/addresses?status=active&page=2&fromTab=true');
+        });
+
+        it('should handle hash fragment', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/settings#section-1',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/settings?fromTab=true#section-1');
+        });
+
+        it('should work when currentPathname is group-less', () => {
+          // currentPathname might be '/home' from usePathname()
+          expect(
+            addFromTabParamIfCrossTab('/(tabs)/account/edit-profile', '/home')
+          ).toBe('/(tabs)/account/edit-profile?fromTab=true');
+        });
+
+        it('should work when both current and target are group-less', () => {
+          // useful if you ever pass group-less hrefs
+          expect(
+            addFromTabParamIfCrossTab('/account/edit-profile', '/home')
+          ).toBe('/account/edit-profile?fromTab=true');
+        });
+
+        it('should not duplicate fromTab when mixed with other params', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/addresses?foo=bar&fromTab=true&baz=qux',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/addresses?foo=bar&fromTab=true&baz=qux');
+        });
+
+        it('should treat fromTab=false as present (do not overwrite)', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/edit-profile?fromTab=false',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/edit-profile?fromTab=false');
+        });
+
+        it('should handle special characters in query params', () => {
+          expect(
+            addFromTabParamIfCrossTab(
+              '/(tabs)/account/edit-profile?name=John%20Doe',
+              '/(tabs)/home'
+            )
+          ).toBe('/(tabs)/account/edit-profile?name=John%20Doe&fromTab=true');
+        });
+      });
     });
   });
 });

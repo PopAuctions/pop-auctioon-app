@@ -10,6 +10,7 @@ const mockUseOnboardingData = jest.fn();
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
+  usePathname: jest.fn(() => '/'),
   Stack: {
     Screen: ({ children }: any) => children,
   },
