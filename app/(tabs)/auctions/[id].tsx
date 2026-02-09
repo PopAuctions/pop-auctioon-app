@@ -25,6 +25,7 @@ import { FollowButton } from '@/components/ui/FollowButton';
 import { useGetUserFollowsAuction } from '@/hooks/pages/auction/useGetUserFollowsAuction';
 import { useGetArticlesUserFollows } from '@/hooks/pages/article/useGetArticlesUserFollows';
 import { ArticleFilters } from '@/components/articles/ArticleFilters';
+import { CustomError } from '@/components/ui/CustomError';
 
 export default function AuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -55,9 +56,10 @@ export default function AuctionDetailScreen() {
 
   if (status === REQUEST_STATUS.error || !liveAuction) {
     return (
-      <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
-      </View>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute={`/(tabs)/auctions/${id}`}
+      />
     );
   }
 
