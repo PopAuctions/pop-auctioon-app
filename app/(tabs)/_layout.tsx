@@ -5,7 +5,6 @@ import { Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { APP_USER_ROLES } from '@/constants';
 import { Text } from 'react-native';
 
 const TabLabel = ({ label, color }: { label: string; color: string }) => {
@@ -26,13 +25,17 @@ const TabLabel = ({ label, color }: { label: string; color: string }) => {
 
 export default function TabLayout() {
   const { t } = useTranslation();
-  const { getSession } = useAuth();
-  const [session, role] = getSession();
+  const { auth } = useAuth();
 
-  const isAuctioneer = role === APP_USER_ROLES.AUCTIONEER;
+  const session = auth.state === 'authenticated' ? auth.session : null;
+  const role = auth.state === 'authenticated' ? auth.role : null;
+  const isAuctioneer = role === 'AUCTIONEER';
+
+  const tabsKey = `${session ? 'in' : 'out'}-${role ?? 'no-role'}`;
 
   return (
     <Tabs
+      key={tabsKey}
       screenOptions={{
         tabBarActiveTintColor: Colors.light.tint,
         headerShown: false,
