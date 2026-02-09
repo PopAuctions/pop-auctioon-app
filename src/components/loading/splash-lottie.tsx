@@ -29,7 +29,7 @@ export default function SplashLottie({ onAnimationFinish }: SplashLottieProps) {
       style={{ flex: 1, backgroundColor: 'white', opacity: fadeAnim }}
     >
       <LottieView
-        source={require('../../../assets/lottie/shopping-bag.json')}
+        source={require('../../../assets/lottie/loading-bubbles.json')}
         autoPlay
         loop={false}
         onAnimationFinish={handleAnimationFinish}
