@@ -155,7 +155,7 @@
       "noFollowedArticles": "No tienes artículos seguidos"
     },
     "store": {
-      "title": "Tienda Online",
+      "title": "Subastas",
       "subtitle": "Compra productos exclusivos",
       "noProducts": "No hay productos disponibles en este momento",
       "productDetail": "Detalles del Producto",
@@ -173,7 +173,7 @@
       }
     },
     "onlineStoreArticle": {
-      "title": "Tienda Online",
+      "title": "Subastas",
       "price": "Precio",
       "buy": "Comprar",
       "offer": "¡Haz una oferta al vendedor!",
@@ -194,8 +194,8 @@
       "noAuctionsFound": "No se encontraron subastas"
     },
     "myOnlineStore": {
-      "title": "Artículos tienda online",
-      "noArticles": "Aún no tienes artículos para vender en la tienda online",
+      "title": "Mis artículos en las subastas",
+      "noArticles": "Aún no tienes artículos para vender en las subastas",
       "noArticlesFound": "No se encontraron artículos",
       "status": "Estado",
       "changePrice": "Cambiar precio",
@@ -435,7 +435,7 @@
       "loadError": "Error al cargar datos del usuario",
       "permissionDenied": "Se requiere permiso para acceder a la galería",
       "compressionFailed": "Error al comprimir la imagen. Por favor intenta con otra.",
-      "onlineStore": "Tienda online",
+      "onlineStore": "Subastas",
       "update": "Actualizar",
       "back": "Volver",
       "dni": "DNI (opcional)",
@@ -600,7 +600,7 @@
       "totalAmount": "Importe Total",
       "viewPayment": "Ver pago",
       "articlesPaid": "Artículos pagados",
-      "onlineStore": "Tienda Online"
+      "onlineStore": "Subastas"
     },
     "payments": {
       "title": "Pago",
@@ -678,7 +678,7 @@
       "cancel": "Cancelar",
       "submit": "Crear",
       "cancelAcquisition": "Cancelar adquisición",
-      "sendToOnlineStore": "Enviar a tienda online",
+      "sendToOnlineStore": "Enviar a Subastas",
       "notifyAgain": "Notificar de nuevo",
       "shippingCourier": "Courier",
       "save": "Guardar",
@@ -710,7 +710,7 @@
       "paid": "Pagado",
       "pending": "Pendiente",
       "soldPrice": "Precio de venta",
-      "onlineStore": "Tienda online",
+      "onlineStore": "Subastas",
       "status": "Estado",
       "view": "Ver",
       "notPaid": "El artículo aún no ha sido pagado",
@@ -724,7 +724,7 @@
       "offer": "Offer",
       "alreadySold": "Ya fue vendido",
       "noOffersMade": "No has realizado ninguna oferta",
-      "goToOnlineStore": "Ir a la tienda online",
+      "goToOnlineStore": "Ir a Subastas",
       "offerExpired": "La oferta ha expirado",
       "payNow": "Pagar ahora",
       "article": "Article",
