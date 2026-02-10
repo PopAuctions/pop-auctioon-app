@@ -122,7 +122,7 @@ export default function BillingInfoScreen() {
   }
 
   // Empty state
-  if (billingRecords.length === 0) {
+  if (billingRecords.length === 0 && !modalVisible) {
     return (
       <SafeAreaView
         className='flex-1 bg-white'

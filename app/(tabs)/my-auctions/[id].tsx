@@ -41,7 +41,7 @@ export default function MyAuctionDetailScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/account/payments-history'
+        refreshRoute={`/(tabs)/my-auctions/${id}`}
       />
     );
   }

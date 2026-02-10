@@ -5,6 +5,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants';
+import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 
 interface FollowButtonProps {
   mode: ButtonMode;
@@ -46,6 +47,7 @@ export function FollowButton({
   extraDataIsLoaded = false,
   actionAfterFollow = () => {},
 }: FollowButtonProps) {
+  const { openSignInAlertModal } = useSignInAlertModal();
   const [isFollowing, setIsFollowing] = useState(() => !!follows);
   const [status, setStatus] = useState<RequestStatus>('idle');
   const { securePost } = useSecureApi();
@@ -61,6 +63,9 @@ export function FollowButton({
       const response = await securePost<LangMap>({ endpoint });
 
       if (response.error) {
+        if (response.status === 401) {
+          openSignInAlertModal();
+        }
         callToast({ variant: 'error', description: response.error });
         setStatus(REQUEST_STATUS.error);
         return;

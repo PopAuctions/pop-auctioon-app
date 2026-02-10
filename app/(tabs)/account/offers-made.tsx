@@ -29,7 +29,7 @@ export default function OffersMadeScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/account/payments-history'
+        refreshRoute='/(tabs)/account/offers-made'
       />
     );
   }

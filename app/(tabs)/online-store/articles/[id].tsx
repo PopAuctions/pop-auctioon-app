@@ -11,6 +11,7 @@ import { parseNumber } from '@/utils/parse-number';
 import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlineStoreArticle';
 import { OnlineStorePriceInfo } from '@/components/online-store/OnlineStorePriceInfo';
 import { ArticleOfferForm } from '@/components/online-store/ArticleOfferForm';
+import { CustomError } from '@/components/ui/CustomError';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -33,9 +34,10 @@ export default function ArticlesDetailScreen() {
 
   if (status === REQUEST_STATUS.error || !onlineStoreArticle) {
     return (
-      <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
-      </View>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute={`/(tabs)/online-store/articles/${id}`}
+      />
     );
   }
 

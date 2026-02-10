@@ -10,6 +10,7 @@ import { ONLY_INTEGERS_REGEX } from '@/constants';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useTranslation } from '../i18n/useTranslation';
+import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 
 const maxBidOffset = MAX_BID_OFFSET;
 
@@ -24,6 +25,7 @@ export const useSendBid = ({
   articleId: number;
   commissionPercentage: number;
 }) => {
+  const { openSignInAlertModal } = useSignInAlertModal();
   const [isPending, setIsPending] = useState(false);
   const [bidAmount, setBidAmount] = useState<string>('');
   const { t, locale } = useTranslation();
@@ -124,6 +126,9 @@ export const useSendBid = ({
       const data = response?.data;
 
       if (response.error) {
+        if (response.status === 401) {
+          openSignInAlertModal();
+        }
         callToast({ variant: 'error', description: response.error });
         return;
       }

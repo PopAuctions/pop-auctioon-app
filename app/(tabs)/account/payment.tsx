@@ -413,7 +413,7 @@ export default function PaymentScreen() {
           es: 'ID de subasta requerido',
           en: 'Auction ID required',
         }}
-        refreshRoute='/(tabs)/account'
+        refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );
   }
@@ -432,7 +432,7 @@ export default function PaymentScreen() {
     return (
       <CustomError
         customMessage={articlesError}
-        refreshRoute='/(tabs)/account/payment'
+        refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );
   }
@@ -441,7 +441,7 @@ export default function PaymentScreen() {
     return (
       <CustomError
         customMessage={addressesError}
-        refreshRoute='/(tabs)/account/payment'
+        refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );
   }

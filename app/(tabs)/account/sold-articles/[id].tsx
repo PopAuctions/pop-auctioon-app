@@ -31,7 +31,7 @@ export default function SoldArticleScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/account/payments-history'
+        refreshRoute={`/(tabs)/account/sold-articles/${id}`}
       />
     );
   }

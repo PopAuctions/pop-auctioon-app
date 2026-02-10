@@ -24,6 +24,7 @@ type LoginError =
   | 'TOO_MANY_REQUESTS'
   | 'NETWORK_ERROR'
   | 'TOO_MANY_EMAIL_REQUESTS'
+  | 'ACCOUNT_DISABLED'
   | 'UNKNOWN_ERROR'
   | 'EMAIL_NOT_VERIFIED'
   | null;
@@ -150,6 +151,10 @@ const getErrorMessage = (errorCode: LoginError): LangMap => {
       en: 'Wait a few moments before requesting another confirmation email.',
       es: 'Espera unos momentos antes de solicitar otro correo de confirmación.',
     },
+    ACCOUNT_DISABLED: {
+      es: 'Tu cuenta ha sido desactivada. Contacta soporte para más información.',
+      en: 'Your account has been disabled. Contact support for more information.',
+    },
     UNKNOWN_ERROR: {
       es: 'Error desconocido. Por favor, intenta de nuevo.',
       en: 'Unknown error. Please try again.',
@@ -161,6 +166,7 @@ const getErrorMessage = (errorCode: LoginError): LangMap => {
 
 const EMAIL_CONFIRM_COOLDOWN_MS = 120_000;
 
+// UI doesnt refresh when its auctioneer
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
@@ -220,6 +226,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [protectedPost]
   );
 
+  const signOut = useCallback(async (): Promise<void> => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      // optional: log/sentry
+      console.warn('[signOut] error:', error.message);
+    }
+  }, []);
+
+  const forceLogout = useCallback(async () => {
+    // 1) Stop refresh timers
+    clearTimer.current?.();
+    clearTimer.current = null;
+
+    // 2) Reset local auth state FIRST
+    setAuth({ state: 'unauthenticated' });
+
+    // 3) Best-effort Supabase cleanup (ignore errors)
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
+  }, []);
+
+  const logoutBecauseDisabled = useCallback(async () => {
+    if (!disabledToastShownRef.current) {
+      disabledToastShownRef.current = true;
+
+      callToastRef.current({
+        variant: 'error',
+        description: ACCOUNT_DISABLED_MESSAGE,
+      });
+    }
+
+    await forceLogout();
+  }, [forceLogout]);
+
+  const getSession = useCallback(() => {
+    if (auth.state === 'authenticated') {
+      return [auth.session, auth.role] as [Session, UserRoles];
+    }
+
+    return [null, null] as [null, null];
+  }, [auth]);
+
   const signInWithPassword = useCallback(
     async ({
       email,
@@ -264,7 +311,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
         }
 
+        // Mark authenticated immediately (so UI can move on)
         setAuth({ state: 'authenticated', session, role: null });
+
+        // Fetch role right away for manual sign-in
+        try {
+          const r = await getUserRole({ id: session.user.id });
+
+          if (r.data?.isDisabled) {
+            await logoutBecauseDisabled();
+            return {
+              success: false,
+              message: getErrorMessage('ACCOUNT_DISABLED'),
+              type: 'error',
+            };
+          }
+
+          setAuth({
+            state: 'authenticated',
+            session,
+            role: r.data?.role ?? null,
+          });
+        } catch (e) {
+          console.warn('[signInWithPassword] getUserRole failed:', e);
+          await forceLogout();
+          return {
+            success: false,
+            message: getErrorMessage('UNKNOWN_ERROR'),
+            type: 'error',
+          };
+        }
+
         return {
           success: true,
           message: { es: 'Sesión iniciada', en: 'Session started' },
@@ -274,49 +351,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isManualSignInRef.current = false;
       }
     },
-    [sendEmailConfirmation]
+    [sendEmailConfirmation, logoutBecauseDisabled, forceLogout]
   );
-
-  const signOut = useCallback(async (): Promise<void> => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      // optional: log/sentry
-      console.warn('[signOut] error:', error.message);
-    }
-  }, []);
-
-  const forceLogout = useCallback(async () => {
-    // 1) Stop refresh timers
-    clearTimer.current?.();
-    clearTimer.current = null;
-
-    // 2) Reset local auth state FIRST
-    setAuth({ state: 'unauthenticated' });
-
-    // 3) Best-effort Supabase cleanup (ignore errors)
-    await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
-  }, []);
-
-  const logoutBecauseDisabled = useCallback(async () => {
-    if (!disabledToastShownRef.current) {
-      disabledToastShownRef.current = true;
-
-      callToastRef.current({
-        variant: 'error',
-        description: ACCOUNT_DISABLED_MESSAGE,
-      });
-    }
-
-    await forceLogout();
-  }, [forceLogout]);
-
-  const getSession = useCallback(() => {
-    if (auth.state === 'authenticated') {
-      return [auth.session, auth.role] as [Session, UserRoles];
-    }
-
-    return [null, null] as [null, null];
-  }, [auth]);
 
   useEffect(() => {
     callToastRef.current = callToast;

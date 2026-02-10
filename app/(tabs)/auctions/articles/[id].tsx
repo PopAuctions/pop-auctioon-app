@@ -22,6 +22,7 @@ import { FollowButton } from '@/components/ui/FollowButton';
 import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 import { parseNumber } from '@/utils/parse-number';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { CustomError } from '@/components/ui/CustomError';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -73,9 +74,10 @@ export default function ArticlesDetailScreen() {
 
   if (status === REQUEST_STATUS.error || !article || !article?.images) {
     return (
-      <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
-      </View>
+      <CustomError
+        customMessage={errorMessage}
+        refreshRoute={`/(tabs)/auctions/articles/${id}`}
+      />
     );
   }
   const auction = article.Auction;

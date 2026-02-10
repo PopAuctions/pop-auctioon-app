@@ -38,11 +38,11 @@
     "home": "Home",
     "account": "Account",
     "login": "Sign In",
-    "auctions": "Auctions",
+    "auctions": "Live Auctions",
     "articleDetails": "Article Details",
-    "store": "Online Store",
-    "myAuctions": "My Auctions",
-    "myOnlineStore": "My Online Store",
+    "store": "Auctions",
+    "myAuctions": "My Live Auctions",
+    "myOnlineStore": "My Auctions",
     "back": "Back"
   },
   "screens": {
@@ -155,7 +155,7 @@
       "noFollowedArticles": "You have no followed articles"
     },
     "store": {
-      "title": "Online Store",
+      "title": "Auctions",
       "subtitle": "Shop exclusive products",
       "noProducts": "No products available at the moment",
       "productDetail": "Product Details",
@@ -173,7 +173,7 @@
       }
     },
     "onlineStoreArticle": {
-      "title": "Online Store",
+      "title": "Auctions",
       "price": "Price",
       "buy": "Buy",
       "offer": "Make an offer to the seller!",
@@ -194,8 +194,8 @@
       "noAuctionsFound": "No auctions found"
     },
     "myOnlineStore": {
-      "title": "Online store articles",
-      "noArticles": "You don't have any articles to sell in the online store yet",
+      "title": "Auctions articles",
+      "noArticles": "You don't have any articles to sell in the auction yet",
       "noArticlesFound": "No articles found",
       "status": "Status",
       "changePrice": "Change price",
@@ -435,10 +435,10 @@
       "loadError": "Failed to load user data",
       "permissionDenied": "Permission required to access gallery",
       "compressionFailed": "Failed to compress image. Please try another one.",
-      "onlineStore": "Online Store",
+      "onlineStore": "Auctions",
       "update": "Update",
       "back": "Back",
-      "dni": "DNI (optional)",
+      "dni": "DNI",
       "includeCountryCode": "Include country code"
     },
     "payment": {
@@ -561,7 +561,7 @@
       "cancel": "Cancel",
       "submit": "Save Address",
       "cancelAcquisition": "Cancel acquisition",
-      "sendToOnlineStore": "Send to online store",
+      "sendToOnlineStore": "Send to auctions",
       "notifyAgain": "Notify again",
       "shippingCourier": "Courier",
       "save": "Save",
@@ -593,7 +593,7 @@
       "paid": "Paid",
       "pending": "Pending",
       "soldPrice": "Sold price",
-      "onlineStore": "Online store",
+      "onlineStore": "Auctions",
       "status": "Status",
       "view": "Check",
       "notPaid": "The article has not been paid yet",
@@ -602,12 +602,12 @@
     "myOffers": {
       "title": "Offers made",
       "noOffers": "No offers made",
-      "checkOnlineStore": "Check online store",
+      "checkOnlineStore": "Check auctions",
       "loading": "Cargando...",
       "offer": "Offer",
       "alreadySold": "Already sold",
       "noOffersMade": "No offers made yet",
-      "goToOnlineStore": "Go to online store",
+      "goToOnlineStore": "Go to auctions",
       "offerExpired": "Offer expired",
       "payNow": "Pay now",
       "article": "Article",
@@ -720,7 +720,7 @@
       "totalAmount": "Total amount",
       "viewPayment": "View payment",
       "articlesPaid": "Articles paid",
-      "onlineStore": "Online Store"
+      "onlineStore": "Auctions"
     },
     "articlesWon": {
       "title": "Articles Won",

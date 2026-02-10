@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { FlatList, View } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { CustomArticleSecondChance, Lang } from '@/types/types';
-import { CustomText } from '../ui/CustomText';
-import { Loading } from '../ui/Loading';
+import { CustomText } from '@/components/ui/CustomText';
+import { Loading } from '@/components/ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { OnlineStoreArticleItem } from './OnlineStoreArticleItem';
@@ -33,9 +33,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   lang: Lang;
   ListHeaderComponent: React.ReactElement;
   filtersKey: string;
-  texts: {
-    price: string;
-  };
+  texts: { price: string };
 }) => {
   const { locale } = useTranslation();
   const params = useLocalSearchParams();
@@ -45,10 +43,28 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   const { fetchArticles } = useFetchOnlineStoreArticlesInfinite();
   const { data: commissionData, status: commissionStatus } =
     useFetchCommissions();
+
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
-  const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const offsetRef = useRef(0);
+  const loadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
+
+  const syncHasMore = (value: boolean) => {
+    hasMoreRef.current = value;
+    setHasMore(value);
+  };
+
+  const syncOffset = (value: number) => {
+    offsetRef.current = value;
+  };
+
+  const syncLoading = (value: boolean) => {
+    loadingRef.current = value;
+    setIsLoading(value);
+  };
 
   const formatter = euroFormatter(lang);
   const filtersActive = Boolean(
@@ -57,8 +73,13 @@ export const OnlineStoreArticlesInfiniteScroll = ({
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const loadInitial = useCallback(async () => {
+    if (loadingRef.current) return;
+
+    syncLoading(true);
+    syncHasMore(true);
+    syncOffset(0);
+
     try {
-      setIsLoading(true);
       const response = await fetchArticles({
         brand,
         price,
@@ -70,28 +91,25 @@ export const OnlineStoreArticlesInfiniteScroll = ({
         limit: ITEMS_PER_PAGE,
       });
 
-      const data = response?.data;
-      if (!data) {
-        setArticles([]);
-        setOffset(0);
-        setHasMore(false);
-        return;
-      }
+      const data = response?.data ?? [];
 
       setArticles(data);
-      setOffset(data.length);
-      setHasMore(data.length >= ITEMS_PER_PAGE);
+      syncOffset(data.length);
+
+      // more pages only if you got a full page back
+      syncHasMore(data.length === ITEMS_PER_PAGE);
     } catch (e) {
       console.warn('Error loading articles', e);
-      setHasMore(false);
+      syncHasMore(false);
     } finally {
-      setIsLoading(false);
+      syncLoading(false);
     }
   }, [fetchArticles, brand, price, model, codeNumber, category, sortBy]);
 
   const loadMore = useCallback(async () => {
-    if (isLoading || !hasMore) return;
-    setIsLoading(true);
+    if (loadingRef.current || !hasMoreRef.current) return;
+
+    syncLoading(true);
 
     try {
       const response = await fetchArticles({
@@ -101,41 +119,36 @@ export const OnlineStoreArticlesInfiniteScroll = ({
         codeNumber,
         category,
         sortBy,
-        offset,
+        offset: offsetRef.current,
         limit: ITEMS_PER_PAGE,
       });
-      const newData = response.data;
 
-      if (!newData || newData.length === 0) {
-        setHasMore(false);
+      const newData = response?.data ?? [];
+
+      if (newData.length === 0) {
+        syncHasMore(false);
         return;
       }
 
+      let appendedCount = 0;
+
       setArticles((prev) => {
-        const existingIds = new Set(prev.map((a) => a.id));
-        const unique = newData.filter(
-          (a: CustomArticleSecondChance) => !existingIds.has(a.id)
-        );
+        const existing = new Set(prev.map((a) => a.id));
+        const unique = newData.filter((a) => !existing.has(a.id));
+        appendedCount = unique.length;
         return [...prev, ...unique];
       });
-      setOffset((prev) => prev + newData.length);
+
+      syncOffset(offsetRef.current + appendedCount);
+
+      // if server returned less than a page, you're done
+      if (newData.length < ITEMS_PER_PAGE) syncHasMore(false);
     } catch (e) {
       console.warn('Error loading more', e);
     } finally {
-      setIsLoading(false);
+      syncLoading(false);
     }
-  }, [
-    isLoading,
-    hasMore,
-    fetchArticles,
-    brand,
-    price,
-    model,
-    codeNumber,
-    category,
-    sortBy,
-    offset,
-  ]);
+  }, [fetchArticles, brand, price, model, codeNumber, category, sortBy]);
 
   useEffect(() => {
     loadInitial();
@@ -170,6 +183,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
         </View>
       );
     }
+
     return null;
   }, [isLoading, hasMore, lang, locale, filtersActive, articles.length]);
 
@@ -177,14 +191,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     <FlatList
       data={articles}
       keyExtractor={(item) => item.id.toString()}
-      extraData={{
-        brand,
-        price,
-        model,
-        codeNumber,
-        category,
-        sortBy,
-      }}
+      extraData={{ brand, price, model, codeNumber, category, sortBy }}
       renderItem={({ item }) => (
         <OnlineStoreArticleItem
           onlineStoreArticle={item}
@@ -203,7 +210,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
       ListHeaderComponent={ListHeaderComponent}
       ListFooterComponent={renderFooter}
       onEndReached={loadMore}
-      onEndReachedThreshold={0.3}
+      onEndReachedThreshold={0.2}
     />
   );
 };

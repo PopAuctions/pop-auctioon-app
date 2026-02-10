@@ -348,7 +348,7 @@ export default function SinglePaymentScreen() {
           es: 'ID de artículo requerido',
           en: 'Article ID required',
         }}
-        refreshRoute='/(tabs)/account'
+        refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
   }
@@ -367,7 +367,7 @@ export default function SinglePaymentScreen() {
     return (
       <CustomError
         customMessage={articleError}
-        refreshRoute='/(tabs)/account/payment'
+        refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
   }
@@ -376,7 +376,7 @@ export default function SinglePaymentScreen() {
     return (
       <CustomError
         customMessage={addressesError}
-        refreshRoute='/(tabs)/account/payment'
+        refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
   }
