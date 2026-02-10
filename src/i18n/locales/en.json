@@ -438,7 +438,7 @@
       "onlineStore": "Auctions",
       "update": "Update",
       "back": "Back",
-      "dni": "DNI (optional)",
+      "dni": "DNI",
       "includeCountryCode": "Include country code"
     },
     "payment": {

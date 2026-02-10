@@ -438,7 +438,7 @@
       "onlineStore": "Subastas",
       "update": "Actualizar",
       "back": "Volver",
-      "dni": "DNI (opcional)",
+      "dni": "DNI",
       "includeCountryCode": "Incluir código de país"
     },
     "payment": {

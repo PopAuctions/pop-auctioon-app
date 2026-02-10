@@ -44,7 +44,7 @@ export default function PaymentScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/account/payments-history'
+        refreshRoute={`/(tabs)/account/payment/${id}`}
       />
     );
   }

@@ -194,7 +194,7 @@ export default function LiveAuctionScreen() {
         }}
       >
         <CustomError
-          refreshRoute={`/(tabs)/auctions/live/index`}
+          refreshRoute={`/(tabs)/auctions`}
           customMessage={{
             es: 'ID de subasta inválido',
             en: 'Invalid auction ID',
