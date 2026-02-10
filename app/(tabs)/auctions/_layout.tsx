@@ -63,7 +63,7 @@ export default function AuctionsLayout() {
         name='live/[id]'
         options={{
           title: t('screens.auctions.liveAuction'),
-          presentation: 'fullScreenModal',
+          presentation: 'card',
           headerShown: false,
           headerStyle: { backgroundColor: '#dc2626' },
           headerTintColor: '#ffffff',
