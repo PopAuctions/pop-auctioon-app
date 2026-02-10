@@ -51,6 +51,7 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
   const { t, locale } = useTranslation();
   const paymentTranslations = t('screens.payment');
   const formatter = euroFormatter(locale, 2);
+  const commissionDiscount = paymentDetails.subtotal * 0.1;
 
   return (
     <View className='mb-6'>
@@ -150,7 +151,21 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
             type='body'
             className='font-medium'
           >
-            {formatter.format(paymentDetails.commission)}
+            {formatter.format(commissionDiscount)}
+          </CustomText>
+        </View>
+        <View className='mb-2 flex-row justify-between'>
+          <CustomText
+            type='body'
+            className='text-gray-600'
+          >
+            {paymentTranslations.commissionDiscount}:
+          </CustomText>
+          <CustomText
+            type='body'
+            className='font-medium'
+          >
+            -{formatter.format(commissionDiscount)}
           </CustomText>
         </View>
 

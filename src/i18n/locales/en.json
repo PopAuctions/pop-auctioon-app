@@ -504,6 +504,7 @@
       "summary": "Summary",
       "couponText": "Discount code",
       "discount": "Discount",
+      "commissionDiscount": "Commission discount",
       "emptyDiscountCode": "Enter discount code",
       "invalidDiscountCode": "Invalid discount code",
       "applyCoupon": "Apply",
