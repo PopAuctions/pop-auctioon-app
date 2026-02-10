@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
-import { LiveArticlesModal } from '@/components/live-auction/LiveArticlesModal';
+import { LiveArticlesContent } from '@/components/live-auction/LiveArticlesContent';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useDeviceType } from '@/hooks/useDeviceType';
 import { REQUEST_STATUS } from '@/constants';
@@ -25,9 +25,10 @@ import { ArticleCountdownUser } from './ArticleCountdownUser';
 import { BidSliderSkeleton } from './BidSliderSkeleton';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
-import { LiveCurrentArticleModal } from './LiveCurrentArticleModal';
+import { LiveCurrentArticleContent } from './LiveCurrentArticleContent';
+import { OverlaySheet } from './OverlaySheet';
 
-type OverlayProps = {
+interface OverlayProps {
   insetsTop: number;
   insetsBottom: number;
   auctionId: string;
@@ -39,7 +40,7 @@ type OverlayProps = {
   articleId: number;
   onBack: () => void;
   refetch: (localValue: number) => void;
-};
+}
 
 const UI = {
   SCREEN_PADDING: 8,
@@ -94,6 +95,7 @@ export const LiveAuctionOverlay = ({
 
   // Bid row pinned
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
+  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT + 16;
 
   // Article HUD sits above bid
   const articleHudBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
@@ -295,29 +297,37 @@ export const LiveAuctionOverlay = ({
         </HighestBidderProvider>
       </View>
 
-      <LiveArticlesModal
-        articles={orderedArticles}
-        currentArticleId={articleId}
-        locale={locale}
-        commissionValue={commissionData || 0}
-        texts={{
-          bids: t('screens.liveAuction.bids'),
-          estimatedPrice: t('screens.liveAuction.estimatedPrice'),
-          liveNow: t('screens.liveAuction.liveNow'),
-          articles: t('screens.liveAuction.articles'),
-        }}
+      <OverlaySheet
         visible={showInfoModal}
         onClose={() => setShowInfoModal(false)}
-      />
+        bottomFreeAreaHeight={bidAreaHeight}
+      >
+        <LiveArticlesContent
+          articles={orderedArticles}
+          currentArticleId={articleId}
+          locale={locale}
+          commissionValue={commissionData || 0}
+          texts={{
+            bids: t('screens.liveAuction.bids'),
+            estimatedPrice: t('screens.liveAuction.estimatedPrice'),
+            liveNow: t('screens.liveAuction.liveNow'),
+            articles: t('screens.liveAuction.articles'),
+          }}
+          onClose={() => setShowInfoModal(false)}
+        />
+      </OverlaySheet>
 
-      <LiveCurrentArticleModal
-        currentArticleId={articleId}
-        texts={{
-          currentArticle: t('screens.liveAuction.currentArticle'),
-        }}
+      <OverlaySheet
         visible={showCurrentArticleModal}
         onClose={() => setShowCurrentArticleModal(false)}
-      />
+        bottomFreeAreaHeight={bidAreaHeight}
+      >
+        <LiveCurrentArticleContent
+          currentArticleId={articleId}
+          texts={{ currentArticle: t('screens.liveAuction.currentArticle') }}
+          onClose={() => setShowCurrentArticleModal(false)}
+        />
+      </OverlaySheet>
     </>
   );
 };
