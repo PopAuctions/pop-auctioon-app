@@ -39,6 +39,16 @@ export const useFetchMyOnlineStoreArticlesInfinite = () => {
         endpoint: `${SECURE_ENDPOINTS.MY_ONLINE_STORE.ARTICLES}?${params.toString()}`,
       });
 
+      if (res.error) {
+        return {
+          error: res.error ?? {
+            es: 'Error al obtener artículos',
+            en: 'Error fetching articles',
+          },
+          data: [],
+        };
+      }
+
       return res;
     },
     [secureGet]

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { FlatList, View } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
-import { CustomArticleSecondChance, Lang } from '@/types/types';
+import { CustomArticleSecondChance, Lang, LangMap } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -11,6 +11,7 @@ import { REQUEST_STATUS } from '@/constants';
 import { useFetchMyOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchMyOnlineStoreArticlesInfinite';
 import { Filters } from '@/app/(tabs)/my-online-store';
 import { MyOnlineStoreArticleItem } from './MyOnlineStoreArticleItem';
+import { CustomError } from '../ui/CustomError';
 
 const ITEMS_PER_PAGE = 4;
 const TEXTS = {
@@ -49,6 +50,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
     useFetchCommissions();
 
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
+  const [error, setError] = useState<LangMap | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
@@ -93,6 +95,13 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
         offset: 0,
         limit: ITEMS_PER_PAGE,
       });
+
+      if (response.error) {
+        setError(response.error);
+        setArticles([]);
+        syncHasMore(false);
+        return;
+      }
 
       const data = response?.data ?? [];
 
@@ -185,6 +194,15 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
 
     return null;
   }, [isLoading, hasMore, lang, locale, filtersActive, articles.length]);
+
+  if (error) {
+    return (
+      <CustomError
+        customMessage={error}
+        refreshRoute='/(tabs)/my-online-store'
+      />
+    );
+  }
 
   return (
     <FlatList

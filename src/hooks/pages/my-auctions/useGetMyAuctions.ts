@@ -27,10 +27,12 @@ export const useGetMyAuctions = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching auctions',
-        es: 'Error al obtener subastas',
-      });
+      setErrorMessage(
+        res?.error ?? {
+          en: 'Error fetching auctions',
+          es: 'Error al obtener subastas',
+        }
+      );
       return {
         message: {
           en: 'Error fetching auctions',
