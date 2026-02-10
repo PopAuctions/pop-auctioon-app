@@ -46,10 +46,18 @@ export default function PaymentScreen() {
 
   // Cargar artículos ganados (equivalente a getUserWonAuctionArticles en web)
   const {
-    data: articles,
+    data: articlesResponse,
     status: articlesStatus,
     errorMessage: articlesError,
   } = useGetWonArticles({ auctionId: auctionId || '' });
+  const articles = useMemo(
+    () => (articlesResponse ? articlesResponse.articlesWon : []),
+    [articlesResponse]
+  );
+  const auctionCountry = useMemo(
+    () => (articlesResponse ? articlesResponse.country : null),
+    [articlesResponse]
+  );
 
   // Cargar direcciones (equivalente a getUserAddresses en web)
   const {
@@ -124,7 +132,7 @@ export default function PaymentScreen() {
   // Calcular el breakdown completo de pago
   const paymentDetails = useMemo(() => {
     // Siempre mostrar el subtotal aunque no tengamos comisión
-    if (!isCommissionReady) {
+    if (!isCommissionReady || !paymentConfig.shippingTaxes) {
       return {
         subtotal,
         commission: 0,
@@ -137,14 +145,16 @@ export default function PaymentScreen() {
     const details = calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
+      auctionCountry: auctionCountry,
       commissionPercentage: paymentConfig.commission || 0,
-      shippingTaxes: paymentConfig.shippingTaxes || {},
+      shippingTaxes: paymentConfig.shippingTaxes,
       discount: appliedDiscount?.amount || 0,
     });
 
     return details;
   }, [
     subtotal,
+    auctionCountry,
     selectedAddress,
     appliedDiscount,
     isCommissionReady,

@@ -448,6 +448,7 @@
       "subtotal": "Subtotal",
       "shipping": "Envío",
       "discount": "Descuento",
+      "commissionDiscount": "Descuento comisión",
       "commission": "Comisión",
       "commission2": "(IVA incluido)",
       "taxes": "IVA (Sobre comisión)",
