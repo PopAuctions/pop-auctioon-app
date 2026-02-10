@@ -1,18 +1,19 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
   ActionResponse,
   LangMap,
   RequestStatus,
   CountryValue,
+  PaymentShippingTax,
 } from '@/types/types';
-import { useSecureApi } from '../api/useSecureApi';
-import { useCallback, useEffect, useState } from 'react';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
-import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 // Backend response format (diferentes nombres)
 interface BackendPaymentConfig {
   taxPercentageArticles: number;
-  taxForShipping: Record<string, number>;
+  taxForShipping: PaymentShippingTax;
   commissionsValue: {
     STANDARD: {
       PERCENTAGE: number;
@@ -27,7 +28,7 @@ interface BackendPaymentConfig {
 // Frontend format (nuestro hook retorna esto)
 interface PaymentConfigData {
   commission: number;
-  shippingTaxes: Record<string, number>;
+  shippingTaxes: PaymentShippingTax | null;
   taxPercentage: number;
   countries: Record<string, CountryValue[]>;
   countriesLabel: Record<string, Record<CountryValue, string>>;
@@ -36,7 +37,7 @@ interface PaymentConfigData {
 export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
   const [data, setData] = useState<PaymentConfigData>({
     commission: 0,
-    shippingTaxes: {},
+    shippingTaxes: null,
     taxPercentage: 0,
     countries: {},
     countriesLabel: {},

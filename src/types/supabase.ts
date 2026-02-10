@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export type Database = {
+export interface Database {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
@@ -692,6 +692,47 @@ export type Database = {
           },
         ];
       };
+      PushTokens: {
+        Row: {
+          created_at: string;
+          device_id: string | null;
+          enabled: boolean;
+          expo_push_token: string;
+          id: string;
+          last_seen_at: string;
+          platform: string;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          device_id?: string | null;
+          enabled?: boolean;
+          expo_push_token: string;
+          id?: string;
+          last_seen_at?: string;
+          platform: string;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          device_id?: string | null;
+          enabled?: boolean;
+          expo_push_token?: string;
+          id?: string;
+          last_seen_at?: string;
+          platform?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'pushtokens_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       User: {
         Row: {
           acceptedTerms: string;
@@ -702,6 +743,7 @@ export type Database = {
           email: string;
           emailVerified: string | null;
           id: string;
+          isDisabled: boolean;
           isHostAuctioneer: boolean;
           lastName: string;
           name: string;
@@ -726,6 +768,7 @@ export type Database = {
           email: string;
           emailVerified?: string | null;
           id: string;
+          isDisabled?: boolean;
           isHostAuctioneer?: boolean;
           lastName: string;
           name: string;
@@ -750,6 +793,7 @@ export type Database = {
           email?: string;
           emailVerified?: string | null;
           id?: string;
+          isDisabled?: boolean;
           isHostAuctioneer?: boolean;
           lastName?: string;
           name?: string;
@@ -1272,6 +1316,7 @@ export type Database = {
         Returns: Json;
       };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
+      delete_user_cleanup: { Args: { p_user_id: string }; Returns: Json };
       filter_auctions_for_calendar: {
         Args: {
           category_param?: Database['public']['Enums']['AuctionCategory'];
@@ -1333,7 +1378,7 @@ export type Database = {
       [_ in never]: never;
     };
   };
-};
+}
 
 type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 

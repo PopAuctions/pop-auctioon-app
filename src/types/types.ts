@@ -725,6 +725,8 @@ export interface Countries {
 export interface PaymentShippingTax {
   GENERAL: number;
   SPAIN: number;
+  DIFFERENT_COUNTRY: number;
+  SAME_COUNTRY: number;
 }
 
 export interface AppliedDiscountCode {
