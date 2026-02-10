@@ -26,7 +26,7 @@ interface ArticlesResponse {
 
 export const useGetWonArticles = ({
   auctionId,
-}: UseGetWonArticlesProps): ActionResponse<ArticlesResponse> & {
+}: UseGetWonArticlesProps): ActionResponse<ArticlesResponse | null> & {
   refetch: () => Promise<void>;
 } => {
   const [articles, setArticles] = useState<ArticlesResponse | null>(null);
@@ -59,13 +59,13 @@ export const useGetWonArticles = ({
       }
 
       if (response.data) {
+        setArticles(response.data);
+        setStatus(REQUEST_STATUS.success);
+      } else {
         setErrorMessage({
           es: 'Error al cargar artículos ganados',
           en: 'Error loading won articles',
         });
-        setArticles(response.data);
-        setStatus(REQUEST_STATUS.success);
-      } else {
         setArticles(null);
         setStatus(REQUEST_STATUS.error);
       }
@@ -84,7 +84,7 @@ export const useGetWonArticles = ({
   }, [fetchWonArticles]);
 
   return {
-    data: articles as ArticlesResponse,
+    data: articles,
     status,
     errorMessage,
     setErrorMessage,

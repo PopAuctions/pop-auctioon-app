@@ -77,12 +77,16 @@ export function calculatePaymentDetails(
   // commissionPercentage viene del hook useFetchCommissions (ej: 12.5 para 12.5%)
   const commission = Math.round(subtotal * (commissionPercentage / 100));
 
-  // Shipping calculation based on country from backend
-  // Default to GENERAL (29€) if no country selected or no shipping data
+  // Shipping calculation based on auction country from backend
+  // Default to DIFFERENT_COUNTRY (29€) if no country selected or no shipping data
   const defaultShipping = shippingTaxes.DIFFERENT_COUNTRY;
   let shipping = defaultShipping;
 
-  if (auctionCountry === selectedCountry) {
+  if (
+    auctionCountry !== null &&
+    selectedCountry !== null &&
+    auctionCountry === selectedCountry
+  ) {
     shipping = shippingTaxes.SAME_COUNTRY;
   }
 

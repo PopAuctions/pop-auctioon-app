@@ -104,7 +104,7 @@ export default function SinglePaymentScreen() {
 
   // Full payment breakdown
   const paymentDetails = useMemo(() => {
-    if (!isCommissionReady) {
+    if (!isCommissionReady || !paymentConfig.shippingTaxes) {
       return {
         subtotal,
         commission: 0,
@@ -118,7 +118,8 @@ export default function SinglePaymentScreen() {
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
       commissionPercentage: paymentConfig.commission || 0,
-      shippingTaxes: paymentConfig.shippingTaxes || {},
+      shippingTaxes: paymentConfig.shippingTaxes,
+      auctionCountry: 'SPAIN',
       discount: appliedDiscount?.amount || 0,
     });
   }, [
