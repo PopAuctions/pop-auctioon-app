@@ -7,6 +7,7 @@ export const LiveBackButton = ({
   controlsOpacity,
   insetsTop,
   UI,
+  Z,
 }: {
   onPress: () => void;
   controlsVisible: boolean;
@@ -17,6 +18,9 @@ export const LiveBackButton = ({
     BACK_TOP_GAP: number;
     BACK_SIZE: number;
   };
+  Z: {
+    BACK: number;
+  };
 }) => {
   return (
     <Animated.View
@@ -26,8 +30,8 @@ export const LiveBackButton = ({
         left: UI.SCREEN_PADDING,
         top: insetsTop + UI.BACK_TOP_GAP,
         opacity: controlsOpacity,
-        zIndex: 50,
-        elevation: 50,
+        zIndex: Z.BACK,
+        elevation: Z.BACK,
         transform: [
           {
             translateY: controlsOpacity.interpolate({

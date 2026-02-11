@@ -5,6 +5,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Animated,
+  StyleSheet,
 } from 'react-native';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
@@ -44,13 +46,24 @@ interface OverlayProps {
   refetch: (localValue: number) => void;
 }
 
+const Z = {
+  TAP_CATCHER: 0,
+  BID: 10,
+  CHAT: 15,
+  HUD: 30,
+  BACK: 35,
+  MODAL_ROOT: 100,
+  MODAL_BACKDROP: 110,
+  MODAL_CARD: 120,
+} as const;
+
 const UI = {
   SCREEN_PADDING: 8,
   HUD_BOTTOM_GAP: 20,
   ROW_GAP: 24,
 
-  BACK_TOP_GAP: 12,
-  BACK_SIZE: 40,
+  BACK_TOP_GAP: 0,
+  BACK_SIZE: 30,
 
   CHAT_WIDTH: 288,
   CHAT_HEIGHT: 180,
@@ -58,15 +71,15 @@ const UI = {
   ACTION_GAP: 8,
   ACTION_BTN_SIZE: 48,
 
-  ARTICLE_HUD_HEIGHT: 76,
+  ARTICLE_HUD_HEIGHT: 70,
 
   BID_HEIGHT: 36,
 
   KEYBOARD_OFFSET_IOS: 0,
-  CHAT_OFFSET: 10,
+  CHAT_OFFSET: 0,
 
   TOP_CONTROLS_HEIGHT: 56,
-  HUD_TOP_GAP: 12,
+  HUD_TOP_GAP: 0,
   CONTROLS_AUTOHIDE_MS: 2500,
   FADE_MS: 180,
   SLIDE_MS: 180,
@@ -113,14 +126,13 @@ export const LiveAuctionOverlay = ({
 
   // Bid row pinned
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
-  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT + 16;
+  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT;
 
-  // Article HUD sits above bid
-  const articleHudBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
+  // Article HUD pinned to top
+  const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
 
   // Chat sits above article HUD
-  const chatBottom =
-    articleHudBottom + UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+  const chatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
 
   const openInfo = () => {
     controls.hide();
@@ -140,7 +152,10 @@ export const LiveAuctionOverlay = ({
       >
         <Pressable
           onPress={controls.show}
-          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+          style={[
+            StyleSheet.absoluteFillObject,
+            { zIndex: Z.TAP_CATCHER, elevation: 0 },
+          ]}
         />
 
         {/* Back */}
@@ -150,6 +165,7 @@ export const LiveAuctionOverlay = ({
           controlsOpacity={controlsOpacity}
           insetsTop={insetsTop}
           UI={UI}
+          Z={Z}
         />
 
         {/* Chat + Actions (keyboard-aware) */}
@@ -164,6 +180,8 @@ export const LiveAuctionOverlay = ({
             left: UI.SCREEN_PADDING,
             right: UI.SCREEN_PADDING,
             bottom: chatBottom,
+            zIndex: Z.CHAT,
+            elevation: Z.CHAT,
           }}
         >
           <View
@@ -260,14 +278,18 @@ export const LiveAuctionOverlay = ({
 
         <HighestBidderProvider key={articleId}>
           {/* Article HUD */}
-          <View
+          <Animated.View
+            onTouchStart={openCurrentArticle}
             pointerEvents='auto'
             style={{
               position: 'absolute',
               left: UI.SCREEN_PADDING,
               right: UI.SCREEN_PADDING,
-              bottom: articleHudBottom,
+              top: articleHudTop,
               height: UI.ARTICLE_HUD_HEIGHT,
+              transform: [{ translateY: controls.hudOffsetY }],
+              zIndex: Z.HUD,
+              elevation: Z.HUD,
             }}
           >
             {currentArticle ? (
@@ -278,7 +300,7 @@ export const LiveAuctionOverlay = ({
             ) : (
               <LiveCurrentArticleCardSkeleton height={75} />
             )}
-          </View>
+          </Animated.View>
 
           <View
             pointerEvents='auto'
@@ -288,6 +310,8 @@ export const LiveAuctionOverlay = ({
               right: UI.SCREEN_PADDING,
               bottom: bidBottom,
               height: UI.BID_HEIGHT,
+              zIndex: Z.BID,
+              elevation: Z.BID,
             }}
           >
             {!isCommissionReady || !biddingAmounts || !articleServerState ? (
@@ -314,6 +338,7 @@ export const LiveAuctionOverlay = ({
         visible={showInfoModal}
         onClose={() => setShowInfoModal(false)}
         bottomFreeAreaHeight={bidAreaHeight}
+        Z={Z}
       >
         <LiveArticlesContent
           articles={orderedArticles}
@@ -334,6 +359,7 @@ export const LiveAuctionOverlay = ({
         visible={showCurrentArticleModal}
         onClose={() => setShowCurrentArticleModal(false)}
         bottomFreeAreaHeight={bidAreaHeight}
+        Z={Z}
       >
         <LiveCurrentArticleContent
           currentArticleId={articleId}
