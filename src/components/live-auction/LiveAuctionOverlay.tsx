@@ -4,29 +4,31 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
 import { LiveArticlesContent } from '@/components/live-auction/LiveArticlesContent';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useDeviceType } from '@/hooks/useDeviceType';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useAutoHideControls } from '@/hooks/components/useAutoHideControls';
 import { REQUEST_STATUS } from '@/constants';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
+import { ArticleCountdownUser } from './ArticleCountdownUser';
+import { BidSliderSkeleton } from './BidSliderSkeleton';
+import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
+import { LiveCurrentArticleContent } from './LiveCurrentArticleContent';
+import { OverlaySheet } from './OverlaySheet';
+import { LiveBackButton } from './LiveBackButton';
 import {
   BiddingAmounts,
   CustomArticleLiveAuto,
   HighestBidderState,
 } from '@/types/types';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
-import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
-import { ArticleCountdownUser } from './ArticleCountdownUser';
-import { BidSliderSkeleton } from './BidSliderSkeleton';
-import { HighestBidderProvider } from '@/context/highest-bidder-context';
-import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
-import { LiveCurrentArticleContent } from './LiveCurrentArticleContent';
-import { OverlaySheet } from './OverlaySheet';
 
 interface OverlayProps {
   insetsTop: number;
@@ -62,6 +64,12 @@ const UI = {
 
   KEYBOARD_OFFSET_IOS: 0,
   CHAT_OFFSET: 10,
+
+  TOP_CONTROLS_HEIGHT: 56,
+  HUD_TOP_GAP: 12,
+  CONTROLS_AUTOHIDE_MS: 2500,
+  FADE_MS: 180,
+  SLIDE_MS: 180,
 } as const;
 
 export const LiveAuctionOverlay = ({
@@ -85,6 +93,16 @@ export const LiveAuctionOverlay = ({
 
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
+  const paused = showInfoModal || showCurrentArticleModal;
+
+  const controls = useAutoHideControls({
+    fadeMs: UI.FADE_MS,
+    slideMs: UI.SLIDE_MS,
+    autoHideMs: UI.CONTROLS_AUTOHIDE_MS,
+    topControlsHeight: UI.TOP_CONTROLS_HEIGHT,
+    paused,
+  });
+  const controlsOpacity = controls.opacity;
 
   const currentArticle = useMemo(() => {
     return orderedArticles.find((a) => a.id === articleId) ?? null;
@@ -104,40 +122,35 @@ export const LiveAuctionOverlay = ({
   const chatBottom =
     articleHudBottom + UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
 
+  const openInfo = () => {
+    controls.hide();
+    setShowInfoModal(true);
+  };
+
+  const openCurrentArticle = () => {
+    controls.hide();
+    setShowCurrentArticleModal(true);
+  };
+
   return (
     <>
       <View
         pointerEvents='box-none'
         className='absolute inset-0'
       >
+        <Pressable
+          onPress={controls.show}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        />
+
         {/* Back */}
-        <View
-          pointerEvents='auto'
-          style={{
-            position: 'absolute',
-            left: UI.SCREEN_PADDING,
-            top: insetsTop + UI.BACK_TOP_GAP,
-          }}
-        >
-          <TouchableOpacity
-            onPress={onBack}
-            activeOpacity={0.7}
-            style={{
-              height: UI.BACK_SIZE,
-              width: UI.BACK_SIZE,
-              borderRadius: UI.BACK_SIZE / 2,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-            }}
-          >
-            <Ionicons
-              name='arrow-back'
-              size={24}
-              color='white'
-            />
-          </TouchableOpacity>
-        </View>
+        <LiveBackButton
+          onPress={onBack}
+          controlsVisible={controls.visible}
+          controlsOpacity={controlsOpacity}
+          insetsTop={insetsTop}
+          UI={UI}
+        />
 
         {/* Chat + Actions (keyboard-aware) */}
         <KeyboardAvoidingView
@@ -176,7 +189,7 @@ export const LiveAuctionOverlay = ({
               style={{ gap: UI.ACTION_GAP }}
             >
               <TouchableOpacity
-                onPress={() => setShowCurrentArticleModal(true)}
+                onPress={openCurrentArticle}
                 activeOpacity={0.7}
                 style={{
                   height: UI.ACTION_BTN_SIZE,
@@ -195,7 +208,7 @@ export const LiveAuctionOverlay = ({
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setShowInfoModal(true)}
+                onPress={openInfo}
                 activeOpacity={0.7}
                 style={{
                   height: UI.ACTION_BTN_SIZE,
