@@ -5,8 +5,8 @@ import {
   Text,
   Image,
   Pressable,
-  Platform,
   ImageSourcePropType,
+  StyleSheet,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lang } from '@/types/types';
@@ -138,13 +138,19 @@ export const CustomToast = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <Toast
-      config={toastConfig}
-      topOffset={(insets.top || 12) + (Platform.OS === 'android' ? 8 : 0)}
-      bottomOffset={insets.bottom || 12}
-      visibilityTime={3000}
-      autoHide={true}
-    />
+    <View
+      pointerEvents='box-none'
+      style={{
+        ...StyleSheet.absoluteFillObject,
+        zIndex: 9999,
+        elevation: 9999,
+      }}
+    >
+      <Toast
+        config={toastConfig}
+        bottomOffset={insets.bottom || 12}
+      />
+    </View>
   );
 };
 
