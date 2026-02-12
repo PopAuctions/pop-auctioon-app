@@ -148,11 +148,9 @@ export const HalfEllipseArticleWheel = ({
       },
       onPanResponderRelease: (_, g) => {
         const snapped = Math.round(g.dy / pixelsPerStep);
+        const next = clamp(viewIndex - snapped, 0, articles.length - 1);
 
-        const base = viewIndexRef.current;
-        const next = clamp(base + snapped, 0, articles.length - 1);
-
-        if (next !== base) {
+        if (next !== viewIndex) {
           setViewIndex(next);
           onViewIndexChange?.(next);
         }
