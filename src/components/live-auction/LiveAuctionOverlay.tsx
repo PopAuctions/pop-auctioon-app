@@ -184,7 +184,7 @@ export const LiveAuctionOverlay = ({
             itemSize={50}
             radiusX={50}
             radiusY={125}
-            onImagePress={openArticleModal}
+            onArticlePress={openArticleModal}
           />
         </View>
 
@@ -317,7 +317,10 @@ export const LiveAuctionOverlay = ({
 
       <OverlaySheet
         visible={showCurrentArticleModal}
-        onClose={() => setShowCurrentArticleModal(false)}
+        onClose={() => {
+          setShowCurrentArticleModal(false);
+          setModalArticleId(null);
+        }}
         bottomFreeAreaHeight={bidAreaHeight}
         Z={Z}
       >

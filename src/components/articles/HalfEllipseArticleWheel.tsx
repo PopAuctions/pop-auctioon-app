@@ -22,7 +22,7 @@ interface Props {
   visibleCount?: 3 | 5;
 
   onViewIndexChange?: (index: number) => void;
-  onImagePress?: (id: number) => void;
+  onArticlePress?: (id: number) => void;
   radiusX?: number;
   radiusY?: number;
   itemSize?: number;
@@ -101,7 +101,7 @@ export const HalfEllipseArticleWheel = ({
   currentArticleIndex,
   visibleCount = 5,
   onViewIndexChange,
-  onImagePress,
+  onArticlePress,
   radiusX = 90,
   radiusY = 140,
   itemSize = 56,
@@ -333,7 +333,8 @@ export const HalfEllipseArticleWheel = ({
                 showLiveBorder && styles.itemLive,
               ]}
               onPress={() => {
-                onImagePress?.(article.id);
+                if (isDraggingRef.current) return;
+                onArticlePress?.(itemIndex);
               }}
             >
               <Image
