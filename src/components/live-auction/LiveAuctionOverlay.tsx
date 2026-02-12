@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
   View,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -13,6 +12,7 @@ import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
 import { LiveArticlesContent } from '@/components/live-auction/LiveArticlesContent';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { HalfEllipseArticleWheel } from '@/components/articles/HalfEllipseArticleWheel';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useDeviceType } from '@/hooks/useDeviceType';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
@@ -168,6 +168,27 @@ export const LiveAuctionOverlay = ({
           Z={Z}
         />
 
+        <View
+          pointerEvents='box-none'
+          style={{
+            position: 'absolute',
+            right: UI.SCREEN_PADDING,
+            bottom: bidBottom + UI.BID_HEIGHT + 60,
+            zIndex: Z.HUD,
+            elevation: Z.HUD,
+            overflow: 'visible',
+          }}
+        >
+          <HalfEllipseArticleWheel
+            articles={orderedArticles}
+            initialIndex={orderedArticles.findIndex((a) => a.id === articleId)}
+            visibleCount={5}
+            itemSize={50}
+            radiusX={50}
+            radiusY={125}
+          />
+        </View>
+
         {/* Chat + Actions (keyboard-aware) */}
         <KeyboardAvoidingView
           pointerEvents='box-none'
@@ -204,47 +225,8 @@ export const LiveAuctionOverlay = ({
             {/* Actions */}
             <View
               pointerEvents='auto'
-              style={{ gap: UI.ACTION_GAP }}
+              style={{ gap: UI.ACTION_GAP, overflow: 'visible' }}
             >
-              <TouchableOpacity
-                onPress={openCurrentArticle}
-                activeOpacity={0.7}
-                style={{
-                  height: UI.ACTION_BTN_SIZE,
-                  width: UI.ACTION_BTN_SIZE,
-                  borderRadius: UI.ACTION_BTN_SIZE / 2,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                }}
-              >
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='shopping-bag'
-                  size={24}
-                  color='#FFFFFF'
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={openInfo}
-                activeOpacity={0.7}
-                style={{
-                  height: UI.ACTION_BTN_SIZE,
-                  width: UI.ACTION_BTN_SIZE,
-                  borderRadius: UI.ACTION_BTN_SIZE / 2,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                }}
-              >
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='list'
-                  size={24}
-                  color='#FFFFFF'
-                />
-              </TouchableOpacity>
-
               <ShareButton
                 mode='empty'
                 className='items-center justify-center'
