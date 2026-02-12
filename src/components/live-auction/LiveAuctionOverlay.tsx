@@ -10,7 +10,7 @@ import {
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
-import { LiveArticlesContent } from '@/components/live-auction/LiveArticlesContent';
+// import { LiveArticlesContent } from '@/components/live-auction/LiveArticlesContent';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { HalfEllipseArticleWheel } from '@/components/articles/HalfEllipseArticleWheel';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -104,9 +104,10 @@ export const LiveAuctionOverlay = ({
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
-  const [showInfoModal, setShowInfoModal] = useState(false);
+  // const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
-  const paused = showInfoModal || showCurrentArticleModal;
+  // const paused = showInfoModal || showCurrentArticleModal;
+  const paused = showCurrentArticleModal;
 
   const controls = useAutoHideControls({
     fadeMs: UI.FADE_MS,
@@ -117,9 +118,12 @@ export const LiveAuctionOverlay = ({
   });
   const controlsOpacity = controls.opacity;
 
-  const currentArticle = useMemo(() => {
-    return orderedArticles.find((a) => a.id === articleId) ?? null;
+  const currentArticleIndex = useMemo(() => {
+    return orderedArticles.findIndex((a) => a.id === articleId);
   }, [orderedArticles, articleId]);
+  const currentArticle = useMemo(() => {
+    return orderedArticles[currentArticleIndex];
+  }, [orderedArticles, currentArticleIndex]);
 
   // Altura del chat ajustada según el dispositivo
   const chatHeight = deviceType === 'tablet' ? 280 : UI.CHAT_HEIGHT;
@@ -176,7 +180,7 @@ export const LiveAuctionOverlay = ({
         >
           <HalfEllipseArticleWheel
             articles={orderedArticles}
-            initialIndex={orderedArticles.findIndex((a) => a.id === articleId)}
+            currentArticleIndex={currentArticleIndex}
             visibleCount={5}
             itemSize={50}
             radiusX={50}
@@ -311,7 +315,7 @@ export const LiveAuctionOverlay = ({
         </HighestBidderProvider>
       </View>
 
-      <OverlaySheet
+      {/* <OverlaySheet
         visible={showInfoModal}
         onClose={() => setShowInfoModal(false)}
         bottomFreeAreaHeight={bidAreaHeight}
@@ -330,7 +334,7 @@ export const LiveAuctionOverlay = ({
           }}
           onClose={() => setShowInfoModal(false)}
         />
-      </OverlaySheet>
+      </OverlaySheet> */}
 
       <OverlaySheet
         visible={showCurrentArticleModal}

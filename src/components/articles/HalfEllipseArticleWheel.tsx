@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Image,
@@ -11,9 +11,9 @@ import { CustomArticleLiveAuto } from '@/types/types';
 
 interface Props {
   articles: CustomArticleLiveAuto[];
-  initialIndex?: number;
+  currentArticleIndex: number;
   visibleCount?: 3 | 5;
-  onIndexChange?: (index: number) => void;
+  onViewIndexChange?: (index: number) => void;
   radiusX?: number;
   radiusY?: number;
   itemSize?: number;
@@ -97,9 +97,9 @@ const buildEqualArcAngles = (
 
 export const HalfEllipseArticleWheel = ({
   articles,
-  initialIndex = 0,
+  currentArticleIndex,
   visibleCount = 5,
-  onIndexChange,
+  onViewIndexChange,
   radiusX = 90,
   radiusY = 140,
   itemSize = 56,
@@ -109,11 +109,22 @@ export const HalfEllipseArticleWheel = ({
   const VISIBLE = visibleCount;
   const half = Math.floor(VISIBLE / 2);
 
-  const [index, setIndex] = useState(() =>
-    clamp(initialIndex, 0, Math.max(0, articles.length - 1))
+  const [viewIndex, setViewIndex] = useState(() =>
+    clamp(currentArticleIndex, 0, Math.max(0, articles.length - 1))
   );
 
-  // Drag amount (in "steps", where 1 step = move to next item)
+  const viewIndexRef = useRef(viewIndex);
+
+  useEffect(() => {
+    viewIndexRef.current = viewIndex;
+  }, [viewIndex]);
+
+  useEffect(() => {
+    setViewIndex(
+      clamp(currentArticleIndex, 0, Math.max(0, articles.length - 1))
+    );
+  }, [currentArticleIndex, articles.length]);
+
   const dragSteps = useRef(new Animated.Value(0)).current;
 
   const slotAngles = useMemo(() => {
@@ -126,36 +137,26 @@ export const HalfEllipseArticleWheel = ({
     );
   }, [arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY]);
 
-  // How much finger movement corresponds to 1 item step
   const pixelsPerStep = 80;
-
-  const setIndexSafe = (next: number) => {
-    const clamped = clamp(next, 0, Math.max(0, articles.length - 1));
-    setIndex(clamped);
-    onIndexChange?.(clamped);
-  };
 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, g) =>
         Math.abs(g.dy) > 6 && Math.abs(g.dy) > Math.abs(g.dx),
       onPanResponderMove: (_, g) => {
-        // dy down => positive steps (go forward), dy up => negative (go backward)
         dragSteps.setValue(g.dy / pixelsPerStep);
       },
       onPanResponderRelease: (_, g) => {
-        const raw = g.dy / pixelsPerStep;
-        // snap to nearest integer step
-        const snapped = Math.round(raw);
+        const snapped = Math.round(g.dy / pixelsPerStep);
 
-        // finite: clamp the move so we don't go past ends
-        const next = clamp(index + snapped, 0, articles.length - 1);
-        const applied = next - index;
+        const base = viewIndexRef.current;
+        const next = clamp(base + snapped, 0, articles.length - 1);
 
-        // update index
-        if (applied !== 0) setIndexSafe(next);
+        if (next !== base) {
+          setViewIndex(next);
+          onViewIndexChange?.(next);
+        }
 
-        // animate drag back to 0 (wheel recenters)
         Animated.spring(dragSteps, {
           toValue: 0,
           useNativeDriver: true,
@@ -173,20 +174,17 @@ export const HalfEllipseArticleWheel = ({
     })
   ).current;
 
-  // Render offsets around current index: [-2..2]
   const slots = useMemo(() => {
     const arr: number[] = [];
     for (let o = -half; o <= half; o++) arr.push(o);
     return arr;
   }, [half]);
 
-  // Container size: enough to show arc
-  // Container size
   const PAD = 24;
   const W = radiusX * 2 + itemSize + PAD;
   const H = radiusY * 2 + itemSize + PAD;
 
-  const cx = W - PAD; // circle center pushed to the right so arc stays near right edge
+  const cx = W - PAD;
   const cy = H / 2;
 
   return (
@@ -195,18 +193,19 @@ export const HalfEllipseArticleWheel = ({
       {...panResponder.panHandlers}
     >
       {slots.map((offset) => {
-        const itemIndex = index + offset;
+        const itemIndex = viewIndex + offset;
         const isOut = itemIndex < 0 || itemIndex >= articles.length;
         const article = !isOut ? articles[itemIndex] : null;
 
-        const slotIdx = offset + half; // 0..VISIBLE-1
-        const theta0 = slotAngles[slotIdx]; // radians
+        const isLive = itemIndex === currentArticleIndex;
+
+        const slotIdx = offset + half;
+        const theta0 = slotAngles[slotIdx];
 
         const x0 = cx - radiusX * Math.cos(theta0);
         const y0 = cy + radiusY * Math.sin(theta0);
 
-        // While dragging, shift them up/down a bit to feel like rotation
-        const dragY = Animated.multiply(dragSteps, 18); // tweak
+        const dragY = Animated.multiply(dragSteps, 18);
 
         const scale = dragSteps.interpolate({
           inputRange: [-1, 0, 1],
@@ -214,7 +213,7 @@ export const HalfEllipseArticleWheel = ({
           extrapolate: 'clamp',
         });
 
-        const opacity = isOut ? 0 : offset === 0 ? 1 : 0.75;
+        const opacity = isOut ? 0 : isLive ? 1 : 0.75;
 
         return (
           <Animated.View
@@ -226,17 +225,18 @@ export const HalfEllipseArticleWheel = ({
               transform: [{ translateY: dragY }, { scale }],
               opacity,
             }}
-            pointerEvents={offset === 0 ? 'auto' : 'none'}
+            pointerEvents={isOut ? 'none' : 'auto'}
           >
             {article ? (
               <Pressable
                 onPress={() => {
-                  // optional: tap center item
+                  // optional: maybe jump viewIndex to this itemIndex
+                  // setViewIndex(itemIndex);
                 }}
                 style={[
                   styles.item,
                   { width: itemSize, height: itemSize, borderRadius: 14 },
-                  offset === 0 && styles.itemActive,
+                  isLive && styles.itemLive,
                 ]}
               >
                 <Image
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.08)',
   },
-  itemActive: {
+  itemLive: {
     borderColor: 'rgba(215,86,57,0.9)',
     borderWidth: 2,
   },
