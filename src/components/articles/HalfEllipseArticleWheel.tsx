@@ -1,24 +1,27 @@
 import { CustomArticleLiveAuto } from '@/types/types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Animated,
-  Image,
-  PanResponder,
-  Pressable,
-  StyleSheet,
   View,
+  StyleSheet,
+  PanResponder,
+  Image,
+  Pressable,
+  Animated,
 } from 'react-native';
 
 interface Props {
   articles: CustomArticleLiveAuto[];
   currentArticleIndex: number;
   visibleCount?: 3 | 5;
+
   onViewIndexChange?: (index: number) => void;
   radiusX?: number;
   radiusY?: number;
   itemSize?: number;
   arcStartDeg?: number;
   arcEndDeg?: number;
+
+  pixelsPerStep?: number; // how much finger movement = 1 index
 }
 
 const clamp = (v: number, min: number, max: number) =>
@@ -26,21 +29,7 @@ const clamp = (v: number, min: number, max: number) =>
 
 const deg2rad = (deg: number) => (deg * Math.PI) / 180;
 
-const normalizeSteps = (raw: number) => {
-  let whole = Math.trunc(raw);
-  let frac = raw - whole; // (-1..1)
-
-  // If user crosses half a step, advance early
-  if (frac > 0.5) {
-    whole += 1;
-    frac -= 1;
-  } else if (frac < -0.5) {
-    whole -= 1;
-    frac += 1;
-  }
-
-  return { whole, frac }; // frac is now in [-0.5..0.5]
-};
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 const buildEqualArcAngles = (
   startDeg: number,
@@ -84,25 +73,19 @@ const buildEqualArcAngles = (
     let j = 0;
     while (j < lens.length && lens[j] < target) j++;
 
-    if (j === 0) {
-      out.push(ts[0]);
-      continue;
+    if (j === 0) out.push(ts[0]);
+    else if (j >= lens.length) out.push(ts[ts.length - 1]);
+    else {
+      const l0 = lens[j - 1];
+      const l1 = lens[j];
+      const t0 = ts[j - 1];
+      const t1 = ts[j];
+      const a = (target - l0) / (l1 - l0 || 1);
+      out.push(t0 + (t1 - t0) * a);
     }
-    if (j >= lens.length) {
-      out.push(ts[ts.length - 1]);
-      continue;
-    }
-
-    const l0 = lens[j - 1];
-    const l1 = lens[j];
-    const t0 = ts[j - 1];
-    const t1 = ts[j];
-    const a = (target - l0) / (l1 - l0 || 1);
-
-    out.push(t0 + (t1 - t0) * a);
   }
 
-  return out; // radians
+  return out;
 };
 
 export const HalfEllipseArticleWheel = ({
@@ -115,60 +98,29 @@ export const HalfEllipseArticleWheel = ({
   itemSize = 56,
   arcStartDeg = -80,
   arcEndDeg = 80,
+  pixelsPerStep = 180,
 }: Props) => {
+  const len = articles.length;
   const VISIBLE = visibleCount;
   const half = Math.floor(VISIBLE / 2);
-
-  const [viewIndex, setViewIndex] = useState(() =>
-    clamp(currentArticleIndex, 0, Math.max(0, articles.length - 1))
+  const [centerValue, setCenterValue] = useState(() =>
+    clamp(currentArticleIndex, 0, Math.max(0, len - 1))
   );
+  const center = useRef(
+    new Animated.Value(clamp(currentArticleIndex, 0, Math.max(0, len - 1)))
+  ).current;
+  const centerRef = useRef(centerValue);
+  const startCenterRef = useRef(0);
 
-  const viewIndexRef = useRef(viewIndex);
-  useEffect(() => {
-    viewIndexRef.current = viewIndex;
-  }, [viewIndex]);
-
-  // When auction changes article, recenter wheel on it.
-  useEffect(() => {
-    setViewIndex(
-      clamp(currentArticleIndex, 0, Math.max(0, articles.length - 1))
+  const slotAngles = useMemo(() => {
+    return buildEqualArcAngles(
+      arcStartDeg,
+      arcEndDeg,
+      VISIBLE,
+      radiusX,
+      radiusY
     );
-  }, [currentArticleIndex, articles.length]);
-
-  // Continuous progress in [-1..1] (always max one step)
-  const dragProgress = useRef(new Animated.Value(0)).current;
-
-  const pixelsPerStep = 110; // tune (bigger = needs more finger move)
-  const snapThreshold = 0.28; // tune (smaller = easier to switch)
-
-  const slotAngles = useMemo(
-    () =>
-      buildEqualArcAngles(arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY),
-    [arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY]
-  );
-
-  // Precompute ellipse positions for each visible slot
-  const PAD = 24;
-  const W = radiusX * 2 + itemSize + PAD;
-  const H = radiusY * 2 + itemSize + PAD;
-  const cx = W - PAD;
-  const cy = H / 2;
-
-  const slotPos = useMemo(() => {
-    return slotAngles.map((t) => {
-      const x = cx - radiusX * Math.cos(t);
-      const y = cy + radiusY * Math.sin(t);
-      return { x, y };
-    });
-  }, [slotAngles, cx, cy, radiusX, radiusY]);
-
-  const slots = useMemo(() => {
-    const arr: number[] = [];
-    for (let o = -half; o <= half; o++) arr.push(o);
-    return arr;
-  }, [half]);
-
-  const startIndexRef = useRef(0);
+  }, [arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -176,162 +128,151 @@ export const HalfEllipseArticleWheel = ({
         Math.abs(g.dy) > 6 && Math.abs(g.dy) > Math.abs(g.dx),
 
       onPanResponderGrant: () => {
-        // capture where the window starts for THIS gesture
-        startIndexRef.current = viewIndexRef.current;
-        dragProgress.setValue(0);
+        center.stopAnimation();
+        startCenterRef.current = centerRef.current;
       },
 
       onPanResponderMove: (_, g) => {
-        const raw = g.dy / pixelsPerStep;
-        const { whole, frac } = normalizeSteps(raw);
-
-        // dy+ (down) => viewIndex should move DOWN visually => decrease index (your chosen mapping)
-        const base = clamp(
-          startIndexRef.current - whole,
+        const next = clamp(
+          startCenterRef.current - g.dy / pixelsPerStep,
           0,
-          articles.length - 1
+          Math.max(0, len - 1)
         );
 
-        if (base !== viewIndexRef.current) {
-          viewIndexRef.current = base;
-          setViewIndex(base);
-          onViewIndexChange?.(base);
-        }
-
-        dragProgress.setValue(frac);
+        center.setValue(next);
       },
 
-      onPanResponderRelease: (_, g) => {
-        const raw = g.dy / pixelsPerStep;
-        const { whole, frac } = normalizeSteps(raw);
+      onPanResponderRelease: () => {
+        const raw = centerRef.current;
+        const snapped = clamp(Math.round(raw), 0, Math.max(0, len - 1));
 
-        const base = clamp(
-          startIndexRef.current - whole,
-          0,
-          articles.length - 1
-        );
-
-        // snap using remaining frac (now only -0.5..0.5)
-        const snapThreshold = 0.25; // tweak
-        let snap = 0;
-        if (frac > snapThreshold) snap = -1;
-        else if (frac < -snapThreshold) snap = 1;
-
-        const next = clamp(base + snap, 0, articles.length - 1);
-
-        viewIndexRef.current = next;
-        setViewIndex(next);
-        onViewIndexChange?.(next);
-
-        Animated.spring(dragProgress, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start();
+        Animated.spring(center, {
+          toValue: snapped,
+          useNativeDriver: false,
+          damping: 18,
+          stiffness: 180,
+          mass: 0.8,
+        }).start(() => {
+          onViewIndexChange?.(snapped);
+        });
       },
 
       onPanResponderTerminate: () => {
-        Animated.spring(dragProgress, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start();
+        const raw = centerRef.current;
+        const snapped = clamp(Math.round(raw), 0, Math.max(0, len - 1));
+        Animated.spring(center, {
+          toValue: snapped,
+          useNativeDriver: false,
+        }).start(() => {
+          onViewIndexChange?.(snapped);
+        });
       },
     })
   ).current;
 
-  useEffect(() => {
-    const from = Math.max(0, viewIndex - (half + 3));
-    const to = Math.min(articles.length - 1, viewIndex + (half + 3));
+  // Map a continuous slot position (0..VISIBLE-1) to an angle by interpolating `slotAngles`.
+  const thetaAt = (pos: number) => {
+    // allow a tiny extrapolation so ends feel smoother
+    const p = clamp(pos, -0.35, VISIBLE - 1 + 0.35);
+    const i0 = Math.floor(p);
+    const i1 = i0 + 1;
+    const t = p - i0;
 
-    for (let i = from; i <= to; i++) {
-      const uri = articles[i]?.images?.[0];
-      if (uri) Image.prefetch(uri);
-    }
-  }, [viewIndex, articles, half]);
+    const a0 = slotAngles[clamp(i0, 0, VISIBLE - 1)];
+    const a1 = slotAngles[clamp(i1, 0, VISIBLE - 1)];
+    return lerp(a0, a1, t);
+  };
+
+  const PAD = 24;
+  const W = radiusX * 2 + itemSize + PAD;
+  const H = radiusY * 2 + itemSize + PAD;
+  const cx = W - PAD;
+  const cy = H / 2;
+  const buffer = 2;
+  const centerFloor = Math.floor(centerValue);
+  const startIdx = clamp(centerFloor - half - buffer, 0, Math.max(0, len - 1));
+  const endIdx = clamp(centerFloor + half + buffer, 0, Math.max(0, len - 1));
+
+  const indicesToRender = useMemo(() => {
+    const arr: number[] = [];
+    for (let i = startIdx; i <= endIdx; i++) arr.push(i);
+    return arr;
+  }, [startIdx, endIdx]);
+
+  useEffect(() => {
+    const sub = center.addListener(({ value }) => {
+      centerRef.current = value;
+      setCenterValue(value);
+    });
+    return () => center.removeListener(sub);
+  }, [center]);
+
+  // When auction changes live article, we snap wheel center to it (no drag).
+  useEffect(() => {
+    const next = clamp(currentArticleIndex, 0, Math.max(0, len - 1));
+    center.stopAnimation();
+    center.setValue(next);
+    centerRef.current = next;
+    setCenterValue(next);
+  }, [currentArticleIndex, len, center]);
 
   return (
     <View
       style={[styles.root, { width: W, height: H }]}
       {...panResponder.panHandlers}
     >
-      {slots.map((offset) => {
-        const itemIndex = viewIndex + offset;
-        const isOut = itemIndex < 0 || itemIndex >= articles.length;
-        const article = !isOut ? articles[itemIndex] : null;
+      {indicesToRender.map((itemIndex) => {
+        const article = articles[itemIndex];
+        if (!article) return null;
 
         const isLive = itemIndex === currentArticleIndex;
 
-        const slotIdx = offset + half; // 0..VISIBLE-1
+        // Relative position of this item to the center (float).
+        // rel = 0 -> center, rel = -1 above, rel = +1 below
+        const rel = itemIndex - centerValue;
 
-        // Neighbors inside the VISIBLE slots (for interpolation)
-        const upIdx = clamp(slotIdx - 1, 0, VISIBLE - 1);
-        const downIdx = clamp(slotIdx + 1, 0, VISIBLE - 1);
+        // Convert rel to a continuous slot position
+        const slotPos = half + rel;
 
-        const up = slotPos[upIdx];
-        const cur = slotPos[slotIdx];
-        const down = slotPos[downIdx];
+        // Cull far-away items (keep a bit extra so fade looks clean)
+        if (slotPos < -1.2 || slotPos > VISIBLE + 0.2) return null;
 
-        // Interpolate position for continuous rotation:
-        // progress -1 => toward "up" neighbor
-        // progress  0 => current
-        // progress +1 => toward "down" neighbor
-        const tx = dragProgress.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [
-            up.x - itemSize / 2,
-            cur.x - itemSize / 2,
-            down.x - itemSize / 2,
-          ],
-          extrapolate: 'clamp',
-        });
+        const theta = thetaAt(slotPos);
 
-        const ty = dragProgress.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [
-            up.y - itemSize / 2,
-            cur.y - itemSize / 2,
-            down.y - itemSize / 2,
-          ],
-          extrapolate: 'clamp',
-        });
+        const x0 = cx - radiusX * Math.cos(theta);
+        const y0 = cy + radiusY * Math.sin(theta);
 
-        const scale = dragProgress.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [1, offset === 0 ? 1.05 : 1, 1],
-          extrapolate: 'clamp',
-        });
+        // Fade as it approaches ends
+        const dist = Math.abs(rel);
 
-        const opacity = isOut ? 0 : isLive ? 1 : 0.75;
+        // Optional subtle scale (live stays crisp)
+        const scale = isLive ? 1 : 1 - Math.min(0.08, dist * 0.03);
 
         return (
-          <Animated.View
-            key={itemIndex}
+          <View
+            key={`article-${article.id ?? itemIndex}`}
             style={{
               position: 'absolute',
-              left: 0,
-              top: 0,
-              opacity,
-              transform: [{ translateX: tx }, { translateY: ty }, { scale }],
+              left: x0 - itemSize / 2,
+              top: y0 - itemSize / 2,
+              opacity: 1,
+              transform: [{ scale }],
             }}
-            pointerEvents={isOut ? 'none' : 'auto'}
+            pointerEvents='auto'
           >
-            {article ? (
-              <Pressable
-                style={[
-                  styles.item,
-                  { width: itemSize, height: itemSize, borderRadius: 14 },
-                  isLive && styles.itemLive,
-                ]}
-              >
-                <Image
-                  source={{ uri: article?.images?.[0] ?? '' }}
-                  style={styles.image}
-                  fadeDuration={0} // Android: prevents the “flash”
-                />
-              </Pressable>
-            ) : (
-              <View style={{ width: itemSize, height: itemSize }} />
-            )}
-          </Animated.View>
+            <Pressable
+              style={[
+                styles.item,
+                { width: itemSize, height: itemSize, borderRadius: 14 },
+                isLive && styles.itemLive,
+              ]}
+            >
+              <Image
+                source={{ uri: article.images?.[0] ?? '' }}
+                style={styles.image}
+              />
+            </Pressable>
+          </View>
         );
       })}
     </View>
