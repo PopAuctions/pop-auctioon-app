@@ -106,6 +106,10 @@ export const HalfEllipseArticleWheel = ({
   const [centerValue, setCenterValue] = useState(() =>
     clamp(currentArticleIndex, 0, Math.max(0, len - 1))
   );
+  const [snappedCenter, setSnappedCenter] = useState(() =>
+    clamp(currentArticleIndex, 0, Math.max(0, len - 1))
+  );
+  const snappedCenterRef = useRef(snappedCenter);
   const center = useRef(
     new Animated.Value(clamp(currentArticleIndex, 0, Math.max(0, len - 1)))
   ).current;
@@ -153,6 +157,7 @@ export const HalfEllipseArticleWheel = ({
           stiffness: 180,
           mass: 0.8,
         }).start(() => {
+          setSnappedCenter(snapped);
           onViewIndexChange?.(snapped);
         });
       },
@@ -164,6 +169,7 @@ export const HalfEllipseArticleWheel = ({
           toValue: snapped,
           useNativeDriver: false,
         }).start(() => {
+          setSnappedCenter(snapped);
           onViewIndexChange?.(snapped);
         });
       },
@@ -189,9 +195,9 @@ export const HalfEllipseArticleWheel = ({
   const cx = W - PAD;
   const cy = H / 2;
   const buffer = 2;
-  const centerFloor = Math.floor(centerValue);
-  const startIdx = clamp(centerFloor - half - buffer, 0, Math.max(0, len - 1));
-  const endIdx = clamp(centerFloor + half + buffer, 0, Math.max(0, len - 1));
+  const centerInt = Math.round(centerValue);
+  const startIdx = clamp(centerInt - half - buffer, 0, Math.max(0, len - 1));
+  const endIdx = clamp(centerInt + half + buffer, 0, Math.max(0, len - 1));
 
   const indicesToRender = useMemo(() => {
     const arr: number[] = [];
@@ -207,6 +213,11 @@ export const HalfEllipseArticleWheel = ({
     return () => center.removeListener(sub);
   }, [center]);
 
+  useEffect(
+    () => void (snappedCenterRef.current = snappedCenter),
+    [snappedCenter]
+  );
+
   // When auction changes live article, we snap wheel center to it (no drag).
   useEffect(() => {
     const next = clamp(currentArticleIndex, 0, Math.max(0, len - 1));
@@ -214,6 +225,7 @@ export const HalfEllipseArticleWheel = ({
     center.setValue(next);
     centerRef.current = next;
     setCenterValue(next);
+    setSnappedCenter(next);
   }, [currentArticleIndex, len, center]);
 
   return (
@@ -225,8 +237,6 @@ export const HalfEllipseArticleWheel = ({
         const article = articles[itemIndex];
         if (!article) return null;
 
-        const isLive = itemIndex === currentArticleIndex;
-
         // Relative position of this item to the center (float).
         // rel = 0 -> center, rel = -1 above, rel = +1 below
         const rel = itemIndex - centerValue;
@@ -237,6 +247,13 @@ export const HalfEllipseArticleWheel = ({
         // Cull far-away items (keep a bit extra so fade looks clean)
         if (slotPos < -1.2 || slotPos > VISIBLE + 0.2) return null;
 
+        const isLive = itemIndex === currentArticleIndex;
+        const relToSnapped = itemIndex - snappedCenter;
+        const slotPosSnapped = half + relToSnapped;
+
+        const isInVisibleSlots =
+          slotPosSnapped >= 0 && slotPosSnapped <= VISIBLE - 1;
+        const showLiveBorder = isLive && isInVisibleSlots;
         const theta = thetaAt(slotPos);
 
         const x0 = cx - radiusX * Math.cos(theta);
@@ -244,9 +261,7 @@ export const HalfEllipseArticleWheel = ({
 
         // Fade as it approaches ends
         const dist = Math.abs(rel);
-
-        // Optional subtle scale (live stays crisp)
-        const scale = isLive ? 1 : 1 - Math.min(0.08, dist * 0.03);
+        const z = 1000 - Math.round(dist * 100) + Math.round(y0);
 
         return (
           <View
@@ -255,8 +270,8 @@ export const HalfEllipseArticleWheel = ({
               position: 'absolute',
               left: x0 - itemSize / 2,
               top: y0 - itemSize / 2,
-              opacity: 1,
-              transform: [{ scale }],
+              zIndex: z,
+              elevation: z,
             }}
             pointerEvents='auto'
           >
@@ -264,7 +279,7 @@ export const HalfEllipseArticleWheel = ({
               style={[
                 styles.item,
                 { width: itemSize, height: itemSize, borderRadius: 14 },
-                isLive && styles.itemLive,
+                showLiveBorder && styles.itemLive,
               ]}
             >
               <Image
@@ -293,7 +308,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.08)',
   },
   itemLive: {
-    borderColor: 'rgba(215,86,57,0.9)',
+    borderColor: '#d75639',
     borderWidth: 2,
   },
   image: {
