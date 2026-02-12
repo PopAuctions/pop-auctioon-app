@@ -1,13 +1,13 @@
+import { CustomArticleLiveAuto } from '@/types/types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  View,
-  Image,
-  StyleSheet,
   Animated,
+  Image,
   PanResponder,
   Pressable,
+  StyleSheet,
+  View,
 } from 'react-native';
-import { CustomArticleLiveAuto } from '@/types/types';
 
 interface Props {
   articles: CustomArticleLiveAuto[];
@@ -26,6 +26,22 @@ const clamp = (v: number, min: number, max: number) =>
 
 const deg2rad = (deg: number) => (deg * Math.PI) / 180;
 
+const normalizeSteps = (raw: number) => {
+  let whole = Math.trunc(raw);
+  let frac = raw - whole; // (-1..1)
+
+  // If user crosses half a step, advance early
+  if (frac > 0.5) {
+    whole += 1;
+    frac -= 1;
+  } else if (frac < -0.5) {
+    whole -= 1;
+    frac += 1;
+  }
+
+  return { whole, frac }; // frac is now in [-0.5..0.5]
+};
+
 const buildEqualArcAngles = (
   startDeg: number,
   endDeg: number,
@@ -37,7 +53,6 @@ const buildEqualArcAngles = (
   const start = deg2rad(startDeg);
   const end = deg2rad(endDeg);
 
-  // sample points along the ellipse arc
   const ts: number[] = [];
   const lens: number[] = [];
 
@@ -53,9 +68,7 @@ const buildEqualArcAngles = (
     const x = rx * Math.cos(t);
     const y = ry * Math.sin(t);
 
-    const dx = x - prevX;
-    const dy = y - prevY;
-    total += Math.hypot(dx, dy);
+    total += Math.hypot(x - prevX, y - prevY);
 
     ts.push(t);
     lens.push(total);
@@ -64,12 +77,10 @@ const buildEqualArcAngles = (
     prevY = y;
   }
 
-  // target lengths for each slot
   const out: number[] = [];
   for (let k = 0; k < count; k++) {
     const target = (total * k) / (count - 1);
 
-    // find where cumulative length crosses target
     let j = 0;
     while (j < lens.length && lens[j] < target) j++;
 
@@ -82,7 +93,6 @@ const buildEqualArcAngles = (
       continue;
     }
 
-    // linear interpolate between samples (good enough visually)
     const l0 = lens[j - 1];
     const l1 = lens[j];
     const t0 = ts[j - 1];
@@ -114,63 +124,43 @@ export const HalfEllipseArticleWheel = ({
   );
 
   const viewIndexRef = useRef(viewIndex);
-
   useEffect(() => {
     viewIndexRef.current = viewIndex;
   }, [viewIndex]);
 
+  // When auction changes article, recenter wheel on it.
   useEffect(() => {
     setViewIndex(
       clamp(currentArticleIndex, 0, Math.max(0, articles.length - 1))
     );
   }, [currentArticleIndex, articles.length]);
 
-  const dragSteps = useRef(new Animated.Value(0)).current;
+  // Continuous progress in [-1..1] (always max one step)
+  const dragProgress = useRef(new Animated.Value(0)).current;
 
-  const slotAngles = useMemo(() => {
-    return buildEqualArcAngles(
-      arcStartDeg,
-      arcEndDeg,
-      VISIBLE,
-      radiusX,
-      radiusY
-    );
-  }, [arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY]);
+  const pixelsPerStep = 110; // tune (bigger = needs more finger move)
+  const snapThreshold = 0.28; // tune (smaller = easier to switch)
 
-  const pixelsPerStep = 80;
+  const slotAngles = useMemo(
+    () =>
+      buildEqualArcAngles(arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY),
+    [arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY]
+  );
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, g) =>
-        Math.abs(g.dy) > 6 && Math.abs(g.dy) > Math.abs(g.dx),
-      onPanResponderMove: (_, g) => {
-        dragSteps.setValue(g.dy / pixelsPerStep);
-      },
-      onPanResponderRelease: (_, g) => {
-        const snapped = Math.round(g.dy / pixelsPerStep);
-        const next = clamp(viewIndex - snapped, 0, articles.length - 1);
+  // Precompute ellipse positions for each visible slot
+  const PAD = 24;
+  const W = radiusX * 2 + itemSize + PAD;
+  const H = radiusY * 2 + itemSize + PAD;
+  const cx = W - PAD;
+  const cy = H / 2;
 
-        if (next !== viewIndex) {
-          setViewIndex(next);
-          onViewIndexChange?.(next);
-        }
-
-        Animated.spring(dragSteps, {
-          toValue: 0,
-          useNativeDriver: true,
-          damping: 18,
-          stiffness: 180,
-          mass: 0.8,
-        }).start();
-      },
-      onPanResponderTerminate: () => {
-        Animated.spring(dragSteps, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start();
-      },
-    })
-  ).current;
+  const slotPos = useMemo(() => {
+    return slotAngles.map((t) => {
+      const x = cx - radiusX * Math.cos(t);
+      const y = cy + radiusY * Math.sin(t);
+      return { x, y };
+    });
+  }, [slotAngles, cx, cy, radiusX, radiusY]);
 
   const slots = useMemo(() => {
     const arr: number[] = [];
@@ -178,12 +168,85 @@ export const HalfEllipseArticleWheel = ({
     return arr;
   }, [half]);
 
-  const PAD = 24;
-  const W = radiusX * 2 + itemSize + PAD;
-  const H = radiusY * 2 + itemSize + PAD;
+  const startIndexRef = useRef(0);
 
-  const cx = W - PAD;
-  const cy = H / 2;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, g) =>
+        Math.abs(g.dy) > 6 && Math.abs(g.dy) > Math.abs(g.dx),
+
+      onPanResponderGrant: () => {
+        // capture where the window starts for THIS gesture
+        startIndexRef.current = viewIndexRef.current;
+        dragProgress.setValue(0);
+      },
+
+      onPanResponderMove: (_, g) => {
+        const raw = g.dy / pixelsPerStep;
+        const { whole, frac } = normalizeSteps(raw);
+
+        // dy+ (down) => viewIndex should move DOWN visually => decrease index (your chosen mapping)
+        const base = clamp(
+          startIndexRef.current - whole,
+          0,
+          articles.length - 1
+        );
+
+        if (base !== viewIndexRef.current) {
+          viewIndexRef.current = base;
+          setViewIndex(base);
+          onViewIndexChange?.(base);
+        }
+
+        dragProgress.setValue(frac);
+      },
+
+      onPanResponderRelease: (_, g) => {
+        const raw = g.dy / pixelsPerStep;
+        const { whole, frac } = normalizeSteps(raw);
+
+        const base = clamp(
+          startIndexRef.current - whole,
+          0,
+          articles.length - 1
+        );
+
+        // snap using remaining frac (now only -0.5..0.5)
+        const snapThreshold = 0.25; // tweak
+        let snap = 0;
+        if (frac > snapThreshold) snap = -1;
+        else if (frac < -snapThreshold) snap = 1;
+
+        const next = clamp(base + snap, 0, articles.length - 1);
+
+        viewIndexRef.current = next;
+        setViewIndex(next);
+        onViewIndexChange?.(next);
+
+        Animated.spring(dragProgress, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      },
+
+      onPanResponderTerminate: () => {
+        Animated.spring(dragProgress, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      },
+    })
+  ).current;
+
+  useEffect(() => {
+    const from = Math.max(0, viewIndex - (half + 3));
+    const to = Math.min(articles.length - 1, viewIndex + (half + 3));
+
+    for (let i = from; i <= to; i++) {
+      const uri = articles[i]?.images?.[0];
+      if (uri) Image.prefetch(uri);
+    }
+  }, [viewIndex, articles, half]);
 
   return (
     <View
@@ -197,15 +260,41 @@ export const HalfEllipseArticleWheel = ({
 
         const isLive = itemIndex === currentArticleIndex;
 
-        const slotIdx = offset + half;
-        const theta0 = slotAngles[slotIdx];
+        const slotIdx = offset + half; // 0..VISIBLE-1
 
-        const x0 = cx - radiusX * Math.cos(theta0);
-        const y0 = cy + radiusY * Math.sin(theta0);
+        // Neighbors inside the VISIBLE slots (for interpolation)
+        const upIdx = clamp(slotIdx - 1, 0, VISIBLE - 1);
+        const downIdx = clamp(slotIdx + 1, 0, VISIBLE - 1);
 
-        const dragY = Animated.multiply(dragSteps, 18);
+        const up = slotPos[upIdx];
+        const cur = slotPos[slotIdx];
+        const down = slotPos[downIdx];
 
-        const scale = dragSteps.interpolate({
+        // Interpolate position for continuous rotation:
+        // progress -1 => toward "up" neighbor
+        // progress  0 => current
+        // progress +1 => toward "down" neighbor
+        const tx = dragProgress.interpolate({
+          inputRange: [-1, 0, 1],
+          outputRange: [
+            up.x - itemSize / 2,
+            cur.x - itemSize / 2,
+            down.x - itemSize / 2,
+          ],
+          extrapolate: 'clamp',
+        });
+
+        const ty = dragProgress.interpolate({
+          inputRange: [-1, 0, 1],
+          outputRange: [
+            up.y - itemSize / 2,
+            cur.y - itemSize / 2,
+            down.y - itemSize / 2,
+          ],
+          extrapolate: 'clamp',
+        });
+
+        const scale = dragProgress.interpolate({
           inputRange: [-1, 0, 1],
           outputRange: [1, offset === 0 ? 1.05 : 1, 1],
           extrapolate: 'clamp',
@@ -215,22 +304,18 @@ export const HalfEllipseArticleWheel = ({
 
         return (
           <Animated.View
-            key={offset}
+            key={itemIndex}
             style={{
               position: 'absolute',
-              left: x0 - itemSize / 2,
-              top: y0 - itemSize / 2,
-              transform: [{ translateY: dragY }, { scale }],
+              left: 0,
+              top: 0,
               opacity,
+              transform: [{ translateX: tx }, { translateY: ty }, { scale }],
             }}
             pointerEvents={isOut ? 'none' : 'auto'}
           >
             {article ? (
               <Pressable
-                onPress={() => {
-                  // optional: maybe jump viewIndex to this itemIndex
-                  // setViewIndex(itemIndex);
-                }}
                 style={[
                   styles.item,
                   { width: itemSize, height: itemSize, borderRadius: 14 },
@@ -240,6 +325,7 @@ export const HalfEllipseArticleWheel = ({
                 <Image
                   source={{ uri: article?.images?.[0] ?? '' }}
                   style={styles.image}
+                  fadeDuration={0} // Android: prevents the “flash”
                 />
               </Pressable>
             ) : (
