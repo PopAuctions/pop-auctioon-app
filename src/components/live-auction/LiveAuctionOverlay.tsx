@@ -10,7 +10,6 @@ import {
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
-// import { LiveArticlesContent } from '@/components/live-auction/LiveArticlesContent';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { HalfEllipseArticleWheel } from '@/components/articles/HalfEllipseArticleWheel';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -19,7 +18,7 @@ import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { useAutoHideControls } from '@/hooks/components/useAutoHideControls';
 import { REQUEST_STATUS } from '@/constants';
-import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
+import { LiveArticleCard } from './LiveArticleCard';
 import { ArticleCountdownUser } from './ArticleCountdownUser';
 import { BidSliderSkeleton } from './BidSliderSkeleton';
 import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
@@ -104,9 +103,8 @@ export const LiveAuctionOverlay = ({
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
-  // const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
-  // const paused = showInfoModal || showCurrentArticleModal;
+  const [modalArticleId, setModalArticleId] = useState<number | null>(null);
   const paused = showCurrentArticleModal;
 
   const controls = useAutoHideControls({
@@ -138,8 +136,9 @@ export const LiveAuctionOverlay = ({
   // Chat sits above article HUD
   const chatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
 
-  const openCurrentArticle = () => {
+  const openArticleModal = (idToShow: number) => {
     controls.hide();
+    setModalArticleId(idToShow);
     setShowCurrentArticleModal(true);
   };
 
@@ -185,6 +184,7 @@ export const LiveAuctionOverlay = ({
             itemSize={50}
             radiusX={50}
             radiusY={125}
+            onImagePress={openArticleModal}
           />
         </View>
 
@@ -260,7 +260,7 @@ export const LiveAuctionOverlay = ({
         <HighestBidderProvider key={articleId}>
           {/* Article HUD */}
           <Animated.View
-            onTouchStart={openCurrentArticle}
+            onTouchStart={() => openArticleModal(articleId)}
             pointerEvents='auto'
             style={{
               position: 'absolute',
@@ -274,7 +274,7 @@ export const LiveAuctionOverlay = ({
             }}
           >
             {currentArticle ? (
-              <LiveCurrentArticleCard
+              <LiveArticleCard
                 article={currentArticle}
                 lang={locale}
               />
@@ -315,27 +315,6 @@ export const LiveAuctionOverlay = ({
         </HighestBidderProvider>
       </View>
 
-      {/* <OverlaySheet
-        visible={showInfoModal}
-        onClose={() => setShowInfoModal(false)}
-        bottomFreeAreaHeight={bidAreaHeight}
-        Z={Z}
-      >
-        <LiveArticlesContent
-          articles={orderedArticles}
-          currentArticleId={articleId}
-          locale={locale}
-          commissionValue={commissionData || 0}
-          texts={{
-            bids: t('screens.liveAuction.bids'),
-            estimatedPrice: t('screens.liveAuction.estimatedPrice'),
-            liveNow: t('screens.liveAuction.liveNow'),
-            articles: t('screens.liveAuction.articles'),
-          }}
-          onClose={() => setShowInfoModal(false)}
-        />
-      </OverlaySheet> */}
-
       <OverlaySheet
         visible={showCurrentArticleModal}
         onClose={() => setShowCurrentArticleModal(false)}
@@ -343,8 +322,8 @@ export const LiveAuctionOverlay = ({
         Z={Z}
       >
         <LiveCurrentArticleContent
-          currentArticleId={articleId}
-          texts={{ currentArticle: t('screens.liveAuction.currentArticle') }}
+          currentArticleId={modalArticleId!}
+          texts={{ currentArticle: t('screens.liveAuction.article') }}
           onClose={() => setShowCurrentArticleModal(false)}
         />
       </OverlaySheet>

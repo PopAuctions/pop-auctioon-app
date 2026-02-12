@@ -17,7 +17,7 @@ const UI = {
   IMAGE_RADIUS: 12,
 } as const;
 
-export const LiveCurrentArticleCard = ({
+export const LiveArticleCard = ({
   article,
   lang,
 }: LiveCurrentArticleCardProps) => {

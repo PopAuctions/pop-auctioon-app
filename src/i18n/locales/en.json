@@ -767,6 +767,7 @@
       "bids": "Bid",
       "estimatedPrice": "Estimated price",
       "close": "Close",
+      "article": "Article",
       "currentArticle": "Current article",
       "finished": "The auction has ended",
       "thanksForWatching": "Thanks for watching!",

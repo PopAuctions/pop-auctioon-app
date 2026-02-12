@@ -22,6 +22,7 @@ interface Props {
   visibleCount?: 3 | 5;
 
   onViewIndexChange?: (index: number) => void;
+  onImagePress?: (id: number) => void;
   radiusX?: number;
   radiusY?: number;
   itemSize?: number;
@@ -100,6 +101,7 @@ export const HalfEllipseArticleWheel = ({
   currentArticleIndex,
   visibleCount = 5,
   onViewIndexChange,
+  onImagePress,
   radiusX = 90,
   radiusY = 140,
   itemSize = 56,
@@ -330,6 +332,9 @@ export const HalfEllipseArticleWheel = ({
                 { width: itemSize, height: itemSize, borderRadius: 14 },
                 showLiveBorder && styles.itemLive,
               ]}
+              onPress={() => {
+                onImagePress?.(article.id);
+              }}
             >
               <Image
                 source={{ uri: article.images?.[0] ?? '' }}
