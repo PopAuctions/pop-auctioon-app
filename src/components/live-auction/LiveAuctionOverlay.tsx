@@ -134,11 +134,6 @@ export const LiveAuctionOverlay = ({
   // Chat sits above article HUD
   const chatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
 
-  const openInfo = () => {
-    controls.hide();
-    setShowInfoModal(true);
-  };
-
   const openCurrentArticle = () => {
     controls.hide();
     setShowCurrentArticleModal(true);
@@ -172,8 +167,8 @@ export const LiveAuctionOverlay = ({
           pointerEvents='box-none'
           style={{
             position: 'absolute',
-            right: UI.SCREEN_PADDING,
-            bottom: bidBottom + UI.BID_HEIGHT + 60,
+            right: UI.SCREEN_PADDING - 7,
+            bottom: bidBottom + UI.BID_HEIGHT + 70,
             zIndex: Z.HUD,
             elevation: Z.HUD,
             overflow: 'visible',

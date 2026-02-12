@@ -26,6 +26,75 @@ const clamp = (v: number, min: number, max: number) =>
 
 const deg2rad = (deg: number) => (deg * Math.PI) / 180;
 
+const buildEqualArcAngles = (
+  startDeg: number,
+  endDeg: number,
+  count: number,
+  rx: number,
+  ry: number,
+  samples = 400
+) => {
+  const start = deg2rad(startDeg);
+  const end = deg2rad(endDeg);
+
+  // sample points along the ellipse arc
+  const ts: number[] = [];
+  const lens: number[] = [];
+
+  let total = 0;
+  let prevX = rx * Math.cos(start);
+  let prevY = ry * Math.sin(start);
+
+  ts.push(start);
+  lens.push(0);
+
+  for (let i = 1; i <= samples; i++) {
+    const t = start + ((end - start) * i) / samples;
+    const x = rx * Math.cos(t);
+    const y = ry * Math.sin(t);
+
+    const dx = x - prevX;
+    const dy = y - prevY;
+    total += Math.hypot(dx, dy);
+
+    ts.push(t);
+    lens.push(total);
+
+    prevX = x;
+    prevY = y;
+  }
+
+  // target lengths for each slot
+  const out: number[] = [];
+  for (let k = 0; k < count; k++) {
+    const target = (total * k) / (count - 1);
+
+    // find where cumulative length crosses target
+    let j = 0;
+    while (j < lens.length && lens[j] < target) j++;
+
+    if (j === 0) {
+      out.push(ts[0]);
+      continue;
+    }
+    if (j >= lens.length) {
+      out.push(ts[ts.length - 1]);
+      continue;
+    }
+
+    // linear interpolate between samples (good enough visually)
+    const l0 = lens[j - 1];
+    const l1 = lens[j];
+    const t0 = ts[j - 1];
+    const t1 = ts[j];
+    const a = (target - l0) / (l1 - l0 || 1);
+
+    out.push(t0 + (t1 - t0) * a);
+  }
+
+  return out; // radians
+};
+
 export const HalfEllipseArticleWheel = ({
   articles,
   initialIndex = 0,
@@ -47,11 +116,15 @@ export const HalfEllipseArticleWheel = ({
   // Drag amount (in "steps", where 1 step = move to next item)
   const dragSteps = useRef(new Animated.Value(0)).current;
 
-  const stepAngle = useMemo(() => {
-    // spread VISIBLE slots across the arc (finite half-circle)
-    const totalDeg = arcEndDeg - arcStartDeg;
-    return totalDeg / (VISIBLE - 1);
-  }, [arcStartDeg, arcEndDeg, VISIBLE]);
+  const slotAngles = useMemo(() => {
+    return buildEqualArcAngles(
+      arcStartDeg,
+      arcEndDeg,
+      VISIBLE,
+      radiusX,
+      radiusY
+    );
+  }, [arcStartDeg, arcEndDeg, VISIBLE, radiusX, radiusY]);
 
   // How much finger movement corresponds to 1 item step
   const pixelsPerStep = 80;
@@ -126,25 +199,9 @@ export const HalfEllipseArticleWheel = ({
         const isOut = itemIndex < 0 || itemIndex >= articles.length;
         const article = !isOut ? articles[itemIndex] : null;
 
-        // θ for this slot, plus drag contribution.
-        // dragSteps affects θ continuously so it "rotates" while dragging.
-        const baseDeg = arcStartDeg + (offset + half) * stepAngle;
+        const slotIdx = offset + half; // 0..VISIBLE-1
+        const theta0 = slotAngles[slotIdx]; // radians
 
-        // Convert dragSteps to degrees: 1 step == stepAngle degrees
-        const theta = Animated.add(
-          new Animated.Value(deg2rad(baseDeg)),
-          Animated.multiply(dragSteps, deg2rad(stepAngle))
-        );
-
-        // x = cx + r*cos(θ), y = cy + r*sin(θ)
-        // Animated doesn't have cos/sin, so we approximate by mapping a small discrete set
-        // BUT for 5 items you can just precompute fixed positions and animate only "progress".
-        //
-        // To keep this sample simple and reliable, we do "discrete slots" + animated translateY
-        // and a small scale/opacity effect. The wheel illusion still works well.
-
-        // Position each slot at a fixed spot along the arc (precomputed with JS math)
-        const theta0 = deg2rad(baseDeg);
         const x0 = cx - radiusX * Math.cos(theta0);
         const y0 = cy + radiusY * Math.sin(theta0);
 
