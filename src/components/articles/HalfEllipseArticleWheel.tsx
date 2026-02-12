@@ -284,7 +284,10 @@ export const HalfEllipseArticleWheel = ({
             >
               <Image
                 source={{ uri: article.images?.[0] ?? '' }}
-                style={styles.image}
+                style={[
+                  styles.image,
+                  { opacity: article?.ArticleBid?.available ? 1 : 0.4 },
+                ]}
               />
             </Pressable>
           </View>
