@@ -1,5 +1,11 @@
 import { CustomArticleLiveAuto } from '@/types/types';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,6 +13,7 @@ import {
   Image,
   Pressable,
   Animated,
+  Easing,
 } from 'react-native';
 
 interface Props {
@@ -109,6 +116,8 @@ export const HalfEllipseArticleWheel = ({
   const [snappedCenter, setSnappedCenter] = useState(() =>
     clamp(currentArticleIndex, 0, Math.max(0, len - 1))
   );
+  const isDraggingRef = useRef(false);
+  const pendingLiveIndexRef = useRef<number | null>(null);
   const snappedCenterRef = useRef(snappedCenter);
   const center = useRef(
     new Animated.Value(clamp(currentArticleIndex, 0, Math.max(0, len - 1)))
@@ -132,6 +141,9 @@ export const HalfEllipseArticleWheel = ({
         Math.abs(g.dy) > 6 && Math.abs(g.dy) > Math.abs(g.dx),
 
       onPanResponderGrant: () => {
+        isDraggingRef.current = true;
+        pendingLiveIndexRef.current = null;
+
         center.stopAnimation();
         startCenterRef.current = centerRef.current;
       },
@@ -157,8 +169,15 @@ export const HalfEllipseArticleWheel = ({
           stiffness: 180,
           mass: 0.8,
         }).start(() => {
+          isDraggingRef.current = false;
           setSnappedCenter(snapped);
           onViewIndexChange?.(snapped);
+
+          if (pendingLiveIndexRef.current != null) {
+            const target = pendingLiveIndexRef.current;
+            pendingLiveIndexRef.current = null;
+            animateToLive(target);
+          }
         });
       },
 
@@ -169,12 +188,40 @@ export const HalfEllipseArticleWheel = ({
           toValue: snapped,
           useNativeDriver: false,
         }).start(() => {
+          isDraggingRef.current = false;
           setSnappedCenter(snapped);
           onViewIndexChange?.(snapped);
+
+          if (pendingLiveIndexRef.current != null) {
+            const target = pendingLiveIndexRef.current;
+            pendingLiveIndexRef.current = null;
+            animateToLive(target);
+          }
         });
       },
     })
   ).current;
+
+  const animateToLive = useCallback(
+    (targetIndex: number) => {
+      const target = clamp(targetIndex, 0, Math.max(0, len - 1));
+
+      setSnappedCenter(target);
+      snappedCenterRef.current = target;
+
+      center.stopAnimation();
+
+      Animated.timing(center, {
+        toValue: target,
+        duration: 650,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: false,
+      }).start(() => {
+        isDraggingRef.current = false;
+      });
+    },
+    [center, setSnappedCenter, snappedCenterRef, len]
+  );
 
   // Map a continuous slot position (0..VISIBLE-1) to an angle by interpolating `slotAngles`.
   const thetaAt = (pos: number) => {
@@ -221,12 +268,14 @@ export const HalfEllipseArticleWheel = ({
   // When auction changes live article, we snap wheel center to it (no drag).
   useEffect(() => {
     const next = clamp(currentArticleIndex, 0, Math.max(0, len - 1));
-    center.stopAnimation();
-    center.setValue(next);
-    centerRef.current = next;
-    setCenterValue(next);
-    setSnappedCenter(next);
-  }, [currentArticleIndex, len, center]);
+
+    if (isDraggingRef.current) {
+      pendingLiveIndexRef.current = next;
+      return;
+    }
+
+    animateToLive(next);
+  }, [currentArticleIndex, len, animateToLive]);
 
   return (
     <View
