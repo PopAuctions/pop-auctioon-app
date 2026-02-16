@@ -5,6 +5,7 @@ import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { useAuctionStartedModal } from '@/context/auction-started-context';
 import { useFetchNowNextAuction } from '@/hooks/components/useFetchNowNextAuction';
 import { AuctionStatus } from '@/constants/auctions';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 type Props = {
   /**
@@ -37,6 +38,7 @@ export const LiveSignal = ({
 }: Props) => {
   const { openAuctionStartedAlertModal } = useAuctionStartedModal();
   const { data, refetch } = useFetchNowNextAuction();
+  const { navigateWithAuth } = useAuthNavigation();
   const [visible, setVisible] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
   const opacity = useRef(new Animated.Value(1)).current;
@@ -54,6 +56,21 @@ export const LiveSignal = ({
     setVisible(true);
     openAuctionStartedAlertModal(auctionId ?? undefined);
   };
+
+  useEffect(() => {
+    if (auctionStatus === AuctionStatus.LIVE) {
+      if (!auctionId) {
+        navigateWithAuth('/(tabs)/auctions');
+        return;
+      }
+      navigateWithAuth(`/(tabs)/auctions/live/${auctionId}`);
+    }
+  }, [
+    auctionStatus,
+    navigateWithAuth,
+    auctionId,
+    openAuctionStartedAlertModal,
+  ]);
 
   useEffect(() => {
     if (!visible) return;
