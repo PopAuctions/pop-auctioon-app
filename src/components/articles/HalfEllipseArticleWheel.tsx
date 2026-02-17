@@ -287,6 +287,7 @@ export const HalfEllipseArticleWheel = ({
       {indicesToRender.map((itemIndex) => {
         const article = articles[itemIndex];
         if (!article) return null;
+        const articleId = article.id;
 
         // Relative position of this item to the center (float).
         // rel = 0 -> center, rel = -1 above, rel = +1 below
@@ -316,7 +317,7 @@ export const HalfEllipseArticleWheel = ({
 
         return (
           <View
-            key={`article-${article.id ?? itemIndex}`}
+            key={`article-${articleId ?? itemIndex}`}
             style={{
               position: 'absolute',
               left: x0 - itemSize / 2,
@@ -334,7 +335,7 @@ export const HalfEllipseArticleWheel = ({
               ]}
               onPress={() => {
                 if (isDraggingRef.current) return;
-                onArticlePress?.(itemIndex);
+                onArticlePress?.(articleId);
               }}
             >
               <Image
