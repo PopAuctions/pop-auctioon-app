@@ -19,7 +19,7 @@ export const useFetchNowNextAuction = (): Omit<
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
   const { protectedGet } = useSecureApi();
 
-  const fetchMyAvailableAuctions = useCallback(async () => {
+  const fetchNowNextAuction = useCallback(async () => {
     try {
       setStatus(REQUEST_STATUS.loading);
 
@@ -53,12 +53,12 @@ export const useFetchNowNextAuction = (): Omit<
   }, [protectedGet]);
 
   useEffect(() => {
-    fetchMyAvailableAuctions();
-  }, [fetchMyAvailableAuctions]);
+    fetchNowNextAuction();
+  }, [fetchNowNextAuction]);
 
   return {
     data,
     status,
-    refetch: fetchMyAvailableAuctions,
+    refetch: fetchNowNextAuction,
   };
 };
