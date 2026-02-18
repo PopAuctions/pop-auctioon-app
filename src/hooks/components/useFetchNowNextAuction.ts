@@ -40,11 +40,9 @@ export const useFetchNowNextAuction = ({
         setStatus(REQUEST_STATUS.error);
         return;
       }
-      setTimeout(() => {
-        if (firstFetchResponse.current) {
-          firstFetchResponse.current = false;
-        }
-      }, 0);
+      if (firstFetchResponse.current) {
+        firstFetchResponse.current = false;
+      }
 
       setData(response.data);
       setStatus(REQUEST_STATUS.success);
