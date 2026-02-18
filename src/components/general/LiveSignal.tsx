@@ -67,6 +67,7 @@ export const LiveSignal = ({
     navigateWithAuth,
     auctionId,
     openAuctionStartedAlertModal,
+    firstFetchResponse,
   ]);
 
   useEffect(() => {

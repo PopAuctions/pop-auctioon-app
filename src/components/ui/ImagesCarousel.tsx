@@ -22,7 +22,7 @@ export function ImagesCarousel({ images }: { images: string[] }) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
 
-  const scrollRef = useRef<any>(null);
+  const scrollRef = useRef<FlatList<string>>(null);
   const viewerListRef = useRef<FlatList<string>>(null);
 
   const { width: winW, height: winH } = useWindowDimensions();

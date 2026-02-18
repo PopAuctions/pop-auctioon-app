@@ -324,11 +324,16 @@ export const LiveAuctionOverlay = ({
         bottomFreeAreaHeight={bidAreaHeight}
         Z={Z}
       >
-        <LiveCurrentArticleContent
-          currentArticleId={modalArticleId!}
-          texts={{ currentArticle: t('screens.liveAuction.article') }}
-          onClose={() => setShowCurrentArticleModal(false)}
-        />
+        {modalArticleId !== null && (
+          <LiveCurrentArticleContent
+            currentArticleId={modalArticleId}
+            texts={{ currentArticle: t('screens.liveAuction.article') }}
+            onClose={() => {
+              setShowCurrentArticleModal(false);
+              setModalArticleId(null);
+            }}
+          />
+        )}
       </OverlaySheet>
     </>
   );
