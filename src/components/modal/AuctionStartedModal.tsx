@@ -8,7 +8,7 @@ import { useAuctionStartedModal } from '@/context/auction-started-context';
 
 const TEXTS = {
   es: {
-    title: 'Una subasta acaba de comenzar!',
+    title: '¡Una subasta acaba de comenzar!',
     goToAuction: 'Ir a la subasta en vivo',
     close: 'Cerrar',
   },
