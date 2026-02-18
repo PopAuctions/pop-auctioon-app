@@ -150,6 +150,7 @@ export const SECURE_ENDPOINTS = {
   // Subastas
   AUCTIONS: {
     LIST: '/auctions',
+    NOW_NEXT: '/auctions/now-and-next',
     CREATE: '/auctions/create',
     UPDATE: '/auctions/update',
     DELETE: '/auctions/delete',

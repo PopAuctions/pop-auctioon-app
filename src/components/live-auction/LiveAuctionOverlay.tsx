@@ -1,33 +1,37 @@
 import React, { useMemo, useState } from 'react';
 import {
   View,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  Animated,
+  StyleSheet,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
-import { LiveArticlesModal } from '@/components/live-auction/LiveArticlesModal';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { HalfEllipseArticleWheel } from '@/components/articles/HalfEllipseArticleWheel';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useDeviceType } from '@/hooks/useDeviceType';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useAutoHideControls } from '@/hooks/components/useAutoHideControls';
 import { REQUEST_STATUS } from '@/constants';
-import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { LiveArticleCard } from './LiveArticleCard';
+import { ArticleCountdownUser } from './ArticleCountdownUser';
+import { BidSliderSkeleton } from './BidSliderSkeleton';
+import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
+import { LiveCurrentArticleContent } from './LiveCurrentArticleContent';
+import { OverlaySheet } from './OverlaySheet';
+import { LiveBackButton } from './LiveBackButton';
 import {
   BiddingAmounts,
   CustomArticleLiveAuto,
   HighestBidderState,
 } from '@/types/types';
-import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
-import { LiveCurrentArticleCard } from './LiveCurrentArticleCard';
-import { ArticleCountdownUser } from './ArticleCountdownUser';
-import { BidSliderSkeleton } from './BidSliderSkeleton';
-import { HighestBidderProvider } from '@/context/highest-bidder-context';
-import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
-import { LiveCurrentArticleModal } from './LiveCurrentArticleModal';
 
-type OverlayProps = {
+interface OverlayProps {
   insetsTop: number;
   insetsBottom: number;
   auctionId: string;
@@ -39,15 +43,26 @@ type OverlayProps = {
   articleId: number;
   onBack: () => void;
   refetch: (localValue: number) => void;
-};
+}
+
+const Z = {
+  TAP_CATCHER: 0,
+  BID: 10,
+  CHAT: 15,
+  HUD: 30,
+  BACK: 35,
+  MODAL_ROOT: 100,
+  MODAL_BACKDROP: 110,
+  MODAL_CARD: 120,
+} as const;
 
 const UI = {
   SCREEN_PADDING: 8,
   HUD_BOTTOM_GAP: 20,
   ROW_GAP: 24,
 
-  BACK_TOP_GAP: 12,
-  BACK_SIZE: 40,
+  BACK_TOP_GAP: 0,
+  BACK_SIZE: 30,
 
   CHAT_WIDTH: 288,
   CHAT_HEIGHT: 180,
@@ -55,12 +70,18 @@ const UI = {
   ACTION_GAP: 8,
   ACTION_BTN_SIZE: 48,
 
-  ARTICLE_HUD_HEIGHT: 76,
+  ARTICLE_HUD_HEIGHT: 70,
 
   BID_HEIGHT: 36,
 
   KEYBOARD_OFFSET_IOS: 0,
-  CHAT_OFFSET: 10,
+  CHAT_OFFSET: 0,
+
+  TOP_CONTROLS_HEIGHT: 56,
+  HUD_TOP_GAP: 0,
+  CONTROLS_AUTOHIDE_MS: 2500,
+  FADE_MS: 180,
+  SLIDE_MS: 180,
 } as const;
 
 export const LiveAuctionOverlay = ({
@@ -82,25 +103,44 @@ export const LiveAuctionOverlay = ({
     useFetchCommissions();
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
-  const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
+  const [modalArticleId, setModalArticleId] = useState<number | null>(null);
+  const paused = showCurrentArticleModal;
 
-  const currentArticle = useMemo(() => {
-    return orderedArticles.find((a) => a.id === articleId) ?? null;
+  const controls = useAutoHideControls({
+    fadeMs: UI.FADE_MS,
+    slideMs: UI.SLIDE_MS,
+    autoHideMs: UI.CONTROLS_AUTOHIDE_MS,
+    topControlsHeight: UI.TOP_CONTROLS_HEIGHT,
+    paused,
+  });
+  const controlsOpacity = controls.opacity;
+
+  const currentArticleIndex = useMemo(() => {
+    return orderedArticles.findIndex((a) => a.id === articleId);
   }, [orderedArticles, articleId]);
+  const currentArticle = useMemo(() => {
+    return orderedArticles[currentArticleIndex];
+  }, [orderedArticles, currentArticleIndex]);
 
   // Altura del chat ajustada según el dispositivo
   const chatHeight = deviceType === 'tablet' ? 280 : UI.CHAT_HEIGHT;
 
   // Bid row pinned
   const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
+  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT;
 
-  // Article HUD sits above bid
-  const articleHudBottom = bidBottom + UI.BID_HEIGHT + UI.ROW_GAP;
+  // Article HUD pinned to top
+  const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
 
   // Chat sits above article HUD
-  const chatBottom =
-    articleHudBottom + UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+  const chatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+
+  const openArticleModal = (idToShow: number) => {
+    controls.hide();
+    setModalArticleId(idToShow);
+    setShowCurrentArticleModal(true);
+  };
 
   return (
     <>
@@ -108,33 +148,44 @@ export const LiveAuctionOverlay = ({
         pointerEvents='box-none'
         className='absolute inset-0'
       >
+        <Pressable
+          onPress={controls.show}
+          style={[
+            StyleSheet.absoluteFillObject,
+            { zIndex: Z.TAP_CATCHER, elevation: 0 },
+          ]}
+        />
+
         {/* Back */}
+        <LiveBackButton
+          onPress={onBack}
+          controlsVisible={controls.visible}
+          controlsOpacity={controlsOpacity}
+          insetsTop={insetsTop}
+          UI={UI}
+          Z={Z}
+        />
+
         <View
-          pointerEvents='auto'
+          pointerEvents='box-none'
           style={{
             position: 'absolute',
-            left: UI.SCREEN_PADDING,
-            top: insetsTop + UI.BACK_TOP_GAP,
+            right: UI.SCREEN_PADDING - 7,
+            bottom: bidBottom + UI.BID_HEIGHT + 70,
+            zIndex: Z.HUD,
+            elevation: Z.HUD,
+            overflow: 'visible',
           }}
         >
-          <TouchableOpacity
-            onPress={onBack}
-            activeOpacity={0.7}
-            style={{
-              height: UI.BACK_SIZE,
-              width: UI.BACK_SIZE,
-              borderRadius: UI.BACK_SIZE / 2,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-            }}
-          >
-            <Ionicons
-              name='arrow-back'
-              size={24}
-              color='white'
-            />
-          </TouchableOpacity>
+          <HalfEllipseArticleWheel
+            articles={orderedArticles}
+            currentArticleIndex={currentArticleIndex}
+            visibleCount={5}
+            itemSize={50}
+            radiusX={50}
+            radiusY={125}
+            onArticlePress={openArticleModal}
+          />
         </View>
 
         {/* Chat + Actions (keyboard-aware) */}
@@ -149,6 +200,8 @@ export const LiveAuctionOverlay = ({
             left: UI.SCREEN_PADDING,
             right: UI.SCREEN_PADDING,
             bottom: chatBottom,
+            zIndex: Z.CHAT,
+            elevation: Z.CHAT,
           }}
         >
           <View
@@ -171,47 +224,8 @@ export const LiveAuctionOverlay = ({
             {/* Actions */}
             <View
               pointerEvents='auto'
-              style={{ gap: UI.ACTION_GAP }}
+              style={{ gap: UI.ACTION_GAP, overflow: 'visible' }}
             >
-              <TouchableOpacity
-                onPress={() => setShowCurrentArticleModal(true)}
-                activeOpacity={0.7}
-                style={{
-                  height: UI.ACTION_BTN_SIZE,
-                  width: UI.ACTION_BTN_SIZE,
-                  borderRadius: UI.ACTION_BTN_SIZE / 2,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                }}
-              >
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='shopping-bag'
-                  size={24}
-                  color='#FFFFFF'
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setShowInfoModal(true)}
-                activeOpacity={0.7}
-                style={{
-                  height: UI.ACTION_BTN_SIZE,
-                  width: UI.ACTION_BTN_SIZE,
-                  borderRadius: UI.ACTION_BTN_SIZE / 2,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                }}
-              >
-                <FontAwesomeIcon
-                  variant='bold'
-                  name='list'
-                  size={24}
-                  color='#FFFFFF'
-                />
-              </TouchableOpacity>
-
               <ShareButton
                 mode='empty'
                 className='items-center justify-center'
@@ -245,25 +259,29 @@ export const LiveAuctionOverlay = ({
 
         <HighestBidderProvider key={articleId}>
           {/* Article HUD */}
-          <View
+          <Animated.View
+            onTouchStart={() => openArticleModal(articleId)}
             pointerEvents='auto'
             style={{
               position: 'absolute',
               left: UI.SCREEN_PADDING,
               right: UI.SCREEN_PADDING,
-              bottom: articleHudBottom,
+              top: articleHudTop,
               height: UI.ARTICLE_HUD_HEIGHT,
+              transform: [{ translateY: controls.hudOffsetY }],
+              zIndex: Z.HUD,
+              elevation: Z.HUD,
             }}
           >
             {currentArticle ? (
-              <LiveCurrentArticleCard
+              <LiveArticleCard
                 article={currentArticle}
                 lang={locale}
               />
             ) : (
               <LiveCurrentArticleCardSkeleton height={75} />
             )}
-          </View>
+          </Animated.View>
 
           <View
             pointerEvents='auto'
@@ -273,6 +291,8 @@ export const LiveAuctionOverlay = ({
               right: UI.SCREEN_PADDING,
               bottom: bidBottom,
               height: UI.BID_HEIGHT,
+              zIndex: Z.BID,
+              elevation: Z.BID,
             }}
           >
             {!isCommissionReady || !biddingAmounts || !articleServerState ? (
@@ -295,29 +315,26 @@ export const LiveAuctionOverlay = ({
         </HighestBidderProvider>
       </View>
 
-      <LiveArticlesModal
-        articles={orderedArticles}
-        currentArticleId={articleId}
-        locale={locale}
-        commissionValue={commissionData || 0}
-        texts={{
-          bids: t('screens.liveAuction.bids'),
-          estimatedPrice: t('screens.liveAuction.estimatedPrice'),
-          liveNow: t('screens.liveAuction.liveNow'),
-          articles: t('screens.liveAuction.articles'),
-        }}
-        visible={showInfoModal}
-        onClose={() => setShowInfoModal(false)}
-      />
-
-      <LiveCurrentArticleModal
-        currentArticleId={articleId}
-        texts={{
-          currentArticle: t('screens.liveAuction.currentArticle'),
-        }}
+      <OverlaySheet
         visible={showCurrentArticleModal}
-        onClose={() => setShowCurrentArticleModal(false)}
-      />
+        onClose={() => {
+          setShowCurrentArticleModal(false);
+          setModalArticleId(null);
+        }}
+        bottomFreeAreaHeight={bidAreaHeight}
+        Z={Z}
+      >
+        {modalArticleId !== null && (
+          <LiveCurrentArticleContent
+            currentArticleId={modalArticleId}
+            texts={{ currentArticle: t('screens.liveAuction.article') }}
+            onClose={() => {
+              setShowCurrentArticleModal(false);
+              setModalArticleId(null);
+            }}
+          />
+        )}
+      </OverlaySheet>
     </>
   );
 };

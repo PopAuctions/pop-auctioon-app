@@ -1,11 +1,11 @@
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 import type { Auction, Lang } from '@/types/types';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { SimpleCountdown } from '../ui/SimpleCountdown';
-import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export const AuctionsSliderItem = ({
   lang,
@@ -16,14 +16,10 @@ export const AuctionsSliderItem = ({
   auction: Auction;
   cardWidth: number;
 }) => {
-  const { navigateWithAuth } = useAuthNavigation();
   const imageHeight = Math.round(cardWidth * 1.05);
 
   return (
-    <Pressable
-      onPress={() => navigateWithAuth(`/(tabs)/auctions/${auction.id}`)}
-      style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
-    >
+    <CustomLink href={`/(tabs)/auctions/${auction.id}`}>
       <View style={{ gap: 10 }}>
         {/* Image */}
         <View className='w-full overflow-hidden rounded-lg'>
@@ -64,6 +60,6 @@ export const AuctionsSliderItem = ({
           </CustomText>
         </View>
       </View>
-    </Pressable>
+    </CustomLink>
   );
 };

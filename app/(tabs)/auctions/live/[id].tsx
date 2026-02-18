@@ -18,7 +18,6 @@ import { useFetchArticlesOrder } from '@/hooks/pages/live/useFetchArticlesOrder'
 import { useFetchCurrentArticle } from '@/hooks/pages/live/useFetchCurrentArticle';
 import { CustomArticleLiveAuto } from '@/types/types';
 import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmounts';
-import { CustomToast } from '@/providers/ToastProvider';
 import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { LiveAuctionSubscriber } from '@/components/subscribers/LiveAuctionSubscribe';
 import { AuctionStatus } from '@/constants/auctions';
@@ -384,7 +383,6 @@ export default function LiveAuctionScreen() {
         refetch={refetchLiveAuction}
         compareTo={AuctionStatus.FINISHED}
       />
-      <CustomToast />
     </>
   );
 }

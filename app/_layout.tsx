@@ -34,6 +34,9 @@ import { disableFontScaling } from '@/utils/disableFontScaling';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { SignInAlertModalProvider } from '@/context/sign-in-modal-context';
 import { SignInAlertModal } from '@/components/modal/SignInAlertModal';
+import { LiveSignal } from '@/components/general/LiveSignal';
+import { AuctionStartedModalProvider } from '@/context/auction-started-context';
+import { AuctionStartedModal } from '@/components/modal/AuctionStartedModal';
 
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
@@ -162,10 +165,12 @@ export default Sentry.wrap(function RootLayout() {
       <AuthProvider>
         <NotificationProvider>
           <SignInAlertModalProvider>
-            <DeepLinkListener />
-            <ProtectedRoute>
-              <RootLayoutNav />
-            </ProtectedRoute>
+            <AuctionStartedModalProvider>
+              <DeepLinkListener />
+              <ProtectedRoute>
+                <RootLayoutNav />
+              </ProtectedRoute>
+            </AuctionStartedModalProvider>
           </SignInAlertModalProvider>
         </NotificationProvider>
       </AuthProvider>
@@ -189,6 +194,12 @@ function RootLayoutNav() {
                 options={{ presentation: 'modal' }}
               />
             </Stack>
+            <LiveSignal
+              size={20}
+              top={50}
+            />
+
+            <AuctionStartedModal />
             <SignInAlertModal />
             <ToastProvider />
           </GestureHandlerRootView>
