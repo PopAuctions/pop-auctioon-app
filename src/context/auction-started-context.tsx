@@ -37,6 +37,7 @@ export const AuctionStartedModalProvider: FC<{ children?: ReactNode }> = ({
   );
 
   const closeAuctionStartedAlertModal = useCallback(() => {
+    setAuctionId(null);
     setIsAuctionStartedModalOpen(false);
   }, []);
 

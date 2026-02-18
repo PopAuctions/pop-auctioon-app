@@ -30,13 +30,17 @@ export function AuctionStartedModal() {
   const texts = TEXTS[locale];
 
   const handleGoToAuction = () => {
+    const target = auctionId;
+
     closeAuctionStartedAlertModal();
 
-    if (!auctionId) {
-      navigateWithAuth('/(tabs)/auctions');
-      return;
-    }
-    navigateWithAuth(`/(tabs)/auctions/live/${auctionId}`);
+    requestAnimationFrame(() => {
+      if (!target) {
+        navigateWithAuth('/(tabs)/auctions');
+        return;
+      }
+      navigateWithAuth(`/(tabs)/auctions/live/${target}`);
+    });
   };
 
   return (

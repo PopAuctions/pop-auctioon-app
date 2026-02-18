@@ -21,10 +21,6 @@ type Props = {
    */
   right?: number;
   /**
-   * If you want to hide it without unmounting
-   */
-  visible?: boolean;
-  /**
    * Optional extra styles (positioning, etc.)
    */
   style?: ViewStyle;
@@ -36,8 +32,9 @@ export const LiveSignal = ({
   right = 12,
   style,
 }: Props) => {
+  const firstFetchResponse = useRef(true);
   const { openAuctionStartedAlertModal } = useAuctionStartedModal();
-  const { data, refetch } = useFetchNowNextAuction();
+  const { data, refetch } = useFetchNowNextAuction({ firstFetchResponse });
   const { navigateWithAuth } = useAuthNavigation();
   const [visible, setVisible] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
@@ -58,7 +55,7 @@ export const LiveSignal = ({
   };
 
   useEffect(() => {
-    if (auctionStatus === AuctionStatus.LIVE) {
+    if (firstFetchResponse.current && auctionStatus === AuctionStatus.LIVE) {
       if (!auctionId) {
         navigateWithAuth('/(tabs)/auctions');
         return;

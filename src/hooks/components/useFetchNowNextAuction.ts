@@ -11,7 +11,11 @@ type NowAndNextAuctionDTO =
   | { auctionId: number; status: AuctionStatus.AVAILABLE }
   | { auctionId: null; status: null };
 
-export const useFetchNowNextAuction = (): Omit<
+export const useFetchNowNextAuction = ({
+  firstFetchResponse,
+}: {
+  firstFetchResponse: React.RefObject<boolean>;
+}): Omit<
   ActionResponse<NowAndNextAuctionDTO | null>,
   'errorMessage' | 'setErrorMessage'
 > => {
@@ -36,6 +40,11 @@ export const useFetchNowNextAuction = (): Omit<
         setStatus(REQUEST_STATUS.error);
         return;
       }
+      setTimeout(() => {
+        if (firstFetchResponse.current) {
+          firstFetchResponse.current = false;
+        }
+      }, 0);
 
       setData(response.data);
       setStatus(REQUEST_STATUS.success);
@@ -50,7 +59,7 @@ export const useFetchNowNextAuction = (): Omit<
 
       setStatus(REQUEST_STATUS.error);
     }
-  }, [protectedGet]);
+  }, [protectedGet, firstFetchResponse]);
 
   useEffect(() => {
     fetchNowNextAuction();
