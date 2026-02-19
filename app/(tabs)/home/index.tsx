@@ -12,6 +12,7 @@ import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticlesSection } from '@/components/home/ArticlesSection';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { WonArticlesModal } from '@/components/modal/WonArticlesModal';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -63,56 +64,60 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView
-      className='flex-1'
-      edges={['top']}
-    >
-      <ScrollView className='flex-1 px-4'>
-        <UpcomingAuctionsSection
-          auctions={upcomingAuctions}
-          locale={locale}
-          isLoading={upcomingAuctionsStatus === REQUEST_STATUS.loading}
-          texts={{
-            title: t('screens.homePage.upcomingAuctionsTitle'),
-            noAuction: t('screens.homePage.noAuctions'),
-          }}
-        />
+    <>
+      <SafeAreaView
+        className='flex-1'
+        edges={['top']}
+      >
+        <ScrollView className='flex-1 px-4'>
+          <UpcomingAuctionsSection
+            auctions={upcomingAuctions}
+            locale={locale}
+            isLoading={upcomingAuctionsStatus === REQUEST_STATUS.loading}
+            texts={{
+              title: t('screens.homePage.upcomingAuctionsTitle'),
+              noAuction: t('screens.homePage.noAuctions'),
+            }}
+          />
 
-        <ArticlesSection
-          lang={locale}
-          commissionValue={
-            commissionsStatus === REQUEST_STATUS.success ? commission : null
-          }
-          texts={{
-            featuredArticlesText: t('screens.homePage.featuredArticles'),
-            newestArticlesText: t('screens.homePage.newestArticles'),
-            mostViewedArticlesText: t('screens.homePage.mostViewedArticles'),
-            currentBid: t('screens.homePage.currentBid'),
-          }}
-          articles={{
-            newestArticles:
-              newestArticlesStatus === REQUEST_STATUS.success
-                ? newestArticles
-                : [],
-            featuredArticles:
-              featuredArticlesStatus === REQUEST_STATUS.success
-                ? featuredArticles
-                : [],
-            mostViewedArticles:
-              mostViewedArticlesStatus === REQUEST_STATUS.success
-                ? mostViewedArticles
-                : [],
-          }}
-          articlesReady={{
-            newestArticlesReady:
-              newestArticlesStatus === REQUEST_STATUS.success,
-            featuredArticlesReady:
-              featuredArticlesStatus === REQUEST_STATUS.success,
-            mostViewedArticlesReady:
-              mostViewedArticlesStatus === REQUEST_STATUS.success,
-          }}
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <ArticlesSection
+            lang={locale}
+            commissionValue={
+              commissionsStatus === REQUEST_STATUS.success ? commission : null
+            }
+            texts={{
+              featuredArticlesText: t('screens.homePage.featuredArticles'),
+              newestArticlesText: t('screens.homePage.newestArticles'),
+              mostViewedArticlesText: t('screens.homePage.mostViewedArticles'),
+              currentBid: t('screens.homePage.currentBid'),
+            }}
+            articles={{
+              newestArticles:
+                newestArticlesStatus === REQUEST_STATUS.success
+                  ? newestArticles
+                  : [],
+              featuredArticles:
+                featuredArticlesStatus === REQUEST_STATUS.success
+                  ? featuredArticles
+                  : [],
+              mostViewedArticles:
+                mostViewedArticlesStatus === REQUEST_STATUS.success
+                  ? mostViewedArticles
+                  : [],
+            }}
+            articlesReady={{
+              newestArticlesReady:
+                newestArticlesStatus === REQUEST_STATUS.success,
+              featuredArticlesReady:
+                featuredArticlesStatus === REQUEST_STATUS.success,
+              mostViewedArticlesReady:
+                mostViewedArticlesStatus === REQUEST_STATUS.success,
+            }}
+          />
+        </ScrollView>
+      </SafeAreaView>
+
+      <WonArticlesModal />
+    </>
   );
 }
