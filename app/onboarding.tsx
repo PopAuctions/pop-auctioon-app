@@ -7,14 +7,21 @@ import { Loading } from '@/components/ui/Loading';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
-import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
+import {
+  HAS_SEEN_ONBOARDING_KEY,
+  VIDEO_LENGTH_MS,
+} from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import { useEffect, useState } from 'react';
+import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const { locale, t } = useTranslation();
   const { navigateWithAuth } = useAuthNavigation();
+  const { hasSeenOnboarding } = useOnboarding();
+  const [displayFooter, setDisplayFooter] = useState(false);
 
   const { video, texts, isLoading, error } = useOnboardingData();
 
@@ -25,20 +32,40 @@ export default function OnboardingScreen() {
   const onSkip = async () => {
     await triggerHaptic('impact');
     await markAsSeen();
-    router.replace('/(tabs)/home');
+    router.replace('/(tabs)/auth/login');
   };
 
   const onLogin = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    navigateWithAuth('/(tabs)/auth/login');
+    navigateWithAuth('/(tabs)/auth/login?fromTab=true');
   };
 
   const onRegister = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    navigateWithAuth('/(tabs)/auth/register-user');
+    navigateWithAuth('/(tabs)/auth/register-user?fromTab=true');
   };
+
+  useEffect(() => {
+    if (isLoading || !video) return;
+
+    let timeoutId: number | undefined;
+
+    hasSeenOnboarding().then((seen) => {
+      if (!seen) {
+        timeoutId = setTimeout(() => {
+          setDisplayFooter(true);
+        }, VIDEO_LENGTH_MS);
+      }
+    });
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [hasSeenOnboarding, isLoading, video]);
 
   // Show loading state while fetching slides
   if (isLoading) {
@@ -141,24 +168,26 @@ export default function OnboardingScreen() {
         </View>
 
         {/* Footer: Login + Register */}
-        <View className='absolute bottom-0 left-0 right-0 px-8 pb-12'>
-          <View className='flex-row gap-4'>
-            <Button
-              mode='primary'
-              onPress={onLogin}
-              className='flex-1'
-            >
-              {t('loginPage.signIn')}
-            </Button>
-            <Button
-              mode='secondary'
-              onPress={onRegister}
-              className='flex-1'
-            >
-              {t('loginPage.register')}
-            </Button>
+        {displayFooter && (
+          <View className='absolute bottom-0 left-0 right-0 px-8 pb-12'>
+            <View className='flex-row gap-4'>
+              <Button
+                mode='primary'
+                onPress={onLogin}
+                className='flex-1'
+              >
+                {t('loginPage.signIn')}
+              </Button>
+              <Button
+                mode='secondary'
+                onPress={onRegister}
+                className='flex-1'
+              >
+                {t('loginPage.register')}
+              </Button>
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </>
   );

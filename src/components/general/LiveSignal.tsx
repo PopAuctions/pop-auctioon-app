@@ -57,10 +57,10 @@ export const LiveSignal = ({
   useEffect(() => {
     if (firstFetchResponse.current && auctionStatus === AuctionStatus.LIVE) {
       if (!auctionId) {
-        navigateWithAuth('/(tabs)/auctions');
+        navigateWithAuth('/(tabs)/auctions?fromTab=true');
         return;
       }
-      navigateWithAuth(`/(tabs)/auctions/live/${auctionId}`);
+      navigateWithAuth(`/(tabs)/auctions/live/${auctionId}?fromTab=true`);
     }
   }, [
     auctionStatus,
