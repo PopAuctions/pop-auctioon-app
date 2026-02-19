@@ -58,7 +58,7 @@ export default function OnboardingScreen() {
   }, [hasSeenOnboarding]);
 
   useEffect(() => {
-    if (!isLoading || !video) return;
+    if (isLoading || !video) return;
     handleFooterDisplay();
   }, [handleFooterDisplay, isLoading, video]);
 
