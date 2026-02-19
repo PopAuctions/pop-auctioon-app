@@ -5,9 +5,11 @@ import { View, ActivityIndicator } from 'react-native';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
+import { useGetArticlesByAuctionAmount } from '@/hooks/pages/article/useGetArticlesByAuctionAmount';
 
 export default function AccountTab() {
   const { data: currentUser, status, errorMessage } = useGetCurrentUser();
+  const { data: articlesWonAmount } = useGetArticlesByAuctionAmount();
   const { isNavigating } = useAuthNavigation();
   const shouldHide = useHideWhileStackBuilds();
 
@@ -48,5 +50,10 @@ export default function AccountTab() {
     );
   }
 
-  return <Account currentUser={currentUser} />;
+  return (
+    <Account
+      currentUser={currentUser}
+      numberOfWonArticles={articlesWonAmount}
+    />
+  );
 }

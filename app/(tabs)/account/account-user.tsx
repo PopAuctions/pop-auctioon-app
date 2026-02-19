@@ -20,7 +20,13 @@ import {
 } from '@/constants/session';
 import { APP_USER_ROLES } from '@/constants';
 
-export default function Account({ currentUser }: { currentUser: User }) {
+export default function Account({
+  currentUser,
+  numberOfWonArticles,
+}: {
+  currentUser: User;
+  numberOfWonArticles: number;
+}) {
   const { signOut } = useAuth();
   const { t } = useTranslation();
   const { handleOpenTerms } = useOpenTerms();
@@ -117,13 +123,24 @@ export default function Account({ currentUser }: { currentUser: User }) {
                     />
                   </View>
 
-                  <View className='h-10 justify-center'>
+                  <View className='flex flex-row items-center justify-center gap-3'>
                     <CustomText
                       type='body'
                       className='leading-[20px]'
                     >
                       {t(labelKey as any)}
                     </CustomText>
+
+                    {name === 'articles-won' && numberOfWonArticles > 0 && (
+                      <View className='h-6 w-6 items-center justify-center rounded-full bg-cinnabar'>
+                        <CustomText
+                          type='body'
+                          className='text-center text-sm leading-none text-white'
+                        >
+                          {numberOfWonArticles}
+                        </CustomText>
+                      </View>
+                    )}
                   </View>
                 </View>
 
