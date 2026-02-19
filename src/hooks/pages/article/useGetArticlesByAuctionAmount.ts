@@ -40,6 +40,7 @@ export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
 
     const articlesWon = res.data;
     if (!articlesWon) {
+      setStatus('error');
       setWonArticle(0);
       return {
         message: {
@@ -51,6 +52,7 @@ export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
 
     const auctions = Object.keys(articlesWon);
     if (auctions.length === 0) {
+      setStatus('error');
       setWonArticle(0);
       return {
         message: {
