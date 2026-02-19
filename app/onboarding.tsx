@@ -13,7 +13,7 @@ import {
 } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 
 export default function OnboardingScreen() {
@@ -47,20 +47,25 @@ export default function OnboardingScreen() {
     navigateWithAuth('/(tabs)/auth/register-user?fromTab=true');
   };
 
-  const handleFooterDisplay = useCallback(async () => {
+  useEffect(() => {
+    if (isLoading || !video) return;
+
+    let timeoutId: number | undefined;
+
     hasSeenOnboarding().then((seen) => {
       if (!seen) {
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
           setDisplayFooter(true);
         }, VIDEO_LENGTH_MS);
       }
     });
-  }, [hasSeenOnboarding]);
 
-  useEffect(() => {
-    if (isLoading || !video) return;
-    handleFooterDisplay();
-  }, [handleFooterDisplay, isLoading, video]);
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [hasSeenOnboarding, isLoading, video]);
 
   // Show loading state while fetching slides
   if (isLoading) {
