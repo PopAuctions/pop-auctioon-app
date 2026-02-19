@@ -356,7 +356,6 @@ export default function LiveAuctionScreen() {
             auctionId={auctionId}
             username={username}
             profilePicture={profilePicture}
-            onBack={() => router.back()}
             biddingAmounts={biddingAmounts}
             articleServerState={
               isCurrentArticleReady

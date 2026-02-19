@@ -41,7 +41,6 @@ interface OverlayProps {
   biddingAmounts: BiddingAmounts | null;
   articleServerState: HighestBidderState | undefined;
   articleId: number;
-  onBack: () => void;
   refetch: (localValue: number) => void;
 }
 
@@ -94,7 +93,6 @@ export const LiveAuctionOverlay = ({
   biddingAmounts,
   articleServerState,
   articleId,
-  onBack,
   refetch,
 }: OverlayProps) => {
   const { t, locale } = useTranslation();
@@ -158,7 +156,6 @@ export const LiveAuctionOverlay = ({
 
         {/* Back */}
         <LiveBackButton
-          onPress={onBack}
           controlsVisible={controls.visible}
           controlsOpacity={controlsOpacity}
           insetsTop={insetsTop}

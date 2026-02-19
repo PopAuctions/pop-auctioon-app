@@ -38,13 +38,13 @@ export default function OnboardingScreen() {
   const onLogin = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    navigateWithAuth('/(tabs)/auth/login');
+    navigateWithAuth('/(tabs)/auth/login?fromTab=true');
   };
 
   const onRegister = async () => {
     await triggerHaptic('selection');
     await markAsSeen();
-    navigateWithAuth('/(tabs)/auth/register-user');
+    navigateWithAuth('/(tabs)/auth/register-user?fromTab=true');
   };
 
   const handleFooterDisplay = useCallback(async () => {

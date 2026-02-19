@@ -1,15 +1,14 @@
 import { Animated, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export const LiveBackButton = ({
-  onPress,
   controlsVisible,
   controlsOpacity,
   insetsTop,
   UI,
   Z,
 }: {
-  onPress: () => void;
   controlsVisible: boolean;
   controlsOpacity: Animated.Value;
   insetsTop: number;
@@ -22,6 +21,13 @@ export const LiveBackButton = ({
     BACK: number;
   };
 }) => {
+  const router = useRouter();
+  const params = useLocalSearchParams();
+
+  const marker = params['fromTab'];
+  const markerStr = Array.isArray(marker) ? marker[0] : marker;
+  const shouldFallback = markerStr === 'true';
+
   return (
     <Animated.View
       pointerEvents={controlsVisible ? 'auto' : 'none'}
@@ -43,7 +49,13 @@ export const LiveBackButton = ({
       }}
     >
       <TouchableOpacity
-        onPress={onPress}
+        onPress={() => {
+          if (shouldFallback) {
+            router.replace(`/(tabs)/auctions/${params.id}?fromTab=true`);
+          } else {
+            router.back();
+          }
+        }}
         activeOpacity={0.7}
         style={{
           height: UI.BACK_SIZE,
