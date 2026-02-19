@@ -7,8 +7,6 @@ interface VideoPlayerProps {
 
 export const VideoPlayer = ({ uri }: VideoPlayerProps) => {
   const player = useVideoPlayer(uri, (player) => {
-    player.loop = true;
-    player.muted = true;
     player.play();
   });
 

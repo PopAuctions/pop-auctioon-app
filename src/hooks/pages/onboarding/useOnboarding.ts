@@ -15,7 +15,7 @@ export const useOnboarding = () => {
 
   const resetOnboarding = async () => {
     try {
-      await AsyncStorage.removeItem(HAS_SEEN_ONBOARDING_KEY);
+      // await AsyncStorage.removeItem(HAS_SEEN_ONBOARDING_KEY);
       router.replace('/onboarding');
     } catch (error) {
       console.error('Error resetting onboarding:', error);
