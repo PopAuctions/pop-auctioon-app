@@ -14,6 +14,7 @@ import {
   Pressable,
   Animated,
   Easing,
+  Keyboard,
 } from 'react-native';
 
 interface Props {
@@ -334,6 +335,7 @@ export const HalfEllipseArticleWheel = ({
                 showLiveBorder && styles.itemLive,
               ]}
               onPress={() => {
+                Keyboard.dismiss();
                 if (isDraggingRef.current) return;
                 onArticlePress?.(articleId);
               }}

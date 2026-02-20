@@ -6,6 +6,7 @@ import {
   Pressable,
   Animated,
   StyleSheet,
+  Keyboard,
 } from 'react-native';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
@@ -47,8 +48,9 @@ interface OverlayProps {
 const Z = {
   TAP_CATCHER: 0,
   BID: 10,
-  CHAT: 15,
-  HUD: 30,
+  CHAT: 30,
+  WHEEL: 20,
+  HUD: 25,
   BACK: 35,
   MODAL_ROOT: 100,
   MODAL_BACKDROP: 110,
@@ -147,7 +149,10 @@ export const LiveAuctionOverlay = ({
         className='absolute inset-0'
       >
         <Pressable
-          onPress={controls.show}
+          onPress={() => {
+            Keyboard.dismiss();
+            controls.show();
+          }}
           style={[
             StyleSheet.absoluteFillObject,
             { zIndex: Z.TAP_CATCHER, elevation: 0 },
@@ -169,8 +174,8 @@ export const LiveAuctionOverlay = ({
             position: 'absolute',
             right: UI.SCREEN_PADDING - 7,
             bottom: bidBottom + UI.BID_HEIGHT + 70,
-            zIndex: Z.HUD,
-            elevation: Z.HUD,
+            zIndex: Z.WHEEL,
+            elevation: Z.WHEEL,
             overflow: 'visible',
           }}
         >
@@ -257,7 +262,10 @@ export const LiveAuctionOverlay = ({
         <HighestBidderProvider key={articleId}>
           {/* Article HUD */}
           <Animated.View
-            onTouchStart={() => openArticleModal(articleId)}
+            onTouchStart={() => {
+              Keyboard.dismiss();
+              openArticleModal(articleId);
+            }}
             pointerEvents='auto'
             style={{
               position: 'absolute',

@@ -1,4 +1,4 @@
-import { GestureResponderEvent, Platform, Share } from 'react-native';
+import { GestureResponderEvent, Keyboard, Platform, Share } from 'react-native';
 import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Button, ButtonMode } from './Button';
@@ -33,6 +33,7 @@ export function ShareButton({
 
   const handleShare = async () => {
     try {
+      Keyboard.dismiss();
       // Generate smart share URL that redirects based on device type
       let path = pathname ?? '';
 
