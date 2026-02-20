@@ -3,6 +3,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SubscribeStatus } from '@/types/types';
+import { hapticImpact } from '@/utils/triggerHaptic';
 
 type Options = {
   table: string;
@@ -90,6 +91,7 @@ export const useArticleBidSubscription = ({
         if (!oldData.highestBidderId && newData.highestBidderId) {
           onFirstBidRef.current?.(newData.currentValue ?? 0);
         }
+        hapticImpact();
       }
     ).subscribe((status: SubscribeStatus) => {
       if (status === 'SUBSCRIBED') setIsSubscribed(true);
