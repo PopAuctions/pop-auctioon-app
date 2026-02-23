@@ -16,6 +16,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { ToastVariant } from '@/providers/ToastProvider';
+import { APP_USER_ROLES } from '@/constants/user';
 
 type LoginError =
   | 'INVALID_CREDENTIALS'
@@ -354,56 +355,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [sendEmailConfirmation, logoutBecauseDisabled, forceLogout]
   );
 
-  useEffect(() => {
-    callToastRef.current = callToast;
-  }, [callToast]);
-
-  useEffect(() => {
-    disabledToastShownRef.current = false;
-  }, [locale]);
-
-  useEffect(() => {
-    let alive = true;
-
-    (async () => {
-      // 1) Load session from storage (might exist after OAuth)
-      const { data: s1 } = await supabase.auth.getSession();
-      const sess0 = s1.session ?? null;
-
-      if (!sess0) {
-        setAuth({ state: 'unauthenticated' });
-        return;
-      }
-
-      setAuth({ state: 'pending', session: sess0 });
-
-      const provider0 = sess0.user.app_metadata?.provider;
-
-      // Only enforce custom email verification for email/password users
-      if (provider0 === 'email') {
-        const ok = await checkIsValidated(sess0);
-        if (!alive) return;
-
-        if (!ok) {
-          await forceLogout();
-          return;
-        }
-      }
-
-      // now you can proceed as authenticated
-      setAuth({ state: 'authenticated', session: sess0, role: null });
-
-      const session = sess0;
-
+  const setAuthenticatedWithRole = useCallback(
+    async (session: Session, isAlive?: () => boolean) => {
       clearTimer.current?.();
       clearTimer.current = scheduleRefresh(session, async () => {
         const { data, error } = await supabase.auth.refreshSession();
 
-        // Sign out only if refresh failed OR returned no session
         if (error || !data.session) {
           await forceLogout();
           return;
         }
+
+        if (isAlive && !isAlive()) return;
 
         setAuth((prev) => ({
           state: 'authenticated',
@@ -415,53 +378,81 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearTimer.current = scheduleRefresh(data.session, () => {});
       });
 
-      // 2) Validate user with server (optional but good)
-      const { data: u, error } = await supabase.auth.getUser();
-      if (!alive) return;
+      // fetch role (awaited, not background)
+      const r = await getUserRole({ id: session.user.id });
 
-      if (error || !u?.user) {
-        await forceLogout();
-        return;
-      }
+      if (isAlive && !isAlive()) return;
 
-      // ✅ Disabled guard + role fetch ONCE (reuse the result below)
-      let roleFromDb: any = null;
-
-      try {
-        const r = await getUserRole({ id: u.user.id });
-        if (!alive) return;
-
-        if (r.data?.isDisabled) {
-          await logoutBecauseDisabled();
-          return;
-        }
-
-        roleFromDb = r.data?.role ?? null;
-      } catch {
-        await forceLogout();
-        return;
-      }
-
-      // ✅ Reuse the role we already fetched (no second getUserRole call)
-      const { data: s2 } = await supabase.auth.getSession();
-      const sess = s2.session ?? sess0;
-
-      if (!sess) {
-        await forceLogout();
+      if (r.data?.isDisabled) {
+        await logoutBecauseDisabled();
         return;
       }
 
       setAuth({
         state: 'authenticated',
-        session: sess,
-        role: roleFromDb,
+        session,
+        role: r.data?.role ?? null,
       });
+    },
+    [forceLogout, logoutBecauseDisabled]
+  );
+
+  useEffect(() => {
+    callToastRef.current = callToast;
+  }, [callToast]);
+
+  useEffect(() => {
+    disabledToastShownRef.current = false;
+  }, [locale]);
+
+  useEffect(() => {
+    let alive = true;
+
+    const isAlive = () => alive;
+
+    (async () => {
+      const { data: s1 } = await supabase.auth.getSession();
+      const sess0 = s1.session ?? null;
+
+      if (!sess0) {
+        setAuth({ state: 'unauthenticated' });
+        return;
+      }
+
+      const identities = sess0.user.identities ?? [];
+      const providers = (sess0.user.app_metadata?.providers as string[]) ?? [];
+
+      const isOAuth =
+        identities.some((i) => i.provider && i.provider !== 'email') ||
+        providers.some((p) => p && p !== 'email');
+
+      if (isOAuth) {
+        setAuth({
+          state: 'authenticated',
+          session: sess0,
+          role: APP_USER_ROLES.USER,
+        });
+        return;
+      }
+
+      // Email/password users
+      setAuth({ state: 'pending', session: sess0 });
+
+      const ok = await checkIsValidated(sess0);
+      if (!isAlive()) return;
+
+      if (!ok) {
+        await forceLogout();
+        return;
+      }
+
+      await setAuthenticatedWithRole(sess0, isAlive);
     })();
 
-    // 3) Subscribe to auth changes
+    // 2) Subscribe to auth changes
     const { data: sub } = supabase.auth.onAuthStateChange(
       async (ev, newSession) => {
-        if (!alive) return;
+        if (!isAlive()) return;
 
         if (ev === 'SIGNED_OUT') {
           setAuth({ state: 'unauthenticated' });
@@ -471,92 +462,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (ev === 'SIGNED_IN' && isManualSignInRef.current) return;
-        if (ev !== 'SIGNED_IN' && ev !== 'TOKEN_REFRESHED') return;
+
+        // ✅ include INITIAL_SESSION
+        if (
+          ev !== 'SIGNED_IN' &&
+          ev !== 'TOKEN_REFRESHED' &&
+          ev !== 'INITIAL_SESSION'
+        ) {
+          return;
+        }
 
         if (!newSession) {
           setAuth({ state: 'unauthenticated' });
           return;
         }
 
-        const provider = newSession.user.app_metadata?.provider;
+        const identities = newSession.user.identities ?? [];
+        const providers =
+          (newSession.user.app_metadata?.providers as string[]) ?? [];
 
-        // ✅ OAuth sign-ins: skip custom email verification gate
-        if (provider && provider !== 'email') {
-          setAuth((prev) => ({
+        const isOAuth =
+          identities.some((i) => i.provider && i.provider !== 'email') ||
+          providers.some((p) => p && p !== 'email');
+
+        if (isOAuth) {
+          setAuth({
             state: 'authenticated',
             session: newSession,
-            role: prev.state === 'authenticated' ? prev.role : null,
-          }));
-
-          // schedule refresh
-          clearTimer.current?.();
-          clearTimer.current = scheduleRefresh(newSession, () => {});
-
-          // fetch role in background
-          (async () => {
-            try {
-              const r = await getUserRole({ id: newSession.user.id });
-              if (!alive) return;
-
-              if (r.data?.isDisabled) {
-                await logoutBecauseDisabled();
-                return;
-              }
-
-              setAuth({
-                state: 'authenticated',
-                session: newSession,
-                role: r.data?.role ?? null,
-              });
-            } catch (e) {
-              console.log('[AuthProvider] getUserRole failed:', e);
-            }
-          })();
-
-          return; // ✅ important
+            role: APP_USER_ROLES.USER,
+          });
+          return;
         }
 
-        // Email/password sessions continue with verification gate
         setAuth({ state: 'pending', session: newSession });
 
-        clearTimer.current?.();
-        clearTimer.current = scheduleRefresh(newSession, () => {});
-
         const ok = await checkIsValidated(newSession);
-        if (!alive) return;
+        if (!isAlive()) return;
 
         if (!ok) {
-          clearTimer.current?.();
-          clearTimer.current = null;
           await forceLogout();
           return;
         }
 
-        setAuth((prev) => ({
-          state: 'authenticated',
-          session: newSession,
-          role: prev.state === 'authenticated' ? prev.role : null,
-        }));
-
-        (async () => {
-          try {
-            const r = await getUserRole({ id: newSession.user.id });
-            if (!alive) return;
-
-            if (r.data?.isDisabled) {
-              await logoutBecauseDisabled();
-              return;
-            }
-
-            setAuth({
-              state: 'authenticated',
-              session: newSession,
-              role: r.data?.role ?? null,
-            });
-          } catch (e) {
-            console.log('[AuthProvider] getUserRole failed:', e);
-          }
-        })();
+        await setAuthenticatedWithRole(newSession, isAlive);
       }
     );
 
@@ -564,8 +512,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       alive = false;
       sub?.subscription.unsubscribe();
       clearTimer.current?.();
+      clearTimer.current = null;
     };
-  }, [logoutBecauseDisabled, forceLogout]);
+  }, [forceLogout, setAuthenticatedWithRole]);
 
   const value = useMemo(
     () => ({
