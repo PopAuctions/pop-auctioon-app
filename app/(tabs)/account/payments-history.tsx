@@ -8,6 +8,7 @@ import { useGetPaymentHistory } from '@/hooks/pages/payment/useGetPaymentHistory
 import { useState, useCallback } from 'react';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
+import { useFocusEffect } from 'expo-router';
 
 export default function PaymentsHistoryScreen() {
   const { locale } = useTranslation();
@@ -16,6 +17,7 @@ export default function PaymentsHistoryScreen() {
     status,
     refetch,
     errorMessage,
+    refetch: refetchPaymentHistory,
   } = useGetPaymentHistory();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -24,6 +26,12 @@ export default function PaymentsHistoryScreen() {
     await refetch();
     setRefreshing(false);
   }, [refetch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchPaymentHistory?.();
+    }, [refetchPaymentHistory])
+  );
 
   if (
     (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) &&

@@ -85,5 +85,6 @@ export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
     status,
     errorMessage,
     setErrorMessage,
+    refetch: fetchArticleBids,
   };
 };

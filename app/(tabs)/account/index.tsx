@@ -1,3 +1,4 @@
+import { useFocusEffect } from 'expo-router';
 import Account from './account-user';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
@@ -6,12 +7,26 @@ import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 import { useGetArticlesByAuctionAmount } from '@/hooks/pages/article/useGetArticlesByAuctionAmount';
+import { useCallback } from 'react';
 
 export default function AccountTab() {
-  const { data: currentUser, status, errorMessage } = useGetCurrentUser();
-  const { data: articlesWonAmount } = useGetArticlesByAuctionAmount();
+  const {
+    data: currentUser,
+    status,
+    errorMessage,
+    refetch: fetchCurrentUser,
+  } = useGetCurrentUser();
+  const { data: articlesWonAmount, refetch: refetchArticles } =
+    useGetArticlesByAuctionAmount();
   const { isNavigating } = useAuthNavigation();
   const shouldHide = useHideWhileStackBuilds();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchArticles?.();
+      fetchCurrentUser?.();
+    }, [refetchArticles, fetchCurrentUser])
+  );
 
   if (shouldHide) {
     return <View className='flex-1 bg-white' />;
