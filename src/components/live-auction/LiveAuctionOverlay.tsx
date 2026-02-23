@@ -116,7 +116,8 @@ export const LiveAuctionOverlay = ({
   // const controlsOpacity = controls.opacity;
 
   const currentArticleIndex = useMemo(() => {
-    return orderedArticles.findIndex((a) => a.id === articleId);
+    const index = orderedArticles.findIndex((a) => a.id === articleId);
+    return index === -1 ? 0 : index;
   }, [orderedArticles, articleId]);
   const currentArticle = useMemo(() => {
     return orderedArticles[currentArticleIndex];
