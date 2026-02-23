@@ -193,7 +193,7 @@ export const LiveAuctionOverlay = ({
         {/* Chat + Actions (keyboard-aware) */}
         <KeyboardAvoidingView
           pointerEvents='box-none'
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={
             Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
           }

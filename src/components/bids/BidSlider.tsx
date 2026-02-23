@@ -255,7 +255,7 @@ const CustomBidModal = ({
       >
         <KeyboardAvoidingView
           style={{ flex: 1, justifyContent: 'flex-end' }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={0}
         >
           {/* Card */}

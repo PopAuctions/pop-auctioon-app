@@ -30,6 +30,7 @@
       "package": "com.popauctioon.popauctioonapp",
       "resizeableActivity": false,
       "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize",
       "googleServicesFile": "./google-services.json",
       "notification": {
         "icon": "./assets/icons/pop-auctioon-icon.png",
