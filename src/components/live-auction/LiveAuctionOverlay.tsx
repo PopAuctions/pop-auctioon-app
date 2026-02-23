@@ -1,11 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   Animated,
-  StyleSheet,
   Keyboard,
 } from 'react-native';
 import { ShareButton } from '@/components/ui/ShareButton';
@@ -17,7 +15,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useDeviceType } from '@/hooks/useDeviceType';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
-import { useAutoHideControls } from '@/hooks/components/useAutoHideControls';
+// import { useAutoHideControls } from '@/hooks/components/useAutoHideControls';
 import { REQUEST_STATUS } from '@/constants';
 import { LiveArticleCard } from './LiveArticleCard';
 import { ArticleCountdownUser } from './ArticleCountdownUser';
@@ -105,16 +103,17 @@ export const LiveAuctionOverlay = ({
 
   const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
   const [modalArticleId, setModalArticleId] = useState<number | null>(null);
-  const paused = showCurrentArticleModal;
+  const backOpacity = useRef(new Animated.Value(1)).current;
+  // const paused = showCurrentArticleModal;
 
-  const controls = useAutoHideControls({
-    fadeMs: UI.FADE_MS,
-    slideMs: UI.SLIDE_MS,
-    autoHideMs: UI.CONTROLS_AUTOHIDE_MS,
-    topControlsHeight: UI.TOP_CONTROLS_HEIGHT,
-    paused,
-  });
-  const controlsOpacity = controls.opacity;
+  // const controls = useAutoHideControls({
+  //   fadeMs: UI.FADE_MS,
+  //   slideMs: UI.SLIDE_MS,
+  //   autoHideMs: UI.CONTROLS_AUTOHIDE_MS,
+  //   topControlsHeight: UI.TOP_CONTROLS_HEIGHT,
+  //   paused,
+  // });
+  // const controlsOpacity = controls.opacity;
 
   const currentArticleIndex = useMemo(() => {
     return orderedArticles.findIndex((a) => a.id === articleId);
@@ -132,12 +131,13 @@ export const LiveAuctionOverlay = ({
 
   // Article HUD pinned to top
   const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
+  const backTop = articleHudTop + UI.ARTICLE_HUD_HEIGHT + 20;
 
   // Chat sits above article HUD
   const chatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
 
   const openArticleModal = (idToShow: number) => {
-    controls.hide();
+    // controls.hide();
     setModalArticleId(idToShow);
     setShowCurrentArticleModal(true);
   };
@@ -148,7 +148,7 @@ export const LiveAuctionOverlay = ({
         pointerEvents='box-none'
         className='absolute inset-0'
       >
-        <Pressable
+        {/* <Pressable
           onPress={() => {
             Keyboard.dismiss();
             controls.show();
@@ -157,13 +157,13 @@ export const LiveAuctionOverlay = ({
             StyleSheet.absoluteFillObject,
             { zIndex: Z.TAP_CATCHER, elevation: 0 },
           ]}
-        />
+        /> */}
 
         {/* Back */}
         <LiveBackButton
-          controlsVisible={controls.visible}
-          controlsOpacity={controlsOpacity}
-          insetsTop={insetsTop}
+          controlsVisible={true}
+          controlsOpacity={backOpacity}
+          insetsTop={backTop}
           UI={UI}
           Z={Z}
         />
@@ -273,7 +273,7 @@ export const LiveAuctionOverlay = ({
               right: UI.SCREEN_PADDING,
               top: articleHudTop,
               height: UI.ARTICLE_HUD_HEIGHT,
-              transform: [{ translateY: controls.hudOffsetY }],
+              // transform: [{ translateY: controls.hudOffsetY }],
               zIndex: Z.HUD,
               elevation: Z.HUD,
             }}
