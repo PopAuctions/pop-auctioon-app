@@ -3,9 +3,9 @@ import { View } from '../Themed';
 import { CustomText } from './CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Button } from './Button';
-import { CustomLink } from './CustomLink';
-import { type Href, useRouter } from 'expo-router';
+import { type Href, usePathname, useRouter } from 'expo-router';
 import { LangMap } from '@/types/types';
+import { getParentRoute } from '@/utils/deeplinks/getParentRoute';
 
 interface CustomErrorProps {
   refreshRoute: Href;
@@ -17,12 +17,20 @@ export const CustomError = ({
   customMessage,
 }: CustomErrorProps) => {
   const { t, locale } = useTranslation();
+  const pathname = usePathname();
   const router = useRouter();
 
   const message = customMessage?.[locale];
 
   const handleRefresh = () => {
     router.replace(refreshRoute);
+  };
+
+  const handleGoToTabRoot = () => {
+    const indexTab = getParentRoute(pathname);
+    const target = indexTab ? `${indexTab}` : '/(tabs)/home';
+
+    router.replace(target as Href);
   };
 
   return (
@@ -58,12 +66,12 @@ export const CustomError = ({
           >
             {t('globals.refreshPage')}
           </Button>
-          <CustomLink
-            href='/(tabs)/home'
+          <Button
             mode='secondary'
+            onPress={handleGoToTabRoot}
           >
             {t('globals.goToHome')}
-          </CustomLink>
+          </Button>
         </View>
       </View>
     </SafeAreaView>
