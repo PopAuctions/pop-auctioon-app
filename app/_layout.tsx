@@ -37,6 +37,7 @@ import { SignInAlertModal } from '@/components/modal/SignInAlertModal';
 import { LiveSignal } from '@/components/general/LiveSignal';
 import { AuctionStartedModalProvider } from '@/context/auction-started-context';
 import { AuctionStartedModal } from '@/components/modal/AuctionStartedModal';
+import { LanguageSyncEffect } from '@/components/auth/LanguageSyncEffect';
 
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
@@ -167,6 +168,7 @@ export default Sentry.wrap(function RootLayout() {
           <SignInAlertModalProvider>
             <AuctionStartedModalProvider>
               <DeepLinkListener />
+              <LanguageSyncEffect />
               <ProtectedRoute>
                 <RootLayoutNav />
               </ProtectedRoute>

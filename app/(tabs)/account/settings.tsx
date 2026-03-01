@@ -13,16 +13,21 @@ import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { ConfirmModal } from '@/components/modal/ConfirmModal';
 import { useDeleteAccount } from '@/hooks/pages/user/useDeleteAccount';
+import { useUpdateLanguage } from '@/hooks/pages/user/useUpdateLanguage';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
   const { resetOnboarding } = useOnboarding();
   const { deleteAccount, status: deleteStatus } = useDeleteAccount(locale);
+  const { updateLanguage } = useUpdateLanguage(locale);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
-      changeLanguage(selectedLanguage as Lang);
+      const newLang = selectedLanguage as Lang;
+      changeLanguage(newLang);
+      // Persist to DB so push notifications use the correct language
+      updateLanguage(newLang);
       triggerHaptic('success', {
         throttleMs: 120,
       });
