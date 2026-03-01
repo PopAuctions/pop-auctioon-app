@@ -48,6 +48,7 @@ export function LanguageSyncEffect() {
           await securePatch({
             endpoint: SECURE_ENDPOINTS.USER.UPDATE_LANGUAGE,
             data: { language: localLocale },
+            options: { retries: 0 },
           });
 
           // Clear the flag now that it has been persisted to DB
@@ -56,6 +57,7 @@ export function LanguageSyncEffect() {
           // No local change — DB is authoritative (e.g. changed on another device)
           const response = await secureGet<UserWithLanguage>({
             endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
+            options: { retries: 0 },
           });
 
           if (response.error || !response.data) {

@@ -102,6 +102,7 @@ describe('LanguageSyncEffect', () => {
       await waitFor(() => {
         expect(mockSecureGet).toHaveBeenCalledWith({
           endpoint: '/user/current',
+          options: { retries: 0 },
         });
       });
     });
@@ -196,6 +197,7 @@ describe('LanguageSyncEffect', () => {
         expect(mockSecurePatch).toHaveBeenCalledWith({
           endpoint: '/user/language',
           data: { language: 'en' },
+          options: { retries: 0 },
         });
       });
       expect(mockSecureGet).not.toHaveBeenCalled();
@@ -216,6 +218,7 @@ describe('LanguageSyncEffect', () => {
         expect(mockSecurePatch).toHaveBeenCalledWith({
           endpoint: '/user/language',
           data: { language: 'es' },
+          options: { retries: 0 },
         });
       });
     });
