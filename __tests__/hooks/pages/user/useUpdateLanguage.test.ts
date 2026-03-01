@@ -56,7 +56,6 @@ describe('useUpdateLanguage', () => {
       expect(mockSecurePatch).toHaveBeenCalledWith({
         endpoint: ENDPOINT,
         data: { language: 'en' },
-        options: { retries: 0 },
       });
     });
 
@@ -107,7 +106,6 @@ describe('useUpdateLanguage', () => {
       expect(mockSecurePatch).toHaveBeenCalledWith({
         endpoint: ENDPOINT,
         data: { language: 'es' },
-        options: { retries: 0 },
       });
 
       await act(async () => {
@@ -116,7 +114,6 @@ describe('useUpdateLanguage', () => {
       expect(mockSecurePatch).toHaveBeenCalledWith({
         endpoint: ENDPOINT,
         data: { language: 'en' },
-        options: { retries: 0 },
       });
     });
   });

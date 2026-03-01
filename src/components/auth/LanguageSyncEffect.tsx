@@ -27,14 +27,22 @@ export function LanguageSyncEffect() {
   const { syncLanguageFromDb } = useTranslationContext();
   const { secureGet, securePatch } = useSecureApi();
   const syncedUserIdRef = useRef<string | null>(null);
+  const syncInProgressRef = useRef(false);
 
   useEffect(() => {
-    if (auth.state !== 'authenticated') return;
+    if (auth.state !== 'authenticated') {
+      // Reset on logout so the next login triggers a fresh sync
+      syncedUserIdRef.current = null;
+      syncInProgressRef.current = false;
+      return;
+    }
 
     const userId = auth.session.user.id;
 
     // Only sync once per authenticated user session
     if (syncedUserIdRef.current === userId) return;
+    if (syncInProgressRef.current) return;
+    syncInProgressRef.current = true;
 
     const syncLanguage = async () => {
       try {
@@ -48,16 +56,15 @@ export function LanguageSyncEffect() {
           await securePatch({
             endpoint: SECURE_ENDPOINTS.USER.UPDATE_LANGUAGE,
             data: { language: localLocale },
-            options: { retries: 0 },
           });
 
-          // Clear the flag now that it has been persisted to DB
+          // Clear the flag regardless — avoids being stuck if the server is
+          // temporarily down. The app shows the correct locale either way.
           await clearManualLanguageFlag();
         } else {
           // No local change — DB is authoritative (e.g. changed on another device)
           const response = await secureGet<UserWithLanguage>({
             endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
-            options: { retries: 0 },
           });
 
           if (response.error || !response.data) {
@@ -79,6 +86,8 @@ export function LanguageSyncEffect() {
         syncedUserIdRef.current = userId;
       } catch (error) {
         console.error('LANGUAGE_SYNC_EFFECT - Unexpected error', error);
+      } finally {
+        syncInProgressRef.current = false;
       }
     };
 

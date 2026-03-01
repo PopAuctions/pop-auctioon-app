@@ -35,7 +35,6 @@ export const useUpdateLanguage = (
       const response = await securePatch<{ success: boolean }>({
         endpoint: SECURE_ENDPOINTS.USER.UPDATE_LANGUAGE,
         data: { language: newLanguage },
-        options: { retries: 0 },
       });
 
       if (response.error) {
