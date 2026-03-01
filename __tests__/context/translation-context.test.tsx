@@ -396,4 +396,122 @@ describe('TranslationProvider - Language Persistence Context', () => {
       });
     });
   });
+
+  // ---------------------------------------------------------------
+  // syncLanguageFromDb — DB → app sync (no write back)
+  // ---------------------------------------------------------------
+  describe('syncLanguageFromDb Function', () => {
+    it('should expose syncLanguageFromDb function', async () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBeDefined());
+
+      expect(typeof result.current.syncLanguageFromDb).toBe('function');
+    });
+
+    it('should update locale when DB language differs from current', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue(null);
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBe('es'));
+
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(i18n.changeLocale).toHaveBeenCalledWith('en');
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledWith('en');
+        expect(result.current.locale).toBe('en');
+      });
+    });
+
+    it('should be a no-op when DB language matches current locale', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue(null);
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBe('es'));
+
+      jest.clearAllMocks();
+
+      // DB says 'es', same as current — should not call updates
+      result.current.syncLanguageFromDb('es');
+
+      await waitFor(() => {
+        expect(i18n.changeLocale).not.toHaveBeenCalled();
+        expect(i18n.saveLanguagePreference).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should save to AsyncStorage so next cold-start respects DB value', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue(null);
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBeDefined());
+
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledWith('en');
+      });
+    });
+
+    it('should NOT trigger saveLanguagePreference if same language (avoids redundant writes)', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('en');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue('en');
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBeDefined());
+
+      jest.clearAllMocks();
+
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(i18n.saveLanguagePreference).not.toHaveBeenCalled();
+        expect(i18n.changeLocale).not.toHaveBeenCalled();
+      });
+    });
+
+    it('Scenario: user logs in with DB language different from local storage', async () => {
+      // Local: es (user hadn't changed language)
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue('es');
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBe('es'));
+
+      // DB has 'en' (set from another device)
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(result.current.locale).toBe('en');
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledWith('en');
+      });
+    });
+  });
 });
