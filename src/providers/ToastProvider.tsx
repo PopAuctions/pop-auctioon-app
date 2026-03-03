@@ -89,7 +89,7 @@ const makeToast = (variant: ToastVariant) => {
           resizeMode='contain'
         />
         <View className='flex-1'>
-          {!!text1 && (
+          {!!text1 && variant === 'error' && (
             <Text className={`text-base font-semibold ${textClass[variant]}`}>
               {text1}
             </Text>
