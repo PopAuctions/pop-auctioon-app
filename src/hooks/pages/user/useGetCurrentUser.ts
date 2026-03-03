@@ -10,6 +10,8 @@ import type {
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 /**
  * Hook para obtener los datos del usuario actual autenticado
@@ -36,6 +38,8 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
   // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
   // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const { locale } = useTranslation();
+  const { callToast } = useToast(locale);
   const { secureGet } = useSecureApi();
   const { auth } = useAuth();
 
@@ -92,6 +96,28 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
     }
   }, [secureGet]);
 
+  const refetchCurrentUser = useCallback(async () => {
+    const response = await secureGet<User>({
+      endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
+    });
+
+    if (!response.error) {
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'Could not update user data',
+          es: 'No se pudieron actualizar los datos del usuario',
+        },
+      });
+      return;
+    }
+
+    if (response.data) {
+      setCurrentUser(response.data);
+      setStatus('success');
+    }
+  }, [secureGet, callToast]);
+
   useEffect(() => {
     if (auth.state !== 'authenticated') {
       setStatus('idle');
@@ -107,6 +133,6 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
     status,
     errorMessage,
     setErrorMessage,
-    refetch: fetchCurrentUser,
+    refetch: refetchCurrentUser,
   };
 };

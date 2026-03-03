@@ -7,6 +7,8 @@ import { REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { useCallback } from 'react';
+import { useFocusEffect } from 'expo-router';
 
 export default function ArticlesWonScreen() {
   const { t, locale } = useTranslation();
@@ -14,12 +16,19 @@ export default function ArticlesWonScreen() {
     data: articlesWon,
     status,
     errorMessage,
+    refetch: refetchArticles,
   } = useGetWonArticlesByAuction();
   const {
     data: commissionsData,
     status: commissionsStatus,
     errorMessage: commissionsErrorMessage,
   } = useFetchCommissions();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchArticles?.();
+    }, [refetchArticles])
+  );
 
   if (
     status === REQUEST_STATUS.loading ||

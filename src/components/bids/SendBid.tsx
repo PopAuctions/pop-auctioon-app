@@ -5,6 +5,7 @@ import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
 import { useSendBid } from '@/hooks/components/useSendBid';
+import { AMOUNT_PLACEHOLDER } from '@/constants';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -12,7 +13,7 @@ interface SendBidProps {
   articleServerState: HighestBidderState;
   articleId: number;
   bidLang: DictionaryTypeBid;
-  biddingAmounts: BiddingAmounts;
+  biddingAmounts?: BiddingAmounts;
   commissionPercentage: number | null;
 }
 
@@ -23,6 +24,13 @@ export function SendBid({
   biddingAmounts = {} as BiddingAmounts,
   commissionPercentage,
 }: SendBidProps) {
+  const safeCommission = commissionPercentage ?? 0;
+
+  const amountsReady =
+    Number.isFinite(biddingAmounts?.tenPercent) &&
+    Number.isFinite(biddingAmounts?.twentyFivePercent) &&
+    Number.isFinite(biddingAmounts?.fiftyPercent);
+
   const {
     currentValue,
     isPending,
@@ -43,10 +51,13 @@ export function SendBid({
     biddingAmounts,
     articleServerState,
     articleId,
-    commissionPercentage: commissionPercentage ?? 0,
+    commissionPercentage: safeCommission,
   });
 
-  const isReady = commissionPercentage !== null && !isNaN(currentValue);
+  const isReady =
+    Number.isFinite(safeCommission) &&
+    Number.isFinite(currentValue) &&
+    amountsReady;
 
   return (
     <View className='w-full rounded-xl border border-neutral-200 bg-white p-4'>
@@ -59,15 +70,15 @@ export function SendBid({
               mode='secondary'
               size='small'
               className='flex-1'
-              disabled={!articleAvailable}
+              disabled={!articleAvailable || !isReady}
               onPress={() => {
                 setAmountToBid(tenPercent);
               }}
             >
               {!isReady
-                ? ''
+                ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(tenPercent + currentValue, commissionPercentage)
+                    toTotal(tenPercent + currentValue, safeCommission)
                   )}
             </Button>
 
@@ -75,18 +86,15 @@ export function SendBid({
               mode='secondary'
               size='small'
               className='flex-1'
-              disabled={!articleAvailable}
+              disabled={!articleAvailable || !isReady}
               onPress={() => {
                 setAmountToBid(twentyFivePercent);
               }}
             >
               {!isReady
-                ? ''
+                ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(
-                      twentyFivePercent + currentValue,
-                      commissionPercentage
-                    )
+                    toTotal(twentyFivePercent + currentValue, safeCommission)
                   )}
             </Button>
 
@@ -94,15 +102,15 @@ export function SendBid({
               mode='secondary'
               size='small'
               className='flex-1'
-              disabled={!articleAvailable}
+              disabled={!articleAvailable || !isReady}
               onPress={() => {
                 setAmountToBid(fiftyPercent);
               }}
             >
               {!isReady
-                ? ''
+                ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(fiftyPercent + currentValue, commissionPercentage)
+                    toTotal(fiftyPercent + currentValue, safeCommission)
                   )}
             </Button>
           </View>
@@ -127,22 +135,28 @@ export function SendBid({
             }`}
           />
 
-          {Number(bidAmount) <= computedMaxBid ? (
-            <CustomText
-              type='bodysmall'
-              className={`${isTooLow ? 'text-red-500' : 'text-[#787878]'}`}
-            >
-              {isNaN(currentValue)
-                ? bidLang.minBid
-                : `${bidLang.minBid} ${formatter.format(computedMinBid)}`}
-            </CustomText>
+          {isReady ? (
+            <>
+              {Number(bidAmount) <= computedMaxBid ? (
+                <CustomText
+                  type='bodysmall'
+                  className={`${isTooLow ? 'text-red-500' : 'text-[#787878]'}`}
+                >
+                  {isNaN(currentValue)
+                    ? bidLang.minBid
+                    : `${bidLang.minBid} ${formatter.format(computedMinBid)}`}
+                </CustomText>
+              ) : (
+                <CustomText
+                  type='bodysmall'
+                  className={'text-red-500'}
+                >
+                  {bidLang.maxBid} {formatter.format(computedMaxBid)}
+                </CustomText>
+              )}
+            </>
           ) : (
-            <CustomText
-              type='bodysmall'
-              className={'text-red-500'}
-            >
-              {bidLang.maxBid} {formatter.format(computedMaxBid)}
-            </CustomText>
+            <View className='h-5' />
           )}
         </View>
       </View>

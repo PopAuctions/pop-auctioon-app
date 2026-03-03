@@ -6,6 +6,7 @@ import { CustomLink } from '@/components/ui/CustomLink';
 import type { Auction, Lang } from '@/types/types';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { SimpleCountdown } from '../ui/SimpleCountdown';
+import { AuctionStatus } from '@/constants/auctions';
 
 export const AuctionsSliderItem = ({
   lang,
@@ -36,10 +37,15 @@ export const AuctionsSliderItem = ({
           <SimpleCountdown
             dateString={auction.startDate}
             locale={lang}
+            auctionStatus={auction.status as AuctionStatus}
             texts={{
               completed: {
                 en: 'Auction already started',
                 es: 'La subasta ya comenzó',
+              },
+              startSoon: {
+                es: 'Comenzará pronto',
+                en: 'Starting soon',
               },
             }}
           />

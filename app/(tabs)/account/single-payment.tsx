@@ -17,7 +17,7 @@ import { PaymentArticlesList } from '@/components/payment/PaymentArticlesList';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
@@ -38,6 +38,7 @@ export default function SinglePaymentScreen() {
     data: buyData,
     status: articleStatus,
     errorMessage: articleError,
+    refetch: refetchBuyArticle,
   } = useFetchBuyArticle({ articleId });
 
   // Addresses
@@ -341,6 +342,12 @@ export default function SinglePaymentScreen() {
     router,
     paymentTranslations,
   ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchBuyArticle?.();
+    }, [refetchBuyArticle])
+  );
 
   if (!articleId) {
     return (

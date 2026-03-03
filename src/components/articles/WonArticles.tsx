@@ -136,12 +136,17 @@ export const WonArticleItem = ({
         </View>
 
         <View className='mt-3'>
-          <View
-            className='flex-row items-center'
-            style={{ gap: 6 }}
-          >
-            <CustomText type='subtitle'>{winningBid}:</CustomText>
-            <CustomText type='subtitle'>
+          <View className='flex flex-col items-start'>
+            <CustomText
+              type='subtitle'
+              className='leading-5'
+            >
+              {winningBid}:
+            </CustomText>
+            <CustomText
+              type='subtitle'
+              className='leading-5'
+            >
               {formatter.format(commissionedSoldPrice)}
             </CustomText>
           </View>

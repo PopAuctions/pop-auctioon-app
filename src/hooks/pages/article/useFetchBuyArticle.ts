@@ -80,5 +80,6 @@ export const useFetchBuyArticle = ({
     status,
     errorMessage,
     setErrorMessage,
+    refetch: fetchBuyArticle,
   };
 };

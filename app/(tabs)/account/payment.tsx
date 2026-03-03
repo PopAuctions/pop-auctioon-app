@@ -11,6 +11,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
@@ -31,7 +32,6 @@ import { PaymentArticlesList } from '@/components/payment/PaymentArticlesList';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
@@ -49,6 +49,7 @@ export default function PaymentScreen() {
     data: articlesResponse,
     status: articlesStatus,
     errorMessage: articlesError,
+    refetch: refetchArticles,
   } = useGetWonArticles({ auctionId: auctionId || '' });
   const articles = useMemo(
     () => (articlesResponse ? articlesResponse.articlesWon : []),
@@ -414,6 +415,12 @@ export default function PaymentScreen() {
     paymentTranslations,
     navigateWithAuth,
   ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchArticles?.();
+    }, [refetchArticles])
+  );
 
   // Validar que existe auctionId (después de todos los hooks)
   if (!auctionId) {

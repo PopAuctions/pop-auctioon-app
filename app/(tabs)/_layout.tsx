@@ -6,6 +6,7 @@ import Colors from '@/constants/Colors';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Text } from 'react-native';
+import { APP_USER_ROLES } from '@/constants/user';
 
 const TabLabel = ({ label, color }: { label: string; color: string }) => {
   return (
@@ -29,8 +30,9 @@ export default function TabLayout() {
 
   const session = auth.state === 'authenticated' ? auth.session : null;
   const role = auth.state === 'authenticated' ? auth.role : null;
-  const isAuctioneer = role === 'AUCTIONEER';
+  const isAuctioneer = role === APP_USER_ROLES.AUCTIONEER;
 
+  // forces remount when session or role changes
   const tabsKey = `${session ? 'in' : 'out'}-${role ?? 'no-role'}`;
 
   return (
