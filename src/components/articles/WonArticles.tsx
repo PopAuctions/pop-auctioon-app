@@ -136,7 +136,7 @@ export const WonArticleItem = ({
         </View>
 
         <View className='mt-3'>
-          <View className='flex-column flex items-start'>
+          <View className='flex flex-col items-start'>
             <CustomText
               type='subtitle'
               className='leading-5'
