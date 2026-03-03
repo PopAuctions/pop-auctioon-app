@@ -1,4 +1,4 @@
-import { View, ScrollView, Pressable } from 'react-native';
+import { View, ScrollView, Pressable, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
@@ -6,7 +6,7 @@ import { CustomLink } from '@/components/ui/CustomLink';
 import { Button } from '@/components/ui/Button';
 import { router } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { User } from '@/types/types';
 import { Divider } from '@/components/ui/Divider';
 import { CustomImage } from '@/components/ui/CustomImage';
@@ -23,14 +23,17 @@ import { APP_USER_ROLES } from '@/constants';
 export default function Account({
   currentUser,
   numberOfWonArticles,
+  refetch,
 }: {
   currentUser: User;
   numberOfWonArticles: number;
+  refetch: () => Promise<void>;
 }) {
   const { signOut } = useAuth();
   const { t } = useTranslation();
   const { handleOpenTerms } = useOpenTerms();
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const userInitials = useMemo(() => {
     return currentUser.username.substring(0, 2).toUpperCase();
@@ -43,12 +46,25 @@ export default function Account({
     setLoading(false);
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false));
+  }, [refetch]);
+
   return (
     <SafeAreaView
       className='flex-1'
       edges={['top']}
     >
-      <ScrollView className='flex-1'>
+      <ScrollView
+        className='flex-1'
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         {/* Header con avatar y nombre de usuario */}
         <View className='flex-row items-center px-6 pb-6 pt-4'>
           {/* Avatar circular con iniciales */}
@@ -78,7 +94,7 @@ export default function Account({
               type='h2'
               className='text-xl'
             >
-              {`${currentUser.name} ${currentUser.lastName}`}
+              {`${currentUser.username}`}
             </CustomText>
             <CustomText
               type='h2'
