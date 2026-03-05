@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  AppState,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { View, AppState, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
@@ -62,7 +56,7 @@ export default function Auth() {
       >
         <KeyboardAvoidingView
           className='flex-1'
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior='padding'
         >
           <ScrollView
             className='flex-1'

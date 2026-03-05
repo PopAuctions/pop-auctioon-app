@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -118,9 +117,8 @@ export function AddressFormModal({
     >
       <KeyboardAvoidingView
         className='flex-1 bg-white'
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        // tweak this value if your fields are still covered
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        behavior='padding'
+        keyboardVerticalOffset={64}
       >
         <TouchableWithoutFeedback
           onPress={Keyboard.dismiss}
