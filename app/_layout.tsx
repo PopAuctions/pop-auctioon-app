@@ -34,7 +34,7 @@ import { disableFontScaling } from '@/utils/disableFontScaling';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { SignInAlertModalProvider } from '@/context/sign-in-modal-context';
 import { SignInAlertModal } from '@/components/modal/SignInAlertModal';
-import { LiveSignal } from '@/components/general/LiveSignal';
+// import { LiveSignal } from '@/components/general/LiveSignal';
 import { AuctionStartedModalProvider } from '@/context/auction-started-context';
 import { AuctionStartedModal } from '@/components/modal/AuctionStartedModal';
 import { LanguageSyncEffect } from '@/components/auth/LanguageSyncEffect';
@@ -196,10 +196,10 @@ function RootLayoutNav() {
                 options={{ presentation: 'modal' }}
               />
             </Stack>
-            <LiveSignal
+            {/* <LiveSignal
               size={20}
               top={50}
-            />
+            /> */}
 
             <AuctionStartedModal />
             <SignInAlertModal />

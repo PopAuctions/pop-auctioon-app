@@ -67,7 +67,11 @@ export function ArticleItem({
                 dateString={article.whenInAuction}
                 locale={lang}
                 texts={{
-                  completed: { es: 'Ya comenzó', en: 'Already started' },
+                  startSoon: { en: 'Starting soon', es: 'Comienza pronto' },
+                  completed: {
+                    en: 'Auction already started',
+                    es: 'La subasta ya comenzó',
+                  },
                 }}
               />
             )}

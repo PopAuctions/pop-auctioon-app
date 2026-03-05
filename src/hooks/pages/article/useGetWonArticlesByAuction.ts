@@ -16,7 +16,7 @@ export const useGetWonArticlesByAuction = (): ActionResponse<ResponseType> => {
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureGet } = useSecureApi();
 
-  const fetchArticleBids = useCallback(async () => {
+  const fetchWonArticles = useCallback(async () => {
     setStatus('loading');
 
     const res = await secureGet<ResponseType>({
@@ -49,13 +49,14 @@ export const useGetWonArticlesByAuction = (): ActionResponse<ResponseType> => {
   }, [secureGet]);
 
   useEffect(() => {
-    fetchArticleBids();
-  }, [fetchArticleBids]);
+    fetchWonArticles();
+  }, [fetchWonArticles]);
 
   return {
     data: wonArticle,
     status,
     errorMessage,
     setErrorMessage,
+    refetch: fetchWonArticles,
   };
 };

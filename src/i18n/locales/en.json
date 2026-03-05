@@ -788,7 +788,7 @@
   "globals": {
     "back": "Back",
     "refreshPage": "Refresh page",
-    "goToHome": "Go to home page"
+    "goToHome": "Go to main page"
   },
   "commonErrors": {
     "networkError": "Internet connection error",

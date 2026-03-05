@@ -10,7 +10,7 @@
  */
 
 import { memo } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Checkbox } from 'expo-checkbox';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomImage } from '@/components/ui/CustomImage';
@@ -44,21 +44,32 @@ export const PaymentArticlesList = memo(function PaymentArticlesList({
         const isSelected = selectedArticleIds.includes(article.id);
 
         return (
-          <View
+          <Pressable
             key={article.id}
+            disabled={isLoading}
+            onPress={() => onToggleArticle(article.id)}
             className={cn(
               'flex-row items-center gap-4 rounded-lg border-2 p-4',
-              isSelected ? 'border-cinnabar bg-orange-50' : 'border-gray-200'
+              isSelected ? 'border-cinnabar bg-orange-50' : 'border-gray-200',
+              isLoading && 'opacity-60'
             )}
           >
             {/* Checkbox */}
             {showCheckBoxes && (
-              <Checkbox
-                value={isSelected}
-                onValueChange={() => onToggleArticle(article.id)}
-                color={isSelected ? '#d75639' : undefined}
-                disabled={isLoading}
-              />
+              <Pressable
+                onPress={(e) => {
+                  e.stopPropagation?.();
+                  onToggleArticle(article.id);
+                }}
+                hitSlop={10}
+              >
+                <Checkbox
+                  value={isSelected}
+                  onValueChange={() => onToggleArticle(article.id)}
+                  color={isSelected ? '#d75639' : undefined}
+                  disabled={isLoading}
+                />
+              </Pressable>
             )}
 
             {/* Imagen del artículo */}
@@ -96,7 +107,7 @@ export const PaymentArticlesList = memo(function PaymentArticlesList({
                 {formatter.format(article.soldPrice || 0)}
               </CustomText>
             </View>
-          </View>
+          </Pressable>
         );
       })}
     </View>

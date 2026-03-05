@@ -230,7 +230,7 @@ export function ContactUsContent() {
         </View>
 
         {/* Checkbox */}
-        <View className='mb-6 flex-row items-center'>
+        {/* <View className='mb-6 flex-row items-center'>
           <Controller
             control={control}
             name='wantToSell'
@@ -249,7 +249,7 @@ export function ContactUsContent() {
           >
             {t('screens.contactUs.wantToSell')}
           </CustomText>
-        </View>
+        </View> */}
 
         {/* Send Button */}
         <Button

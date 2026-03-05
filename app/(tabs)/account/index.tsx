@@ -8,10 +8,20 @@ import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 import { useGetArticlesByAuctionAmount } from '@/hooks/pages/article/useGetArticlesByAuctionAmount';
 
 export default function AccountTab() {
-  const { data: currentUser, status, errorMessage } = useGetCurrentUser();
-  const { data: articlesWonAmount } = useGetArticlesByAuctionAmount();
+  const {
+    data: currentUser,
+    status,
+    errorMessage,
+    refetch: fetchCurrentUser,
+  } = useGetCurrentUser();
+  const { data: articlesWonAmount, refetch: refetchArticles } =
+    useGetArticlesByAuctionAmount();
   const { isNavigating } = useAuthNavigation();
   const shouldHide = useHideWhileStackBuilds();
+
+  const refetchData = async () => {
+    await Promise.all([refetchArticles?.(), fetchCurrentUser?.()]);
+  };
 
   if (shouldHide) {
     return <View className='flex-1 bg-white' />;
@@ -54,6 +64,7 @@ export default function AccountTab() {
     <Account
       currentUser={currentUser}
       numberOfWonArticles={articlesWonAmount}
+      refetch={refetchData}
     />
   );
 }

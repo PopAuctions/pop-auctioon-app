@@ -304,6 +304,11 @@ export const HalfEllipseArticleWheel = ({
         const relToSnapped = itemIndex - snappedCenter;
         const slotPosSnapped = half + relToSnapped;
 
+        const isBehindLive = itemIndex < currentArticleIndex;
+        const isUnavailable =
+          isBehindLive || article?.ArticleBid?.available === false;
+        const imageOpacity = isUnavailable ? 0.4 : 1;
+
         const isInVisibleSlots =
           slotPosSnapped >= 0 && slotPosSnapped <= VISIBLE - 1;
         const showLiveBorder = isLive && isInVisibleSlots;
@@ -342,10 +347,7 @@ export const HalfEllipseArticleWheel = ({
             >
               <Image
                 source={{ uri: article.images?.[0] ?? '' }}
-                style={[
-                  styles.image,
-                  { opacity: article?.ArticleBid?.available ? 1 : 0.4 },
-                ]}
+                style={[styles.image, { opacity: imageOpacity }]}
               />
             </Pressable>
           </View>

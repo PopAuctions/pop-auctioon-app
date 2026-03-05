@@ -118,7 +118,7 @@ export function AddressFormModal({
     >
       <KeyboardAvoidingView
         className='flex-1 bg-white'
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         // tweak this value if your fields are still covered
         keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
       >
