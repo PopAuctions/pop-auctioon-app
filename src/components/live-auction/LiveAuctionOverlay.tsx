@@ -92,6 +92,33 @@ export const LiveAuctionOverlay = ({
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const backOpacity = useRef(new Animated.Value(1)).current;
 
+  const currentArticleIndex = useMemo(() => {
+    const index = orderedArticles.findIndex((a) => a.id === articleId);
+    return index === -1 ? 0 : index;
+  }, [orderedArticles, articleId]);
+  const currentArticle = useMemo(() => {
+    return orderedArticles[currentArticleIndex];
+  }, [orderedArticles, currentArticleIndex]);
+
+  // Altura del chat ajustada según el dispositivo
+  const chatHeight = deviceType === 'tablet' ? 280 : UI.CHAT_HEIGHT;
+
+  // Bid row pinned
+  const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
+  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT;
+
+  // Article HUD pinned to top
+  const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
+  const backTop = articleHudTop + UI.ARTICLE_HUD_HEIGHT + 20;
+
+  const baseChatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+  const chatBottom = keyboardHeight > 0 ? keyboardHeight + 10 : baseChatBottom;
+
+  const openArticleModal = (idToShow: number) => {
+    setModalArticleId(idToShow);
+    setShowCurrentArticleModal(true);
+  };
+
   // Keyboard listeners para ajustar posición del chat
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -113,33 +140,6 @@ export const LiveAuctionOverlay = ({
       keyboardDidHideListener?.remove();
     };
   }, []);
-
-  const currentArticleIndex = useMemo(() => {
-    const index = orderedArticles.findIndex((a) => a.id === articleId);
-    return index === -1 ? 0 : index;
-  }, [orderedArticles, articleId]);
-  const currentArticle = useMemo(() => {
-    return orderedArticles[currentArticleIndex];
-  }, [orderedArticles, currentArticleIndex]);
-
-  // Altura del chat ajustada según el dispositivo
-  const chatHeight = deviceType === 'tablet' ? 280 : UI.CHAT_HEIGHT;
-
-  // Bid row pinned
-  const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
-  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT;
-
-  // Article HUD pinned to top
-  const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
-  const backTop = articleHudTop + UI.ARTICLE_HUD_HEIGHT + 20;
-
-  const baseChatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
-  const chatBottom = keyboardHeight > 0 ? keyboardHeight + 60 : baseChatBottom;
-
-  const openArticleModal = (idToShow: number) => {
-    setModalArticleId(idToShow);
-    setShowCurrentArticleModal(true);
-  };
 
   return (
     <>
