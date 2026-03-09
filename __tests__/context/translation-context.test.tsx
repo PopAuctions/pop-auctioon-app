@@ -14,6 +14,7 @@ jest.mock('@/i18n', () => ({
   changeLocale: jest.fn(),
   loadLanguagePreference: jest.fn(),
   saveLanguagePreference: jest.fn(),
+  setManualLanguageFlag: jest.fn().mockResolvedValue(undefined),
 }));
 
 describe('TranslationProvider - Language Persistence Context', () => {

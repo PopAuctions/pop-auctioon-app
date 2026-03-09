@@ -86,9 +86,14 @@ export const changeLocale = (locale: Lang) => {
 // ---------------------------------------------------------------------------
 // Manual-change flag — persists across restarts so the correct value wins
 // when the user changes language while logged out and then logs in.
+// An in-memory mirror is kept so callers that don't await the write
+// (e.g. fire-and-forget during init) can still read the flag synchronously.
 // ---------------------------------------------------------------------------
 
+let _manualLanguageFlagInMemory = false;
+
 export const setManualLanguageFlag = async (): Promise<void> => {
+  _manualLanguageFlagInMemory = true; // set synchronously to avoid read races
   try {
     await AsyncStorage.setItem(LANGUAGE_MANUALLY_SET_KEY, 'true');
   } catch (error) {
@@ -97,6 +102,7 @@ export const setManualLanguageFlag = async (): Promise<void> => {
 };
 
 export const clearManualLanguageFlag = async (): Promise<void> => {
+  _manualLanguageFlagInMemory = false; // clear synchronously
   try {
     await AsyncStorage.removeItem(LANGUAGE_MANUALLY_SET_KEY);
   } catch (error) {
@@ -105,6 +111,7 @@ export const clearManualLanguageFlag = async (): Promise<void> => {
 };
 
 export const getManualLanguageFlag = async (): Promise<boolean> => {
+  if (_manualLanguageFlagInMemory) return true; // fast path, avoids AsyncStorage race
   try {
     const value = await AsyncStorage.getItem(LANGUAGE_MANUALLY_SET_KEY);
     return value === 'true';

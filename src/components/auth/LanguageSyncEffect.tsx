@@ -53,14 +53,22 @@ export function LanguageSyncEffect() {
           // Local value wins — push it to DB so all surfaces stay in sync
           const localLocale = getCurrentLocale() as Lang;
 
-          await securePatch({
+          const patchResponse = await securePatch<{ success: boolean }>({
             endpoint: SECURE_ENDPOINTS.USER.UPDATE_LANGUAGE,
             data: { language: localLocale },
           });
 
-          // Clear the flag regardless — avoids being stuck if the server is
-          // temporarily down. The app shows the correct locale either way.
-          await clearManualLanguageFlag();
+          if (patchResponse.error) {
+            console.error(
+              'LANGUAGE_SYNC_EFFECT - Failed to update user language',
+              patchResponse.error
+            );
+            // Keep the flag set so the next login can retry the push.
+          } else {
+            // Only clear after a successful update so we don't silently lose
+            // the user's language choice if the server is temporarily down.
+            await clearManualLanguageFlag();
+          }
         } else {
           // No local change — DB is authoritative (e.g. changed on another device)
           const response = await secureGet<UserWithLanguage>({

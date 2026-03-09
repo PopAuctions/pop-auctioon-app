@@ -58,8 +58,8 @@ export function TranslationProvider({
         // mark it as a manual choice so LanguageSyncEffect pushes it to the DB
         // on first login instead of the DB's default (es) overriding device lang.
         const deviceLocale = getCurrentLocale();
-        saveLanguagePreference(deviceLocale);
-        setManualLanguageFlag();
+        await saveLanguagePreference(deviceLocale);
+        await setManualLanguageFlag();
       }
 
       setIsInitialized(true);
