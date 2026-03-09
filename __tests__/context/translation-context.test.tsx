@@ -194,10 +194,12 @@ describe('TranslationProvider - Language Persistence Context', () => {
       result.current.changeLanguage('en');
 
       await waitFor(() => {
-        expect(i18n.saveLanguagePreference).toHaveBeenCalledTimes(3);
-        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(1, 'en');
-        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(2, 'es');
-        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(3, 'en');
+        // 1st call: init persists device locale (no saved preference)
+        // calls 2-4: the three changeLanguage calls
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledTimes(4);
+        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(2, 'en');
+        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(3, 'es');
+        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(4, 'en');
       });
     });
   });
