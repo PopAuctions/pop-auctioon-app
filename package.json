@@ -22,11 +22,11 @@
     "build:ios": "eas build --platform ios --profile development",
     "build:ios:prod": "eas build --platform ios --profile production",
     "build:ios:device": "eas build --platform ios --profile development-device",
-    "build:ios:internal": "test -n \"$EXPO_PUBLIC_API_KEY\" || (echo '❌ EXPO_PUBLIC_API_KEY missing' && exit 1) && eas build --platform ios --profile internal-store",
+    "build:ios:internal": "grep -q 'EXPO_PUBLIC_API_KEY' eas.json || (echo '❌ EXPO_PUBLIC_API_KEY not found in eas.json' && exit 1) && eas build --platform ios --profile internal-store",
     "ios:submit": "eas submit -p ios",
     "build:android": "eas build --platform android --profile development",
     "build:android:prod": "eas build --platform android --profile production",
-    "build:android:internal": "test -n \"$EXPO_PUBLIC_API_KEY\" || (echo '❌ EXPO_PUBLIC_API_KEY missing' && exit 1) && eas build --platform android --profile internal-store",
+    "build:android:internal": "grep -q 'EXPO_PUBLIC_API_KEY' eas.json || (echo '❌ EXPO_PUBLIC_API_KEY not found in eas.json' && exit 1) && eas build --platform android --profile internal-store",
     "generate-types": "pnpm exec supabase gen types typescript --project-id xvohgpgzvxdwooerdnfb --schema public > ./src/types/supabase.ts"
   },
   "dependencies": {
