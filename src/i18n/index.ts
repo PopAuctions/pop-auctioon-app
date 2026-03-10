@@ -2,7 +2,10 @@ import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { Lang } from '@/types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LANGUAGE_STORAGE_KEY } from '@/constants/locales';
+import {
+  LANGUAGE_STORAGE_KEY,
+  LANGUAGE_MANUALLY_SET_KEY,
+} from '@/constants/locales';
 
 // Import translation files
 import es from './locales/es.json';
@@ -78,6 +81,44 @@ export const loadLanguagePreference = async (): Promise<Lang | null> => {
 // Helper function to change locale
 export const changeLocale = (locale: Lang) => {
   i18n.locale = locale;
+};
+
+// ---------------------------------------------------------------------------
+// Manual-change flag — persists across restarts so the correct value wins
+// when the user changes language while logged out and then logs in.
+// An in-memory mirror is kept so callers that don't await the write
+// (e.g. fire-and-forget during init) can still read the flag synchronously.
+// ---------------------------------------------------------------------------
+
+let _manualLanguageFlagInMemory = false;
+
+export const setManualLanguageFlag = async (): Promise<void> => {
+  _manualLanguageFlagInMemory = true; // set synchronously to avoid read races
+  try {
+    await AsyncStorage.setItem(LANGUAGE_MANUALLY_SET_KEY, 'true');
+  } catch (error) {
+    console.error('Error setting manual language flag:', error);
+  }
+};
+
+export const clearManualLanguageFlag = async (): Promise<void> => {
+  _manualLanguageFlagInMemory = false; // clear synchronously
+  try {
+    await AsyncStorage.removeItem(LANGUAGE_MANUALLY_SET_KEY);
+  } catch (error) {
+    console.error('Error clearing manual language flag:', error);
+  }
+};
+
+export const getManualLanguageFlag = async (): Promise<boolean> => {
+  if (_manualLanguageFlagInMemory) return true; // fast path, avoids AsyncStorage race
+  try {
+    const value = await AsyncStorage.getItem(LANGUAGE_MANUALLY_SET_KEY);
+    return value === 'true';
+  } catch (error) {
+    console.error('Error reading manual language flag:', error);
+    return false;
+  }
 };
 
 // Helper function to get available locales

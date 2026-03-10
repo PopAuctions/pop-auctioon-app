@@ -4,7 +4,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   View,
 } from 'react-native';
@@ -255,7 +254,7 @@ const CustomBidModal = ({
       >
         <KeyboardAvoidingView
           style={{ flex: 1, justifyContent: 'flex-end' }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior='padding'
           keyboardVerticalOffset={0}
         >
           {/* Card */}

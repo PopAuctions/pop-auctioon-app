@@ -14,6 +14,7 @@ jest.mock('@/i18n', () => ({
   changeLocale: jest.fn(),
   loadLanguagePreference: jest.fn(),
   saveLanguagePreference: jest.fn(),
+  setManualLanguageFlag: jest.fn().mockResolvedValue(undefined),
 }));
 
 describe('TranslationProvider - Language Persistence Context', () => {
@@ -193,10 +194,12 @@ describe('TranslationProvider - Language Persistence Context', () => {
       result.current.changeLanguage('en');
 
       await waitFor(() => {
-        expect(i18n.saveLanguagePreference).toHaveBeenCalledTimes(3);
-        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(1, 'en');
-        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(2, 'es');
-        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(3, 'en');
+        // 1st call: init persists device locale (no saved preference)
+        // calls 2-4: the three changeLanguage calls
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledTimes(4);
+        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(2, 'en');
+        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(3, 'es');
+        expect(i18n.saveLanguagePreference).toHaveBeenNthCalledWith(4, 'en');
       });
     });
   });
@@ -393,6 +396,124 @@ describe('TranslationProvider - Language Persistence Context', () => {
         expect(i18n.loadLanguagePreference).toHaveBeenCalled();
         expect(i18n.changeLocale).toHaveBeenCalledWith('en');
         expect(result.current.locale).toBe('en');
+      });
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // syncLanguageFromDb — DB → app sync (no write back)
+  // ---------------------------------------------------------------
+  describe('syncLanguageFromDb Function', () => {
+    it('should expose syncLanguageFromDb function', async () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBeDefined());
+
+      expect(typeof result.current.syncLanguageFromDb).toBe('function');
+    });
+
+    it('should update locale when DB language differs from current', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue(null);
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBe('es'));
+
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(i18n.changeLocale).toHaveBeenCalledWith('en');
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledWith('en');
+        expect(result.current.locale).toBe('en');
+      });
+    });
+
+    it('should be a no-op when DB language matches current locale', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue(null);
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBe('es'));
+
+      jest.clearAllMocks();
+
+      // DB says 'es', same as current — should not call updates
+      result.current.syncLanguageFromDb('es');
+
+      await waitFor(() => {
+        expect(i18n.changeLocale).not.toHaveBeenCalled();
+        expect(i18n.saveLanguagePreference).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should save to AsyncStorage so next cold-start respects DB value', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue(null);
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBeDefined());
+
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledWith('en');
+      });
+    });
+
+    it('should NOT trigger saveLanguagePreference if same language (avoids redundant writes)', async () => {
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('en');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue('en');
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBeDefined());
+
+      jest.clearAllMocks();
+
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(i18n.saveLanguagePreference).not.toHaveBeenCalled();
+        expect(i18n.changeLocale).not.toHaveBeenCalled();
+      });
+    });
+
+    it('Scenario: user logs in with DB language different from local storage', async () => {
+      // Local: es (user hadn't changed language)
+      (i18n.getCurrentLocale as jest.Mock).mockReturnValue('es');
+      (i18n.loadLanguagePreference as jest.Mock).mockResolvedValue('es');
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <TranslationProvider>{children}</TranslationProvider>
+      );
+      const { result } = renderHook(() => useTranslationContext(), { wrapper });
+
+      await waitFor(() => expect(result.current.locale).toBe('es'));
+
+      // DB has 'en' (set from another device)
+      result.current.syncLanguageFromDb('en');
+
+      await waitFor(() => {
+        expect(result.current.locale).toBe('en');
+        expect(i18n.saveLanguagePreference).toHaveBeenCalledWith('en');
       });
     });
   });

@@ -1,11 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  Animated,
-  Keyboard,
-} from 'react-native';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { View, Animated, Keyboard } from 'react-native';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { Chat } from '@/components/chat/Chat';
 import { BidSlider } from '@/components/bids/BidSlider';
@@ -15,7 +9,6 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useDeviceType } from '@/hooks/useDeviceType';
 import { HighestBidderProvider } from '@/context/highest-bidder-context';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
-// import { useAutoHideControls } from '@/hooks/components/useAutoHideControls';
 import { REQUEST_STATUS } from '@/constants';
 import { LiveArticleCard } from './LiveArticleCard';
 import { ArticleCountdownUser } from './ArticleCountdownUser';
@@ -44,7 +37,6 @@ interface OverlayProps {
 }
 
 const Z = {
-  TAP_CATCHER: 0,
   BID: 10,
   CHAT: 30,
   WHEEL: 20,
@@ -73,14 +65,8 @@ const UI = {
 
   BID_HEIGHT: 36,
 
-  KEYBOARD_OFFSET_IOS: 0,
   CHAT_OFFSET: 0,
-
-  TOP_CONTROLS_HEIGHT: 56,
   HUD_TOP_GAP: 0,
-  CONTROLS_AUTOHIDE_MS: 2500,
-  FADE_MS: 180,
-  SLIDE_MS: 180,
 } as const;
 
 export const LiveAuctionOverlay = ({
@@ -103,17 +89,8 @@ export const LiveAuctionOverlay = ({
 
   const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
   const [modalArticleId, setModalArticleId] = useState<number | null>(null);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const backOpacity = useRef(new Animated.Value(1)).current;
-  // const paused = showCurrentArticleModal;
-
-  // const controls = useAutoHideControls({
-  //   fadeMs: UI.FADE_MS,
-  //   slideMs: UI.SLIDE_MS,
-  //   autoHideMs: UI.CONTROLS_AUTOHIDE_MS,
-  //   topControlsHeight: UI.TOP_CONTROLS_HEIGHT,
-  //   paused,
-  // });
-  // const controlsOpacity = controls.opacity;
 
   const currentArticleIndex = useMemo(() => {
     const index = orderedArticles.findIndex((a) => a.id === articleId);
@@ -134,14 +111,35 @@ export const LiveAuctionOverlay = ({
   const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
   const backTop = articleHudTop + UI.ARTICLE_HUD_HEIGHT + 20;
 
-  // Chat sits above article HUD
-  const chatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+  const baseChatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+  const chatBottom = keyboardHeight > 0 ? keyboardHeight + 10 : baseChatBottom;
 
   const openArticleModal = (idToShow: number) => {
-    // controls.hide();
     setModalArticleId(idToShow);
     setShowCurrentArticleModal(true);
   };
+
+  // Keyboard listeners para ajustar posición del chat
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      (event) => {
+        setKeyboardHeight(event.endCoordinates.height);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
 
   return (
     <>
@@ -149,17 +147,6 @@ export const LiveAuctionOverlay = ({
         pointerEvents='box-none'
         className='absolute inset-0'
       >
-        {/* <Pressable
-          onPress={() => {
-            Keyboard.dismiss();
-            controls.show();
-          }}
-          style={[
-            StyleSheet.absoluteFillObject,
-            { zIndex: Z.TAP_CATCHER, elevation: 0 },
-          ]}
-        /> */}
-
         {/* Back */}
         <LiveBackButton
           controlsVisible={true}
@@ -192,12 +179,8 @@ export const LiveAuctionOverlay = ({
         </View>
 
         {/* Chat + Actions (keyboard-aware) */}
-        <KeyboardAvoidingView
+        <View
           pointerEvents='box-none'
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={
-            Platform.OS === 'ios' ? UI.KEYBOARD_OFFSET_IOS : 0
-          }
           style={{
             position: 'absolute',
             left: UI.SCREEN_PADDING,
@@ -258,7 +241,7 @@ export const LiveAuctionOverlay = ({
               </ShareButton>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </View>
 
         <HighestBidderProvider key={articleId}>
           {/* Article HUD */}
@@ -274,7 +257,6 @@ export const LiveAuctionOverlay = ({
               right: UI.SCREEN_PADDING,
               top: articleHudTop,
               height: UI.ARTICLE_HUD_HEIGHT,
-              // transform: [{ translateY: controls.hudOffsetY }],
               zIndex: Z.HUD,
               elevation: Z.HUD,
             }}
