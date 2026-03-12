@@ -44,7 +44,8 @@
         "EXPO_PUBLIC_AWS_REGION": "eu-central-1",
         "EXPO_PUBLIC_SENTRY_DSN": "https://53faf73f2d2392580fda8ca7d6ba8ae5@o4507746597994496.ingest.de.sentry.io/4510739211223120",
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
-      }
+      },
+      "autoIncrement": true
     }
   },
   "submit": {
