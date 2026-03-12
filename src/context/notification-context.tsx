@@ -287,6 +287,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
             endpoint: PROTECTED_ENDPOINTS.NOTIFICATIONS.REGISTER,
             data: {
               token: expoPushToken,
+              platform: Platform.OS as 'ios' | 'android',
               user_id: auth.session.user.id, // Include user_id to associate token
             },
           });
@@ -331,8 +332,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {
         try {
-          const requestData: { token: string; user_id?: string } = {
+          const requestData: {
+            token: string;
+            platform: 'ios' | 'android';
+            user_id?: string;
+          } = {
             token: expoPushToken,
+            platform: Platform.OS as 'ios' | 'android',
           };
 
           if (userId) {
