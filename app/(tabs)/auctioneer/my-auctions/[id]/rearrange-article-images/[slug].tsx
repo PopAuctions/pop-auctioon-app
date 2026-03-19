@@ -2,43 +2,39 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { ArticleImagesOrderList } from '@/components/articles/ArticleImagesOrderList';
+import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
 import { Loading } from '@/components/ui/Loading';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useArticle } from '@/hooks/pages/my-auction/useArticle';
 import { useToast } from '@/hooks/useToast';
-import { useOnlineStoreArticle } from '@/hooks/pages/online-store/useOnlineStoreArticle';
-import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlineStoreArticle';
 
-export default function MyOnlineStoreArticleRearrangeImagesScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+export default function RearrangeArticleImagesScreen() {
+  const { id, slug } = useLocalSearchParams<{ id: string; slug: string }>();
   const { locale } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const { callToast } = useToast(locale);
 
-  const articleId = Number(id);
+  const auctionId = String(id);
+  const articleId = Number(slug);
 
   const {
-    data: onlineStoreArticle,
+    data: article,
     status,
     errorMessage,
-  } = useGetOnlineStoreArticle({ articleId: articleId });
-  const { editArticleImagesOrder } = useOnlineStoreArticle();
+  } = useGetArticle({ articleId: articleId });
+  const { editArticleImagesOrder } = useArticle({ auctionId });
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }
 
-  const article = onlineStoreArticle?.Article;
-  if (
-    status === REQUEST_STATUS.error ||
-    !onlineStoreArticle ||
-    !article?.images
-  ) {
+  if (status === REQUEST_STATUS.error || !article || !article.images) {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute={`/(tabs)/my-online-store/articles/${articleId}/rearrange-images`}
+        refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/rearrange-article-images/${articleId}`}
       />
     );
   }
@@ -68,7 +64,7 @@ export default function MyOnlineStoreArticleRearrangeImagesScreen() {
       return;
     }
 
-    router.navigate(`/(tabs)/my-online-store/articles/${articleId}`);
+    router.navigate(`/(tabs)/auctioneer/my-auctions/${auctionId}`);
     setIsSaving(false);
   };
 

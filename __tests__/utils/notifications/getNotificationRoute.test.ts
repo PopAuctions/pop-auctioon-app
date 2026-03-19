@@ -210,7 +210,7 @@ describe('getNotificationRoute', () => {
             title: 'Nueva oferta',
             body: 'Alguien ha superado tu oferta',
             data: {
-              route: '/(tabs)/my-auctions/bids/456',
+              route: '/(tabs)/auctioneer/my-auctions/bids/456',
               articleId: 456,
               type: 'outbid',
             },
@@ -219,7 +219,7 @@ describe('getNotificationRoute', () => {
       } as any;
 
       const result = getNotificationRoute(notification);
-      expect(result).toBe('/(tabs)/my-auctions/bids/456');
+      expect(result).toBe('/(tabs)/auctioneer/my-auctions/bids/456');
     });
 
     it('should handle win notification', () => {

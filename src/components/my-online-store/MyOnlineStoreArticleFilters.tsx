@@ -10,7 +10,7 @@ import {
 } from '@/constants';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
-import { Filters } from '@/app/(tabs)/my-online-store';
+import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { SelectCategoryModal } from '../modal/SelectCategoryModal';
 
 interface Props {

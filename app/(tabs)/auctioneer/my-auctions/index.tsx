@@ -37,7 +37,7 @@ export default function MyAuctionsScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/my-auctions'
+        refreshRoute='/(tabs)/auctioneer/my-auctions'
       />
     );
   }

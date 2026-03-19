@@ -22,7 +22,7 @@ export const useAuthNavigation = () => {
     (href: string, options?: { replace?: boolean }) => {
       // Normalizar la ruta para manejar parámetros dinámicos
       // Ejemplos:
-      // - '/(tabs)/my-auctions/28' → 'my-auctions/[id]'
+      // - '/(tabs)/auctioneer/my-auctions/28' → 'my-auctions/[id]'
       // - '/(tabs)/account/edit-profile' → 'edit-profile'
       const routeName = normalizeRoutePath(href);
       const routeConfig = PROTECTED_ROUTES[routeName];

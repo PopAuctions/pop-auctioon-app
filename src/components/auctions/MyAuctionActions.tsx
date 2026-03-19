@@ -49,7 +49,7 @@ export const MyAuctionActions = ({
         auctionStatus === AuctionStatus.NEED_CHANGES ||
         auctionStatus === AuctionStatus.CHANGES_MADE) && (
         <CustomLink
-          href={`/(tabs)/my-auctions/${auctionId}/edit`}
+          href={`/(tabs)/auctioneer/my-auctions/${auctionId}/edit`}
           size='small'
           className='w-1/2'
           mode='primary'

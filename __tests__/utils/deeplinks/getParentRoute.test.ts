@@ -281,11 +281,11 @@ describe('shouldBuildStack', () => {
   });
 
   describe('Cross-stack navigation scenarios', () => {
-    it('should build stack for account/sold-articles/[id]', () => {
-      const result = shouldBuildStack('/(tabs)/account/sold-articles/123');
+    it('should build stack for auctioneer/sold-articles/[id]', () => {
+      const result = shouldBuildStack('/(tabs)/auctioneer/sold-articles/123');
       expect(result).toBe(true);
-      expect(getParentRoute('/(tabs)/account/sold-articles/123')).toBe(
-        '/(tabs)/account'
+      expect(getParentRoute('/(tabs)/auctioneer/sold-articles/123')).toBe(
+        '/(tabs)/auctioneer'
       );
     });
 

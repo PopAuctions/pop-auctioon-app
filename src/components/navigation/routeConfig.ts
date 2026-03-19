@@ -113,15 +113,15 @@ export const hasAccess = (
  * Normaliza una ruta con parámetros dinámicos a su patrón en PROTECTED_ROUTES
  *
  * Convierte rutas reales con IDs/slugs a sus patrones con [id]/[slug]:
- * - '/(tabs)/my-auctions/28' → 'my-auctions/[id]'
- * - '/(tabs)/my-auctions/28/edit-article/789' → 'my-auctions/[id]/edit-article/[slug]'
+ * - '/(tabs)/auctioneer/my-auctions/28' → 'my-auctions/[id]'
+ * - '/(tabs)/auctioneer/my-auctions/28/edit-article/789' → 'my-auctions/[id]/edit-article/[slug]'
  * - '/(tabs)/account/edit-profile' → 'edit-profile'
  * - '/(tabs)/auctions/live/123' → 'auctions/live/[id]'
  *
  * ESTRATEGIA CONSERVADORA: Solo convertir a [id]/[slug] valores que CLARAMENTE son datos,
  * no nombres de rutas. Por defecto, mantener literal (más seguro).
  *
- * @param path - Ruta completa con grupos y parámetros (ej: '/(tabs)/my-auctions/28/edit-article/abc')
+ * @param path - Ruta completa con grupos y parámetros (ej: '/(tabs)/auctioneer/my-auctions/28/edit-article/abc')
  * @returns Patrón normalizado que matchea con PROTECTED_ROUTES
  */
 export const normalizeRoutePath = (path: string): string => {

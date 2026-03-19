@@ -11,8 +11,7 @@ const TAB_ROUTES = [
   '/(tabs)/home',
   '/(tabs)/auctions',
   '/(tabs)/online-store',
-  '/(tabs)/my-auctions',
-  '/(tabs)/my-online-store',
+  '/(tabs)/auctioneer',
   '/(tabs)/account',
   '/(tabs)/auth',
 ] as const;
@@ -88,7 +87,7 @@ function addFromTabParamIfCrossTab(
  * Ejemplos:
  * - '/home/api-testing' -> Ruta pública (no requiere auth)
  * - '/(tabs)/auctions' -> Requiere autenticación (configurado en routeConfig)
- * - '/(tabs)/my-auctions' -> Requiere autenticación + rol AUCTIONEER
+ * - '/(tabs)/auctioneer/my-auctions' -> Requiere autenticación + rol AUCTIONEER
  */
 interface CustomLinkProps {
   href: string;

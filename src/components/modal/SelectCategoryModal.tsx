@@ -49,7 +49,7 @@ export function SelectCategoryModal({
     if (!selectedCategory) return;
 
     navigateWithAuth(
-      `/(tabs)/my-online-store/articles/new?category=${selectedCategory}`
+      `/(tabs)/auctioneer/my-online-store/articles/new?category=${selectedCategory}`
     );
 
     closeModal();

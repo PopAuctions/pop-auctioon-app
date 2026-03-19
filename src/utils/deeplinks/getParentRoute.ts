@@ -23,6 +23,7 @@ const TAB_ROUTES = [
   'home',
   'auctions',
   'online-store',
+  'auctioneer',
   'my-auctions',
   'my-online-store',
   'account',

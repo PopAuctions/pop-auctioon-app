@@ -5,15 +5,15 @@ import {
   CustomArticleSecondChance,
   Lang,
 } from '@/types/types';
-import { CustomText } from '../ui/CustomText';
-import { CustomLink } from '../ui/CustomLink';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 import {
   AMOUNT_PLACEHOLDER,
   ARTICLE_BRANDS_LABELS,
   ArticleSecondChanceStatusConst,
   ONLINE_STORE_ARTICLE_STATUS_LABELS,
 } from '@/constants';
-import { CustomImage } from '../ui/CustomImage';
+import { CustomImage } from '@/components/ui/CustomImage';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
 type MyOnlineStoreArticleItemProps = {
@@ -116,8 +116,8 @@ export function MyOnlineStoreArticleItem({
             <CustomLink
               href={
                 isSold
-                  ? '/(tabs)/account'
-                  : `/(tabs)/my-online-store/articles/${articleId}`
+                  ? '/(tabs)/auctioneer'
+                  : `/(tabs)/auctioneer/my-online-store/articles/${articleId}`
               }
               mode='primary'
               size='small'

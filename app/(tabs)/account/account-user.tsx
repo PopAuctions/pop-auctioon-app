@@ -18,7 +18,6 @@ import {
   SECOND_SECTION,
   THIRD_SECTION,
 } from '@/constants/session';
-import { APP_USER_ROLES } from '@/constants';
 
 export default function Account({
   currentUser,
@@ -179,7 +178,7 @@ export default function Account({
         <View className='mx-2 p-2'>
           {SECOND_SECTION.map(
             ({ name, icon, labelKey, href, role, variant }) => {
-              if (role && currentUser.role !== APP_USER_ROLES.AUCTIONEER) {
+              if (role && currentUser.role !== role) {
                 return null;
               }
 
