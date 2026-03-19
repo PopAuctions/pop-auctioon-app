@@ -7,6 +7,7 @@ import { Divider } from '@/components/ui/Divider';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
 import type { UserRegisterSchemaType } from '@/utils/schemas';
 import { getErrorMessage } from '@/utils/form-errors';
+import { PasswordInput } from '@/components/fields/PasswordInput';
 
 interface RegisterUserFormProps {
   control: Control<UserRegisterSchemaType>;
@@ -169,12 +170,11 @@ export function RegisterUserForm({
               >
                 {t('loginPage.password')} *
               </CustomText>
-              <Input
+              <PasswordInput
                 placeholder='********'
                 value={value}
                 onChangeText={onChange}
                 editable={!isLoading}
-                secureTextEntry
               />
               {errors.password && (
                 <CustomText
@@ -200,12 +200,11 @@ export function RegisterUserForm({
               >
                 {t('screens.account.confirmPassword')} *
               </CustomText>
-              <Input
+              <PasswordInput
                 placeholder='********'
                 value={value}
                 onChangeText={onChange}
                 editable={!isLoading}
-                secureTextEntry
               />
               {errors.confirmPassword && (
                 <CustomText
@@ -306,12 +305,6 @@ export function RegisterUserForm({
               onImageRemoved={() => onChange('')}
               disabled={isLoading}
             />
-            <CustomText
-              type='bodysmall'
-              className='text-gray-500 mt-1'
-            >
-              {t('screens.account.imageFormats')}
-            </CustomText>
           </View>
         )}
       />

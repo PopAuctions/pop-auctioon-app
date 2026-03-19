@@ -14,6 +14,7 @@ import { AppleButton } from '@/components/auth/AppleButton';
 import { Divider } from '@/components/ui/Divider';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/useToast';
+import { PasswordInput } from '@/components/fields/PasswordInput';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -106,11 +107,10 @@ export default function Auth() {
                 >
                   {t('loginPage.password')}
                 </CustomText>
-                <Input
+                <PasswordInput
                   value={password}
                   onChangeText={setPassword}
                   placeholder={t('loginPage.password')}
-                  secureTextEntry
                   autoCapitalize='none'
                   autoComplete='password'
                   editable={!isLoading}
