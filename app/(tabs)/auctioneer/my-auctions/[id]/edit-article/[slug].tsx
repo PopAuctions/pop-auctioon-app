@@ -225,8 +225,9 @@ export default function EditAuctionArticleScreen() {
             }
           </CustomText>
 
-          <ArticleComments comments={comments || []} />
-
+          {comments && comments?.length > 0 && (
+            <ArticleComments comments={comments} />
+          )}
           <CustomText
             type='body'
             className='mb-2 text-red-600'
