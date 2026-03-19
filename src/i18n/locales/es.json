@@ -41,6 +41,7 @@
     "auctions": "Subastas en vivo",
     "articleDetails": "Detalles del Artículo",
     "store": "Subastas",
+    "auctioneer": "Subastador",
     "myAuctions": "Mis Subastas en vivo",
     "myOnlineStore": "Mis subastas",
     "back": "Atrás"
@@ -91,6 +92,13 @@
           "watches": "Relojes"
         }
       }
+    },
+    "auctioneer": {
+      "myAuctions": "Mis subastas en vivo",
+      "myOnlineStore": "Mis subastas",
+      "soldArticles": "Artículos Vendidos",
+      "auctioneerActive": "Subastador activo",
+      "auctioneerNotActive": "Subastador inactivo"
     },
     "auction": {
       "follow": "Seguir",

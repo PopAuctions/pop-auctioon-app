@@ -74,14 +74,6 @@ export const SECOND_SECTION: {
   role?: keyof typeof APP_USER_ROLES;
 }[] = [
   {
-    name: 'sold-articles',
-    icon: 'money-bill',
-    variant: VariantEnum.NORMAL,
-    labelKey: 'screens.account.soldArticles',
-    href: '/(tabs)/account/sold-articles',
-    role: APP_USER_ROLES.AUCTIONEER,
-  },
-  {
     name: 'settings',
     icon: 'gear',
     variant: VariantEnum.BOLD,

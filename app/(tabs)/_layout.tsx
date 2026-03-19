@@ -123,44 +123,21 @@ export default function TabLayout() {
 
       {/* MY AUCTIONS tab - only visible for AUCTIONEER */}
       <Tabs.Screen
-        name='my-auctions'
+        name='auctioneer'
         options={{
-          title: t('tabsNames.myAuctions'),
+          title: t('tabsNames.auctioneer'),
           headerShown: false,
           href: session && isAuctioneer ? undefined : null,
           tabBarLabel: ({ color }) => (
             <TabLabel
-              label={t('tabsNames.myAuctions')}
+              label={t('tabsNames.auctioneer')}
               color={color}
             />
           ),
           tabBarIcon: ({ color }) => (
             <FontAwesome
-              name='list'
+              name='id-badge'
               size={28}
-              color={color}
-            />
-          ),
-        }}
-      />
-
-      {/* MY ONLINE STORE tab - only visible for AUCTIONEER */}
-      <Tabs.Screen
-        name='my-online-store'
-        options={{
-          title: t('tabsNames.myOnlineStore'),
-          headerShown: false,
-          href: session && isAuctioneer ? undefined : null,
-          tabBarLabel: ({ color }) => (
-            <TabLabel
-              label={t('tabsNames.myOnlineStore')}
-              color={color}
-            />
-          ),
-          tabBarIcon: ({ color }) => (
-            <FontAwesome
-              name='shopping-bag'
-              size={24}
               color={color}
             />
           ),

@@ -41,6 +41,7 @@
     "auctions": "Live Auctions",
     "articleDetails": "Article Details",
     "store": "Auctions",
+    "auctioneer": "Auctioneer",
     "myAuctions": "My Live Auctions",
     "myOnlineStore": "My Auctions",
     "back": "Back"
@@ -91,6 +92,13 @@
           "watches": "Watches"
         }
       }
+    },
+    "auctioneer": {
+      "myAuctions": "My live auctions",
+      "myOnlineStore": "My auctions",
+      "soldArticles": "Sold Articles",
+      "auctioneerActive": "Active auctioneer",
+      "auctioneerNotActive": "Inactive auctioneer"
     },
     "auction": {
       "follow": "Follow",
