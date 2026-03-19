@@ -7,7 +7,6 @@ import {
   AUCTION_STATUS_LABEL,
   AuctionStatus,
 } from '@/constants/auctions';
-import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
@@ -16,6 +15,7 @@ import { CustomError } from '@/components/ui/CustomError';
 import { View } from '@/components/Themed';
 import { MyAuctionActions } from '@/components/auctions/MyAuctionActions';
 import { MyAuctionArticlesSection } from '@/components/articles/MyAuctionArticlesSection';
+import { useGetMyAuction } from '@/hooks/pages/auction/useGetMyAuction';
 
 export default function MyAuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -27,7 +27,7 @@ export default function MyAuctionDetailScreen() {
     status,
     errorMessage,
     refetch,
-  } = useGetLiveAuction({
+  } = useGetMyAuction({
     auctionId: id,
   });
   const auctionLang = t('screens.myAuction');

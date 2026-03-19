@@ -15,7 +15,7 @@ interface FetchLiveAuctionResponse {
   status: AuctionStatus | null;
 }
 
-export const useGetLiveAuction = ({
+export const useGetMyAuction = ({
   auctionId,
   validateIsLive = false,
 }: {
@@ -27,16 +27,16 @@ export const useGetLiveAuction = ({
   const [auction, setAuction] = useState<FetchLiveAuctionResponse | null>(null);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
-  const { protectedGet } = useSecureApi();
+  const { secureGet } = useSecureApi();
 
-  const fetchLiveAuction = useCallback(async () => {
+  const fetchMyAuction = useCallback(async () => {
     try {
       setStatus(REQUEST_STATUS.loading);
       const params = new URLSearchParams();
       params.append('validateIsLive', String(validateIsLive));
 
-      const res = await protectedGet<FetchLiveAuctionResponse>({
-        endpoint: `/auctions/${auctionId}?${params}`,
+      const res = await secureGet<FetchLiveAuctionResponse>({
+        endpoint: `/my-auctions/${auctionId}?${params}`,
       });
 
       if (res.error) {
@@ -76,7 +76,7 @@ export const useGetLiveAuction = ({
 
       sentryErrorReport(
         errorMessage,
-        '1_USE_GET_LIVE_AUCTION - Unexpected error'
+        '1_USE_GET_MY_AUCTION - Unexpected error'
       );
 
       console.error('Unexpected error fetching auctions:', errorMessage);
@@ -88,15 +88,15 @@ export const useGetLiveAuction = ({
         },
       };
     }
-  }, [auctionId, validateIsLive, protectedGet]);
+  }, [auctionId, validateIsLive, secureGet]);
 
-  const refetchLiveAuction = useCallback(async () => {
+  const refetchMyAuction = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       params.append('validateIsLive', String(validateIsLive));
 
-      const res = await protectedGet<FetchLiveAuctionResponse>({
-        endpoint: `/auctions/${auctionId}?${params}`,
+      const res = await secureGet<FetchLiveAuctionResponse>({
+        endpoint: `/my-auctions/${auctionId}?${params}`,
       });
       const liveAuction = res.data;
 
@@ -123,20 +123,20 @@ export const useGetLiveAuction = ({
 
       sentryErrorReport(
         errorMessage,
-        '2_USE_GET_LIVE_AUCTION - Unexpected error'
+        '2_USE_GET_MY_AUCTION - Unexpected error'
       );
     }
-  }, [auctionId, validateIsLive, protectedGet]);
+  }, [auctionId, validateIsLive, secureGet]);
 
   useEffect(() => {
-    fetchLiveAuction();
-  }, [fetchLiveAuction]);
+    fetchMyAuction();
+  }, [fetchMyAuction]);
 
   return {
     data: auction,
     status,
     errorMessage,
     setErrorMessage,
-    refetch: refetchLiveAuction,
+    refetch: refetchMyAuction,
   };
 };

@@ -69,15 +69,15 @@ export default function MyAuctionsScreen() {
         <View className='mt-4 flex flex-col items-center gap-4'>
           {/* Top actions */}
           <View className='flex flex-row gap-3'>
-            <CustomLink
-              href='/my-auctions/new'
+            {/* <CustomLink
+              href='(tabs)/auctioneer/my-auctions/new'
               mode='primary'
             >
               {myAuctions.newAuction}
-            </CustomLink>
+            </CustomLink> */}
 
             <CustomLink
-              href='/my-auctions/old'
+              href='(tabs)/auctioneer/my-auctions/old'
               mode='secondary'
             >
               {myAuctions.oldAuctions}
@@ -93,7 +93,7 @@ export default function MyAuctionsScreen() {
                   className='w-full'
                 >
                   <CustomLink
-                    href={`/my-auctions/${auction.id}`}
+                    href={`/(tabs)/auctioneer/my-auctions/${auction.id}`}
                     className='flex w-full flex-row gap-5 md:gap-8'
                   >
                     {/* Image */}

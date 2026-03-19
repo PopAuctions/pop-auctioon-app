@@ -120,7 +120,7 @@ export const MyAuctionArticlesSection = ({
               auctionStatus === AuctionStatus.AVAILABLE) && (
               <CustomLink
                 mode='primary'
-                href={`(tabs)/my-auctions/${auctionId}/new-article`}
+                href={`(tabs)/auctioneer/my-auctions/${auctionId}/new-article`}
               >
                 {auctionLang.newArticle}
               </CustomLink>
