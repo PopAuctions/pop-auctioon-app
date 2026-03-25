@@ -359,6 +359,7 @@
       "paymentsHistory": "Historial de Pagos",
       "singlePayment": "Pago Individual",
       "payment": "Pago",
+      "notifications": "Notificaciones",
       "articlesWon": "Artículos Ganados",
       "settings": "Configuración",
       "language": "Idioma",
@@ -406,6 +407,11 @@
       "winningBid": "Puja ganadora",
       "payArticles": "Pagar artículos",
       "viewArticle": "Ver artículo"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "noNotifications": "No tienes notificaciones",
+      "markAllAsRead": "Marcar todas como leídas"
     },
     "editProfile": {
       "title": "Editar Información del Perfil",

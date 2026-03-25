@@ -359,6 +359,7 @@
       "paymentsHistory": "Payments History",
       "singlePayment": "Single Payment",
       "payment": "Payment",
+      "notifications": "Notifications",
       "articlesWon": "Articles Won",
       "settings": "Settings",
       "language": "Language",
@@ -406,6 +407,11 @@
       "winningBid": "Winning bid",
       "payArticles": "Pay articles",
       "viewArticle": "View article"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "noNotifications": "You have no notifications",
+      "markAllAsRead": "Mark all as read"
     },
     "editProfile": {
       "title": "Edit Profile Information",

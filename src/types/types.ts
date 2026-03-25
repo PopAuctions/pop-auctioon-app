@@ -894,3 +894,22 @@ export interface UseSignupReturn {
   isLoading: boolean;
   errorMessage: LangMap | null;
 }
+
+export enum NotificationEventType {
+  AUCTION_STARTED = 'auction_started',
+
+  ARTICLE_WON = 'article_won',
+
+  OUTBID = 'outbid',
+
+  OFFER_RECEIVED = 'offer_received',
+
+  OFFER_ACCEPTED = 'offer_accepted',
+
+  OFFER_REJECTED = 'offer_rejected',
+
+  PAYMENT_APPROVED = 'payment_approved',
+  PAYMENT_RECEIVED = 'payment_received',
+
+  SHIPPING_UPDATED = 'shipping_updated',
+}
