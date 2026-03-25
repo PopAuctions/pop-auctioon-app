@@ -137,6 +137,13 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
+        name='notifications'
+        options={{
+          title: t('screens.account.notifications'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
         name='info/[page]'
         options={{
           presentation: 'card',

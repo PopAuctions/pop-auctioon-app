@@ -6,6 +6,7 @@ import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 import { useGetArticlesByAuctionAmount } from '@/hooks/pages/article/useGetArticlesByAuctionAmount';
+import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGetUnreadUserNotifications';
 
 export default function AccountTab() {
   const {
@@ -16,11 +17,17 @@ export default function AccountTab() {
   } = useGetCurrentUser();
   const { data: articlesWonAmount, refetch: refetchArticles } =
     useGetArticlesByAuctionAmount();
+  const { data: notifications, refetch: refetchNotifications } =
+    useGetUnreadUserNotifications();
   const { isNavigating } = useAuthNavigation();
   const shouldHide = useHideWhileStackBuilds();
 
   const refetchData = async () => {
-    await Promise.all([refetchArticles?.(), fetchCurrentUser?.()]);
+    await Promise.all([
+      refetchArticles?.(),
+      fetchCurrentUser?.(),
+      refetchNotifications?.(),
+    ]);
   };
 
   if (shouldHide) {
@@ -64,6 +71,7 @@ export default function AccountTab() {
     <Account
       currentUser={currentUser}
       numberOfWonArticles={articlesWonAmount}
+      notifications={notifications}
       refetch={refetchData}
     />
   );

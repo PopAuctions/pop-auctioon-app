@@ -3,6 +3,12 @@ import { APP_USER_ROLES } from './user';
 
 export const FIRST_SECTION = [
   {
+    name: 'notifications',
+    icon: 'bell',
+    labelKey: 'screens.account.notifications',
+    href: '/(tabs)/account/notifications',
+  },
+  {
     name: 'articles-won',
     icon: 'trophy',
     labelKey: 'screens.account.articlesWon',
