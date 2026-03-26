@@ -18,18 +18,22 @@ export interface RouteConfig {
 export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   // Rutas que requieren LOGIN (cualquier rol)
   account: {},
-  'account-user': {},
+  'account/account-user': {},
+  'account/addresses': {},
+  'account/articles-won': {},
+  'account/billing-info': {},
+  'account/edit-profile': {},
+  'account/followed-articles': {},
+  'account/followed-auctions': {},
+  'account/offers-made': {},
+  'account/payment': {},
+  'account/payments-history': {},
   'account/reset-password': {}, // Cambiar contraseña en settings (protegido)
-  addresses: {},
-  'articles-won': {},
-  'billing-info': {},
-  'edit-profile': {},
-  'followed-auctions': {},
-  'followed-articles': {},
-  'offers-made': {},
-  'payments-history': {},
-  'verify-phone': {},
-  'payment/[id]': {},
+  'account/settings': {},
+  'account/single-payment': {},
+  'account/verify-phone': {},
+  'account/payment/[id]': {},
+  'account/info/[page]': {},
   // NOTA: 'auth/reset-password' NO está aquí porque es pública (olvidé contraseña)
 
   // Rutas que requieren LOGIN + rol específico
@@ -57,12 +61,6 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'my-auctions/[id]/rearrange-article-images/[slug]': {
     requiredRole: 'AUCTIONEER',
   },
-
-  // Ejemplo de rutas futuras:
-  // 'admin-panel': {
-  //   requiredRole: 'ADMIN',
-  // },
-  // 'notifications': {},  // Cualquier usuario autenticado
 };
 
 /**

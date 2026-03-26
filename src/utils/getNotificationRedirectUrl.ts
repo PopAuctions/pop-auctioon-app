@@ -17,9 +17,9 @@ export const getNotificationRedirectUrl = ({
     case NotificationEventType.OFFER_REJECTED:
       return `/(tabs)/account/offers-made`;
     case NotificationEventType.SHIPPING_UPDATED:
-      return `/(tabs)/payment/${metadata?.id}`;
+      return `/(tabs)/account/payment/${metadata?.id}`;
     case NotificationEventType.PAYMENT_APPROVED:
-      return `/(tabs)/payment/${metadata?.id}`;
+      return `/(tabs)/account/payment/${metadata?.id}`;
     case NotificationEventType.PAYMENT_RECEIVED:
       return `/(tabs)/auctioneer/sold-articles/${metadata?.id}`;
     default:

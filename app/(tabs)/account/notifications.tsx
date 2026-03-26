@@ -103,7 +103,8 @@ export default function UserNotificationsScreen() {
       metadata: notification.metadata,
     });
 
-    navigateWithAuth(`${url}?fromTab=true`);
+    const separator = url.includes('?') ? '&' : '?';
+    navigateWithAuth(`${url}${separator}fromTab=true`);
   };
 
   const header = () => {
