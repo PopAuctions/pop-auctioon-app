@@ -22,6 +22,8 @@ export const getNotificationRedirectUrl = ({
       return `/(tabs)/account/payment/${metadata?.id}`;
     case NotificationEventType.PAYMENT_RECEIVED:
       return `/(tabs)/auctioneer/sold-articles/${metadata?.id}`;
+    case NotificationEventType.OUTBID:
+      return `/(tabs)/auctions/articles/${metadata?.id}`;
     default:
       return `/(tabs)/`;
   }
