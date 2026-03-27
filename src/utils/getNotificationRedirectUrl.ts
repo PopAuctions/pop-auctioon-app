@@ -13,7 +13,7 @@ export const getNotificationRedirectUrl = ({
     case NotificationEventType.OFFER_RECEIVED:
       return `/(tabs)/auctioneer/my-online-store/articles/${metadata?.id}`;
     case NotificationEventType.OFFER_ACCEPTED:
-      return `/(tabs)/account/single-payment/?articleId=${metadata?.id}`;
+      return `/(tabs)/account/single-payment?articleId=${metadata?.id}`;
     case NotificationEventType.OFFER_REJECTED:
       return `/(tabs)/account/offers-made`;
     case NotificationEventType.SHIPPING_UPDATED:
@@ -25,6 +25,6 @@ export const getNotificationRedirectUrl = ({
     case NotificationEventType.OUTBID:
       return `/(tabs)/auctions/articles/${metadata?.id}`;
     default:
-      return `/(tabs)/`;
+      return `/(tabs)/account/notifications`;
   }
 };
