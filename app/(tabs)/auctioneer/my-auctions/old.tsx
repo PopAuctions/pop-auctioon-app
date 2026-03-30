@@ -40,7 +40,7 @@ export default function MyOldAuctionsScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/my-auctions/old'
+        refreshRoute='/(tabs)/auctioneer/my-auctions/old'
       />
     );
   }
@@ -69,7 +69,7 @@ export default function MyOldAuctionsScreen() {
                 className='w-full'
               >
                 <CustomLink
-                  href={`/my-auctions/${auction.id}`}
+                  href={`/(tabs)/auctioneer/my-auctions/${auction.id}`}
                   className='flex w-full flex-row gap-5'
                 >
                   {/* Image */}

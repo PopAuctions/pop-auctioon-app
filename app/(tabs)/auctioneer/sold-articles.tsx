@@ -38,7 +38,7 @@ export default function SoldArticlesScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute='/(tabs)/account/sold-articles'
+        refreshRoute='/(tabs)/auctioneer/sold-articles'
       />
     );
   }
@@ -65,7 +65,7 @@ export default function SoldArticlesScreen() {
             <SoldArticleItem
               key={article.id}
               article={article}
-              reviewUrl={`/(tabs)/account/sold-articles/${article.Article.id}`}
+              reviewUrl={`/(tabs)/auctioneer/sold-articles/${article.Article.id}`}
               lang={locale}
               texts={{
                 soldPrice: t('screens.soldArticles.soldPrice'),

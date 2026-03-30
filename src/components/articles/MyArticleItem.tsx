@@ -204,7 +204,7 @@ export function MyArticleItem({
               <>
                 <View className='min-w-[45%] flex-1'>
                   <CustomLink
-                    href={`/(tabs)/my-auctions/${auctionId}/rearrange-article-images/${article.id}`}
+                    href={`/(tabs)/auctioneer/my-auctions/${auctionId}/rearrange-article-images/${article.id}`}
                     mode='primary'
                     size='small'
                   >
@@ -213,7 +213,7 @@ export function MyArticleItem({
                 </View>
                 <View className='min-w-[45%] flex-1'>
                   <CustomLink
-                    href={`/(tabs)/my-auctions/${auctionId}/edit-article/${article.id}`}
+                    href={`/(tabs)/auctioneer/my-auctions/${auctionId}/edit-article/${article.id}`}
                     mode='secondary'
                     size='small'
                   >

@@ -90,7 +90,7 @@ export default function NewAuctionArticleScreen() {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute={`/(tabs)/my-auctions/${auctionId}/new-article`}
+        refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/new-article`}
       />
     );
   }
@@ -145,7 +145,7 @@ export default function NewAuctionArticleScreen() {
     }
 
     setIsUploadingArticle(false);
-    router.navigate(`/(tabs)/my-auctions/${auctionId}`);
+    router.navigate(`/(tabs)/auctioneer/my-auctions/${auctionId}`);
   };
 
   const handleCancel = () => {

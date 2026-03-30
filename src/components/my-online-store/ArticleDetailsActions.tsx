@@ -122,7 +122,7 @@ export const ArticleDetailsActions = ({
       variant: 'success',
       description: response.data,
     });
-    navigateWithAuth('/(tabs)/my-online-store');
+    navigateWithAuth('/(tabs)/auctioneer/my-online-store');
     setIsLoading(false);
 
     return true;
@@ -149,7 +149,7 @@ export const ArticleDetailsActions = ({
     });
 
     setIsLoading(false);
-    navigateWithAuth('/(tabs)/my-online-store');
+    navigateWithAuth('/(tabs)/auctioneer/my-online-store');
     return true;
   };
 
@@ -159,7 +159,7 @@ export const ArticleDetailsActions = ({
         <View className='mb-2 w-1/2 px-1'>
           <CustomLink
             mode='primary'
-            href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/rearrange-images`}
+            href={`/(tabs)/auctioneer/my-online-store/articles/${articleSecondChanceId}/rearrange-images`}
             isDisabled={isLoading}
           >
             {orderImages}
@@ -168,7 +168,7 @@ export const ArticleDetailsActions = ({
         {/* <View className='mb-2 w-1/2 px-1'>
           <CustomLink
             mode='primary'
-            href={`/(tabs)/my-online-store/articles/${articleSecondChanceId}/edit-images`}
+            href={`/(tabs)/auctioneer/my-online-store/articles/${articleSecondChanceId}/edit-images`}
             isDisabled={isLoading}
           >
             {editImages}

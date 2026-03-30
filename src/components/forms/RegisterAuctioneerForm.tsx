@@ -7,6 +7,7 @@ import { Divider } from '@/components/ui/Divider';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
 import type { AuctioneerRegisterSchemaType } from '@/utils/schemas';
 import { getErrorMessage } from '@/utils/form-errors';
+import { PasswordInput } from '@/components/fields/PasswordInput';
 
 interface RegisterAuctioneerFormProps {
   control: Control<AuctioneerRegisterSchemaType>;
@@ -201,11 +202,10 @@ export function RegisterAuctioneerForm({
             control={control}
             name='password'
             render={({ field: { onChange, value } }) => (
-              <Input
+              <PasswordInput
                 placeholder='********'
                 value={value}
                 onChangeText={onChange}
-                secureTextEntry
                 autoCapitalize='none'
                 editable={!isLoading}
               />
@@ -233,11 +233,10 @@ export function RegisterAuctioneerForm({
             control={control}
             name='confirmPassword'
             render={({ field: { onChange, value } }) => (
-              <Input
+              <PasswordInput
                 placeholder='********'
                 value={value}
                 onChangeText={onChange}
-                secureTextEntry
                 autoCapitalize='none'
                 editable={!isLoading}
               />

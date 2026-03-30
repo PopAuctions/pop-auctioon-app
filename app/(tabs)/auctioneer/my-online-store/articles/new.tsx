@@ -1,148 +1,110 @@
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Controller } from 'react-hook-form';
 import { useLocalSearchParams, router } from 'expo-router';
-
-import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { getErrorMessage } from '@/utils/form-errors';
+import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
+import { ArticleExtraFields } from '@/components/articles/ArticleExtraFields';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { SelectField } from '@/components/fields/SelectField';
+import { useOnlineStoreArticle } from '@/hooks/pages/online-store/useOnlineStoreArticle';
+import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { useToast } from '@/hooks/useToast';
 import { useArticleForm } from '@/hooks/components/useArticleForm';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { getErrorMessage } from '@/utils/form-errors';
+import { supabase } from '@/utils/supabase/supabase-store';
+import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
+import { ARTICLE_IMAGES_MIN } from '@/constants/files';
 import {
-  ArticleCategories,
-  AuctionCategories,
-  AuctionCategoriesConst,
-  FromArticleCategoryToAuctionCategory,
-} from '@/types/types';
-import {
+  AMOUNT_PLACEHOLDER,
   ARTICLE_IMAGES_MAX,
   ARTICLE_STATE,
   ARTICLE_STATE_DESCRIPTION,
   ARTICLE_STATE_LABELS,
   REQUEST_STATUS,
 } from '@/constants';
+import {
+  AnyArticleFormValues,
+  AuctionCategories,
+  AuctionCategoriesConst,
+} from '@/types/types';
+import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { euroFormatter } from '@/utils/euroFormatter';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
-import { supabase } from '@/utils/supabase/supabase-store';
-import { useArticleImages } from '@/hooks/components/useArticleImages';
-import { ARTICLE_IMAGES_MIN } from '@/constants/files';
-import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
-import { ArticleExtraFields } from '@/components/articles/ArticleExtraFields';
-import { Tooltip } from '@/components/ui/Tooltip';
-import { SelectField } from '@/components/fields/SelectField';
-import { useArticle } from '@/hooks/pages/my-auction/useArticle';
-import { mapArticleToFormValues } from '@/utils/mapArticleToFormValues';
-import { useGetArticle } from '@/hooks/pages/article/useGetArticle';
-import { useGetArticleComments } from '@/hooks/pages/my-auction/useGetArticleComments';
-import { ArticleComments } from '@/components/articles/ArticleComments';
 
-export default function EditAuctionArticleScreen() {
+export default function NewOnlineStoreArticleScreen() {
   const params = useLocalSearchParams<{
-    id: string;
-    slug: string;
+    category?: AuctionCategories;
   }>();
-
-  const auctionId = params.id;
-  const articleId = params.slug;
-
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
-  const [isSavingArticle, setIsSavingArticle] = useState(false);
-  const hasHydratedForm = useRef(false);
+  const [isUploadingArticle, setIsUploadingArticle] = useState(false);
 
-  const {
-    data: article,
-    status,
-    errorMessage,
-  } = useGetArticle({
-    articleId,
-  });
+  const categoryParam = params.category;
 
-  const { editArticle } = useArticle({
-    auctionId,
-  });
-  const { data: comments } = useGetArticleComments({
-    auctionId,
-    articleId,
-  });
+  const { createArticle } = useOnlineStoreArticle();
 
   const {
     images,
-    removedImages,
     isUploading: isUploadingImages,
     handleImagesSelected,
     handleRemoveImageAt,
     validateMinImages,
     uploadAllAndGetPublicUrls,
-    resetRemovedRemoteImages,
   } = useArticleImages({
     supabase,
     bucket: 'develop',
     folder: 'images',
     minImages: ARTICLE_IMAGES_MIN,
-    callToast,
+    callToast: callToast,
   });
 
-  const auctionCategory =
-    (article?.category &&
-      FromArticleCategoryToAuctionCategory[
-        article.category as ArticleCategories
-      ]) ||
-    AuctionCategoriesConst.WATCHES;
+  const {
+    data: commissionValue = 0,
+    status,
+    errorMessage,
+  } = useFetchCommissions();
 
-  const form = useArticleForm({
-    category: auctionCategory,
-    mode: 'edit',
-  });
+  const category = categoryParam
+    ? AuctionCategoriesConst[categoryParam]
+    : AuctionCategoriesConst.BAGS;
 
   const {
     control,
     handleSubmit,
-    reset,
+    watch,
     formState: { errors, isSubmitting },
-  } = form;
+  } = useArticleForm({
+    category: category,
+    mode: 'create',
+  });
 
-  useEffect(() => {
-    if (!article) return;
-    if (hasHydratedForm.current) return;
+  const startingPrice = watch('startingPrice');
+  const commissionedPrice = useMemo(() => {
+    if (!startingPrice) return null;
+    return getArticleCommissionedPrice(Number(startingPrice), commissionValue);
+  }, [startingPrice, commissionValue]);
 
-    const initialValues = mapArticleToFormValues(auctionCategory, article);
-    reset(initialValues);
-
-    if (Array.isArray(article.images) && article.images.length > 0) {
-      handleImagesSelected(article.images);
-    }
-
-    resetRemovedRemoteImages();
-    hasHydratedForm.current = true;
-  }, [
-    article,
-    auctionCategory,
-    reset,
-    handleImagesSelected,
-    resetRemovedRemoteImages,
-  ]);
-
-  useEffect(() => {
-    hasHydratedForm.current = false;
-  }, [articleId]);
-
-  if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
+  if (status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }
 
-  if (status === REQUEST_STATUS.error || !article) {
+  if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
         customMessage={errorMessage}
-        refreshRoute={`/(tabs)/my-auctions/${auctionId}/edit-article/${articleId}`}
+        refreshRoute='/(tabs)/auctioneer/my-online-store/articles/new'
       />
     );
   }
+
+  const formatter = euroFormatter(locale, 2);
 
   const tooltipContent = (
     <View className='gap-2'>
@@ -166,46 +128,42 @@ export default function EditAuctionArticleScreen() {
     </View>
   );
 
-  const onSubmit = async (data: any) => {
-    setIsSavingArticle(true);
-
+  const onSubmit = async (data: AnyArticleFormValues) => {
+    setIsUploadingArticle(true);
     if (!validateMinImages()) {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe haber al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `There must be at least ${ARTICLE_IMAGES_MIN} images.`,
+          es: `Debe subir al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
+          en: `You must upload at least ${ARTICLE_IMAGES_MIN} images.`,
         },
       });
-
-      setIsSavingArticle(false);
+      setIsUploadingArticle(false);
       return;
     }
 
     const publicUrls = await uploadAllAndGetPublicUrls();
 
-    const response = await editArticle({
-      articleId: Number(articleId),
-      images: publicUrls,
-      removedImages: removedImages,
-      articleAuctionId: article.auctionId?.toString() as string,
+    const response = await createArticle({
       values: { ...data },
+      images: publicUrls,
+      category: category,
     });
 
     if (response.status === 'error') {
-      setIsSavingArticle(false);
+      setIsUploadingArticle(false);
       return;
     }
 
-    setIsSavingArticle(false);
-    router.navigate(`/(tabs)/my-auctions/${auctionId}`);
+    setIsUploadingArticle(false);
+    router.navigate(`/(tabs)/auctioneer/my-online-store`);
   };
 
   const handleCancel = () => {
     router.back();
   };
 
-  const isLoading = isSubmitting || isUploadingImages || isSavingArticle;
+  const isLoading = isSubmitting || isUploadingImages || isUploadingArticle;
 
   return (
     <SafeAreaView
@@ -214,25 +172,22 @@ export default function EditAuctionArticleScreen() {
     >
       <ScrollView className='flex-1'>
         <View className='p-6'>
-          <CustomText
-            type='subtitle'
-            className='mb-4 text-center text-3xl text-cinnabar'
-          >
-            {
-              AUCTION_CATEGORIES_LABEL[locale][
-                auctionCategory as AuctionCategories
-              ]
-            }
-          </CustomText>
+          <View className='mb-4'>
+            <CustomText
+              type='subtitle'
+              className='mb-4 text-center text-3xl text-cinnabar'
+            >
+              {AUCTION_CATEGORIES_LABEL[locale][category as AuctionCategories]}
+            </CustomText>
 
-          <ArticleComments comments={comments || []} />
-
-          <CustomText
-            type='body'
-            className='mb-2 text-red-600'
-          >
-            {t('screens.newArticle.required')}
-          </CustomText>
+            {/* Info: category / required fields */}
+            <CustomText
+              type='body'
+              className='text-red-600'
+            >
+              {t('screens.newArticle.required')}
+            </CustomText>
+          </View>
 
           {/* Title */}
           <View className='mb-4'>
@@ -279,7 +234,7 @@ export default function EditAuctionArticleScreen() {
             <Controller
               control={control}
               name='state'
-              render={({ field: { onChange, value } }) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <SelectField
                   name='state'
                   value={value ?? null}
@@ -298,7 +253,7 @@ export default function EditAuctionArticleScreen() {
                 type='error'
                 className='mt-1'
               >
-                {getErrorMessage(errors.state.message, locale)}
+                {getErrorMessage(errors.state?.message, locale)}
               </CustomText>
             )}
           </View>
@@ -333,6 +288,22 @@ export default function EditAuctionArticleScreen() {
                 {getErrorMessage(errors.startingPrice.message, locale)}
               </CustomText>
             )}
+          </View>
+          <View className='mb-4 flex flex-row gap-2'>
+            <Tooltip
+              content={t('screens.newArticle.commissionedPriceTooltip')}
+            />
+            <CustomText
+              type='body'
+              className='text-black/70'
+            >
+              {t('screens.newArticle.commissionedPrice')}:{' '}
+              <Text className='font-bold text-black'>
+                {commissionedPrice !== null
+                  ? formatter.format(commissionedPrice)
+                  : AMOUNT_PLACEHOLDER}
+              </Text>
+            </CustomText>
           </View>
 
           {/* Estimated Value */}
@@ -369,12 +340,12 @@ export default function EditAuctionArticleScreen() {
             )}
           </View>
 
-          {/* Extra fields por categoría (reusando el mismo componente) */}
           <ArticleExtraFields
             control={control}
             errors={errors}
             isLoading={isLoading}
-            category={auctionCategory}
+            category={category}
+            auctionView={false}
           />
 
           {/* Description */}
@@ -412,7 +383,6 @@ export default function EditAuctionArticleScreen() {
             )}
           </View>
 
-          {/* Images */}
           <View className='mb-6'>
             <CustomText
               type='body'

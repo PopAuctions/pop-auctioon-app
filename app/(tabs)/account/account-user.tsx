@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { router } from 'expo-router';
 import { useAuth } from '@/context/auth-context';
 import { useCallback, useMemo, useState } from 'react';
-import { User } from '@/types/types';
+import { DisplayedNotification, User } from '@/types/types';
 import { Divider } from '@/components/ui/Divider';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
@@ -18,15 +18,16 @@ import {
   SECOND_SECTION,
   THIRD_SECTION,
 } from '@/constants/session';
-import { APP_USER_ROLES } from '@/constants';
 
 export default function Account({
   currentUser,
   numberOfWonArticles,
   refetch,
+  notifications,
 }: {
   currentUser: User;
   numberOfWonArticles: number;
+  notifications: DisplayedNotification[];
   refetch: () => Promise<void>;
 }) {
   const { signOut } = useAuth();
@@ -157,6 +158,16 @@ export default function Account({
                         </CustomText>
                       </View>
                     )}
+                    {name === 'notifications' && notifications.length > 0 && (
+                      <View className='h-6 w-6 items-center justify-center rounded-full bg-cinnabar'>
+                        <CustomText
+                          type='body'
+                          className='text-center text-sm leading-none text-white'
+                        >
+                          {notifications.length}
+                        </CustomText>
+                      </View>
+                    )}
                   </View>
                 </View>
 
@@ -179,7 +190,7 @@ export default function Account({
         <View className='mx-2 p-2'>
           {SECOND_SECTION.map(
             ({ name, icon, labelKey, href, role, variant }) => {
-              if (role && currentUser.role !== APP_USER_ROLES.AUCTIONEER) {
+              if (role && currentUser.role !== role) {
                 return null;
               }
 

@@ -81,20 +81,6 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
-        name='sold-articles'
-        options={{
-          title: t('screens.account.soldArticles'),
-          presentation: 'card',
-        }}
-      />
-      <Stack.Screen
-        name='sold-articles/[id]'
-        options={{
-          title: t('screens.account.soldArticle'),
-          presentation: 'card',
-        }}
-      />
-      <Stack.Screen
         name='addresses'
         options={{
           title: t('screens.account.addresses'),
@@ -147,6 +133,13 @@ export default function AccountLayout() {
         name='articles-won'
         options={{
           title: t('screens.account.articlesWon'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='notifications'
+        options={{
+          title: t('screens.account.notifications'),
           presentation: 'card',
         }}
       />

@@ -208,6 +208,13 @@ export const SECURE_ENDPOINTS = {
       SEND: '/user/otp/send', // POST - Enviar código OTP al teléfono
       VERIFY: '/user/otp/verify', // POST - Verificar código OTP
     },
+    NOTIFICATIONS: {
+      GET: '/notifications', // GET - Obtener notificaciones del usuario
+      UNREAD: '/notifications/unread', // GET - Obtener notificaciones no leídas del usuario
+      READ: (id: string): ApiEndpoint =>
+        `/notifications/${id}/read` as ApiEndpoint, // PATCH - Marcar notificación como leída
+      MARK_ALL_AS_READ: `/notifications/mark-all-as-read` as ApiEndpoint, // PATCH - Marcar notificaciones como leída
+    },
     INVOICE: {
       CREATE: (id: string): ApiEndpoint => `/user/payments/${id}/invoice`, // POST - Crear nueva factura
       GET: (id: string): ApiEndpoint =>

@@ -101,7 +101,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
     });
 
-    if (!response.error) {
+    if (response.error) {
       callToast({
         variant: 'error',
         description: {

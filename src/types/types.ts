@@ -315,6 +315,9 @@ export interface CustomFullArticleSecondChance {
   >[];
 }
 
+export type UserArticlesWonRecord =
+  Database['public']['Tables']['UserArticlesWon']['Row'];
+
 export type UserArticlesWon = Pick<
   Article,
   'id' | 'title' | 'brand' | 'soldPrice'
@@ -325,6 +328,29 @@ export interface AuctionUserWonArticles {
   title: string;
   articles: CustomArticle[];
 }
+
+export type UserPaymentRecord =
+  Database['public']['Tables']['UserPayment']['Row'];
+
+export type NotificationText = Record<Lang, string>;
+
+export type Notification = Omit<
+  Database['public']['Tables']['Notifications']['Row'],
+  'title' | 'description' | 'metadata'
+> & {
+  title: NotificationText;
+  description: NotificationText | null;
+  metadata: Record<string, unknown> | null;
+};
+
+export type DisplayedNotification = Pick<
+  Notification,
+  'id' | 'event' | 'image' | 'read' | 'createdAt'
+> & {
+  title: NotificationText;
+  description: NotificationText | null;
+  metadata: Record<string, string | number> | null;
+};
 
 export interface UserPayment {
   id: number;
@@ -867,4 +893,23 @@ export interface UseSignupReturn {
   }>;
   isLoading: boolean;
   errorMessage: LangMap | null;
+}
+
+export enum NotificationEventType {
+  AUCTION_STARTED = 'auction_started',
+
+  ARTICLE_WON = 'article_won',
+
+  OUTBID = 'outbid',
+
+  OFFER_RECEIVED = 'offer_received',
+
+  OFFER_ACCEPTED = 'offer_accepted',
+
+  OFFER_REJECTED = 'offer_rejected',
+
+  PAYMENT_APPROVED = 'payment_approved',
+  PAYMENT_RECEIVED = 'payment_received',
+
+  SHIPPING_UPDATED = 'shipping_updated',
 }

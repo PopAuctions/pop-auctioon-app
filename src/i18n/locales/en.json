@@ -41,6 +41,7 @@
     "auctions": "Live Auctions",
     "articleDetails": "Article Details",
     "store": "Auctions",
+    "auctioneer": "Auctioneer",
     "myAuctions": "My Live Auctions",
     "myOnlineStore": "My Auctions",
     "back": "Back"
@@ -91,6 +92,13 @@
           "watches": "Watches"
         }
       }
+    },
+    "auctioneer": {
+      "myAuctions": "My live auctions",
+      "myOnlineStore": "My auctions",
+      "soldArticles": "Sold Articles",
+      "auctioneerActive": "Active auctioneer",
+      "auctioneerNotActive": "Inactive auctioneer"
     },
     "auction": {
       "follow": "Follow",
@@ -351,6 +359,7 @@
       "paymentsHistory": "Payments History",
       "singlePayment": "Single Payment",
       "payment": "Payment",
+      "notifications": "Notifications",
       "articlesWon": "Articles Won",
       "settings": "Settings",
       "language": "Language",
@@ -398,6 +407,11 @@
       "winningBid": "Winning bid",
       "payArticles": "Pay articles",
       "viewArticle": "View article"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "noNotifications": "You have no notifications",
+      "markAllAsRead": "Mark all as read"
     },
     "editProfile": {
       "title": "Edit Profile Information",

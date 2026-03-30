@@ -9,7 +9,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { REQUEST_STATUS } from '@/constants';
 import { useFetchMyOnlineStoreArticlesInfinite } from '@/hooks/components/useFetchMyOnlineStoreArticlesInfinite';
-import { Filters } from '@/app/(tabs)/my-online-store';
+import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { MyOnlineStoreArticleItem } from './MyOnlineStoreArticleItem';
 import { CustomError } from '../ui/CustomError';
 
@@ -199,7 +199,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
     return (
       <CustomError
         customMessage={error}
-        refreshRoute='/(tabs)/my-online-store'
+        refreshRoute='/(tabs)/auctioneer/my-online-store'
       />
     );
   }

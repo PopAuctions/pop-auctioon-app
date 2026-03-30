@@ -18,18 +18,23 @@ export interface RouteConfig {
 export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   // Rutas que requieren LOGIN (cualquier rol)
   account: {},
+  notifications: {},
   'account-user': {},
-  'account/reset-password': {}, // Cambiar contraseña en settings (protegido)
   addresses: {},
   'articles-won': {},
   'billing-info': {},
   'edit-profile': {},
-  'followed-auctions': {},
   'followed-articles': {},
+  'followed-auctions': {},
   'offers-made': {},
+  payment: {},
   'payments-history': {},
+  'reset-password': {}, // Cambiar contraseña en settings (protegido)
+  settings: {},
+  'single-payment': {},
   'verify-phone': {},
   'payment/[id]': {},
+  'info/[page]': {},
   // NOTA: 'auth/reset-password' NO está aquí porque es pública (olvidé contraseña)
 
   // Rutas que requieren LOGIN + rol específico
@@ -57,12 +62,6 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   'my-auctions/[id]/rearrange-article-images/[slug]': {
     requiredRole: 'AUCTIONEER',
   },
-
-  // Ejemplo de rutas futuras:
-  // 'admin-panel': {
-  //   requiredRole: 'ADMIN',
-  // },
-  // 'notifications': {},  // Cualquier usuario autenticado
 };
 
 /**
@@ -113,15 +112,15 @@ export const hasAccess = (
  * Normaliza una ruta con parámetros dinámicos a su patrón en PROTECTED_ROUTES
  *
  * Convierte rutas reales con IDs/slugs a sus patrones con [id]/[slug]:
- * - '/(tabs)/my-auctions/28' → 'my-auctions/[id]'
- * - '/(tabs)/my-auctions/28/edit-article/789' → 'my-auctions/[id]/edit-article/[slug]'
+ * - '/(tabs)/auctioneer/my-auctions/28' → 'my-auctions/[id]'
+ * - '/(tabs)/auctioneer/my-auctions/28/edit-article/789' → 'my-auctions/[id]/edit-article/[slug]'
  * - '/(tabs)/account/edit-profile' → 'edit-profile'
  * - '/(tabs)/auctions/live/123' → 'auctions/live/[id]'
  *
  * ESTRATEGIA CONSERVADORA: Solo convertir a [id]/[slug] valores que CLARAMENTE son datos,
  * no nombres de rutas. Por defecto, mantener literal (más seguro).
  *
- * @param path - Ruta completa con grupos y parámetros (ej: '/(tabs)/my-auctions/28/edit-article/abc')
+ * @param path - Ruta completa con grupos y parámetros (ej: '/(tabs)/auctioneer/my-auctions/28/edit-article/abc')
  * @returns Patrón normalizado que matchea con PROTECTED_ROUTES
  */
 export const normalizeRoutePath = (path: string): string => {

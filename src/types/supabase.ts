@@ -651,6 +651,56 @@ export interface Database {
           },
         ];
       };
+      Notifications: {
+        Row: {
+          createdAt: string;
+          description: Json | null;
+          event: string;
+          id: string;
+          image: string | null;
+          internalId: string;
+          metadata: Json | null;
+          read: boolean;
+          readAt: string | null;
+          title: Json;
+          userId: string;
+        };
+        Insert: {
+          createdAt?: string;
+          description?: Json | null;
+          event: string;
+          id?: string;
+          image?: string | null;
+          internalId: string;
+          metadata?: Json | null;
+          read?: boolean;
+          readAt?: string | null;
+          title: Json;
+          userId: string;
+        };
+        Update: {
+          createdAt?: string;
+          description?: Json | null;
+          event?: string;
+          id?: string;
+          image?: string | null;
+          internalId?: string;
+          metadata?: Json | null;
+          read?: boolean;
+          readAt?: string | null;
+          title?: Json;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Notifications_userId_fkey';
+            columns: ['userId'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       PhoneOTP: {
         Row: {
           attemptCount: number | null;
@@ -745,6 +795,8 @@ export interface Database {
           id: string;
           isDisabled: boolean;
           isHostAuctioneer: boolean;
+          isReviewAccount: boolean;
+          language: string | null;
           lastName: string;
           name: string;
           phoneNumber: string | null;
@@ -770,6 +822,8 @@ export interface Database {
           id: string;
           isDisabled?: boolean;
           isHostAuctioneer?: boolean;
+          isReviewAccount?: boolean;
+          language?: string | null;
           lastName: string;
           name: string;
           phoneNumber?: string | null;
@@ -795,6 +849,8 @@ export interface Database {
           id?: string;
           isDisabled?: boolean;
           isHostAuctioneer?: boolean;
+          isReviewAccount?: boolean;
+          language?: string | null;
           lastName?: string;
           name?: string;
           phoneNumber?: string | null;

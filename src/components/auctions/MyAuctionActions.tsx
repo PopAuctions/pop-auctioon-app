@@ -3,7 +3,7 @@ import { Translations } from '@/i18n';
 import { View } from 'react-native';
 import { ConfirmModal } from '../modal/ConfirmModal';
 import { Lang, LangMap } from '@/types/types';
-import { CustomLink } from '../ui/CustomLink';
+// import { CustomLink } from '../ui/CustomLink';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
@@ -45,18 +45,18 @@ export const MyAuctionActions = ({
 
   return (
     <View className='flex flex-row gap-4'>
-      {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
+      {/* {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
         auctionStatus === AuctionStatus.NEED_CHANGES ||
         auctionStatus === AuctionStatus.CHANGES_MADE) && (
         <CustomLink
-          href={`/(tabs)/my-auctions/${auctionId}/edit`}
+          href={`/(tabs)/auctioneer/my-auctions/${auctionId}/edit`}
           size='small'
           className='w-1/2'
           mode='primary'
         >
           {myAuction.edit}
         </CustomLink>
-      )}
+      )} */}
       {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
         auctionStatus === AuctionStatus.NEED_CHANGES ||
         auctionStatus === AuctionStatus.CHANGES_MADE ||
