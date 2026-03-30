@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -11,8 +11,10 @@ import { useFetchNewestArticles } from '@/hooks/pages/article/useFetchNewestArti
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticlesSection } from '@/components/home/ArticlesSection';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { WonArticlesModal } from '@/components/modal/WonArticlesModal';
+import { HomeHeader } from '@/components/home/HomeHeader';
+import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGetUnreadUserNotifications';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -31,6 +33,14 @@ export default function HomeScreen() {
   const { data: newestArticles, status: newestArticlesStatus } =
     useFetchNewestArticles();
   const { data: commission, status: commissionsStatus } = useFetchCommissions();
+  const { data: unreadNotifications, refetch } =
+    useGetUnreadUserNotifications();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch?.();
+    }, [refetch])
+  );
 
   useEffect(() => {
     const checkAndShowOnboarding = async () => {
@@ -69,7 +79,9 @@ export default function HomeScreen() {
         className='flex-1'
         edges={['top']}
       >
-        <ScrollView className='flex-1 px-4'>
+        <HomeHeader unreadCount={unreadNotifications?.length || 0} />
+
+        <ScrollView className='mt-4 flex-1 px-4'>
           <UpcomingAuctionsSection
             auctions={upcomingAuctions}
             locale={locale}
