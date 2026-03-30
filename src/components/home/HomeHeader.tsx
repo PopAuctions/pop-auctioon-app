@@ -14,10 +14,28 @@ export function HomeHeader({ unreadCount = 0 }: HomeHeaderProps) {
   const displayedCount = unreadCount > 99 ? '99+' : String(unreadCount);
 
   return (
-    <View className='flex-row items-center justify-between border-b border-gray px-4'>
-      <View className='flex-row items-center gap-3'>
+    <View className='w-full flex-row items-center border-b border-gray px-4'>
+      <View className='w-full flex-row items-center justify-between gap-3'>
         <Pressable
-          onPress={() => navigateWithAuth('/(tabs)/account/notifications')}
+          onPress={() =>
+            navigateWithAuth('/(tabs)/account/offers-made?fromTab=true')
+          }
+          className='h-11 w-11 items-center justify-center rounded-full'
+          accessibilityRole='button'
+          accessibilityLabel='Offers made'
+        >
+          <FontAwesomeIcon
+            variant='light'
+            name='handshake'
+            size={22}
+            color='#111827'
+          />
+        </Pressable>
+
+        <Pressable
+          onPress={() =>
+            navigateWithAuth('/(tabs)/account/notifications?fromTab=true')
+          }
           className='relative h-11 w-11 items-center justify-center rounded-full'
           accessibilityRole='button'
           accessibilityLabel='Notifications'
@@ -29,7 +47,7 @@ export function HomeHeader({ unreadCount = 0 }: HomeHeaderProps) {
           />
 
           {hasUnread ? (
-            <View className='absolute right-1.5 top-1.5 min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-cinnabar px-1'>
+            <View className='absolute right-1 top-1 min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-cinnabar px-1'>
               <CustomText
                 type='bodysmall'
                 className='text-[10px] font-bold text-white'
