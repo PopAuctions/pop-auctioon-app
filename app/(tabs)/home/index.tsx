@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { UpcomingAuctionsSection } from '@/components/home/UpcomingAuctions';
 import { useFetchUpcomingAuctions } from '@/hooks/pages/auction/useFetchUpcomingAuctions';
-import { REQUEST_STATUS } from '@/constants';
+import { APP_USER_ROLES, REQUEST_STATUS } from '@/constants';
 import { useFetchMostViewedArticles } from '@/hooks/pages/article/useFetchMostViewedArticles';
 import { useFetchFeaturedArticles } from '@/hooks/pages/article/useFetchFeaturedArticles';
 import { useFetchNewestArticles } from '@/hooks/pages/article/useFetchNewestArticles';
@@ -15,6 +15,7 @@ import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { WonArticlesModal } from '@/components/modal/WonArticlesModal';
 import { HomeHeader } from '@/components/home/HomeHeader';
 import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGetUnreadUserNotifications';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -35,6 +36,9 @@ export default function HomeScreen() {
   const { data: commission, status: commissionsStatus } = useFetchCommissions();
   const { data: unreadNotifications, refetch } =
     useGetUnreadUserNotifications();
+  const { data: currentUser } = useGetCurrentUser();
+
+  const isUserAuctioneer = currentUser?.role === APP_USER_ROLES.AUCTIONEER;
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +83,13 @@ export default function HomeScreen() {
         className='flex-1'
         edges={['top']}
       >
-        <HomeHeader unreadCount={unreadNotifications?.length || 0} />
+        <HomeHeader
+          unreadCount={unreadNotifications?.length || 0}
+          isAuctioneer={isUserAuctioneer}
+          texts={{
+            createAuction: t('screens.homePage.createAuction'),
+          }}
+        />
 
         <ScrollView className='mt-4 flex-1 px-4'>
           <UpcomingAuctionsSection
