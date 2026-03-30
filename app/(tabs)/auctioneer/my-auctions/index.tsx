@@ -57,27 +57,19 @@ export default function MyAuctionsScreen() {
           />
         }
       >
-        {/* Title */}
-        <CustomText
-          type='h1'
-          className='my-4 text-center'
-        >
-          {myAuctions.title}
-        </CustomText>
-
         {/* Payment cards list */}
         <View className='mt-4 flex flex-col items-center gap-4'>
           {/* Top actions */}
           <View className='flex flex-row gap-3'>
-            {/* <CustomLink
-              href='(tabs)/auctioneer/my-auctions/new'
+            <CustomLink
+              href='/(tabs)/auctioneer/my-auctions/new'
               mode='primary'
             >
               {myAuctions.newAuction}
-            </CustomLink> */}
+            </CustomLink>
 
             <CustomLink
-              href='(tabs)/auctioneer/my-auctions/old'
+              href='/(tabs)/auctioneer/my-auctions/old'
               mode='secondary'
             >
               {myAuctions.oldAuctions}

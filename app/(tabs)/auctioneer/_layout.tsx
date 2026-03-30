@@ -40,7 +40,7 @@ export default function AuctioneerLayout() {
         }}
       />
       <Stack.Screen
-        name='my-auctions/new'
+        name='my-auctions/new/index'
         options={{
           title: t('screens.myAuctions.newAuction'),
           presentation: 'card',
@@ -49,7 +49,7 @@ export default function AuctioneerLayout() {
         }}
       />
       <Stack.Screen
-        name='my-auctions/old'
+        name='my-auctions/old/index'
         options={{
           title: t('screens.myAuctions.oldAuctions'),
           presentation: 'card',
