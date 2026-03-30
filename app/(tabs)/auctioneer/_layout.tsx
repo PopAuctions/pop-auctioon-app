@@ -27,6 +27,7 @@ export default function AuctioneerLayout() {
           title: t('tabsNames.auctioneer'),
           headerShown: true,
           headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
 

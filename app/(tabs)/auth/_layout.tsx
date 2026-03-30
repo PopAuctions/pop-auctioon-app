@@ -28,6 +28,8 @@ export default function AuthLayout() {
         name='index'
         options={{
           headerShown: false,
+          headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen

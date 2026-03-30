@@ -30,6 +30,8 @@ export default function AccountLayout() {
         options={{
           title: t('tabsNames.account'),
           headerShown: false,
+          headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen

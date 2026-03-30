@@ -28,7 +28,8 @@ export default function StoreLayout() {
         options={{
           title: t('screens.store.title'),
           headerShown: true,
-          headerLeft: () => null, // Oculta el botón de retroceso en la pantalla principal
+          headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen
