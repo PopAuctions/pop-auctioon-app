@@ -3,19 +3,21 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import type { AnyArticleFormValues, LangMap } from '@/types/types';
+import type { LangMap } from '@/types/types';
+import { parseLocalDateTime } from '@/utils/getMinDateToStartAuction';
+import { AuctionFormValues } from '@/utils/schemas/auctionSchemas';
 
 interface FunctionResponse {
   status: 'success' | 'error';
 }
 
 interface CreateAuctionArgs {
-  values: AnyArticleFormValues;
+  values: AuctionFormValues;
   imageFile: string;
 }
 
 interface EditAuctionArgs {
-  values: AnyArticleFormValues;
+  values: AuctionFormValues;
   imageFile: string;
   removedImages: string[];
   auctionId: string;
@@ -34,11 +36,16 @@ export const useAuction = (): {
     imageFile,
   }: CreateAuctionArgs): Promise<FunctionResponse> => {
     try {
+      const clientStartDate = parseLocalDateTime(
+        values.startDate,
+        values.startTime
+      );
       const payload = {
-        imageFile,
+        image: imageFile,
         data: {
           ...values,
         },
+        clientStartDate,
       };
 
       const response = await securePost<LangMap>({

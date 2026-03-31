@@ -15,12 +15,14 @@ import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
 import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { supabase } from '@/utils/supabase/supabase-store';
 import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { useAuction } from '@/hooks/pages/my-auction/useAuction';
 import { useAuctionForm } from '@/hooks/components/useAuctionForm';
 import { DateInputField } from '@/components/fields/DateInputField';
 import { TimeInputField } from '@/components/fields/TimeInputField';
 import { getMinDateToStartAuction } from '@/utils/getMinDateToStartAuction';
+import { useArticleImages } from '@/hooks/components/useArticleImages';
 
 const TOOLTIP_MESSAGE = {
   en: {
@@ -36,11 +38,25 @@ const TOOLTIP_MESSAGE = {
 export default function MyANewAuctionScreen() {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
-
   const [isUploadingAuction, setIsUploadingAuction] = useState(false);
-  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const { createAuction } = useAuction();
+
+  const {
+    images,
+    isUploading: isUploadingImages,
+    handleSingleImageSelected,
+    handleRemoveImageAt,
+    validateMinImages,
+    uploadAllAndGetPublicUrls,
+  } = useArticleImages({
+    supabase,
+    bucket: 'develop',
+    folder: 'images',
+    minImages: 1,
+    callToast,
+  });
+
   const {
     control,
     handleSubmit,
@@ -73,12 +89,20 @@ export default function MyANewAuctionScreen() {
     try {
       setIsUploadingAuction(true);
 
-      if (imageUri === null) {
+      if (!validateMinImages()) {
+        setIsUploadingAuction(false);
+        return;
+      }
+
+      const publicUrls = await uploadAllAndGetPublicUrls();
+      const imageUrl = publicUrls[0];
+
+      if (!imageUrl) {
         callToast({
           variant: 'error',
           description: {
-            en: 'Image is required.',
-            es: 'La imagen es requerida.',
+            en: 'There was an error uploading the image.',
+            es: 'Hubo un error subiendo la imagen.',
           },
         });
         setIsUploadingAuction(false);
@@ -86,10 +110,8 @@ export default function MyANewAuctionScreen() {
       }
 
       const response = await createAuction({
-        values: {
-          ...data,
-        },
-        imageFile: imageUri,
+        values: { ...data },
+        imageFile: imageUrl,
       });
 
       if (response.status === 'error') {
@@ -97,10 +119,8 @@ export default function MyANewAuctionScreen() {
         return;
       }
 
-      setIsUploadingAuction(false);
       router.navigate('/(tabs)/auctioneer/my-auctions');
     } catch {
-      setIsUploadingAuction(false);
       callToast({
         variant: 'error',
         description: {
@@ -108,6 +128,8 @@ export default function MyANewAuctionScreen() {
           es: 'Hubo un error al crear la subasta.',
         },
       });
+    } finally {
+      setIsUploadingAuction(false);
     }
   };
 
@@ -115,7 +137,7 @@ export default function MyANewAuctionScreen() {
     router.back();
   };
 
-  const isLoading = isSubmitting || isUploadingAuction;
+  const isLoading = isSubmitting || isUploadingImages || isUploadingAuction;
 
   if (isLoading) {
     return <Loading locale={locale} />;
@@ -124,19 +146,12 @@ export default function MyANewAuctionScreen() {
   return (
     <SafeAreaView
       className='flex-1 bg-white'
-      edges={['bottom']}
+      edges={[]}
     >
       <ScrollView className='flex-1'>
         <View className='p-6 md:px-0'>
           <View className='w-full md:max-w-[700px] md:self-center'>
             <View className='mb-4'>
-              <CustomText
-                type='subtitle'
-                className='mb-4 text-center text-3xl text-cinnabar'
-              >
-                {t('screens.myAuction.newAuction.titlePage')}
-              </CustomText>
-
               <CustomText
                 type='body'
                 className='text-red-600'
@@ -321,9 +336,9 @@ export default function MyANewAuctionScreen() {
               </CustomText>
 
               <ImageUploadButton
-                selectedImage={imageUri}
-                onImageSelected={setImageUri}
-                onImageRemoved={() => setImageUri(null)}
+                selectedImage={images[0] ?? null}
+                onImageSelected={handleSingleImageSelected}
+                onImageRemoved={() => handleRemoveImageAt(0)}
                 disabled={isLoading}
               />
 

@@ -3,6 +3,7 @@ import { File } from 'expo-file-system';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/react-native';
 import { base64ToArrayBuffer } from '@/utils/base64ToArrayBuffer';
+import { LangMap } from '@/types/types';
 
 interface UseArticleImagesParams {
   supabase: SupabaseClient;
@@ -11,7 +12,7 @@ interface UseArticleImagesParams {
   minImages: number;
   callToast: (args: {
     variant: 'error' | 'success';
-    description: string;
+    description: LangMap;
   }) => void;
 }
 
@@ -51,7 +52,10 @@ export function useArticleImages({
     if (images.length < minImages) {
       callToast({
         variant: 'error',
-        description: 'screens.newArticle.minImagesError',
+        description: {
+          es: `Debes agregar al menos ${minImages} imagenes.`,
+          en: `You must add at least ${minImages} images.`,
+        },
       });
       return false;
     }
@@ -121,11 +125,18 @@ export function useArticleImages({
       );
       callToast({
         variant: 'error',
-        description: 'screens.newArticle.imageUploadError',
+        description: {
+          es: 'Hubo un error al subir las imágenes.',
+          en: 'There was an error uploading the images.',
+        },
       });
       return [];
     }
   }, [images, supabase, bucket, folder, callToast]);
+
+  const handleSingleImageSelected = useCallback((uri: string) => {
+    setImages([uri]);
+  }, []);
 
   const resetRemovedRemoteImages = useCallback(() => {
     setRemovedImages([]);
@@ -141,5 +152,6 @@ export function useArticleImages({
     uploadAllAndGetPublicUrls,
     setImages,
     resetRemovedRemoteImages,
+    handleSingleImageSelected,
   };
 }

@@ -38,7 +38,6 @@ export function useAuctionForm({ mode, initialValues }: UseAuctionFormParams) {
   return {
     ...form,
     schema,
-
     mode,
   };
 }
