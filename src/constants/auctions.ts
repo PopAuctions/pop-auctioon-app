@@ -97,3 +97,5 @@ export const AUCTION_CATEGORIES_LANG: Record<
     { value: 'ART', label: 'Art' },
   ],
 };
+
+export const MIN_DAYS_TO_START_AUCTION = 10;

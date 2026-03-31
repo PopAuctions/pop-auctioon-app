@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Image, Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Controller } from 'react-hook-form';
 import { router } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useToast } from '@/hooks/useToast';
 import { CustomText } from '@/components/ui/CustomText';
@@ -16,14 +15,12 @@ import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
 import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { ImageUploadButton } from '@/components/ui/ImageUploadButton';
 import { useAuction } from '@/hooks/pages/my-auction/useAuction';
 import { useAuctionForm } from '@/hooks/components/useAuctionForm';
-
-type PickedFile = {
-  uri: string;
-  name: string;
-  mimeType?: string;
-};
+import { DateInputField } from '@/components/fields/DateInputField';
+import { TimeInputField } from '@/components/fields/TimeInputField';
+import { getMinDateToStartAuction } from '@/utils/getMinDateToStartAuction';
 
 const TOOLTIP_MESSAGE = {
   en: {
@@ -41,24 +38,19 @@ export default function MyANewAuctionScreen() {
   const { callToast } = useToast(locale);
 
   const [isUploadingAuction, setIsUploadingAuction] = useState(false);
-  const [imageFile, setImageFile] = useState<PickedFile | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const { createAuction } = useAuction();
-
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useAuctionForm({ mode: 'create' });
 
-  const minDate = useMemo(() => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-
-    return `${yyyy}-${mm}-${dd}`;
-  }, []);
+  const { minDate, minDateFormatted } = useMemo(
+    () => getMinDateToStartAuction(),
+    []
+  );
 
   const tooltipContent = (
     <View className='gap-2'>
@@ -77,44 +69,11 @@ export default function MyANewAuctionScreen() {
     </View>
   );
 
-  const pickImage = async () => {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (!permission.granted) {
-      callToast({
-        variant: 'error',
-        description: {
-          en: 'Photo library permission is required.',
-          es: 'Se requiere permiso para acceder a la galería.',
-        },
-      });
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      quality: 0.9,
-      allowsMultipleSelection: false,
-    });
-
-    if (result.canceled || !result.assets?.[0]) return;
-
-    const asset = result.assets[0];
-
-    setImageFile({
-      uri: asset.uri,
-      name: asset.fileName ?? `auction-image-${Date.now()}.jpg`,
-      mimeType: asset.mimeType ?? 'image/jpeg',
-    });
-  };
-
-  const removeImage = () => setImageFile(null);
-
   const onSubmit = async (data: any) => {
     try {
       setIsUploadingAuction(true);
 
-      if (imageFile === null) {
+      if (imageUri === null) {
         callToast({
           variant: 'error',
           description: {
@@ -130,7 +89,7 @@ export default function MyANewAuctionScreen() {
         values: {
           ...data,
         },
-        imageFile: imageFile.uri,
+        imageFile: imageUri,
       });
 
       if (response.status === 'error') {
@@ -272,7 +231,7 @@ export default function MyANewAuctionScreen() {
                     name='category'
                     value={value ?? null}
                     options={Object.entries(AuctionCategoriesConst).map(
-                      ([key, category]) => ({
+                      ([, category]) => ({
                         label:
                           AUCTION_CATEGORIES_LABEL[locale][
                             category as AuctionCategories
@@ -307,19 +266,15 @@ export default function MyANewAuctionScreen() {
               >
                 {t('screens.myAuction.newAuction.startDate')}*
               </CustomText>
-              <Controller
+              <DateInputField
                 control={control}
                 name='startDate'
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    value={value || ''}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    placeholder={minDate}
-                    editable={!isLoading}
-                  />
-                )}
+                placeholder={minDateFormatted}
+                disabled={isLoading}
+                minimumDate={minDate}
+                title={t('screens.myAuction.newAuction.startDate')}
               />
+
               {errors.startDate && (
                 <CustomText
                   type='error'
@@ -338,19 +293,14 @@ export default function MyANewAuctionScreen() {
               >
                 {t('screens.myAuction.newAuction.startTime')}*
               </CustomText>
-              <Controller
+              <TimeInputField
                 control={control}
                 name='startTime'
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    value={value || ''}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    placeholder='18:00'
-                    editable={!isLoading}
-                  />
-                )}
+                placeholder='18:00'
+                disabled={isLoading}
+                title={t('screens.myAuction.newAuction.startTime')}
               />
+
               {errors.startTime && (
                 <CustomText
                   type='error'
@@ -367,42 +317,15 @@ export default function MyANewAuctionScreen() {
                 type='body'
                 className='mb-2'
               >
-                {t('screens.myAuction.newAuction.image')}
+                {t('screens.myAuction.newAuction.image')}*
               </CustomText>
 
-              <Button
-                mode='secondary'
-                onPress={pickImage}
+              <ImageUploadButton
+                selectedImage={imageUri}
+                onImageSelected={setImageUri}
+                onImageRemoved={() => setImageUri(null)}
                 disabled={isLoading}
-              >
-                {t('screens.myAuction.newAuction.image')}
-              </Button>
-
-              <CustomText
-                type='body'
-                className='mt-2 text-sm text-black/60'
-              >
-                {t('screens.myAuction.newAuction.imageFormats')}
-              </CustomText>
-
-              {imageFile?.uri ? (
-                <View className='mt-4 items-start gap-3'>
-                  <Image
-                    source={{ uri: imageFile.uri }}
-                    className='h-[220px] w-full rounded-lg'
-                    resizeMode='contain'
-                  />
-
-                  <Pressable onPress={removeImage}>
-                    <CustomText
-                      type='body'
-                      className='text-cinnabar'
-                    >
-                      {t('screens.myAuction.newAuction.removeImage')}
-                    </CustomText>
-                  </Pressable>
-                </View>
-              ) : null}
+              />
 
               {errors.image && (
                 <CustomText
