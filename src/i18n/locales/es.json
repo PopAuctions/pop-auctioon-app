@@ -274,7 +274,33 @@
       "testDevicesCamera": "Cámara",
       "testDevicesMic": "Micrófono",
       "testDevicesMicVolume": "Volumen del micrófono",
-      "testDevicesClose": "Cerrar"
+      "testDevicesClose": "Cerrar",
+      "newAuction": {
+        "titlePage": "Crear subasta",
+        "required": "* Campos obligatorios",
+        "title": "Título",
+        "country": "País",
+        "category": "Categoría",
+        "startDate": "Fecha de inicio",
+        "startTime": "Hora de inicio",
+        "image": "Subir imagen",
+        "imageFormats": "Formatos aceptados: JPG, PNG, WEBP",
+        "removeImage": "Eliminar Imagen",
+        "submit": "Crear subasta",
+        "cancel": "Cancelar",
+        "errors": {
+          "generic": "Hubo un error al crear la subasta.",
+          "imageRequired": "Debes subir una imagen.",
+          "invalidDate": "Introduce una fecha válida.",
+          "invalidTime": "Introduce una hora válida."
+        },
+        "tooltip": {
+          "category": {
+            "main": "Elige la categoría que mejor corresponda a tu subasta.",
+            "strong": "Esto no podrá cambiarse después."
+          }
+        }
+      }
     },
     "newArticle": {
       "pageTitle": "Nuevo artículo",
