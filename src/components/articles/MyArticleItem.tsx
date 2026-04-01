@@ -29,6 +29,7 @@ type MyArticleItemProps = {
     unfeaturedText: string;
   };
   auctionId: string;
+  isOrderingItems: boolean;
   formatter: Intl.NumberFormat;
   locale: Lang;
   commissionValue: number | null;
@@ -67,6 +68,7 @@ export function MyArticleItem({
     featuredText,
     unfeaturedText,
   },
+  isOrderingItems = false,
   auctionId,
   formatter,
   locale,
@@ -189,7 +191,7 @@ export function MyArticleItem({
           </CustomText>
         </View>
       </View>
-      {showActions && (
+      {showActions && !isOrderingItems && (
         <View className='mt-4 flex w-full flex-row flex-wrap gap-3'>
           {(auctionStatus === AuctionStatus.NOT_AVAILABLE ||
             auctionStatus === AuctionStatus.NEED_CHANGES ||
