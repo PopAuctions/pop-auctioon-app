@@ -46,35 +46,41 @@ function getTabRootFromHref(href: string): TabRoute | null {
 
   return match ?? null;
 }
-
-/**
- * Adds fromTab=true ONLY when:
- * - destination belongs to a tab route AND is nested (not the tab root)
- * - AND navigation is cross-tab (current tab root !== destination tab root)
- */
-function addFromTabParamIfCrossTab(
+function resolveTabNavigation(
   href: string,
   currentPathname: string
-): string {
-  if (href.includes('fromTab=')) return href;
+): { finalHref: string; shouldReplace: boolean } {
+  if (href.includes('fromTab=')) {
+    return {
+      finalHref: href,
+      shouldReplace: href.includes('fromTab=true'),
+    };
+  }
 
   const currentTab = getTabRootFromHref(currentPathname);
   const targetTab = getTabRootFromHref(href);
 
-  if (!currentTab || !targetTab) return href;
+  if (!currentTab || !targetTab) {
+    return { finalHref: href, shouldReplace: false };
+  }
 
-  // detect nested: same tab root but not exactly the root path
   const [targetNoQuery] = href.split('?');
   const targetNormalized = normalizeTabsPath(targetNoQuery);
   const isTargetNested = targetNormalized !== targetTab;
+  const isCrossTab = currentTab !== targetTab;
 
-  if (!isTargetNested) return href; // not nested → no marker
-  if (currentTab === targetTab) return href; // same tab → no marker
+  if (!isTargetNested || !isCrossTab) {
+    return { finalHref: href, shouldReplace: false };
+  }
 
   const [pathAndQuery, hash] = href.split('#');
   const separator = pathAndQuery.includes('?') ? '&' : '?';
-  const result = `${pathAndQuery}${separator}fromTab=true`;
-  return hash ? `${result}#${hash}` : result;
+  const finalHref = `${pathAndQuery}${separator}fromTab=true`;
+
+  return {
+    finalHref: hash ? `${finalHref}#${hash}` : finalHref,
+    shouldReplace: true,
+  };
 }
 
 /**
@@ -191,10 +197,12 @@ export const CustomLink = forwardRef<
       }
 
       // Agregar automáticamente fromTab=true si es ruta anidada
-      const finalHref = addFromTabParamIfCrossTab(href, pathname);
+      const { finalHref, shouldReplace } = resolveTabNavigation(href, pathname);
 
       const go = () => {
-        navigateWithAuth(finalHref as any, { replace });
+        navigateWithAuth(finalHref, {
+          replace: replace || shouldReplace,
+        });
       };
 
       if (!dismissFirst) {
@@ -241,4 +249,4 @@ export const CustomLink = forwardRef<
 CustomLink.displayName = 'CustomLink';
 
 // Exportar funciones helper para testing
-export { normalizeTabsPath, getTabRootFromHref, addFromTabParamIfCrossTab };
+export { normalizeTabsPath, getTabRootFromHref };

@@ -14,7 +14,6 @@ export default function AccountLayout() {
         headerShown: true,
         headerBackTitle: t('tabsNames.back'),
         headerTitleAlign: 'center',
-        // TODO: update all other tabs to use the same headerLeft
         headerLeft: () => {
           return (
             <SmartBack
