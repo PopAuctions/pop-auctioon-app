@@ -2,25 +2,18 @@ import { REQUEST_STATUS } from '@/constants';
 import { AuctionStatus } from '@/constants/auctions';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import {
-  ActionResponse,
-  LangMap,
-  LiveAuction,
-  RequestStatus,
-} from '@/types/types';
+import { ActionResponse, LangMap, Auction, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
 interface FetchLiveAuctionResponse {
-  auction: LiveAuction | null;
+  auction: Auction | null;
   status: AuctionStatus | null;
 }
 
 export const useGetMyAuction = ({
   auctionId,
-  validateIsLive = false,
 }: {
   auctionId: string;
-  validateIsLive?: boolean;
 }): ActionResponse<FetchLiveAuctionResponse | null> & {
   refetch: () => Promise<void>;
 } => {
@@ -32,11 +25,9 @@ export const useGetMyAuction = ({
   const fetchMyAuction = useCallback(async () => {
     try {
       setStatus(REQUEST_STATUS.loading);
-      const params = new URLSearchParams();
-      params.append('validateIsLive', String(validateIsLive));
 
       const res = await secureGet<FetchLiveAuctionResponse>({
-        endpoint: `/my-auctions/${auctionId}?${params}`,
+        endpoint: `/my-auctions/${auctionId}`,
       });
 
       if (res.error) {
@@ -88,15 +79,12 @@ export const useGetMyAuction = ({
         },
       };
     }
-  }, [auctionId, validateIsLive, secureGet]);
+  }, [auctionId, secureGet]);
 
   const refetchMyAuction = useCallback(async () => {
     try {
-      const params = new URLSearchParams();
-      params.append('validateIsLive', String(validateIsLive));
-
       const res = await secureGet<FetchLiveAuctionResponse>({
-        endpoint: `/my-auctions/${auctionId}?${params}`,
+        endpoint: `/my-auctions/${auctionId}`,
       });
       const liveAuction = res.data;
 
@@ -126,7 +114,7 @@ export const useGetMyAuction = ({
         '2_USE_GET_MY_AUCTION - Unexpected error'
       );
     }
-  }, [auctionId, validateIsLive, secureGet]);
+  }, [auctionId, secureGet]);
 
   useEffect(() => {
     fetchMyAuction();

@@ -16,6 +16,7 @@ import { View } from '@/components/Themed';
 import { MyAuctionActions } from '@/components/auctions/MyAuctionActions';
 import { MyAuctionArticlesSection } from '@/components/articles/MyAuctionArticlesSection';
 import { useGetMyAuction } from '@/hooks/pages/auction/useGetMyAuction';
+import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 
 export default function MyAuctionDetailScreen() {
   const { t, locale } = useTranslation();
@@ -23,21 +24,27 @@ export default function MyAuctionDetailScreen() {
     id: string;
   }>();
   const {
-    data: liveAuctionData,
+    data: auctionData,
     status,
     errorMessage,
     refetch,
   } = useGetMyAuction({
     auctionId: id,
   });
+
+  const { data: liveAuctionData } = useGetLiveAuction({
+    auctionId: id,
+    validateIsLive: false,
+  });
   const auctionLang = t('screens.myAuction');
   const liveAuction = liveAuctionData?.auction;
+  const auction = auctionData?.auction;
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
   }
 
-  if (status === REQUEST_STATUS.error || !liveAuction) {
+  if (status === REQUEST_STATUS.error || !auction) {
     return (
       <CustomError
         customMessage={errorMessage}
@@ -46,7 +53,6 @@ export default function MyAuctionDetailScreen() {
     );
   }
 
-  const { Auction: auction } = liveAuction;
   const auctionMode = auction.mode;
 
   const statusColor =

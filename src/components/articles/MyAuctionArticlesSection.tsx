@@ -1,12 +1,12 @@
 import { AuctionStatus } from '@/constants/auctions';
-import { View } from '../Themed';
-import { CustomLink } from '../ui/CustomLink';
-import { CustomText } from '../ui/CustomText';
+import { View } from '@/components/Themed';
+import { CustomLink } from '@/components/ui/CustomLink';
+import { CustomText } from '@/components/ui/CustomText';
 import { MyAuctionArticles } from './MyAuctionArticles';
 import { MyAuctionArticlesFilters } from './MyAuctionArticlesFilters';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useState } from 'react';
-import { Button } from '../ui/Button';
+import { Button } from '@/components/ui/Button';
 import { useLocalSearchParams } from 'expo-router';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';

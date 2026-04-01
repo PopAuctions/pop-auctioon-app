@@ -10,7 +10,6 @@ import { getErrorMessage } from '@/utils/form-errors';
 import { useToast } from '@/hooks/useToast';
 import { useArticleForm } from '@/hooks/components/useArticleForm';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
-import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import {
   ARTICLE_IMAGES_MAX,
   ARTICLE_STATE,
@@ -30,6 +29,7 @@ import { Tooltip } from '@/components/ui/Tooltip';
 import { SelectField } from '@/components/fields/SelectField';
 import { useArticle } from '@/hooks/pages/my-auction/useArticle';
 import { useState } from 'react';
+import { useGetMyAuction } from '@/hooks/pages/auction/useGetMyAuction';
 
 export default function NewAuctionArticleScreen() {
   const params = useLocalSearchParams<{
@@ -61,16 +61,16 @@ export default function NewAuctionArticleScreen() {
   });
 
   const {
-    data: liveAuctionData,
+    data: auctionData,
     status,
     errorMessage,
-  } = useGetLiveAuction({
+  } = useGetMyAuction({
     auctionId,
   });
 
-  const liveAuction = liveAuctionData?.auction;
-  const auctionCategory = liveAuction?.Auction.category
-    ? AuctionCategoriesConst[liveAuction.Auction.category]
+  const auction = auctionData?.auction;
+  const auctionCategory = auction?.category
+    ? AuctionCategoriesConst[auction.category]
     : AuctionCategoriesConst.BAGS;
 
   const {
@@ -86,7 +86,7 @@ export default function NewAuctionArticleScreen() {
     return <Loading locale={locale} />;
   }
 
-  if (status === REQUEST_STATUS.error || !liveAuction) {
+  if (status === REQUEST_STATUS.error || !auction) {
     return (
       <CustomError
         customMessage={errorMessage}
@@ -119,6 +119,7 @@ export default function NewAuctionArticleScreen() {
 
   const onSubmit = async (data: any) => {
     setIsUploadingArticle(true);
+
     if (!validateMinImages()) {
       callToast({
         variant: 'error',

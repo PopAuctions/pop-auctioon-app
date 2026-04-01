@@ -440,7 +440,7 @@ export default function EditAuctionArticleScreen() {
               isLoading={isLoading}
               disabled={isLoading}
             >
-              {t('screens.newArticle.submit')}
+              {t('screens.newArticle.editSubmit')}
             </Button>
           </View>
 
