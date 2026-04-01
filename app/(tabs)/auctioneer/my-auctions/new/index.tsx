@@ -9,7 +9,6 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Loading } from '@/components/ui/Loading';
 import { SelectField } from '@/components/fields/SelectField';
 import { getErrorMessage } from '@/utils/form-errors';
-import { AVAILABLE_COUNTRIES_LANG } from '@/constants';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
 import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
@@ -23,6 +22,8 @@ import { DateInputField } from '@/components/fields/DateInputField';
 import { TimeInputField } from '@/components/fields/TimeInputField';
 import { getMinDateToStartAuction } from '@/utils/getMinDateToStartAuction';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
+import { useFetchAvailableCountries } from '@/hooks/globals/useFetchAvailableCountries';
+import { REQUEST_STATUS } from '@/constants';
 
 const TOOLTIP_MESSAGE = {
   en: {
@@ -56,6 +57,9 @@ export default function MyANewAuctionScreen() {
     minImages: 1,
     callToast,
   });
+
+  const { data: countries, status: countriesStatus } =
+    useFetchAvailableCountries();
 
   const {
     control,
@@ -137,7 +141,11 @@ export default function MyANewAuctionScreen() {
     router.back();
   };
 
-  const isLoading = isSubmitting || isUploadingImages || isUploadingAuction;
+  const isLoading =
+    isSubmitting ||
+    isUploadingImages ||
+    isUploadingAuction ||
+    countriesStatus === REQUEST_STATUS.loading;
 
   if (isLoading) {
     return <Loading locale={locale} />;
@@ -206,7 +214,7 @@ export default function MyANewAuctionScreen() {
                   <SelectField
                     name='country'
                     value={value ?? null}
-                    options={AVAILABLE_COUNTRIES_LANG[locale]}
+                    options={countries?.[locale] ?? []}
                     placeholder={t('screens.myAuction.newAuction.country')}
                     isSearchable={true}
                     isDisabled={isLoading}

@@ -65,7 +65,7 @@ export default function MyAuctionDetailScreen() {
     <View className='flex w-full flex-col items-center justify-center gap-4'>
       <View className='mx-auto mt-5 h-[300px] w-full max-w-80 overflow-hidden rounded-xl'>
         <CustomImage
-          src={auction.image}
+          src={auction.image ?? ''}
           alt={auction.title}
           className='h-full w-full'
         />

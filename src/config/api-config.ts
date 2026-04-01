@@ -175,6 +175,9 @@ export const SECURE_ENDPOINTS = {
     ): ApiEndpoint =>
       `/auctions/${auctionId}/articles/${articleId}/remove` as ApiEndpoint,
   },
+  GLOBALS: {
+    COUNTRIES: '/globals/countries',
+  },
 
   // Usuario y perfil
   USER: {

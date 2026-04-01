@@ -1,56 +1,4 @@
-import type {
-  PaymentShippingTax,
-  Countries,
-  CountryValue,
-  Lang,
-} from '@/types/types';
-
-/**
- * Payment Constants
- * Adaptado de src/lib/server/paymentConstants.ts (Next.js web version)
- * Removido 'server-only' import para compatibilidad con React Native
- */
-
-// ========================================
-// PAYMENT TIMING
-// ========================================
-
-/**
- * Number of days after the acquisition of an article
- * so the auctioneer can cancel the acquisition
- */
-export const DAYS_AFTER_ACQUISITION_TO_CANCEL: number = 3;
-
-// ========================================
-// TAX RATES
-// ========================================
-
-const TAX_PERCENTAGE_ARTICLES: number = 0;
-export const TAX_PERCENTAGE: number = 0.21; // 21% VAT
-
-export function getTaxPercentage(): number {
-  return TAX_PERCENTAGE_ARTICLES;
-}
-
-// ========================================
-// SHIPPING TAXES
-// ========================================
-
-const GENERAL_TAX_FOR_SHIPPING: number = 29;
-const SPAIN_TAX_FOR_SHIPPING: number = 10;
-
-const SHIPPING_TAXES: PaymentShippingTax = {
-  GENERAL: GENERAL_TAX_FOR_SHIPPING,
-  SPAIN: SPAIN_TAX_FOR_SHIPPING,
-};
-
-export function getShippingTax(): PaymentShippingTax {
-  return SHIPPING_TAXES;
-}
-
-// ========================================
-// PAYMENT STATUS
-// ========================================
+import type { Countries, CountryValue, Lang } from '@/types/types';
 
 export enum UserPaymentStatus {
   PENDING = 'PENDING',
@@ -277,29 +225,3 @@ export const COUNTRIES_MAP_LABEL: {
     SWEDEN: 'Sweden',
   },
 };
-
-// ========================================
-// HELPER FUNCTIONS
-// ========================================
-
-/**
- * Helper function to get the label of a country
- * @param countryCode - Country code (CountryValue)
- * @param locale - Language ('es' | 'en')
- * @returns Localized country label
- */
-export function getCountryLabel(
-  countryCode: CountryValue,
-  locale: 'es' | 'en'
-): string {
-  return COUNTRIES_MAP_LABEL[locale][countryCode] || countryCode;
-}
-
-/**
- * Helper function to validate if a code is a valid country
- * @param code - Code to validate
- * @returns true if it's a valid country code
- */
-export function isValidCountryCode(code: string): code is CountryValue {
-  return COUNTRIES_ARRAY.includes(code as CountryValue);
-}

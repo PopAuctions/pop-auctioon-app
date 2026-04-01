@@ -743,10 +743,7 @@ export interface CountryObject {
   value: CountryValue;
 }
 
-export interface Countries {
-  es: CountryObject[];
-  en: CountryObject[];
-}
+export type Countries = Record<Lang, CountryObject[]>;
 
 export interface PaymentShippingTax {
   GENERAL: number;
