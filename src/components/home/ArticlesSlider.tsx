@@ -1,17 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   FlatList,
+  LayoutChangeEvent,
   Pressable,
-  useWindowDimensions,
   View,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
 import type { SimpleArticle, Lang } from '@/types/types';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
-import { ArticleItem } from '@/components/articles/ArticleItem';
+import { ArticleSliderItem } from '../articles/ArticleSliderItem';
 
-const ITEMS_GAP = 32;
+const ITEMS_GAP = 8;
 
 export const ArticlesSlider = ({
   articles,
@@ -26,62 +26,111 @@ export const ArticlesSlider = ({
   commissionValue: number | null;
   texts: { currentBid: string };
 }) => {
-  const { width } = useWindowDimensions();
-  const listRef = useRef<FlatList<SimpleArticle>>(null);
+  const listRef = useRef<FlatList<SimpleArticle[]>>(null);
   const [page, setPage] = useState(0);
+  const [pageWidth, setPageWidth] = useState(0);
 
-  const CARD_W = Math.min(width - 48, Math.round(width * 0.95));
+  const pages = useMemo(() => {
+    const result: SimpleArticle[][] = [];
+
+    for (let i = 0; i < articles.length; i += 2) {
+      result.push(articles.slice(i, i + 2));
+    }
+
+    return result;
+  }, [articles]);
+
+  const handleTrackLayout = (e: LayoutChangeEvent) => {
+    setPageWidth(e.nativeEvent.layout.width);
+  };
+
+  const cardWidth = pageWidth > 0 ? (pageWidth - ITEMS_GAP) / 2 : 0;
 
   const scrollToPage = (index: number) => {
-    const clamped = Math.max(0, Math.min(articles.length - 1, index));
-    const offset = clamped * (CARD_W + ITEMS_GAP);
-    listRef.current?.scrollToOffset({ offset, animated: true });
+    const clamped = Math.max(0, Math.min(pages.length - 1, index));
+
+    listRef.current?.scrollToOffset({
+      offset: clamped * pageWidth,
+      animated: true,
+    });
+
     setPage(clamped);
   };
 
   const onMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!pageWidth) return;
+
     const x = e.nativeEvent.contentOffset.x;
-    const next = Math.round(x / (CARD_W + ITEMS_GAP));
+    const next = Math.round(x / pageWidth);
     setPage(next);
   };
 
+  if (articles.length === 0) return null;
+
   return (
     <View className='w-full px-2'>
-      <FlatList<SimpleArticle>
-        ref={listRef}
-        data={articles}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_W + ITEMS_GAP}
-        snapToAlignment='start'
-        decelerationRate='fast'
-        ItemSeparatorComponent={() => <View style={{ width: ITEMS_GAP }} />}
-        onMomentumScrollEnd={onMomentumEnd}
-        renderItem={({ item }) => (
-          <View style={{ width: CARD_W }}>
-            <ArticleItem
-              article={item}
-              auctionLang={{ currentBid: texts.currentBid }}
-              formatter={formatter}
-              lang={lang}
-              commissionValue={commissionValue}
-              showFollowButton={false}
-            />
-          </View>
-        )}
-      />
+      <View
+        className='overflow-hidden'
+        onLayout={handleTrackLayout}
+      >
+        {pageWidth > 0 && (
+          <FlatList<SimpleArticle[]>
+            ref={listRef}
+            data={pages}
+            keyExtractor={(_, index) => `page-${index}`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            decelerationRate='fast'
+            snapToInterval={pageWidth}
+            snapToAlignment='start'
+            disableIntervalMomentum
+            bounces={false}
+            overScrollMode='never'
+            onMomentumScrollEnd={onMomentumEnd}
+            getItemLayout={(_, index) => ({
+              length: pageWidth,
+              offset: pageWidth * index,
+              index,
+            })}
+            renderItem={({ item: pageArticles }) => (
+              <View
+                style={{ width: pageWidth }}
+                className='flex-row'
+              >
+                {pageArticles.map((article, idx) => (
+                  <View
+                    key={article.id}
+                    style={{
+                      width: cardWidth,
+                      marginRight: idx === 0 ? ITEMS_GAP : 0,
+                    }}
+                  >
+                    <ArticleSliderItem
+                      article={article}
+                      auctionLang={{ currentBid: texts.currentBid }}
+                      formatter={formatter}
+                      lang={lang}
+                      commissionValue={commissionValue}
+                    />
+                  </View>
+                ))}
 
-      {/* Arrows + dots */}
-      <View className='mt-3 flex-row items-center justify-between px-4'>
+                {pageArticles.length === 1 && (
+                  <View style={{ width: cardWidth }} />
+                )}
+              </View>
+            )}
+          />
+        )}
+      </View>
+
+      <View className='flex-row items-center justify-between px-4'>
         <Pressable
-          onPress={() => {
-            scrollToPage(page - 1);
-          }}
+          onPress={() => scrollToPage(page - 1)}
           disabled={page <= 0}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
-          accessibilityLabel='Previous article'
-          accessibilityHint='Navigates to the previous article in the slider'
+          accessibilityLabel='Previous article page'
+          accessibilityHint='Navigates to the previous page in the slider'
         >
           <FontAwesomeIcon
             variant='bold'
@@ -95,28 +144,26 @@ export const ArticlesSlider = ({
           className='flex-row items-center'
           style={{ gap: 8 }}
         >
-          {articles.map((article, idx) => (
+          {pages.map((_, idx) => (
             <View
-              key={article.id}
+              key={`dot-${idx}`}
               className={
                 idx === page
                   ? 'h-2 w-2 rounded-full bg-cinnabar'
                   : 'h-2 w-2 rounded-full bg-neutral-600'
               }
               accessibilityRole='progressbar'
-              accessibilityLabel={`Page ${page + 1} of ${articles.length}`}
+              accessibilityLabel={`Page ${page + 1} of ${pages.length}`}
             />
           ))}
         </View>
 
         <Pressable
-          onPress={() => {
-            scrollToPage(page + 1);
-          }}
-          disabled={page >= articles.length - 1}
+          onPress={() => scrollToPage(page + 1)}
+          disabled={page >= pages.length - 1}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
-          accessibilityHint='Next article'
-          accessibilityLabel='Navigates to the next article in the slider'
+          accessibilityLabel='Next article page'
+          accessibilityHint='Navigates to the next page in the slider'
         >
           <FontAwesomeIcon
             variant='bold'
