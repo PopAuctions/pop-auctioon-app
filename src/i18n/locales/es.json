@@ -430,7 +430,7 @@
       "privacyPolicy": "Política de Privacidad",
       "cookiesPolicy": "Política de Cookies",
       "signOut": "Cerrar Sesión",
-      "noArticlesWon": "Aún no has ganado ningun artículo",
+      "noArticlesWon": "Aún no has ganado ningún artículo",
       "winningBid": "Puja ganadora",
       "payArticles": "Pagar artículos",
       "viewArticle": "Ver artículo"
@@ -748,7 +748,7 @@
     },
     "soldArticles": {
       "title": "Artículos vendidos",
-      "noArticles": "Aún no has vendido ningun artículo",
+      "noArticles": "Aún no has vendido ningún artículo",
       "paid": "Pagado",
       "pending": "Pendiente",
       "soldPrice": "Precio de venta",
