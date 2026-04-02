@@ -36,13 +36,13 @@ export function OnlineStoreArticleItem({
   }
 
   return (
-    <View className='w-full gap-2'>
+    <View className='w-full'>
       <CustomLink
-        className='flex w-full flex-col gap-5 md:gap-8'
+        className='w-full'
         href={`/(tabs)/online-store/articles/${articleId}`}
         mode='empty'
       >
-        <View className='aspect-square w-full items-center overflow-hidden rounded-xl md:w-2/5'>
+        <View className='aspect-square w-full overflow-hidden rounded-xl'>
           <CustomImage
             src={article.images[0]}
             alt={article.title}
@@ -51,29 +51,33 @@ export function OnlineStoreArticleItem({
           />
         </View>
 
-        <View className='w-full flex-col items-start justify-between md:w-3/5'>
-          <View className='flex flex-col pr-2'>
-            <CustomText type='subtitle'>
-              {`${texts.price} ${commissionValue !== null ? formatter.format(commissionedPrice) : AMOUNT_PLACEHOLDER}`}
-            </CustomText>
+        <View className='mt-2 pr-1'>
+          <CustomText type='subtitle'>
+            {`${texts.price} ${
+              commissionValue !== null
+                ? formatter.format(commissionedPrice)
+                : AMOUNT_PLACEHOLDER
+            }`}
+          </CustomText>
 
-            <CustomText
-              type='body'
-              className='text-cinnabar'
-            >
-              {ARTICLE_BRANDS_LABELS[
-                article.brand as keyof typeof ARTICLE_BRANDS_LABELS
-              ] ??
-                article.brand ??
-                ''}
-            </CustomText>
-            <CustomText
-              type='h4'
-              className='text-black'
-            >
-              {article.title}
-            </CustomText>
-          </View>
+          <CustomText
+            type='body'
+            className='text-cinnabar'
+          >
+            {ARTICLE_BRANDS_LABELS[
+              article.brand as keyof typeof ARTICLE_BRANDS_LABELS
+            ] ??
+              article.brand ??
+              ''}
+          </CustomText>
+
+          <CustomText
+            type='h4'
+            className='text-black'
+            numberOfLines={2}
+          >
+            {article.title}
+          </CustomText>
         </View>
       </CustomLink>
     </View>
