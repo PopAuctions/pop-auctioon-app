@@ -109,7 +109,6 @@ export const OnlineStoreArticlesSlider = ({
                       onlineStoreArticle={article}
                       formatter={formatter}
                       texts={{ price: texts.price }}
-                      lang={lang}
                       commissionValue={commissionValue}
                     />
                   </View>
@@ -124,7 +123,7 @@ export const OnlineStoreArticlesSlider = ({
         )}
       </View>
 
-      <View className='flex-row items-center justify-between px-4'>
+      <View className='mt-2 flex-row items-center justify-between px-4'>
         <Pressable
           onPress={() => scrollToPage(page - 1)}
           disabled={page <= 0}

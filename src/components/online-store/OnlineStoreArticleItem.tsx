@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { CustomArticleSecondChance, Lang } from '@/types/types';
-import { CustomText } from '../ui/CustomText';
-import { CustomLink } from '../ui/CustomLink';
+import { CustomArticleSecondChance } from '@/types/types';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 import { AMOUNT_PLACEHOLDER, ARTICLE_BRANDS_LABELS } from '@/constants';
-import { CustomImage } from '../ui/CustomImage';
+import { CustomImage } from '@/components/ui/CustomImage';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
 type OnlineStoreArticleItemProps = {
@@ -13,14 +13,12 @@ type OnlineStoreArticleItemProps = {
   texts: {
     price: string;
   };
-  lang: Lang;
   commissionValue: number | null;
 };
 
 export function OnlineStoreArticleItem({
   onlineStoreArticle,
   formatter,
-  lang,
   texts,
   commissionValue,
 }: OnlineStoreArticleItemProps) {
@@ -40,11 +38,11 @@ export function OnlineStoreArticleItem({
   return (
     <View className='w-full gap-2'>
       <CustomLink
-        className='flex w-full flex-row gap-5 md:gap-8'
+        className='flex w-full flex-col gap-5 md:gap-8'
         href={`/(tabs)/online-store/articles/${articleId}`}
         mode='empty'
       >
-        <View className='aspect-square w-1/2 items-center overflow-hidden rounded-xl md:w-2/5'>
+        <View className='aspect-square w-full items-center overflow-hidden rounded-xl md:w-2/5'>
           <CustomImage
             src={article.images[0]}
             alt={article.title}
@@ -53,17 +51,10 @@ export function OnlineStoreArticleItem({
           />
         </View>
 
-        <View className='w-1/2 flex-col items-start justify-between md:w-3/5'>
+        <View className='w-full flex-col items-start justify-between md:w-3/5'>
           <View className='flex flex-col pr-2'>
             <CustomText type='subtitle'>
               {`${texts.price} ${commissionValue !== null ? formatter.format(commissionedPrice) : AMOUNT_PLACEHOLDER}`}
-            </CustomText>
-
-            <CustomText
-              type='h4'
-              className='text-black'
-            >
-              {article.title}
             </CustomText>
 
             <CustomText
@@ -75,6 +66,12 @@ export function OnlineStoreArticleItem({
               ] ??
                 article.brand ??
                 ''}
+            </CustomText>
+            <CustomText
+              type='h4'
+              className='text-black'
+            >
+              {article.title}
             </CustomText>
           </View>
         </View>

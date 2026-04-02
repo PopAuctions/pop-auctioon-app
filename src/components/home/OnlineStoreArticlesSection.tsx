@@ -27,37 +27,36 @@ export const OnlineStoreArticlesSection = ({
   const formatter = euroFormatter(lang);
 
   return (
-    <View className='my-5 w-full gap-8'>
-      <View className='gap-3'>
-        <CustomText
-          type='h2'
-          className='text-left'
-        >
-          {texts.onlineStoreTitle}
-        </CustomText>
+    <View className='mt-2 w-full gap-2'>
+      <CustomText
+        type='h2'
+        className='text-left'
+      >
+        {texts.onlineStoreTitle}
+      </CustomText>
 
-        <View className='w-full'>
-          {articlesReady ? (
-            <OnlineStoreArticlesSlider
-              articles={articles}
-              lang={lang}
-              texts={{ price: texts.price }}
-              formatter={formatter}
-              commissionValue={commissionValue}
-            />
-          ) : (
-            <ArticleSliderSkeleton />
-          )}
-        </View>
-        <View>
-          <CustomLink
-            mode='secondary'
-            href='/(tabs)/online-store'
-            className='w-1/2 self-center'
-          >
-            {texts.viewMore}
-          </CustomLink>
-        </View>
+      <View className='w-full'>
+        {articlesReady ? (
+          <OnlineStoreArticlesSlider
+            articles={articles}
+            lang={lang}
+            texts={{ price: texts.price }}
+            formatter={formatter}
+            commissionValue={commissionValue}
+          />
+        ) : (
+          <ArticleSliderSkeleton />
+        )}
+      </View>
+      <View>
+        <CustomLink
+          className='w-1/2 self-center'
+          href='/(tabs)/online-store'
+          mode='secondary'
+          size='small'
+        >
+          {texts.viewMore}
+        </CustomLink>
       </View>
     </View>
   );

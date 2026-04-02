@@ -39,7 +39,7 @@ export const ArticlesSection = ({
   const formatter = euroFormatter(lang);
 
   return (
-    <View className='mt-5 w-full gap-8 pb-10'>
+    <View className='mt-6 w-full gap-8 pb-10'>
       <View className='gap-3'>
         <CustomText
           type='h2'
