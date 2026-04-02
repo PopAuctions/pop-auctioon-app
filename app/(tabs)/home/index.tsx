@@ -16,6 +16,8 @@ import { WonArticlesModal } from '@/components/modal/WonArticlesModal';
 import { HomeHeader } from '@/components/home/HomeHeader';
 import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGetUnreadUserNotifications';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { useFetchNewestArticlesOnlineStore } from '@/hooks/pages/online-store/useFetchNewestArticlesOnlineStore';
+import { OnlineStoreArticlesSection } from '@/components/home/OnlineStoreArticlesSection';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -33,6 +35,10 @@ export default function HomeScreen() {
     useFetchFeaturedArticles();
   const { data: newestArticles, status: newestArticlesStatus } =
     useFetchNewestArticles();
+  const {
+    data: newestArticlesOnlineStore,
+    status: newestArticlesOnlineStoreStatus,
+  } = useFetchNewestArticlesOnlineStore();
   const { data: commission, status: commissionsStatus } = useFetchCommissions();
   const { data: unreadNotifications, refetch } =
     useGetUnreadUserNotifications();
@@ -101,6 +107,24 @@ export default function HomeScreen() {
               noAuction: t('screens.homePage.noAuctions'),
             }}
           />
+
+          {newestArticlesOnlineStoreStatus !== REQUEST_STATUS.error && (
+            <OnlineStoreArticlesSection
+              lang={locale}
+              commissionValue={
+                commissionsStatus === REQUEST_STATUS.success ? commission : null
+              }
+              texts={{
+                onlineStoreTitle: t('screens.homePage.onlineStoreTitle'),
+                price: t('screens.store.price'),
+                viewMore: t('screens.homePage.viewMore'),
+              }}
+              articles={newestArticlesOnlineStore}
+              articlesReady={
+                newestArticlesOnlineStoreStatus === REQUEST_STATUS.success
+              }
+            />
+          )}
 
           <ArticlesSection
             lang={locale}

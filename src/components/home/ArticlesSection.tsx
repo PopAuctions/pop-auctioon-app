@@ -39,11 +39,8 @@ export const ArticlesSection = ({
   const formatter = euroFormatter(lang);
 
   return (
-    <View
-      className='mt-5 w-full pb-10'
-      style={{ gap: 32 }}
-    >
-      <View style={{ gap: 12 }}>
+    <View className='mt-5 w-full gap-8 pb-10'>
+      <View className='gap-3'>
         <CustomText
           type='h2'
           className='text-left'
@@ -66,7 +63,7 @@ export const ArticlesSection = ({
         </View>
       </View>
 
-      <View style={{ gap: 12 }}>
+      <View className='gap-3'>
         <CustomText
           type='h2'
           className='text-left'
@@ -89,7 +86,7 @@ export const ArticlesSection = ({
         </View>
       </View>
 
-      <View style={{ gap: 12 }}>
+      <View className='gap-3'>
         <CustomText
           type='h2'
           className='text-left'
