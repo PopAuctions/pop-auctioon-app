@@ -60,8 +60,20 @@ export function ArticleItem({
           />
         </View>
 
-        <View className='w-1/2 flex-col items-start justify-between md:w-3/5'>
+        <View className='w-1/2 flex-col justify-between md:w-3/5'>
           <View className='flex flex-col pr-2'>
+            <FollowButton
+              mode='primary'
+              size='large'
+              heartIcon={true}
+              follows={userFollows}
+              followEndpoint={`/articles/${articleId}/follow`}
+              unfollowEndpoint={`/articles/${articleId}/unfollow`}
+              lang={lang}
+              isAvailable={!article.sold}
+              extraDataIsLoaded={true}
+              actionAfterFollow={actionAfterFollow}
+            />
             {article.whenInAuction && (
               <SimpleCountdown
                 dateString={article.whenInAuction}
@@ -98,21 +110,6 @@ export function ArticleItem({
               }
             </CustomText>
           </View>
-
-          {showFollowButton && (
-            <FollowButton
-              className='w-2/3 enabled:hover:cursor-pointer disabled:opacity-50'
-              mode='primary'
-              size='large'
-              follows={userFollows}
-              followEndpoint={`/articles/${articleId}/follow`}
-              unfollowEndpoint={`/articles/${articleId}/unfollow`}
-              lang={lang}
-              isAvailable={article.sold}
-              extraDataIsLoaded={true}
-              actionAfterFollow={actionAfterFollow}
-            />
-          )}
         </View>
       </CustomLink>
     </View>

@@ -185,7 +185,7 @@ export default function AuctionDetailScreen() {
                   followEndpoint={`/auctions/${id}/follow`}
                   unfollowEndpoint={`/auctions/${id}/unfollow`}
                   lang={locale}
-                  isAvailable={!isAuctionAvailable}
+                  isAvailable={isAuctionAvailable}
                   extraDataIsLoaded={
                     userFollowsStatus === REQUEST_STATUS.success ||
                     userFollowsStatus === REQUEST_STATUS.error
