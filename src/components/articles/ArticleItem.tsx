@@ -62,18 +62,20 @@ export function ArticleItem({
 
         <View className='w-1/2 flex-col justify-between md:w-3/5'>
           <View className='flex flex-col pr-2'>
-            <FollowButton
-              mode='primary'
-              size='large'
-              heartIcon={true}
-              follows={userFollows}
-              followEndpoint={`/articles/${articleId}/follow`}
-              unfollowEndpoint={`/articles/${articleId}/unfollow`}
-              lang={lang}
-              isAvailable={!article.sold}
-              extraDataIsLoaded={true}
-              actionAfterFollow={actionAfterFollow}
-            />
+            {showFollowButton && (
+              <FollowButton
+                mode='primary'
+                size='large'
+                heartIcon={true}
+                follows={userFollows}
+                followEndpoint={`/articles/${articleId}/follow`}
+                unfollowEndpoint={`/articles/${articleId}/unfollow`}
+                lang={lang}
+                isAvailable={!article.sold}
+                extraDataIsLoaded={true}
+                actionAfterFollow={actionAfterFollow}
+              />
+            )}
             {article.whenInAuction && (
               <SimpleCountdown
                 dateString={article.whenInAuction}
