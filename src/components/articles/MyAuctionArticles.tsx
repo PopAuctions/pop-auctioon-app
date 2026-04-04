@@ -108,6 +108,7 @@ export const MyAuctionArticles = ({
           <MyArticleItem
             article={item}
             auctionId={auctionId}
+            isOrderingItems={isOrderingItems}
             auctionStatus={auctionStatus}
             showActions={true}
             texts={{

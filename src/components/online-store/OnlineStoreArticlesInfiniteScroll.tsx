@@ -95,8 +95,6 @@ export const OnlineStoreArticlesInfiniteScroll = ({
 
       setArticles(data);
       syncOffset(data.length);
-
-      // more pages only if you got a full page back
       syncHasMore(data.length === ITEMS_PER_PAGE);
     } catch (e) {
       console.warn('Error loading articles', e);
@@ -141,7 +139,6 @@ export const OnlineStoreArticlesInfiniteScroll = ({
 
       syncOffset(offsetRef.current + appendedCount);
 
-      // if server returned less than a page, you're done
       if (newData.length < ITEMS_PER_PAGE) syncHasMore(false);
     } catch (e) {
       console.warn('Error loading more', e);
@@ -192,20 +189,25 @@ export const OnlineStoreArticlesInfiniteScroll = ({
       data={articles}
       keyExtractor={(item) => item.id.toString()}
       extraData={{ brand, price, model, codeNumber, category, sortBy }}
+      numColumns={2}
+      columnWrapperStyle={{
+        justifyContent: 'space-between',
+        marginBottom: 20,
+      }}
       renderItem={({ item }) => (
-        <OnlineStoreArticleItem
-          onlineStoreArticle={item}
-          formatter={formatter}
-          texts={texts}
-          lang={lang}
-          commissionValue={isCommissionReady ? commissionData : null}
-        />
+        <View style={{ width: '48%' }}>
+          <OnlineStoreArticleItem
+            onlineStoreArticle={item}
+            formatter={formatter}
+            texts={texts}
+            commissionValue={isCommissionReady ? commissionData : null}
+          />
+        </View>
       )}
       contentContainerStyle={{
         paddingHorizontal: 16,
         paddingTop: 16,
         paddingBottom: 32,
-        rowGap: 20,
       }}
       ListHeaderComponent={ListHeaderComponent}
       ListFooterComponent={renderFooter}

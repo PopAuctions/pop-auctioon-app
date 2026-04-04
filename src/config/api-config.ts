@@ -151,9 +151,9 @@ export const SECURE_ENDPOINTS = {
   AUCTIONS: {
     LIST: '/auctions',
     NOW_NEXT: '/auctions/now-and-next',
-    CREATE: '/auctions/create',
-    UPDATE: '/auctions/update',
-    DELETE: '/auctions/delete',
+    CREATE: '/auctions/new',
+    UPDATE: (auctionId: string | number): ApiEndpoint =>
+      `/auctions/${auctionId}/edit` as ApiEndpoint,
     JOIN: '/auctions/join',
     BID: '/auctions/bid',
     DETAILS: '/auctions/details',
@@ -174,6 +174,9 @@ export const SECURE_ENDPOINTS = {
       articleId: string | number
     ): ApiEndpoint =>
       `/auctions/${auctionId}/articles/${articleId}/remove` as ApiEndpoint,
+  },
+  GLOBALS: {
+    COUNTRIES: '/globals/countries',
   },
 
   // Usuario y perfil

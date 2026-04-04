@@ -207,6 +207,7 @@ function SubmitBidButton({
       className='w-full rounded-md py-3'
       disabled={disabled}
       onPress={onPress}
+      isLoading={isPending}
     >
       {bidLang.sendBid}
     </Button>

@@ -203,7 +203,7 @@ export default function ArticlesDetailScreen() {
                     followEndpoint={`/articles/${id}/follow`}
                     unfollowEndpoint={`/articles/${id}/unfollow`}
                     lang={locale}
-                    isAvailable={article.sold}
+                    isAvailable={!article.sold}
                     extraDataIsLoaded={extraDataIsLoaded}
                   />
                 )}

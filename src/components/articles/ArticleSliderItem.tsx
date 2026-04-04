@@ -1,30 +1,32 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { CustomArticleSecondChance } from '@/types/types';
+import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
-import { AMOUNT_PLACEHOLDER, ARTICLE_BRANDS_LABELS } from '@/constants';
+import { AMOUNT_PLACEHOLDER } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
+import { SimpleCountdown } from '@/components/ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
-type OnlineStoreArticleItemProps = {
-  onlineStoreArticle: CustomArticleSecondChance;
-  formatter: Intl.NumberFormat;
-  texts: {
-    price: string;
+type ArticleItemProps = {
+  article: SimpleArticle;
+  auctionLang: {
+    currentBid: string;
   };
+  formatter: Intl.NumberFormat;
+  lang: Lang;
   commissionValue: number | null;
 };
 
-export function OnlineStoreArticleItem({
-  onlineStoreArticle,
+export function ArticleSliderItem({
+  article,
+  auctionLang,
   formatter,
-  texts,
+  lang,
   commissionValue,
-}: OnlineStoreArticleItemProps) {
-  const articleId = onlineStoreArticle.id;
-  const article = onlineStoreArticle.Article;
-  const price = onlineStoreArticle.price;
+}: ArticleItemProps) {
+  const articleId = article.id;
+  const price = article.ArticleBid.currentValue;
 
   const commissionedPrice = useMemo(
     () => getArticleCommissionedPrice(price, commissionValue ?? 0),
@@ -38,8 +40,8 @@ export function OnlineStoreArticleItem({
   return (
     <View className='w-full'>
       <CustomLink
-        className='w-full'
-        href={`/(tabs)/online-store/articles/${articleId}`}
+        className='w-full gap-2'
+        href={`/(tabs)/auctions/articles/${articleId}`}
         mode='empty'
       >
         <View className='aspect-square w-full overflow-hidden rounded-xl'>
@@ -51,24 +53,27 @@ export function OnlineStoreArticleItem({
           />
         </View>
 
-        <View className='mt-2 pr-1'>
+        <View>
+          {article.whenInAuction && (
+            <SimpleCountdown
+              dateString={article.whenInAuction}
+              locale={lang}
+              texts={{
+                startSoon: { en: 'Starting soon', es: 'Comienza pronto' },
+                completed: {
+                  en: 'Auction already started',
+                  es: 'La subasta ya comenzó',
+                },
+              }}
+            />
+          )}
+
           <CustomText type='subtitle'>
-            {`${texts.price} ${
-              commissionValue !== null
+            {`${auctionLang.currentBid} ${
+              commissionedPrice !== null
                 ? formatter.format(commissionedPrice)
                 : AMOUNT_PLACEHOLDER
             }`}
-          </CustomText>
-
-          <CustomText
-            type='body'
-            className='text-cinnabar'
-          >
-            {ARTICLE_BRANDS_LABELS[
-              article.brand as keyof typeof ARTICLE_BRANDS_LABELS
-            ] ??
-              article.brand ??
-              ''}
           </CustomText>
 
           <CustomText

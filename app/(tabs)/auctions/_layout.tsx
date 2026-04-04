@@ -29,7 +29,8 @@ export default function AuctionsLayout() {
         options={{
           title: t('tabsNames.auctions'),
           headerShown: true,
-          headerLeft: () => null, // Oculta el botón de retroceso en la pantalla principal
+          headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
       {/* <Stack.Screen

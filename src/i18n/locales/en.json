@@ -51,6 +51,8 @@
       "upcomingAuctionsTitle": "Upcoming auctions",
       "auctionCategoriesTitle": "Find your auction",
       "auctionCategoriesSubTitle": "What are you interested in?",
+      "onlineStoreTitle": "Online Store Articles",
+      "viewMore": "View More",
       "auctioneer": "Become an auctioneer",
       "auctions": "Upcoming auctions",
       "featuredArticles": "Featured articles",
@@ -58,6 +60,7 @@
       "mostViewedArticles": "Most viewed articles",
       "currentBid": "Current bid",
       "bags": "Bags",
+      "createAuction": "Create new auction",
       "getToKnowUs": "Get to know us",
       "onlineAuction": "Online auctions",
       "allAuctions": "See all auctions",
@@ -111,6 +114,7 @@
       "waiting2": "Wait a few minutes",
       "start": "Auction already started!",
       "finished": "Auction finished",
+      "bid": "Bid:",
       "watchButton": "Watch live",
       "ended": "Auction finished",
       "timeStart": "Time to start:",
@@ -273,7 +277,33 @@
       "testDevicesCamera": "Camera",
       "testDevicesMic": "Microphone",
       "testDevicesMicVolume": "Microphone volume",
-      "testDevicesClose": "Close"
+      "testDevicesClose": "Close",
+      "newAuction": {
+        "titlePage": "Create Auction",
+        "required": "* Required fields",
+        "title": "Title",
+        "country": "Country",
+        "category": "Category",
+        "startDate": "Start date",
+        "startTime": "Start time",
+        "image": "Upload image",
+        "imageFormats": "Accepted formats: JPG, PNG, WEBP",
+        "removeImage": "Remove image",
+        "submit": "Create auction",
+        "cancel": "Cancel",
+        "errors": {
+          "generic": "There was an error creating the auction.",
+          "imageRequired": "Please upload an image.",
+          "invalidDate": "Please enter a valid date.",
+          "invalidTime": "Please enter a valid time."
+        },
+        "tooltip": {
+          "category": {
+            "main": "Choose the category that best matches your auction.",
+            "strong": "This cannot be changed later."
+          }
+        }
+      }
     },
     "newArticle": {
       "pageTitle": "New article",

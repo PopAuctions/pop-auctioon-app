@@ -28,6 +28,8 @@ export default function HomeLayout() {
         options={{
           title: t('tabsNames.home'),
           headerShown: false,
+          headerLeft: () => null,
+          headerBackVisible: false,
         }}
       />
       {/* Pantallas futuras para navegación desde HOME - COMENTADAS HASTA IMPLEMENTAR

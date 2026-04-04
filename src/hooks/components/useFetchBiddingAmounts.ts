@@ -41,8 +41,10 @@ export const useFetchBiddingAmounts = ({
     const params = new URLSearchParams();
 
     if (articleId) params.append('articleId', String(articleId));
-    if (currentPrice) params.append('currentPrice', String(currentPrice));
-    if (startingPrice) params.append('startingPrice', String(startingPrice));
+    if (currentPrice !== null && currentPrice !== undefined)
+      params.append('currentPrice', String(currentPrice));
+    if (startingPrice !== null && startingPrice !== undefined)
+      params.append('startingPrice', String(startingPrice));
 
     const res = await protectedGet<BiddingAmounts>({
       endpoint: `/bids/bidding-amounts?${params}`,
@@ -117,7 +119,13 @@ export const useFetchBiddingAmounts = ({
   );
 
   useEffect(() => {
-    if (!articleId || !currentPrice || !startingPrice) return;
+    if (
+      !articleId ||
+      currentPrice === null ||
+      currentPrice === undefined ||
+      !startingPrice
+    )
+      return;
 
     fetchData();
   }, [articleId, currentPrice, startingPrice, fetchData]);

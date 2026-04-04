@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/useToast';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
+import { FontAwesomeIcon } from './FontAwesomeIcon';
 
 interface FollowButtonProps {
   mode: ButtonMode;
@@ -18,6 +19,7 @@ interface FollowButtonProps {
   extraDataIsLoaded?: boolean;
   lang: Lang;
   actionAfterFollow?: () => void;
+  heartIcon?: boolean;
 }
 
 const TEXTS = {
@@ -46,6 +48,7 @@ export function FollowButton({
   isAvailable = false,
   extraDataIsLoaded = false,
   actionAfterFollow = () => {},
+  heartIcon = false,
 }: FollowButtonProps) {
   const { openSignInAlertModal } = useSignInAlertModal();
   const [isFollowing, setIsFollowing] = useState(() => !!follows);
@@ -86,20 +89,61 @@ export function FollowButton({
     setIsFollowing(!!follows);
   }, [follows]);
 
-  const label = !isAvailable
+  const label = isAvailable
     ? isFollowing
       ? TEXTS.unfollow[lang]
       : TEXTS.follow[lang]
     : TEXTS.notAviable[lang];
+
+  if (!isAvailable) {
+    return null;
+  }
+
+  if (heartIcon) {
+    return (
+      <>
+        {isFollowing ? (
+          <Button
+            mode='empty'
+            className='mr-4 self-end'
+            disabled={isLoading}
+            onPress={handleClick}
+          >
+            <FontAwesomeIcon
+              variant='bold'
+              name='heart'
+              size={26}
+              color='cinnabar'
+            />
+          </Button>
+        ) : (
+          <Button
+            mode='empty'
+            className='mr-4 self-end'
+            disabled={isLoading}
+            onPress={handleClick}
+          >
+            <FontAwesomeIcon
+              variant='bold'
+              name='heart-o'
+              size={26}
+              color='cinnabar'
+            />
+          </Button>
+        )}
+      </>
+    );
+  }
 
   return (
     <Button
       mode={mode}
       size={size}
       className={className}
-      disabled={isAvailable || isLoading}
+      disabled={!isAvailable || isLoading}
       onPress={handleClick}
       isLoading={isLoading || !extraDataIsLoaded}
+      textClassName='text-center'
     >
       {label}
     </Button>

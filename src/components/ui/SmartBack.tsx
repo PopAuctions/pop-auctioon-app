@@ -1,40 +1,22 @@
 import React from 'react';
 import { Pressable, type PressableProps } from 'react-native';
-import { useRouter, useLocalSearchParams, type Href } from 'expo-router';
+import { router, type Href } from 'expo-router';
+import { useNavigationState } from '@react-navigation/native';
 import { cn } from '@/utils/cn';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomText } from '@/components/ui/CustomText';
 
 type SmartBackProps = {
-  /**
-   * Where to go when this screen was opened via cross-tab navigation / deeplink.
-   * Example: '/(tabs)/account'
-   */
   fallbackHref: Href;
-
-  /**
-   * If true, always go to fallbackHref (force reset behavior).
-   */
   alwaysFallback?: boolean;
-
-  /**
-   * Query param used to mark "cross-tab entry".
-   * Default: 'fromTab'
-   */
   markerParam?: string;
-
-  /**
-   * Expected marker value. Default: 'true'
-   * Example: you can set 'account' if you prefer.
-   */
   markerValue?: string;
-
   label: string;
-
   className?: string;
-
   hitSlop?: PressableProps['hitSlop'];
 };
+
+type RouteParamsValue = string | string[] | undefined;
 
 export const SmartBack = ({
   fallbackHref,
@@ -45,22 +27,29 @@ export const SmartBack = ({
   className,
   hitSlop = 10,
 }: SmartBackProps) => {
-  const router = useRouter();
-  const params = useLocalSearchParams();
+  const currentRoute = useNavigationState((state) => state.routes[state.index]);
+
+  const params = (currentRoute?.params ?? {}) as Record<
+    string,
+    RouteParamsValue
+  >;
 
   const marker = params[markerParam];
   const markerStr = Array.isArray(marker) ? marker[0] : marker;
   const shouldFallback = alwaysFallback || markerStr === markerValue;
 
+  const handlePress = () => {
+    if (shouldFallback) {
+      router.replace(fallbackHref);
+      return;
+    }
+
+    router.back();
+  };
+
   return (
     <Pressable
-      onPress={() => {
-        if (shouldFallback) {
-          router.replace(fallbackHref);
-        } else {
-          router.back();
-        }
-      }}
+      onPress={handlePress}
       className={cn(
         'flex flex-row items-center justify-center gap-2 rounded-full px-2',
         className ?? ''

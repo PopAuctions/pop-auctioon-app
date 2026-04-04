@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { UpcomingAuctionsSection } from '@/components/home/UpcomingAuctions';
 import { useFetchUpcomingAuctions } from '@/hooks/pages/auction/useFetchUpcomingAuctions';
-import { REQUEST_STATUS } from '@/constants';
+import { APP_USER_ROLES, REQUEST_STATUS } from '@/constants';
 import { useFetchMostViewedArticles } from '@/hooks/pages/article/useFetchMostViewedArticles';
 import { useFetchFeaturedArticles } from '@/hooks/pages/article/useFetchFeaturedArticles';
 import { useFetchNewestArticles } from '@/hooks/pages/article/useFetchNewestArticles';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticlesSection } from '@/components/home/ArticlesSection';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { WonArticlesModal } from '@/components/modal/WonArticlesModal';
+import { HomeHeader } from '@/components/home/HomeHeader';
+import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGetUnreadUserNotifications';
+import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
+import { useFetchNewestArticlesOnlineStore } from '@/hooks/pages/online-store/useFetchNewestArticlesOnlineStore';
+import { OnlineStoreArticlesSection } from '@/components/home/OnlineStoreArticlesSection';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -30,7 +35,22 @@ export default function HomeScreen() {
     useFetchFeaturedArticles();
   const { data: newestArticles, status: newestArticlesStatus } =
     useFetchNewestArticles();
+  const {
+    data: newestArticlesOnlineStore,
+    status: newestArticlesOnlineStoreStatus,
+  } = useFetchNewestArticlesOnlineStore();
   const { data: commission, status: commissionsStatus } = useFetchCommissions();
+  const { data: unreadNotifications, refetch } =
+    useGetUnreadUserNotifications();
+  const { data: currentUser } = useGetCurrentUser();
+
+  const isUserAuctioneer = currentUser?.role === APP_USER_ROLES.AUCTIONEER;
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch?.();
+    }, [refetch])
+  );
 
   useEffect(() => {
     const checkAndShowOnboarding = async () => {
@@ -69,7 +89,15 @@ export default function HomeScreen() {
         className='flex-1'
         edges={['top']}
       >
-        <ScrollView className='flex-1 px-4'>
+        <HomeHeader
+          unreadCount={unreadNotifications?.length || 0}
+          isAuctioneer={isUserAuctioneer}
+          texts={{
+            createAuction: t('screens.homePage.createAuction'),
+          }}
+        />
+
+        <ScrollView className='mt-4 flex-1 px-4'>
           <UpcomingAuctionsSection
             auctions={upcomingAuctions}
             locale={locale}
@@ -79,6 +107,24 @@ export default function HomeScreen() {
               noAuction: t('screens.homePage.noAuctions'),
             }}
           />
+
+          {newestArticlesOnlineStoreStatus !== REQUEST_STATUS.error && (
+            <OnlineStoreArticlesSection
+              lang={locale}
+              commissionValue={
+                commissionsStatus === REQUEST_STATUS.success ? commission : null
+              }
+              texts={{
+                onlineStoreTitle: t('screens.homePage.onlineStoreTitle'),
+                price: t('screens.store.price'),
+                viewMore: t('screens.homePage.viewMore'),
+              }}
+              articles={newestArticlesOnlineStore}
+              articlesReady={
+                newestArticlesOnlineStoreStatus === REQUEST_STATUS.success
+              }
+            />
+          )}
 
           <ArticlesSection
             lang={locale}

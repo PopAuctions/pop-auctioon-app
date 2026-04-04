@@ -7,31 +7,31 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
-import type { SimpleArticle, Lang } from '@/types/types';
+import type { CustomArticleSecondChance, Lang } from '@/types/types';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
-import { ArticleSliderItem } from '../articles/ArticleSliderItem';
+import { OnlineStoreArticleItem } from '../online-store/OnlineStoreArticleItem';
 
 const ITEMS_GAP = 8;
 
-export const ArticlesSlider = ({
+export const OnlineStoreArticlesSlider = ({
   articles,
   lang,
   formatter,
   texts,
   commissionValue,
 }: {
-  articles: SimpleArticle[];
+  articles: CustomArticleSecondChance[];
   formatter: Intl.NumberFormat;
   lang: Lang;
   commissionValue: number | null;
-  texts: { currentBid: string };
+  texts: { price: string };
 }) => {
-  const listRef = useRef<FlatList<SimpleArticle[]>>(null);
+  const listRef = useRef<FlatList<CustomArticleSecondChance[]>>(null);
   const [page, setPage] = useState(0);
   const [pageWidth, setPageWidth] = useState(0);
 
   const pages = useMemo(() => {
-    const result: SimpleArticle[][] = [];
+    const result: CustomArticleSecondChance[][] = [];
 
     for (let i = 0; i < articles.length; i += 2) {
       result.push(articles.slice(i, i + 2));
@@ -74,7 +74,7 @@ export const ArticlesSlider = ({
         onLayout={handleTrackLayout}
       >
         {pageWidth > 0 && (
-          <FlatList<SimpleArticle[]>
+          <FlatList<CustomArticleSecondChance[]>
             ref={listRef}
             data={pages}
             keyExtractor={(_, index) => `page-${index}`}
@@ -105,11 +105,10 @@ export const ArticlesSlider = ({
                       marginRight: idx === 0 ? ITEMS_GAP : 0,
                     }}
                   >
-                    <ArticleSliderItem
-                      article={article}
-                      auctionLang={{ currentBid: texts.currentBid }}
+                    <OnlineStoreArticleItem
+                      onlineStoreArticle={article}
                       formatter={formatter}
-                      lang={lang}
+                      texts={{ price: texts.price }}
                       commissionValue={commissionValue}
                     />
                   </View>
@@ -124,7 +123,7 @@ export const ArticlesSlider = ({
         )}
       </View>
 
-      <View className='flex-row items-center justify-between px-4'>
+      <View className='mt-2 flex-row items-center justify-between px-4'>
         <Pressable
           onPress={() => scrollToPage(page - 1)}
           disabled={page <= 0}

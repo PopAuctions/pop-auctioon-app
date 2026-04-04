@@ -43,7 +43,7 @@ export const ArticlesInfiniteScroll = ({
   ListHeaderComponent: React.ReactElement;
   articlesFollowed: number[];
   order?: number[];
-  texts: { currentBid: string };
+  texts: { currentBid: string; bid: string };
   filtersKey: string;
 }) => {
   const { locale } = useTranslation();
@@ -58,6 +58,25 @@ export const ArticlesInfiniteScroll = ({
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const handleBidSuccess = useCallback(
+    (articleId: number, newCurrentValue: number) => {
+      setArticles((prev) =>
+        prev.map((article) =>
+          article.id === articleId
+            ? {
+                ...article,
+                ArticleBid: {
+                  ...article.ArticleBid,
+                  currentValue: newCurrentValue,
+                },
+              }
+            : article
+        )
+      );
+    },
+    []
+  );
 
   const offsetRef = useRef(0);
   const loadingRef = useRef(false);
@@ -214,11 +233,13 @@ export const ArticlesInfiniteScroll = ({
       renderItem={({ item }) => (
         <ArticleItem
           article={item}
-          auctionLang={{ currentBid: texts.currentBid }}
+          auctionLang={{ currentBid: texts.currentBid, bid: texts.bid }}
           formatter={formatter}
           lang={lang}
           userFollows={articlesFollowed.includes(Number(item.id))}
           commissionValue={isCommissionReady ? commissionData : null}
+          showBidButton={true}
+          onBidSuccess={handleBidSuccess}
         />
       )}
       contentContainerStyle={{

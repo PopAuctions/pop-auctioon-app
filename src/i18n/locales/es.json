@@ -51,6 +51,8 @@
       "upcomingAuctionsTitle": "Próximas subastas",
       "auctionCategoriesTitle": "Encuentra tu subasta",
       "auctionCategoriesSubTitle": "¿Qué te interesa?",
+      "onlineStoreTitle": "Artículos de tienda online",
+      "viewMore": "Ver más",
       "auctioneer": "Conviértete en Subastador",
       "auctions": "Próximas subastas",
       "featuredArticles": "Artículos destacados",
@@ -58,6 +60,7 @@
       "mostViewedArticles": "Artículos más vistos",
       "currentBid": "Puja Actual",
       "bags": "Bolsos",
+      "createAuction": "Crear nueva subasta",
       "getToKnowUs": "Conócenos",
       "onlineAuction": "Subastas online",
       "allAuctions": "Ver todas las subastas",
@@ -111,6 +114,7 @@
       "waiting2": "Espera unos minutos",
       "start": "La subasta ya empezo!",
       "finished": "Subasta finalizada",
+      "bid": "Puja:",
       "watchButton": "Ver en vivo",
       "ended": "Subasta finalizada",
       "timeStart": "Tiempo para empezar:",
@@ -273,7 +277,33 @@
       "testDevicesCamera": "Cámara",
       "testDevicesMic": "Micrófono",
       "testDevicesMicVolume": "Volumen del micrófono",
-      "testDevicesClose": "Cerrar"
+      "testDevicesClose": "Cerrar",
+      "newAuction": {
+        "titlePage": "Crear subasta",
+        "required": "* Campos obligatorios",
+        "title": "Título",
+        "country": "País",
+        "category": "Categoría",
+        "startDate": "Fecha de inicio",
+        "startTime": "Hora de inicio",
+        "image": "Subir imagen",
+        "imageFormats": "Formatos aceptados: JPG, PNG, WEBP",
+        "removeImage": "Eliminar Imagen",
+        "submit": "Crear subasta",
+        "cancel": "Cancelar",
+        "errors": {
+          "generic": "Hubo un error al crear la subasta.",
+          "imageRequired": "Debes subir una imagen.",
+          "invalidDate": "Introduce una fecha válida.",
+          "invalidTime": "Introduce una hora válida."
+        },
+        "tooltip": {
+          "category": {
+            "main": "Elige la categoría que mejor corresponda a tu subasta.",
+            "strong": "Esto no podrá cambiarse después."
+          }
+        }
+      }
     },
     "newArticle": {
       "pageTitle": "Nuevo artículo",
@@ -403,7 +433,7 @@
       "privacyPolicy": "Política de Privacidad",
       "cookiesPolicy": "Política de Cookies",
       "signOut": "Cerrar Sesión",
-      "noArticlesWon": "Aún no has ganado ningun artículo",
+      "noArticlesWon": "Aún no has ganado ningún artículo",
       "winningBid": "Puja ganadora",
       "payArticles": "Pagar artículos",
       "viewArticle": "Ver artículo"
@@ -721,7 +751,7 @@
     },
     "soldArticles": {
       "title": "Artículos vendidos",
-      "noArticles": "Aún no has vendido ningun artículo",
+      "noArticles": "Aún no has vendido ningún artículo",
       "paid": "Pagado",
       "pending": "Pendiente",
       "soldPrice": "Precio de venta",
