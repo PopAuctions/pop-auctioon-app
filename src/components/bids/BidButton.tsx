@@ -26,10 +26,12 @@ export const BidButton = ({
   text,
   isLoading,
 }: BidButtonProps) => {
+  const effectiveBase = Math.max(currentValue, startingPrice);
+
   const { data: biddingAmounts, status: biddingAmountsStatus } =
     useFetchBiddingAmounts({
       articleId,
-      currentPrice: currentValue,
+      currentPrice: effectiveBase,
       startingPrice,
     });
 
@@ -38,12 +40,12 @@ export const BidButton = ({
   }
 
   const bidAmount = toTotal(
-    (biddingAmounts?.tenPercent ?? 0) + currentValue,
+    (biddingAmounts?.tenPercent ?? 0) + effectiveBase,
     commissionPercentage ?? 0
   );
   const bidAmountFormatter = formatter.format(
     toTotal(
-      (biddingAmounts?.tenPercent ?? 0) + currentValue,
+      (biddingAmounts?.tenPercent ?? 0) + effectiveBase,
       commissionPercentage ?? 0
     )
   );
@@ -51,7 +53,7 @@ export const BidButton = ({
   const allAmountsReady =
     biddingAmountsStatus === REQUEST_STATUS.success &&
     biddingAmounts?.tenPercent !== undefined &&
-    currentValue > 0;
+    startingPrice > 0;
 
   return (
     <Button
