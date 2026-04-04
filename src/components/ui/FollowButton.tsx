@@ -102,7 +102,7 @@ export function FollowButton({
   if (heartIcon) {
     return (
       <>
-        {follows ? (
+        {isFollowing ? (
           <Button
             mode='empty'
             className='mr-4 self-end'
