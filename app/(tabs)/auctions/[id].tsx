@@ -239,6 +239,7 @@ export default function AuctionDetailScreen() {
           auctionId={id}
           texts={{
             currentBid: auctionLang.currentBid,
+            bid: auctionLang.bid,
           }}
           ListHeaderComponent={renderAuctionHeader()}
           articlesFollowed={userArticlesFollowed || []}

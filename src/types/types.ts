@@ -57,7 +57,7 @@ export type Article = Database['public']['Tables']['Article']['Row'] & {
 
 export type SimpleArticle = Pick<
   Article,
-  'id' | 'images' | 'title' | 'brand' | 'sold' | 'auctionId'
+  'id' | 'images' | 'title' | 'brand' | 'sold' | 'auctionId' | 'startingPrice'
 > & { ArticleBid: Pick<ArticleBid, 'currentValue'> } & {
   whenInAuction?: Date | null;
 };

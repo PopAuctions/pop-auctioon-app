@@ -114,6 +114,7 @@
       "waiting2": "Wait a few minutes",
       "start": "Auction already started!",
       "finished": "Auction finished",
+      "bid": "Bid:",
       "watchButton": "Watch live",
       "ended": "Auction finished",
       "timeStart": "Time to start:",

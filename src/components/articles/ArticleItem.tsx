@@ -1,24 +1,30 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { Lang, SimpleArticle } from '@/types/types';
-import { CustomText } from '../ui/CustomText';
-import { CustomLink } from '../ui/CustomLink';
+import { Lang, LangMap, SimpleArticle } from '@/types/types';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
 import { AMOUNT_PLACEHOLDER, ARTICLE_BRANDS_LABELS } from '@/constants';
-import { CustomImage } from '../ui/CustomImage';
-import { SimpleCountdown } from '../ui/SimpleCountdown';
+import { CustomImage } from '@/components/ui/CustomImage';
+import { SimpleCountdown } from '@/components/ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
-import { FollowButton } from '../ui/FollowButton';
+import { FollowButton } from '@/components/ui/FollowButton';
+import { BidButton } from '@/components/bids/BidButton';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { useToast } from '@/hooks/useToast';
 
 type ArticleItemProps = {
   article: SimpleArticle;
   auctionLang: {
     currentBid: string;
+    bid?: string;
   };
   formatter: Intl.NumberFormat;
   lang: Lang;
   commissionValue: number | null;
   userFollows?: boolean;
   showFollowButton?: boolean;
+  showBidButton?: boolean;
   actionAfterFollow?: () => void;
 };
 
@@ -30,8 +36,13 @@ export function ArticleItem({
   commissionValue,
   userFollows = false,
   showFollowButton = true,
+  showBidButton = false,
   actionAfterFollow = () => {},
 }: ArticleItemProps) {
+  const { securePost } = useSecureApi();
+  const { callToast } = useToast(lang);
+  const [isLoading, setIsLoading] = useState(false);
+
   const articleId = article.id;
   const price = article.ArticleBid.currentValue;
 
@@ -43,6 +54,32 @@ export function ArticleItem({
   if (!article.images || article.images.length === 0) {
     return null;
   }
+
+  const sendBid = async ({ amount }: { amount: number }) => {
+    setIsLoading(true);
+    const response = await securePost<LangMap>({
+      endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
+      data: {
+        articleId,
+        amount: amount,
+        clientCurrentAmount: price,
+      },
+    });
+
+    setIsLoading(false);
+    if (response.error) {
+      callToast({
+        variant: 'error',
+        description: response.error,
+      });
+      return;
+    }
+
+    callToast({
+      variant: 'success',
+      description: response.data,
+    });
+  };
 
   return (
     <View className='w-full gap-2'>
@@ -112,6 +149,19 @@ export function ArticleItem({
               }
             </CustomText>
           </View>
+
+          {showBidButton && !article.sold && (
+            <BidButton
+              articleId={articleId}
+              startingPrice={article.startingPrice}
+              currentValue={commissionedPrice}
+              commissionPercentage={commissionValue ?? 0}
+              formatter={formatter}
+              onPress={sendBid}
+              text={{ bid: auctionLang.bid }}
+              isLoading={isLoading}
+            />
+          )}
         </View>
       </CustomLink>
     </View>

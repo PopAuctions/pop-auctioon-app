@@ -43,7 +43,7 @@ export const ArticlesInfiniteScroll = ({
   ListHeaderComponent: React.ReactElement;
   articlesFollowed: number[];
   order?: number[];
-  texts: { currentBid: string };
+  texts: { currentBid: string; bid: string };
   filtersKey: string;
 }) => {
   const { locale } = useTranslation();
@@ -214,11 +214,12 @@ export const ArticlesInfiniteScroll = ({
       renderItem={({ item }) => (
         <ArticleItem
           article={item}
-          auctionLang={{ currentBid: texts.currentBid }}
+          auctionLang={{ currentBid: texts.currentBid, bid: texts.bid }}
           formatter={formatter}
           lang={lang}
           userFollows={articlesFollowed.includes(Number(item.id))}
           commissionValue={isCommissionReady ? commissionData : null}
+          showBidButton={true}
         />
       )}
       contentContainerStyle={{
