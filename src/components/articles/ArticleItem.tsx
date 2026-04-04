@@ -82,7 +82,8 @@ export function ArticleItem({
       description: response.data,
     });
 
-    onBidSuccess?.(articleId, amount);
+    const rawAmount = Math.round(amount / (1 + (commissionValue ?? 0)));
+    onBidSuccess?.(articleId, rawAmount);
   };
 
   return (
@@ -158,7 +159,7 @@ export function ArticleItem({
             <BidButton
               articleId={articleId}
               startingPrice={article.startingPrice}
-              currentValue={commissionedPrice}
+              currentValue={price}
               commissionPercentage={commissionValue ?? 0}
               formatter={formatter}
               onPress={sendBid}
