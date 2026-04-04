@@ -26,6 +26,7 @@ type ArticleItemProps = {
   showFollowButton?: boolean;
   showBidButton?: boolean;
   actionAfterFollow?: () => void;
+  onBidSuccess?: (articleId: number, newCurrentValue: number) => void;
 };
 
 export function ArticleItem({
@@ -38,6 +39,7 @@ export function ArticleItem({
   showFollowButton = true,
   showBidButton = false,
   actionAfterFollow = () => {},
+  onBidSuccess,
 }: ArticleItemProps) {
   const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
@@ -79,6 +81,8 @@ export function ArticleItem({
       variant: 'success',
       description: response.data,
     });
+
+    onBidSuccess?.(articleId, amount);
   };
 
   return (

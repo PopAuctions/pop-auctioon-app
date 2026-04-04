@@ -59,6 +59,25 @@ export const ArticlesInfiniteScroll = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
+  const handleBidSuccess = useCallback(
+    (articleId: number, newCurrentValue: number) => {
+      setArticles((prev) =>
+        prev.map((article) =>
+          article.id === articleId
+            ? {
+                ...article,
+                ArticleBid: {
+                  ...article.ArticleBid,
+                  currentValue: newCurrentValue,
+                },
+              }
+            : article
+        )
+      );
+    },
+    []
+  );
+
   const offsetRef = useRef(0);
   const loadingRef = useRef(false);
   const hasMoreRef = useRef(true);
@@ -220,6 +239,7 @@ export const ArticlesInfiniteScroll = ({
           userFollows={articlesFollowed.includes(Number(item.id))}
           commissionValue={isCommissionReady ? commissionData : null}
           showBidButton={true}
+          onBidSuccess={handleBidSuccess}
         />
       )}
       contentContainerStyle={{

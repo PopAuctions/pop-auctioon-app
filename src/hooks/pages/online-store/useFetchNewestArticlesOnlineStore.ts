@@ -22,8 +22,6 @@ export const useFetchNewestArticlesOnlineStore = (): ActionResponse<
       endpoint: `/online-store/articles/latest`,
     });
 
-    console.log({ res });
-
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
       setErrorMessage({
