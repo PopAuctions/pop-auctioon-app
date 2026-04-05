@@ -68,9 +68,15 @@ export const WonArticles = ({
       contentContainerStyle={{ paddingBottom: 24 }}
       renderSectionHeader={({ section }) => (
         <View className='my-5 flex-row items-center justify-between rounded-2xl bg-white px-5 py-2'>
-          <CustomText type='h3'>{section.title}</CustomText>
+          <CustomText
+            className='w-3/5'
+            type='h3'
+          >
+            {section.title}
+          </CustomText>
 
           <CustomLink
+            className='w-2/5'
             mode='primary'
             href={`/(tabs)/account/payment?auctionId=${section.auctionId}`}
           >
