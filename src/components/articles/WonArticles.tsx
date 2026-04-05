@@ -78,6 +78,7 @@ export const WonArticles = ({
           <CustomLink
             className='w-2/5'
             mode='primary'
+            size='small'
             href={`/(tabs)/account/payment?auctionId=${section.auctionId}`}
           >
             {payArticles}
