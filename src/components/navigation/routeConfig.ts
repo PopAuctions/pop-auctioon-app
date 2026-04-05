@@ -30,7 +30,6 @@ export const PROTECTED_ROUTES: Record<string, RouteConfig> = {
   payment: {},
   'payments-history': {},
   'reset-password': {}, // Cambiar contraseña en settings (protegido)
-  settings: {},
   'single-payment': {},
   'verify-phone': {},
   'payment/[id]': {},
