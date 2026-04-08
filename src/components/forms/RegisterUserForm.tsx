@@ -156,8 +156,8 @@ export function RegisterUserForm({
         )}
       />
 
-      {/* Password and Confirm Password Row */}
-      <View className='flex-row gap-3'>
+      {/* Password and Confirm Password */}
+      <View className='gap-3'>
         {/* Password */}
         <Controller
           control={control}
