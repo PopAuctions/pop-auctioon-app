@@ -1,7 +1,6 @@
 {
   "commonActions": {
     "loading": "Loading...",
-    "inDevelopment": "Screen under development",
     "error": "Error",
     "ok": "OK",
     "cancel": "Cancel",
@@ -22,6 +21,8 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
+    "user": "User",
+    "auctionCompany": "Auctioneer Company",
     "newAccount": "Create account",
     "email": "Email",
     "password": "Password",

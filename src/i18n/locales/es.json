@@ -1,7 +1,6 @@
 {
   "commonActions": {
     "loading": "Cargando...",
-    "inDevelopment": "Pantalla en desarrollo",
     "error": "Error",
     "ok": "OK",
     "cancel": "Cancelar",
@@ -21,7 +20,9 @@
   "loginPage": {
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
-    "register": "Registrarse",
+    "register": "Regístrate",
+    "user": "Usuario",
+    "auctionCompany": "Empresa subastadora",
     "newAccount": "Crear cuenta",
     "email": "Correo electrónico",
     "password": "Contraseña",

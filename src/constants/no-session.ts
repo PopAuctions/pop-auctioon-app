@@ -5,12 +5,12 @@ export const FIRST_SECTION = [
     labelKey: 'screens.account.login',
     href: '/(tabs)/auth/login',
   },
-  {
-    name: 'register',
-    icon: 'user-plus',
-    labelKey: 'screens.account.register',
-    href: '/(tabs)/auth/register',
-  },
+  // {
+  //   name: 'register',
+  //   icon: 'user-plus',
+  //   labelKey: 'screens.account.register',
+  //   href: '/(tabs)/auth/register',
+  // },
 ];
 
 export const SECOND_SECTION = [
