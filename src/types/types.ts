@@ -60,6 +60,7 @@ export type SimpleArticle = Pick<
   'id' | 'images' | 'title' | 'brand' | 'sold' | 'auctionId' | 'startingPrice'
 > & { ArticleBid: Pick<ArticleBid, 'currentValue'> } & {
   whenInAuction?: Date | null;
+  minBidAmount?: number | null;
 };
 
 export type BlogArticle = Database['public']['Tables']['BlogArticle']['Row'];

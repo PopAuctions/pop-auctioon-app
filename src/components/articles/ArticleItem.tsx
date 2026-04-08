@@ -157,7 +157,6 @@ export function ArticleItem({
 
           {showBidButton && !article.sold && (
             <BidButton
-              articleId={articleId}
               startingPrice={article.startingPrice}
               currentValue={price}
               commissionPercentage={commissionValue ?? 0}
@@ -165,6 +164,7 @@ export function ArticleItem({
               onPress={sendBid}
               text={{ bid: auctionLang.bid }}
               isLoading={isLoading}
+              bidAmount={article.minBidAmount ?? 0}
             />
           )}
         </View>

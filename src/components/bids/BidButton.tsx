@@ -1,12 +1,11 @@
 import { Button } from '@/components/ui/Button';
-import { AMOUNT_PLACEHOLDER, REQUEST_STATUS } from '@/constants';
-import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmounts';
+import { AMOUNT_PLACEHOLDER } from '@/constants';
 import { toTotal } from '@/utils/toTotal';
 
 interface BidButtonProps {
-  articleId: number;
   startingPrice: number;
   currentValue: number;
+  bidAmount: number;
   commissionPercentage: number;
   isLoading: boolean;
   formatter: Intl.NumberFormat;
@@ -17,7 +16,6 @@ interface BidButtonProps {
 }
 
 export const BidButton = ({
-  articleId,
   currentValue = 0,
   startingPrice = 0,
   commissionPercentage = 0,
@@ -25,46 +23,28 @@ export const BidButton = ({
   onPress,
   text,
   isLoading,
+  bidAmount,
 }: BidButtonProps) => {
   const effectiveBase = Math.max(currentValue, startingPrice);
 
-  const { data: biddingAmounts, status: biddingAmountsStatus } =
-    useFetchBiddingAmounts({
-      articleId,
-      currentPrice: effectiveBase,
-      startingPrice,
-    });
-
-  if (biddingAmountsStatus === REQUEST_STATUS.error) {
-    return null;
-  }
-
-  const bidAmount = toTotal(
-    (biddingAmounts?.tenPercent ?? 0) + effectiveBase,
+  const bidAmountCalculated = toTotal(
+    (bidAmount ?? 0) + effectiveBase,
     commissionPercentage ?? 0
   );
-  const bidAmountFormatter = formatter.format(
-    toTotal(
-      (biddingAmounts?.tenPercent ?? 0) + effectiveBase,
-      commissionPercentage ?? 0
-    )
-  );
+  const bidAmountFormatter = formatter.format(bidAmountCalculated);
 
-  const allAmountsReady =
-    biddingAmountsStatus === REQUEST_STATUS.success &&
-    biddingAmounts?.tenPercent !== undefined &&
-    startingPrice > 0;
+  const allAmountsReady = startingPrice > 0;
 
   return (
     <Button
       mode='primary'
       className='w-2/3'
       size='small'
-      onPress={() => onPress({ amount: bidAmount ?? 0 })}
+      onPress={() => onPress({ amount: bidAmountCalculated })}
       isLoading={isLoading || !allAmountsReady}
     >
       {allAmountsReady
-        ? `${text?.bid ?? 'Bid'} ${bidAmountFormatter}`
+        ? `${text?.bid ?? 'Puja'} ${bidAmountFormatter}`
         : AMOUNT_PLACEHOLDER}
     </Button>
   );
