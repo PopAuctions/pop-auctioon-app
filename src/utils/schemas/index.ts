@@ -286,6 +286,12 @@ export const AuctioneerRegisterSchema = z
         es: 'Requerido',
       }),
     }),
+    cif: z.string().min(1, {
+      message: JSON.stringify({
+        en: 'Required',
+        es: 'Requerido',
+      }),
+    }),
     town: z.string().min(1, {
       message: JSON.stringify({
         en: 'Required',
