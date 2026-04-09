@@ -458,6 +458,7 @@
       "address": "Dirección",
       "country": "País",
       "town": "Ciudad",
+      "cif": "CIF",
       "province": "Provincia",
       "postalCode": "Código postal",
       "keepUrlProtocol": "Mantén el protocolo en la URL (http:// o https://)",
