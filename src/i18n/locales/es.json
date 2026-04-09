@@ -41,10 +41,8 @@
     "login": "Iniciar Sesión",
     "auctions": "Subastas en vivo",
     "articleDetails": "Detalles del Artículo",
-    "store": "Subastas",
+    "store": "Online Store",
     "auctioneer": "Subastador",
-    "myAuctions": "Mis Subastas en vivo",
-    "myOnlineStore": "Mis subastas",
     "back": "Atrás"
   },
   "screens": {
