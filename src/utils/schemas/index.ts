@@ -555,6 +555,7 @@ export const AuctioneerEditSchema = z
     webPage: z.string(),
     socialMedia: z.string(),
     storeName: z.string(),
+    cif: z.string(),
   })
   .refine(
     (data) => {

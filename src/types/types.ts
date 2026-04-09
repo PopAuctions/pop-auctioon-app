@@ -877,6 +877,7 @@ export interface SignupData {
   province?: string;
   country?: string;
   postalCode?: string;
+  cif?: string;
 }
 
 export interface UseSignupReturn {
