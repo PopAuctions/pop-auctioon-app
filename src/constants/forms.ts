@@ -24,4 +24,5 @@ export const AUCTIONEER_REGISTER_DEFAULT_VALUES = {
   webPage: 'https://',
   socialMedia: 'https://',
   storeName: '',
+  cif: '',
 };

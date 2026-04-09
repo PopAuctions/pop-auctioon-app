@@ -15,6 +15,7 @@ import { Divider } from '@/components/ui/Divider';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/useToast';
 import { PasswordInput } from '@/components/fields/PasswordInput';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -69,7 +70,7 @@ export default function Auth() {
             }}
           >
             {/* Logo */}
-            <View className='mb-6 items-center'>
+            <View className='items-center'>
               <View className='h-20 w-80'>
                 <PopAuctioonIcon
                   className='h-full w-full text-white'
@@ -79,12 +80,23 @@ export default function Auth() {
             </View>
 
             {/* Card */}
-            <View className='w-full rounded-2xl bg-white p-6 shadow-2xl md:max-w-[600px] md:self-center'>
+            <View className='w-full rounded-2xl bg-white px-6 py-8 md:max-w-[600px] md:self-center'>
+              <View className='mb-6 gap-2'>
+                <GoogleButton
+                  buttonText={t('screens.account.continueWith')}
+                  isDisabled={isLoading}
+                />
+                <AppleButton
+                  buttonText={t('screens.account.continueWith')}
+                  isDisabled={isLoading}
+                />
+              </View>
+
               {/* Email */}
-              <View className='mb-5'>
+              <View className='mb-4'>
                 <CustomText
                   type='body'
-                  className='text-gray-700 mb-2 font-medium'
+                  className='text-gray-700 font-medium'
                 >
                   {t('loginPage.email')}
                 </CustomText>
@@ -100,10 +112,10 @@ export default function Auth() {
               </View>
 
               {/* Password */}
-              <View className='mb-1'>
+              <View>
                 <CustomText
                   type='body'
-                  className='text-gray-700 mb-2 font-medium'
+                  className='text-gray-700 font-medium'
                 >
                   {t('loginPage.password')}
                 </CustomText>
@@ -145,33 +157,57 @@ export default function Auth() {
                 </Button>
               </View>
 
-              <View className='my-4 flex-row items-center'>
-                <View className='h-px flex-1' />
-                <CustomText type='body'>{t('commonActions.or')}</CustomText>
-                <View className='bg-gray-200 h-px flex-1' />
+              <View className='my-4 flex flex-row items-center gap-2 self-center'>
+                <Divider className='w-1/3' />
+                <CustomText
+                  type='body'
+                  className='text-gray-700'
+                >
+                  {t('loginPage.register')}
+                </CustomText>
+                <Divider className='w-1/3' />
               </View>
 
-              <View className='gap-2'>
-                <GoogleButton
-                  buttonText={t('screens.account.continueWith')}
+              <View className='flex flex-row gap-4 self-center'>
+                <CustomLink
+                  mode='empty'
+                  href='/(tabs)/auth/register-user'
                   isDisabled={isLoading}
-                />
-                <AppleButton
-                  buttonText={t('screens.account.continueWith')}
+                  className='flex w-2/5 items-center justify-center rounded-lg border border-black p-2 text-center'
+                >
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='user'
+                    size={30}
+                    color='cinnabar'
+                  />
+                  <CustomText
+                    className='text-center'
+                    type='body'
+                  >
+                    {t('loginPage.user')}
+                  </CustomText>
+                </CustomLink>
+                <CustomLink
+                  mode='empty'
+                  href='/(tabs)/auth/register-auctioneer'
                   isDisabled={isLoading}
-                />
+                  className='flex w-2/5 items-center justify-center gap-2 rounded-lg border border-black p-2 text-center'
+                >
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='shopping-bag'
+                    size={30}
+                    color='cinnabar'
+                  />
+                  <CustomText
+                    className='text-center leading-5'
+                    type='body'
+                  >
+                    {t('loginPage.auctionCompany')}
+                  </CustomText>
+                </CustomLink>
               </View>
-
-              <Divider className='my-4' />
-
-              {/* Secondary */}
-              <CustomLink
-                mode='secondary'
-                href='/(tabs)/auth/register'
-                isDisabled={isLoading}
-              >
-                {t('loginPage.newAccount')}
-              </CustomLink>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

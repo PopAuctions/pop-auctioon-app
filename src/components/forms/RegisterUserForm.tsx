@@ -39,7 +39,7 @@ export function RegisterUserForm({
           render={({ field: { onChange, value } }) => (
             <View className='flex-1'>
               <CustomText
-                type='h4'
+                type='body'
                 className='mb-2'
               >
                 {t('screens.editProfile.name')} *
@@ -69,7 +69,7 @@ export function RegisterUserForm({
           render={({ field: { onChange, value } }) => (
             <View className='flex-1'>
               <CustomText
-                type='h4'
+                type='body'
                 className='mb-2'
               >
                 {t('screens.editProfile.lastName')} *
@@ -100,7 +100,7 @@ export function RegisterUserForm({
         render={({ field: { onChange, value } }) => (
           <View>
             <CustomText
-              type='h4'
+              type='body'
               className='mb-2'
             >
               {t('screens.editProfile.username')} *
@@ -131,7 +131,7 @@ export function RegisterUserForm({
         render={({ field: { onChange, value } }) => (
           <View>
             <CustomText
-              type='h4'
+              type='body'
               className='mb-2'
             >
               {t('loginPage.email')} *
@@ -165,7 +165,7 @@ export function RegisterUserForm({
           render={({ field: { onChange, value } }) => (
             <View className='flex-1'>
               <CustomText
-                type='h4'
+                type='body'
                 className='mb-2'
               >
                 {t('loginPage.password')} *
@@ -195,7 +195,7 @@ export function RegisterUserForm({
           render={({ field: { onChange, value } }) => (
             <View className='flex-1'>
               <CustomText
-                type='h4'
+                type='body'
                 className='mb-2'
               >
                 {t('screens.account.confirmPassword')} *
@@ -226,7 +226,7 @@ export function RegisterUserForm({
         render={({ field: { onChange, value } }) => (
           <View>
             <CustomText
-              type='h4'
+              type='body'
               className='mb-2'
             >
               {t('screens.editProfile.dni')}
@@ -257,7 +257,7 @@ export function RegisterUserForm({
         render={({ field: { onChange, value } }) => (
           <View>
             <CustomText
-              type='h4'
+              type='body'
               className='mb-2'
             >
               {t('screens.editProfile.phoneNumber')}
@@ -294,7 +294,7 @@ export function RegisterUserForm({
         render={({ field: { onChange, value } }) => (
           <View>
             <CustomText
-              type='h4'
+              type='body'
               className='mb-2'
             >
               {t('screens.account.uploadImage')}

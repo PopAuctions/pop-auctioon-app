@@ -1,7 +1,6 @@
 {
   "commonActions": {
     "loading": "Cargando...",
-    "inDevelopment": "Pantalla en desarrollo",
     "error": "Error",
     "ok": "OK",
     "cancel": "Cancelar",
@@ -21,7 +20,9 @@
   "loginPage": {
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
-    "register": "Registrarse",
+    "register": "Regístrate",
+    "user": "Usuario",
+    "auctionCompany": "Empresa subastadora",
     "newAccount": "Crear cuenta",
     "email": "Correo electrónico",
     "password": "Contraseña",
@@ -40,10 +41,8 @@
     "login": "Iniciar Sesión",
     "auctions": "Subastas en vivo",
     "articleDetails": "Detalles del Artículo",
-    "store": "Subastas",
+    "store": "Tienda Online",
     "auctioneer": "Subastador",
-    "myAuctions": "Mis Subastas en vivo",
-    "myOnlineStore": "Mis subastas",
     "back": "Atrás"
   },
   "screens": {
@@ -457,6 +456,7 @@
       "address": "Dirección",
       "country": "País",
       "town": "Ciudad",
+      "cif": "CIF",
       "province": "Provincia",
       "postalCode": "Código postal",
       "keepUrlProtocol": "Mantén el protocolo en la URL (http:// o https://)",

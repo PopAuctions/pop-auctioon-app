@@ -788,6 +788,7 @@ export interface Database {
           acceptedTerms: string;
           active: boolean;
           address: string | null;
+          cif: string | null;
           country: string | null;
           dni: string | null;
           email: string;
@@ -815,6 +816,7 @@ export interface Database {
           acceptedTerms: string;
           active?: boolean;
           address?: string | null;
+          cif?: string | null;
           country?: string | null;
           dni?: string | null;
           email: string;
@@ -842,6 +844,7 @@ export interface Database {
           acceptedTerms?: string;
           active?: boolean;
           address?: string | null;
+          cif?: string | null;
           country?: string | null;
           dni?: string | null;
           email?: string;

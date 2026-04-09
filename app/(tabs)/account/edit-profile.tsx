@@ -75,6 +75,7 @@ export default function EditProfileScreen() {
         webPage: '',
         socialMedia: '',
         storeName: '',
+        cif: '',
       }),
     },
   });
@@ -100,6 +101,7 @@ export default function EditProfileScreen() {
         formData.webPage = currentUserData.webPage || '';
         formData.socialMedia = currentUserData.socialMedia || '';
         formData.storeName = currentUserData.storeName || '';
+        formData.cif = currentUserData.cif || '';
       }
 
       reset(formData);
@@ -333,6 +335,37 @@ export default function EditProfileScreen() {
                       className='mt-1'
                     >
                       {getErrorMessage(errors.storeName.message, locale)}
+                    </CustomText>
+                  )}
+                </View>
+
+                {/* CIF Input */}
+                <View className='mb-4'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.cif')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name='cif'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.cif')}
+                        editable={false}
+                      />
+                    )}
+                  />
+                  {'cif' in errors && errors.cif && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {getErrorMessage(errors.cif.message, locale)}
                     </CustomText>
                   )}
                 </View>

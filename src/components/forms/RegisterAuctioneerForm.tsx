@@ -30,46 +30,11 @@ export function RegisterAuctioneerForm({
 
   return (
     <View>
-      {/* Profile Picture */}
-      <View className='mb-6'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.uploadImage')}
-        </CustomText>
-        <Controller
-          control={control}
-          name='profilePicture'
-          render={({ field: { onChange, value } }) => (
-            <ImageUploadButton
-              selectedImage={value || null}
-              onImageSelected={onChange}
-              onImageRemoved={() => onChange('')}
-              disabled={isLoading}
-            />
-          )}
-        />
-        <CustomText
-          type='bodysmall'
-          className='text-gray-500 mt-1'
-        >
-          {t('screens.account.imageFormats')}
-        </CustomText>
-      </View>
-
-      <Divider className='mb-6' />
-
       {/* Name and Last Name Row */}
       <View className='mb-4 flex-row gap-3'>
         {/* Name */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
-            {t('screens.editProfile.name')} *
-          </CustomText>
+          <CustomText type='body'>{t('screens.editProfile.name')} *</CustomText>
           <Controller
             control={control}
             name='name'
@@ -95,10 +60,7 @@ export function RegisterAuctioneerForm({
 
         {/* Last Name */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
+          <CustomText type='body'>
             {t('screens.editProfile.lastName')} *
           </CustomText>
           <Controller
@@ -127,10 +89,7 @@ export function RegisterAuctioneerForm({
 
       {/* Username */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
+        <CustomText type='body'>
           {t('screens.editProfile.username')} *
         </CustomText>
         <Controller
@@ -158,12 +117,7 @@ export function RegisterAuctioneerForm({
 
       {/* Email */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('loginPage.email')} *
-        </CustomText>
+        <CustomText type='body'>{t('loginPage.email')} *</CustomText>
         <Controller
           control={control}
           name='email'
@@ -192,12 +146,7 @@ export function RegisterAuctioneerForm({
       <View className='mb-4 flex-row gap-3'>
         {/* Password */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
-            {t('loginPage.password')} *
-          </CustomText>
+          <CustomText type='body'>{t('loginPage.password')} *</CustomText>
           <Controller
             control={control}
             name='password'
@@ -223,10 +172,7 @@ export function RegisterAuctioneerForm({
 
         {/* Confirm Password */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
+          <CustomText type='body'>
             {t('screens.account.confirmPassword')} *
           </CustomText>
           <Controller
@@ -255,12 +201,7 @@ export function RegisterAuctioneerForm({
 
       {/* DNI */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
-          {t('screens.editProfile.dni')} *
-        </CustomText>
+        <CustomText type='body'>{t('screens.editProfile.dni')} *</CustomText>
         <Controller
           control={control}
           name='dni'
@@ -287,15 +228,9 @@ export function RegisterAuctioneerForm({
       <View className='mb-4'>
         <CustomText
           type='body'
-          className='text-gray-700 mb-2'
+          className='text-gray-700'
         >
           {t('screens.editProfile.phoneNumber')} *
-        </CustomText>
-        <CustomText
-          type='bodysmall'
-          className='text-gray-500 mb-2'
-        >
-          {t('screens.editProfile.includeCountryCode')}
         </CustomText>
         <Controller
           control={control}
@@ -310,6 +245,12 @@ export function RegisterAuctioneerForm({
             />
           )}
         />
+        <CustomText
+          type='bodysmall'
+          className='text-gray-500'
+        >
+          {t('screens.editProfile.includeCountryCode')}
+        </CustomText>
         {errors.phoneNumber && (
           <CustomText
             type='bodysmall'
@@ -324,10 +265,7 @@ export function RegisterAuctioneerForm({
 
       {/* Store Name */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
+        <CustomText type='body'>
           {t('screens.editProfile.storeName')} *
         </CustomText>
         <Controller
@@ -354,16 +292,10 @@ export function RegisterAuctioneerForm({
 
       {/* Web Page */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
+        <CustomText type='body'>
           {t('screens.editProfile.webPage')} *
         </CustomText>
-        <CustomText
-          type='bodysmall'
-          className='text-gray-500 mb-2'
-        >
+        <CustomText type='bodysmall'>
           {t('screens.editProfile.keepUrlProtocol')}
         </CustomText>
         <Controller
@@ -392,16 +324,10 @@ export function RegisterAuctioneerForm({
 
       {/* Social Media */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
+        <CustomText type='body'>
           {t('screens.editProfile.socialMedia')} *
         </CustomText>
-        <CustomText
-          type='bodysmall'
-          className='text-gray-500 mb-2'
-        >
+        <CustomText type='bodysmall'>
           {t('screens.editProfile.keepUrlProtocol')}
         </CustomText>
         <Controller
@@ -428,14 +354,34 @@ export function RegisterAuctioneerForm({
         )}
       </View>
 
-      <Divider className='mb-6' />
+      {/* CIF */}
+      <View className='mb-4'>
+        <CustomText type='body'>{t('screens.editProfile.cif')} *</CustomText>
+        <Controller
+          control={control}
+          name='cif'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder={t('screens.editProfile.cif')}
+              value={value}
+              onChangeText={onChange}
+              editable={!isLoading}
+            />
+          )}
+        />
+        {errors.cif && (
+          <CustomText
+            type='bodysmall'
+            className='mt-1 text-red-500'
+          >
+            {getErrorMessage(errors.cif.message, locale)}
+          </CustomText>
+        )}
+      </View>
 
       {/* Address */}
       <View className='mb-4'>
-        <CustomText
-          type='body'
-          className='text-gray-700 mb-2'
-        >
+        <CustomText type='body'>
           {t('screens.editProfile.address')} *
         </CustomText>
         <Controller
@@ -464,12 +410,7 @@ export function RegisterAuctioneerForm({
       <View className='mb-4 flex-row gap-3'>
         {/* Town */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
-            {t('screens.editProfile.town')} *
-          </CustomText>
+          <CustomText type='body'>{t('screens.editProfile.town')} *</CustomText>
           <Controller
             control={control}
             name='town'
@@ -494,10 +435,7 @@ export function RegisterAuctioneerForm({
 
         {/* Province */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
+          <CustomText type='body'>
             {t('screens.editProfile.province')} *
           </CustomText>
           <Controller
@@ -527,10 +465,7 @@ export function RegisterAuctioneerForm({
       <View className='mb-6 flex-row gap-3'>
         {/* Country */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
+          <CustomText type='body'>
             {t('screens.editProfile.country')} *
           </CustomText>
           <Controller
@@ -557,10 +492,7 @@ export function RegisterAuctioneerForm({
 
         {/* Postal Code */}
         <View className='flex-1'>
-          <CustomText
-            type='body'
-            className='text-gray-700 mb-2'
-          >
+          <CustomText type='body'>
             {t('screens.editProfile.postalCode')} *
           </CustomText>
           <Controller
@@ -587,6 +519,31 @@ export function RegisterAuctioneerForm({
       </View>
 
       <Divider className='mb-6' />
+
+      {/* Profile Picture */}
+      <View className='mb-6'>
+        <CustomText type='body'>
+          {t('screens.editProfile.uploadImage')}
+        </CustomText>
+        <Controller
+          control={control}
+          name='profilePicture'
+          render={({ field: { onChange, value } }) => (
+            <ImageUploadButton
+              selectedImage={value || null}
+              onImageSelected={onChange}
+              onImageRemoved={() => onChange('')}
+              disabled={isLoading}
+            />
+          )}
+        />
+        <CustomText
+          type='bodysmall'
+          className='text-gray-500 mt-1'
+        >
+          {t('screens.account.imageFormats')}
+        </CustomText>
+      </View>
 
       {/* Terms and Conditions */}
       <View className='mb-6 flex-row items-start'>

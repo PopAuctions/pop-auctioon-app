@@ -1,6 +1,6 @@
-import { OFFERS_OPTIONS_VALUES, WonArticleStatus } from '@/constants';
+import { OFFERS_OPTIONS_VALUES, type WonArticleStatus } from '@/constants';
 import { type Database } from '@/types/supabase';
-import { ArticleFormValues } from '@/utils/schemas/articleSchemas';
+import { type ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
 export type Lang = 'es' | 'en';
 
@@ -838,6 +838,21 @@ export type SubscribeStatus =
   | 'CLOSED'
   | 'CHANNEL_ERROR';
 
+export interface SignupResponse {
+  error: LangMap | null;
+  success: LangMap | null;
+  data: {
+    email: string;
+  } | null;
+}
+
+export type OffersOptionValue = keyof typeof OFFERS_OPTIONS_VALUES;
+
+export interface OfferOption {
+  value: OffersOptionValue;
+  label: string;
+}
+
 // Auth - Signup Types
 export interface SignupData {
   // Common fields for all roles
@@ -862,21 +877,7 @@ export interface SignupData {
   province?: string;
   country?: string;
   postalCode?: string;
-}
-
-export interface SignupResponse {
-  error: LangMap | null;
-  success: LangMap | null;
-  data: {
-    email: string;
-  } | null;
-}
-
-export type OffersOptionValue = keyof typeof OFFERS_OPTIONS_VALUES;
-
-export interface OfferOption {
-  value: OffersOptionValue;
-  label: string;
+  cif?: string;
 }
 
 export interface UseSignupReturn {

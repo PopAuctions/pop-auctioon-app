@@ -13,10 +13,10 @@ import type {
   Lang,
   LangMap,
   UserRoles,
-  SignupData,
   SignupResponse,
   UseSignupReturn,
   UploadFile,
+  SignupData,
 } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
 import { File } from 'expo-file-system';
