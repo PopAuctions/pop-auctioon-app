@@ -13,13 +13,13 @@ import type {
   Lang,
   LangMap,
   UserRoles,
-  SignupData,
   SignupResponse,
   UseSignupReturn,
   UploadFile,
 } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
 import { File } from 'expo-file-system';
+import { type AuctioneerRegisterSchemaType } from '@/utils/schemas';
 
 /**
  * Convierte una URI de imagen local a un objeto UploadFile con base64
@@ -56,7 +56,7 @@ export const useSignup = (): UseSignupReturn => {
 
   const signup = useCallback(
     async (
-      data: SignupData,
+      data: AuctioneerRegisterSchemaType,
       role: UserRoles,
       lang: Lang
     ): Promise<{
@@ -69,7 +69,7 @@ export const useSignup = (): UseSignupReturn => {
 
       try {
         // Convertir imagen a UploadFile si existe
-        let uploadFileData: SignupData = { ...data };
+        let uploadFileData: AuctioneerRegisterSchemaType = { ...data };
 
         if (data.profilePicture && data.profilePicture.trim() !== '') {
           const uploadFile = await convertImageToUploadFile(

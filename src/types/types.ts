@@ -1,5 +1,6 @@
 import { OFFERS_OPTIONS_VALUES, WonArticleStatus } from '@/constants';
 import { type Database } from '@/types/supabase';
+import { AuctioneerRegisterSchemaType } from '@/utils/schemas';
 import { ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
 export type Lang = 'es' | 'en';
@@ -838,32 +839,6 @@ export type SubscribeStatus =
   | 'CLOSED'
   | 'CHANNEL_ERROR';
 
-// Auth - Signup Types
-export interface SignupData {
-  // Common fields for all roles
-  name: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-
-  // Optional fields depending on role
-  dni?: string;
-  phoneNumber?: string;
-  profilePicture?: string;
-
-  // Additional fields for AUCTIONEER
-  storeName?: string;
-  webPage?: string;
-  socialMedia?: string;
-  address?: string;
-  town?: string;
-  province?: string;
-  country?: string;
-  postalCode?: string;
-}
-
 export interface SignupResponse {
   error: LangMap | null;
   success: LangMap | null;
@@ -881,7 +856,7 @@ export interface OfferOption {
 
 export interface UseSignupReturn {
   signup: (
-    data: SignupData,
+    data: AuctioneerRegisterSchemaType,
     role: UserRoles,
     lang: Lang
   ) => Promise<{
