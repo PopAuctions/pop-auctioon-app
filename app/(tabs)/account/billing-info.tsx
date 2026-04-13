@@ -6,7 +6,6 @@ import {
   useGetBilling,
   useDeleteBilling,
 } from '@/hooks/pages/billing/useBilling';
-import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
@@ -27,44 +26,13 @@ export default function BillingInfoScreen() {
     refetch,
     errorMessage: fetchError,
   } = useGetBilling();
-  const {
-    deleteBilling,
-    status: deleteStatus,
-    errorMessage: deleteError,
-  } = useDeleteBilling();
+  const { deleteBilling, status: deleteStatus } = useDeleteBilling();
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [billingToEdit, setBillingToEdit] = useState<
     (BillingSchemaType & { id?: string }) | undefined
   >(undefined);
-
-  // Handle fetch error and delete status
-  useEffect(() => {
-    // Handle fetch error
-    if (status === REQUEST_STATUS.error && fetchError) {
-      callToast({
-        variant: 'error',
-        description: fetchError,
-      });
-    }
-
-    // Handle delete success
-    if (deleteStatus === REQUEST_STATUS.success) {
-      callToast({
-        variant: 'success',
-        description: 'screens.billingInfo.deleteSuccess',
-      });
-      setDeletingId(null);
-      refetch();
-    } else if (deleteStatus === REQUEST_STATUS.error && deleteError) {
-      callToast({
-        variant: 'error',
-        description: deleteError,
-      });
-      setDeletingId(null);
-    }
-  }, [status, fetchError, deleteStatus, deleteError, refetch, callToast]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -84,13 +52,26 @@ export default function BillingInfoScreen() {
       billingName: billing.billingName,
       billingAddress: billing.billingAddress,
       vatNumber: billing.vatNumber || '',
+      country: billing.country || '',
+      city: billing.city || '',
+      postalCode: billing.postalCode || '',
     });
     setModalVisible(true);
   };
 
   const handleDelete = async (billing: UserBillingInfo) => {
     setDeletingId(billing.id);
-    await deleteBilling(billing.id);
+    const result = await deleteBilling(billing.id);
+    if (result.error) {
+      callToast({ variant: 'error', description: result.error });
+    } else {
+      callToast({
+        variant: 'success',
+        description: 'screens.billingInfo.deleteSuccess',
+      });
+      refetch();
+    }
+    setDeletingId(null);
   };
 
   const handleModalClose = () => {
@@ -103,6 +84,16 @@ export default function BillingInfoScreen() {
     setBillingToEdit(undefined);
     refetch(); // Refresh list
   };
+
+  // Handle fetch error
+  useEffect(() => {
+    if (status === REQUEST_STATUS.error && fetchError) {
+      callToast({
+        variant: 'error',
+        description: fetchError,
+      });
+    }
+  }, [status, fetchError, callToast]);
 
   // Loading state - Solo mostrar si NO es un refresh manual
   const loading = status === REQUEST_STATUS.loading && !refreshing;
@@ -151,13 +142,6 @@ export default function BillingInfoScreen() {
         }
       >
         <View className='p-6'>
-          {/* Header */}
-          <CustomText
-            type='h1'
-            className='text-center text-cinnabar'
-          >
-            {t('screens.billingInfo.title')}
-          </CustomText>
           <View className='my-4 self-end'>
             <Button
               mode='primary'

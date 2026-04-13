@@ -198,7 +198,7 @@ export const useUpdateBilling = (): ActionResponse<null> & {
 
 // ==================== DELETE BILLING ====================
 export const useDeleteBilling = (): ActionResponse<null> & {
-  deleteBilling: (id: string) => Promise<void>;
+  deleteBilling: (id: string) => Promise<{ error: LangMap | null }>;
 } => {
   const [status, setStatus] = useState<RequestStatus>('idle');
   // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
@@ -206,7 +206,9 @@ export const useDeleteBilling = (): ActionResponse<null> & {
   const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
   const { secureDelete } = useSecureApi();
 
-  const deleteBilling = async (id: string): Promise<void> => {
+  const deleteBilling = async (
+    id: string
+  ): Promise<{ error: LangMap | null }> => {
     try {
       setStatus('loading');
       setErrorMessage(null);
@@ -219,11 +221,12 @@ export const useDeleteBilling = (): ActionResponse<null> & {
         console.error('ERROR_DELETE_BILLING', response.error);
         setStatus('error');
         setErrorMessage(response.error);
-        return;
+        return { error: response.error };
       }
 
       console.log('SUCCESS_DELETE_BILLING');
       setStatus('success');
+      return { error: null };
     } catch (error) {
       const errorMsg =
         error instanceof Error ? error.message : 'Unknown error occurred';
@@ -239,6 +242,7 @@ export const useDeleteBilling = (): ActionResponse<null> & {
 
       setStatus('error');
       setErrorMessage(message);
+      return { error: message };
     }
   };
 

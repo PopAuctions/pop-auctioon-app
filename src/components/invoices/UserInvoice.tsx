@@ -67,6 +67,9 @@ export function UserInvoice({
           billing?.billingName ?? '',
           billing?.billingAddress ?? '',
           billing?.vatNumber ?? '',
+          billing?.country ?? '',
+          billing?.city ?? '',
+          billing?.postalCode ?? '',
         ],
       })),
     [billingData]
@@ -83,6 +86,9 @@ export function UserInvoice({
               billing.billingName,
               billing.billingAddress,
               billing.vatNumber,
+              billing.country,
+              billing.city,
+              billing.postalCode,
             ] as string[],
           },
         ])
@@ -106,6 +112,9 @@ export function UserInvoice({
       billingName: selectedBillingInfo[0],
       billingAddress: selectedBillingInfo[1],
       vatNumber: selectedBillingInfo?.[2] || '',
+      country: selectedBillingInfo?.[3] || '',
+      city: selectedBillingInfo?.[4] || '',
+      postalCode: selectedBillingInfo?.[5] || '',
     };
 
     await createUserInvoice({
@@ -151,7 +160,7 @@ export function UserInvoice({
       } else {
         await Linking.openURL(file.uri);
       }
-    } catch (error) {
+    } catch {
       callToast({
         variant: 'error',
         description: {

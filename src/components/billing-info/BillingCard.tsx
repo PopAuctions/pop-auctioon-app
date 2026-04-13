@@ -34,7 +34,7 @@ export function BillingCard({
       </View>
 
       {/* Address details con labels */}
-      <View className='gap-2'>
+      <View className=''>
         {/* Billing Name */}
         <View>
           <CustomText
@@ -79,6 +79,48 @@ export function BillingCard({
               className='font-normal'
             >
               {billing.vatNumber}
+            </CustomText>
+          </CustomText>
+        </View>
+        <View>
+          <CustomText
+            type='body'
+            className='font-bold text-black'
+          >
+            {t('screens.billingInfo.country')}:{' '}
+            <CustomText
+              type='body'
+              className='font-normal'
+            >
+              {billing.country}
+            </CustomText>
+          </CustomText>
+        </View>
+        <View>
+          <CustomText
+            type='body'
+            className='font-bold text-black'
+          >
+            {t('screens.billingInfo.city')}:{' '}
+            <CustomText
+              type='body'
+              className='font-normal'
+            >
+              {billing.city}
+            </CustomText>
+          </CustomText>
+        </View>
+        <View>
+          <CustomText
+            type='body'
+            className='font-bold text-black'
+          >
+            {t('screens.billingInfo.postalCode')}:{' '}
+            <CustomText
+              type='body'
+              className='font-normal'
+            >
+              {billing.postalCode}
             </CustomText>
           </CustomText>
         </View>
