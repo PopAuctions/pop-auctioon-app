@@ -531,7 +531,10 @@ export interface Database {
         Row: {
           auctionId: number | null;
           billingAddress: string;
+          billingCity: string | null;
+          billingCountry: string | null;
           billingName: string;
+          billingPostalCode: string | null;
           commission: number | null;
           correlativeNumber: number;
           createdAt: string | null;
@@ -552,7 +555,10 @@ export interface Database {
         Insert: {
           auctionId?: number | null;
           billingAddress: string;
+          billingCity?: string | null;
+          billingCountry?: string | null;
           billingName: string;
+          billingPostalCode?: string | null;
           commission?: number | null;
           correlativeNumber: number;
           createdAt?: string | null;
@@ -573,7 +579,10 @@ export interface Database {
         Update: {
           auctionId?: number | null;
           billingAddress?: string;
+          billingCity?: string | null;
+          billingCountry?: string | null;
           billingName?: string;
+          billingPostalCode?: string | null;
           commission?: number | null;
           correlativeNumber?: number;
           createdAt?: string | null;
@@ -1054,9 +1063,12 @@ export interface Database {
         Row: {
           billingAddress: string;
           billingName: string;
+          city: string | null;
+          country: string | null;
           createdAt: string | null;
           id: string;
           label: string | null;
+          postalCode: string | null;
           updatedAt: string | null;
           userId: string;
           vatNumber: string | null;
@@ -1064,9 +1076,12 @@ export interface Database {
         Insert: {
           billingAddress: string;
           billingName: string;
+          city?: string | null;
+          country?: string | null;
           createdAt?: string | null;
           id?: string;
           label?: string | null;
+          postalCode?: string | null;
           updatedAt?: string | null;
           userId: string;
           vatNumber?: string | null;
@@ -1074,9 +1089,12 @@ export interface Database {
         Update: {
           billingAddress?: string;
           billingName?: string;
+          city?: string | null;
+          country?: string | null;
           createdAt?: string | null;
           id?: string;
           label?: string | null;
+          postalCode?: string | null;
           updatedAt?: string | null;
           userId?: string;
           vatNumber?: string | null;

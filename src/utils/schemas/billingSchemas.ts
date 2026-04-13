@@ -24,6 +24,24 @@ export const BillingSchema = z.object({
       es: 'Requerido',
     }),
   }),
+  country: z.string().min(1, {
+    message: JSON.stringify({
+      en: 'Required',
+      es: 'Requerido',
+    }),
+  }),
+  city: z.string().min(1, {
+    message: JSON.stringify({
+      en: 'Required',
+      es: 'Requerido',
+    }),
+  }),
+  postalCode: z.string().min(1, {
+    message: JSON.stringify({
+      en: 'Required',
+      es: 'Requerido',
+    }),
+  }),
 });
 
 export type BillingSchemaType = z.infer<typeof BillingSchema>;
