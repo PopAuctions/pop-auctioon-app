@@ -26,44 +26,13 @@ export default function BillingInfoScreen() {
     refetch,
     errorMessage: fetchError,
   } = useGetBilling();
-  const {
-    deleteBilling,
-    status: deleteStatus,
-    errorMessage: deleteError,
-  } = useDeleteBilling();
+  const { deleteBilling, status: deleteStatus } = useDeleteBilling();
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [billingToEdit, setBillingToEdit] = useState<
     (BillingSchemaType & { id?: string }) | undefined
   >(undefined);
-
-  // Handle fetch error and delete status
-  useEffect(() => {
-    // Handle fetch error
-    if (status === REQUEST_STATUS.error && fetchError) {
-      callToast({
-        variant: 'error',
-        description: fetchError,
-      });
-    }
-
-    // Handle delete success
-    if (deleteStatus === REQUEST_STATUS.success) {
-      callToast({
-        variant: 'success',
-        description: 'screens.billingInfo.deleteSuccess',
-      });
-      setDeletingId(null);
-      refetch();
-    } else if (deleteStatus === REQUEST_STATUS.error && deleteError) {
-      callToast({
-        variant: 'error',
-        description: deleteError,
-      });
-      setDeletingId(null);
-    }
-  }, [status, fetchError, deleteStatus, deleteError, refetch, callToast]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -92,7 +61,17 @@ export default function BillingInfoScreen() {
 
   const handleDelete = async (billing: UserBillingInfo) => {
     setDeletingId(billing.id);
-    await deleteBilling(billing.id);
+    const result = await deleteBilling(billing.id);
+    if (result.error) {
+      callToast({ variant: 'error', description: result.error });
+    } else {
+      callToast({
+        variant: 'success',
+        description: 'screens.billingInfo.deleteSuccess',
+      });
+      refetch();
+    }
+    setDeletingId(null);
   };
 
   const handleModalClose = () => {
@@ -105,6 +84,16 @@ export default function BillingInfoScreen() {
     setBillingToEdit(undefined);
     refetch(); // Refresh list
   };
+
+  // Handle fetch error
+  useEffect(() => {
+    if (status === REQUEST_STATUS.error && fetchError) {
+      callToast({
+        variant: 'error',
+        description: fetchError,
+      });
+    }
+  }, [status, fetchError, callToast]);
 
   // Loading state - Solo mostrar si NO es un refresh manual
   const loading = status === REQUEST_STATUS.loading && !refreshing;
