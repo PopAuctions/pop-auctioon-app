@@ -6,7 +6,6 @@ import {
   useGetBilling,
   useDeleteBilling,
 } from '@/hooks/pages/billing/useBilling';
-import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
@@ -84,6 +83,9 @@ export default function BillingInfoScreen() {
       billingName: billing.billingName,
       billingAddress: billing.billingAddress,
       vatNumber: billing.vatNumber || '',
+      country: billing.country || '',
+      city: billing.city || '',
+      postalCode: billing.postalCode || '',
     });
     setModalVisible(true);
   };
@@ -151,13 +153,6 @@ export default function BillingInfoScreen() {
         }
       >
         <View className='p-6'>
-          {/* Header */}
-          <CustomText
-            type='h1'
-            className='text-center text-cinnabar'
-          >
-            {t('screens.billingInfo.title')}
-          </CustomText>
           <View className='my-4 self-end'>
             <Button
               mode='primary'

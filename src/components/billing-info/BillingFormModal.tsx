@@ -52,6 +52,9 @@ export function BillingFormModal({
       billingName: '',
       billingAddress: '',
       vatNumber: '',
+      country: '',
+      city: '',
+      postalCode: '',
     },
   });
 
@@ -86,6 +89,9 @@ export function BillingFormModal({
         billingName: billingToEdit.billingName,
         billingAddress: billingToEdit.billingAddress,
         vatNumber: billingToEdit.vatNumber,
+        country: billingToEdit.country,
+        city: billingToEdit.city,
+        postalCode: billingToEdit.postalCode,
       });
     } else {
       // Reset to empty when creating new
@@ -94,6 +100,9 @@ export function BillingFormModal({
         billingName: '',
         billingAddress: '',
         vatNumber: '',
+        country: '',
+        city: '',
+        postalCode: '',
       });
     }
   }, [billingToEdit, reset]);
@@ -143,10 +152,7 @@ export function BillingFormModal({
         <ScrollView className='flex-1 px-4 py-6'>
           {/* Etiqueta de identificación */}
           <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
+            <CustomText type='body'>
               {t('screens.billingInfo.label')} *
             </CustomText>
             <Controller
@@ -176,10 +182,7 @@ export function BillingFormModal({
 
           {/* Nombre o razón social */}
           <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
+            <CustomText type='body'>
               {t('screens.billingInfo.billingName')} *
             </CustomText>
             <Controller
@@ -209,10 +212,7 @@ export function BillingFormModal({
 
           {/* Dirección de facturación */}
           <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
+            <CustomText type='body'>
               {t('screens.billingInfo.billingAddress')} *
             </CustomText>
             <Controller
@@ -246,10 +246,7 @@ export function BillingFormModal({
 
           {/* Número de identificación fiscal */}
           <View className='mb-4'>
-            <CustomText
-              type='body'
-              className='mb-2'
-            >
+            <CustomText type='body'>
               {t('screens.billingInfo.vatNumber')} *
             </CustomText>
             <Controller
@@ -273,6 +270,96 @@ export function BillingFormModal({
               >
                 {JSON.parse(errors.vatNumber.message || '{}')[locale] ||
                   errors.vatNumber.message}
+              </CustomText>
+            )}
+          </View>
+
+          {/* Country */}
+          <View className='mb-4'>
+            <CustomText type='body'>
+              {t('screens.billingInfo.country')} *
+            </CustomText>
+            <Controller
+              control={control}
+              name='country'
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  placeholder={t('screens.billingInfo.country')}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize='characters'
+                  editable={!isSubmitting}
+                />
+              )}
+            />
+            {errors.country && (
+              <CustomText
+                type='error'
+                className='mt-1'
+              >
+                {JSON.parse(errors.country.message || '{}')[locale] ||
+                  errors.country.message}
+              </CustomText>
+            )}
+          </View>
+
+          {/* City */}
+          <View className='mb-4'>
+            <CustomText type='body'>
+              {t('screens.billingInfo.city')} *
+            </CustomText>
+            <Controller
+              control={control}
+              name='city'
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  placeholder={t('screens.billingInfo.city')}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize='characters'
+                  editable={!isSubmitting}
+                />
+              )}
+            />
+            {errors.city && (
+              <CustomText
+                type='error'
+                className='mt-1'
+              >
+                {JSON.parse(errors.city.message || '{}')[locale] ||
+                  errors.city.message}
+              </CustomText>
+            )}
+          </View>
+
+          {/* Postal Code */}
+          <View className='mb-4'>
+            <CustomText type='body'>
+              {t('screens.billingInfo.postalCode')} *
+            </CustomText>
+            <Controller
+              control={control}
+              name='postalCode'
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  placeholder={t('screens.billingInfo.postalCode')}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  autoCapitalize='characters'
+                  editable={!isSubmitting}
+                />
+              )}
+            />
+            {errors.postalCode && (
+              <CustomText
+                type='error'
+                className='mt-1'
+              >
+                {JSON.parse(errors.postalCode.message || '{}')[locale] ||
+                  errors.postalCode.message}
               </CustomText>
             )}
           </View>
