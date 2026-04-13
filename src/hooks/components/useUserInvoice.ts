@@ -101,6 +101,11 @@ export const useCreateUserInvoice = ({
       if (response.error) {
         setStatus('error');
         setErrorMessage(response.error);
+        callToast({
+          variant: 'error',
+          description: response.error,
+        });
+
         return;
       }
 
