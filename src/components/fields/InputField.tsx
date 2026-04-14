@@ -63,6 +63,7 @@ export function TextField({
         placeholder={placeholder || '...'}
         placeholderTextColor='#999'
         style={{
+          height: 42,
           borderWidth: 1,
           borderColor: isDisabled ? '#ccc' : '#000',
           borderRadius: 8,
