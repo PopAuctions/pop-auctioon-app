@@ -43,6 +43,7 @@
     "articleDetails": "Article Details",
     "store": "Online Store",
     "auctioneer": "Auctioneer",
+    "myOnlineStore": "My Online Store",
     "back": "Back"
   },
   "screens": {
@@ -97,7 +98,7 @@
     },
     "auctioneer": {
       "myAuctions": "My live auctions",
-      "myOnlineStore": "My auctions",
+      "myOnlineStore": "My Online Store",
       "soldArticles": "Sold Articles",
       "auctioneerActive": "Active auctioneer",
       "auctioneerNotActive": "Inactive auctioneer"
@@ -166,7 +167,7 @@
       "noFollowedArticles": "You have no followed articles"
     },
     "store": {
-      "title": "Auctions",
+      "title": "Online Store",
       "subtitle": "Shop exclusive products",
       "noProducts": "No products available at the moment",
       "productDetail": "Product Details",
@@ -184,7 +185,7 @@
       }
     },
     "onlineStoreArticle": {
-      "title": "Auctions",
+      "title": "Online Store",
       "price": "Price",
       "buy": "Buy",
       "offer": "Make an offer to the seller!",
@@ -200,13 +201,13 @@
       "newAuction": "New auction",
       "search": "Search",
       "searchLabel": "Search by name",
-      "edit": "Edita",
+      "edit": "Edit",
       "oldAuctions": "Old auctions",
       "noAuctionsFound": "No auctions found"
     },
     "myOnlineStore": {
-      "title": "Auctions articles",
-      "noArticles": "You don't have any articles to sell in the auction yet",
+      "title": "My articles in the online store",
+      "noArticles": "You don't have any articles to sell in the online store yet",
       "noArticlesFound": "No articles found",
       "status": "Status",
       "changePrice": "Change price",

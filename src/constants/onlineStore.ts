@@ -10,8 +10,8 @@ export const SORT_BY = {
   en: [
     { value: 'NEWEST', label: 'Newest' },
     { value: 'OLDEST', label: 'Oldest' },
-    { value: 'HIGHER_PRICE', label: 'Higher price' },
-    { value: 'LOWER_PRICE', label: 'Lower price' },
+    { value: 'HIGHER_PRICE', label: 'Highest price' },
+    { value: 'LOWER_PRICE', label: 'Lowest price' },
   ],
 };
 

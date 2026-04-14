@@ -43,6 +43,7 @@
     "articleDetails": "Detalles del Artículo",
     "store": "Tienda Online",
     "auctioneer": "Subastador",
+    "myOnlineStore": "Mi Tienda Online",
     "back": "Atrás"
   },
   "screens": {
@@ -96,8 +97,8 @@
       }
     },
     "auctioneer": {
-      "myAuctions": "Mis subastas en vivo",
-      "myOnlineStore": "Mis subastas",
+      "myAuctions": "Mis Subastas en Vivo",
+      "myOnlineStore": "Mi Tienda Online",
       "soldArticles": "Artículos Vendidos",
       "auctioneerActive": "Subastador activo",
       "auctioneerNotActive": "Subastador inactivo"
@@ -166,7 +167,7 @@
       "noFollowedArticles": "No tienes artículos seguidos"
     },
     "store": {
-      "title": "Subastas",
+      "title": "Tienda Online",
       "subtitle": "Compra productos exclusivos",
       "noProducts": "No hay productos disponibles en este momento",
       "productDetail": "Detalles del Producto",
@@ -184,7 +185,7 @@
       }
     },
     "onlineStoreArticle": {
-      "title": "Subastas",
+      "title": "Tienda Online",
       "price": "Precio",
       "buy": "Comprar",
       "offer": "¡Haz una oferta al vendedor!",
@@ -205,8 +206,8 @@
       "noAuctionsFound": "No se encontraron subastas"
     },
     "myOnlineStore": {
-      "title": "Mis artículos en las subastas",
-      "noArticles": "Aún no tienes artículos para vender en las subastas",
+      "title": "Mis artículos en la tienda online",
+      "noArticles": "Aún no tienes artículos para vender en la tienda online",
       "noArticlesFound": "No se encontraron artículos",
       "status": "Estado",
       "changePrice": "Cambiar precio",

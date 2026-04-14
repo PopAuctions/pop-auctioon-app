@@ -35,7 +35,7 @@ export default function AuctioneerLayout() {
       <Stack.Screen
         name='my-auctions/index'
         options={{
-          title: t('tabsNames.myAuctions'),
+          title: t('tabsNames.myOnlineStore'),
           headerShown: true,
         }}
       />
