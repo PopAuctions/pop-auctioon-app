@@ -328,6 +328,7 @@ export interface AuctionUserWonArticles {
   createdAt: string;
   title: string;
   articles: CustomArticle[];
+  displayHideButton: boolean;
 }
 
 export type UserPaymentRecord =
