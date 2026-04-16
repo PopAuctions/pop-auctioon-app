@@ -63,7 +63,9 @@ export default function ArticlesWonScreen() {
             payArticles: t('screens.account.payArticles'),
             view: t('screens.account.viewArticle'),
             noArticlesWon: t('screens.account.noArticlesWon'),
+            removeArticles: t('screens.account.removeArticles'),
           }}
+          refetchArticles={refetchArticles}
         />
       ) : (
         <View className='flex-1 items-center justify-center px-6'>

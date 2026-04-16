@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, SectionList } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
@@ -6,6 +6,10 @@ import { CustomLink } from '@/components/ui/CustomLink';
 import { CustomText } from '@/components/ui/CustomText';
 import { AuctionUserWonArticles, CustomArticle, Lang } from '@/types/types';
 import { CustomImage } from '@/components/ui/CustomImage';
+import { ConfirmModal } from '../modal/ConfirmModal';
+import { useToast } from '@/hooks/useToast';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
 
 type WonArticlesProps = {
   wonArticles: Record<string, AuctionUserWonArticles>;
@@ -16,7 +20,9 @@ type WonArticlesProps = {
     payArticles: string;
     view: string;
     noArticlesWon: string;
+    removeArticles: string;
   };
+  refetchArticles?: () => void;
 };
 
 type SectionItemRow = CustomArticle[];
@@ -25,9 +31,65 @@ export const WonArticles = ({
   wonArticles,
   lang,
   commissionValue,
-  texts: { winningBid, payArticles, view, noArticlesWon },
+  texts: { winningBid, payArticles, view, noArticlesWon, removeArticles },
+  refetchArticles,
 }: WonArticlesProps) => {
+  const [isRemoving, setIsRemoving] = useState<Record<string, boolean> | null>(
+    null
+  );
+  const { callToast } = useToast(lang);
+  const { securePost } = useSecureApi();
   const formatter = euroFormatter(lang);
+
+  const handleRemoveArticles = async (auctionId: string) => {
+    setIsRemoving((prev) => ({ ...prev, [auctionId]: true }));
+    const articlesId = wonArticles[auctionId].articles.map(
+      (article) => article.id
+    );
+
+    try {
+      if (articlesId.length === 0) {
+        callToast({
+          variant: 'error',
+          description: {
+            es: 'No hay artículos para eliminar',
+            en: 'There are no articles to remove',
+          },
+        });
+        return;
+      }
+
+      const response = await securePost({
+        endpoint: SECURE_ENDPOINTS.USER.REMOVE_WON_ARTICLES,
+        data: {
+          auctionId: auctionId,
+        },
+      });
+
+      if (response.error) {
+        callToast({
+          variant: 'error',
+          description: {
+            es: 'Error al eliminar los artículos',
+            en: 'Error removing articles',
+          },
+        });
+        return;
+      }
+
+      callToast({
+        variant: 'success',
+        description: {
+          es: 'Artículos eliminados correctamente',
+          en: 'Articles removed successfully',
+        },
+      });
+
+      refetchArticles?.();
+    } finally {
+      setIsRemoving((prev) => ({ ...prev, [auctionId]: false }));
+    }
+  };
 
   const sections = useMemo(() => {
     return Object.entries(wonArticles).map(([auctionId, data]) => {
@@ -41,6 +103,7 @@ export const WonArticles = ({
         auctionId,
         title: data.title,
         data: rows,
+        displayHideButton: data.displayHideButton,
       };
     });
   }, [wonArticles]);
@@ -69,20 +132,45 @@ export const WonArticles = ({
       renderSectionHeader={({ section }) => (
         <View className='my-5 flex-row items-center justify-between rounded-2xl bg-white px-5 py-2'>
           <CustomText
-            className='w-3/5'
+            className='w-3/5 self-center'
             type='h3'
           >
             {section.title}
           </CustomText>
 
-          <CustomLink
-            className='w-2/5'
-            mode='primary'
-            size='small'
-            href={`/(tabs)/account/payment?auctionId=${section.auctionId}`}
-          >
-            {payArticles}
-          </CustomLink>
+          <View className='flex w-2/5 flex-col gap-2'>
+            <CustomLink
+              mode='primary'
+              size='small'
+              href={`/(tabs)/account/payment?auctionId=${section.auctionId}`}
+            >
+              {payArticles}
+            </CustomLink>
+            {section.displayHideButton && (
+              <ConfirmModal
+                mode='secondary'
+                onConfirm={async () => {
+                  await handleRemoveArticles(section.auctionId);
+                }}
+                isDisabled={isRemoving?.[section.auctionId]}
+                title={{
+                  es: 'Eliminar artículos de esta subasta',
+                  en: 'Remove auction won articles',
+                }}
+                description={{
+                  es: '¿Estás seguro de que quieres quitar los artículos ganados en esta subasta?',
+                  en: 'Are you sure you want to remove the won articles in this auction?',
+                }}
+                importantMessage={{
+                  es: 'No los podrás recuperar después de eliminarlos',
+                  en: 'You will not be able to recover them after removing',
+                }}
+                locale={lang}
+              >
+                {removeArticles}
+              </ConfirmModal>
+            )}
+          </View>
         </View>
       )}
       renderItem={({ item: row }) => (

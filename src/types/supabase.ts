@@ -931,6 +931,7 @@ export interface Database {
           articleId: number;
           changedBidder: boolean;
           created_at: string;
+          hideFromUser: boolean;
           id: number;
           ownerId: string | null;
           status: Database['public']['Enums']['WonArticleStatus'];
@@ -941,6 +942,7 @@ export interface Database {
           articleId: number;
           changedBidder?: boolean;
           created_at?: string;
+          hideFromUser?: boolean;
           id?: number;
           ownerId?: string | null;
           status?: Database['public']['Enums']['WonArticleStatus'];
@@ -951,6 +953,7 @@ export interface Database {
           articleId?: number;
           changedBidder?: boolean;
           created_at?: string;
+          hideFromUser?: boolean;
           id?: number;
           ownerId?: string | null;
           status?: Database['public']['Enums']['WonArticleStatus'];
