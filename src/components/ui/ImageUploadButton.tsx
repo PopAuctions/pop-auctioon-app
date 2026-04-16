@@ -176,9 +176,8 @@ export function ImageUploadButton({
                       {/* Botón para eliminar */}
                       <TouchableOpacity
                         onPress={() => handleRemoveImageAt(index)}
-                        className='absolute -right-0.5 -top-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-500 shadow-lg'
+                        className={`absolute -right-0.5 -top-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-500 shadow-lg ${disabled && 'opacity-50'}`}
                         disabled={disabled}
-                        activeOpacity={0.7}
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       >
                         <FontAwesome
@@ -213,7 +212,7 @@ export function ImageUploadButton({
                   {/* Botón para eliminar */}
                   <TouchableOpacity
                     onPress={handleRemoveImage}
-                    className='absolute -right-0.5 -top-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-500 shadow-lg'
+                    className={`absolute -right-0.5 -top-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-500 shadow-lg ${disabled && 'opacity-50'}`}
                     disabled={disabled}
                     activeOpacity={0.7}
                     hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
