@@ -1,0 +1,107 @@
+import { useEffect, useRef } from 'react';
+import { useAuth } from '@/context/auth-context';
+import { useTranslationContext } from '@/context/translation-context';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import {
+  clearManualLanguageFlag,
+  getCurrentLocale,
+  getManualLanguageFlag,
+} from '@/i18n';
+import { Lang, User } from '@/types/types';
+
+type UserWithLanguage = User & { language?: string };
+
+/**
+ * Resolves the language conflict on login:
+ *
+ * - If the user explicitly changed language while logged out (flag set)
+ *   → push local value to DB (user intent wins)
+ * - Otherwise
+ *   → pull DB value to local (sync from another device wins)
+ *
+ * Must be rendered inside both <TranslationProvider> and <AuthProvider>.
+ */
+export function LanguageSyncEffect() {
+  const { auth } = useAuth();
+  const { syncLanguageFromDb } = useTranslationContext();
+  const { secureGet, securePatch } = useSecureApi();
+  const syncedUserIdRef = useRef<string | null>(null);
+  const syncInProgressRef = useRef(false);
+
+  useEffect(() => {
+    if (auth.state !== 'authenticated') {
+      // Reset on logout so the next login triggers a fresh sync
+      syncedUserIdRef.current = null;
+      syncInProgressRef.current = false;
+      return;
+    }
+
+    const userId = auth.session.user.id;
+
+    // Only sync once per authenticated user session
+    if (syncedUserIdRef.current === userId) return;
+    if (syncInProgressRef.current) return;
+    syncInProgressRef.current = true;
+
+    const syncLanguage = async () => {
+      try {
+        // Check if user explicitly changed language while logged out
+        const hasManualChange = await getManualLanguageFlag();
+
+        if (hasManualChange) {
+          // Local value wins — push it to DB so all surfaces stay in sync
+          const localLocale = getCurrentLocale() as Lang;
+
+          const patchResponse = await securePatch<{ success: boolean }>({
+            endpoint: SECURE_ENDPOINTS.USER.UPDATE_LANGUAGE,
+            data: { language: localLocale },
+          });
+
+          if (patchResponse.error) {
+            console.error(
+              'LANGUAGE_SYNC_EFFECT - Failed to update user language',
+              patchResponse.error
+            );
+            // Keep the flag set so the next login can retry the push.
+          } else {
+            // Only clear after a successful update so we don't silently lose
+            // the user's language choice if the server is temporarily down.
+            await clearManualLanguageFlag();
+          }
+        } else {
+          // No local change — DB is authoritative (e.g. changed on another device)
+          const response = await secureGet<UserWithLanguage>({
+            endpoint: SECURE_ENDPOINTS.USER.CURRENT_USER,
+          });
+
+          if (response.error || !response.data) {
+            console.error(
+              'LANGUAGE_SYNC_EFFECT - Failed to fetch user language',
+              response.error
+            );
+            return;
+          }
+
+          const dbLanguage = response.data.language;
+
+          if (dbLanguage === 'es' || dbLanguage === 'en') {
+            syncLanguageFromDb(dbLanguage as Lang);
+          }
+        }
+
+        // Mark as synced for this user session
+        syncedUserIdRef.current = userId;
+      } catch (error) {
+        console.error('LANGUAGE_SYNC_EFFECT - Unexpected error', error);
+      } finally {
+        syncInProgressRef.current = false;
+      }
+    };
+
+    syncLanguage();
+  }, [auth.state, auth, secureGet, securePatch, syncLanguageFromDb]);
+
+  // This component renders nothing — it's a pure side-effect
+  return null;
+}

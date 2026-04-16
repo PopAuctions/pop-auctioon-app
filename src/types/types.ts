@@ -1,0 +1,915 @@
+import { OFFERS_OPTIONS_VALUES, type WonArticleStatus } from '@/constants';
+import { type Database } from '@/types/supabase';
+import { type ArticleFormValues } from '@/utils/schemas/articleSchemas';
+
+export type Lang = 'es' | 'en';
+
+export type UserRoles = 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
+
+export type RequestStatus = 'idle' | 'loading' | 'success' | 'error';
+
+export interface UserRolesTypes {
+  user: 'USER';
+  auctioneer: 'AUCTIONEER';
+  hostAuctioneer: 'HOST_AUCTIONEER';
+}
+
+export interface ApiResponse {
+  error: string | null;
+  success: string;
+}
+
+export type User = Database['public']['Tables']['User']['Row'] & {
+  provider: string;
+};
+
+export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
+
+export type PhoneOTP = Database['public']['Tables']['PhoneOTP']['Row'];
+
+export type UserDiscountCode =
+  Database['public']['Tables']['UserDiscountCode']['Row'];
+
+export type ArticleOffer = Database['public']['Tables']['ArticleOffer']['Row'];
+
+export type Bids = Database['public']['Tables']['Bids']['Row'] & {
+  User: Pick<User, 'username' | 'profilePicture'>;
+};
+
+export type Auction = Database['public']['Tables']['Auction']['Row'];
+
+export type AuctionModeEnum = Database['public']['Enums']['AuctionMode'];
+
+export const AuctionMode: Record<AuctionModeEnum, AuctionModeEnum> = {
+  LIVE: 'LIVE',
+  AUTOMATIC: 'AUTOMATIC',
+} as const;
+
+export type Article = Database['public']['Tables']['Article']['Row'] & {
+  ArticleBid: Pick<
+    ArticleBid,
+    | 'currentValue'
+    | 'available'
+    | 'highestBidderUsername'
+    | 'highestBidderImage'
+  >;
+};
+
+export type SimpleArticle = Pick<
+  Article,
+  'id' | 'images' | 'title' | 'brand' | 'sold' | 'auctionId' | 'startingPrice'
+> & { ArticleBid: Pick<ArticleBid, 'currentValue'> } & {
+  whenInAuction?: Date | null;
+  minBidAmount?: number | null;
+};
+
+export type BlogArticle = Database['public']['Tables']['BlogArticle']['Row'];
+
+export interface BlogArticleJson {
+  en: string;
+  es: string;
+}
+export interface BlogArticleJsonArray {
+  en: string[];
+  es: string[];
+}
+
+// Legal Content Types
+export type CookiesPolicyData = {
+  es: {
+    title: string;
+    description: string;
+    whatAreCookies: {
+      title: string;
+      content: string;
+    };
+    cookiesTypes: {
+      title: string;
+      types: {
+        name: string;
+        description: string;
+      }[];
+    };
+    thirdPartyCookies: {
+      title: string;
+      content: string;
+    };
+    manageCookies: {
+      title: string;
+      content: string;
+      browsers: {
+        name: string;
+        url: string;
+      }[];
+      note: string;
+    };
+  };
+  en: {
+    title: string;
+    description: string;
+    whatAreCookies: {
+      title: string;
+      content: string;
+    };
+    cookiesTypes: {
+      title: string;
+      types: {
+        name: string;
+        description: string;
+      }[];
+    };
+    thirdPartyCookies: {
+      title: string;
+      content: string;
+    };
+    manageCookies: {
+      title: string;
+      content: string;
+      browsers: {
+        name: string;
+        url: string;
+      }[];
+      note: string;
+    };
+  };
+};
+
+export type PrivacyPolicyData = {
+  es: {
+    title: string;
+    sections: {
+      title: string;
+      content: {
+        subtitle?: string;
+        content: string[];
+      }[];
+    }[];
+  };
+  en: {
+    title: string;
+    sections: {
+      title: string;
+      content: {
+        subtitle?: string;
+        content: string[];
+      }[];
+    }[];
+  };
+};
+
+export type TermsAndConditionsData = {
+  pdfUrl: string;
+};
+
+export type LegalContentData = {
+  cookiesPolicy: CookiesPolicyData;
+  privacyPolicy: PrivacyPolicyData;
+  termsAndConditions: TermsAndConditionsData;
+};
+
+// Info Content Types
+export type AboutUsData = {
+  es: {
+    text: string;
+  };
+  en: {
+    text: string;
+  };
+};
+
+export type HowItWorksData = {
+  es: {
+    intro: string;
+    sections: {
+      title: string;
+      content: {
+        text?: string;
+        children?: string[];
+      }[];
+    }[];
+    outro: {
+      title: string;
+      content: string;
+    };
+  };
+  en: {
+    intro: string;
+    sections: {
+      title: string;
+      content: {
+        text?: string;
+        children?: string[];
+      }[];
+    }[];
+    outro: {
+      title: string;
+      content: string;
+    };
+  };
+};
+
+export type FAQsData = {
+  es: {
+    subtitle: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
+  }[];
+  en: {
+    subtitle: string;
+    questions: {
+      question: string;
+      answer: string;
+    }[];
+  }[];
+};
+
+export type InfoContentData = {
+  aboutUs: AboutUsData;
+  howItWorks: HowItWorksData;
+  faqs: FAQsData;
+};
+
+export type UserIVS = Database['public']['Tables']['UserIVS']['Row'];
+
+export type ArticleBid = Database['public']['Tables']['ArticleBid']['Row'];
+
+export type UserAddress = Database['public']['Tables']['UserAddress']['Row'];
+
+export type Invoice = Database['public']['Tables']['Invoice']['Row'];
+
+export type InvoiceTypeEnum = Database['public']['Enums']['InvoiceType'];
+
+export const InvoiceType: Record<InvoiceTypeEnum, InvoiceTypeEnum> = {
+  USER: 'USER',
+  AUCTIONEER: 'AUCTIONEER',
+  HOST_AUCTIONEER: 'HOST_AUCTIONEER',
+} as const;
+
+export type GeneratedInvoice = Pick<
+  Invoice,
+  | 'billingAddress'
+  | 'billingName'
+  | 'commission'
+  | 'correlativeNumber'
+  | 'createdAt'
+  | 'discount'
+  | 'invoiceId'
+  | 'issuedAt'
+  | 'items'
+  | 'shipping'
+  | 'subtotal'
+  | 'taxes'
+  | 'total'
+  | 'vatNumber'
+>;
+
+export type UserBillingInfo =
+  Database['public']['Tables']['UserBillingInfo']['Row'];
+
+export type ArticleSecondChance =
+  Database['public']['Tables']['ArticleSecondChance']['Row'];
+
+export interface CustomArticleSecondChance {
+  id: number;
+  userId?: string;
+  expiresAt?: Date;
+  price: number;
+  status?: ArticleSecondChanceStatus;
+  Article: Pick<Article, 'id' | 'images' | 'title' | 'brand'>;
+  ArticleOffer?: Pick<ArticleOffer, 'id' | 'status' | 'createdAt'>[];
+}
+
+export interface CustomArticleSecondChancePayment {
+  id: number;
+  userId?: string;
+  expiresAt?: Date;
+  amount: number;
+  status?: ArticleSecondChanceStatus;
+
+  ArticleSecondChance: Pick<ArticleSecondChance, 'id'> & {
+    Article: Pick<Article, 'id'>;
+  };
+}
+
+export interface CustomArticleOffer {
+  id: number;
+  amount: number;
+  status: OfferStatus;
+  expiresAt: string;
+  userId: string;
+  ArticleSecondChance: Pick<ArticleSecondChance, 'id' | 'status'> & {
+    Article: Pick<Article, 'id' | 'images' | 'title' | 'brand'>;
+  };
+}
+
+export interface CustomFullArticleSecondChance {
+  id: number;
+  price: number;
+  status: ArticleSecondChanceStatus;
+  Article: Article;
+  minOffer: number;
+  ArticleOffer?: Pick<
+    ArticleOffer,
+    'id' | 'amount' | 'expiresAt' | 'status' | 'createdAt'
+  >[];
+}
+
+export type UserArticlesWonRecord =
+  Database['public']['Tables']['UserArticlesWon']['Row'];
+
+export type UserArticlesWon = Pick<
+  Article,
+  'id' | 'title' | 'brand' | 'soldPrice'
+> & { image: string };
+
+export interface AuctionUserWonArticles {
+  createdAt: string;
+  title: string;
+  articles: CustomArticle[];
+  displayHideButton: boolean;
+}
+
+export type UserPaymentRecord =
+  Database['public']['Tables']['UserPayment']['Row'];
+
+export type NotificationText = Record<Lang, string>;
+
+export type Notification = Omit<
+  Database['public']['Tables']['Notifications']['Row'],
+  'title' | 'description' | 'metadata'
+> & {
+  title: NotificationText;
+  description: NotificationText | null;
+  metadata: Record<string, unknown> | null;
+};
+
+export type DisplayedNotification = Pick<
+  Notification,
+  'id' | 'event' | 'image' | 'read' | 'createdAt'
+> & {
+  title: NotificationText;
+  description: NotificationText | null;
+  metadata: Record<string, string | number> | null;
+};
+
+export interface UserPayment {
+  id: number;
+  createdAt: string;
+  status: string;
+  receiptUrl?: string;
+  articlesPaid: number[];
+  totalAmount: number;
+  taxesAmount?: number;
+  shippingAmount?: number;
+  commissionAmount?: number;
+  discountAmount?: number;
+  articlesAmount?: number;
+  description?: string;
+  errorCode?: string | null;
+  paymentIntent?: string | null;
+  chargeId?: string | null;
+  discountCode?: string | null;
+  shippingNumber?: string | null;
+  shippingCourier?: string | null;
+  auctionId?: number | null;
+  userAddressId?: string | null;
+  auction: {
+    id: number;
+    title: string;
+    startDate: Date;
+  } | null;
+  articles: CustomArticle[];
+  userAddress?: UserAddress;
+  user: Partial<User>;
+}
+
+export type ArticleOwner = Pick<
+  User,
+  'id' | 'storeName' | 'email' | 'name' | 'lastName' | 'phoneNumber'
+>;
+
+export interface CustomArticle {
+  id: number;
+  title: string;
+  auctionId: number;
+  soldPrice: number;
+  brand: string;
+  images: string[];
+}
+
+export interface CustomAuction {
+  id: string;
+  title: string;
+  startDate: string;
+  image: string;
+}
+
+export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
+  ArticleBid: Pick<
+    ArticleBid,
+    | 'articleId'
+    | 'highestBidderUsername'
+    | 'highestBidderImage'
+    | 'available'
+    | 'countdownActive'
+    | 'countdownAmount'
+    | 'countdownFinish'
+  >;
+  Auction: Pick<
+    Auction,
+    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate' | 'category'
+  >;
+};
+
+export type LangMap = Record<Lang, string>;
+
+export type OnboardingSlide = {
+  id: string;
+  title: LangMap;
+  description: LangMap;
+  imageUrl?: string; // URL from API
+  image?: any; // Local image (require('@/assets/...'))
+  order?: number; // Order from API
+};
+
+export type OnboardingVideo = {
+  id: string;
+  title: LangMap;
+  description: LangMap;
+  videoUrl: string;
+  bgColor: string;
+};
+
+export type OnboardingTexts = {
+  skip: LangMap;
+  next: LangMap;
+  start: LangMap;
+};
+
+/**
+ * Response type for React hooks that manage stateful data fetching
+ * Includes React state setters and refetch capabilities
+ * Use for: useGetLiveAuction, useGetAuctions, etc.
+ */
+export interface ActionResponse<TData = unknown> {
+  data: TData;
+  status: RequestStatus;
+  refetch?: () => RefetchReturn;
+  errorMessage: LangMap | null;
+  setErrorMessage: React.Dispatch<React.SetStateAction<LangMap | null>>;
+}
+
+/**
+ * Response type for async utility functions (non-hooks)
+ * Lighter version without React dependencies
+ * Use for: getUserRole, getUser, fetchArticle, etc.
+ */
+export interface AsyncResponse<TData = unknown> {
+  data: TData | null;
+  error?: LangMap;
+  success: boolean;
+}
+
+export type RefetchReturn = Promise<{ message?: LangMap } | void>;
+
+export type VerificationToken =
+  Database['public']['Tables']['VerificationToken']['Row'];
+
+export interface UploadFile {
+  src: string;
+  name: string;
+  type: string;
+  arrayBuffer: string;
+}
+
+export interface AuctionStatusType {
+  NOT_AVAILABLE: 'NOT_AVAILABLE';
+  NEED_CHANGES: 'NEED_CHANGES';
+  CHANGES_MADE: 'CHANGES_MADE';
+  PARTIALLY_AVAILABLE: 'PARTIALLY_AVAILABLE';
+  PARTIALLY_AVAILABLE_CHANGES_MADE: 'PARTIALLY_AVAILABLE_CHANGES_MADE';
+  AVAILABLE: 'AVAILABLE';
+  IN_REVIEW: 'IN_REVIEW';
+  LIVE: 'LIVE';
+  FINISHED: 'FINISHED';
+  WAITING_MIN_ARTICLES_AMOUNT: 'WAITING_MIN_ARTICLES_AMOUNT';
+}
+
+export interface ArticleStatusType {
+  NOT_PUBLISHED: 'NOT_PUBLISHED';
+  NEED_CHANGES: 'NEED_CHANGES';
+  CHANGES_MADE: 'CHANGES_MADE';
+  APPROVED: 'APPROVED';
+  PUBLISHED: 'PUBLISHED';
+}
+
+export type CalendarMonths = Record<string, MonthEntry>;
+
+export interface MonthEntry {
+  es: string;
+  en: string;
+  value: string | number;
+}
+
+export interface Comment {
+  es: string;
+  en: string;
+}
+
+export interface HamburgerMenuItem {
+  path: string;
+  role: string;
+  authNeededToDisplay: boolean | undefined;
+}
+
+export interface UserMenuItem {
+  path: string;
+  role: string;
+}
+
+export type HamburgerMenuItems = Record<string, HamburgerMenuItem>;
+
+export type UserMenuItems = Record<string, UserMenuItem>;
+
+export interface NavBarMenuItemChild {
+  name: string;
+  path: string;
+  subchildren?: boolean;
+}
+export interface NavBarMenuItem {
+  path: string;
+  role: string;
+  childs?: NavBarMenuItemChild[];
+}
+
+export type NavBarMenuItems = Record<string, NavBarMenuItem>;
+
+interface Comission {
+  PERCENTAGE: number;
+  THRESHOLD: number;
+  LABEL: string;
+}
+
+export interface Comissions {
+  // LOW: Comission;
+  // MEDIUM_LOW: Comission;
+  // MEDIUM: Comission;
+  // MEDIUM_HIGH: Comission;
+  // HIGH: Comission;
+  STANDARD: Comission;
+}
+
+export interface ArticleStatusLabels {
+  es: Record<keyof ArticleStatusType, string>;
+  en: Record<keyof ArticleStatusType, string>;
+}
+
+export interface AuctionStatusLabels {
+  es: Record<keyof AuctionStatusType, string>;
+  en: Record<keyof AuctionStatusType, string>;
+}
+
+interface RoleType {
+  value: string;
+  label: string;
+  description: string;
+  icon: string;
+  position: string;
+  extraClass?: string;
+}
+
+export interface RolesTypes {
+  user: RoleType;
+  auctioneer: RoleType;
+  'host-auctioneer': RoleType;
+}
+
+export const FromArticleCategoryToAuctionCategory: Record<
+  ArticleCategories,
+  AuctionCategories
+> = {
+  BAG: 'BAGS',
+  JEWERLY: 'JEWERLY',
+  WATCH: 'WATCHES',
+  ART: 'ART',
+} as const;
+
+export const AuctionCategoriesConst: Record<
+  AuctionCategories,
+  AuctionCategories
+> = {
+  BAGS: 'BAGS',
+  JEWERLY: 'JEWERLY',
+  WATCHES: 'WATCHES',
+  ART: 'ART',
+} as const;
+
+export type AuctionCategories = Database['public']['Enums']['AuctionCategory'];
+
+export type AnyArticleFormValues = ArticleFormValues<AuctionCategories>;
+
+export const OfferStatusConst: Record<OfferStatus, string> = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export const OfferStatusLabels: Record<Lang, Record<OfferStatus, string>> = {
+  en: {
+    PENDING: 'Pending',
+    ACCEPTED: 'Accepted',
+    REJECTED: 'Rejected',
+  },
+  es: {
+    PENDING: 'Pendiente',
+    ACCEPTED: 'Aceptado',
+    REJECTED: 'Rechazado',
+  },
+} as const;
+
+export type OfferStatus = Database['public']['Enums']['OfferStatus'];
+
+export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
+  BAG: 'BAG',
+  JEWERLY: 'JEWERLY',
+  WATCH: 'WATCH',
+  ART: 'ART',
+} as const;
+
+export type ArticleCategories = Database['public']['Enums']['ArticleCategory'];
+
+export interface CustomPaidArticle {
+  id: string;
+  status: WonArticleStatus;
+  Article: Pick<CustomArticle, 'id' | 'title' | 'images' | 'soldPrice'> & {
+    Auction: Pick<Auction, 'id' | 'title'>;
+  };
+  payment?: {
+    id: string;
+    status: string;
+  } & {
+    Auction?: Pick<Auction, 'id' | 'title'>;
+  };
+}
+
+export interface CustomPaidArticleFull {
+  id: string;
+  status: WonArticleStatus;
+  changedBidder: boolean;
+  Article: CustomArticle & {
+    Auction: Pick<Auction, 'id' | 'title'>;
+  };
+  User?: Pick<
+    User,
+    | 'id'
+    | 'username'
+    | 'email'
+    | 'name'
+    | 'lastName'
+    | 'phoneNumber'
+    | 'dni'
+    | 'phoneNumber'
+  >;
+  Owner?: ArticleOwner;
+  payment?: UserPayment & {
+    UserAddress: Pick<
+      UserAddress,
+      'address' | 'city' | 'country' | 'state' | 'postalCode'
+    >;
+    User: Pick<
+      User,
+      'username' | 'email' | 'name' | 'lastName' | 'phoneNumber'
+    >;
+    Auction?: Pick<Auction, 'id' | 'title'>;
+  };
+}
+
+export type CustomUser = Pick<
+  User,
+  'id' | 'username' | 'email' | 'name' | 'lastName' | 'dni' | 'phoneNumber'
+>;
+
+export const ArticleSecondChanceStatusConst: Record<
+  ArticleSecondChanceStatus,
+  string
+> = {
+  NOT_AVAILABLE: 'NOT_AVAILABLE',
+  AVAILABLE: 'AVAILABLE',
+  SOLD: 'SOLD',
+} as const;
+
+export type ArticleSecondChanceStatus =
+  Database['public']['Enums']['ArticleSecondChanceStatus'];
+
+export interface HighestBidderState {
+  highestBidder: string | null;
+  highestBidderImage: string | null;
+  currentValue: number;
+  available: boolean;
+}
+
+export type CountryValue =
+  | 'ANDORRA'
+  | 'AUSTRIA'
+  | 'BELGIUM'
+  | 'BULGARIA'
+  | 'CROATIA'
+  | 'CYPRUS'
+  | 'CZECH_REPUBLIC'
+  | 'DENMARK'
+  | 'SPAIN'
+  | 'ESTONIA'
+  | 'FINLAND'
+  | 'FRANCE'
+  | 'GERMANY'
+  | 'GREECE'
+  | 'HUNGARY'
+  | 'IRELAND'
+  | 'ITALY'
+  | 'LATVIA'
+  | 'LITHUANIA'
+  | 'LUXEMBOURG'
+  | 'MALTA'
+  | 'NETHERLANDS'
+  | 'POLAND'
+  | 'PORTUGAL'
+  | 'ROMANIA'
+  | 'SLOVAKIA'
+  | 'SLOVENIA'
+  | 'SWEDEN';
+
+export interface CountryObject {
+  label: string;
+  value: CountryValue;
+}
+
+export type Countries = Record<Lang, CountryObject[]>;
+
+export interface PaymentShippingTax {
+  GENERAL: number;
+  SPAIN: number;
+  DIFFERENT_COUNTRY: number;
+  SAME_COUNTRY: number;
+}
+
+export interface AppliedDiscountCode {
+  code: string;
+  amount: number;
+}
+
+export interface AddressOption {
+  value: string;
+  label: string;
+  country: string;
+  data: string[];
+}
+
+export interface MyOffers {
+  id: string;
+  amount: number;
+  status: OfferStatus;
+  expiresAt: Date;
+  ArticleSecondChance: {
+    id: string;
+    status: ArticleSecondChanceStatus;
+    Article: {
+      title: string;
+      images: string[];
+    };
+  };
+}
+
+export interface CustomArticleLiveAuto extends Pick<
+  Article,
+  'id' | 'startingPrice' | 'brand' | 'estimatedValue' | 'title' | 'images'
+> {
+  ArticleBid: Pick<ArticleBid, 'currentValue' | 'available'>;
+  Bids: {
+    count: number;
+  }[];
+}
+
+export interface BiddingAmounts {
+  maxAmountWithoutToast: number;
+  minBid: number;
+  tenPercent: number;
+  twentyFivePercent: number;
+  fiftyPercent: number;
+}
+
+export interface AuctionBrand {
+  image: string;
+  title: string;
+  title2: string;
+  description: string[];
+}
+
+// Tipos para constantes adicionales
+export type Country = {
+  value: string;
+  label: string;
+};
+
+export type LocaleLabels = Record<
+  Lang,
+  { value: string; label: string; ariaLabel: string }
+>;
+
+export type LabelsByLanguage = Record<Lang, Record<string, string>>;
+
+export type ErrorMessages = Record<string, Record<Lang, string>>;
+
+export type PriceFilter = {
+  value: string;
+  label: string;
+};
+
+export type CategoryFilter = {
+  value: string;
+  label: string;
+};
+
+export type ApiEndpoint = `/${string}`;
+
+export type SubscribeStatus =
+  | 'SUBSCRIBED'
+  | 'TIMED_OUT'
+  | 'CLOSED'
+  | 'CHANNEL_ERROR';
+
+export interface SignupResponse {
+  error: LangMap | null;
+  success: LangMap | null;
+  data: {
+    email: string;
+  } | null;
+}
+
+export type OffersOptionValue = keyof typeof OFFERS_OPTIONS_VALUES;
+
+export interface OfferOption {
+  value: OffersOptionValue;
+  label: string;
+}
+
+// Auth - Signup Types
+export interface SignupData {
+  // Common fields for all roles
+  name: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+
+  // Optional fields depending on role
+  dni?: string;
+  phoneNumber?: string;
+  profilePicture?: string;
+
+  // Additional fields for AUCTIONEER
+  storeName?: string;
+  webPage?: string;
+  socialMedia?: string;
+  address?: string;
+  town?: string;
+  province?: string;
+  country?: string;
+  postalCode?: string;
+  cif?: string;
+}
+
+export interface UseSignupReturn {
+  signup: (
+    data: SignupData,
+    role: UserRoles,
+    lang: Lang
+  ) => Promise<{
+    success: boolean;
+    email?: string;
+    error?: LangMap;
+  }>;
+  isLoading: boolean;
+  errorMessage: LangMap | null;
+}
+
+export enum NotificationEventType {
+  AUCTION_STARTED = 'auction_started',
+
+  ARTICLE_WON = 'article_won',
+
+  OUTBID = 'outbid',
+
+  OFFER_RECEIVED = 'offer_received',
+
+  OFFER_ACCEPTED = 'offer_accepted',
+
+  OFFER_REJECTED = 'offer_rejected',
+
+  PAYMENT_APPROVED = 'payment_approved',
+  PAYMENT_RECEIVED = 'payment_received',
+
+  SHIPPING_UPDATED = 'shipping_updated',
+}

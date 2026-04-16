@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Divider applies custom className 1`] = `
+<View
+  className="rounded-lg w-full h-px bg-red-500"
+  style={{}}
+/>
+`;
+
+exports[`Divider renders horizontal divider by default 1`] = `
+<View
+  className="rounded-lg bg-[#232323] w-full h-px"
+  style={{}}
+/>
+`;
+
+exports[`Divider renders vertical divider 1`] = `
+<View
+  className="rounded-lg bg-[#232323] h-full w-px"
+  style={{}}
+/>
+`;

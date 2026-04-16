@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MonoText Component should match snapshot 1`] = `
+<Text
+  allowFontScaling={false}
+  style={
+    [
+      {},
+      [
+        undefined,
+        {
+          "fontFamily": "SpaceMono",
+        },
+      ],
+    ]
+  }
+>
+  Snapshot test!
+</Text>
+`;

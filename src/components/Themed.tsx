@@ -6,7 +6,7 @@
 import { Text as DefaultText, View as DefaultView } from 'react-native';
 
 import Colors from '@/constants/Colors';
-import { useColorScheme } from './useColorScheme';
+import { useColorScheme } from '@/hooks/ui/useColorScheme';
 
 type ThemeProps = {
   lightColor?: string;
@@ -44,6 +44,7 @@ export function Text(props: TextProps) {
   return (
     <DefaultText
       style={[color ? { color } : {}, style]}
+      allowFontScaling={false}
       {...otherProps}
     />
   );

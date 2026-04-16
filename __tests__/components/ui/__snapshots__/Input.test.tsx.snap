@@ -1,0 +1,276 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input Accessibility should handle accessibility hint 1`] = `
+<TextInput
+  accessibilityHint="Enter your username here"
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Accessibility should handle accessibility label 1`] = `
+<TextInput
+  accessibilityLabel="Username input field"
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Basic rendering should render input correctly 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Complex configurations should handle all props together 1`] = `
+<TextInput
+  accessibilityLabel="Complex input field"
+  autoCapitalize="none"
+  autoCorrect={false}
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg custom-complex-input"
+  editable={true}
+  keyboardType="email-address"
+  multiline={true}
+  numberOfLines={3}
+  placeholder="Enter complex data"
+  placeholderTextColor="#64748b"
+  returnKeyType="done"
+  secureTextEntry={false}
+  style={
+    {
+      "borderColor": "green",
+      "borderWidth": 2,
+    }
+  }
+  testID="complex-input"
+  value="Complex input"
+/>
+`;
+
+exports[`Input Complex configurations should handle form-like configuration 1`] = `
+<TextInput
+  autoCapitalize="none"
+  autoComplete="email"
+  autoCorrect={false}
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  keyboardType="email-address"
+  placeholder="Email address"
+  placeholderTextColor="#64748b"
+  returnKeyType="next"
+  textContentType="emailAddress"
+/>
+`;
+
+exports[`Input Complex configurations should handle password input configuration 1`] = `
+<TextInput
+  autoCapitalize="none"
+  autoComplete="password"
+  autoCorrect={false}
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholder="Password"
+  placeholderTextColor="#64748b"
+  returnKeyType="done"
+  secureTextEntry={true}
+  textContentType="password"
+/>
+`;
+
+exports[`Input Edge cases should handle null values 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+  style={null}
+/>
+`;
+
+exports[`Input Edge cases should handle undefined props gracefully 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Placeholder handling should handle custom placeholder text color through props 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholder="Custom color placeholder"
+  placeholderTextColor="#ff0000"
+/>
+`;
+
+exports[`Input Placeholder handling should handle empty placeholder 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholder=""
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Placeholder handling should handle long placeholder text 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholder="This is a very long placeholder text that might wrap or be truncated"
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Placeholder handling should use default placeholder text color 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholder="Test placeholder"
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input State management should handle editable prop 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg opacity-50"
+  editable={false}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Styling and customization should apply custom className 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg custom-input-class"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Styling and customization should apply custom style 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+  style={
+    {
+      "backgroundColor": "lightblue",
+      "borderColor": "blue",
+      "borderWidth": 2,
+    }
+  }
+/>
+`;
+
+exports[`Input Styling and customization should apply default className 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Styling and customization should combine className and style 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+  style={
+    {
+      "fontSize": 18,
+    }
+  }
+/>
+`;
+
+exports[`Input Styling and customization should combine default and custom className 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg border-2 border-red-500"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input Styling and customization should handle empty className 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input TextInput props should handle auto-capitalize 1`] = `
+<TextInput
+  autoCapitalize="words"
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input TextInput props should handle auto-complete type 1`] = `
+<TextInput
+  autoComplete="email"
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input TextInput props should handle auto-correct 1`] = `
+<TextInput
+  autoCorrect={false}
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input TextInput props should handle keyboard type 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  keyboardType="email-address"
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input TextInput props should handle multiline input 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  multiline={true}
+  numberOfLines={4}
+  placeholderTextColor="#64748b"
+/>
+`;
+
+exports[`Input TextInput props should handle return key type 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+  returnKeyType="done"
+/>
+`;
+
+exports[`Input TextInput props should handle secure text entry 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+  secureTextEntry={true}
+/>
+`;
+
+exports[`Input TextInput props should handle text content type 1`] = `
+<TextInput
+  className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+  editable={true}
+  placeholderTextColor="#64748b"
+  textContentType="password"
+/>
+`;

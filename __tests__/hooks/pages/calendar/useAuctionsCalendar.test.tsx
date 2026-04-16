@@ -1,0 +1,384 @@
+/**
+ * Test suite for useAuctionsCalendar hook
+ * Tests basic functionality and error handling
+ */
+import { renderHook, waitFor } from '@testing-library/react-native';
+import { mockSupabase } from '../../../setup/mocks.mock';
+import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
+import { supabase } from '@/utils/supabase/supabase-store';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { REQUEST_STATUS } from '@/constants';
+
+jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
+
+jest.mock('@/lib/error/sentry-error-report', () => ({
+  sentryErrorReport: jest.fn(),
+}));
+
+const mockSupabaseInternal = supabase as any;
+const mockSentryErrorReport = sentryErrorReport as jest.MockedFunction<
+  typeof sentryErrorReport
+>;
+
+describe('useAuctionsCalendar', () => {
+  const mockAuctionsData = {
+    today: [
+      {
+        id: '1',
+        title: 'Today Auction',
+        startDate: new Date().toISOString(),
+        image: 'https://example.com/image1.jpg',
+      },
+    ],
+    this_month: [
+      {
+        id: '2',
+        title: 'This Month Auction',
+        startDate: new Date().toISOString(),
+        image: 'https://example.com/image2.jpg',
+      },
+    ],
+    next_month: [
+      {
+        id: '3',
+        title: 'Next Month Auction',
+        startDate: new Date(Date.now() + 86400000 * 35).toISOString(),
+        image: 'https://example.com/image3.jpg',
+      },
+    ],
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    // Add jest.fn() to rpc method for tracking calls
+    mockSupabaseInternal.rpc = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe('Initial state and basic functionality', () => {
+    it('should initialize with correct default state', () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      // Check initial state
+      expect(result.current.status).toBe(REQUEST_STATUS.loading);
+      expect(result.current.data).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
+      expect(typeof result.current.refetch).toBe('function');
+    });
+
+    it('should provide refetch function', async () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
+      });
+
+      expect(typeof result.current.refetch).toBe('function');
+    });
+  });
+
+  describe('Successful data fetching', () => {
+    it('should successfully fetch and return auctions data', async () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
+      });
+
+      expect(result.current.data).toEqual(mockAuctionsData);
+      expect(result.current.status).toBe(REQUEST_STATUS.success);
+    });
+
+    it('should call RPC with correct function name and parameters', async () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(mockSupabaseInternal.rpc).toHaveBeenCalledTimes(1);
+      });
+
+      expect(mockSupabaseInternal.rpc).toHaveBeenCalledWith(
+        'filter_auctions_for_calendar',
+        expect.objectContaining({
+          today: expect.any(String),
+          start_of_month: expect.any(String),
+          end_of_month: expect.any(String),
+          start_of_next_month: expect.any(String),
+          end_of_next_month: expect.any(String),
+          category_param: null,
+        })
+      );
+    });
+  });
+
+  describe('Refetch functionality', () => {
+    it('should handle refetch correctly', async () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
+      });
+
+      // Clear previous calls
+      mockSupabaseInternal.rpc.mockClear();
+
+      // Call refetch
+      await result.current.refetch();
+
+      expect(mockSupabaseInternal.rpc).toHaveBeenCalledTimes(1);
+      expect(result.current.status).toBe(REQUEST_STATUS.success);
+    });
+
+    it('should handle refetch errors', async () => {
+      // Initial successful load
+      mockSupabaseInternal.rpc.mockResolvedValueOnce({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
+      });
+
+      // Mock error for refetch
+      mockSupabaseInternal.rpc.mockRejectedValueOnce(
+        new Error('Refetch failed')
+      );
+
+      await result.current.refetch();
+
+      expect(mockSentryErrorReport).toHaveBeenCalledWith(
+        expect.any(Error),
+        'USE_AUCTIONS_CALENDAR - Unexpected error'
+      );
+    });
+  });
+
+  describe('Error handling', () => {
+    it('should handle Supabase RPC errors properly', async () => {
+      const mockError = { message: 'RPC function failed' };
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: null,
+        error: mockError,
+        count: null,
+        status: 400,
+        statusText: 'Bad Request',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
+      });
+
+      expect(result.current.data).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
+      expect(mockSentryErrorReport).toHaveBeenCalledWith(
+        'RPC function failed',
+        'USE_AUCTIONS_CALENDAR - RPC filter_auctions_for_calendar failed'
+      );
+    });
+
+    it('should handle null data response', async () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: null,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
+      });
+
+      expect(result.current.data).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
+      expect(mockSentryErrorReport).toHaveBeenCalledWith(
+        'No data returned from calendar RPC',
+        'USE_AUCTIONS_CALENDAR - RPC filter_auctions_for_calendar failed'
+      );
+    });
+
+    it('should handle network errors during fetch', async () => {
+      const mockError = new Error('Network error');
+      mockSupabaseInternal.rpc.mockRejectedValue(mockError);
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
+      });
+
+      expect(result.current.data).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
+      expect(mockSentryErrorReport).toHaveBeenCalledWith(
+        mockError,
+        'USE_AUCTIONS_CALENDAR - Unexpected error'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'Unexpected error fetching auctions:',
+        'Network error'
+      );
+    });
+
+    it('should handle non-Error objects in catch block', async () => {
+      const mockError = 'String error message';
+      mockSupabaseInternal.rpc.mockRejectedValue(mockError);
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.error);
+      });
+
+      expect(result.current.data).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
+      expect(mockSentryErrorReport).toHaveBeenCalledWith(
+        mockError,
+        'USE_AUCTIONS_CALENDAR - Unexpected error'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'Unexpected error fetching auctions:',
+        'Unknown error occurred'
+      );
+    });
+  });
+
+  describe('Date parameter validation', () => {
+    it('should call RPC with properly formatted ISO date strings', async () => {
+      mockSupabaseInternal.rpc.mockResolvedValue({
+        data: mockAuctionsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: 'OK',
+      });
+
+      renderHook(() => useAuctionsCalendar());
+
+      await waitFor(() => {
+        expect(mockSupabaseInternal.rpc).toHaveBeenCalled();
+      });
+
+      const rpcCall = mockSupabaseInternal.rpc.mock.calls[0];
+      const params = rpcCall[1];
+
+      // Verify ISO date format
+      expect(params.today).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+      );
+      expect(params.start_of_month).toMatch(
+        /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/
+      );
+      expect(params.end_of_month).toMatch(/^\d{4}-\d{2}-\d{2}T23:59:59\.999Z$/);
+      expect(params.start_of_next_month).toMatch(
+        /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/
+      );
+      expect(params.end_of_next_month).toMatch(
+        /^\d{4}-\d{2}-\d{2}T23:59:59\.999Z$/
+      );
+      expect(params.category_param).toBeNull();
+    });
+  });
+
+  describe('State management', () => {
+    it('should properly manage loading states', async () => {
+      const slowResolve = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            data: mockAuctionsData,
+            error: null,
+            count: null,
+            status: 200,
+            statusText: 'OK',
+          });
+        }, 100);
+      });
+
+      mockSupabaseInternal.rpc.mockReturnValue(slowResolve);
+
+      const { result } = renderHook(() => useAuctionsCalendar());
+
+      // Should start as loading
+      expect(result.current.status).toBe(REQUEST_STATUS.loading);
+      expect(result.current.data).toEqual({
+        today: [],
+        this_month: [],
+        next_month: [],
+      });
+
+      // Wait for completion
+      await waitFor(() => {
+        expect(result.current.status).toBe(REQUEST_STATUS.success);
+      });
+
+      expect(result.current.data).toEqual(mockAuctionsData);
+    });
+  });
+});

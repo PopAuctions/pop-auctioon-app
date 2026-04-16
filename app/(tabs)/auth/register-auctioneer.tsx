@@ -1,0 +1,141 @@
+import { View, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { Button } from '@/components/ui/Button';
+import { RegisterAuctioneerForm } from '@/components/forms/RegisterAuctioneerForm';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  AuctioneerRegisterSchema,
+  type AuctioneerRegisterSchemaType,
+} from '@/utils/schemas';
+import { useSignup } from '@/hooks/auth/useSignup';
+import { useToast } from '@/hooks/useToast';
+import { APP_USER_ROLES } from '@/constants/user';
+import { useOpenTerms } from '@/hooks/useOpenTerms';
+
+export default function RegisterAuctioneerScreen() {
+  const { t, locale } = useTranslation();
+  const { callToast } = useToast(locale);
+  const { signup, isLoading } = useSignup();
+  const { handleOpenTerms } = useOpenTerms();
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuctioneerRegisterSchemaType>({
+    resolver: zodResolver(AuctioneerRegisterSchema),
+    defaultValues: {
+      name: '',
+      lastName: '',
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      dni: '',
+      phoneNumber: '',
+      profilePicture: '',
+      storeName: '',
+      webPage: '',
+      socialMedia: '',
+      address: '',
+      town: '',
+      province: '',
+      country: '',
+      cif: '',
+      postalCode: '',
+    },
+  });
+
+  const onSubmit = async (data: AuctioneerRegisterSchemaType) => {
+    if (!acceptedTerms) {
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'Debes aceptar los términos y condiciones',
+          en: 'You must accept the terms and conditions',
+        },
+      });
+      return;
+    }
+
+    const result = await signup(
+      {
+        name: data.name,
+        lastName: data.lastName,
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        dni: data.dni || '',
+        phoneNumber: data.phoneNumber || '',
+        profilePicture: data.profilePicture || '',
+        storeName: data.storeName || '',
+        webPage: data.webPage || '',
+        socialMedia: data.socialMedia || '',
+        address: data.address || '',
+        town: data.town || '',
+        province: data.province || '',
+        country: data.country || '',
+        postalCode: data.postalCode || '',
+        cif: data.cif || '',
+      },
+      APP_USER_ROLES.AUCTIONEER,
+      locale
+    );
+
+    if (result.success && result.email) {
+      callToast({
+        variant: 'success',
+        description: {
+          es: 'Subastador creado. Revisa tu email para confirmar tu cuenta.',
+          en: 'Auctioneer created. Check your email to confirm your account.',
+        },
+      });
+
+      router.replace('/(tabs)/auth/login');
+    } else if (result.error) {
+      callToast({
+        variant: 'error',
+        description: result.error,
+      });
+    }
+  };
+
+  return (
+    <SafeAreaView
+      className='flex-1 bg-white'
+      edges={[]}
+    >
+      <ScrollView className='flex-1 px-4 pb-2 pt-4'>
+        <View className='w-full md:max-w-[700px] md:self-center'>
+          {/* Formulario */}
+          <RegisterAuctioneerForm
+            control={control}
+            errors={errors}
+            isLoading={isLoading}
+            acceptedTerms={acceptedTerms}
+            onTermsToggle={() => setAcceptedTerms(!acceptedTerms)}
+            onOpenTerms={handleOpenTerms}
+          />
+
+          {/* Botones */}
+          <View className='gap-3 pb-6'>
+            <Button
+              mode='primary'
+              onPress={handleSubmit(onSubmit)}
+              isLoading={isLoading}
+              disabled={!acceptedTerms}
+            >
+              {t('screens.account.createAccount')}
+            </Button>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}

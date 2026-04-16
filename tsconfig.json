@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "target": "ES2020",
     "strict": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -23,7 +24,11 @@
       "@/types/*": ["./src/types/*"],
       "@/services/*": ["./src/services/*"],
       "@/stores/*": ["./src/stores/*"],
-      "@/styles/*": ["./src/styles/*"]
+      "@/styles/*": ["./src/styles/*"],
+      "@/context/*": ["./src/context/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/assets/*": ["./src/assets/*"],
+      "@/navigation/*": ["./src/navigation/*"]
     }
   },
   "include": [
@@ -31,6 +36,8 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts"
-  ]
+    "nativewind-env.d.ts",
+    "jest.config.js"
+  ],
+  "exclude": ["__tests__", "**/*.test.ts", "**/*.test.tsx"]
 }

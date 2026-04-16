@@ -1,0 +1,328 @@
+import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { View, Animated, Keyboard } from 'react-native';
+import { ShareButton } from '@/components/ui/ShareButton';
+import { Chat } from '@/components/chat/Chat';
+import { BidSlider } from '@/components/bids/BidSlider';
+import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { HalfEllipseArticleWheel } from '@/components/articles/HalfEllipseArticleWheel';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { useDeviceType } from '@/hooks/useDeviceType';
+import { HighestBidderProvider } from '@/context/highest-bidder-context';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { REQUEST_STATUS } from '@/constants';
+import { LiveArticleCard } from './LiveArticleCard';
+import { ArticleCountdownUser } from './ArticleCountdownUser';
+import { BidSliderSkeleton } from './BidSliderSkeleton';
+import { LiveCurrentArticleCardSkeleton } from './LiveCurrentArticleCardSkeleton';
+import { LiveCurrentArticleContent } from './LiveCurrentArticleContent';
+import { OverlaySheet } from './OverlaySheet';
+import { LiveBackButton } from './LiveBackButton';
+import {
+  BiddingAmounts,
+  CustomArticleLiveAuto,
+  HighestBidderState,
+} from '@/types/types';
+
+interface OverlayProps {
+  insetsTop: number;
+  insetsBottom: number;
+  auctionId: string;
+  username: string;
+  profilePicture?: string;
+  orderedArticles: CustomArticleLiveAuto[];
+  biddingAmounts: BiddingAmounts | null;
+  articleServerState: HighestBidderState | undefined;
+  articleId: number;
+  refetch: (localValue: number) => void;
+}
+
+const Z = {
+  BID: 10,
+  CHAT: 30,
+  WHEEL: 20,
+  HUD: 25,
+  BACK: 35,
+  MODAL_ROOT: 100,
+  MODAL_BACKDROP: 110,
+  MODAL_CARD: 120,
+} as const;
+
+const UI = {
+  SCREEN_PADDING: 8,
+  HUD_BOTTOM_GAP: 20,
+  ROW_GAP: 24,
+
+  BACK_TOP_GAP: 0,
+  BACK_SIZE: 30,
+
+  CHAT_WIDTH: 288,
+  CHAT_HEIGHT: 180,
+
+  ACTION_GAP: 8,
+  ACTION_BTN_SIZE: 48,
+
+  ARTICLE_HUD_HEIGHT: 70,
+
+  BID_HEIGHT: 36,
+
+  CHAT_OFFSET: 0,
+  HUD_TOP_GAP: 0,
+} as const;
+
+export const LiveAuctionOverlay = ({
+  insetsTop,
+  insetsBottom,
+  auctionId,
+  username,
+  profilePicture = '',
+  orderedArticles,
+  biddingAmounts,
+  articleServerState,
+  articleId,
+  refetch,
+}: OverlayProps) => {
+  const { t, locale } = useTranslation();
+  const deviceType = useDeviceType();
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
+
+  const [showCurrentArticleModal, setShowCurrentArticleModal] = useState(false);
+  const [modalArticleId, setModalArticleId] = useState<number | null>(null);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const backOpacity = useRef(new Animated.Value(1)).current;
+
+  const currentArticleIndex = useMemo(() => {
+    const index = orderedArticles.findIndex((a) => a.id === articleId);
+    return index === -1 ? 0 : index;
+  }, [orderedArticles, articleId]);
+  const currentArticle = useMemo(() => {
+    return orderedArticles[currentArticleIndex];
+  }, [orderedArticles, currentArticleIndex]);
+
+  // Altura del chat ajustada según el dispositivo
+  const chatHeight = deviceType === 'tablet' ? 280 : UI.CHAT_HEIGHT;
+
+  // Bid row pinned
+  const bidBottom = insetsBottom + UI.HUD_BOTTOM_GAP;
+  const bidAreaHeight = insetsBottom + UI.HUD_BOTTOM_GAP + UI.BID_HEIGHT;
+
+  // Article HUD pinned to top
+  const articleHudTop = insetsTop + UI.BACK_TOP_GAP + UI.HUD_TOP_GAP;
+  const backTop = articleHudTop + UI.ARTICLE_HUD_HEIGHT + 20;
+
+  const baseChatBottom = UI.ARTICLE_HUD_HEIGHT + UI.ROW_GAP - UI.CHAT_OFFSET;
+  const chatBottom = keyboardHeight > 0 ? keyboardHeight + 10 : baseChatBottom;
+
+  const openArticleModal = (idToShow: number) => {
+    setModalArticleId(idToShow);
+    setShowCurrentArticleModal(true);
+  };
+
+  // Keyboard listeners para ajustar posición del chat
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      (event) => {
+        setKeyboardHeight(event.endCoordinates.height);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
+
+  return (
+    <>
+      <View
+        pointerEvents='box-none'
+        className='absolute inset-0'
+      >
+        {/* Back */}
+        <LiveBackButton
+          controlsVisible={true}
+          controlsOpacity={backOpacity}
+          insetsTop={backTop}
+          UI={UI}
+          Z={Z}
+        />
+
+        <View
+          pointerEvents='box-none'
+          style={{
+            position: 'absolute',
+            right: UI.SCREEN_PADDING - 7,
+            bottom: bidBottom + UI.BID_HEIGHT + 70,
+            zIndex: Z.WHEEL,
+            elevation: Z.WHEEL,
+            overflow: 'visible',
+          }}
+        >
+          <HalfEllipseArticleWheel
+            articles={orderedArticles}
+            currentArticleIndex={currentArticleIndex}
+            visibleCount={5}
+            itemSize={50}
+            radiusX={50}
+            radiusY={125}
+            onArticlePress={openArticleModal}
+          />
+        </View>
+
+        {/* Chat + Actions (keyboard-aware) */}
+        <View
+          pointerEvents='box-none'
+          style={{
+            position: 'absolute',
+            left: UI.SCREEN_PADDING,
+            right: UI.SCREEN_PADDING,
+            bottom: chatBottom,
+            zIndex: Z.CHAT,
+            elevation: Z.CHAT,
+          }}
+        >
+          <View
+            pointerEvents='box-none'
+            className='flex-row items-end justify-between'
+          >
+            {/* Chat */}
+            <View
+              pointerEvents='auto'
+              style={{ width: UI.CHAT_WIDTH, height: chatHeight }}
+            >
+              <Chat
+                auctionId={auctionId}
+                username={username}
+                profilePicture={profilePicture}
+                enabled
+              />
+            </View>
+
+            {/* Actions */}
+            <View
+              pointerEvents='auto'
+              style={{ gap: UI.ACTION_GAP, overflow: 'visible' }}
+            >
+              <ShareButton
+                mode='empty'
+                className='items-center justify-center'
+                lang={locale}
+                title={{
+                  es: 'Compartir Subasta',
+                  en: 'Share Auction',
+                }}
+              >
+                <View
+                  style={{
+                    height: UI.ACTION_BTN_SIZE,
+                    width: UI.ACTION_BTN_SIZE,
+                    borderRadius: UI.ACTION_BTN_SIZE / 2,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0,0,0,0.6)',
+                  }}
+                >
+                  <FontAwesomeIcon
+                    variant='bold'
+                    name='share'
+                    size={24}
+                    color='#FFFFFF'
+                  />
+                </View>
+              </ShareButton>
+            </View>
+          </View>
+        </View>
+
+        <HighestBidderProvider key={articleId}>
+          {/* Article HUD */}
+          <Animated.View
+            onTouchStart={() => {
+              Keyboard.dismiss();
+              openArticleModal(articleId);
+            }}
+            pointerEvents='auto'
+            style={{
+              position: 'absolute',
+              left: UI.SCREEN_PADDING,
+              right: UI.SCREEN_PADDING,
+              top: articleHudTop,
+              height: UI.ARTICLE_HUD_HEIGHT,
+              zIndex: Z.HUD,
+              elevation: Z.HUD,
+            }}
+          >
+            {currentArticle ? (
+              <LiveArticleCard
+                article={currentArticle}
+                lang={locale}
+              />
+            ) : (
+              <LiveCurrentArticleCardSkeleton height={75} />
+            )}
+          </Animated.View>
+
+          <View
+            pointerEvents='auto'
+            style={{
+              position: 'absolute',
+              left: UI.SCREEN_PADDING,
+              right: UI.SCREEN_PADDING,
+              bottom: bidBottom,
+              height: UI.BID_HEIGHT,
+              zIndex: Z.BID,
+              elevation: Z.BID,
+            }}
+          >
+            {!isCommissionReady || !biddingAmounts || !articleServerState ? (
+              <BidSliderSkeleton height={UI.BID_HEIGHT + 16} />
+            ) : (
+              <BidSlider
+                biddingAmounts={biddingAmounts}
+                articleServerState={articleServerState}
+                articleId={articleId}
+                commissionPercentage={commissionData}
+              />
+            )}
+          </View>
+
+          <ArticleCountdownUser
+            articleId={articleId}
+            COUNTDOWN_STEPS={10}
+            refetch={refetch}
+          />
+        </HighestBidderProvider>
+      </View>
+
+      <OverlaySheet
+        visible={showCurrentArticleModal}
+        onClose={() => {
+          setShowCurrentArticleModal(false);
+          setModalArticleId(null);
+        }}
+        bottomFreeAreaHeight={bidAreaHeight}
+        Z={Z}
+      >
+        {modalArticleId !== null && (
+          <LiveCurrentArticleContent
+            currentArticleId={modalArticleId}
+            texts={{ currentArticle: t('screens.liveAuction.article') }}
+            onClose={() => {
+              setShowCurrentArticleModal(false);
+              setModalArticleId(null);
+            }}
+          />
+        )}
+      </OverlaySheet>
+    </>
+  );
+};

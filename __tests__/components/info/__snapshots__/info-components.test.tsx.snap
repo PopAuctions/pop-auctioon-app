@@ -1,0 +1,366 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Info Components AboutUsContent should match snapshot 1`] = `
+<RCTScrollView
+  className="flex-1"
+>
+  <View>
+    <View
+      className="p-6"
+    >
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] mb-6 text-center text-cinnabar"
+      >
+        About Us
+      </Text>
+      <View
+        className="mb-8 overflow-hidden rounded-xl shadow-lg"
+      >
+        <Image
+          className="h-[380px] w-full"
+          resizeMode="cover"
+          source="about-hero.webp"
+        />
+      </View>
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-5 leading-8"
+      >
+        This is the About Us content in English.
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-5 leading-8"
+      >
+        Second paragraph in English.
+      </Text>
+      <View
+        className="h-8"
+      />
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`Info Components ContactUsContent should match snapshot 1`] = `
+<RCTScrollView
+  className="flex-1"
+>
+  <View>
+    <View
+      className="p-6"
+    >
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] mb-4 text-center text-cinnabar"
+      >
+        screens.contactUs.title
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black mb-6 text-center"
+      >
+        screens.contactUs.subtitle
+      </Text>
+      <View
+        className="mb-4"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
+        >
+          screens.contactUs.name
+          *
+        </Text>
+        <TextInput
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+          editable={true}
+          onChangeText={[Function]}
+          placeholder="screens.contactUs.namePlaceholder"
+          placeholderTextColor="#64748b"
+          value=""
+        />
+      </View>
+      <View
+        className="mb-4"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
+        >
+          screens.contactUs.email
+          *
+        </Text>
+        <TextInput
+          autoCapitalize="none"
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+          editable={true}
+          keyboardType="email-address"
+          onChangeText={[Function]}
+          placeholder="screens.contactUs.emailPlaceholder"
+          placeholderTextColor="#64748b"
+          value=""
+        />
+      </View>
+      <View
+        className="mb-4"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
+        >
+          screens.contactUs.phone
+        </Text>
+        <TextInput
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+          editable={true}
+          keyboardType="phone-pad"
+          onChangeText={[Function]}
+          placeholder="screens.contactUs.phonePlaceholder"
+          placeholderTextColor="#64748b"
+          value=""
+        />
+      </View>
+      <View
+        className="mb-4"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[22px] leading-[28px] md:self-auto md:font-poppins md:text-[28px] md:leading-[36px] text-black mb-2"
+        >
+          screens.contactUs.message
+          *
+        </Text>
+        <TextInput
+          className="h-12 w-full rounded-lg border border-black bg-white px-3 py-3 text-base text-text-black shadow-sm focus:border-cinnabar disabled:opacity-50 md:h-14 md:text-lg"
+          editable={true}
+          multiline={true}
+          numberOfLines={6}
+          onChangeText={[Function]}
+          placeholder="screens.contactUs.messagePlaceholder"
+          placeholderTextColor="#64748b"
+          textAlignVertical="top"
+          value=""
+        />
+      </View>
+      <View
+        className="mb-6 flex-row items-center"
+      >
+        <View
+          accessibilityRole="checkbox"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": false,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            [
+              {
+                "borderColor": "#657786",
+                "borderRadius": 2,
+                "borderWidth": 2,
+                "height": 20,
+                "width": 20,
+              },
+              undefined,
+              false,
+              false,
+              false,
+              false,
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-lg leading-[24px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black ml-3"
+        >
+          screens.contactUs.wantToSell
+        </Text>
+      </View>
+      <View
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": false,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4 w-full"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
+        }
+        testID="ui-button"
+      >
+        <View
+          className="opacity-100 transition-opacity duration-150"
+          pointerEvents="none"
+        >
+          <Text
+            className="text-lg md:text-xl text-white"
+          >
+            screens.contactUs.send
+          </Text>
+        </View>
+      </View>
+      <View
+        className="h-8"
+      />
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`Info Components FAQsContent should match snapshot 1`] = `
+<View
+  className="flex-1"
+>
+  <View
+    className="p-6"
+  >
+    <Text
+      className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[52px] md:leading-[57px] mb-2 text-black"
+    >
+      Frequently Asked Questions
+    </Text>
+    <Text
+      className="font-poppins text-base uppercase leading-[26px] tracking-[1px] text-black"
+    >
+      Find answers to common questions
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Info Components HowItWorksContent should match snapshot 1`] = `
+<RCTScrollView
+  className="flex-1"
+>
+  <View>
+    <View
+      className="p-6"
+    >
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-6 leading-7"
+      >
+        Introduction to how PopAuction works
+      </Text>
+      <View
+        className="mb-6"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] mb-3 text-cinnabar"
+        >
+          Step 1
+        </Text>
+        <View
+          className="mb-3"
+        >
+          <Text
+            allowFontScaling={false}
+            className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-2 leading-7"
+          >
+            Step 1 content
+          </Text>
+        </View>
+      </View>
+      <View
+        className="mb-6"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] mb-3 text-cinnabar"
+        >
+          Step 2
+        </Text>
+        <View
+          className="mb-3"
+        >
+          <Text
+            allowFontScaling={false}
+            className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black mb-2 leading-7"
+          >
+            Step 2 content
+          </Text>
+        </View>
+      </View>
+      <View
+        className="mb-6"
+      >
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-[24px] leading-[29px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[46px] mb-3 text-cinnabar"
+        >
+          Conclusion
+        </Text>
+        <Text
+          allowFontScaling={false}
+          className="grow-0 self-stretch font-rubik text-lg tracking-[0.1px] md:self-auto md:font-poppins md:text-[20px] md:leading-[28px] text-black leading-7"
+        >
+          Conclusion content
+        </Text>
+      </View>
+      <View
+        className="h-8"
+      />
+    </View>
+  </View>
+</RCTScrollView>
+`;

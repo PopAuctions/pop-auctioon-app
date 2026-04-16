@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuctionDisplayDateTime Display options should display time by default 1`] = `
+<View>
+  <Text
+    allowFontScaling={false}
+    className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black"
+  >
+    December 25, 2024
+  </Text>
+  <Text
+    allowFontScaling={false}
+    className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black"
+  >
+    09:30 AM
+  </Text>
+</View>
+`;
+
+exports[`AuctionDisplayDateTime Display options should hide time when displayTime is false 1`] = `
+<View>
+  <Text
+    allowFontScaling={false}
+    className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black"
+  >
+    December 25, 2024
+  </Text>
+</View>
+`;
+
+exports[`AuctionDisplayDateTime Display options should render in single line mode 1`] = `
+<View
+  className="flex-row items-center gap-2"
+>
+  <Text
+    allowFontScaling={false}
+    className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black"
+  >
+    December 25, 2024
+  </Text>
+  <Text />
+  <Text
+    allowFontScaling={false}
+    className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black"
+  >
+    09:30 AM
+  </Text>
+</View>
+`;
+
+exports[`AuctionDisplayDateTime Display options should render in single line mode without time 1`] = `
+<View
+  className="flex-row items-center gap-2"
+>
+  <Text
+    allowFontScaling={false}
+    className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black"
+  >
+    December 25, 2024
+  </Text>
+</View>
+`;

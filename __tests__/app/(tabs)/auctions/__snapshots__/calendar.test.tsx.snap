@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CalendarScreen should match snapshot - empty state 1`] = `
+<RCTScrollView
+  className="flex-1"
+>
+  <View>
+    <View
+      className="p-4"
+    >
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] text-black text-center"
+      >
+        Auctions of
+         
+        September
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black mb-4 text-center"
+      >
+        DON'T MISS ANYTHING!
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] py-4 text-center text-cinnabar"
+      >
+        No auctions found
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`CalendarScreen should match snapshot - with auctions 1`] = `
+<RCTScrollView
+  className="flex-1"
+>
+  <View>
+    <View
+      className="p-4"
+    >
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[34px] leading-[37px] tracking-[0.01px] md:self-auto md:font-poppins md:text-[60px] md:leading-[66px] text-black text-center"
+      >
+        Auctions of
+         
+        September
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="font-poppins text-base uppercase leading-[26px] tracking-[1px] md:text-xl md:leading-[32px] text-black mb-4 text-center"
+      >
+        DON'T MISS ANYTHING!
+      </Text>
+      <Text
+        allowFontScaling={false}
+        className="grow-0 self-stretch font-rubik text-[30px] leading-[33px] tracking-[0.1px] md:self-auto md:font-poppins md:text-[36px] md:leading-[44px] py-4 text-center text-cinnabar"
+      >
+        No auctions found
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;

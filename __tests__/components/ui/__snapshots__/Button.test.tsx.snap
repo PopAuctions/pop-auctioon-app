@@ -1,0 +1,1437 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button Accessibility should be accessible when disabled 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Disabled Accessible Button
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Basic rendering should render with empty string children 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    />
+  </View>
+</View>
+`;
+
+exports[`Button Basic rendering should render without children 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Default
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button modes should render primary mode by default 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Primary Button
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button modes should render primary mode explicitly 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Primary Button
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button modes should render secondary mode 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-cinnabar"
+    >
+      Secondary Button
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button sizes should render large primary button explicitly 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Large Primary
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button sizes should render large secondary button explicitly 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-cinnabar"
+    >
+      Large Secondary
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button sizes should render large size by default 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Large Button
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button sizes should render small primary button 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-4 py-2 md:px-5 md:py-3"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Small Primary
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Button sizes should render small secondary button 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[15px] py-[7px] md:px-5 md:py-3"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-cinnabar"
+    >
+      Small Secondary
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Custom styling should apply custom className 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4 custom-button-class"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Custom Class
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Custom styling should apply custom style 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "red",
+      "padding": 20,
+    }
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Custom Style
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Custom styling should combine custom className and style 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 transition-all duration-200 ease-out active:scale-95 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4 rounded-xl"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "borderWidth": 2,
+    }
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-cinnabar"
+    >
+      Combined Styling
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Custom styling should handle undefined className 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Undefined Class
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Disabled state should combine disabled and loading states 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": true,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-0 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Disabled Loading
+    </Text>
+  </View>
+  <View
+    className="absolute inset-0 items-center justify-center"
+    pointerEvents="none"
+  >
+    <ActivityIndicator
+      color="#ffffff"
+      size="small"
+    />
+  </View>
+</View>
+`;
+
+exports[`Button Disabled state should render disabled styles 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Disabled Button
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Edge cases should handle boolean children 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  />
+</View>
+`;
+
+exports[`Button Edge cases should handle null children gracefully 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  />
+</View>
+`;
+
+exports[`Button Loading state should hide loading indicator when isLoading is false 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": false,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-100 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Not Loading
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Button Loading state should render loading with custom size 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": true,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-4 py-2 md:px-5 md:py-3"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-0 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Small Loading
+    </Text>
+  </View>
+  <View
+    className="absolute inset-0 items-center justify-center"
+    pointerEvents="none"
+  >
+    <ActivityIndicator
+      color="#ffffff"
+      size="small"
+    />
+  </View>
+</View>
+`;
+
+exports[`Button Loading state should render loading with different modes 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": true,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-0 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Loading Primary
+    </Text>
+  </View>
+  <View
+    className="absolute inset-0 items-center justify-center"
+    pointerEvents="none"
+  >
+    <ActivityIndicator
+      color="#ffffff"
+      size="small"
+    />
+  </View>
+</View>
+`;
+
+exports[`Button Loading state should render loading with different modes 2`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": true,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-white border border-silver text-cinnabar px-[27px] py-[11px] md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-0 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-cinnabar"
+    >
+      Loading Secondary
+    </Text>
+  </View>
+  <View
+    className="absolute inset-0 items-center justify-center"
+    pointerEvents="none"
+  >
+    <ActivityIndicator
+      color="#d75639"
+      size="small"
+    />
+  </View>
+</View>
+`;
+
+exports[`Button Loading state should show loading indicator when isLoading is true 1`] = `
+<View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": true,
+      "checked": undefined,
+      "disabled": true,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  className="relative flex-row items-center justify-center gap-3 rounded-lg transition-all duration-200 ease-out active:scale-95 opacity-50 bg-cinnabar text-white px-7 py-3 md:px-9 md:py-4"
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
+  testID="ui-button"
+>
+  <View
+    className="opacity-0 transition-opacity duration-150"
+    pointerEvents="none"
+  >
+    <Text
+      className="text-lg md:text-xl text-white"
+    >
+      Loading Button
+    </Text>
+  </View>
+  <View
+    className="absolute inset-0 items-center justify-center"
+    pointerEvents="none"
+  >
+    <ActivityIndicator
+      color="#ffffff"
+      size="small"
+    />
+  </View>
+</View>
+`;
