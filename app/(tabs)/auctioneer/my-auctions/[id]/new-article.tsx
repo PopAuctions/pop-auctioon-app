@@ -38,6 +38,7 @@ export default function NewAuctionArticleScreen() {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
+  const [isCompressingImages, setIsCompressingImages] = useState(false);
 
   const auctionId = params.id;
 
@@ -118,6 +119,16 @@ export default function NewAuctionArticleScreen() {
   );
 
   const onSubmit = async (data: any) => {
+    if (isCompressingImages) {
+      callToast({
+        variant: 'error',
+        description: {
+          en: `Images are still being compressed. Please wait a moment and try again.`,
+          es: `Las imágenes aún se están comprimiendo. Por favor espera un momento e intenta de nuevo.`,
+        },
+      });
+      return;
+    }
     setIsUploadingArticle(true);
 
     if (!validateMinImages()) {
@@ -376,6 +387,7 @@ export default function NewAuctionArticleScreen() {
                 onImageRemovedAt={handleRemoveImageAt}
                 maxImages={ARTICLE_IMAGES_MAX}
                 disabled={isLoading}
+                onCompressingChange={setIsCompressingImages}
               />
             </View>
 
@@ -385,7 +397,7 @@ export default function NewAuctionArticleScreen() {
                 mode='primary'
                 onPress={handleSubmit(onSubmit)}
                 isLoading={isLoading}
-                disabled={isLoading}
+                disabled={isLoading || isCompressingImages}
               >
                 {t('screens.newArticle.submit')}
               </Button>

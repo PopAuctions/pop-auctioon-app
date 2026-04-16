@@ -30,6 +30,7 @@ interface ImageUploadButtonProps {
   multiple?: boolean;
   maxImages?: number;
   disabled?: boolean;
+  onCompressingChange?: (isCompressing: boolean) => void;
 }
 
 export function ImageUploadButton({
@@ -45,6 +46,7 @@ export function ImageUploadButton({
   multiple = false,
   maxImages = ARTICLE_IMAGES_MAX,
   disabled = false,
+  onCompressingChange,
 }: ImageUploadButtonProps) {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
@@ -57,6 +59,7 @@ export function ImageUploadButton({
 
   const handleAssets = async (assets: ImagePicker.ImagePickerAsset[]) => {
     setIsCompressing(true);
+    onCompressingChange?.(true);
 
     try {
       if (multiple) {
@@ -92,6 +95,7 @@ export function ImageUploadButton({
       });
     } finally {
       setIsCompressing(false);
+      onCompressingChange?.(false);
     }
   };
 
