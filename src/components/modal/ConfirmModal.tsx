@@ -62,6 +62,7 @@ export function ConfirmModal<TConfirmResult = void>({
         onPress={openModal}
         size='small'
         disabled={confirming || isDisabled}
+        isLoading={confirming}
         textClassName='text-center'
       >
         {children}
