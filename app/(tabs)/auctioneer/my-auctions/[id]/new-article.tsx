@@ -157,7 +157,7 @@ export default function NewAuctionArticleScreen() {
     }
 
     setIsUploadingArticle(false);
-    router.navigate(`/(tabs)/auctioneer/my-auctions/${auctionId}`);
+    router.replace(`/(tabs)/auctioneer/my-auctions/${auctionId}`);
   };
 
   const handleCancel = () => {
