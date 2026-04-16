@@ -3,7 +3,7 @@
     "owner": "pop-auctioon",
     "name": "PopAuctioon",
     "slug": "pop-auctioon-app",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "icon": "./assets/icons/pop-auctioon-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
