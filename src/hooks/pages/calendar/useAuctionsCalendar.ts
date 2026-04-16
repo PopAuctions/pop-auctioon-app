@@ -63,5 +63,6 @@ export const useAuctionsCalendar = (): ActionResponse<AuctionsData> => {
     status,
     errorMessage,
     setErrorMessage,
+    refetch: fetchAuctions,
   };
 };
