@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, ScrollView } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import { useAuctionsCalendar } from '@/hooks/pages/calendar/useAuctionsCalendar';
 import { getCalendarMonths, getMonthName } from '@/utils/calendar';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -12,9 +13,15 @@ import { Divider } from '@/components/ui/Divider';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 
 export default function IndexScreen() {
-  const { data: auctions, status } = useAuctionsCalendar();
+  const { data: auctions, status, refetch } = useAuctionsCalendar();
   const { t, locale } = useTranslation();
   const shouldHide = useHideWhileStackBuilds();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch?.();
+    }, [refetch])
+  );
 
   if (shouldHide) {
     return <View className='flex-1 bg-white' />;
