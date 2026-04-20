@@ -3,98 +3,11 @@ import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { cn } from '@/utils/cn';
 import { Href, usePathname, useRouter } from 'expo-router';
-
-/**
- * Tab routes (parent routes) - extracted from app/(tabs)/_layout.tsx
- */
-const TAB_ROUTES = [
-  '/(tabs)/home',
-  '/(tabs)/auctions',
-  '/(tabs)/online-store',
-  '/(tabs)/auctioneer',
-  '/(tabs)/account',
-  '/(tabs)/auth',
-] as const;
+import { setCrossTabBackTarget } from '@/utils/navigation/crossTabNavigation';
+import { TAB_ROUTES } from '../navigation/routeConfig';
 
 type TabRoute = (typeof TAB_ROUTES)[number];
 
-function normalizeTabsPath(pathname: string): string {
-  if (pathname.startsWith('/(tabs)/')) return pathname;
-
-  // '/home' -> '/(tabs)/home', '/account/foo' -> '/(tabs)/account/foo'
-  for (const tabRoute of TAB_ROUTES) {
-    const tabName = tabRoute.replace('/(tabs)/', '');
-    if (pathname === `/${tabName}` || pathname.startsWith(`/${tabName}/`)) {
-      return `/(tabs)/${tabName}${pathname.slice(tabName.length + 1)}`;
-    }
-  }
-
-  return pathname;
-}
-
-/**
- * Returns the tab root route for a given href, or null if it doesn't belong to a tab route.
- * Works with both '/(tabs)/account/...' and group-less '/account/...'
- */
-function getTabRootFromHref(href: string): TabRoute | null {
-  const [pathNoQuery] = href.split('?');
-  const clean = normalizeTabsPath(pathNoQuery);
-
-  const match = TAB_ROUTES.find(
-    (tabRoute) => clean === tabRoute || clean.startsWith(tabRoute + '/')
-  );
-
-  return match ?? null;
-}
-function resolveTabNavigation(
-  href: string,
-  currentPathname: string
-): { finalHref: string; shouldReplace: boolean } {
-  if (href.includes('fromTab=')) {
-    return {
-      finalHref: href,
-      shouldReplace: href.includes('fromTab=true'),
-    };
-  }
-
-  const currentTab = getTabRootFromHref(currentPathname);
-  const targetTab = getTabRootFromHref(href);
-
-  if (!currentTab || !targetTab) {
-    return { finalHref: href, shouldReplace: false };
-  }
-
-  const [targetNoQuery] = href.split('?');
-  const targetNormalized = normalizeTabsPath(targetNoQuery);
-  const isTargetNested = targetNormalized !== targetTab;
-  const isCrossTab = currentTab !== targetTab;
-
-  if (!isTargetNested || !isCrossTab) {
-    return { finalHref: href, shouldReplace: false };
-  }
-
-  const [pathAndQuery, hash] = href.split('#');
-  const separator = pathAndQuery.includes('?') ? '&' : '?';
-  const finalHref = `${pathAndQuery}${separator}fromTab=true`;
-
-  return {
-    finalHref: hash ? `${finalHref}#${hash}` : finalHref,
-    shouldReplace: true,
-  };
-}
-
-/**
- * CustomLink - Componente inteligente de navegación
- *
- * Automáticamente determina si una ruta requiere autenticación consultando
- * la configuración centralizada en routeConfig.ts. No necesitas pasar props
- * de autenticación - todo se maneja automáticamente.
- *
- * Ejemplos:
- * - '/home/api-testing' -> Ruta pública (no requiere auth)
- * - '/(tabs)/auctions' -> Requiere autenticación (configurado en routeConfig)
- * - '/(tabs)/auctioneer/my-auctions' -> Requiere autenticación + rol AUCTIONEER
- */
 interface CustomLinkProps {
   href: string;
   children: React.ReactNode;
@@ -106,6 +19,56 @@ interface CustomLinkProps {
   style?: ViewStyle;
   hoverEffect?: boolean;
   outsideRedirect?: boolean;
+}
+
+function normalizeTabsPath(pathname: string): string {
+  if (pathname.startsWith('/(tabs)/')) return pathname;
+
+  for (const tabRoute of TAB_ROUTES) {
+    const tabName = tabRoute.replace('/(tabs)/', '');
+    if (pathname === `/${tabName}` || pathname.startsWith(`/${tabName}/`)) {
+      return `/(tabs)/${tabName}${pathname.slice(tabName.length + 1)}`;
+    }
+  }
+
+  return pathname;
+}
+
+function getTabRootFromHref(href: string): TabRoute | null {
+  const [pathNoQuery] = href.split('?');
+  const clean = normalizeTabsPath(pathNoQuery);
+
+  const match = TAB_ROUTES.find(
+    (tabRoute) => clean === tabRoute || clean.startsWith(tabRoute + '/')
+  );
+
+  return match ?? null;
+}
+
+function stripRouteGroups(path: string): string {
+  return path.replace(/\/\([^)]+\)/g, '');
+}
+
+function getPathnameFromHref(href: string): string {
+  const [pathNoQuery] = href.split('?');
+  return stripRouteGroups(pathNoQuery);
+}
+
+function isCrossTabNestedNavigation(
+  href: string,
+  currentPathname: string
+): boolean {
+  const currentTab = getTabRootFromHref(currentPathname);
+  const targetTab = getTabRootFromHref(href);
+
+  if (!currentTab || !targetTab) return false;
+
+  const [targetNoQuery] = href.split('?');
+  const targetNormalized = normalizeTabsPath(targetNoQuery);
+  const isTargetNested = targetNormalized !== targetTab;
+  const isCrossTab = currentTab !== targetTab;
+
+  return isCrossTab && isTargetNested;
 }
 
 const LINK_MODE_STYLES = {
@@ -126,6 +89,7 @@ const TEXT_COLOR_BY_MODE: Record<
   plainText: 'text-cinnabar',
   empty: '',
 };
+
 const LINK_SIZE_STYLES = {
   primary: {
     small: 'px-4 py-2',
@@ -149,9 +113,9 @@ export const CustomLink = forwardRef<
   React.ElementRef<typeof Pressable>,
   CustomLinkProps & {
     dismissFirst?: boolean;
-    dismissFallbackHref?: Href; // if can't go back, where to go to close overlay context
-    replace?: boolean; // optional: use replace instead of push
-    onPressOverride?: () => void | Promise<void>; // optional escape hatch
+    dismissFallbackHref?: Href;
+    replace?: boolean;
+    onPressOverride?: () => void | Promise<void>;
   }
 >(
   (
@@ -176,8 +140,8 @@ export const CustomLink = forwardRef<
     const router = useRouter();
     const pathname = usePathname();
     const { navigateWithAuth } = useAuthNavigation();
-    const modeStyle = `${LINK_MODE_STYLES[mode]} ${LINK_SIZE_STYLES[mode][size]}`;
 
+    const modeStyle = `${LINK_MODE_STYLES[mode]} ${LINK_SIZE_STYLES[mode][size]}`;
     const hoverEffects = hoverEffect
       ? 'active:scale-105 transition-all duration-300 ease-out'
       : '';
@@ -196,13 +160,16 @@ export const CustomLink = forwardRef<
         return;
       }
 
-      // Agregar automáticamente fromTab=true si es ruta anidada
-      const { finalHref, shouldReplace } = resolveTabNavigation(href, pathname);
+      const isCrossTabNested = isCrossTabNestedNavigation(href, pathname);
+
+      if (isCrossTabNested) {
+        const destinationPathname = getPathnameFromHref(href);
+
+        setCrossTabBackTarget(destinationPathname, pathname);
+      }
 
       const go = () => {
-        navigateWithAuth(finalHref, {
-          replace: replace || shouldReplace,
-        });
+        navigateWithAuth(href, { replace });
       };
 
       if (!dismissFirst) {
@@ -210,7 +177,6 @@ export const CustomLink = forwardRef<
         return;
       }
 
-      // dismissFirst === true from here on
       if (router.canGoBack()) router.back();
       else router.replace(dismissFallbackHref);
 
@@ -248,5 +214,4 @@ export const CustomLink = forwardRef<
 
 CustomLink.displayName = 'CustomLink';
 
-// Exportar funciones helper para testing
 export { normalizeTabsPath, getTabRootFromHref };
