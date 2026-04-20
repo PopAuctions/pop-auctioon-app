@@ -3,10 +3,11 @@ import { Text, Linking, ViewStyle, Pressable } from 'react-native';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { cn } from '@/utils/cn';
 import { Href, usePathname, useRouter } from 'expo-router';
-import { setCrossTabBackTarget } from '@/utils/navigation/crossTabNavigation';
-import { TAB_ROUTES } from '../navigation/routeConfig';
-
-type TabRoute = (typeof TAB_ROUTES)[number];
+import {
+  getPathnameFromHref,
+  isCrossTabNestedNavigation,
+  setCrossTabBackTarget,
+} from '@/utils/navigation/crossTabNavigation';
 
 interface CustomLinkProps {
   href: string;
@@ -19,56 +20,6 @@ interface CustomLinkProps {
   style?: ViewStyle;
   hoverEffect?: boolean;
   outsideRedirect?: boolean;
-}
-
-function normalizeTabsPath(pathname: string): string {
-  if (pathname.startsWith('/(tabs)/')) return pathname;
-
-  for (const tabRoute of TAB_ROUTES) {
-    const tabName = tabRoute.replace('/(tabs)/', '');
-    if (pathname === `/${tabName}` || pathname.startsWith(`/${tabName}/`)) {
-      return `/(tabs)/${tabName}${pathname.slice(tabName.length + 1)}`;
-    }
-  }
-
-  return pathname;
-}
-
-function getTabRootFromHref(href: string): TabRoute | null {
-  const [pathNoQuery] = href.split('?');
-  const clean = normalizeTabsPath(pathNoQuery);
-
-  const match = TAB_ROUTES.find(
-    (tabRoute) => clean === tabRoute || clean.startsWith(tabRoute + '/')
-  );
-
-  return match ?? null;
-}
-
-function stripRouteGroups(path: string): string {
-  return path.replace(/\/\([^)]+\)/g, '');
-}
-
-function getPathnameFromHref(href: string): string {
-  const [pathNoQuery] = href.split('?');
-  return stripRouteGroups(pathNoQuery);
-}
-
-function isCrossTabNestedNavigation(
-  href: string,
-  currentPathname: string
-): boolean {
-  const currentTab = getTabRootFromHref(currentPathname);
-  const targetTab = getTabRootFromHref(href);
-
-  if (!currentTab || !targetTab) return false;
-
-  const [targetNoQuery] = href.split('?');
-  const targetNormalized = normalizeTabsPath(targetNoQuery);
-  const isTargetNested = targetNormalized !== targetTab;
-  const isCrossTab = currentTab !== targetTab;
-
-  return isCrossTab && isTargetNested;
 }
 
 const LINK_MODE_STYLES = {
@@ -213,5 +164,3 @@ export const CustomLink = forwardRef<
 );
 
 CustomLink.displayName = 'CustomLink';
-
-export { normalizeTabsPath, getTabRootFromHref };
