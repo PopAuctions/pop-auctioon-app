@@ -108,24 +108,6 @@ export default function HomeScreen() {
             }}
           />
 
-          {newestArticlesOnlineStoreStatus !== REQUEST_STATUS.error && (
-            <OnlineStoreArticlesSection
-              lang={locale}
-              commissionValue={
-                commissionsStatus === REQUEST_STATUS.success ? commission : null
-              }
-              texts={{
-                onlineStoreTitle: t('screens.homePage.onlineStoreTitle'),
-                price: t('screens.store.price'),
-                viewMore: t('screens.homePage.viewMore'),
-              }}
-              articles={newestArticlesOnlineStore}
-              articlesReady={
-                newestArticlesOnlineStoreStatus === REQUEST_STATUS.success
-              }
-            />
-          )}
-
           <ArticlesSection
             lang={locale}
             commissionValue={
@@ -160,6 +142,24 @@ export default function HomeScreen() {
                 mostViewedArticlesStatus === REQUEST_STATUS.success,
             }}
           />
+
+          {newestArticlesOnlineStoreStatus !== REQUEST_STATUS.error && (
+            <OnlineStoreArticlesSection
+              lang={locale}
+              commissionValue={
+                commissionsStatus === REQUEST_STATUS.success ? commission : null
+              }
+              texts={{
+                onlineStoreTitle: t('screens.homePage.onlineStoreTitle'),
+                price: t('screens.store.price'),
+                viewMore: t('screens.homePage.viewMore'),
+              }}
+              articles={newestArticlesOnlineStore}
+              articlesReady={
+                newestArticlesOnlineStoreStatus === REQUEST_STATUS.success
+              }
+            />
+          )}
         </ScrollView>
       </SafeAreaView>
 
