@@ -4,6 +4,15 @@ export interface RouteConfig {
   requiredRole?: UserRoles | null;
 }
 
+export const TAB_ROUTES = [
+  '/(tabs)/home',
+  '/(tabs)/auctions',
+  '/(tabs)/online-store',
+  '/(tabs)/auctioneer',
+  '/(tabs)/account',
+  '/(tabs)/auth',
+] as const;
+
 /**
  * Configuración centralizada de rutas protegidas
  *

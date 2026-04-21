@@ -32,12 +32,12 @@ export function SignInAlertModal() {
 
   const handleGoToSignIn = () => {
     closeSignInAlertModal();
-    navigateWithAuth('/(tabs)/auth/login?fromTab=true');
+    navigateWithAuth('/(tabs)/auth/login');
   };
 
   const handleGoToCreateAccount = () => {
     closeSignInAlertModal();
-    navigateWithAuth('/(tabs)/auth/register-user?fromTab=true');
+    navigateWithAuth('/(tabs)/auth/register-user');
   };
 
   return (

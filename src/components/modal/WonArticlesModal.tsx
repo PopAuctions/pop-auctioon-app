@@ -32,7 +32,7 @@ export function WonArticlesModal() {
 
   const handleGoToArticlesWon = () => {
     setOpen(false);
-    navigateWithAuth('/(tabs)/account/articles-won?fromTab=true');
+    navigateWithAuth('/(tabs)/account/articles-won');
   };
 
   useEffect(() => {

@@ -1,6 +1,11 @@
 import { Animated, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Href, router, usePathname } from 'expo-router';
+import {
+  clearCrossTabBackTarget,
+  getCrossTabBackTarget,
+  markTabForReset,
+} from '@/utils/navigation/crossTabNavigation';
 
 export const LiveBackButton = ({
   controlsVisible,
@@ -21,12 +26,23 @@ export const LiveBackButton = ({
     BACK: number;
   };
 }) => {
-  const router = useRouter();
-  const params = useLocalSearchParams();
+  const pathname = usePathname();
 
-  const marker = params['fromTab'];
-  const markerStr = Array.isArray(marker) ? marker[0] : marker;
-  const shouldFallback = markerStr === 'true';
+  const handlePress = () => {
+    const crossTabEntry = getCrossTabBackTarget(pathname);
+
+    if (crossTabEntry) {
+      clearCrossTabBackTarget(pathname);
+
+      // Mark the current tab to be reset next time the user taps it
+      markTabForReset(pathname);
+
+      router.replace(crossTabEntry.originHref as Href);
+      return;
+    }
+
+    router.back();
+  };
 
   return (
     <Animated.View
@@ -49,13 +65,7 @@ export const LiveBackButton = ({
       }}
     >
       <TouchableOpacity
-        onPress={() => {
-          if (shouldFallback) {
-            router.replace(`/(tabs)/auctions/${params.id}?fromTab=true`);
-          } else {
-            router.back();
-          }
-        }}
+        onPress={handlePress}
         activeOpacity={0.7}
         style={{
           height: UI.BACK_SIZE,
