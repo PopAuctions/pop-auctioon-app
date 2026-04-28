@@ -22,6 +22,7 @@ import {
   CustomArticleLiveAuto,
   HighestBidderState,
 } from '@/types/types';
+import { LiveHighestBidder } from './LiveHighestBidder';
 
 interface OverlayProps {
   insetsTop: number;
@@ -244,6 +245,12 @@ export const LiveAuctionOverlay = ({
         </View>
 
         <HighestBidderProvider key={articleId}>
+          <LiveHighestBidder
+            insetsTop={backTop}
+            UI={UI}
+            Z={Z}
+          />
+
           {/* Article HUD */}
           <Animated.View
             onTouchStart={() => {
