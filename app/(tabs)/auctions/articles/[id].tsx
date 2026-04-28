@@ -23,6 +23,7 @@ import { ArticleBidsRecord } from '@/components/articles/ArticleBidsRecord';
 import { parseNumber } from '@/utils/parse-number';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { CustomError } from '@/components/ui/CustomError';
+import { useFetchAutoBidsAmount } from '@/hooks/components/useFetchAutoBidsAmount';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -56,6 +57,8 @@ export default function ArticlesDetailScreen() {
     currentPrice: article?.ArticleBid?.currentValue || 0,
     startingPrice: article?.startingPrice || 0,
   });
+
+  const { data: autoBidsAmount } = useFetchAutoBidsAmount(id);
 
   const [
     { follows = false } = {},
@@ -275,6 +278,7 @@ export default function ArticlesDetailScreen() {
                   commissionPercentage={
                     isCommissionReady ? commissionData : null
                   }
+                  autoBidsAmount={autoBidsAmount ?? 0}
                 />
               </View>
             </View>

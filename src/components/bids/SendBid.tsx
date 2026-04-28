@@ -1,11 +1,22 @@
 import { View, TextInput } from 'react-native';
-import type { BiddingAmounts, HighestBidderState } from '@/types/types';
+import type {
+  BiddingAmounts,
+  HighestBidderState,
+  LangMap,
+} from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
 import { useSendBid } from '@/hooks/components/useSendBid';
 import { AMOUNT_PLACEHOLDER } from '@/constants';
+import { AutomaticBidModal } from '../modal/AutomaticBidModal';
+import { useState } from 'react';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -15,6 +26,7 @@ interface SendBidProps {
   bidLang: DictionaryTypeBid;
   biddingAmounts?: BiddingAmounts;
   commissionPercentage: number | null;
+  autoBidsAmount: number;
 }
 
 export function SendBid({
@@ -23,7 +35,14 @@ export function SendBid({
   articleServerState,
   biddingAmounts = {} as BiddingAmounts,
   commissionPercentage,
+  autoBidsAmount,
 }: SendBidProps) {
+  const { locale } = useTranslation();
+  const [automaticBidModalVisible, setAutomaticBidModalVisible] =
+    useState(false);
+  const [isAutomaticBidPending, setIsAutomaticBidPending] = useState(false);
+  const { securePost } = useSecureApi();
+  const { callToast } = useToast(locale);
   const safeCommission = commissionPercentage ?? 0;
 
   const amountsReady =
@@ -58,6 +77,55 @@ export function SendBid({
     Number.isFinite(safeCommission) &&
     Number.isFinite(currentValue) &&
     amountsReady;
+
+  const createAutomaticBid = async (amount: string) => {
+    if (Number(amount) < computedMinBid) {
+      const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
+
+      callToast({
+        variant: 'error',
+        description: { es: message, en: message },
+      });
+
+      return false;
+    }
+
+    setIsAutomaticBidPending(true);
+    try {
+      const data = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.AUTO_BID.CREATE,
+        data: {
+          articleId: Number(articleId),
+          maxAmount: Number(amount),
+        },
+      });
+
+      if (data.error) {
+        callToast({ variant: 'error', description: data.error });
+        return false;
+      }
+
+      callToast({ variant: 'success', description: data.data });
+      return true;
+    } catch (e) {
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'The automatic bid could not be set',
+          es: 'La puja automática no pudo ser configurada',
+        },
+      });
+
+      sentryErrorReport(
+        e instanceof Error ? e.message : String(e),
+        'CATCH_CREATE_AUTOMATIC_BID - Unexpected error'
+      );
+
+      return false;
+    } finally {
+      setIsAutomaticBidPending(false);
+    }
+  };
 
   return (
     <View className='w-full rounded-xl border border-neutral-200 bg-white p-4'>
@@ -172,6 +240,45 @@ export function SendBid({
         }}
         articleAvailable={articleAvailable}
       />
+      <View className='mt-2'>
+        <Button
+          mode='secondary'
+          onPress={() => {
+            setAutomaticBidModalVisible(true);
+          }}
+          disabled={isAutomaticBidPending}
+          isLoading={isAutomaticBidPending}
+        >
+          {bidLang.createAutomaticBid}
+        </Button>
+      </View>
+      <AutomaticBidModal
+        visible={automaticBidModalVisible}
+        onClose={() => setAutomaticBidModalVisible(false)}
+        onConfirm={createAutomaticBid}
+        title={{
+          es: 'Configurar puja automática',
+          en: 'Set automatic bid',
+        }}
+        description={{
+          es: 'La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.',
+          en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
+        }}
+        extraMessage={{
+          es: 'Debes haber realizado al menos una puja manual antes de configurar una puja automática. Este proceso no crea una puja inmediata.',
+          en: 'You must place at least one manual bid before setting an automatic bid. This process does not place an immediate bid.',
+        }}
+        minAmount={computedMinBid}
+      />
+      {autoBidsAmount !== undefined && autoBidsAmount > 0 && (
+        <CustomText
+          type='bodysmall'
+          className='text-[#787878]'
+        >
+          {autoBidsAmount}{' '}
+          {autoBidsAmount === 1 ? bidLang.automaticBid : bidLang.automaticBids}
+        </CustomText>
+      )}
     </View>
   );
 }
