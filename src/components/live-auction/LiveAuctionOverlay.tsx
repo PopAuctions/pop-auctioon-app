@@ -217,8 +217,8 @@ export const LiveAuctionOverlay = ({
                 className='items-center justify-center'
                 lang={locale}
                 title={{
-                  es: 'Compartir Subasta',
-                  en: 'Share Auction',
+                  es: 'Subasta en vivo en PopAuctioon',
+                  en: 'Live auction on PopAuctioon',
                 }}
               >
                 <View

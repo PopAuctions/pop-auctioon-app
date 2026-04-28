@@ -11,15 +11,10 @@ interface ShareButtonProps {
   mode: ButtonMode;
   className?: string;
   lang: Lang;
-  title?: LangMap;
+  title: LangMap;
 }
 
 const baseUrl = process.env.EXPO_PUBLIC_BASE_URL as string;
-
-const text = {
-  es: { fallback: 'Compartir' },
-  en: { fallback: 'Share' },
-} as const;
 
 export function ShareButton({
   children,
@@ -44,22 +39,17 @@ export function ShareButton({
 
       // Generate smart share URL with locale
       const shareUrl = `${baseUrl}/api/share?url=${encodeURIComponent(path)}&locale=${lang}`;
-      const shareTitle = title?.[lang] ?? text[lang].fallback;
+      const shareTitle = title?.[lang];
 
       // Add haptic feedback
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
       // Use native share modal (different payloads for iOS vs Android)
-      const payload =
-        Platform.OS === 'ios'
-          ? {
-              message: `${shareTitle}\n${shareUrl}`,
-              url: shareUrl,
-            }
-          : {
-              message: shareUrl,
-              title: shareTitle,
-            };
+      const payload = {
+        message: `${shareTitle}\n${shareUrl}`,
+        ...(Platform.OS === 'ios' ? { url: shareUrl } : {}),
+        title: shareTitle,
+      };
 
       await Share.share(payload);
     } catch (error) {
