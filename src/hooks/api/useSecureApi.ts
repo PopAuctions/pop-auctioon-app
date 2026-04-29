@@ -36,20 +36,32 @@ export const useSecureApi = () => {
   const createSecureHeaders = useCallback(async () => {
     const baseHeaders = createBaseHeaders();
 
-    // Obtener sesión actual de Supabase
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const accessToken = session?.access_token;
+    try {
+      // Obtener sesión actual de Supabase (with timeout protection)
+      const sessionPromise = supabase.auth.getSession();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('getSession timeout')), 10000)
+      );
 
-    if (!accessToken) {
+      const {
+        data: { session },
+      } = (await Promise.race([sessionPromise, timeoutPromise])) as any;
+
+      const accessToken = session?.access_token;
+
+      if (!accessToken) {
+        return baseHeaders;
+      }
+
+      return {
+        ...baseHeaders,
+        [HEADERS_CONFIG.AUTHORIZATION_HEADER]: `Bearer ${accessToken}`,
+      };
+    } catch (error) {
+      console.error('ERROR_CREATE_SECURE_HEADERS', error);
+      // Return base headers if session retrieval fails
       return baseHeaders;
     }
-
-    return {
-      ...baseHeaders,
-      [HEADERS_CONFIG.AUTHORIZATION_HEADER]: `Bearer ${accessToken}`,
-    };
   }, [createBaseHeaders]);
 
   // Función auxiliar para hacer requests HTTP
