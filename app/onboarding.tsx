@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Pressable, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRouter, Stack } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
@@ -18,9 +19,19 @@ type OnboardingStep = 'language' | 'video';
 type OnboardingVideoLang = Lang | 'it';
 
 const texts = {
-  skip: { es: 'Omitir', en: 'Skip' },
-  next: { es: 'Siguiente', en: 'Next' },
-  start: { es: 'Empezar', en: 'Get Started' },
+  skip: { es: 'Omitir', en: 'Skip', it: 'Salta' },
+  next: { es: 'Siguiente', en: 'Next', it: 'Avanti' },
+  start: { es: 'Empezar', en: 'Get Started', it: 'Inizia' },
+  welcome: {
+    es: '¡Bienvenido a PopAuctioon!',
+    en: 'Welcome to PopAuctioon!',
+    it: 'Benvenuto su PopAuctioon!',
+  },
+  description: {
+    es: 'Descubre subastas en vivo y encuentra piezas únicas.',
+    en: 'Discover live auctions and find unique pieces.',
+    it: 'Scopri aste dal vivo e trova pezzi unici.',
+  },
 };
 
 export default function OnboardingScreen() {
@@ -33,7 +44,7 @@ export default function OnboardingScreen() {
   const [selectedLang, setSelectedLang] = useState<OnboardingVideoLang | null>(
     null
   );
-  const [displayFooter, setDisplayFooter] = useState(false);
+  const [displayEndMessage, setDisplayEndMessage] = useState(false);
 
   const selectedVideoUrl = selectedLang
     ? videosData?.videos[selectedLang]
@@ -44,7 +55,7 @@ export default function OnboardingScreen() {
 
     changeLanguage(lang === 'it' ? 'es' : lang);
     setSelectedLang(lang);
-    setDisplayFooter(false);
+    setDisplayEndMessage(false);
     setStep('video');
   };
 
@@ -72,9 +83,14 @@ export default function OnboardingScreen() {
 
   const onVideoEnd = async () => {
     hasSeenOnboarding().then((seen) => {
-      if (!seen) {
-        setDisplayFooter(true);
-      }
+      // timeout one second
+      setTimeout(() => {
+        if (!seen) {
+          setDisplayEndMessage(true);
+        } else {
+          navigateWithAuth('/(tabs)/account');
+        }
+      }, 250);
     });
   };
 
@@ -82,7 +98,7 @@ export default function OnboardingScreen() {
     hasSeenOnboarding().then((seen) => {
       if (seen) {
         setSelectedLang(locale);
-        setDisplayFooter(false);
+        setDisplayEndMessage(false);
         setStep('video');
       }
     });
@@ -214,7 +230,7 @@ export default function OnboardingScreen() {
       <Stack.Screen options={{ headerShown: false }} />
 
       <View
-        className='flex-1'
+        className='relative flex-1'
         style={{ backgroundColor: videosData?.bgColor }}
       >
         <VideoPlayer
@@ -227,40 +243,61 @@ export default function OnboardingScreen() {
             onPress={onSkip}
             hitSlop={10}
             accessibilityRole='button'
-            accessibilityLabel={texts.skip[locale]}
+            accessibilityLabel={texts.skip[selectedLang ?? locale]}
             accessibilityHint={t('onboarding.skipHint')}
           >
-            <View className='rounded-full bg-white px-4 py-2'>
+            <View className='rounded-full bg-cinnabar px-4 py-2'>
               <CustomText
                 type='bodysmall'
-                className='font-semibold text-black'
+                className='font-semibold text-white'
               >
-                {texts.skip[locale]}
+                {texts.skip[selectedLang ?? locale]}
               </CustomText>
             </View>
           </Pressable>
         </View>
 
-        {displayFooter && (
-          <View className='absolute bottom-0 left-0 right-0 px-8 pb-12'>
-            <View className='flex-row gap-4'>
+        {displayEndMessage && (
+          <Animated.View
+            entering={FadeInDown.duration(500)}
+            className='absolute bottom-0 left-0 right-0 z-20 rounded-t-3xl bg-white px-6 pb-10 pt-8 shadow-lg'
+          >
+            {/* Welcome message */}
+            <CustomText
+              type='h1'
+              className='mb-2 text-center'
+            >
+              {texts.welcome[selectedLang ?? locale]}
+            </CustomText>
+
+            <CustomText
+              type='body'
+              className='text-gray-500 mb-6 text-center'
+            >
+              {texts.description[selectedLang ?? locale]}
+            </CustomText>
+
+            {/* Actions */}
+            <View className='flex-row gap-3'>
               <Button
-                mode='primary'
-                onPress={onLogin}
+                mode='secondary'
                 className='flex-1'
+                onPress={onRegister}
               >
-                {t('loginPage.signIn')}
+                {selectedLang === 'it' ? 'Registrati' : t('loginPage.register')}
               </Button>
 
               <Button
-                mode='secondary'
-                onPress={onRegister}
+                mode='primary'
                 className='flex-1'
+                onPress={onLogin}
               >
-                {t('loginPage.register')}
+                {selectedLang === 'it'
+                  ? 'Inizia sessione'
+                  : t('loginPage.signIn')}
               </Button>
             </View>
-          </View>
+          </Animated.View>
         )}
       </View>
     </>
