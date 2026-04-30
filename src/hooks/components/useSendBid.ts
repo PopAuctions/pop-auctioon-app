@@ -106,13 +106,25 @@ export const useSendBid = ({
         variant: 'error',
         description: { es: message, en: message },
       });
-
       return;
     }
 
     // actual request
+    let timeoutHandle: number | null = null;
     try {
       setIsPending(true);
+
+      timeoutHandle = setTimeout(() => {
+        sentryErrorReport('Bid request timeout', 'SEND_BID_TIMEOUT_10S');
+        setIsPending(false);
+        callToast({
+          variant: 'error',
+          description: {
+            en: 'Bid request timed out. Please try again.',
+            es: 'La solicitud de puja agotó el tiempo. Por favor, inténtalo de nuevo.',
+          },
+        });
+      }, 10000);
 
       const response = await securePost<LangMap>({
         endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
@@ -122,6 +134,11 @@ export const useSendBid = ({
           clientCurrentAmount: currentValue,
         },
       });
+
+      // Clear timeout if request completes before timeout
+      if (timeoutHandle) {
+        clearTimeout(timeoutHandle);
+      }
 
       const data = response?.data;
 
@@ -136,6 +153,9 @@ export const useSendBid = ({
       callToast({ variant: 'success', description: data });
       setBidAmount('');
     } catch (e: any) {
+      if (timeoutHandle) {
+        clearTimeout(timeoutHandle);
+      }
       sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
       callToast({
         variant: 'error',
@@ -145,6 +165,10 @@ export const useSendBid = ({
         },
       });
     } finally {
+      // Final safety: always ensure pending is false
+      if (timeoutHandle) {
+        clearTimeout(timeoutHandle);
+      }
       setIsPending(false);
     }
   };

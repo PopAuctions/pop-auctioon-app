@@ -841,7 +841,10 @@
       "bidAmount": "Monto a pujar",
       "anyBidAmount": "O puja lo que quieras",
       "minBid": "La puja mínima es de:",
-      "maxBid": "La puja máxima es de:"
+      "maxBid": "La puja máxima es de:",
+      "createAutomaticBid": "Configurar puja automática",
+      "automaticBid": "puja automática configurada",
+      "automaticBids": "pujas automáticas configuradas"
     }
   },
   "globals": {

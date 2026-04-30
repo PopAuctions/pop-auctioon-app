@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
 import {
   Controller,
@@ -6,8 +6,9 @@ import {
   type FieldValues,
   type Path,
 } from 'react-hook-form';
-import DateTimePicker, { useDefaultStyles } from 'react-native-ui-datepicker';
-
+import DateTimePicker, {
+  useDefaultClassNames,
+} from 'react-native-ui-datepicker';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
@@ -42,9 +43,25 @@ export function TimeInputField<T extends FieldValues>({
   disabled = false,
   title,
 }: TimeInputFieldProps<T>) {
-  const defaultStyles = useDefaultStyles();
+  const defaultClassNames = useDefaultClassNames();
   const [isOpen, setIsOpen] = useState(false);
   const [draftTime, setDraftTime] = useState<Date | null>(null);
+
+  const pickerClassNames = useMemo(
+    () => ({
+      ...defaultClassNames,
+      time_label: 'text-black',
+      // time_selector: cn(defaultClassNames.time_selector, 'text-cinnabar'),
+      // time_selector_label: cn(
+      //   defaultClassNames.time_selector_label,
+      //   'text-cinnabar font-semibold'
+      // ),
+      time_selected_indicator:
+        'bg-orange-200 border border-cinnabar rounded-xl',
+    }),
+
+    [defaultClassNames]
+  );
 
   return (
     <Controller
@@ -119,7 +136,7 @@ export function TimeInputField<T extends FieldValues>({
                         setDraftTime(date);
                       }
                     }}
-                    styles={defaultStyles}
+                    classNames={pickerClassNames}
                   />
 
                   <View className='mt-4 flex-row gap-3'>

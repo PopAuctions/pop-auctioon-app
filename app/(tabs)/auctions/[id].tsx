@@ -198,8 +198,8 @@ export default function AuctionDetailScreen() {
                 className='w-1/2'
                 mode='secondary'
                 title={{
-                  es: 'Compartir Subasta',
-                  en: 'Share Auction',
+                  es: 'Mira esta subasta en Popauctioon',
+                  en: 'Check out this auction on Popauction',
                 }}
               >
                 {auctionLang.share}

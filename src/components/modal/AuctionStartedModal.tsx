@@ -36,10 +36,10 @@ export function AuctionStartedModal() {
 
     requestAnimationFrame(() => {
       if (!target) {
-        navigateWithAuth('/(tabs)/auctions?fromTab=true');
+        navigateWithAuth('/(tabs)/auctions');
         return;
       }
-      navigateWithAuth(`/(tabs)/auctions/live/${target}?fromTab=true`);
+      navigateWithAuth(`/(tabs)/auctions/live/${target}`);
     });
   };
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
-
+import { Href, router, Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Text } from 'react-native';
 import { APP_USER_ROLES } from '@/constants/user';
+import { consumeTabReset } from '@/utils/navigation/crossTabNavigation';
 
 const TabLabel = ({ label, color }: { label: string; color: string }) => {
   return (
@@ -23,6 +23,16 @@ const TabLabel = ({ label, color }: { label: string; color: string }) => {
     </Text>
   );
 };
+
+const createResetListener = (tabRoot: string, href: Href) => ({
+  tabPress: (e: { preventDefault: () => void }) => {
+    if (consumeTabReset(tabRoot)) {
+      e.preventDefault();
+
+      router.navigate(href);
+    }
+  },
+});
 
 export default function TabLayout() {
   const { t } = useTranslation();
@@ -58,6 +68,7 @@ export default function TabLayout() {
       {/* HOME tab - visible for all users */}
       <Tabs.Screen
         name='home'
+        listeners={createResetListener('/home', '/(tabs)/home')}
         options={{
           title: t('tabsNames.home'),
           headerShown: false,
@@ -80,6 +91,7 @@ export default function TabLayout() {
       {/* AUCTIONS tab - visible for all users */}
       <Tabs.Screen
         name='auctions'
+        listeners={createResetListener('/auctions', '/(tabs)/auctions')}
         options={{
           title: t('tabsNames.auctions'),
           headerShown: false,
@@ -102,6 +114,7 @@ export default function TabLayout() {
       {/* STORE tab - visible for all users */}
       <Tabs.Screen
         name='online-store'
+        listeners={createResetListener('/online-store', '/(tabs)/online-store')}
         options={{
           title: t('tabsNames.store'),
           headerShown: false,
@@ -124,6 +137,7 @@ export default function TabLayout() {
       {/* MY AUCTIONS tab - only visible for AUCTIONEER */}
       <Tabs.Screen
         name='auctioneer'
+        listeners={createResetListener('/auctioneer', '/(tabs)/auctioneer')}
         options={{
           title: t('tabsNames.auctioneer'),
           headerShown: false,
@@ -147,6 +161,7 @@ export default function TabLayout() {
       {/* ACCOUNT tab - only visible for logged users */}
       <Tabs.Screen
         name='account'
+        listeners={createResetListener('/account', '/(tabs)/account')}
         options={{
           title: t('tabsNames.account'),
           headerShown: false,
@@ -170,6 +185,7 @@ export default function TabLayout() {
       {/* AUTH tab - only visible for non-logged users */}
       <Tabs.Screen
         name='auth'
+        listeners={createResetListener('/auth', '/(tabs)/auth')}
         options={{
           title: t('tabsNames.login'),
           headerShown: false,

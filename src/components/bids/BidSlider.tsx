@@ -84,16 +84,17 @@ export const BidSlider = ({
   );
 
   const handleBid = async (bidAmount: number) => {
-    try {
-      hapticImpact();
+    hapticImpact();
 
-      const finalBase = bidAmount + currentValue;
-      const total = toTotal(finalBase, commissionPercentage);
+    const finalBase = bidAmount + currentValue;
+    const total = toTotal(finalBase, commissionPercentage);
 
-      await sendBid(total);
-    } finally {
+    await sendBid(total);
+
+    // Reset swipe button after sendBid completes
+    requestAnimationFrame(() => {
       setSwipeKey((k) => k + 1);
-    }
+    });
   };
 
   return (

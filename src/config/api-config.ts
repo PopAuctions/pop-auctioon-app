@@ -82,9 +82,7 @@ export const PROTECTED_ENDPOINTS = {
   },
 
   // Onboarding (tutorial de primera vez)
-  ONBOARDING: {
-    SLIDES: '/onboarding/slides', // GET - Slides del tutorial
-  },
+  ONBOARDING: '/onboarding',
 } as const;
 
 // ========================================
@@ -231,6 +229,10 @@ export const SECURE_ENDPOINTS = {
   },
   BIDS: {
     CREATE: '/bids',
+  },
+  AUTO_BID: {
+    CREATE: '/auto-bid',
+    GET: (id: string): ApiEndpoint => `/auto-bid/${id}` as ApiEndpoint,
   },
   LIVE: {
     ARTICLES: '/live/articles',

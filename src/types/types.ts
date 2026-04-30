@@ -425,27 +425,17 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
 
 export type LangMap = Record<Lang, string>;
 
-export type OnboardingSlide = {
-  id: string;
-  title: LangMap;
-  description: LangMap;
-  imageUrl?: string; // URL from API
-  image?: any; // Local image (require('@/assets/...'))
-  order?: number; // Order from API
-};
-
 export type OnboardingVideo = {
   id: string;
   title: LangMap;
   description: LangMap;
   videoUrl: string;
+  videos: {
+    es: string;
+    en: string;
+    it: string;
+  };
   bgColor: string;
-};
-
-export type OnboardingTexts = {
-  skip: LangMap;
-  next: LangMap;
-  start: LangMap;
 };
 
 /**
