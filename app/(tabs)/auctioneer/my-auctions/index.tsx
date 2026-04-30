@@ -62,17 +62,16 @@ export default function MyAuctionsScreen() {
           {/* Top actions */}
           <View className='flex flex-row gap-3'>
             <CustomLink
-              href='/(tabs)/auctioneer/my-auctions/new'
-              mode='primary'
-            >
-              {myAuctions.newAuction}
-            </CustomLink>
-
-            <CustomLink
               href='/(tabs)/auctioneer/my-auctions/old'
               mode='secondary'
             >
               {myAuctions.oldAuctions}
+            </CustomLink>
+            <CustomLink
+              href='/(tabs)/auctioneer/my-auctions/new'
+              mode='primary'
+            >
+              {myAuctions.newAuction}
             </CustomLink>
           </View>
 

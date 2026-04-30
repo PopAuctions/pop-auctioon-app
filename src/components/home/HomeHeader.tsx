@@ -1,7 +1,6 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
-import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { CustomLink } from '@/components/ui/CustomLink';
 
 type HomeHeaderProps = {
@@ -17,21 +16,15 @@ export function HomeHeader({
   isAuctioneer = false,
   texts,
 }: HomeHeaderProps) {
-  const { navigateWithAuth } = useAuthNavigation();
-
   const hasUnread = unreadCount > 0;
   const displayedCount = unreadCount > 99 ? '99+' : String(unreadCount);
 
   return (
     <View className='w-full flex-row items-center border-b border-gray px-4 py-1'>
       <View className='w-full flex-row items-center justify-between gap-3'>
-        <Pressable
-          onPress={() =>
-            navigateWithAuth('/(tabs)/account/offers-made?fromTab=true')
-          }
+        <CustomLink
+          href={'/(tabs)/account/offers-made'}
           className='h-11 w-11 items-center justify-center rounded-full'
-          accessibilityRole='button'
-          accessibilityLabel='Offers made'
         >
           <FontAwesomeIcon
             variant='light'
@@ -39,7 +32,7 @@ export function HomeHeader({
             size={22}
             color='#111827'
           />
-        </Pressable>
+        </CustomLink>
 
         <View className='flex flex-row gap-2'>
           {isAuctioneer && (
@@ -53,13 +46,9 @@ export function HomeHeader({
               {texts.createAuction}
             </CustomLink>
           )}
-          <Pressable
-            onPress={() =>
-              navigateWithAuth('/(tabs)/account/notifications?fromTab=true')
-            }
+          <CustomLink
+            href={'/(tabs)/account/notifications'}
             className='relative h-11 w-11 items-center justify-center rounded-full'
-            accessibilityRole='button'
-            accessibilityLabel='Notifications'
           >
             <FontAwesomeIcon
               name='bell'
@@ -77,7 +66,7 @@ export function HomeHeader({
                 </CustomText>
               </View>
             ) : null}
-          </Pressable>
+          </CustomLink>
         </View>
       </View>
     </View>

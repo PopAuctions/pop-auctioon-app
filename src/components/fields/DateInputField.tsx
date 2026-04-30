@@ -6,12 +6,17 @@ import {
   type FieldValues,
   type Path,
 } from 'react-hook-form';
-import DateTimePicker, { useDefaultStyles } from 'react-native-ui-datepicker';
+
+import DateTimePicker, {
+  useDefaultClassNames,
+} from 'react-native-ui-datepicker';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Lang } from '@/types/types';
+import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+import { cn } from '@/utils/cn';
 
 type DateInputFieldProps<T extends FieldValues> = {
   control: Control<T>;
@@ -58,9 +63,28 @@ export function DateInputField<T extends FieldValues>({
   title,
 }: DateInputFieldProps<T>) {
   const { locale } = useTranslation();
-  const defaultStyles = useDefaultStyles();
+  const defaultClassNames = useDefaultClassNames();
   const [isOpen, setIsOpen] = useState(false);
   const [draftDate, setDraftDate] = useState<Date | null>(null);
+
+  const pickerClassNames = {
+    ...defaultClassNames,
+    day_label: 'text-black',
+    month_label: 'text-black',
+    year_label: 'text-black',
+    weekday_label: 'text-black',
+    selected: 'bg-cinnabar border-cinnabar',
+    selected_label: 'text-white',
+    today: 'border-cinnabar',
+    month_selector_label: cn(
+      defaultClassNames.month_selector_label,
+      'text-cinnabar'
+    ),
+    year_selector_label: cn(
+      defaultClassNames.year_selector_label,
+      'text-cinnabar'
+    ),
+  };
 
   const safeMinimumDate = useMemo(
     () => minimumDate ?? new Date(),
@@ -136,7 +160,25 @@ export function DateInputField<T extends FieldValues>({
                         setDraftDate(date);
                       }
                     }}
-                    styles={defaultStyles}
+                    classNames={pickerClassNames}
+                    components={{
+                      IconPrev: (
+                        <FontAwesomeIcon
+                          name='chevron-left'
+                          variant='bold'
+                          size={20}
+                          color='cinnabar'
+                        />
+                      ),
+                      IconNext: (
+                        <FontAwesomeIcon
+                          name='chevron-right'
+                          variant='bold'
+                          size={20}
+                          color='cinnabar'
+                        />
+                      ),
+                    }}
                   />
 
                   <View className='mt-4 flex-row gap-3'>
@@ -155,7 +197,6 @@ export function DateInputField<T extends FieldValues>({
                         onPress={handleConfirm}
                       >
                         {TEXTS[locale].confirm}
-                        Confirm
                       </Button>
                     </View>
                   </View>

@@ -22,6 +22,7 @@ import {
   CustomArticleLiveAuto,
   HighestBidderState,
 } from '@/types/types';
+import { LiveHighestBidder } from './LiveHighestBidder';
 
 interface OverlayProps {
   insetsTop: number;
@@ -217,8 +218,8 @@ export const LiveAuctionOverlay = ({
                 className='items-center justify-center'
                 lang={locale}
                 title={{
-                  es: 'Compartir Subasta',
-                  en: 'Share Auction',
+                  es: 'Subasta en vivo en PopAuctioon',
+                  en: 'Live auction on PopAuctioon',
                 }}
               >
                 <View
@@ -244,6 +245,12 @@ export const LiveAuctionOverlay = ({
         </View>
 
         <HighestBidderProvider key={articleId}>
+          <LiveHighestBidder
+            insetsTop={backTop}
+            UI={UI}
+            Z={Z}
+          />
+
           {/* Article HUD */}
           <Animated.View
             onTouchStart={() => {

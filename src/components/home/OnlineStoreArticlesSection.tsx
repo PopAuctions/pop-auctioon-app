@@ -30,7 +30,7 @@ export const OnlineStoreArticlesSection = ({
     <View className='mt-2 w-full gap-2'>
       <CustomText
         type='h2'
-        className='text-left'
+        className='text-center'
       >
         {texts.onlineStoreTitle}
       </CustomText>

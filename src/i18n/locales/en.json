@@ -831,7 +831,10 @@
       "bidAmount": "Bid amount",
       "anyBidAmount": "Or enter any bid amount",
       "minBid": "Minimum bid is:",
-      "maxBid": "Maximum bid is:"
+      "maxBid": "Maximum bid is:",
+      "createAutomaticBid": "Configure automatic bid",
+      "automaticBid": "automatic bid configured",
+      "automaticBids": "automatic bids configured"
     }
   },
   "globals": {
