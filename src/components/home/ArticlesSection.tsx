@@ -38,76 +38,71 @@ export const ArticlesSection = ({
 }) => {
   const formatter = euroFormatter(lang);
 
+  const renderSection = (
+    title: string,
+    articles: SimpleArticle[],
+    ready: boolean
+  ) => {
+    if (!ready) {
+      return (
+        <View className='gap-3'>
+          <CustomText
+            type='h2'
+            className='text-left'
+          >
+            {title}
+          </CustomText>
+
+          <View className='w-full'>
+            <ArticleSliderSkeleton />
+          </View>
+        </View>
+      );
+    }
+
+    if (articles.length === 0) return null;
+
+    return (
+      <View className='gap-3'>
+        <CustomText
+          type='h2'
+          className='text-left'
+        >
+          {title}
+        </CustomText>
+
+        <View className='w-full'>
+          <ArticlesSlider
+            articles={articles}
+            lang={lang}
+            texts={{ currentBid: texts.currentBid }}
+            formatter={formatter}
+            commissionValue={commissionValue}
+          />
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View className='mt-6 w-full gap-8 pb-10'>
-      <View className='gap-3'>
-        <CustomText
-          type='h2'
-          className='text-left'
-        >
-          {texts.newestArticlesText}
-        </CustomText>
+      {renderSection(
+        texts.newestArticlesText,
+        newestArticles,
+        newestArticlesReady
+      )}
 
-        <View className='w-full'>
-          {newestArticlesReady ? (
-            <ArticlesSlider
-              articles={newestArticles}
-              lang={lang}
-              texts={{ currentBid: texts.currentBid }}
-              formatter={formatter}
-              commissionValue={commissionValue}
-            />
-          ) : (
-            <ArticleSliderSkeleton />
-          )}
-        </View>
-      </View>
+      {renderSection(
+        texts.featuredArticlesText,
+        featuredArticles,
+        featuredArticlesReady
+      )}
 
-      <View className='gap-3'>
-        <CustomText
-          type='h2'
-          className='text-left'
-        >
-          {texts.featuredArticlesText}
-        </CustomText>
-
-        <View className='w-full'>
-          {featuredArticlesReady ? (
-            <ArticlesSlider
-              articles={featuredArticles}
-              lang={lang}
-              texts={{ currentBid: texts.currentBid }}
-              formatter={formatter}
-              commissionValue={commissionValue}
-            />
-          ) : (
-            <ArticleSliderSkeleton />
-          )}
-        </View>
-      </View>
-
-      <View className='gap-3'>
-        <CustomText
-          type='h2'
-          className='text-left'
-        >
-          {texts.mostViewedArticlesText}
-        </CustomText>
-
-        <View className='w-full'>
-          {mostViewedArticlesReady ? (
-            <ArticlesSlider
-              articles={mostViewedArticles}
-              lang={lang}
-              texts={{ currentBid: texts.currentBid }}
-              formatter={formatter}
-              commissionValue={commissionValue}
-            />
-          ) : (
-            <ArticleSliderSkeleton />
-          )}
-        </View>
-      </View>
+      {renderSection(
+        texts.mostViewedArticlesText,
+        mostViewedArticles,
+        mostViewedArticlesReady
+      )}
     </View>
   );
 };
