@@ -82,9 +82,7 @@ export const PROTECTED_ENDPOINTS = {
   },
 
   // Onboarding (tutorial de primera vez)
-  ONBOARDING: {
-    SLIDES: '/onboarding/slides', // GET - Slides del tutorial
-  },
+  ONBOARDING: '/onboarding',
 } as const;
 
 // ========================================

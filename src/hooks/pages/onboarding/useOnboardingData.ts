@@ -1,22 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
-import type {
-  OnboardingSlide,
-  OnboardingVideo,
-  OnboardingTexts,
-} from '@/types/types';
+import type { OnboardingVideo } from '@/types/types';
 
 type OnboardingApiResponse = {
-  slides: OnboardingSlide[];
-  video: OnboardingVideo;
-  texts: OnboardingTexts;
+  videos: OnboardingVideo;
 };
 
 type UseOnboardingDataReturn = {
-  slides: OnboardingSlide[];
-  video: OnboardingVideo | null;
-  texts: OnboardingTexts;
+  videosData: OnboardingVideo | null;
   isLoading: boolean;
   error: string | null;
 };
@@ -27,13 +19,7 @@ type UseOnboardingDataReturn = {
  */
 export const useOnboardingData = (): UseOnboardingDataReturn => {
   const { protectedGet } = useSecureApi();
-  const [slides, setSlides] = useState<OnboardingSlide[]>([]);
-  const [video, setVideo] = useState<OnboardingVideo | null>(null);
-  const [texts, setTexts] = useState<OnboardingTexts>({
-    skip: { es: 'Omitir', en: 'Skip' },
-    next: { es: 'Siguiente', en: 'Next' },
-    start: { es: 'Empezar', en: 'Get Started' },
-  });
+  const [videosData, setVideosData] = useState<OnboardingVideo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,9 +30,9 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
         setError(null);
 
         const response = await protectedGet<OnboardingApiResponse>({
-          endpoint: PROTECTED_ENDPOINTS.ONBOARDING.SLIDES,
+          endpoint: PROTECTED_ENDPOINTS.ONBOARDING,
           options: {
-            timeout: 5000, // 5 seconds for JSON data
+            timeout: 5000,
           },
         });
 
@@ -58,23 +44,7 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
         }
 
         if (response.data) {
-          // Sort slides by order field
-          const sortedSlides = response.data.slides.sort(
-            (a, b) => (a.order || 0) - (b.order || 0)
-          );
-
-          // Transform API slides to add images
-          const transformedSlides = sortedSlides.map((slide) => ({
-            ...slide,
-            // Use Supabase Storage URLs directly (no proxy needed)
-            image: slide.imageUrl
-              ? { uri: slide.imageUrl }
-              : require('../../../../assets/icons/pop-auctioon-icon.png'),
-          }));
-
-          setSlides(transformedSlides);
-          setVideo(response.data.video ?? null);
-          setTexts(response.data.texts);
+          setVideosData(response.data.videos ?? null);
         }
       } catch (err) {
         console.error('ERROR_FETCH_ONBOARDING_CATCH', err);
@@ -89,9 +59,7 @@ export const useOnboardingData = (): UseOnboardingDataReturn => {
   }, [protectedGet]);
 
   return {
-    slides,
-    video,
-    texts,
+    videosData,
     isLoading,
     error,
   };
