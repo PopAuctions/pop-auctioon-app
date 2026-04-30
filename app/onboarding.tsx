@@ -7,23 +7,46 @@ import { Loading } from '@/components/ui/Loading';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { triggerHaptic } from '@/utils/triggerHaptic';
-import {
-  HAS_SEEN_ONBOARDING_KEY,
-  VIDEO_LENGTH_MS,
-} from '@/constants/onboarding';
+import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useEffect, useState } from 'react';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
+import { Lang } from '@/types/types';
+
+type OnboardingStep = 'language' | 'video';
+type OnboardingVideoLang = Lang | 'it';
+
+const texts = {
+  skip: { es: 'Omitir', en: 'Skip' },
+  next: { es: 'Siguiente', en: 'Next' },
+  start: { es: 'Empezar', en: 'Get Started' },
+};
 
 export default function OnboardingScreen() {
-  const router = useRouter();
-  const { locale, t } = useTranslation();
+  const { locale, t, changeLanguage } = useTranslation();
   const { navigateWithAuth } = useAuthNavigation();
   const { hasSeenOnboarding } = useOnboarding();
+  const { videosData, isLoading, error } = useOnboardingData();
+  const router = useRouter();
+  const [step, setStep] = useState<OnboardingStep>('language');
+  const [selectedLang, setSelectedLang] = useState<OnboardingVideoLang | null>(
+    null
+  );
   const [displayFooter, setDisplayFooter] = useState(false);
 
-  const { video, texts, isLoading, error } = useOnboardingData();
+  const selectedVideoUrl = selectedLang
+    ? videosData?.videos[selectedLang]
+    : null;
+
+  const handleSelectLanguage = async (lang: OnboardingVideoLang) => {
+    await triggerHaptic('selection');
+
+    changeLanguage(lang === 'it' ? 'es' : lang);
+    setSelectedLang(lang);
+    setDisplayFooter(false);
+    setStep('video');
+  };
 
   const markAsSeen = async () => {
     await AsyncStorage.setItem(HAS_SEEN_ONBOARDING_KEY, 'true');
@@ -47,27 +70,24 @@ export default function OnboardingScreen() {
     navigateWithAuth('/(tabs)/auth/register-user');
   };
 
-  useEffect(() => {
-    if (isLoading || !video) return;
-
-    let timeoutId: number | undefined;
-
+  const onVideoEnd = async () => {
     hasSeenOnboarding().then((seen) => {
       if (!seen) {
-        timeoutId = setTimeout(() => {
-          setDisplayFooter(true);
-        }, VIDEO_LENGTH_MS);
+        setDisplayFooter(true);
       }
     });
+  };
 
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+  useEffect(() => {
+    hasSeenOnboarding().then((seen) => {
+      if (seen) {
+        setSelectedLang(locale);
+        setDisplayFooter(false);
+        setStep('video');
       }
-    };
-  }, [hasSeenOnboarding, isLoading, video]);
+    });
+  }, [hasSeenOnboarding, router, locale]);
 
-  // Show loading state while fetching slides
   if (isLoading) {
     return (
       <>
@@ -83,8 +103,7 @@ export default function OnboardingScreen() {
     );
   }
 
-  // Show error state if fetch failed
-  if (error || !video) {
+  if (error || !videosData) {
     const handleGoHome = () => {
       router.replace({
         pathname: '/(tabs)/home',
@@ -137,17 +156,72 @@ export default function OnboardingScreen() {
     );
   }
 
+  if (step === 'language') {
+    return (
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+
+        <View className='flex-1 items-center justify-center bg-white px-8'>
+          <CustomText
+            type='h3'
+            className='mb-1 text-center'
+          >
+            Elige tu idioma
+          </CustomText>
+          <CustomText
+            type='body'
+            className='mb-1 text-center'
+          >
+            Choose your language
+          </CustomText>
+          <CustomText
+            type='body'
+            className='mb-1 text-center'
+          >
+            Scegli la tua lingua
+          </CustomText>
+          <View className='mt-4 w-full gap-2'>
+            <Button
+              mode='secondary'
+              onPress={() => handleSelectLanguage('es')}
+            >
+              Español
+            </Button>
+            <Button
+              mode='secondary'
+              onPress={() => handleSelectLanguage('en')}
+            >
+              English
+            </Button>
+            <Button
+              mode='secondary'
+              onPress={() => handleSelectLanguage('it')}
+            >
+              Italiano
+            </Button>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  if (!selectedVideoUrl) {
+    return null;
+  }
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
+
       <View
         className='flex-1'
-        style={{ backgroundColor: video.bgColor }}
+        style={{ backgroundColor: videosData?.bgColor }}
       >
-        {/* Video - Full screen, no controls */}
-        <VideoPlayer uri={video.videoUrl} />
+        <VideoPlayer
+          uri={selectedVideoUrl}
+          onEnd={onVideoEnd}
+        />
 
-        {/* Skip Button */}
         <View className='absolute right-0 top-0 z-10 px-6 pt-14'>
           <Pressable
             onPress={onSkip}
@@ -167,7 +241,6 @@ export default function OnboardingScreen() {
           </Pressable>
         </View>
 
-        {/* Footer: Login + Register */}
         {displayFooter && (
           <View className='absolute bottom-0 left-0 right-0 px-8 pb-12'>
             <View className='flex-row gap-4'>
@@ -178,6 +251,7 @@ export default function OnboardingScreen() {
               >
                 {t('loginPage.signIn')}
               </Button>
+
               <Button
                 mode='secondary'
                 onPress={onRegister}
