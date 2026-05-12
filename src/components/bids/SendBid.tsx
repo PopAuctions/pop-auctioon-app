@@ -1,9 +1,5 @@
 import { View, TextInput } from 'react-native';
-import type {
-  BiddingAmounts,
-  HighestBidderState,
-  LangMap,
-} from '@/types/types';
+import type { BiddingAmounts, HighestBidderState } from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
@@ -12,11 +8,10 @@ import { useSendBid } from '@/hooks/components/useSendBid';
 import { AMOUNT_PLACEHOLDER } from '@/constants';
 import { AutomaticBidModal } from '../modal/AutomaticBidModal';
 import { useState } from 'react';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { useUpsertAutoBid } from '@/hooks/pages/auto-bid/useUpsertAutoBid';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -37,11 +32,11 @@ export function SendBid({
   commissionPercentage,
   autoBidsAmount,
 }: SendBidProps) {
+  const { upsertAutoBid } = useUpsertAutoBid();
   const { locale } = useTranslation();
   const [automaticBidModalVisible, setAutomaticBidModalVisible] =
     useState(false);
   const [isAutomaticBidPending, setIsAutomaticBidPending] = useState(false);
-  const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
   const safeCommission = commissionPercentage ?? 0;
 
@@ -92,12 +87,9 @@ export function SendBid({
 
     setIsAutomaticBidPending(true);
     try {
-      const data = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.AUTO_BID.CREATE,
-        data: {
-          articleId: Number(articleId),
-          maxAmount: Number(amount),
-        },
+      const data = await upsertAutoBid({
+        articleId: Number(articleId),
+        maxAmount: Number(amount),
       });
 
       if (data.error) {
@@ -105,7 +97,7 @@ export function SendBid({
         return false;
       }
 
-      callToast({ variant: 'success', description: data.data });
+      callToast({ variant: 'success', description: data.success });
       return true;
     } catch (e) {
       callToast({
@@ -265,8 +257,8 @@ export function SendBid({
           en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
         }}
         extraMessage={{
-          es: 'Debes haber realizado al menos una puja manual antes de configurar una puja automática. Este proceso no crea una puja inmediata.',
-          en: 'You must place at least one manual bid before setting an automatic bid. This process does not place an immediate bid.',
+          es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
+          en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
         }}
         minAmount={computedMinBid}
       />
