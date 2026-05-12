@@ -422,6 +422,54 @@ export interface Database {
           },
         ];
       };
+      AutomaticBid: {
+        Row: {
+          articleId: number;
+          createdAt: string;
+          id: string;
+          isActive: boolean;
+          isEligible: boolean;
+          maxAmount: number;
+          updatedAt: string;
+          userId: string;
+        };
+        Insert: {
+          articleId: number;
+          createdAt?: string;
+          id?: string;
+          isActive?: boolean;
+          isEligible?: boolean;
+          maxAmount: number;
+          updatedAt?: string;
+          userId: string;
+        };
+        Update: {
+          articleId?: number;
+          createdAt?: string;
+          id?: string;
+          isActive?: boolean;
+          isEligible?: boolean;
+          maxAmount?: number;
+          updatedAt?: string;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'AutomaticBid_articleId_fkey';
+            columns: ['articleId'];
+            isOneToOne: false;
+            referencedRelation: 'Article';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'AutomaticBid_userId_fkey';
+            columns: ['userId'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Bids: {
         Row: {
           amount: number;
@@ -429,6 +477,7 @@ export interface Database {
           created_at: string;
           currentPrice: number;
           id: number;
+          source: Database['public']['Enums']['BidSource'];
           userId: string;
         };
         Insert: {
@@ -437,6 +486,7 @@ export interface Database {
           created_at?: string;
           currentPrice: number;
           id?: number;
+          source?: Database['public']['Enums']['BidSource'];
           userId: string;
         };
         Update: {
@@ -445,6 +495,7 @@ export interface Database {
           created_at?: string;
           currentPrice?: number;
           id?: number;
+          source?: Database['public']['Enums']['BidSource'];
           userId?: string;
         };
         Relationships: [
@@ -1384,6 +1435,17 @@ export interface Database {
         Args: { article_id: number; sold_price: number; user_id: string };
         Returns: Json;
       };
+      create_automatic_bid: {
+        Args: {
+          p_amount: number;
+          p_article_id: number;
+          p_triggering_bid_id?: number;
+          p_user_id: string;
+          p_user_image?: string;
+          p_username: string;
+        };
+        Returns: Json;
+      };
       create_bid: {
         Args: {
           p_amount: number;
@@ -1407,6 +1469,10 @@ export interface Database {
           today: string;
         };
         Returns: Json;
+      };
+      get_article_auto_bid_count: {
+        Args: { p_article_id: number };
+        Returns: number;
       };
       grant_article_to_second_user: {
         Args: { article_id: number; new_price: number; second_user_id: string };
@@ -1447,6 +1513,7 @@ export interface Database {
         | 'FINISHED'
         | 'IN_REVIEW'
         | 'PARTIALLY_AVAILABLE_CHANGES_MADE';
+      BidSource: 'MANUAL' | 'AUTOMATIC';
       InvoiceType: 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
       LiveAuctionState: 'PENDING' | 'LIVE' | 'FINISHED';
       OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED';
@@ -1614,6 +1681,7 @@ export const Constants = {
         'IN_REVIEW',
         'PARTIALLY_AVAILABLE_CHANGES_MADE',
       ],
+      BidSource: ['MANUAL', 'AUTOMATIC'],
       InvoiceType: ['USER', 'AUCTIONEER', 'HOST_AUCTIONEER'],
       LiveAuctionState: ['PENDING', 'LIVE', 'FINISHED'],
       OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED'],
