@@ -36,6 +36,8 @@ export type Bids = Database['public']['Tables']['Bids']['Row'] & {
   User: Pick<User, 'username' | 'profilePicture'>;
 };
 
+export type AutomaticBid = Database['public']['Tables']['AutomaticBid']['Row'];
+
 export type Auction = Database['public']['Tables']['Auction']['Row'];
 
 export type AuctionModeEnum = Database['public']['Enums']['AuctionMode'];
@@ -62,6 +64,22 @@ export type SimpleArticle = Pick<
   whenInAuction?: Date | null;
   minBidAmount?: number | null;
 };
+
+export interface AutoBidArticle {
+  id: string;
+  minBid: number;
+  maxAmount: number;
+  articleId: string;
+  isActive: boolean;
+  isEligible: boolean;
+  createdAt: string;
+  Article:
+    | (SimpleArticle & {
+        startingPrice: Pick<Article, 'startingPrice'>;
+        ArticleBid: Pick<ArticleBid, 'currentValue'> | null;
+      })
+    | null;
+}
 
 export type BlogArticle = Database['public']['Tables']['BlogArticle']['Row'];
 
@@ -902,4 +920,5 @@ export enum NotificationEventType {
   PAYMENT_RECEIVED = 'payment_received',
 
   SHIPPING_UPDATED = 'shipping_updated',
+  AUTO_BID_INELIGIBLE = 'auto_bid_inelegible',
 }
