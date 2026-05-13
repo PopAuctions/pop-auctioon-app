@@ -231,7 +231,9 @@ export const SECURE_ENDPOINTS = {
     CREATE: '/bids',
   },
   AUTO_BID: {
+    GET_ALL: '/auto-bid',
     CREATE: '/auto-bid',
+    DEACTIVATE: '/auto-bid',
     GET: (id: string): ApiEndpoint => `/auto-bid/${id}` as ApiEndpoint,
   },
   LIVE: {

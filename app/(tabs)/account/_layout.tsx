@@ -82,6 +82,13 @@ export default function AccountLayout() {
         }}
       />
       <Stack.Screen
+        name='automatic-bids'
+        options={{
+          title: t('screens.account.automaticBids'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
         name='addresses'
         options={{
           title: t('screens.account.addresses'),

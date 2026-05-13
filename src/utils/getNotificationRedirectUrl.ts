@@ -24,6 +24,8 @@ export const getNotificationRedirectUrl = ({
       return `/(tabs)/auctioneer/sold-articles/${metadata?.id}`;
     case NotificationEventType.OUTBID:
       return `/(tabs)/auctions/articles/${metadata?.id}`;
+    case NotificationEventType.AUTO_BID_INELIGIBLE:
+      return `/(tabs)/auctions/articles/${metadata?.id}`;
     default:
       return `/(tabs)/account/notifications`;
   }

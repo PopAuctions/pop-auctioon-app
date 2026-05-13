@@ -40,6 +40,12 @@ export const FIRST_SECTION = [
     href: '/(tabs)/account/offers-made',
   },
   {
+    name: 'auto-bids',
+    icon: 'bolt',
+    labelKey: 'screens.account.automaticBids',
+    href: '/(tabs)/account/automatic-bids',
+  },
+  {
     name: 'followed-auctions',
     icon: 'gavel',
     labelKey: 'screens.account.followedAuctions',
