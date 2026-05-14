@@ -25,6 +25,8 @@ export type User = Database['public']['Tables']['User']['Row'] & {
 
 export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
 
+export type Store = Database['public']['Tables']['Store']['Row'];
+
 export type PhoneOTP = Database['public']['Tables']['PhoneOTP']['Row'];
 
 export type UserDiscountCode =
@@ -403,10 +405,9 @@ export interface UserPayment {
   user: Partial<User>;
 }
 
-export type ArticleOwner = Pick<
-  User,
-  'id' | 'storeName' | 'email' | 'name' | 'lastName' | 'phoneNumber'
->;
+export type ArticleOwner = Pick<User, 'id' | 'email' | 'name' | 'lastName'> & {
+  Store: Pick<Store, 'name' | 'phoneNumber'>;
+};
 
 export interface CustomArticle {
   id: number;
