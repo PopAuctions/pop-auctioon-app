@@ -38,6 +38,11 @@ import { SignInAlertModal } from '@/components/modal/SignInAlertModal';
 import { AuctionStartedModalProvider } from '@/context/auction-started-context';
 import { AuctionStartedModal } from '@/components/modal/AuctionStartedModal';
 import { LanguageSyncEffect } from '@/components/auth/LanguageSyncEffect';
+import * as Application from 'expo-application';
+import { useFetchAppVersion } from '@/hooks/app/useFetchAppVersion';
+import { REQUEST_STATUS } from '@/constants';
+import { AppVersionGate } from '@/components/app/AppVersionGate';
+import { getVersionUpdateType } from '@/utils/appVersion';
 
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
@@ -95,6 +100,8 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+const localAppVersion = Application.nativeApplicationVersion;
+
 export default Sentry.wrap(function RootLayout() {
   const [loaded, error] = useFonts({
     Poppins_400Regular,
@@ -108,6 +115,15 @@ export default Sentry.wrap(function RootLayout() {
   const [fontError, setFontError] = useState<Error | null>(null);
   const [fontsReady, setFontsReady] = useState(false);
   const [animationFinished, setAnimationFinished] = useState(false);
+  const {
+    data: serverAppVersion,
+    status,
+    errorMessage: appVersionError,
+  } = useFetchAppVersion();
+  const updateType = getVersionUpdateType(
+    localAppVersion,
+    String(serverAppVersion)
+  );
 
   // Lock orientation to portrait immediately on mount
   useEffect(() => {
@@ -151,13 +167,26 @@ export default Sentry.wrap(function RootLayout() {
     }
   }, [fontsReady, animationFinished]);
 
-  if (fontError) {
+  if (fontError || appVersionError) {
     return <ErrorLoading />;
   }
 
-  if (!loaded || showSplash) {
+  if (
+    !loaded ||
+    showSplash ||
+    status === REQUEST_STATUS.idle ||
+    status === REQUEST_STATUS.loading
+  ) {
     return (
       <SplashLottie onAnimationFinish={() => setAnimationFinished(true)} />
+    );
+  }
+
+  if (updateType === 'force') {
+    return (
+      <TranslationProvider>
+        <AppVersionGate updateType={updateType} />
+      </TranslationProvider>
     );
   }
 
@@ -171,6 +200,9 @@ export default Sentry.wrap(function RootLayout() {
               <LanguageSyncEffect />
               <ProtectedRoute>
                 <RootLayoutNav />
+                {updateType === 'soft' && (
+                  <AppVersionGate updateType={updateType} />
+                )}
               </ProtectedRoute>
             </AuctionStartedModalProvider>
           </SignInAlertModalProvider>

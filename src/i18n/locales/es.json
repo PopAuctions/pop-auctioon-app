@@ -895,7 +895,7 @@
   },
   "errorLoading": {
     "title": "Error de Carga",
-    "fontError": "Error al cargar las fuentes. Por favor, reinicia la aplicación."
+    "fontError": "Error al cargar la información de la app. Por favor, reinicia la aplicación."
   },
   "chat": {
     "title": "Chat en vivo",

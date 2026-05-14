@@ -885,7 +885,7 @@
   },
   "errorLoading": {
     "title": "Loading Error",
-    "fontError": "Error loading fonts. Please restart the app."
+    "fontError": "Error loading app information. Please restart the app."
   },
   "chat": {
     "title": "Live chat",
