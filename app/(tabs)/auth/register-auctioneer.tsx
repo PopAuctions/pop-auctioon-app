@@ -99,7 +99,12 @@ export default function RegisterAuctioneerScreen() {
         },
       });
 
-      router.replace('/(tabs)/auth/login');
+      router.push({
+        pathname: '/(tabs)/auth/confirm-email',
+        params: {
+          email: result.email,
+        },
+      });
     } else if (result.error) {
       callToast({
         variant: 'error',

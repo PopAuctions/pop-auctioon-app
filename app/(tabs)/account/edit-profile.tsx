@@ -364,7 +364,7 @@ export default function EditProfileScreen() {
                     type='body'
                     className='mb-2 '
                   >
-                    {t('screens.editProfile.phoneNumber')}
+                    {t('screens.editProfile.phoneNumber')}*
                   </CustomText>
                   <Controller
                     control={control}
