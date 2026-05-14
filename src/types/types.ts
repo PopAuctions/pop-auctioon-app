@@ -880,6 +880,7 @@ export interface SignupData {
 
   // Additional fields for AUCTIONEER
   storeName?: string;
+  storePhoneNumber?: string;
   webPage?: string;
   socialMedia?: string;
   address?: string;

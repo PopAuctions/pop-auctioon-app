@@ -668,7 +668,7 @@ export default function EditProfileScreen() {
                 type='body'
                 className='mb-3 text-black'
               >
-                {t('screens.editProfile.uploadImage')}
+                {t('screens.editProfile.editImage')}
               </CustomText>
 
               <Controller

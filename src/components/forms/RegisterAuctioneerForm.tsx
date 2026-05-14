@@ -30,6 +30,12 @@ export function RegisterAuctioneerForm({
 
   return (
     <View>
+      <CustomText
+        type='subtitle'
+        className='mb-4 text-cinnabar'
+      >
+        {t('screens.editProfile.userInfo')}
+      </CustomText>
       {/* Name and Last Name Row */}
       <View className='mb-4 flex-row gap-3'>
         {/* Name */}
@@ -230,7 +236,7 @@ export function RegisterAuctioneerForm({
           type='body'
           className='text-gray-700'
         >
-          {t('screens.editProfile.phoneNumber')} *
+          {t('screens.editProfile.phoneNumber')}
         </CustomText>
         <Controller
           control={control}
@@ -262,6 +268,12 @@ export function RegisterAuctioneerForm({
       </View>
 
       <Divider className='mb-6' />
+      <CustomText
+        type='subtitle'
+        className='mb-4 text-cinnabar'
+      >
+        {t('screens.editProfile.storeInfo')}
+      </CustomText>
 
       {/* Store Name */}
       <View className='mb-4'>
@@ -286,6 +298,64 @@ export function RegisterAuctioneerForm({
             className='mt-1 text-red-500'
           >
             {getErrorMessage(errors.storeName.message, locale)}
+          </CustomText>
+        )}
+      </View>
+
+      {/* storePhoneNumber */}
+      <View className='mb-4'>
+        <CustomText type='body'>
+          {t('screens.editProfile.phoneNumber')} *
+        </CustomText>
+        <Controller
+          control={control}
+          name='storePhoneNumber'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder={t('screens.editProfile.phoneNumber')}
+              value={value}
+              onChangeText={onChange}
+              editable={!isLoading}
+            />
+          )}
+        />
+        <CustomText
+          type='bodysmall'
+          className='text-gray-500'
+        >
+          {t('screens.editProfile.includeCountryCode')}
+        </CustomText>
+        {errors.storePhoneNumber && (
+          <CustomText
+            type='bodysmall'
+            className='mt-1 text-red-500'
+          >
+            {getErrorMessage(errors.storePhoneNumber.message, locale)}
+          </CustomText>
+        )}
+      </View>
+
+      {/* CIF */}
+      <View className='mb-4'>
+        <CustomText type='body'>{t('screens.editProfile.cif')} *</CustomText>
+        <Controller
+          control={control}
+          name='cif'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder={t('screens.editProfile.cif')}
+              value={value}
+              onChangeText={onChange}
+              editable={!isLoading}
+            />
+          )}
+        />
+        {errors.cif && (
+          <CustomText
+            type='bodysmall'
+            className='mt-1 text-red-500'
+          >
+            {getErrorMessage(errors.cif.message, locale)}
           </CustomText>
         )}
       </View>
@@ -350,31 +420,6 @@ export function RegisterAuctioneerForm({
             className='mt-1 text-red-500'
           >
             {getErrorMessage(errors.socialMedia.message, locale)}
-          </CustomText>
-        )}
-      </View>
-
-      {/* CIF */}
-      <View className='mb-4'>
-        <CustomText type='body'>{t('screens.editProfile.cif')} *</CustomText>
-        <Controller
-          control={control}
-          name='cif'
-          render={({ field: { onChange, value } }) => (
-            <Input
-              placeholder={t('screens.editProfile.cif')}
-              value={value}
-              onChangeText={onChange}
-              editable={!isLoading}
-            />
-          )}
-        />
-        {errors.cif && (
-          <CustomText
-            type='bodysmall'
-            className='mt-1 text-red-500'
-          >
-            {getErrorMessage(errors.cif.message, locale)}
           </CustomText>
         )}
       </View>
@@ -523,7 +568,7 @@ export function RegisterAuctioneerForm({
       {/* Profile Picture */}
       <View className='mb-6'>
         <CustomText type='body'>
-          {t('screens.editProfile.uploadImage')}
+          {t('screens.editProfile.uploadLogo')}
         </CustomText>
         <Controller
           control={control}

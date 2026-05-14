@@ -274,12 +274,7 @@ export const AuctioneerRegisterSchema = z
       }),
     }),
     profilePicture: z.string().optional(),
-    phoneNumber: z.string().min(5, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
-    }),
+    phoneNumber: z.string().optional(),
     storePhoneNumber: z.string().min(5, {
       message: JSON.stringify({
         en: 'Required',
