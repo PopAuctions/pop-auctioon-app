@@ -95,6 +95,7 @@ export const SECURE_ENDPOINTS = {
     VARIABLES: '/config/variables',
     APP_SETTINGS: '/config/app-settings',
     FEATURE_FLAGS: '/config/feature-flags',
+    APP_VERSION: '/config/app-version',
   },
 
   ARTICLES: {
