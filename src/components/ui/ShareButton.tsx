@@ -1,7 +1,7 @@
 import { GestureResponderEvent, Keyboard, Platform, Share } from 'react-native';
 import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Button, ButtonMode } from './Button';
+import { Button, ButtonMode, ButtonSize } from './Button';
 import { useToast } from '@/hooks/useToast';
 import { Lang, LangMap } from '@/types/types';
 import * as Haptics from 'expo-haptics';
@@ -12,6 +12,7 @@ interface ShareButtonProps {
   className?: string;
   lang: Lang;
   title: LangMap;
+  size?: ButtonSize;
 }
 
 const baseUrl = process.env.EXPO_PUBLIC_BASE_URL as string;
@@ -22,6 +23,7 @@ export function ShareButton({
   className,
   lang,
   title,
+  size = 'large',
 }: ShareButtonProps) {
   const pathname = usePathname();
   const { callToast } = useToast(lang);
@@ -73,6 +75,7 @@ export function ShareButton({
       mode={mode}
       className={className}
       onPress={handlePress}
+      size={size}
     >
       {children}
     </Button>

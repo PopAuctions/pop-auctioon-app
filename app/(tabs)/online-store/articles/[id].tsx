@@ -12,6 +12,7 @@ import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlin
 import { OnlineStorePriceInfo } from '@/components/online-store/OnlineStorePriceInfo';
 import { ArticleOfferForm } from '@/components/online-store/ArticleOfferForm';
 import { CustomError } from '@/components/ui/CustomError';
+import { ShareButton } from '@/components/ui/ShareButton';
 
 export default function ArticlesDetailScreen() {
   const { t, locale } = useTranslation();
@@ -78,7 +79,7 @@ export default function ArticlesDetailScreen() {
             </View>
 
             {/* SECTION: Price & Offer */}
-            <View className='mx-auto mt-10 w-full flex-col justify-around gap-5  md:flex-row'>
+            <View className='mx-auto mt-5 w-full flex-col justify-around gap-5  md:flex-row'>
               <View className='w-full md:w-2/6'>
                 <OnlineStorePriceInfo
                   lang={locale}
@@ -104,7 +105,19 @@ export default function ArticlesDetailScreen() {
             </View>
 
             {/* SECTION: Specifications & Description & Observations */}
-            <View className='mt-10 w-full flex-col gap-3 md:flex-row md:gap-5'>
+            <View className='mt-5 w-full flex-col gap-3 md:flex-row md:gap-5'>
+              <ShareButton
+                lang={locale}
+                size='small'
+                className='w-1/2'
+                mode='secondary'
+                title={{
+                  es: '¡Mira este artículo!',
+                  en: 'Check out this article!',
+                }}
+              >
+                {t('screens.auction.share')}
+              </ShareButton>
               <ArticleSpecificationsSection
                 article={article}
                 articleLang={articleLang}

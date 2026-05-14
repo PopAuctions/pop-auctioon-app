@@ -102,7 +102,7 @@ export function ArticleOfferForm({
   };
 
   return (
-    <View className='flex flex-col space-y-2 p-6'>
+    <View className='flex flex-col px-6'>
       <View className='my-3'>
         <Input
           value={amount}
@@ -124,7 +124,7 @@ export function ArticleOfferForm({
 
       <Button
         mode='primary'
-        size='small'
+        size='large'
         disabled={isDisabled}
         isLoading={isLoading}
         className='mt-2'
