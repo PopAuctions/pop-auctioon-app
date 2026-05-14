@@ -451,6 +451,8 @@
       "name": "Name",
       "lastName": "Last Name",
       "username": "Username",
+      "userInfo": "User data",
+      "storeInfo": "Store data",
       "phoneNumber": "Phone Number",
       "phoneHint": "With country code",
       "storeName": "Store Name",

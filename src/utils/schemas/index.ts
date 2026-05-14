@@ -280,13 +280,19 @@ export const AuctioneerRegisterSchema = z
         es: 'Requerido',
       }),
     }),
-    address: z.string().min(1, {
+    storePhoneNumber: z.string().min(5, {
       message: JSON.stringify({
         en: 'Required',
         es: 'Requerido',
       }),
     }),
     cif: z.string().min(1, {
+      message: JSON.stringify({
+        en: 'Required',
+        es: 'Requerido',
+      }),
+    }),
+    address: z.string().min(1, {
       message: JSON.stringify({
         en: 'Required',
         es: 'Requerido',
@@ -547,6 +553,7 @@ export const AuctioneerEditSchema = z
     // dni: z.string().min(1, { message: 'Required' }),
     profilePicture: z.string().optional(),
     phoneNumber: z.string(),
+    storePhoneNumber: z.string(),
     address: z.string(),
     town: z.string(),
     province: z.string(),

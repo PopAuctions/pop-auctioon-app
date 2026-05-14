@@ -451,6 +451,8 @@
       "name": "Nombre",
       "lastName": "Apellido",
       "username": "Nombre de usuario",
+      "userInfo": "Información de usuario",
+      "storeInfo": "Información de la tienda",
       "phoneNumber": "Número de teléfono",
       "phoneHint": "Con código de país",
       "storeName": "Nombre de la tienda",

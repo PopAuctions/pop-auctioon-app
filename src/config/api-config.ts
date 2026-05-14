@@ -186,6 +186,7 @@ export const SECURE_ENDPOINTS = {
     HISTORY: '/user/history',
     FAVORITES: '/user/favorites',
     ADDRESSES: '/user/addresses',
+    STORE: '/user/store',
     CREATE_ADDRESS: '/user/addresses/create',
     CURRENT_USER: '/user/current',
     UPDATE_LANGUAGE: '/user/language',

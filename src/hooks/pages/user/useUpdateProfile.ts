@@ -90,6 +90,8 @@ export const useUpdateProfile = (): ActionResponse<null> & {
         // Campos adicionales (AUCTIONEER)
         if ('storeName' in data) {
           formData.append('storeName', data.storeName || '');
+          formData.append('cif', data.cif || '');
+          formData.append('storePhoneNumber', data.storePhoneNumber || '');
           formData.append('webPage', data.webPage || '');
           formData.append('socialMedia', data.socialMedia || '');
           formData.append('address', data.address || '');
