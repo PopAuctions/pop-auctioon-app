@@ -48,5 +48,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     }
   }, [auth, segments, segmentsKey, router]);
 
+  if (auth.state === 'loading' || auth.state === 'pending') {
+    return null;
+  }
+
   return <>{children}</>;
 };
