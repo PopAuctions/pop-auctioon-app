@@ -1,11 +1,43 @@
+import { CustomError } from '@/components/ui/CustomError';
 import { SmartBack } from '@/components/ui/SmartBack';
+import { REQUEST_STATUS } from '@/constants';
+import { useFetchUserStore } from '@/hooks/components/useFetchUserStore';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Stack } from 'expo-router';
+import { ActivityIndicator, View } from 'react-native';
 
 const INDEX_ROUTE = '/(tabs)/auctioneer';
 
 export default function AuctioneerLayout() {
   const { t } = useTranslation();
+  const { data: userStore, status: storeStatus } = useFetchUserStore();
+
+  if (
+    storeStatus === REQUEST_STATUS.idle ||
+    storeStatus === REQUEST_STATUS.loading ||
+    !userStore
+  ) {
+    return (
+      <View className='flex-1 items-center justify-center'>
+        <ActivityIndicator
+          size='large'
+          color='#d75639'
+        />
+      </View>
+    );
+  }
+
+  if (!userStore.active) {
+    return (
+      <CustomError
+        customMessage={{
+          en: 'Your account is not yet active. Wait for activation or contact support for more information.',
+          es: 'Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.',
+        }}
+        refreshRoute='/(tabs)/auctioneer'
+      />
+    );
+  }
 
   return (
     <Stack

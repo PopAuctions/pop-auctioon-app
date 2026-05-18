@@ -40,6 +40,7 @@ export default function RegisterAuctioneerScreen() {
       phoneNumber: '',
       profilePicture: '',
       storeName: '',
+      storePhoneNumber: '',
       webPage: '',
       socialMedia: '',
       address: '',
@@ -75,6 +76,7 @@ export default function RegisterAuctioneerScreen() {
         phoneNumber: data.phoneNumber || '',
         profilePicture: data.profilePicture || '',
         storeName: data.storeName || '',
+        storePhoneNumber: data.storePhoneNumber || '',
         webPage: data.webPage || '',
         socialMedia: data.socialMedia || '',
         address: data.address || '',
@@ -97,7 +99,12 @@ export default function RegisterAuctioneerScreen() {
         },
       });
 
-      router.replace('/(tabs)/auth/login');
+      router.push({
+        pathname: '/(tabs)/auth/confirm-email',
+        params: {
+          email: result.email,
+        },
+      });
     } else if (result.error) {
       callToast({
         variant: 'error',

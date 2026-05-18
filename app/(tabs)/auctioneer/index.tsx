@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { INDEX_OPTIONS } from '@/constants/auctioneer';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import { useFetchUserStore } from '@/hooks/components/useFetchUserStore';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
@@ -18,19 +19,29 @@ import { ScrollView } from 'react-native-gesture-handler';
 export default function AuctioneerTab() {
   const { t } = useTranslation();
   const { data: currentUser, status, errorMessage } = useGetCurrentUser();
+  const {
+    data: userStore,
+    status: storeStatus,
+    errorMessage: storeError,
+  } = useFetchUserStore();
   const { isNavigating } = useAuthNavigation();
   const shouldHide = useHideWhileStackBuilds();
 
   const storeInitials = useMemo(() => {
-    return currentUser?.storeName?.substring(0, 2).toUpperCase() ?? '';
-  }, [currentUser]);
+    return userStore?.name?.substring(0, 2).toUpperCase() ?? '';
+  }, [userStore]);
 
   if (shouldHide) {
     return <View className='flex-1 bg-white' />;
   }
 
   // Si no hay sesión, mostrar loading mientras ProtectedRoute maneja la redirección
-  if (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) {
+  if (
+    status === REQUEST_STATUS.loading ||
+    status === REQUEST_STATUS.idle ||
+    storeStatus === REQUEST_STATUS.idle ||
+    storeStatus === REQUEST_STATUS.loading
+  ) {
     return (
       <View className='flex-1 items-center justify-center'>
         <ActivityIndicator
@@ -41,10 +52,15 @@ export default function AuctioneerTab() {
     );
   }
 
-  if (status === REQUEST_STATUS.error || !currentUser) {
+  if (
+    status === REQUEST_STATUS.error ||
+    !currentUser ||
+    storeStatus === REQUEST_STATUS.error ||
+    !userStore
+  ) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage || storeError}
         refreshRoute='/(tabs)/auctioneer'
       />
     );
@@ -70,7 +86,7 @@ export default function AuctioneerTab() {
           <View className='mr-4 h-20 w-20 overflow-hidden rounded-full bg-neutral-200'>
             <CustomImage
               src={currentUser.profilePicture}
-              alt={`${currentUser.storeName} Image`}
+              alt={`${userStore.name} Image`}
               className='h-full w-full'
               resizeMode='cover'
             />
@@ -92,13 +108,13 @@ export default function AuctioneerTab() {
             type='h2'
             className='text-xl'
           >
-            {`${currentUser.storeName}`}
+            {`${userStore.name}`}
           </CustomText>
           <CustomText
             type='h4'
-            className={`text-base ${currentUser.active ? 'text-green-600' : 'text-red-600'}`}
+            className={`text-base ${userStore.active ? 'text-green-600' : 'text-red-600'}`}
           >
-            {currentUser.active
+            {userStore.active
               ? t('screens.auctioneer.auctioneerActive')
               : t('screens.auctioneer.auctioneerNotActive')}
           </CustomText>

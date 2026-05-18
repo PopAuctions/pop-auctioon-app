@@ -20,6 +20,7 @@ import type * as z from 'zod';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import { useFetchUserStore } from '@/hooks/components/useFetchUserStore';
 
 export default function EditProfileScreen() {
   const { t, locale } = useTranslation();
@@ -35,6 +36,11 @@ export default function EditProfileScreen() {
     errorMessage: fetchError,
   } = useGetCurrentUser();
   const {
+    data: userStoreData,
+    status: storeFetchStatus,
+    errorMessage: storeFetchError,
+  } = useFetchUserStore();
+  const {
     updateProfile,
     status: updateStatus,
     errorMessage: updateError,
@@ -45,10 +51,8 @@ export default function EditProfileScreen() {
     auth.state === 'authenticated' && auth.role
       ? auth.role
       : APP_USER_ROLES.USER;
-  const schema =
-    userRole === APP_USER_ROLES.AUCTIONEER
-      ? AuctioneerEditSchema
-      : UserEditSchema;
+  const isAuctioneer = userRole === APP_USER_ROLES.AUCTIONEER;
+  const schema = isAuctioneer ? AuctioneerEditSchema : UserEditSchema;
 
   // React Hook Form con schema dinámico según el rol
   const {
@@ -66,13 +70,14 @@ export default function EditProfileScreen() {
       username: '',
       phoneNumber: '',
       profilePicture: '',
-      ...(userRole === APP_USER_ROLES.AUCTIONEER && {
+      ...(isAuctioneer && {
         address: '',
         town: '',
         province: '',
         country: '',
         postalCode: '',
         webPage: '',
+        storePhoneNumber: '',
         socialMedia: '',
         storeName: '',
         cif: '',
@@ -92,21 +97,22 @@ export default function EditProfileScreen() {
       };
 
       // Agregar campos de AUCTIONEER si aplica
-      if (userRole === APP_USER_ROLES.AUCTIONEER) {
-        formData.address = currentUserData.address || '';
-        formData.town = currentUserData.town || '';
-        formData.province = currentUserData.province || '';
-        formData.country = currentUserData.country || '';
-        formData.postalCode = currentUserData.postalCode || '';
-        formData.webPage = currentUserData.webPage || '';
-        formData.socialMedia = currentUserData.socialMedia || '';
-        formData.storeName = currentUserData.storeName || '';
-        formData.cif = currentUserData.cif || '';
+      if (isAuctioneer) {
+        formData.address = userStoreData?.address || '';
+        formData.town = userStoreData?.town || '';
+        formData.province = userStoreData?.province || '';
+        formData.country = userStoreData?.country || '';
+        formData.postalCode = userStoreData?.postalCode || '';
+        formData.webPage = userStoreData?.webPage || '';
+        formData.socialMedia = userStoreData?.socialMedia || '';
+        formData.storeName = userStoreData?.name || '';
+        formData.storePhoneNumber = userStoreData?.phoneNumber ?? '';
+        formData.cif = userStoreData?.cif || '';
       }
 
       reset(formData);
     }
-  }, [currentUserData, userRole, reset]);
+  }, [currentUserData, userStoreData, isAuctioneer, reset]);
 
   // No useEffect for fetch errors - we handle it in the render
 
@@ -144,15 +150,22 @@ export default function EditProfileScreen() {
   };
 
   // Show loading while fetching user data
-  if (fetchStatus === REQUEST_STATUS.loading) {
+  if (
+    fetchStatus === REQUEST_STATUS.loading ||
+    storeFetchStatus === REQUEST_STATUS.loading
+  ) {
     return <Loading locale={locale} />;
   }
 
   // Show error if fetch failed or if we don't have user data
-  if (fetchStatus === REQUEST_STATUS.error || !currentUserData) {
+  if (
+    fetchStatus === REQUEST_STATUS.error ||
+    !currentUserData ||
+    (isAuctioneer && storeFetchStatus === REQUEST_STATUS.error)
+  ) {
     return (
       <CustomError
-        customMessage={fetchError}
+        customMessage={fetchError || storeFetchError}
         refreshRoute='/(tabs)/account/edit-profile'
       />
     );
@@ -171,10 +184,10 @@ export default function EditProfileScreen() {
           <View className='w-full md:max-w-[700px] md:self-center'>
             {/* Header */}
             <CustomText
-              type='h1'
-              className='mb-4 text-center text-cinnabar'
+              type='subtitle'
+              className='mb-4 text-cinnabar'
             >
-              {t('screens.editProfile.title')}
+              {t('screens.editProfile.userInfo')}
             </CustomText>
 
             {/* Name and Last Name Row */}
@@ -305,6 +318,13 @@ export default function EditProfileScreen() {
               )}
             </View>
 
+            <CustomText
+              type='subtitle'
+              className='mb-4 text-cinnabar'
+            >
+              {t('screens.editProfile.storeInfo')}
+            </CustomText>
+
             {/* Campos adicionales para AUCTIONEER */}
             {userRole === 'AUCTIONEER' && (
               <>
@@ -335,6 +355,37 @@ export default function EditProfileScreen() {
                       className='mt-1'
                     >
                       {getErrorMessage(errors.storeName.message, locale)}
+                    </CustomText>
+                  )}
+                </View>
+
+                <View className='mb-4'>
+                  <CustomText
+                    type='body'
+                    className='mb-2 '
+                  >
+                    {t('screens.editProfile.phoneNumber')}*
+                  </CustomText>
+                  <Controller
+                    control={control}
+                    name='storePhoneNumber'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value || ''}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder={t('screens.editProfile.phoneNumber')}
+                        keyboardType='phone-pad'
+                        editable={!isLoading}
+                      />
+                    )}
+                  />
+                  {'storePhoneNumber' in errors && errors.storePhoneNumber && (
+                    <CustomText
+                      type='error'
+                      className='mt-1'
+                    >
+                      {getErrorMessage(errors.storePhoneNumber.message, locale)}
                     </CustomText>
                   )}
                 </View>
@@ -617,7 +668,7 @@ export default function EditProfileScreen() {
                 type='body'
                 className='mb-3 text-black'
               >
-                {t('screens.editProfile.uploadImage')}
+                {t('screens.editProfile.editImage')}
               </CustomText>
 
               <Controller

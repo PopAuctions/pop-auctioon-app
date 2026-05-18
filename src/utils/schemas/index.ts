@@ -274,19 +274,20 @@ export const AuctioneerRegisterSchema = z
       }),
     }),
     profilePicture: z.string().optional(),
-    phoneNumber: z.string().min(5, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
-    }),
-    address: z.string().min(1, {
+    phoneNumber: z.string().optional(),
+    storePhoneNumber: z.string().min(5, {
       message: JSON.stringify({
         en: 'Required',
         es: 'Requerido',
       }),
     }),
     cif: z.string().min(1, {
+      message: JSON.stringify({
+        en: 'Required',
+        es: 'Requerido',
+      }),
+    }),
+    address: z.string().min(1, {
       message: JSON.stringify({
         en: 'Required',
         es: 'Requerido',
@@ -547,6 +548,7 @@ export const AuctioneerEditSchema = z
     // dni: z.string().min(1, { message: 'Required' }),
     profilePicture: z.string().optional(),
     phoneNumber: z.string(),
+    storePhoneNumber: z.string().min(5, { message: 'Required' }),
     address: z.string(),
     town: z.string(),
     province: z.string(),
@@ -572,27 +574,6 @@ export const AuctioneerEditSchema = z
     }
   )
   .superRefine((data, ctx) => {
-    // Validar phoneNumber
-    if (!data.phoneNumber || data.phoneNumber.trim().length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['phoneNumber'],
-        message: JSON.stringify({
-          en: 'Required',
-          es: 'Requerido',
-        }),
-      });
-    } else if (data.phoneNumber.length < 5) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['phoneNumber'],
-        message: JSON.stringify({
-          en: 'Min. 5 characters',
-          es: 'Mín. 5 caracteres',
-        }),
-      });
-    }
-
     // Validar address
     if (!data.address || data.address.trim().length === 0) {
       ctx.addIssue({

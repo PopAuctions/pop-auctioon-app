@@ -35,7 +35,7 @@ export const CustomError = ({
 
   return (
     <SafeAreaView
-      className='h-full w-full bg-white'
+      className='h-full w-full bg-white px-4'
       edges={['bottom']}
     >
       <View className='flex h-full w-full flex-col items-center justify-center text-center'>
@@ -62,12 +62,14 @@ export const CustomError = ({
         <View className='mt-4 flex flex-row gap-4'>
           <Button
             mode='primary'
+            size='small'
             onPress={handleRefresh}
           >
             {t('globals.refreshPage')}
           </Button>
           <Button
             mode='secondary'
+            size='small'
             onPress={handleGoToTabRoot}
           >
             {t('globals.goToHome')}
