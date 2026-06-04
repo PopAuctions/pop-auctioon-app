@@ -276,6 +276,7 @@ export const SECURE_ENDPOINTS = {
   // Payments (Stripe)
   PAYMENT: {
     CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
+    CREATE_REDSYS_SESSION: '/user/payments/create-redsys-session', // POST - Create Redsys redirect session
     CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
     REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
     CREATE_SINGLE_ARTICLE_PAYMENT:
