@@ -131,16 +131,19 @@ URL: /[lang]/check-sold-article/[id]
 
 ## 1. Decisiones de diseño
 
-| Aspecto                    | Decisión                               | Motivo                                                                    |
-| -------------------------- | -------------------------------------- | ------------------------------------------------------------------------- |
-| Modo checkout web          | **Redirección**                        | Sin PCI-DSS, misma arquitectura que la app                                |
-| Modo checkout app          | **Redirección** via `expo-web-browser` | Único modo que funciona en React Native sin SDK nativo                    |
-| Modo checkout web — Insite | **Descartado**                         | Widget JS embebido en iframe; no funciona en React Native                 |
-| Modo cobros — REST puro    | **Descartado para cobros**             | Requiere manejar datos de tarjeta en servidor → PCI-DSS nivel 1           |
-| Modo devoluciones          | **REST** solo desde admin web          | Admin solo existe en web; evita añadir endpoints de devolución en la app  |
-| DS_MERCHANT_ORDER          | Timestamp 10dígitos + 2hex random      | 12 chars, primeros 4 numéricos (regla Redsys); único; trazable            |
-| Webhook                    | `DS_MERCHANT_MERCHANTURL`              | Señal server-to-server que Redsys envía **antes** de redirigir al usuario |
-| `receiptUrl` en DB         | `null`                                 | Redsys no genera URL de recibo; se puede añadir página interna después    |
+| Aspecto                             | Decisión                                                                         | Motivo                                                                                                                          |
+| ----------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Modo checkout web                   | **Redirección**                                                                  | Sin PCI-DSS, misma arquitectura que la app                                                                                      |
+| Modo checkout app                   | **Redirección** via `expo-web-browser`                                           | Único modo que funciona en React Native sin SDK nativo                                                                          |
+| Modo checkout web — Insite          | **Descartado**                                                                   | Widget JS embebido en iframe; no funciona en React Native                                                                       |
+| Modo cobros — REST puro             | **Descartado para cobros**                                                       | Requiere manejar datos de tarjeta en servidor → PCI-DSS nivel 1                                                                 |
+| Modo devoluciones                   | **REST** solo desde admin web                                                    | Admin solo existe en web; evita añadir endpoints de devolución en la app                                                        |
+| DS_MERCHANT_ORDER                   | Timestamp 10dígitos + 2hex random                                                | 12 chars, primeros 4 numéricos (regla Redsys); único; trazable                                                                  |
+| Webhook                             | `DS_MERCHANT_MERCHANTURL`                                                        | Señal server-to-server que Redsys envía **antes** de redirigir al usuario                                                       |
+| `receiptUrl` en DB                  | `null`                                                                           | Redsys no genera URL de recibo; se puede añadir página interna después                                                          |
+| Rollout app móvil                   | **Dual-stack temporal: Stripe legado + Redsys nuevo**                            | Los usuarios de app no actualizan todos al mismo tiempo; el backend debe aceptar ambos flujos durante la transición             |
+| Compatibilidad de endpoints móviles | **Añadir endpoints nuevos; no mutar ni borrar los legacy en el cutover inicial** | Los binarios viejos ya salen compilados contra `create-intent`, webhook Stripe y config con `STRIPE_PUBLIC_KEY`                 |
+| Retiro de Stripe móvil              | **Por evidencia, no por fecha**                                                  | Solo se desactiva Stripe cuando el tráfico legacy de app haya caído a cero o a un umbral aceptado durante una ventana sostenida |
 
 ---
 
@@ -531,7 +534,7 @@ Añadir las variables del apartado 5.
 
 ## 8. Archivos a crear — App (Expo)
 
-### `src/hooks/payment/useRedsysPayment.ts` _(nuevo — reemplaza useStripePayment)_
+### `src/hooks/payment/useRedsysPayment.ts` _(nuevo — reemplaza useStripePayment en el release nuevo, sin obligar a borrar el legado todavía)_
 
 Misma interfaz pública que `useStripePayment`, compatible drop-in:
 
@@ -575,15 +578,53 @@ Añadir en `SECURE_ENDPOINTS.PAYMENT`:
 
 ```typescript
 PAYMENT: {
-  // ... endpoints existentes (mantener durante transición) ...
-  CREATE_REDSYS_SESSION: '/user/payments/create-redsys-session', // POST — nuevo
+  CREATE_INTENT: '/user/payments/create-intent', // LEGACY app: no borrar en el primer release
+  CREATE_REDSYS_SESSION: '/user/payments/create-redsys-session', // NUEVO app: Redsys
   REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // ya existe, sin cambio
 }
 ```
 
+### Compatibilidad de rollout móvil (crítico)
+
+El checkout web sí puede hacer cutover completo. **La app no**: cuando publiquemos Redsys, seguirán existiendo builds instalados que todavía intentarán pagar con Stripe hasta que el usuario actualice.
+
+Por tanto, el plan correcto para móvil es este:
+
+- **App legacy (sin update)** sigue usando su contrato actual: `create-intent` + Stripe SDK/app flow + `/api/webhooks/stripe`.
+- **App nueva** usa `create-redsys-session` + redirección Redsys.
+- **Endpoints compartidos y agnósticos al gateway** (`create-articles-payment`, `create-single-article-payment`, reject routes) se mantienen para ambos flujos.
+- **No reutilizar `create-intent` para Redsys** ni cambiar su payload/respuesta; eso rompería clientes ya publicados.
+- **No eliminar `STRIPE_PUBLIC_KEY` de `/api/mobile/secure/config`** mientras siga existiendo soporte legacy.
+
+Tabla de convivencia recomendada:
+
+| Cliente móvil | Inicio de pago                                                | Backend que debe seguir vivo                                                      |
+| ------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| App vieja     | `POST /api/mobile/secure/user/payments/create-intent`         | `payment-intent.ts`, `/api/webhooks/stripe`, `STRIPE_PUBLIC_KEY` en config        |
+| App nueva     | `POST /api/mobile/secure/user/payments/create-redsys-session` | `create-redsys-session.ts`, `/api/payments/redsys/launch`, `/api/webhooks/redsys` |
+
+### `src/app/api/mobile/secure/config/route.ts`
+
+Durante la transición debe exponer **ambos mundos**:
+
+- Mantener `STRIPE_PUBLIC_KEY` para builds viejos.
+- Añadir flags explícitas para el rollout nuevo, por ejemplo:
+
+```typescript
+{
+  stripePublicKey: 'pk_live_...',
+  payments: {
+    mobileDefaultGateway: 'redsys',
+    legacyStripeEnabled: true,
+  },
+}
+```
+
+La app nueva puede ignorar Stripe y usar Redsys directo, o leer este flag como kill switch. Lo importante para este plan es que el backend no deje huérfanos a los clientes viejos.
+
 ### `app/(tabs)/account/payment.tsx`
 
-Cambios mínimos — solo reemplazar el hook:
+Cambios mínimos en el **release nuevo** — solo reemplazar el hook:
 
 ```diff
 - import { useStripePayment } from '@/hooks/payment/useStripePayment';
@@ -606,7 +647,7 @@ El campo `clientIntent` que se pasa a `createPayment` será el `redsysOrderId` e
 
 ### `app/(tabs)/account/single-payment.tsx`
 
-Mismos cambios exactos que `payment.tsx`.
+Mismos cambios exactos que `payment.tsx` para el release nuevo.
 
 ### `src/hooks/pages/payment/useArticlesPayment.ts`
 
@@ -967,6 +1008,7 @@ Redsys espera `HTTP 200` en la respuesta del webhook. Si no recibe respuesta en 
 **Ubicación:** `src/__tests__/lib/payments/redsys-token-store.test.ts`
 
 **Correr:**
+
 ```bash
 npm run test -- redsys-token-store
 # o en modo watch:
@@ -975,37 +1017,42 @@ npm run test:watch -- redsys-token-store
 
 **Qué cubren (9 tests):**
 
-| # | Test | Qué verifica |
-|---|------|--------------|
-| 1 | `SESSION_TTL_MS equals 5 minutes` | La constante TTL son exactamente 300 000 ms |
-| 2 | `createSessionToken returns 64-char hex token` | El token es hex de 64 chars (32 bytes crypto-aleatorios) |
-| 3 | `createSessionToken generates unique tokens` | Dos llamadas producen tokens distintos |
-| 4 | `createSessionToken throws on DB insert error` | Si Supabase falla el insert, propaga el error |
-| 5 | `consumeSessionToken returns session on first use` | Token válido → devuelve la sesión completa |
-| 6 | `consumeSessionToken returns null for unknown token` | Token inexistente → `null` (no lanza) |
-| 7 | `consumeSessionToken returns null for used/expired token` | Fila con `used=true` → `null` (idempotencia) |
-| 8 | `consumeSessionToken returns null on DB error` | Error de Supabase → `null` (no propaga) |
-| 9 | `consumeSessionToken preserves lang and signedParams` | Los datos de la sesión llegan intactos al caller |
+| #   | Test                                                      | Qué verifica                                             |
+| --- | --------------------------------------------------------- | -------------------------------------------------------- |
+| 1   | `SESSION_TTL_MS equals 5 minutes`                         | La constante TTL son exactamente 300 000 ms              |
+| 2   | `createSessionToken returns 64-char hex token`            | El token es hex de 64 chars (32 bytes crypto-aleatorios) |
+| 3   | `createSessionToken generates unique tokens`              | Dos llamadas producen tokens distintos                   |
+| 4   | `createSessionToken throws on DB insert error`            | Si Supabase falla el insert, propaga el error            |
+| 5   | `consumeSessionToken returns session on first use`        | Token válido → devuelve la sesión completa               |
+| 6   | `consumeSessionToken returns null for unknown token`      | Token inexistente → `null` (no lanza)                    |
+| 7   | `consumeSessionToken returns null for used/expired token` | Fila con `used=true` → `null` (idempotencia)             |
+| 8   | `consumeSessionToken returns null on DB error`            | Error de Supabase → `null` (no propaga)                  |
+| 9   | `consumeSessionToken preserves lang and signedParams`     | Los datos de la sesión llegan intactos al caller         |
 
 **Diseño de mocks:** Los tests usan mocks de Jest para `supabaseAdmin`. El helper `makeChain()` devuelve un objeto con métodos encadenables (`.from().delete()...`, `.from().insert()...`, `.from().update()...`) que se resuelven al hacer `await` o llamar `.single()`. Los mocks `mockDelete`, `mockInsert`, `mockUpdate` son `jest.fn()` que se pueden configurar por test para simular éxito o error.
 
 ### Test E2E visual (manual, dev local)
 
 **Requisitos previos:**
+
 - `npm run dev` corriendo en `localhost:3000`
 - `ngrok http 3000` corriendo (actualizar `REDSYS_MERCHANT_URL`, `REDSYS_WEB_URLOK`, `REDSYS_WEB_URLKO` en `.env` con la URL ngrok)
 - Usuario de prueba: `rodrigosamayoamorales@gmail.com` con sesión activa
 
 **Flujo 1 — Múltiples artículos (subasta):**
+
 ```
 http://localhost:3000/es/payment?auctionId=28
 ```
+
 Seleccionar artículos NOT_PAID → continuar → Bridge page → formulario auto-submit → Redsys TPV test.
 
 **Flujo 2 — Artículo único (Segunda Oportunidad):**
+
 ```
 http://localhost:3000/es/single-payment?articleId=188
 ```
+
 (artículo `mini pearl crush`, oferta ACCEPTED)
 
 **Tarjeta de test Redsys:**
@@ -1016,6 +1063,7 @@ http://localhost:3000/es/single-payment?articleId=188
 | Caducidad | `12/26` |
 
 **Verificar en DB después del pago:**
+
 ```sql
 -- Token debe haberse consumido (used = true)
 SELECT token, used, expires_at FROM redsys_sessions ORDER BY created_at DESC LIMIT 5;
@@ -1027,6 +1075,7 @@ ORDER BY "createdAt" DESC LIMIT 3;
 ```
 
 **Reset de datos de prueba (para repetir el test):**
+
 ```sql
 -- Reset artículos a NOT_PAID
 UPDATE "UserArticlesWon" SET status = 'NOT_PAID', "userPaymentId" = NULL
@@ -1254,7 +1303,7 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 #### Día 7 — Hook `useRedsysPayment` + endpoints móvil 🟡 (3–5 h)
 
-**Objetivo**: adaptar la app para usar Redsys en lugar de Stripe.
+**Objetivo**: adaptar la app nueva para usar Redsys **sin romper los builds viejos que seguirán entrando por Stripe**.
 
 > ⚠️ Para contexto de la app, consultar `AGENTS.md` o `CLAUDE.md` de este repo — tienen la estructura de la app Expo.
 
@@ -1270,9 +1319,17 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
   - `initializePaymentSession(amount, selectedItems)` → POST `/payments/create-redsys-session` → guarda `redsysOrder` y `launchUrl`
   - `openPaymentBrowser()` → `WebBrowser.openAuthSessionAsync(launchUrl, 'popauctioonapp://')` → parsea URL de retorno
   - Devuelve `{ success: boolean, error?, redsysOrderId }`
-- [ ] Añadir `CREATE_REDSYS_SESSION` a `src/config/api-config.ts` en la app
+- [ ] **No borrar** `useStripePayment.ts` ni el endpoint `CREATE_INTENT` en esta fase; quedan como legado para clientes instalados sin update
+- [ ] Añadir `CREATE_REDSYS_SESSION` a `src/config/api-config.ts` en la app, manteniendo `CREATE_INTENT`
 - [ ] Actualizar `app/(tabs)/account/payment.tsx` en la app (ver diff en Sección 9 de este plan)
 - [ ] Actualizar `app/(tabs)/account/single-payment.tsx` en la app (mismos cambios)
+- [ ] Actualizar `src/app/api/mobile/secure/config/route.ts` en web backend para seguir devolviendo `STRIPE_PUBLIC_KEY` y añadir flags de rollout Redsys
+- [ ] Añadir observabilidad mínima del rollout móvil
+  - Log o métrica en `/create-intent` y `/create-redsys-session`
+  - Idealmente incluir versión/build de app si ya existe header disponible
+- [ ] QA con **dos clientes**
+  - Build viejo: debe seguir pagando por Stripe sin cambios
+  - Build nuevo: debe pagar por Redsys
 - [ ] Test en simulador iOS + Android
 
 ---
@@ -1311,29 +1368,42 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 ### Fase E — Limpieza final
 
-#### Día 9 — Eliminar Stripe 🟢 (1–2 h)
+#### Día 9 — Limpieza segura por etapas 🟡 (2–4 h)
 
-**Objetivo**: borrar todo rastro de Stripe del proyecto.
+**Objetivo**: limpiar Stripe donde ya no aporta valor, **sin romper a los usuarios de app que todavía no actualizaron**.
 
 **Archivos de contexto para la IA**:
 
 - `package.json` del web y de la app
-- `src/app/api/webhooks/stripe/route.ts` (a archivar/borrar)
-- `src/lib/payments/payment-intent.ts` (a borrar)
+- `src/app/api/webhooks/stripe/route.ts` (**legacy app backend**; no borrar todavía)
+- `src/lib/payments/payment-intent.ts` (**legacy app backend**; no borrar todavía)
 - `src/lib/payments/retrieve-payment-information.ts` (ya sin uso tras Días 5+6)
 
 **Tareas**:
 
 - [ ] Verificar que `retrieve-payment-information.ts` ya no tiene importadores: `grep -r "retrieve-payment-information" src/`
-- [ ] Borrar `src/lib/payments/payment-intent.ts`
 - [ ] Borrar `src/lib/payments/retrieve-payment-information.ts`
 - [ ] Borrar `src/lib/payments/process-single-article-payment.tsx` (código muerto verificado)
-- [ ] Archivar (o borrar) `src/app/api/webhooks/stripe/route.ts`
-- [ ] Archivar (o borrar) `src/app/api/mobile/secure/user/payments/create-intent/route.ts`
-- [ ] En web: `npm uninstall @stripe/react-stripe-js @stripe/stripe-js stripe`
-- [ ] En app: `npm uninstall @stripe/stripe-react-native` + eliminar `StripeProvider` de `app/_layout.tsx`
+- [ ] En web: `npm uninstall @stripe/react-stripe-js @stripe/stripe-js`
+- [ ] Mantener `stripe` server SDK mientras existan `create-intent` + `/api/webhooks/stripe` para app legacy
+- [ ] En app nueva: quitar `@stripe/stripe-react-native` + `StripeProvider` **solo si el release nuevo ya quedó 100% Redsys**
+- [ ] Mantener `src/app/api/mobile/secure/user/payments/create-intent/route.ts` durante coexistencia móvil
+- [ ] Mantener `src/lib/payments/payment-intent.ts` durante coexistencia móvil
+- [ ] Mantener `src/app/api/webhooks/stripe/route.ts` durante coexistencia móvil
+- [ ] Mantener `STRIPE_PUBLIC_KEY` en `/api/mobile/secure/config` durante coexistencia móvil
 - [ ] Verificar `npm run build` pasa sin errores
-- [ ] Limpiar variables Stripe de `.env.example` (dejar comentadas por si acaso)
+- [ ] Limpiar variables Stripe **web-only** de `.env.example` si ya no aplican, pero no borrar las que siga necesitando el backend móvil legado
+
+**Criterio de retiro real de Stripe móvil**:
+
+- Esperar a que la versión nueva de app esté publicada y con adopción suficiente.
+- Confirmar por logs/métricas que `create-intent` y `/api/webhooks/stripe` ya no reciben tráfico relevante.
+- Mantener una ventana de observación mínima de 2–4 semanas sin uso significativo antes de apagar endpoints legacy.
+- Solo entonces ejecutar el borrado definitivo de:
+  - `src/app/api/mobile/secure/user/payments/create-intent/route.ts`
+  - `src/lib/payments/payment-intent.ts`
+  - `src/app/api/webhooks/stripe/route.ts`
+  - `stripe` server SDK
 
 ---
 
@@ -1349,7 +1419,7 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 | 6   | B    | Checkout web (`/single-payment`) + test e2e | ⬜     |
 | 7   | C    | App: hook `useRedsysPayment` + endpoints    | ⬜     |
 | 8   | D    | Devoluciones admin                          | ⬜     |
-| 9   | E    | Limpieza Stripe                             | ⬜     |
+| 9   | E    | Limpieza Stripe segura / coexistencia app   | ⬜     |
 
 > Actualiza el ⬜ a ✅ conforme completas cada día.
 
@@ -1392,13 +1462,14 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 ### Fase C — App
 
-| #   | Tarea                                            | Dificultad | Estimado    | Notas                                                                                                                                                                               |
-| --- | ------------------------------------------------ | ---------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 12  | `useRedsysPayment.ts` en la app                  | 🟡 Medio   | **2–4 h**   | `WebBrowser.openAuthSessionAsync` + parsear deep link de vuelta.                                                                                                                    |
-| 13  | `api-config.ts` — añadir `CREATE_REDSYS_SESSION` | 🟢 Fácil   | **0.5 h**   |                                                                                                                                                                                     |
-| 14  | Actualizar `payment.tsx` y `single-payment.tsx`  | 🟡 Medio   | **3–5 h**   | Reemplazar lógica Stripe por el hook nuevo. Manejar `type: 'cancel'` (usuario cierra modal).                                                                                        |
-| 15  | Test en simulador iOS y Android                  | 🟡 Medio   | **3–5 h**   | Verificar que el in-app browser abre, procesa y cierra con el deep link `popauctioonapp://`. Android Custom Tab suele tener comportamientos distintos a iOS SFSafariViewController. |
-|     | **Total Fase C**                                 |            | **~9–15 h** |                                                                                                                                                                                     |
+| #   | Tarea                                           | Dificultad | Estimado     | Notas                                                                                                                                           |
+| --- | ----------------------------------------------- | ---------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 12  | `useRedsysPayment.ts` en la app                 | 🟡 Medio   | **2–4 h**    | `WebBrowser.openAuthSessionAsync` + parsear deep link de vuelta.                                                                                |
+| 13  | `api-config.ts` + config backend de app         | 🟡 Medio   | **1–2 h**    | Añadir `CREATE_REDSYS_SESSION` sin borrar `CREATE_INTENT`; mantener `STRIPE_PUBLIC_KEY` y flags de coexistencia en `/api/mobile/secure/config`. |
+| 14  | Actualizar `payment.tsx` y `single-payment.tsx` | 🟡 Medio   | **3–5 h**    | Reemplazar lógica Stripe por el hook nuevo en la app nueva. Manejar `type: 'cancel'` (usuario cierra modal).                                    |
+| 15  | QA coexistencia: build viejo + build nuevo      | 🟡 Medio   | **3–5 h**    | Verificar Stripe legado y Redsys nuevo en paralelo. Incluye iOS/Android si ambas builds están disponibles.                                      |
+| 16  | Observabilidad de adopción                      | 🟢 Fácil   | **1 h**      | Logs o métricas en `create-intent`, `create-redsys-session` y webhook Stripe para decidir el sunset real.                                       |
+|     | **Total Fase C**                                |            | **~10–17 h** |                                                                                                                                                 |
 
 ### Fase D — Devoluciones y anulaciones admin
 
@@ -1411,23 +1482,23 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 ### Fase E — Limpieza
 
-| #     | Tarea                                                            | Dificultad | Estimado   | Notas                                                   |
-| ----- | ---------------------------------------------------------------- | ---------- | ---------- | ------------------------------------------------------- |
-| 19–22 | Eliminar dependencias Stripe web + app, archivar `create-intent` | 🟢 Fácil   | **1–2 h**  | Verificar que `npm run build` pase sin errores después. |
-|       | **Total Fase E**                                                 |            | **~1–2 h** |                                                         |
+| #     | Tarea                                                       | Dificultad | Estimado   | Notas                                                                                               |
+| ----- | ----------------------------------------------------------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------- |
+| 19–22 | Limpieza Stripe segura + preservación de backend legacy app | 🟡 Medio   | **2–4 h**  | Web puede limpiarse antes; endpoints/backend Stripe móvil se retiran solo tras ventana de adopción. |
+|       | **Total Fase E**                                            |            | **~2–4 h** |                                                                                                     |
 
 ---
 
 ### Resumen total
 
-| Fase                     | Estimado     | Bloqueo principal                            |
-| ------------------------ | ------------ | -------------------------------------------- |
-| A — Backend              | 12–17 h      | `redsys-sign.ts` (criptografía crítica)      |
-| B — Web end-to-end       | 8–14 h       | Tunnel para webhook local (ngrok/Cloudflare) |
-| C — App                  | 9–15 h       | Comportamiento Android Custom Tab            |
-| D — Devoluciones/Anulac. | 6–9 h        | Probar fallback anulación→devolución         |
-| E — Limpieza             | 1–2 h        | —                                            |
-| **Total**                | **~36–57 h** | ≈ 5–7 días a jornada completa                |
+| Fase                     | Estimado     | Bloqueo principal                                                        |
+| ------------------------ | ------------ | ------------------------------------------------------------------------ |
+| A — Backend              | 12–17 h      | `redsys-sign.ts` (criptografía crítica)                                  |
+| B — Web end-to-end       | 8–14 h       | Tunnel para webhook local (ngrok/Cloudflare)                             |
+| C — App                  | 10–17 h      | Coexistencia build viejo/build nuevo + comportamiento Android Custom Tab |
+| D — Devoluciones/Anulac. | 6–9 h        | Probar fallback anulación→devolución                                     |
+| E — Limpieza             | 2–4 h        | Definir sunset real de Stripe móvil                                      |
+| **Total**                | **~38–61 h** | ≈ 5–8 días a jornada completa                                            |
 
 > La mayor incertidumbre es cuánto tiempo tarda Getnet en proveer las credenciales de test y si el entorno de sandbox tiene limitaciones. El desarrollo puro de código (sin esperas externas) debería estar en el extremo bajo del rango.
 
