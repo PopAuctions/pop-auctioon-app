@@ -157,7 +157,7 @@ App                              Next.js (web API)                    Supabase
  ├─ POST /user/payments/create-redsys-session ──────────────────────────►│
  │   { amount, selectedItems }           │  valida usuario               │
  │                                      │  genera DS_MERCHANT_ORDER ─────►
- │                                      │  (12 chars: PA + timestamp b36)│
+ │                                      │  (12 chars: 8 dígitos + 4 hex) │
  │                                      │  firma params HMAC SHA256      │
  │◄─ { sessionToken, launchUrl } ───────┤  guarda token efímero (5 min)  │
 ```
@@ -334,6 +334,8 @@ REDSYS_APP_URLOK=popauctioonapp://payment-result?status=ok
 REDSYS_APP_URLKO=popauctioonapp://payment-result?status=ko
 ```
 
+> `REDSYS_MERCHANT_CODE` es la única variable necesaria para el código de comercio. En cada entorno se configura con el valor que corresponda.
+
 ---
 
 ## 6. Archivos a crear — Web (Next.js)
@@ -359,7 +361,8 @@ Server action que genera los parámetros firmados y un token de sesión efímero
 ```typescript
 // Input:  amount (número), selectedItems (number[]), platform: 'web' | 'app', lang: string
 // Output: { sessionToken, launchUrl, redsysOrder }
-// Guarda en Redis/BullMQ o en memoria: { redsysOrder, amount, userId, expiresAt }
+// Guarda en `RedsysSessions` vía Supabase service role:
+// { token, redsysOrder, signedParams, userId, lang, expiresAt, used }
 ```
 
 ### `src/app/api/payments/redsys/launch/route.ts` _(nuevo — bridge page)_
@@ -608,14 +611,19 @@ Tabla de convivencia recomendada:
 Durante la transición debe exponer **ambos mundos**:
 
 - Mantener `STRIPE_PUBLIC_KEY` para builds viejos.
+- Mantener el envelope actual de respuesta del endpoint:
+  `{ success, config, user, level, timestamp }`
 - Añadir flags explícitas para el rollout nuevo, por ejemplo:
 
 ```typescript
 {
-  stripePublicKey: 'pk_live_...',
-  payments: {
-    mobileDefaultGateway: 'redsys',
-    legacyStripeEnabled: true,
+  success: true,
+  config: {
+    STRIPE_PUBLIC_KEY: 'pk_live_...',
+    payments: {
+      mobileDefaultGateway: 'redsys',
+      legacyStripeEnabled: true,
+    },
   },
 }
 ```
@@ -661,22 +669,22 @@ Sin cambios — ya usa `clientIntent` como string genérico; el valor simplement
 
 Los mismos campos de `UserPayment` almacenan los valores nuevos:
 
-| Campo DB        | Valor Stripe (actual)                 | Valor Redsys (nuevo)                        |
-| --------------- | ------------------------------------- | ------------------------------------------- |
-| `paymentIntent` | `pi_3PxxxxxSTRIPE`                    | `PA1716abc123` (12 chars, base36 timestamp) |
-| `chargeId`      | `ch_3PxxxxxSTRIPE`                    | `123456` (Ds_AuthorisationCode)             |
-| `receiptUrl`    | `https://pay.stripe.com/receipts/...` | `null`                                      |
-| `status`        | `PENDING` / `APPROVED` / `REJECTED`   | Sin cambio                                  |
-| `articlesPaid`  | `[1, 2, 3]`                           | Sin cambio                                  |
+| Campo DB        | Valor Stripe (actual)                 | Valor Redsys (nuevo)                            |
+| --------------- | ------------------------------------- | ----------------------------------------------- |
+| `paymentIntent` | `pi_3PxxxxxSTRIPE`                    | `17162345ABCD` (12 chars, primeros 4 numéricos) |
+| `chargeId`      | `ch_3PxxxxxSTRIPE`                    | `123456` (Ds_AuthorisationCode)                 |
+| `receiptUrl`    | `https://pay.stripe.com/receipts/...` | `null`                                          |
+| `status`        | `PENDING` / `APPROVED` / `REJECTED`   | Sin cambio                                      |
+| `articlesPaid`  | `[1, 2, 3]`                           | Sin cambio                                      |
 
-### Tabla `redsys_sessions` — nueva migración
+### Tabla `RedsysSessions` — nueva migración
 
 Almacén distribuido para los tokens efímeros de sesión Redsys. **Reemplaza el `Map` en memoria de `redsys-token-store.ts`**, que fallaba en producción serverless porque cada instancia de Vercel tiene su propio proceso Node.js (ver §11 → Token store en producción).
 
-**Migración aplicada en Dev:** `create_redsys_sessions`
+**Migración aplicada en Dev:** crear/renombrar `RedsysSessions`
 
 ```sql
-CREATE TABLE redsys_sessions (
+CREATE TABLE "RedsysSessions" (
   token TEXT PRIMARY KEY,
   redsys_order TEXT NOT NULL,
   signed_params JSONB NOT NULL,
@@ -688,13 +696,15 @@ CREATE TABLE redsys_sessions (
 );
 
 -- Index to speed up cleanup of expired rows
-CREATE INDEX redsys_sessions_expires_at_idx ON redsys_sessions (expires_at);
+CREATE INDEX "RedsysSessions_expires_at_idx" ON "RedsysSessions" (expires_at);
 
 -- No direct user access: only service role (bypasses RLS) can read/write
-ALTER TABLE redsys_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "RedsysSessions" ENABLE ROW LEVEL SECURITY;
 ```
 
 **Acceso**: sólo vía `supabaseAdmin` (service role key, bypasses RLS). Nunca se expone al cliente.
+
+> **Estado real del repo**: `src/types/supabase.ts` ya refleja la tabla `RedsysSessions`, así que en la **DB de dev sí existe**. Pero en este repo no aparece un archivo SQL/migración versionado para crearla/renombrarla. Antes de depender de esto para más entornos o para reproducibilidad, hay que commitear la migración real.
 
 **Garantía de single-use**: `consumeSessionToken` usa un `UPDATE ... WHERE used = false AND expires_at > now() RETURNING *`. La atomicidad de Postgres garantiza que sólo una instancia puede consumir el token, aunque dos instancias lleguen simultáneamente.
 
@@ -777,9 +787,9 @@ El sufijo aleatorio de 16 bits (65 536 valores por ms) hace que las colisiones s
 ### Token efímero de sesión
 
 - TTL: 5 minutos
-- Almacenamiento: Redis via ioredis/BullMQ (ya existe en el proyecto) o en-memory con `Map` + `setTimeout`
-- El token contiene: `{ redsysOrder, signedParams: { Ds_SignatureVersion, Ds_MerchantParameters, Ds_Signature }, userId, expiresAt }`
-- Se invalida al usarse (single-use)
+- Almacenamiento real actual: tabla `RedsysSessions` en Supabase, consumida con `supabaseAdmin`
+- El token contiene: `{ redsysOrder, signedParams: { Ds_SignatureVersion, Ds_MerchantParameters, Ds_Signature }, userId, lang, expiresAt }`
+- Se invalida al usarse (single-use) mediante `UPDATE ... WHERE used = false ... RETURNING *`
 
 ### Verificación del webhook
 
@@ -845,7 +855,7 @@ Revisión completa de la cadena escritura BD → notificación tras introducir R
 
 | Componente                                   | ¿Toca Redsys?                                            | ¿Cambia su escritura en BD?                                                                                                                                                               | ¿Afecta notificaciones?                                                                       |
 | -------------------------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `create-articles-payment.ts`                 | No — sigue insertando `UserPayment` con `status=PENDING` | `paymentIntent` ahora contiene `PA1abc...` en lugar de `pi_xxx` (mismo tipo `text`)                                                                                                       | No — el insert PENDING no dispara push                                                        |
+| `create-articles-payment.ts`                 | No — sigue insertando `UserPayment` con `status=PENDING` | `paymentIntent` ahora contiene `17162345ABCD` en lugar de `pi_xxx` (mismo tipo `text`)                                                                                                    | No — el insert PENDING no dispara push                                                        |
 | `create-article-payment.ts`                  | No — inserta `UserPayment` con `auctionId=null`          | Igual que arriba                                                                                                                                                                          | No                                                                                            |
 | `processArticlesPayment()`                   | Sí — invocado por webhook Redsys                         | UPDATE `status=APPROVED`, `chargeId=Ds_AuthorisationCode`, `receiptUrl=null`. Mismas escrituras downstream (`UserArticlesWon`, `ArticleSecondChance`, `Article.sold`, `UserDiscountCode`) | Dispara CDC → push automático ✅                                                              |
 | `processSingleArticle` (helper interno)      | Indirecto vía `processArticlesPayment`                   | Sin cambio                                                                                                                                                                                | Sin cambio                                                                                    |
@@ -1066,7 +1076,7 @@ http://localhost:3000/es/single-payment?articleId=188
 
 ```sql
 -- Token debe haberse consumido (used = true)
-SELECT token, used, expires_at FROM redsys_sessions ORDER BY created_at DESC LIMIT 5;
+SELECT token, used, expires_at FROM "RedsysSessions" ORDER BY created_at DESC LIMIT 5;
 
 -- UserPayment debe estar APPROVED
 SELECT status, "paymentIntent", "chargeId" FROM "UserPayment"
@@ -1183,7 +1193,7 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
   - Genera `redsysOrder` con `generateRedsysOrder()`
   - Construye params Redsys (amount en céntimos, **URLs concatenando `?order=${redsysOrder}` al final** para que las páginas de retorno puedan identificar el pago)
   - Firma con `signParamsRedirection()`
-  - Guarda token efímero en `src/lib/payments/redsys-token-store.ts` (Map en memoria, TTL 5 min, single-use): `{ redsysOrder, signedParams, userId, expiresAt, used }`
+  - Guarda token efímero en `src/lib/payments/redsys-token-store.ts` (tabla `RedsysSessions`, TTL 5 min, single-use): `{ redsysOrder, signedParams, userId, lang, expiresAt, used }`
   - Devuelve `{ sessionToken, launchUrl: '/api/payments/redsys/launch?token=TOKEN', redsysOrder }`
 - [x] Crear `src/app/api/payments/redsys/launch/route.ts`
   - `GET ?token=SESSION_TOKEN`
@@ -1211,12 +1221,9 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
   - Solo se activa cuando `pathname.startsWith('/api/payments/redsys/launch')`
   - Eliminados `scriptSrc`/`frameSrc` de `js.stripe.com` para rutas de pago
 - [x] Añadir variables al `.env.example` — bloque completo Redsys + `CRON_SECRET`
-- [x] Crear `src/app/api/auto/cleanup-pending-payments/route.ts`
-  - `GET` → Vercel Cron (auth por `CRON_SECRET`)
-  - `POST` → trigger manual (auth por `SUPA_AUTO_AUCTION_SECRET`)
-  - Rechaza `UserPayment` con `status=PENDING` y `createdAt < now() - 2h`
-  - **Nota**: el cron NO está configurado en `vercel.json` — la limpieza se hará antes de cada revisión de PENDING (antes de insertar un nuevo pago), no de forma periódica. El archivo existe para trigger manual si hace falta.
-- [x] `vercel.json` — creado pero sin crons configurados (`{}`)
+- [ ] Sin cron job ni `vercel.json`
+  - No se usará cron administrado por Vercel
+  - La limpieza queda en el rechazo best-effort al reintentar pagos y soporte manual si alguna vez hiciera falta
 - [x] `pnpm check-all` pasa limpio (exit 0, 89/89 tests, sin errores ESLint ni prettier)
 
 **Variables de entorno para Redsys** (ver `.env.example`):
@@ -1531,21 +1538,20 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 ### Paso 2 — Actualizar variables de entorno (servidor / Vercel)
 
-| Variable                    | Valor en test                               | Valor en producción                                |
-| --------------------------- | ------------------------------------------- | -------------------------------------------------- |
-| `REDSYS_ENVIRONMENT`        | `test`                                      | `prod`                                             |
-| `REDSYS_MERCHANT_CODE`      | `48491625` ✅ ya correcto                   | `48491625` — **no cambia**                         |
-| `REDSYS_TERMINAL`           | `001` ✅ ya correcto                        | `001` — **no cambia**                              |
-| `REDSYS_MERCHANT_KEY`       | `sq7HjrUOBfKmC576ILgskD5srU870gJ7`          | clave SHA-256 real de Getnet                       |
-| `REDSYS_MERCHANT_KEY_REST`  | `sq7HjrUOBfKmC576`                          | clave SHA-512 real de Getnet                       |
-| `REDSYS_MERCHANT_URL`       | (vacío o tunnel ngrok)                      | `https://app.popauction.es/api/webhooks/redsys`    |
-| `REDSYS_WEB_URLOK`          | (vacío o localhost)                         | `https://app.popauction.es/{lang}/payment/success` |
-| `REDSYS_WEB_URLKO`          | (vacío o localhost)                         | `https://app.popauction.es/{lang}/payment/error`   |
-| `REDSYS_APP_URLOK`          | `popauctioonapp://payment-result?status=ok` | igual (deep link no cambia)                        |
-| `REDSYS_APP_URLKO`          | `popauctioonapp://payment-result?status=ko` | igual (deep link no cambia)                        |
-| `REDSYS_TEST_MERCHANT_CODE` | `999008881`                                 | puede borrarse o dejarse vacío (no se lee en prod) |
+| Variable                   | Valor en test                               | Valor en producción                                |
+| -------------------------- | ------------------------------------------- | -------------------------------------------------- |
+| `REDSYS_ENVIRONMENT`       | `test`                                      | `prod`                                             |
+| `REDSYS_MERCHANT_CODE`     | `48491625` ✅ ya correcto                   | `48491625` — **no cambia**                         |
+| `REDSYS_TERMINAL`          | `001` ✅ ya correcto                        | `001` — **no cambia**                              |
+| `REDSYS_MERCHANT_KEY`      | `sq7HjrUOBfKmC576ILgskD5srU870gJ7`          | clave SHA-256 real de Getnet                       |
+| `REDSYS_MERCHANT_KEY_REST` | `sq7HjrUOBfKmC576`                          | clave SHA-512 real de Getnet                       |
+| `REDSYS_MERCHANT_URL`      | (vacío o tunnel ngrok)                      | `https://app.popauction.es/api/webhooks/redsys`    |
+| `REDSYS_WEB_URLOK`         | (vacío o localhost)                         | `https://app.popauction.es/{lang}/payment/success` |
+| `REDSYS_WEB_URLKO`         | (vacío o localhost)                         | `https://app.popauction.es/{lang}/payment/error`   |
+| `REDSYS_APP_URLOK`         | `popauctioonapp://payment-result?status=ok` | igual (deep link no cambia)                        |
+| `REDSYS_APP_URLKO`         | `popauctioonapp://payment-result?status=ko` | igual (deep link no cambia)                        |
 
-> `REDSYS_MERCHANT_CODE=48491625` es tu código real de comercio Getnet y es válido en **ambos entornos**. En test, `create-redsys-session.ts` usa `REDSYS_TEST_MERCHANT_CODE=999008881` cuando `REDSYS_ENVIRONMENT=test` (para que las peticiones vayan al servidor de sandbox `sis-t.redsys.es`). En prod, usa `REDSYS_MERCHANT_CODE` directamente.
+> `REDSYS_MERCHANT_CODE=48491625` es tu código real de comercio Getnet y es válido en **ambos entornos**. Es la única variable que usaremos para el merchant code.
 
 ---
 
