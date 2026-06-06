@@ -1306,44 +1306,59 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 ---
 
-### Fase C — App móvil (Expo)
+### Fase C - App movil (Expo)
 
-#### Día 7 — Hook `useRedsysPayment` + endpoints móvil 🟡 (3–5 h)
+#### Dia 7 - Hook `useRedsysPayment` + endpoints movil (hecho en codigo, pendiente QA) (3-5 h)
 
-**Objetivo**: adaptar la app nueva para usar Redsys **sin romper los builds viejos que seguirán entrando por Stripe**.
+**Objetivo**: adaptar la app nueva para usar Redsys **sin romper los builds viejos que seguiran entrando por Stripe**.
 
-> ⚠️ Para contexto de la app, consultar `AGENTS.md` o `CLAUDE.md` de este repo — tienen la estructura de la app Expo.
+> Para contexto de la app, consultar `AGENTS.md` o `CLAUDE.md` de este repo.
 
 **Archivos de contexto para la IA**:
 
-- Hook actual en la app: `src/hooks/payment/useStripePayment.ts` (en el repo de la app)
-- `app/(tabs)/account/payment.tsx` (en el repo de la app)
-- `src/app/api/mobile/secure/user/payments/create-redsys-session/route.ts` (Día 3, ya creado)
+- Hook actual en la app: `src/hooks/payment/useStripePayment.ts` (repo app Expo)
+- `app/(tabs)/account/payment.tsx` (repo app Expo)
+- `app/(tabs)/account/single-payment.tsx` (repo app Expo)
+- `src/app/api/mobile/secure/user/payments/create-redsys-session/route.ts` (repo web)
+- `src/app/api/mobile/secure/config/route.ts` (repo web)
 
-**Tareas**:
+**Checklist dia 7**:
 
-- [ ] Crear `src/hooks/payment/useRedsysPayment.ts` en la app
-  - `initializePaymentSession(amount, selectedItems)` → POST `/payments/create-redsys-session` → guarda `redsysOrder` y `launchUrl`
-  - `openPaymentBrowser()` → `WebBrowser.openAuthSessionAsync(launchUrl, 'popauctioonapp://')` → parsea URL de retorno
+- [x] Crear `src/hooks/payment/useRedsysPayment.ts` en la app
+  - `initializePaymentSession(amount, selectedItems)` -> POST `/payments/create-redsys-session` -> guarda `redsysOrder` y `launchUrl`
+  - `openPaymentBrowser()` -> `WebBrowser.openAuthSessionAsync(launchUrl, 'popauctioonapp://')` -> parsea URL de retorno
   - Devuelve `{ success: boolean, error?, redsysOrderId }`
-- [ ] **No borrar** `useStripePayment.ts` ni el endpoint `CREATE_INTENT` en esta fase; quedan como legado para clientes instalados sin update
-- [ ] Añadir `CREATE_REDSYS_SESSION` a `src/config/api-config.ts` en la app, manteniendo `CREATE_INTENT`
-- [ ] Actualizar `app/(tabs)/account/payment.tsx` en la app (ver diff en Sección 9 de este plan)
-- [ ] Actualizar `app/(tabs)/account/single-payment.tsx` en la app (mismos cambios)
-- [ ] Actualizar `src/app/api/mobile/secure/config/route.ts` en web backend para seguir devolviendo `STRIPE_PUBLIC_KEY` y añadir flags de rollout Redsys
-- [ ] Añadir observabilidad mínima del rollout móvil
-  - Log o métrica en `/create-intent` y `/create-redsys-session`
-  - Idealmente incluir versión/build de app si ya existe header disponible
+- [x] No borrar `useStripePayment.ts` ni el endpoint `CREATE_INTENT` en esta fase
+- [x] Anadir `CREATE_REDSYS_SESSION` a `src/config/api-config.ts` en la app, manteniendo `CREATE_INTENT`
+- [x] Actualizar `app/(tabs)/account/payment.tsx` en la app
+- [x] Actualizar `app/(tabs)/account/single-payment.tsx` en la app
+- [x] Actualizar `src/app/api/mobile/secure/config/route.ts` en web backend para seguir devolviendo `STRIPE_PUBLIC_KEY` y anadir flags de rollout Redsys
+- [x] Anadir observabilidad minima del rollout movil
+  - Log en `/create-intent`
+  - Log en `/create-redsys-session`
+  - Log en webhook Stripe
+  - Log en webhook Redsys
 - [ ] QA con **dos clientes**
   - Build viejo: debe seguir pagando por Stripe sin cambios
   - Build nuevo: debe pagar por Redsys
-- [ ] Test en simulador iOS + Android
+- [ ] Test en simulador iOS + Android / dispositivo real
+
+**Cambios aplicados en esta iteracion**:
+
+- **App Expo**
+  - `src/hooks/payment/useRedsysPayment.ts` creado
+  - `src/utils/payments/parse-redsys-return-url.ts` creado
+  - `src/config/api-config.ts` actualizado con `CREATE_REDSYS_SESSION`
+  - `app/(tabs)/account/payment.tsx` migrado a Redsys
+  - `app/(tabs)/account/single-payment.tsx` migrado a Redsys
+- **Web backend**
+  - `src/app/api/mobile/secure/config/route.ts` actualizado con `MOBILE_PAYMENT_ROLLOUT` y `REDSYS_MERCHANT_CODE`
+  - `src/app/api/mobile/secure/user/payments/create-intent/route.ts` con logs de coexistencia Stripe
+  - `src/app/api/mobile/secure/user/payments/create-redsys-session/route.ts` con logs de adopcion Redsys
+  - `src/app/api/webhooks/stripe/route.ts` con observabilidad minima
+  - `src/app/api/webhooks/redsys/route.ts` con observabilidad minima
 
 ---
-
-### Fase D — Devoluciones y anulaciones admin (web)
-
-#### Día 8 — `create-redsys-refund.ts` + botón en admin 🟡 (4–6 h)
 
 **Objetivo**: implementar la devolución de pagos ya realizados desde el panel de admin.
 
@@ -1424,7 +1439,7 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 | 4   | A    | CSP, env vars, job BullMQ                   | ⬜     |
 | 5   | B    | Checkout web (`/payment`) refactor          | ⬜     |
 | 6   | B    | Checkout web (`/single-payment`) + test e2e | ⬜     |
-| 7   | C    | App: hook `useRedsysPayment` + endpoints    | ⬜     |
+| 7   | C    | App: hook `useRedsysPayment` + endpoints    | hecho  |
 | 8   | D    | Devoluciones admin                          | ⬜     |
 | 9   | E    | Limpieza Stripe segura / coexistencia app   | ⬜     |
 
@@ -1698,3 +1713,277 @@ La fila `UserPayment` se puede distinguir por:
 - Si `articles.length >= 1` y existe `auctionId` → flujo subasta
 
 La página `/payment/success` puede leer estos campos y mostrar copy distinto sin necesidad de duplicar la ruta.
+
+---
+
+## 17. Matriz de pruebas
+
+> Esta matriz resume las pruebas de app nueva, app vieja y web para validar coexistencia Stripe/Redsys.
+
+### Tabla A - App movil (build nuevo Redsys)
+
+| Flujo                  | Entrada                                               | Accion                                  | Resultado esperado en app                                                              | Resultado esperado en backend/BD                                                                        |
+| ---------------------- | ----------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Pago subasta OK        | `/(tabs)/account/payment?auctionId=X`                 | Seleccionar direccion y pagar en Redsys | Browser abre Redsys, vuelve por deep link, toast de exito, navega a `payments-history` | `create-redsys-session` log, webhook Redsys, `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder` |
+| Pago subasta cancelado | `/(tabs)/account/payment?auctionId=X`                 | Abrir Redsys y cerrar/cancelar          | No navega a exito                                                                      | `UserPayment` pasa a `REJECTED` por `rejectPayment()`                                                   |
+| Pago subasta rechazado | `/(tabs)/account/payment?auctionId=X`                 | Completar con escenario KO de Redsys    | Vuelve a app con error                                                                 | `UserPayment.status=REJECTED`                                                                           |
+| Pago single OK         | `/(tabs)/account/single-payment?articleId=X`          | Seleccionar direccion y pagar           | Igual que subasta OK                                                                   | `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder`                                              |
+| Pago single cancelado  | `/(tabs)/account/single-payment?articleId=X`          | Abrir Redsys y cerrar/cancelar          | Sin exito                                                                              | `UserPayment.status=REJECTED`                                                                           |
+| Pago single rechazado  | `/(tabs)/account/single-payment?articleId=X`          | Escenario KO                            | Error visible en app                                                                   | `UserPayment.status=REJECTED`                                                                           |
+| Deep link OK           | `popauctioonapp://payment-result?status=ok&order=...` | Recibir redirect                        | App interpreta `ok` correctamente                                                      | Hook resuelve `success=true`                                                                            |
+| Deep link KO           | `popauctioonapp://payment-result?status=ko&order=...` | Recibir redirect                        | App interpreta `ko` como fallo                                                         | Hook resuelve `success=false`                                                                           |
+
+### Tabla B - Coexistencia movil (build viejo Stripe)
+
+| Flujo             | Cliente     | Accion                           | Resultado esperado                   | Observabilidad esperada                                            |
+| ----------------- | ----------- | -------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Log `MOBILE_PAYMENT_CREATE_INTENT`, webhook Stripe                 |
+| Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido          |
+| Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Response incluye tambien rollout Redsys sin romper contrato legacy |
+
+### Tabla C - Web checkout Redsys
+
+| Flujo          | URL                                     | Accion           | Resultado esperado                           | Validacion                                      |
+| -------------- | --------------------------------------- | ---------------- | -------------------------------------------- | ----------------------------------------------- |
+| Web subasta OK | `/[lang]/payment?auctionId=X`           | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
+| Web subasta KO | `/[lang]/payment?auctionId=X`           | Escenario KO     | Redireccion a `/payment/error?order=ORDER`   | `UserPayment.status=REJECTED`                   |
+| Web single OK  | `/[lang]/single-payment?articleId=X`    | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
+| Bridge page    | `/api/payments/redsys/launch?token=...` | Abrir URL        | HTML auto-submit a Redsys                    | Form action correcta segun `REDSYS_ENVIRONMENT` |
+
+### Tabla D - Webhooks y trazabilidad
+
+| Punto                  | Como probar                                             | Resultado esperado                                                            |
+| ---------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Webhook Redsys vivo    | POST manual a `/api/webhooks/redsys` con firma invalida | Responde HTTP 200                                                             |
+| Webhook Redsys pago OK | Pago real/sandbox aprobado                              | Log `MOBILE_PAYMENT_REDSYS_WEBHOOK`, procesamiento aprobado                   |
+| Webhook Stripe legacy  | Pago desde build vieja                                  | Log `MOBILE_PAYMENT_STRIPE_WEBHOOK`                                           |
+| Config coexistencia    | GET `/api/mobile/secure/config?type=basic`              | Incluye `STRIPE_PUBLIC_KEY`, `REDSYS_MERCHANT_CODE`, `MOBILE_PAYMENT_ROLLOUT` |
+
+### Checklist operativo de prueba
+
+- [ ] Backend web levantado con envs Redsys de test
+- [ ] App nueva abre Redsys desde subasta
+- [ ] App nueva abre Redsys desde single
+- [ ] Cancelacion manual devuelve rechazo limpio en app
+- [ ] Retorno KO devuelve rechazo limpio en app
+- [ ] Retorno OK termina en historial y `APPROVED`
+- [ ] Build vieja sigue pagando por Stripe
+- [ ] Logs de coexistencia aparecen en servidor
+- [ ] Webhook Redsys responde 200 siempre
+- [ ] `paymentIntent` guarda el `redsysOrder` en la app nueva
+
+---
+
+## 18. Cómo probar el flujo desde la app
+
+> Esta sección deja un paso a paso operativo para validar la app nueva con Redsys y la coexistencia con builds viejos que siguen usando Stripe.
+
+### Qué debe estar corriendo
+
+- `PopAuction-Web` levantado con `pnpm dev`
+- App Expo nueva levantada con `pnpm start` o instalada en un device/build que soporte deep links
+- Entorno de test de Redsys configurado en el backend
+
+### Variables mínimas que deben existir en web
+
+- `REDSYS_ENVIRONMENT=test`
+- `REDSYS_MERCHANT_CODE`
+- `REDSYS_MERCHANT_KEY`
+- `REDSYS_MERCHANT_URL`
+- `REDSYS_APP_URLOK=popauctioonapp://payment-result?status=ok`
+- `REDSYS_APP_URLKO=popauctioonapp://payment-result?status=ko`
+
+### Flujo 1 - App nueva / pago de subasta
+
+1. Abrir la app nueva con un usuario que tenga artículos ganados pendientes de pago.
+2. Entrar a `/(tabs)/account/payment?auctionId=X`.
+3. Seleccionar dirección.
+4. Pulsar pagar.
+5. Confirmar que se abre Redsys en el browser.
+6. Completar el caso `OK`.
+
+Resultado esperado:
+
+- La app vuelve por deep link.
+- Se muestra feedback de éxito.
+- Navega a `payments-history`.
+- En backend aparece el log de `create-redsys-session`.
+- Llega webhook Redsys.
+- En BD, `UserPayment.paymentIntent = redsysOrder`.
+- En BD, `UserPayment.status = APPROVED`.
+
+### Flujo 2 - App nueva / pago single
+
+1. Abrir `/(tabs)/account/single-payment?articleId=X`.
+2. Seleccionar dirección.
+3. Pulsar pagar.
+4. Completar el caso `OK`.
+
+Resultado esperado:
+
+- Mismo comportamiento que subasta.
+- En BD, el `UserPayment` queda aprobado.
+- El `paymentIntent` guarda el `Ds_Order` de Redsys.
+
+### Flujo 3 - Cancelación manual en app nueva
+
+1. Abrir cualquiera de los dos flujos de pago de la app nueva.
+2. Llegar a Redsys.
+3. Cerrar el browser o cancelar antes de pagar.
+
+Resultado esperado:
+
+- La app no debe marcar éxito.
+- No debe navegar a historial como pago aprobado.
+- El flujo local debe tratarlo como cancelación.
+- El `UserPayment` creado debe quedar rechazado mediante `rejectPayment(...)`.
+
+### Flujo 4 - Rechazo KO en app nueva
+
+1. Abrir cualquiera de los dos flujos de pago de la app nueva.
+2. Completar un escenario KO de Redsys.
+
+Resultado esperado:
+
+- La app vuelve por deep link con error.
+- No hay navegación de éxito.
+- El `UserPayment` queda `REJECTED`.
+
+### Flujo 5 - Deep link directo
+
+Probar manualmente:
+
+- `popauctioonapp://payment-result?status=ok&order=ORDER`
+- `popauctioonapp://payment-result?status=ko&order=ORDER`
+
+Resultado esperado:
+
+- El parser distingue `ok` y `ko`.
+- El hook resuelve correctamente éxito o fallo.
+
+### Flujo 6 - Build vieja / coexistencia Stripe
+
+1. Instalar una build vieja real de la app.
+2. Iniciar un pago normal desde esa build.
+
+Resultado esperado:
+
+- La build vieja sigue llamando `create-intent`.
+- Sigue recibiendo `STRIPE_PUBLIC_KEY` desde `/api/mobile/secure/config`.
+- Sigue abriendo Stripe, no Redsys.
+- El backend procesa el webhook de Stripe.
+- No se rompe el contrato legacy.
+
+### Qué mirar en logs y BD
+
+- Log `MOBILE_PAYMENT_CREATE_REDSYS_SESSION`
+- Log `MOBILE_PAYMENT_REDSYS_WEBHOOK`
+- Log `MOBILE_PAYMENT_CREATE_INTENT` para la build vieja
+- Log `MOBILE_PAYMENT_STRIPE_WEBHOOK` para la build vieja
+- `UserPayment.paymentIntent`
+- `UserPayment.status`
+
+---
+
+## 19. Nivel de confianza y por qué debería funcionar
+
+> Este bloque no sustituye QA real, pero deja claro por qué el diseño actual minimiza el riesgo en coexistencia y migración.
+
+### Por qué la app nueva con Redsys debería funcionar
+
+1. El flujo en app se ejecuta en el orden correcto:
+   - crear sesión Redsys
+   - crear `UserPayment` en `PENDING`
+   - abrir `openAuthSessionAsync`
+   - interpretar deep link `ok/ko/cancel`
+   - rechazar localmente en cancelación o KO
+2. El backend móvil nuevo usa un endpoint dedicado (`create-redsys-session`) en lugar de mutar el contrato legacy de Stripe.
+3. El webhook de Redsys procesa por `Ds_Order`, que coincide con lo guardado en `UserPayment.paymentIntent`.
+4. El webhook Redsys quedó idempotente y responde `HTTP 200`, que es el comportamiento esperado por Redsys.
+
+### Por qué los clientes del build viejo deberían seguir funcionando
+
+1. No se eliminaron los endpoints legacy de Stripe.
+2. `POST /api/mobile/secure/user/payments/create-intent` sigue existiendo.
+3. `/api/mobile/secure/config` sigue devolviendo `STRIPE_PUBLIC_KEY`.
+4. El webhook de Stripe sigue activo.
+5. El rollout móvil quedó en dual-stack temporal, diseñado precisamente para binarios viejos y nuevos coexistiendo.
+
+### Qué nos da confianza técnica en la coexistencia
+
+- La app nueva y la vieja no comparten el mismo endpoint de inicio de pago.
+- La app vieja sigue entrando por Stripe.
+- La app nueva entra por Redsys.
+- El backend acepta ambos caminos a la vez.
+- La decisión de retirar Stripe móvil no depende de fecha, sino de evidencia de tráfico.
+
+### Qué NO asegura este plan por sí solo
+
+- No garantiza que un device concreto no tenga problemas de deep link si no se prueba.
+- No garantiza que Android/iOS se comporten igual sin QA real.
+- No garantiza que una build vieja específica siga sana hasta probarla contra staging o producción controlada.
+
+### Criterio de salida razonable antes de considerar estable el cambio
+
+- App nueva probada en subasta y single con `OK`, `KO` y cancelación.
+- Build vieja probada al menos una vez con Stripe real.
+- Webhook Redsys verificado con pago real o sandbox.
+- Logs de coexistencia visibles en servidor.
+- Confirmación en BD de que Redsys guarda `paymentIntent = Ds_Order`.
+## 20. Resumen operativo en tablas
+
+> Versión resumida y ordenada de pruebas y confianza para usar como checklist rápido.
+
+### Tabla A - Prerrequisitos
+
+| Tipo | Item | Valor / acción esperada |
+| --- | --- | --- |
+| Backend | Web corriendo | `PopAuction-Web` levantado con `pnpm dev` |
+| App | Cliente nuevo | App Expo nueva levantada con `pnpm start` o instalada en un device/build con deep links |
+| Redsys | Entorno | `REDSYS_ENVIRONMENT=test` |
+| Redsys | Merchant code | `REDSYS_MERCHANT_CODE` configurado |
+| Redsys | Firma | `REDSYS_MERCHANT_KEY` configurado |
+| Redsys | Webhook | `REDSYS_MERCHANT_URL` configurado |
+| App | Deep link OK | `REDSYS_APP_URLOK=popauctioonapp://payment-result?status=ok` |
+| App | Deep link KO | `REDSYS_APP_URLKO=popauctioonapp://payment-result?status=ko` |
+
+### Tabla B - Flujos app nueva
+
+| Flujo | Entrada | Pasos | Resultado esperado en app | Validación en backend / BD |
+| --- | --- | --- | --- | --- |
+| Subasta OK | `/(tabs)/account/payment?auctionId=X` | Abrir pago, seleccionar dirección, pagar en Redsys, completar `OK` | Vuelve por deep link, muestra éxito y navega a `payments-history` | Log `create-redsys-session`, webhook Redsys, `UserPayment.paymentIntent = redsysOrder`, `UserPayment.status = APPROVED` |
+| Single OK | `/(tabs)/account/single-payment?articleId=X` | Abrir pago, seleccionar dirección, pagar en Redsys, completar `OK` | Igual que subasta OK | `UserPayment.status = APPROVED`, `paymentIntent = redsysOrder` |
+| Cancelación | Cualquiera de los dos flujos nuevos | Abrir Redsys y cerrar/cancelar antes de pagar | No navega a éxito ni muestra pago aprobado | `UserPayment.status = REJECTED` mediante `rejectPayment(...)` |
+| Rechazo KO | Cualquiera de los dos flujos nuevos | Completar escenario KO de Redsys | Vuelve con error, sin navegación de éxito | `UserPayment.status = REJECTED` |
+| Deep link OK | `popauctioonapp://payment-result?status=ok&order=ORDER` | Lanzar manualmente la URL | La app interpreta `ok` como éxito | El hook resuelve `success=true` |
+| Deep link KO | `popauctioonapp://payment-result?status=ko&order=ORDER` | Lanzar manualmente la URL | La app interpreta `ko` como fallo | El hook resuelve `success=false` |
+
+### Tabla C - Coexistencia build vieja
+
+| Flujo | Cliente | Pasos | Resultado esperado | Validación |
+| --- | --- | --- | --- | --- |
+| Pago legacy OK | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys | Llama `create-intent`, recibe `STRIPE_PUBLIC_KEY`, procesa webhook Stripe |
+| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe | Mantiene el comportamiento legacy de error | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido |
+| Config legacy | Build vieja real | Leer `/api/mobile/secure/config` | No se rompe el contrato anterior | La respuesta sigue incluyendo `STRIPE_PUBLIC_KEY` |
+
+### Tabla D - Motivos de confianza
+
+| Área | Motivo de confianza | Por qué importa |
+| --- | --- | --- |
+| App nueva | El flujo se ejecuta en el orden correcto | Crea sesión Redsys, crea `UserPayment` en `PENDING`, abre `openAuthSessionAsync`, interpreta `ok/ko/cancel` y rechaza localmente en cancelación o KO |
+| Backend nuevo | Redsys entra por endpoint dedicado | `create-redsys-session` no rompe el contrato legacy de Stripe |
+| Webhook Redsys | Procesa por `Ds_Order` | Coincide con `UserPayment.paymentIntent`, lo que simplifica lookup e idempotencia |
+| Integración Redsys | Respuesta `HTTP 200` e idempotencia | Es el comportamiento esperado por Redsys para no reintentar indefinidamente |
+| Coexistencia | Dual-stack temporal | Permite que build nueva y build vieja convivan sin apagar Stripe de golpe |
+
+### Tabla E - Qué sí y qué no
+
+| Tipo | Afirmación |
+| --- | --- |
+| Sí | La app nueva y la vieja no comparten el mismo endpoint de inicio de pago |
+| Sí | La app vieja sigue entrando por Stripe y la nueva por Redsys |
+| Sí | El backend acepta ambos caminos a la vez |
+| Sí | La retirada de Stripe móvil está diseñada para depender de evidencia de tráfico y no de fecha |
+| No | No se puede garantizar comportamiento perfecto en todos los devices sin QA real |
+| No | No se puede garantizar equivalencia iOS/Android sin prueba real |
+| No | No se puede dar por sano un build viejo concreto sin instalarlo y pagar con él |
