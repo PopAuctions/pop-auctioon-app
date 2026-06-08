@@ -27,6 +27,7 @@
         "foregroundImage": "./assets/icons/pop-auctioon-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "usesCleartextTraffic": true,
       "package": "com.popauctioon.popauctioonapp",
       "resizeableActivity": false,
       "predictiveBackGestureEnabled": false,

@@ -23,10 +23,12 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
+import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
+  const { navigateWithAuth } = useAuthNavigation();
   const { callToast } = useToast(locale);
 
   const { articleId } = useLocalSearchParams<{
@@ -269,7 +271,9 @@ export default function SinglePaymentScreen() {
         },
       });
 
-      router.replace('/(tabs)/account/payments-history');
+      navigateWithAuth('/(tabs)/account/payments-history', {
+        buildStack: true,
+      });
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -294,7 +298,7 @@ export default function SinglePaymentScreen() {
     rejectPayment,
     openPaymentBrowser,
     callToast,
-    router,
+    navigateWithAuth,
     paymentTranslations,
   ]);
 

@@ -35,7 +35,19 @@ const buildLaunchUrl = (launchUrl: string): string => {
     return launchUrl;
   }
 
-  return `${API_CONFIG.BASE_URL}${launchUrl.startsWith('/') ? launchUrl : `/${launchUrl}`}`;
+  const baseUrl = API_CONFIG.BASE_URL.replace(/\/$/, '');
+  const normalizedPath = launchUrl.startsWith('/')
+    ? launchUrl
+    : `/${launchUrl}`;
+
+  if (
+    baseUrl.endsWith('/api') &&
+    normalizedPath.startsWith('/api/')
+  ) {
+    return `${baseUrl}${normalizedPath.slice('/api'.length)}`;
+  }
+
+  return `${baseUrl}${normalizedPath}`;
 };
 
 export const useRedsysPayment = (): UseRedsysPaymentReturn => {

@@ -19,6 +19,7 @@ export function DeepLinkListener() {
       // Skip expo development client links
       if (url.includes('expo-development-client')) return;
       if (url.includes('/auth/callback')) return;
+      if (url.includes('payment-result')) return;
       if (status === 'loading') return;
 
       // Parse URL

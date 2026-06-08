@@ -275,6 +275,29 @@ describe('DeepLinkListener', () => {
     });
   });
 
+  describe('Payment Return Deep Links', () => {
+    beforeEach(() => {
+      mockUseAuth.mockReturnValue({
+        auth: { state: 'unauthenticated' },
+        getSession: () => [null, null],
+        signOut: jest.fn(),
+      });
+    });
+
+    it('should ignore payment-result deep links handled by the payment flow', () => {
+      render(<DeepLinkListener />);
+
+      const testUrl = 'popauctioonapp://payment-result?status=ok&order=123';
+      eventListener?.({ url: testUrl });
+
+      expect(console.log).not.toHaveBeenCalledWith(
+        'ðŸ”— Deep link received:',
+        testUrl
+      );
+      expect(mockRouterPush).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Initial URL Handling', () => {
     it('should handle initial URL if present', async () => {
       const initialUrl = 'popauction://account';

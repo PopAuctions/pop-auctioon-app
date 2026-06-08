@@ -344,7 +344,9 @@ export default function PaymentScreen() {
         },
       });
 
-      navigateWithAuth('/(tabs)/account/payments-history');
+      navigateWithAuth('/(tabs)/account/payments-history', {
+        buildStack: true,
+      });
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({

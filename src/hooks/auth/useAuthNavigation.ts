@@ -10,6 +10,7 @@ import {
   isCrossTabNestedNavigation,
   setCrossTabBackTarget,
 } from '@/utils/navigation/crossTabNavigation';
+import { getParentRoute } from '@/utils/deeplinks/getParentRoute';
 
 export const useAuthNavigation = () => {
   const { getSession } = useAuth();
@@ -18,7 +19,7 @@ export const useAuthNavigation = () => {
   const pathname = usePathname();
 
   const navigateWithAuth = useCallback(
-    (href: string, options?: { replace?: boolean }) => {
+    (href: string, options?: { replace?: boolean; buildStack?: boolean }) => {
       const routeName = normalizeRoutePath(href);
       const routeConfig = PROTECTED_ROUTES[routeName];
 
@@ -42,6 +43,27 @@ export const useAuthNavigation = () => {
       }
 
       setIsNavigating(true);
+
+      const destinationPath = href.split('?')[0];
+      const parentRoute = getParentRoute(destinationPath);
+      const shouldBuildNestedStack =
+        options?.buildStack &&
+        parentRoute &&
+        parentRoute !== destinationPath;
+
+      if (shouldBuildNestedStack) {
+        router.replace(parentRoute as Href);
+
+        setTimeout(() => {
+          router.push(href as Href);
+        }, 100);
+
+        setTimeout(() => {
+          setIsNavigating(false);
+        }, 500);
+
+        return true;
+      }
 
       if (options?.replace) {
         router.replace(href as Href);
