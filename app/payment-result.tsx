@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
@@ -141,6 +141,7 @@ export default function PaymentResultScreen() {
       className='flex-1 bg-white'
       edges={['top', 'bottom']}
     >
+      <Stack.Screen options={{ headerShown: false }} />
       <View className='flex-1 justify-center px-6 py-10'>
         <View className='rounded-[28px] border border-[#ece7e2] bg-[#faf7f4] px-6 py-8'>
           <View className='mb-6 items-center'>

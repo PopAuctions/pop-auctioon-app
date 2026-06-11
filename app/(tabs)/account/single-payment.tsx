@@ -23,7 +23,6 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
-import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import {
   clearPaymentResultContext,
   savePaymentResultContext,
@@ -32,7 +31,6 @@ import {
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
-  const { navigateWithAuth } = useAuthNavigation();
   const { callToast } = useToast(locale);
 
   const { articleId } = useLocalSearchParams<{
@@ -259,32 +257,10 @@ export default function SinglePaymentScreen() {
           errorCode: browserResult.error?.code,
           errorDescription: browserResult.error?.message,
         });
-
-        if (browserResult.type !== 'cancel') {
-          callToast({
-            variant: 'error',
-            description: {
-              es:
-                browserResult.error?.message || 'Error al procesar el pago',
-              en:
-                browserResult.error?.message || 'Error processing payment',
-            },
-          });
-        }
         return;
       }
 
-      callToast({
-        variant: 'success',
-        description: {
-          es: paymentTranslations.paymentSuccess,
-          en: paymentTranslations.paymentSuccess,
-        },
-      });
-
-      navigateWithAuth('/(tabs)/account/payments-history', {
-        buildStack: true,
-      });
+      return;
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -309,7 +285,6 @@ export default function SinglePaymentScreen() {
     rejectPayment,
     openPaymentBrowser,
     callToast,
-    navigateWithAuth,
     paymentTranslations,
   ]);
 

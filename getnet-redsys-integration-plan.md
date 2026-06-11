@@ -1724,8 +1724,8 @@ La página `/payment/success` puede leer estos campos y mostrar copy distinto si
 
 | Verificado | Flujo                  | Entrada                                               | Accion                                  | Resultado esperado en app                                                              | Resultado esperado en backend/BD                                                                        |
 | ---------- | ---------------------- | ----------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| [ ]        | Pago subasta OK        | `/(tabs)/account/payment?auctionId=X`                 | Seleccionar direccion y pagar en Redsys | Browser abre Redsys, vuelve por deep link, toast de exito, navega a `payments-history` | `create-redsys-session` log, webhook Redsys, `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder` |
-| [ ]        | Pago subasta cancelado | `/(tabs)/account/payment?auctionId=X`                 | Abrir Redsys y cerrar/cancelar          | No navega a exito                                                                      | `UserPayment` pasa a `REJECTED` por `rejectPayment()`                                                   |
+| [x]        | Pago subasta OK        | `/(tabs)/account/payment?auctionId=28`                | Seleccionar direccion y pagar en Redsys | Browser abre Redsys, vuelve por deep link y muestra pantalla de aprobado               | Verificado en dev con user `rodrigosamayoamorales@gmail.com`: `UserPayment.id=257` aprobado, `UserArticlesWon(80,81,85)` en `PAID`, `userPaymentId=257` |
+| [x]        | Pago subasta cancelado | `/(tabs)/account/payment?auctionId=28`                | Abrir Redsys, volver atras y confirmar cancelacion | Vuelve a app y muestra pantalla de rechazo                                             | Verificado en dev con user `rodrigosamayoamorales@gmail.com`: Redsys devolvio cancelacion (`SIS9915`), los articulos quedaron en `DRAFT`, sin consolidar pago |
 | [ ]        | Pago subasta rechazado | `/(tabs)/account/payment?auctionId=X`                 | Completar con escenario KO de Redsys    | Vuelve a app con error                                                                 | `UserPayment.status=REJECTED`                                                                           |
 | [ ]        | Pago single OK         | `/(tabs)/account/single-payment?articleId=X`          | Seleccionar direccion y pagar           | Igual que subasta OK                                                                   | `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder`                                              |
 | [ ]        | Pago single cancelado  | `/(tabs)/account/single-payment?articleId=X`          | Abrir Redsys y cerrar/cancelar          | Sin exito                                                                              | `UserPayment.status=REJECTED`                                                                           |
@@ -1741,9 +1741,17 @@ Usa el playbook `docs/mobile-payment-db-reset-playbook.md` antes de ejecutar cad
   - resetear `UserPayment` a `REJECTED` con `errorCode = 'MANUAL_RESET'`
   - resetear `UserArticlesWon` a `NOT_PAID`
   - no tocar `Article.sold`
+  - verificado en app nueva con `rodrigosamayoamorales@gmail.com` sobre `auctionId=28`
+  - Redsys retorno OK
+  - DB final validada: `UserPayment.id=257`, articulos `80,81,85` en `PAID`
 - `Pago subasta cancelado`:
   - mismo reset base que subasta OK
   - volver a intentar y cancelar antes del pago para confirmar rechazo limpio
+  - verificado en app nueva con `rodrigosamayoamorales@gmail.com` sobre `auctionId=28`
+  - se uso flecha atras de Redsys y luego continuar
+  - Redsys mostro cancelacion de usuario `SIS9915`
+  - app mostro pantalla de rechazo
+  - DB final validada: articulos `80,81,85` quedaron en `DRAFT`, sin pago consolidado
 - `Pago subasta rechazado`:
   - mismo reset base que subasta OK
   - completar el escenario KO de Redsys para verificar rechazo

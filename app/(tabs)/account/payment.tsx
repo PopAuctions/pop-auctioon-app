@@ -39,12 +39,10 @@ import {
   savePaymentResultContext,
 } from '@/utils/payments/payment-result-context';
 import type { CountryValue } from '@/types/types';
-import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
-  const { navigateWithAuth } = useAuthNavigation();
   const { callToast } = useToast(locale);
   const { auctionId } = useLocalSearchParams<{ auctionId: string }>();
 
@@ -330,32 +328,10 @@ export default function PaymentScreen() {
           errorCode: browserResult.error?.code,
           errorDescription: browserResult.error?.message,
         });
-
-        if (browserResult.type !== 'cancel') {
-          callToast({
-            variant: 'error',
-            description: {
-              es:
-                browserResult.error?.message || 'Error al procesar el pago',
-              en:
-                browserResult.error?.message || 'Error processing payment',
-            },
-          });
-        }
         return;
       }
 
-      callToast({
-        variant: 'success',
-        description: {
-          es: paymentTranslations.paymentSuccess,
-          en: paymentTranslations.paymentSuccess,
-        },
-      });
-
-      navigateWithAuth('/(tabs)/account/payments-history', {
-        buildStack: true,
-      });
+      return;
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -381,7 +357,6 @@ export default function PaymentScreen() {
     openPaymentBrowser,
     callToast,
     paymentTranslations,
-    navigateWithAuth,
   ]);
 
   useFocusEffect(
