@@ -1727,6 +1727,7 @@ La página `/payment/success` puede leer estos campos y mostrar copy distinto si
 | [x]        | Pago subasta OK        | `/(tabs)/account/payment?auctionId=28`                | Seleccionar direccion y pagar en Redsys | Browser abre Redsys, vuelve por deep link y muestra pantalla de aprobado               | Verificado en dev con user `rodrigosamayoamorales@gmail.com`: `UserPayment.id=257` aprobado, `UserArticlesWon(80,81,85)` en `PAID`, `userPaymentId=257` |
 | [x]        | Pago subasta cancelado | `/(tabs)/account/payment?auctionId=28`                | Abrir Redsys, volver atras y confirmar cancelacion | Vuelve a app y muestra pantalla de rechazo                                             | Verificado en dev con user `rodrigosamayoamorales@gmail.com`: Redsys devolvio cancelacion (`SIS9915`), los articulos quedaron en `DRAFT`, sin consolidar pago |
 | [ ]        | Pago subasta rechazado | `/(tabs)/account/payment?auctionId=X`                 | Completar con escenario KO de Redsys    | Vuelve a app con error                                                                 | `UserPayment.status=REJECTED`                                                                           |
+| [ ]        | Reintento tras rechazo/cancelacion | `/(tabs)/account/payment?auctionId=28`       | Reabrir pago despues de KO/cancelacion  | La app permite volver a intentar el pago sin quedar bloqueada                          | Los articulos siguen pagables; no quedan en `PAID` si el intento anterior fallo                        |
 | [ ]        | Pago single OK         | `/(tabs)/account/single-payment?articleId=X`          | Seleccionar direccion y pagar           | Igual que subasta OK                                                                   | `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder`                                              |
 | [ ]        | Pago single cancelado  | `/(tabs)/account/single-payment?articleId=X`          | Abrir Redsys y cerrar/cancelar          | Sin exito                                                                              | `UserPayment.status=REJECTED`                                                                           |
 | [ ]        | Pago single rechazado  | `/(tabs)/account/single-payment?articleId=X`          | Escenario KO                            | Error visible en app                                                                   | `UserPayment.status=REJECTED`                                                                           |
@@ -1755,6 +1756,10 @@ Usa el playbook `docs/mobile-payment-db-reset-playbook.md` antes de ejecutar cad
 - `Pago subasta rechazado`:
   - mismo reset base que subasta OK
   - completar el escenario KO de Redsys para verificar rechazo
+- `Reintento tras rechazo/cancelacion`:
+  - partir de un intento previo fallido o cancelado
+  - verificar que la app sigue dejando entrar a `auctionId=28`
+  - confirmar que el usuario puede lanzar Redsys otra vez sin soporte manual
 - `Pago single OK`:
   - resetear `UserPayment`
   - resetear `ArticleSecondChance`

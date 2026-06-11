@@ -246,6 +246,8 @@ export default function SinglePaymentScreen() {
       await savePaymentResultContext({
         flow: 'single',
         retryRoute: `/(tabs)/account/single-payment?articleId=${articleId}`,
+        paymentId: userPaymentId,
+        paymentIntent: redsysOrderId,
       });
 
       const browserResult = await openPaymentBrowser();

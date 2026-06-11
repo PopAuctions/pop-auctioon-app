@@ -317,6 +317,8 @@ export default function PaymentScreen() {
       await savePaymentResultContext({
         flow: 'auction',
         retryRoute: `/(tabs)/account/payment?auctionId=${auctionId}`,
+        paymentId: userPaymentId,
+        paymentIntent: redsysOrderId,
       });
 
       const browserResult = await openPaymentBrowser();

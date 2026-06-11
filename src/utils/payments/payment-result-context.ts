@@ -5,6 +5,8 @@ const PAYMENT_RESULT_CONTEXT_KEY = 'payment_result_context_v1';
 export interface PaymentResultContext {
   retryRoute: string;
   flow: 'auction' | 'single';
+  paymentId?: number;
+  paymentIntent?: string;
 }
 
 export const savePaymentResultContext = async (

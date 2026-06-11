@@ -14,9 +14,8 @@ import {
 } from '@/utils/payments/payment-result-context';
 
 export default function PaymentResultScreen() {
-  const { status, order } = useLocalSearchParams<{
+  const { status } = useLocalSearchParams<{
     status?: string;
-    order?: string;
   }>();
   const router = useRouter();
   const { navigateWithAuth } = useAuthNavigation();
@@ -169,19 +168,20 @@ export default function PaymentResultScreen() {
             {copy.description[locale]}
           </CustomText>
 
-          {typeof order === 'string' && order.length > 0 && (
+          {typeof context?.paymentIntent === 'string' &&
+            context.paymentIntent.length > 0 && (
             <View className='mb-6 rounded-2xl bg-white px-4 py-3'>
               <CustomText
                 type='bodysmall'
                 className='text-center text-gray-500'
               >
-                {locale === 'es' ? 'Orden Redsys' : 'Redsys order'}
+                {locale === 'es' ? 'Orden de pago' : 'Payment order'}
               </CustomText>
               <CustomText
                 type='bold'
                 className='mt-1 text-center text-black'
               >
-                {order}
+                {context.paymentIntent}
               </CustomText>
             </View>
           )}
