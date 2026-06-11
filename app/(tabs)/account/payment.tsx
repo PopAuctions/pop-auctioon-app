@@ -34,6 +34,10 @@ import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
+import {
+  clearPaymentResultContext,
+  savePaymentResultContext,
+} from '@/utils/payments/payment-result-context';
 import type { CountryValue } from '@/types/types';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
@@ -73,7 +77,6 @@ export default function PaymentScreen() {
     openPaymentBrowser,
     isLoading: paymentLoading,
   } = useRedsysPayment();
-
   const { createPayment, rejectPayment } = useArticlesPayment();
 
   // Hook para toggle de selección de artículos (sincronizar con backend)
@@ -313,9 +316,15 @@ export default function PaymentScreen() {
         return;
       }
 
+      await savePaymentResultContext({
+        flow: 'auction',
+        retryRoute: `/(tabs)/account/payment?auctionId=${auctionId}`,
+      });
+
       const browserResult = await openPaymentBrowser();
 
       if (!browserResult.success) {
+        await clearPaymentResultContext();
         await rejectPayment({
           userPaymentId,
           errorCode: browserResult.error?.code,

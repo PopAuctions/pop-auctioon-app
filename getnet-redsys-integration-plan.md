@@ -1722,42 +1722,70 @@ La página `/payment/success` puede leer estos campos y mostrar copy distinto si
 
 ### Tabla A - App movil (build nuevo Redsys)
 
-| Flujo                  | Entrada                                               | Accion                                  | Resultado esperado en app                                                              | Resultado esperado en backend/BD                                                                        |
-| ---------------------- | ----------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Pago subasta OK        | `/(tabs)/account/payment?auctionId=X`                 | Seleccionar direccion y pagar en Redsys | Browser abre Redsys, vuelve por deep link, toast de exito, navega a `payments-history` | `create-redsys-session` log, webhook Redsys, `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder` |
-| Pago subasta cancelado | `/(tabs)/account/payment?auctionId=X`                 | Abrir Redsys y cerrar/cancelar          | No navega a exito                                                                      | `UserPayment` pasa a `REJECTED` por `rejectPayment()`                                                   |
-| Pago subasta rechazado | `/(tabs)/account/payment?auctionId=X`                 | Completar con escenario KO de Redsys    | Vuelve a app con error                                                                 | `UserPayment.status=REJECTED`                                                                           |
-| Pago single OK         | `/(tabs)/account/single-payment?articleId=X`          | Seleccionar direccion y pagar           | Igual que subasta OK                                                                   | `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder`                                              |
-| Pago single cancelado  | `/(tabs)/account/single-payment?articleId=X`          | Abrir Redsys y cerrar/cancelar          | Sin exito                                                                              | `UserPayment.status=REJECTED`                                                                           |
-| Pago single rechazado  | `/(tabs)/account/single-payment?articleId=X`          | Escenario KO                            | Error visible en app                                                                   | `UserPayment.status=REJECTED`                                                                           |
-| Deep link OK           | `popauctioonapp://payment-result?status=ok&order=...` | Recibir redirect                        | App interpreta `ok` correctamente                                                      | Hook resuelve `success=true`                                                                            |
-| Deep link KO           | `popauctioonapp://payment-result?status=ko&order=...` | Recibir redirect                        | App interpreta `ko` como fallo                                                         | Hook resuelve `success=false`                                                                           |
+| Verificado | Flujo                  | Entrada                                               | Accion                                  | Resultado esperado en app                                                              | Resultado esperado en backend/BD                                                                        |
+| ---------- | ---------------------- | ----------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [ ]        | Pago subasta OK        | `/(tabs)/account/payment?auctionId=X`                 | Seleccionar direccion y pagar en Redsys | Browser abre Redsys, vuelve por deep link, toast de exito, navega a `payments-history` | `create-redsys-session` log, webhook Redsys, `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder` |
+| [ ]        | Pago subasta cancelado | `/(tabs)/account/payment?auctionId=X`                 | Abrir Redsys y cerrar/cancelar          | No navega a exito                                                                      | `UserPayment` pasa a `REJECTED` por `rejectPayment()`                                                   |
+| [ ]        | Pago subasta rechazado | `/(tabs)/account/payment?auctionId=X`                 | Completar con escenario KO de Redsys    | Vuelve a app con error                                                                 | `UserPayment.status=REJECTED`                                                                           |
+| [ ]        | Pago single OK         | `/(tabs)/account/single-payment?articleId=X`          | Seleccionar direccion y pagar           | Igual que subasta OK                                                                   | `UserPayment.status=APPROVED`, `paymentIntent=redsysOrder`                                              |
+| [ ]        | Pago single cancelado  | `/(tabs)/account/single-payment?articleId=X`          | Abrir Redsys y cerrar/cancelar          | Sin exito                                                                              | `UserPayment.status=REJECTED`                                                                           |
+| [ ]        | Pago single rechazado  | `/(tabs)/account/single-payment?articleId=X`          | Escenario KO                            | Error visible en app                                                                   | `UserPayment.status=REJECTED`                                                                           |
+| [ ]        | Deep link OK           | `popauctioonapp://payment-result?status=ok&order=...` | Recibir redirect                        | App interpreta `ok` correctamente                                                      | Hook resuelve `success=true`                                                                            |
+| [ ]        | Deep link KO           | `popauctioonapp://payment-result?status=ko&order=...` | Recibir redirect                        | App interpreta `ko` como fallo                                                         | Hook resuelve `success=false`                                                                           |
+
+### Preparacion de BD para cada prueba
+
+Usa el playbook `docs/mobile-payment-db-reset-playbook.md` antes de ejecutar cada escenario. El objetivo es dejar el pago en estado repetible sin ensuciar historico.
+
+- `Pago subasta OK`:
+  - resetear `UserPayment` a `REJECTED` con `errorCode = 'MANUAL_RESET'`
+  - resetear `UserArticlesWon` a `NOT_PAID`
+  - no tocar `Article.sold`
+- `Pago subasta cancelado`:
+  - mismo reset base que subasta OK
+  - volver a intentar y cancelar antes del pago para confirmar rechazo limpio
+- `Pago subasta rechazado`:
+  - mismo reset base que subasta OK
+  - completar el escenario KO de Redsys para verificar rechazo
+- `Pago single OK`:
+  - resetear `UserPayment`
+  - resetear `ArticleSecondChance`
+  - resetear `Article` a `sold = false` y `soldPrice = null` si ya se marco como vendido
+  - extender `ArticleOffer.expiresAt` si la oferta ya vencio
+- `Pago single cancelado`:
+  - mismo reset base que single OK
+  - cerrar Redsys antes de autorizar
+- `Pago single rechazado`:
+  - mismo reset base que single OK
+  - completar un escenario KO en Redsys
+- `Deep link OK / KO`:
+  - no requiere reset de BD, solo validar el parseo del retorno
 
 ### Tabla B - Coexistencia movil (build viejo Stripe)
 
-| Flujo             | Cliente     | Accion                           | Resultado esperado                   | Observabilidad esperada                                            |
-| ----------------- | ----------- | -------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Log `MOBILE_PAYMENT_CREATE_INTENT`, webhook Stripe                 |
-| Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido          |
-| Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Response incluye tambien rollout Redsys sin romper contrato legacy |
+| Verificado | Flujo             | Cliente     | Accion                           | Resultado esperado                   | Observabilidad esperada                                            |
+| ---------- | ----------------- | ----------- | -------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| [ ]        | Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Log `MOBILE_PAYMENT_CREATE_INTENT`, webhook Stripe                 |
+| [ ]        | Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido          |
+| [ ]        | Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Response incluye tambien rollout Redsys sin romper contrato legacy |
 
 ### Tabla C - Web checkout Redsys
 
-| Flujo          | URL                                     | Accion           | Resultado esperado                           | Validacion                                      |
-| -------------- | --------------------------------------- | ---------------- | -------------------------------------------- | ----------------------------------------------- |
-| Web subasta OK | `/[lang]/payment?auctionId=X`           | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
-| Web subasta KO | `/[lang]/payment?auctionId=X`           | Escenario KO     | Redireccion a `/payment/error?order=ORDER`   | `UserPayment.status=REJECTED`                   |
-| Web single OK  | `/[lang]/single-payment?articleId=X`    | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
-| Bridge page    | `/api/payments/redsys/launch?token=...` | Abrir URL        | HTML auto-submit a Redsys                    | Form action correcta segun `REDSYS_ENVIRONMENT` |
+| Verificado | Flujo          | URL                                     | Accion           | Resultado esperado                           | Validacion                                      |
+| ---------- | -------------- | --------------------------------------- | ---------------- | -------------------------------------------- | ----------------------------------------------- |
+| [ ]        | Web subasta OK | `/[lang]/payment?auctionId=X`           | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
+| [ ]        | Web subasta KO | `/[lang]/payment?auctionId=X`           | Escenario KO     | Redireccion a `/payment/error?order=ORDER`   | `UserPayment.status=REJECTED`                   |
+| [ ]        | Web single OK  | `/[lang]/single-payment?articleId=X`    | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
+| [ ]        | Bridge page    | `/api/payments/redsys/launch?token=...` | Abrir URL        | HTML auto-submit a Redsys                    | Form action correcta segun `REDSYS_ENVIRONMENT` |
 
 ### Tabla D - Webhooks y trazabilidad
 
-| Punto                  | Como probar                                             | Resultado esperado                                                            |
-| ---------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Webhook Redsys vivo    | POST manual a `/api/webhooks/redsys` con firma invalida | Responde HTTP 200                                                             |
-| Webhook Redsys pago OK | Pago real/sandbox aprobado                              | Log `MOBILE_PAYMENT_REDSYS_WEBHOOK`, procesamiento aprobado                   |
-| Webhook Stripe legacy  | Pago desde build vieja                                  | Log `MOBILE_PAYMENT_STRIPE_WEBHOOK`                                           |
-| Config coexistencia    | GET `/api/mobile/secure/config?type=basic`              | Incluye `STRIPE_PUBLIC_KEY`, `REDSYS_MERCHANT_CODE`, `MOBILE_PAYMENT_ROLLOUT` |
+| Verificado | Punto                  | Como probar                                             | Resultado esperado                                                            |
+| ---------- | ---------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [ ]        | Webhook Redsys vivo    | POST manual a `/api/webhooks/redsys` con firma invalida | Responde HTTP 200                                                             |
+| [ ]        | Webhook Redsys pago OK | Pago real/sandbox aprobado                              | Log `MOBILE_PAYMENT_REDSYS_WEBHOOK`, procesamiento aprobado                   |
+| [ ]        | Webhook Stripe legacy  | Pago desde build vieja                                  | Log `MOBILE_PAYMENT_STRIPE_WEBHOOK`                                           |
+| [ ]        | Config coexistencia    | GET `/api/mobile/secure/config?type=basic`              | Incluye `STRIPE_PUBLIC_KEY`, `REDSYS_MERCHANT_CODE`, `MOBILE_PAYMENT_ROLLOUT` |
 
 ### Checklist operativo de prueba
 
@@ -1930,60 +1958,61 @@ Resultado esperado:
 - Webhook Redsys verificado con pago real o sandbox.
 - Logs de coexistencia visibles en servidor.
 - Confirmación en BD de que Redsys guarda `paymentIntent = Ds_Order`.
+
 ## 20. Resumen operativo en tablas
 
 > Versión resumida y ordenada de pruebas y confianza para usar como checklist rápido.
 
 ### Tabla A - Prerrequisitos
 
-| Tipo | Item | Valor / acción esperada |
-| --- | --- | --- |
-| Backend | Web corriendo | `PopAuction-Web` levantado con `pnpm dev` |
-| App | Cliente nuevo | App Expo nueva levantada con `pnpm start` o instalada en un device/build con deep links |
-| Redsys | Entorno | `REDSYS_ENVIRONMENT=test` |
-| Redsys | Merchant code | `REDSYS_MERCHANT_CODE` configurado |
-| Redsys | Firma | `REDSYS_MERCHANT_KEY` configurado |
-| Redsys | Webhook | `REDSYS_MERCHANT_URL` configurado |
-| App | Deep link OK | `REDSYS_APP_URLOK=popauctioonapp://payment-result?status=ok` |
-| App | Deep link KO | `REDSYS_APP_URLKO=popauctioonapp://payment-result?status=ko` |
+| Tipo    | Item          | Valor / acción esperada                                                                 |
+| ------- | ------------- | --------------------------------------------------------------------------------------- |
+| Backend | Web corriendo | `PopAuction-Web` levantado con `pnpm dev`                                               |
+| App     | Cliente nuevo | App Expo nueva levantada con `pnpm start` o instalada en un device/build con deep links |
+| Redsys  | Entorno       | `REDSYS_ENVIRONMENT=test`                                                               |
+| Redsys  | Merchant code | `REDSYS_MERCHANT_CODE` configurado                                                      |
+| Redsys  | Firma         | `REDSYS_MERCHANT_KEY` configurado                                                       |
+| Redsys  | Webhook       | `REDSYS_MERCHANT_URL` configurado                                                       |
+| App     | Deep link OK  | `REDSYS_APP_URLOK=popauctioonapp://payment-result?status=ok`                            |
+| App     | Deep link KO  | `REDSYS_APP_URLKO=popauctioonapp://payment-result?status=ko`                            |
 
 ### Tabla B - Flujos app nueva
 
-| Flujo | Entrada | Pasos | Resultado esperado en app | Validación en backend / BD |
-| --- | --- | --- | --- | --- |
-| Subasta OK | `/(tabs)/account/payment?auctionId=X` | Abrir pago, seleccionar dirección, pagar en Redsys, completar `OK` | Vuelve por deep link, muestra éxito y navega a `payments-history` | Log `create-redsys-session`, webhook Redsys, `UserPayment.paymentIntent = redsysOrder`, `UserPayment.status = APPROVED` |
-| Single OK | `/(tabs)/account/single-payment?articleId=X` | Abrir pago, seleccionar dirección, pagar en Redsys, completar `OK` | Igual que subasta OK | `UserPayment.status = APPROVED`, `paymentIntent = redsysOrder` |
-| Cancelación | Cualquiera de los dos flujos nuevos | Abrir Redsys y cerrar/cancelar antes de pagar | No navega a éxito ni muestra pago aprobado | `UserPayment.status = REJECTED` mediante `rejectPayment(...)` |
-| Rechazo KO | Cualquiera de los dos flujos nuevos | Completar escenario KO de Redsys | Vuelve con error, sin navegación de éxito | `UserPayment.status = REJECTED` |
-| Deep link OK | `popauctioonapp://payment-result?status=ok&order=ORDER` | Lanzar manualmente la URL | La app interpreta `ok` como éxito | El hook resuelve `success=true` |
-| Deep link KO | `popauctioonapp://payment-result?status=ko&order=ORDER` | Lanzar manualmente la URL | La app interpreta `ko` como fallo | El hook resuelve `success=false` |
+| Flujo        | Entrada                                                 | Pasos                                                              | Resultado esperado en app                                         | Validación en backend / BD                                                                                              |
+| ------------ | ------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Subasta OK   | `/(tabs)/account/payment?auctionId=X`                   | Abrir pago, seleccionar dirección, pagar en Redsys, completar `OK` | Vuelve por deep link, muestra éxito y navega a `payments-history` | Log `create-redsys-session`, webhook Redsys, `UserPayment.paymentIntent = redsysOrder`, `UserPayment.status = APPROVED` |
+| Single OK    | `/(tabs)/account/single-payment?articleId=X`            | Abrir pago, seleccionar dirección, pagar en Redsys, completar `OK` | Igual que subasta OK                                              | `UserPayment.status = APPROVED`, `paymentIntent = redsysOrder`                                                          |
+| Cancelación  | Cualquiera de los dos flujos nuevos                     | Abrir Redsys y cerrar/cancelar antes de pagar                      | No navega a éxito ni muestra pago aprobado                        | `UserPayment.status = REJECTED` mediante `rejectPayment(...)`                                                           |
+| Rechazo KO   | Cualquiera de los dos flujos nuevos                     | Completar escenario KO de Redsys                                   | Vuelve con error, sin navegación de éxito                         | `UserPayment.status = REJECTED`                                                                                         |
+| Deep link OK | `popauctioonapp://payment-result?status=ok&order=ORDER` | Lanzar manualmente la URL                                          | La app interpreta `ok` como éxito                                 | El hook resuelve `success=true`                                                                                         |
+| Deep link KO | `popauctioonapp://payment-result?status=ko&order=ORDER` | Lanzar manualmente la URL                                          | La app interpreta `ko` como fallo                                 | El hook resuelve `success=false`                                                                                        |
 
 ### Tabla C - Coexistencia build vieja
 
-| Flujo | Cliente | Pasos | Resultado esperado | Validación |
-| --- | --- | --- | --- | --- |
-| Pago legacy OK | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys | Llama `create-intent`, recibe `STRIPE_PUBLIC_KEY`, procesa webhook Stripe |
-| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe | Mantiene el comportamiento legacy de error | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido |
-| Config legacy | Build vieja real | Leer `/api/mobile/secure/config` | No se rompe el contrato anterior | La respuesta sigue incluyendo `STRIPE_PUBLIC_KEY` |
+| Flujo             | Cliente          | Pasos                                         | Resultado esperado                         | Validación                                                                |
+| ----------------- | ---------------- | --------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------- |
+| Pago legacy OK    | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys             | Llama `create-intent`, recibe `STRIPE_PUBLIC_KEY`, procesa webhook Stripe |
+| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe                     | Mantiene el comportamiento legacy de error | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido                 |
+| Config legacy     | Build vieja real | Leer `/api/mobile/secure/config`              | No se rompe el contrato anterior           | La respuesta sigue incluyendo `STRIPE_PUBLIC_KEY`                         |
 
 ### Tabla D - Motivos de confianza
 
-| Área | Motivo de confianza | Por qué importa |
-| --- | --- | --- |
-| App nueva | El flujo se ejecuta en el orden correcto | Crea sesión Redsys, crea `UserPayment` en `PENDING`, abre `openAuthSessionAsync`, interpreta `ok/ko/cancel` y rechaza localmente en cancelación o KO |
-| Backend nuevo | Redsys entra por endpoint dedicado | `create-redsys-session` no rompe el contrato legacy de Stripe |
-| Webhook Redsys | Procesa por `Ds_Order` | Coincide con `UserPayment.paymentIntent`, lo que simplifica lookup e idempotencia |
-| Integración Redsys | Respuesta `HTTP 200` e idempotencia | Es el comportamiento esperado por Redsys para no reintentar indefinidamente |
-| Coexistencia | Dual-stack temporal | Permite que build nueva y build vieja convivan sin apagar Stripe de golpe |
+| Área               | Motivo de confianza                      | Por qué importa                                                                                                                                      |
+| ------------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| App nueva          | El flujo se ejecuta en el orden correcto | Crea sesión Redsys, crea `UserPayment` en `PENDING`, abre `openAuthSessionAsync`, interpreta `ok/ko/cancel` y rechaza localmente en cancelación o KO |
+| Backend nuevo      | Redsys entra por endpoint dedicado       | `create-redsys-session` no rompe el contrato legacy de Stripe                                                                                        |
+| Webhook Redsys     | Procesa por `Ds_Order`                   | Coincide con `UserPayment.paymentIntent`, lo que simplifica lookup e idempotencia                                                                    |
+| Integración Redsys | Respuesta `HTTP 200` e idempotencia      | Es el comportamiento esperado por Redsys para no reintentar indefinidamente                                                                          |
+| Coexistencia       | Dual-stack temporal                      | Permite que build nueva y build vieja convivan sin apagar Stripe de golpe                                                                            |
 
 ### Tabla E - Qué sí y qué no
 
-| Tipo | Afirmación |
-| --- | --- |
-| Sí | La app nueva y la vieja no comparten el mismo endpoint de inicio de pago |
-| Sí | La app vieja sigue entrando por Stripe y la nueva por Redsys |
-| Sí | El backend acepta ambos caminos a la vez |
-| Sí | La retirada de Stripe móvil está diseñada para depender de evidencia de tráfico y no de fecha |
-| No | No se puede garantizar comportamiento perfecto en todos los devices sin QA real |
-| No | No se puede garantizar equivalencia iOS/Android sin prueba real |
-| No | No se puede dar por sano un build viejo concreto sin instalarlo y pagar con él |
+| Tipo | Afirmación                                                                                    |
+| ---- | --------------------------------------------------------------------------------------------- |
+| Sí   | La app nueva y la vieja no comparten el mismo endpoint de inicio de pago                      |
+| Sí   | La app vieja sigue entrando por Stripe y la nueva por Redsys                                  |
+| Sí   | El backend acepta ambos caminos a la vez                                                      |
+| Sí   | La retirada de Stripe móvil está diseñada para depender de evidencia de tráfico y no de fecha |
+| No   | No se puede garantizar comportamiento perfecto en todos los devices sin QA real               |
+| No   | No se puede garantizar equivalencia iOS/Android sin prueba real                               |
+| No   | No se puede dar por sano un build viejo concreto sin instalarlo y pagar con él                |

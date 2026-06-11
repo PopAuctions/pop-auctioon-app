@@ -24,6 +24,10 @@ import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import {
+  clearPaymentResultContext,
+  savePaymentResultContext,
+} from '@/utils/payments/payment-result-context';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -200,6 +204,8 @@ export default function SinglePaymentScreen() {
     }
 
     try {
+      setIsSubmittingPayment(true);
+
       // 1) Re-init with final amount
 
       const redsysOrderId = await initializePaymentSession(
@@ -239,9 +245,15 @@ export default function SinglePaymentScreen() {
         return;
       }
 
+      await savePaymentResultContext({
+        flow: 'single',
+        retryRoute: `/(tabs)/account/single-payment?articleId=${articleId}`,
+      });
+
       const browserResult = await openPaymentBrowser();
 
       if (!browserResult.success) {
+        await clearPaymentResultContext();
         await rejectPayment({
           userPaymentId,
           errorCode: browserResult.error?.code,
@@ -262,7 +274,6 @@ export default function SinglePaymentScreen() {
         return;
       }
 
-      // 5) Success
       callToast({
         variant: 'success',
         description: {
