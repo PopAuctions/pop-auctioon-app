@@ -347,6 +347,8 @@ export type UserArticlesWon = Pick<
 export interface AuctionUserWonArticles {
   createdAt: string;
   title: string;
+  storeCommissionPercentage: number;
+
   articles: CustomArticle[];
   displayHideButton: boolean;
 }

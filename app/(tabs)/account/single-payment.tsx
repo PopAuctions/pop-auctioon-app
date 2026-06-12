@@ -113,6 +113,7 @@ export default function SinglePaymentScreen() {
         commission: 0,
         shipping: 0,
         discount: 0,
+        taxes: 0,
         total: subtotal,
       };
     }
@@ -122,6 +123,7 @@ export default function SinglePaymentScreen() {
       selectedCountry: selectedAddress?.country as CountryValue | null,
       commissionPercentage: paymentConfig.commission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
+      taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       auctionCountry: 'SPAIN',
       discount: appliedDiscount?.amount || 0,
     });
