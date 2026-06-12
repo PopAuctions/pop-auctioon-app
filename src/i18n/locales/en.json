@@ -462,6 +462,7 @@
       "country": "Country",
       "town": "Town",
       "cif": "CIF",
+      "legalName": "Legal name",
       "province": "Province",
       "postalCode": "Postal Code",
       "keepUrlProtocol": "Keep the protocol in the URL (http:// or https://)",

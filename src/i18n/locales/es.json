@@ -462,6 +462,7 @@
       "country": "País",
       "town": "Ciudad",
       "cif": "CIF",
+      "legalName": "Nombre legal",
       "province": "Provincia",
       "postalCode": "Código postal",
       "keepUrlProtocol": "Mantén el protocolo en la URL (http:// o https://)",
