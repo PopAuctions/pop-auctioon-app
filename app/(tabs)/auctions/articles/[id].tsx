@@ -246,7 +246,7 @@ export default function ArticlesDetailScreen() {
                 currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
-                commissionValue={isCommissionReady ? commissionData : null}
+                buyerCommissionValue={isCommissionReady ? commissionData : null}
                 texts={{
                   highestBid: articleLang.highestBid,
                   estimatedValue: articleLang.estimatedValue,
