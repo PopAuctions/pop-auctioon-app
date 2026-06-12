@@ -35,18 +35,34 @@ export function PaymentSummary({ lang, paymentDict, payment }: Props) {
       </View>
 
       {/* Commission */}
+      <View className='ml-4 flex flex-row items-center justify-between px-2'>
+        <CustomText
+          type='bodysmall'
+          className='text-slate-600'
+        >
+          {paymentDict.commission}
+        </CustomText>
+        <CustomText
+          type='bodysmall'
+          className='text-slate-600'
+        >
+          {formatter.format(payment.commissionAmount ?? 0)}
+        </CustomText>
+      </View>
+
+      {/* taxes */}
       <View className='flex flex-row items-center justify-between px-2'>
         <CustomText
           type='h4'
           className='text-base'
         >
-          {paymentDict.commission} {paymentDict.commission2}
+          {paymentDict.taxes}
         </CustomText>
         <CustomText
           type='h4'
           className='text-base'
         >
-          {formatter.format(payment.commissionAmount ?? 0)}
+          {formatter.format(payment.taxesAmount ?? 0)}
         </CustomText>
       </View>
 

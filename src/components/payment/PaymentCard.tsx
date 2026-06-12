@@ -14,12 +14,12 @@ interface PaymentCardProps {
 
 export function PaymentCard({ payment }: PaymentCardProps) {
   const { t, locale } = useTranslation();
-  const formatter = euroFormatter(locale);
+  const formatter = euroFormatter(locale, 2);
 
   return (
     <View className='my-3 mb-4 flex-row overflow-hidden rounded-3xl bg-white p-2 shadow-sm'>
       {/* Imagen del primer artículo a la izquierda - ocupa ~40% del ancho */}
-      <View className='bg-gray-100 mr-4 w-[45%] overflow-hidden rounded-lg'>
+      <View className='bg-gray-100 mr-4 w-[35%] overflow-hidden rounded-lg'>
         {payment.articles[0]?.images[0] ? (
           <CustomImage
             src={payment.articles[0].images[0]}
