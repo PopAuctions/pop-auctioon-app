@@ -172,7 +172,7 @@ export default function AuctionDetailScreen() {
                 <CustomLink
                   className='w-1/2'
                   mode='primary'
-                  href={`/auctions/${LIVE_URL[auctionMode]}/${id}`}
+                  href={`/(tabs)/auctions/${LIVE_URL[auctionMode]}/${id}`}
                 >
                   {auctionLang.watchButton}
                 </CustomLink>

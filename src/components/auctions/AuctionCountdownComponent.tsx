@@ -82,7 +82,7 @@ export function AuctionCountdownComponent({
           <CustomLink
             className='mt-1 w-full'
             mode='primary'
-            href={`/auction/${id}/live-auto`}
+            href={`/(tabs)/auctions/live-auto/${id}`}
           >
             {texts.enterBefore}
           </CustomLink>
@@ -117,7 +117,7 @@ export function AuctionCountdownComponent({
           <CustomLink
             className='w-full'
             mode='primary'
-            href={`/auction/${id}/live-auto`}
+            href={`/(tabs)/auctions/live-auto/${id}`}
           >
             {texts.enterBefore}
           </CustomLink>

@@ -214,7 +214,7 @@ export default function ArticlesDetailScreen() {
                 {auction.status === AuctionStatus.LIVE && (
                   <CustomLink
                     mode='primary'
-                    href={`/auctions/live/${auction.id}`}
+                    href={`/(tabs)/auctions/live/${auction.id}`}
                     className='w-2/3'
                   >
                     <Text className='text-base text-white'>
