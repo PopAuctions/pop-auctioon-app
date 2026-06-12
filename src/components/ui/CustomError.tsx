@@ -8,7 +8,7 @@ import { LangMap } from '@/types/types';
 import { getParentRoute } from '@/utils/deeplinks/getParentRoute';
 
 interface CustomErrorProps {
-  refreshRoute: Href;
+  refreshRoute: string;
   customMessage?: LangMap | null;
 }
 
@@ -23,7 +23,12 @@ export const CustomError = ({
   const message = customMessage?.[locale];
 
   const handleRefresh = () => {
-    router.replace(refreshRoute);
+    router.replace({
+      pathname: '/_refresh',
+      params: {
+        target: refreshRoute,
+      },
+    });
   };
 
   const handleGoToTabRoot = () => {
