@@ -347,6 +347,8 @@ export type UserArticlesWon = Pick<
 export interface AuctionUserWonArticles {
   createdAt: string;
   title: string;
+  storeCommissionPercentage: number;
+
   articles: CustomArticle[];
   displayHideButton: boolean;
 }
@@ -438,7 +440,14 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
   >;
   Auction: Pick<
     Auction,
-    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate' | 'category'
+    | 'id'
+    | 'status'
+    | 'title'
+    | 'image'
+    | 'mode'
+    | 'startDate'
+    | 'category'
+    | 'country'
   >;
 };
 
@@ -889,6 +898,7 @@ export interface SignupData {
   country?: string;
   postalCode?: string;
   cif?: string;
+  legalName?: string;
 }
 
 export interface UseSignupReturn {

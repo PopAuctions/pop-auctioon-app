@@ -287,6 +287,12 @@ export const AuctioneerRegisterSchema = z
         es: 'Requerido',
       }),
     }),
+    legalName: z.string().min(1, {
+      message: JSON.stringify({
+        en: 'Required',
+        es: 'Requerido',
+      }),
+    }),
     address: z.string().min(1, {
       message: JSON.stringify({
         en: 'Required',

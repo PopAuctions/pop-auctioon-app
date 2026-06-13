@@ -335,6 +335,32 @@ export function RegisterAuctioneerForm({
         )}
       </View>
 
+      {/* Legal name */}
+      <View className='mb-4'>
+        <CustomText type='body'>
+          {t('screens.editProfile.legalName')} *
+        </CustomText>
+        <Controller
+          control={control}
+          name='legalName'
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder={t('screens.editProfile.legalName')}
+              value={value}
+              onChangeText={onChange}
+              editable={!isLoading}
+            />
+          )}
+        />
+        {errors.legalName && (
+          <CustomText
+            type='bodysmall'
+            className='mt-1 text-red-500'
+          >
+            {getErrorMessage(errors.legalName.message, locale)}
+          </CustomText>
+        )}
+      </View>
       {/* CIF */}
       <View className='mb-4'>
         <CustomText type='body'>{t('screens.editProfile.cif')} *</CustomText>

@@ -41,7 +41,42 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { secureGet } = useSecureApi();
-  const { auth } = useAuth();
+  const { auth, forceLogout } = useAuth();
+
+  const isAuthError = (response: { status?: number; error?: LangMap }) => {
+    if (!response.error) {
+      return false;
+    }
+
+    const errorText =
+      response.error.en?.toLowerCase() + ' ' + response.error.es?.toLowerCase();
+
+    const isUnauthorizedStatus =
+      response.status === 401 || response.status === 403;
+    const containsInvalidAuthMessage =
+      errorText.includes('invalid token') ||
+      errorText.includes('token invalid') ||
+      errorText.includes('unauthorized') ||
+      errorText.includes('no authorization') ||
+      errorText.includes('not authenticated');
+
+    return isUnauthorizedStatus || containsInvalidAuthMessage;
+  };
+
+  const handleAuthError = useCallback(
+    async (response: { status?: number; error?: LangMap }) => {
+      if (!isAuthError(response)) {
+        return false;
+      }
+
+      console.log('AUTH_ERROR - Forcing logout due to invalid/expired session');
+      await forceLogout();
+      setStatus('idle');
+      setCurrentUser(null);
+      return true;
+    },
+    [forceLogout]
+  );
 
   const fetchCurrentUser = useCallback(async () => {
     try {
@@ -52,6 +87,10 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       });
 
       if (response.error) {
+        if (await handleAuthError(response)) {
+          return;
+        }
+
         setStatus('error');
         setErrorMessage(response.error);
 
@@ -94,7 +133,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
         es: 'Error al cargar datos del usuario',
       });
     }
-  }, [secureGet]);
+  }, [secureGet, handleAuthError]);
 
   const refetchCurrentUser = useCallback(async () => {
     const response = await secureGet<User>({
@@ -102,6 +141,10 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
     });
 
     if (response.error) {
+      if (await handleAuthError(response)) {
+        return;
+      }
+
       callToast({
         variant: 'error',
         description: {
@@ -116,7 +159,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       setCurrentUser(response.data);
       setStatus('success');
     }
-  }, [secureGet, callToast]);
+  }, [secureGet, callToast, handleAuthError]);
 
   useEffect(() => {
     if (auth.state !== 'authenticated') {
