@@ -1781,9 +1781,9 @@ Usa el playbook `docs/mobile-payment-db-reset-playbook.md` antes de ejecutar cad
 
 | Verificado | Flujo             | Cliente     | Accion                           | Resultado esperado                   | Observabilidad esperada                                            |
 | ---------- | ----------------- | ----------- | -------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| [ ]        | Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Log `MOBILE_PAYMENT_CREATE_INTENT`, webhook Stripe                 |
-| [ ]        | Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido          |
-| [ ]        | Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Response incluye tambien rollout Redsys sin romper contrato legacy |
+| [x]        | Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Verificado en build viejo: sigue entrando por `create-intent` y resolviendo el webhook Stripe |
+| [x]        | Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Verificado en build viejo: se conserva el fallo legacy y el log `MOBILE_PAYMENT_CREATE_INTENT` |
+| [x]        | Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Verificado en build viejo: el contrato legacy no se rompe al coexistir con Redsys |
 
 ### Tabla C - Web checkout Redsys
 
@@ -2007,9 +2007,9 @@ Resultado esperado:
 
 | Flujo             | Cliente          | Pasos                                         | Resultado esperado                         | Validación                                                                |
 | ----------------- | ---------------- | --------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------- |
-| Pago legacy OK    | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys             | Llama `create-intent`, recibe `STRIPE_PUBLIC_KEY`, procesa webhook Stripe |
-| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe                     | Mantiene el comportamiento legacy de error | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido                 |
-| Config legacy     | Build vieja real | Leer `/api/mobile/secure/config`              | No se rompe el contrato anterior           | La respuesta sigue incluyendo `STRIPE_PUBLIC_KEY`                         |
+| Pago legacy OK    | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys             | Verificado en build viejo: sigue entrando por `create-intent` y procesando webhook Stripe |
+| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe                     | Mantiene el comportamiento legacy de error | Verificado en build viejo: el error legacy sigue intacto                  |
+| Config legacy     | Build vieja real | Leer `/api/mobile/secure/config`              | No se rompe el contrato anterior           | Verificado en build viejo: la respuesta sigue incluyendo `STRIPE_PUBLIC_KEY` |
 
 ### Tabla D - Motivos de confianza
 

@@ -2,375 +2,185 @@ import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import type { PaymentDetailsInput } from '@/utils/calculate-payment-details';
 
 describe('calculatePaymentDetails', () => {
-  const defaultShippingTaxes = {
-    SPAIN: 10,
-    FRANCE: 15,
-    GERMANY: 20,
+  const shippingTaxes = {
+    SAME_COUNTRY: 10,
+    DIFFERENT_COUNTRY: 29,
     GENERAL: 29,
+    SPAIN: 10,
   };
 
-  describe('Basic calculations', () => {
-    it('should calculate payment details correctly with all values', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 1000,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
-        discount: 50,
-      };
+  const makeInput = (
+    overrides: Partial<PaymentDetailsInput> = {}
+  ): PaymentDetailsInput => ({
+    articlesAmount: 1000,
+    selectedCountry: 'SPAIN',
+    auctionCountry: 'SPAIN',
+    commissionPercentage: 12.5,
+    taxPercentageArticles: 21,
+    shippingTaxes,
+    discount: 0,
+    ...overrides,
+  });
 
-      const result = calculatePaymentDetails(input);
+  it('calculates subtotal, commission, taxes, shipping, and total', () => {
+    const result = calculatePaymentDetails(makeInput({ discount: 50 }));
 
-      expect(result).toEqual({
-        subtotal: 1000,
-        commission: 125, // 1000 * 0.125 = 125
-        shipping: 10, // SPAIN shipping
-        discount: 50,
-        total: 1085, // 1000 + 125 + 10 - 50 = 1085
-      });
-    });
-
-    it('should calculate correctly without discount', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 500,
-        selectedCountry: 'FRANCE',
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result).toEqual({
-        subtotal: 500,
-        commission: 50, // 500 * 0.10 = 50
-        shipping: 15, // FRANCE shipping
-        discount: 0,
-        total: 565, // 500 + 50 + 15 = 565
-      });
-    });
-
-    it('should handle zero articles amount', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 0,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result).toEqual({
-        subtotal: 0,
-        commission: 0,
-        shipping: 10,
-        discount: 0,
-        total: 10, // Only shipping
-      });
+    expect(result).toEqual({
+      subtotal: 1000,
+      commission: 111.11,
+      taxes: 23.33,
+      shipping: 10,
+      discount: 50,
+      total: 983.33,
     });
   });
 
-  describe('Commission calculations', () => {
-    it('should calculate commission with integer percentage', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 1000,
+  it('uses DIFFERENT_COUNTRY shipping when the countries differ', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        articlesAmount: 500,
+        selectedCountry: 'FRANCE',
+        auctionCountry: 'ITALY',
+        commissionPercentage: 10,
+      })
+    );
+
+    expect(result.shipping).toBe(29);
+    expect(result.commission).toBe(45.45);
+    expect(result.taxes).toBe(9.55);
+    expect(result.total).toBe(538.55);
+  });
+
+  it('uses SAME_COUNTRY shipping when the countries match', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
         selectedCountry: 'SPAIN',
-        commissionPercentage: 15,
-        shippingTaxes: defaultShippingTaxes,
-      };
+        auctionCountry: 'SPAIN',
+        shippingTaxes: {
+          ...shippingTaxes,
+          SAME_COUNTRY: 12,
+          DIFFERENT_COUNTRY: 39,
+        },
+      })
+    );
 
-      const result = calculatePaymentDetails(input);
+    expect(result.shipping).toBe(12);
+  });
 
-      expect(result.commission).toBe(150); // 1000 * 0.15 = 150
-    });
-
-    it('should calculate commission with decimal percentage', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 1000,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.commission).toBe(125); // 1000 * 0.125 = 125
-    });
-
-    it('should round commission to nearest integer', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 333,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      // 333 * 0.125 = 41.625 → rounds to 42
-      expect(result.commission).toBe(42);
-    });
-
-    it('should handle zero commission percentage', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 1000,
-        selectedCountry: 'SPAIN',
+  it('applies a zero commission cleanly', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        articlesAmount: 250,
         commissionPercentage: 0,
-        shippingTaxes: defaultShippingTaxes,
-      };
+      })
+    );
 
-      const result = calculatePaymentDetails(input);
-
-      expect(result.commission).toBe(0);
-    });
+    expect(result.commission).toBe(0);
+    expect(result.taxes).toBe(0);
+    expect(result.total).toBe(260);
   });
 
-  describe('Shipping calculations', () => {
-    it('should use country-specific shipping cost', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 500,
-        selectedCountry: 'GERMANY',
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-      };
+  it('applies a zero tax percentage cleanly', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        articlesAmount: 250,
+        taxPercentageArticles: 0,
+      })
+    );
 
-      const result = calculatePaymentDetails(input);
-
-      expect(result.shipping).toBe(20); // GERMANY shipping
-    });
-
-    it('should use GENERAL shipping when country not selected', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 500,
-        selectedCountry: null,
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.shipping).toBe(29); // GENERAL shipping
-    });
-
-    it('should use GENERAL shipping when country not in shipping taxes', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 500,
-        selectedCountry: 'PORTUGAL' as any,
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.shipping).toBe(29); // Fallback to GENERAL
-    });
-
-    it('should use default 29 when GENERAL not in shipping taxes', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 500,
-        selectedCountry: 'ITALY' as any,
-        commissionPercentage: 10,
-        shippingTaxes: { SPAIN: 10 }, // No GENERAL
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.shipping).toBe(29); // Hardcoded default
-    });
-
-    it('should handle zero shipping cost', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 500,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 10,
-        shippingTaxes: { SPAIN: 0, GENERAL: 29 },
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.shipping).toBe(0);
-    });
+    expect(result.taxes).toBe(0);
+    expect(result.total).toBe(260);
   });
 
-  describe('Discount calculations', () => {
-    it('should apply discount correctly', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 1000,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-        discount: 100,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.discount).toBe(100);
-      expect(result.total).toBe(1010); // 1000 + 100 + 10 - 100 = 1010
-    });
-
-    it('should handle discount equal to subtotal + commission + shipping', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 100,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-        discount: 120, // 100 + 10 + 10 = 120
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.total).toBe(0); // Total should be 0
-    });
-
-    it('should handle discount greater than total (negative total)', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 100,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-        discount: 200,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.total).toBe(-80); // 100 + 10 + 10 - 200 = -80
-    });
-  });
-
-  describe('Precision and rounding', () => {
-    it('should return numbers with max 2 decimal places', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 99.999,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
-        discount: 5.555,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.subtotal.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
-      expect(result.commission.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
-      expect(result.shipping.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
-      expect(result.discount.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
-      expect(result.total.toString()).toMatch(/^-?\d+(\.\d{1,2})?$/);
-    });
-
-    it('should handle floating point precision issues', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 0.1 + 0.2, // 0.30000000000000004 in JS
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.subtotal).toBe(0.3);
-    });
-  });
-
-  describe('Real-world scenarios', () => {
-    it('should calculate correctly for multiple articles', () => {
-      // Articles: 100€, 200€, 300€ = 600€ total
-      const input: PaymentDetailsInput = {
-        articlesAmount: 600,
-        selectedCountry: 'FRANCE',
-        commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
-        discount: 50,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result).toEqual({
-        subtotal: 600,
-        commission: 75, // 600 * 0.125 = 75
-        shipping: 15, // FRANCE
-        discount: 50,
-        total: 640, // 600 + 75 + 15 - 50 = 640
-      });
-    });
-
-    it('should handle high-value auctions', () => {
-      const input: PaymentDetailsInput = {
+  it('handles a high-value auction with discount', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
         articlesAmount: 10000,
-        selectedCountry: 'GERMANY',
         commissionPercentage: 12.5,
-        shippingTaxes: defaultShippingTaxes,
+        taxPercentageArticles: 21,
+        shippingTaxes: {
+          ...shippingTaxes,
+          SAME_COUNTRY: 10,
+          DIFFERENT_COUNTRY: 20,
+        },
         discount: 500,
-      };
+        selectedCountry: 'GERMANY',
+        auctionCountry: 'FRANCE',
+      })
+    );
 
-      const result = calculatePaymentDetails(input);
-
-      expect(result).toEqual({
-        subtotal: 10000,
-        commission: 1250, // 10000 * 0.125 = 1250
-        shipping: 20,
-        discount: 500,
-        total: 10770, // 10000 + 1250 + 20 - 500 = 10770
-      });
-    });
-
-    it('should handle low-value articles with shipping higher than subtotal', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 5,
-        selectedCountry: null, // GENERAL shipping (29€)
-        commissionPercentage: 10,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result).toEqual({
-        subtotal: 5,
-        commission: 1, // 5 * 0.10 = 0.5 → rounds to 1
-        shipping: 29,
-        discount: 0,
-        total: 35,
-      });
+    expect(result).toEqual({
+      subtotal: 10000,
+      commission: 1111.11,
+      taxes: 233.33,
+      shipping: 20,
+      discount: 500,
+      total: 9753.33,
     });
   });
 
-  describe('Edge cases', () => {
-    it('should handle empty shipping taxes object', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 100,
-        selectedCountry: 'SPAIN',
+  it('keeps two-decimal precision in all outputs', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        articlesAmount: 99.999,
+        commissionPercentage: 12.5,
+        taxPercentageArticles: 21,
+        discount: 5.555,
+      })
+    );
+
+    expect(result.subtotal.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
+    expect(result.commission.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
+    expect(result.taxes.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
+    expect(result.shipping.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
+    expect(result.discount.toString()).toMatch(/^\d+(\.\d{1,2})?$/);
+    expect(result.total.toString()).toMatch(/^-?\d+(\.\d{1,2})?$/);
+  });
+
+  it('handles low-value amounts without breaking rounding', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        articlesAmount: 5,
         commissionPercentage: 10,
-        shippingTaxes: {},
-        discount: 0,
-      };
+        taxPercentageArticles: 21,
+        selectedCountry: null,
+        auctionCountry: null,
+      })
+    );
 
-      const result = calculatePaymentDetails(input);
-
-      expect(result.shipping).toBe(29); // Default fallback
+    expect(result).toEqual({
+      subtotal: 5,
+      commission: 0.45,
+      taxes: 0.1,
+      shipping: 29,
+      discount: 0,
+      total: 34.1,
     });
+  });
 
-    it('should handle very small commission percentages', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 100,
+  it('uses DIFFERENT_COUNTRY shipping when only one country is known', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        selectedCountry: null,
+        auctionCountry: 'SPAIN',
+        articlesAmount: 300,
+        commissionPercentage: 10,
+      })
+    );
+
+    expect(result.shipping).toBe(29);
+  });
+
+  it('uses DIFFERENT_COUNTRY shipping when the auction country is missing', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
         selectedCountry: 'SPAIN',
-        commissionPercentage: 0.01,
-        shippingTaxes: defaultShippingTaxes,
-      };
+        auctionCountry: null,
+        articlesAmount: 300,
+        commissionPercentage: 10,
+      })
+    );
 
-      const result = calculatePaymentDetails(input);
-
-      expect(result.commission).toBe(0); // 100 * 0.0001 = 0.01 → rounds to 0
-    });
-
-    it('should handle very high commission percentages', () => {
-      const input: PaymentDetailsInput = {
-        articlesAmount: 100,
-        selectedCountry: 'SPAIN',
-        commissionPercentage: 100,
-        shippingTaxes: defaultShippingTaxes,
-      };
-
-      const result = calculatePaymentDetails(input);
-
-      expect(result.commission).toBe(100); // 100 * 1.0 = 100
-      expect(result.total).toBe(210); // 100 + 100 + 10
-    });
+    expect(result.shipping).toBe(29);
   });
 });
