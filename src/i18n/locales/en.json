@@ -97,6 +97,7 @@
       }
     },
     "auctioneer": {
+      "editStore": "Edit information",
       "myAuctions": "My live auctions",
       "myOnlineStore": "My Online Store",
       "soldArticles": "Sold Articles",
@@ -462,6 +463,7 @@
       "country": "Country",
       "town": "Town",
       "cif": "CIF",
+      "legalInputs": "This will be used on settlement documents and invoices. If you need to change, please contact support.",
       "legalName": "Legal name",
       "province": "Province",
       "postalCode": "Postal Code",
@@ -483,6 +485,7 @@
       "compressionError": "Failed to compress image. Please try another one.",
       "compressingImages": "Compressing images...",
       "updateSuccess": "Profile updated successfully",
+      "updateSuccessStore": "Data updated successfully",
       "updateError": "Failed to update profile",
       "loadError": "Failed to load user data",
       "permissionDenied": "Permission required to access gallery",

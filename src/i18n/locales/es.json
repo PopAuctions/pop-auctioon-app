@@ -97,6 +97,7 @@
       }
     },
     "auctioneer": {
+      "editStore": "Editar información",
       "myAuctions": "Mis Subastas en Vivo",
       "myOnlineStore": "Mi Tienda Online",
       "soldArticles": "Artículos Vendidos",
@@ -462,6 +463,7 @@
       "country": "País",
       "town": "Ciudad",
       "cif": "CIF",
+      "legalInputs": "Se usará en documentos de liquidación y facturas. Si necesitas cambiarlo, contacta con soporte.",
       "legalName": "Nombre legal",
       "province": "Provincia",
       "postalCode": "Código postal",
@@ -482,7 +484,7 @@
       "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
       "compressionError": "Error al comprimir la imagen. Por favor intenta con otra.",
       "compressingImages": "Comprimiendo imágenes...",
-      "updateSuccess": "Perfil actualizado exitosamente",
+      "updateSuccessStore": "Información actualizada exitosamente",
       "updateError": "Error al actualizar el perfil",
       "loadError": "Error al cargar datos del usuario",
       "permissionDenied": "Se requiere permiso para acceder a la galería",

@@ -1,3 +1,6 @@
+import { useMemo } from 'react';
+import { ActivityIndicator } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { View } from '@/components/Themed';
 import { CustomError } from '@/components/ui/CustomError';
 import { CustomImage } from '@/components/ui/CustomImage';
@@ -12,9 +15,6 @@ import { useFetchUserStore } from '@/hooks/components/useFetchUserStore';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
-import { useMemo } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default function AuctioneerTab() {
   const { t } = useTranslation();
@@ -82,10 +82,10 @@ export default function AuctioneerTab() {
     <ScrollView className='flex-1'>
       <View className='flex-row items-center px-6 pb-6 pt-4'>
         {/* Avatar circular con iniciales */}
-        {currentUser.profilePicture ? (
+        {userStore.logo ? (
           <View className='mr-4 h-20 w-20 overflow-hidden rounded-full bg-neutral-200'>
             <CustomImage
-              src={currentUser.profilePicture}
+              src={userStore.logo}
               alt={`${userStore.name} Image`}
               className='h-full w-full'
               resizeMode='cover'

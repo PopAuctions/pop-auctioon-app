@@ -436,7 +436,6 @@ export const AuctioneerEditSchema = z.object({
   postalCode: z.string().min(1, { message: 'Required' }),
   webPage: z.string().url().min(1, { message: 'Required' }),
   socialMedia: z.string().url().min(1, { message: 'Required' }),
-  storeName: z.string().min(1, { message: 'Required' }),
   cif: z.string().min(1, { message: 'Required' }),
   logo: z.string().optional(),
 });
