@@ -1,16 +1,15 @@
-import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { AuctioneerPayoutDashboard as AuctioneerPayoutDashboardType } from '@/types/payouts';
-import { euroFormatter } from '@/utils/euroFormatter';
-import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { View } from '../Themed';
-import { Pressable } from 'react-native';
-import { CustomText } from '../ui/CustomText';
+import { View } from 'react-native';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { CustomText } from '@/components/ui/CustomText';
+import { CustomLink } from '@/components/ui/CustomLink';
+import { euroFormatter } from '@/utils/euroFormatter';
 import { PayoutSummaryCard } from './PayoutSummaryCard';
 import { PayoutSectionTitle } from './PayoutSectionTitle';
 import { EmptyPayoutMessage } from './EmptyPayoutMessage';
 import { PayoutInfoRow } from './PayoutInfoRow';
 import { SALE_TYPE_MAP } from '@/constants/store';
+import { AuctioneerPayoutDashboard as AuctioneerPayoutDashboardType } from '@/types/payouts';
 
 export function AuctioneerPayoutDashboard({
   dashboard,
@@ -20,7 +19,6 @@ export function AuctioneerPayoutDashboard({
   const { locale, t } = useTranslation();
   const texts = t('screens.store.payoutsDashboard');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
-  const router = useRouter();
   const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
 
   const pendingAuctionTotal = dashboard.auctionPendingPayouts.reduce(
@@ -150,13 +148,10 @@ export function AuctioneerPayoutDashboard({
       ) : (
         <View className='gap-3'>
           {dashboard.payoutHistory.map((payout) => (
-            <Pressable
+            <CustomLink
               key={payout.payoutId}
-              onPress={() => {
-                router.push(
-                  `/(tabs)/auctioneer/my-store/payouts/${payout.payoutId}` as never
-                );
-              }}
+              mode='empty'
+              href={`/(tabs)/auctioneer/payouts/${payout.payoutId}`}
               className='rounded-2xl border border-neutral-200 bg-white p-4'
             >
               <View className='flex-row items-start justify-between gap-3'>
@@ -188,14 +183,7 @@ export function AuctioneerPayoutDashboard({
                   value={String(payout.totalItems)}
                 />
               </View>
-
-              <CustomText
-                type='bodysmall'
-                className='mt-3 text-cinnabar'
-              >
-                {texts.viewDetails}
-              </CustomText>
-            </Pressable>
+            </CustomLink>
           ))}
         </View>
       )}

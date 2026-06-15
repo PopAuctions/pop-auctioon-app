@@ -1,4 +1,13 @@
-import { StoreSettlementSaleTypeType } from './types';
+import {
+  Article,
+  Auction,
+  Store,
+  StorePayout,
+  StoreSettlementItem,
+  StoreSettlementSaleTypeType,
+  StoreSettlementShipping,
+  UserPayment,
+} from './types';
 
 export interface AuctionPendingPayout {
   auctionId: number;
@@ -35,3 +44,25 @@ export interface AuctioneerPayoutDashboard {
   onlineStorePendingPayouts: OnlineStorePendingPayout[];
   payoutHistory: AuctioneerPayoutHistory[];
 }
+
+export type StorePayoutWithItems = StorePayout & {
+  Store: Pick<Store, 'id' | 'name' | 'logo' | 'phoneNumber'> | null;
+  StoreSettlementItem: StoreSettlementItemWithRelations[];
+  StoreSettlementShipping?: Pick<
+    StoreSettlementShipping,
+    'id' | 'userPaymentId' | 'shippingAmount' | 'status' | 'paidAt'
+  >[];
+};
+
+export type StoreSettlementItemWithRelations = StoreSettlementItem & {
+  Store: Pick<Store, 'id' | 'name' | 'logo' | 'phoneNumber'> | null;
+  Article:
+    | (Pick<Article, 'id' | 'title' | 'images' | 'brand' | 'auctionId'> & {
+        Auction: Pick<Auction, 'id' | 'title'> | null;
+      })
+    | null;
+  UserPayment: Pick<
+    UserPayment,
+    'id' | 'createdAt' | 'totalAmount' | 'receiptUrl'
+  > | null;
+};

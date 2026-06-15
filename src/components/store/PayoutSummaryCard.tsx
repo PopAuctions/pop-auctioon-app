@@ -1,4 +1,4 @@
-import { View } from '../Themed';
+import { View } from 'react-native';
 import { CustomText } from '../ui/CustomText';
 
 export const PayoutSummaryCard = ({

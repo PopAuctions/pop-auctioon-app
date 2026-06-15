@@ -187,7 +187,7 @@ export default function AuctioneerLayout() {
         }}
       />
       <Stack.Screen
-        name='payouts/[id]/index'
+        name='payouts/[id]'
         options={{
           title: '',
           presentation: 'card',

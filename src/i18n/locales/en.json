@@ -207,6 +207,32 @@
         "noPayoutHistory": "You don't have any paid payouts yet."
       }
     },
+    "storeSettlements": {
+      "title": "Payout Details",
+      "description": "Review your payout information and settlement details.",
+      "items": "Items",
+      "articles": "Articles",
+      "article": "Article",
+      "method": "Method",
+      "status": "Status",
+      "payoutInformation": "Payout Information",
+      "paidAt": "Paid At",
+      "soldAt": "Sold At",
+      "reference": "Reference",
+      "notes": "Notes",
+      "receipt": "Receipt",
+      "viewReceipt": "View Receipt",
+      "grossAmount": "Gross Amount",
+      "platform": "PopAuction Commission",
+      "articlePayout": "Article Payout",
+      "shipping": "Shipping",
+      "total": "Total",
+      "saleType": "Sale Type",
+      "downloadLiquidationInvoice": "Download Liquidation Invoice",
+      "downloadCommissionInvoice": "Download Commission Invoice",
+      "payoutDetail": "Payout Detail",
+      "noItems": "No settlement items found"
+    },
     "onlineStoreArticle": {
       "title": "Online Store",
       "price": "Price",

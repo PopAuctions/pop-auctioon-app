@@ -207,6 +207,32 @@
         "noPayoutHistory": "Todavía no tienes liquidaciones pagadas."
       }
     },
+    "storeSettlements": {
+      "title": "Detalle del Pago",
+      "description": "Consulta la información de tu pago y los detalles de liquidación.",
+      "items": "Artículos",
+      "articles": "Artículos",
+      "article": "Artículo",
+      "method": "Método",
+      "status": "Estado",
+      "payoutInformation": "Información del Pago",
+      "paidAt": "Pagado el",
+      "soldAt": "Vendido el",
+      "reference": "Referencia",
+      "notes": "Notas",
+      "receipt": "Comprobante",
+      "viewReceipt": "Ver Comprobante",
+      "grossAmount": "Monto Bruto",
+      "platform": "Comisión PopAuction",
+      "articlePayout": "Pago del Artículo",
+      "shipping": "Envío",
+      "total": "Total",
+      "saleType": "Tipo de Venta",
+      "downloadLiquidationInvoice": "Descargar Factura de Liquidación",
+      "downloadCommissionInvoice": "Descargar Factura de Comisión",
+      "payoutDetail": "Detalle del Pago",
+      "noItems": "No se encontraron artículos en esta liquidación"
+    },
     "onlineStoreArticle": {
       "title": "Tienda Online",
       "price": "Precio",
