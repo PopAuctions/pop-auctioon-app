@@ -213,7 +213,18 @@ export const SECURE_ENDPOINTS = {
   GLOBALS: {
     COUNTRIES: '/globals/countries',
   },
-
+  STORE: {
+    EDIT: '/store/edit',
+    PAYOUTS: {
+      DASHBOARD: '/store/payouts',
+      SINGLE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}` as ApiEndpoint,
+      COMMISSION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/commission` as ApiEndpoint,
+      LIQUIDATION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/liquidation` as ApiEndpoint,
+    },
+  },
   // Usuario y perfil
   USER: {
     PROFILE: '/user/profile',

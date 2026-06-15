@@ -27,6 +27,31 @@ export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
 
 export type Store = Database['public']['Tables']['Store']['Row'];
 
+export type StorePayout = Database['public']['Tables']['StorePayout']['Row'];
+
+export type StoreSettlementShipping =
+  Database['public']['Tables']['StoreSettlementShipping']['Row'];
+
+export type StoreSettlementSaleTypeType =
+  Database['public']['Enums']['StoreSettlementSaleType'];
+
+export type StoreSettlementStatusType =
+  Database['public']['Enums']['StoreSettlementStatus'];
+
+export type StorePayoutStatusType =
+  Database['public']['Enums']['StorePayoutStatus'];
+
+export type StoreSettlementStatusFilter = StoreSettlementStatusType | 'ALL';
+
+export type StorePayoutMethod =
+  Database['public']['Enums']['StorePayoutMethod'];
+
+export type StoreSettlementItem =
+  Database['public']['Tables']['StoreSettlementItem']['Row'];
+
+export type StorePayoutMethodType =
+  Database['public']['Enums']['StorePayoutMethod'];
+
 export type PhoneOTP = Database['public']['Tables']['PhoneOTP']['Row'];
 
 export type UserDiscountCode =

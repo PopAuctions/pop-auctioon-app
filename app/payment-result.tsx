@@ -124,7 +124,7 @@ export default function PaymentResultScreen() {
         <View className='flex-1 items-center justify-center px-6'>
           <CustomText
             type='body'
-            className='text-center text-gray-600'
+            className='text-gray-600 text-center'
           >
             {locale === 'es'
               ? 'Cargando resultado del pago...'
@@ -163,28 +163,28 @@ export default function PaymentResultScreen() {
 
           <CustomText
             type='body'
-            className='mb-4 text-center text-gray-700'
+            className='text-gray-700 mb-4 text-center'
           >
             {copy.description[locale]}
           </CustomText>
 
           {typeof context?.paymentIntent === 'string' &&
             context.paymentIntent.length > 0 && (
-            <View className='mb-6 rounded-2xl bg-white px-4 py-3'>
-              <CustomText
-                type='bodysmall'
-                className='text-center text-gray-500'
-              >
-                {locale === 'es' ? 'Orden de pago' : 'Payment order'}
-              </CustomText>
-              <CustomText
-                type='bold'
-                className='mt-1 text-center text-black'
-              >
-                {context.paymentIntent}
-              </CustomText>
-            </View>
-          )}
+              <View className='mb-6 rounded-2xl bg-white px-4 py-3'>
+                <CustomText
+                  type='bodysmall'
+                  className='text-gray-500 text-center'
+                >
+                  {locale === 'es' ? 'Orden de pago' : 'Payment order'}
+                </CustomText>
+                <CustomText
+                  type='bold'
+                  className='mt-1 text-center text-black'
+                >
+                  {context.paymentIntent}
+                </CustomText>
+              </View>
+            )}
 
           <Button
             mode='primary'

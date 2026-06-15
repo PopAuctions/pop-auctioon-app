@@ -54,7 +54,11 @@ export const parseRedsysReturnUrl = ({
   const returnedOrderId = parsedUrl.searchParams.get('order');
   const resolvedOrderId = returnedOrderId ?? expectedOrderId ?? null;
 
-  if (expectedOrderId && returnedOrderId && expectedOrderId !== returnedOrderId) {
+  if (
+    expectedOrderId &&
+    returnedOrderId &&
+    expectedOrderId !== returnedOrderId
+  ) {
     return {
       success: false,
       type: 'error',

@@ -848,10 +848,13 @@ export interface Database {
           active: boolean;
           address: string | null;
           cif: string | null;
+          commissionPercentage: number;
           country: string | null;
           createdAt: string;
           id: string;
           isHostAuctioneer: boolean;
+          legalName: string | null;
+          logo: string | null;
           name: string | null;
           phoneNumber: string | null;
           postalCode: string | null;
@@ -866,10 +869,13 @@ export interface Database {
           active?: boolean;
           address?: string | null;
           cif?: string | null;
+          commissionPercentage?: number;
           country?: string | null;
           createdAt?: string;
           id?: string;
           isHostAuctioneer?: boolean;
+          legalName?: string | null;
+          logo?: string | null;
           name?: string | null;
           phoneNumber?: string | null;
           postalCode?: string | null;
@@ -884,10 +890,13 @@ export interface Database {
           active?: boolean;
           address?: string | null;
           cif?: string | null;
+          commissionPercentage?: number;
           country?: string | null;
           createdAt?: string;
           id?: string;
           isHostAuctioneer?: boolean;
+          legalName?: string | null;
+          logo?: string | null;
           name?: string | null;
           phoneNumber?: string | null;
           postalCode?: string | null;
@@ -904,6 +913,243 @@ export interface Database {
             columns: ['userId'];
             isOneToOne: true;
             referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      StorePayout: {
+        Row: {
+          cancelledAt: string | null;
+          commissionInvoiceCorrelativeNumber: number | null;
+          commissionInvoiceId: string | null;
+          commissionInvoiceIssuedAt: string | null;
+          createdAt: string;
+          createdBy: string | null;
+          id: string;
+          liquidationCorrelativeNumber: number | null;
+          liquidationId: string | null;
+          liquidationIssuedAt: string | null;
+          method: Database['public']['Enums']['StorePayoutMethod'];
+          notes: string | null;
+          paidAt: string;
+          receiptUrl: string | null;
+          reference: string | null;
+          status: Database['public']['Enums']['StorePayoutStatus'];
+          storeId: string;
+          totalAmount: number;
+          totalItems: number;
+          updatedAt: string;
+        };
+        Insert: {
+          cancelledAt?: string | null;
+          commissionInvoiceCorrelativeNumber?: number | null;
+          commissionInvoiceId?: string | null;
+          commissionInvoiceIssuedAt?: string | null;
+          createdAt?: string;
+          createdBy?: string | null;
+          id?: string;
+          liquidationCorrelativeNumber?: number | null;
+          liquidationId?: string | null;
+          liquidationIssuedAt?: string | null;
+          method?: Database['public']['Enums']['StorePayoutMethod'];
+          notes?: string | null;
+          paidAt?: string;
+          receiptUrl?: string | null;
+          reference?: string | null;
+          status?: Database['public']['Enums']['StorePayoutStatus'];
+          storeId: string;
+          totalAmount: number;
+          totalItems: number;
+          updatedAt?: string;
+        };
+        Update: {
+          cancelledAt?: string | null;
+          commissionInvoiceCorrelativeNumber?: number | null;
+          commissionInvoiceId?: string | null;
+          commissionInvoiceIssuedAt?: string | null;
+          createdAt?: string;
+          createdBy?: string | null;
+          id?: string;
+          liquidationCorrelativeNumber?: number | null;
+          liquidationId?: string | null;
+          liquidationIssuedAt?: string | null;
+          method?: Database['public']['Enums']['StorePayoutMethod'];
+          notes?: string | null;
+          paidAt?: string;
+          receiptUrl?: string | null;
+          reference?: string | null;
+          status?: Database['public']['Enums']['StorePayoutStatus'];
+          storeId?: string;
+          totalAmount?: number;
+          totalItems?: number;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'storepayout_createdby_fkey';
+            columns: ['createdBy'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storepayout_storeid_fkey';
+            columns: ['storeId'];
+            isOneToOne: false;
+            referencedRelation: 'Store';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      StoreSettlementItem: {
+        Row: {
+          articleId: number;
+          buyerCommissionAmount: number;
+          buyerCommissionPercentage: number;
+          createdAt: string;
+          grossAmount: number;
+          id: string;
+          paidAt: string | null;
+          payableAt: string;
+          payoutId: string | null;
+          platformTotalCommissionAmount: number;
+          saleType: Database['public']['Enums']['StoreSettlementSaleType'];
+          sellerCommissionAmount: number;
+          sellerCommissionPercentage: number;
+          sellerNetAmount: number;
+          soldAt: string;
+          status: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt: string;
+          userPaymentId: number;
+        };
+        Insert: {
+          articleId: number;
+          buyerCommissionAmount?: number;
+          buyerCommissionPercentage?: number;
+          createdAt?: string;
+          grossAmount: number;
+          id?: string;
+          paidAt?: string | null;
+          payableAt: string;
+          payoutId?: string | null;
+          platformTotalCommissionAmount?: number;
+          saleType: Database['public']['Enums']['StoreSettlementSaleType'];
+          sellerCommissionAmount?: number;
+          sellerCommissionPercentage?: number;
+          sellerNetAmount: number;
+          soldAt: string;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt?: string;
+          userPaymentId: number;
+        };
+        Update: {
+          articleId?: number;
+          buyerCommissionAmount?: number;
+          buyerCommissionPercentage?: number;
+          createdAt?: string;
+          grossAmount?: number;
+          id?: string;
+          paidAt?: string | null;
+          payableAt?: string;
+          payoutId?: string | null;
+          platformTotalCommissionAmount?: number;
+          saleType?: Database['public']['Enums']['StoreSettlementSaleType'];
+          sellerCommissionAmount?: number;
+          sellerCommissionPercentage?: number;
+          sellerNetAmount?: number;
+          soldAt?: string;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId?: string;
+          updatedAt?: string;
+          userPaymentId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'storesettlementitem_articleid_fkey';
+            columns: ['articleId'];
+            isOneToOne: false;
+            referencedRelation: 'Article';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementitem_payoutid_fkey';
+            columns: ['payoutId'];
+            isOneToOne: false;
+            referencedRelation: 'StorePayout';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementitem_storeid_fkey';
+            columns: ['storeId'];
+            isOneToOne: false;
+            referencedRelation: 'Store';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementitem_userpaymentid_fkey';
+            columns: ['userPaymentId'];
+            isOneToOne: false;
+            referencedRelation: 'UserPayment';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      StoreSettlementShipping: {
+        Row: {
+          createdAt: string;
+          id: string;
+          paidAt: string | null;
+          payoutId: string | null;
+          shippingAmount: number;
+          status: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt: string;
+          userPaymentId: number;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: string;
+          paidAt?: string | null;
+          payoutId?: string | null;
+          shippingAmount: number;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt?: string;
+          userPaymentId: number;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          paidAt?: string | null;
+          payoutId?: string | null;
+          shippingAmount?: number;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId?: string;
+          updatedAt?: string;
+          userPaymentId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'storesettlementshipping_payoutid_fkey';
+            columns: ['payoutId'];
+            isOneToOne: false;
+            referencedRelation: 'StorePayout';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementshipping_storeid_fkey';
+            columns: ['storeId'];
+            isOneToOne: false;
+            referencedRelation: 'Store';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementshipping_userpaymentid_fkey';
+            columns: ['userPaymentId'];
+            isOneToOne: true;
+            referencedRelation: 'UserPayment';
             referencedColumns: ['id'];
           },
         ];
@@ -1550,6 +1796,10 @@ export interface Database {
       LiveAuctionState: 'PENDING' | 'LIVE' | 'FINISHED';
       OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED';
       PaymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+      StorePayoutMethod: 'BANK_TRANSFER' | 'STRIPE' | 'PAYPAL' | 'CASH';
+      StorePayoutStatus: 'PAID' | 'CANCELLED';
+      StoreSettlementSaleType: 'AUCTION' | 'ONLINE_STORE';
+      StoreSettlementStatus: 'PENDING' | 'PROBLEM' | 'PAID' | 'CANCELLED';
       UserRole: 'ADMIN' | 'USER' | 'AUCTIONEER';
       WonArticleStatus: 'NOT_PAID' | 'DRAFT' | 'PAID';
     };
@@ -1718,6 +1968,10 @@ export const Constants = {
       LiveAuctionState: ['PENDING', 'LIVE', 'FINISHED'],
       OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED'],
       PaymentStatus: ['PENDING', 'APPROVED', 'REJECTED'],
+      StorePayoutMethod: ['BANK_TRANSFER', 'STRIPE', 'PAYPAL', 'CASH'],
+      StorePayoutStatus: ['PAID', 'CANCELLED'],
+      StoreSettlementSaleType: ['AUCTION', 'ONLINE_STORE'],
+      StoreSettlementStatus: ['PENDING', 'PROBLEM', 'PAID', 'CANCELLED'],
       UserRole: ['ADMIN', 'USER', 'AUCTIONEER'],
       WonArticleStatus: ['NOT_PAID', 'DRAFT', 'PAID'],
     },
