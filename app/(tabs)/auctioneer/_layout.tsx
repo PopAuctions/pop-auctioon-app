@@ -65,6 +65,13 @@ export default function AuctioneerLayout() {
 
       {/* MY AUCTIONS */}
       <Stack.Screen
+        name='edit/index'
+        options={{
+          title: t('screens.auctioneer.editStore'),
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
         name='my-auctions/index'
         options={{
           title: t('screens.auctioneer.myAuctions'),

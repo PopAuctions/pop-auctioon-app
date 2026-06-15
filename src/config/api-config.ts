@@ -213,7 +213,9 @@ export const SECURE_ENDPOINTS = {
   GLOBALS: {
     COUNTRIES: '/globals/countries',
   },
-
+  STORE: {
+    EDIT: '/store/edit',
+  },
   // Usuario y perfil
   USER: {
     PROFILE: '/user/profile',

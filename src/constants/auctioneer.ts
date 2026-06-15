@@ -2,6 +2,13 @@ import { APP_USER_ROLES } from './user';
 
 export const INDEX_OPTIONS = [
   {
+    name: 'Edit Store',
+    icon: 'edit',
+    labelKey: 'screens.auctioneer.editStore',
+    href: '/(tabs)/auctioneer/edit',
+    role: APP_USER_ROLES.AUCTIONEER,
+  },
+  {
     name: 'My live auctions',
     icon: 'video-camera',
     labelKey: 'screens.auctioneer.myAuctions',
