@@ -117,3 +117,19 @@ export const StoreSettlementSaleType: Record<
   ONLINE_STORE: 'ONLINE_STORE',
   AUCTION: 'AUCTION',
 } as const;
+
+export const STORE_INVOICE_TYPES = {
+  COMMISSION_INVOICE: 'COMMISSION_INVOICE',
+  LIQUIDATION_INVOICE: 'LIQUIDATION_INVOICE',
+};
+
+export const STORE_INVOICE_TYPES_LABEL = {
+  COMMISSION_INVOICE: {
+    es: 'fatura-comisión',
+    en: 'commission-invoice',
+  },
+  LIQUIDATION_INVOICE: {
+    es: 'factura-liquidación',
+    en: 'liquidation-invoice',
+  },
+};

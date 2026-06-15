@@ -1,3 +1,4 @@
+import { STORE_INVOICE_TYPES } from '@/constants/store';
 import {
   Article,
   Auction,
@@ -66,3 +67,5 @@ export type StoreSettlementItemWithRelations = StoreSettlementItem & {
     'id' | 'createdAt' | 'totalAmount' | 'receiptUrl'
   > | null;
 };
+
+export type StoreInvoiceTypes = keyof typeof STORE_INVOICE_TYPES;

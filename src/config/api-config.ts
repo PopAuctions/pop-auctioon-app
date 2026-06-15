@@ -219,6 +219,10 @@ export const SECURE_ENDPOINTS = {
       DASHBOARD: '/store/payouts',
       SINGLE: (id: string): ApiEndpoint =>
         `/store/payouts/${id}` as ApiEndpoint,
+      COMMISSION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/commission` as ApiEndpoint,
+      LIQUIDATION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/liquidation` as ApiEndpoint,
     },
   },
   // Usuario y perfil
