@@ -47,9 +47,7 @@ export const useAuthNavigation = () => {
       const destinationPath = href.split('?')[0];
       const parentRoute = getParentRoute(destinationPath);
       const shouldBuildNestedStack =
-        options?.buildStack &&
-        parentRoute &&
-        parentRoute !== destinationPath;
+        options?.buildStack && parentRoute && parentRoute !== destinationPath;
 
       if (shouldBuildNestedStack) {
         router.replace(parentRoute as Href);

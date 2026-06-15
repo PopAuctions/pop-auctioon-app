@@ -40,10 +40,7 @@ const buildLaunchUrl = (launchUrl: string): string => {
     ? launchUrl
     : `/${launchUrl}`;
 
-  if (
-    baseUrl.endsWith('/api') &&
-    normalizedPath.startsWith('/api/')
-  ) {
+  if (baseUrl.endsWith('/api') && normalizedPath.startsWith('/api/')) {
     return `${baseUrl}${normalizedPath.slice('/api'.length)}`;
   }
 
