@@ -21,6 +21,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useToast } from '@/hooks/useToast';
 import { Button } from '../ui/Button';
+import { getFileNameFromContentDisposition } from '@/utils/getFileNameFromContentDisposition';
 
 export function StorePayoutDetail({
   payout,
@@ -88,13 +89,18 @@ export function StorePayoutDetail({
 
       const fileName =
         response.headers?.get('x-file-name') ??
-        response.headers?.get('Content-Disposition') ??
-        `${STORE_INVOICE_TYPES_LABEL[mode]}.pdf`;
-      console.log(response.headers);
+        response.headers?.get('content-disposition') ??
+        `${STORE_INVOICE_TYPES_LABEL[mode]}`;
 
       const arrayBuffer = response.data as ArrayBuffer;
       const uint8Array = new Uint8Array(arrayBuffer);
-      const file = new File(Paths.document, fileName);
+      const file = new File(
+        Paths.document,
+        `${
+          getFileNameFromContentDisposition(fileName) ??
+          STORE_INVOICE_TYPES_LABEL[mode][locale]
+        }.pdf`
+      );
 
       file.create({ overwrite: true });
       file.write(uint8Array);
