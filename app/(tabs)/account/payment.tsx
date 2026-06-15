@@ -141,6 +141,7 @@ export default function PaymentScreen() {
         commission: 0,
         shipping: 0,
         discount: 0,
+        taxes: 0,
         total: subtotal,
       };
     }
@@ -151,6 +152,7 @@ export default function PaymentScreen() {
       auctionCountry: auctionCountry,
       commissionPercentage: paymentConfig.commission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
+      taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       discount: appliedDiscount?.amount || 0,
     });
 

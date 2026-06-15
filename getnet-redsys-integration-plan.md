@@ -1781,40 +1781,40 @@ Usa el playbook `docs/mobile-payment-db-reset-playbook.md` antes de ejecutar cad
 
 | Verificado | Flujo             | Cliente     | Accion                           | Resultado esperado                   | Observabilidad esperada                                            |
 | ---------- | ----------------- | ----------- | -------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| [ ]        | Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Log `MOBILE_PAYMENT_CREATE_INTENT`, webhook Stripe                 |
-| [ ]        | Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido          |
-| [ ]        | Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Response incluye tambien rollout Redsys sin romper contrato legacy |
+| [x]        | Pago legacy OK    | Build vieja | Pagar con Stripe                 | El flujo anterior sigue funcionando  | Verificado en build viejo: sigue entrando por `create-intent` y resolviendo el webhook Stripe |
+| [x]        | Pago legacy fallo | Build vieja | Forzar fallo Stripe              | Error normal de Stripe               | Verificado en build viejo: se conserva el fallo legacy y el log `MOBILE_PAYMENT_CREATE_INTENT` |
+| [x]        | Config legacy     | Build vieja | Leer `/api/mobile/secure/config` | Sigue recibiendo `STRIPE_PUBLIC_KEY` | Verificado en build viejo: el contrato legacy no se rompe al coexistir con Redsys |
 
 ### Tabla C - Web checkout Redsys
 
 | Verificado | Flujo          | URL                                     | Accion           | Resultado esperado                           | Validacion                                      |
 | ---------- | -------------- | --------------------------------------- | ---------------- | -------------------------------------------- | ----------------------------------------------- |
-| [ ]        | Web subasta OK | `/[lang]/payment?auctionId=X`           | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
-| [ ]        | Web subasta KO | `/[lang]/payment?auctionId=X`           | Escenario KO     | Redireccion a `/payment/error?order=ORDER`   | `UserPayment.status=REJECTED`                   |
-| [ ]        | Web single OK  | `/[lang]/single-payment?articleId=X`    | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | `UserPayment.status=APPROVED`                   |
-| [ ]        | Bridge page    | `/api/payments/redsys/launch?token=...` | Abrir URL        | HTML auto-submit a Redsys                    | Form action correcta segun `REDSYS_ENVIRONMENT` |
+| [x]        | Web subasta OK | `/[lang]/payment?auctionId=X`           | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | Verificado en web: `UserPayment.status=APPROVED` y retorno correcto |
+| [x]        | Web subasta KO | `/[lang]/payment?auctionId=X`           | Escenario KO     | Redireccion a `/payment/error?order=ORDER`   | Verificado en web: `UserPayment.status=REJECTED` y retorno correcto |
+| [x]        | Web single OK  | `/[lang]/single-payment?articleId=X`    | Pagar por Redsys | Redireccion a `/payment/success?order=ORDER` | Verificado en web: `UserPayment.status=APPROVED` y retorno correcto |
+| [x]        | Bridge page    | `/api/payments/redsys/launch?token=...` | Abrir URL        | HTML auto-submit a Redsys                    | Verificado en web: form action correcto segun `REDSYS_ENVIRONMENT` |
 
 ### Tabla D - Webhooks y trazabilidad
 
 | Verificado | Punto                  | Como probar                                             | Resultado esperado                                                            |
 | ---------- | ---------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [ ]        | Webhook Redsys vivo    | POST manual a `/api/webhooks/redsys` con firma invalida | Responde HTTP 200                                                             |
-| [ ]        | Webhook Redsys pago OK | Pago real/sandbox aprobado                              | Log `MOBILE_PAYMENT_REDSYS_WEBHOOK`, procesamiento aprobado                   |
-| [ ]        | Webhook Stripe legacy  | Pago desde build vieja                                  | Log `MOBILE_PAYMENT_STRIPE_WEBHOOK`                                           |
-| [ ]        | Config coexistencia    | GET `/api/mobile/secure/config?type=basic`              | Incluye `STRIPE_PUBLIC_KEY`, `REDSYS_MERCHANT_CODE`, `MOBILE_PAYMENT_ROLLOUT` |
+| [x]        | Webhook Redsys vivo    | POST manual a `/api/webhooks/redsys` con firma invalida | Verificado en web: responde HTTP 200                                                             |
+| [x]        | Webhook Redsys pago OK | Pago real/sandbox aprobado                              | Verificado en web: log `MOBILE_PAYMENT_REDSYS_WEBHOOK`, procesamiento aprobado                   |
+| [x]        | Webhook Stripe legacy  | Pago desde build vieja                                  | Verificado en web: log `MOBILE_PAYMENT_STRIPE_WEBHOOK`                                           |
+| [x]        | Config coexistencia    | GET `/api/mobile/secure/config?type=basic`              | Verificado en web: incluye `STRIPE_PUBLIC_KEY`, `REDSYS_MERCHANT_CODE`, `MOBILE_PAYMENT_ROLLOUT` |
 
 ### Checklist operativo de prueba
 
-- [ ] Backend web levantado con envs Redsys de test
-- [ ] App nueva abre Redsys desde subasta
-- [ ] App nueva abre Redsys desde single
-- [ ] Cancelacion manual devuelve rechazo limpio en app
-- [ ] Retorno KO devuelve rechazo limpio en app
-- [ ] Retorno OK termina en historial y `APPROVED`
-- [ ] Build vieja sigue pagando por Stripe
-- [ ] Logs de coexistencia aparecen en servidor
-- [ ] Webhook Redsys responde 200 siempre
-- [ ] `paymentIntent` guarda el `redsysOrder` en la app nueva
+- [x] Backend web levantado con envs Redsys de test
+- [x] App nueva abre Redsys desde subasta
+- [x] App nueva abre Redsys desde single
+- [x] Cancelacion manual devuelve rechazo limpio en app
+- [x] Retorno KO devuelve rechazo limpio en app
+- [x] Retorno OK termina en historial y `APPROVED`
+- [x] Build vieja sigue pagando por Stripe
+- [x] Logs de coexistencia aparecen en servidor
+- [x] Webhook Redsys responde 200 siempre
+- [x] `paymentIntent` guarda el `redsysOrder` en la app nueva
 
 ---
 
@@ -2007,9 +2007,9 @@ Resultado esperado:
 
 | Flujo             | Cliente          | Pasos                                         | Resultado esperado                         | Validación                                                                |
 | ----------------- | ---------------- | --------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------- |
-| Pago legacy OK    | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys             | Llama `create-intent`, recibe `STRIPE_PUBLIC_KEY`, procesa webhook Stripe |
-| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe                     | Mantiene el comportamiento legacy de error | Log `MOBILE_PAYMENT_CREATE_INTENT`, evento Stripe fallido                 |
-| Config legacy     | Build vieja real | Leer `/api/mobile/secure/config`              | No se rompe el contrato anterior           | La respuesta sigue incluyendo `STRIPE_PUBLIC_KEY`                         |
+| Pago legacy OK    | Build vieja real | Instalar build vieja e iniciar un pago normal | Sigue usando Stripe, no Redsys             | Verificado en build viejo: sigue entrando por `create-intent` y procesando webhook Stripe |
+| Pago legacy fallo | Build vieja real | Forzar un fallo de Stripe                     | Mantiene el comportamiento legacy de error | Verificado en build viejo: el error legacy sigue intacto                  |
+| Config legacy     | Build vieja real | Leer `/api/mobile/secure/config`              | No se rompe el contrato anterior           | Verificado en build viejo: la respuesta sigue incluyendo `STRIPE_PUBLIC_KEY` |
 
 ### Tabla D - Motivos de confianza
 
