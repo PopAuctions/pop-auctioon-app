@@ -100,6 +100,7 @@
       "editStore": "Editar información",
       "myAuctions": "Mis Subastas en Vivo",
       "myOnlineStore": "Mi Tienda Online",
+      "payouts": "Pagos y documentos",
       "soldArticles": "Artículos Vendidos",
       "auctioneerActive": "Subastador activo",
       "auctioneerNotActive": "Subastador inactivo"
@@ -183,6 +184,27 @@
         "all": "Todos",
         "bags": "Bolsos",
         "jewelry": "Joyería"
+      },
+      "payoutsDashboard": {
+        "title": "Mis liquidaciones",
+        "description": "Consulta tus próximas liquidaciones y el historial de pagos realizados.",
+        "auctionsPendingPayouts": "Liquidaciones pendientes de subastas",
+        "onlineStorePendingPayouts": "Liquidaciones pendientes de tienda online",
+        "payoutHistory": "Historial de liquidaciones",
+        "auction": "Subasta",
+        "article": "Artículo",
+        "articles": "Artículos",
+        "articleNetAmount": "Importe neto artículos",
+        "shipping": "Envío",
+        "total": "Total",
+        "payableAt": "Disponible para liquidar",
+        "paidAt": "Pagado el",
+        "saleType": "Tipo de venta",
+        "source": "Origen",
+        "viewDetails": "Ver detalles",
+        "noPendingAuctionPayouts": "No tienes liquidaciones pendientes de subastas.",
+        "noPendingOnlineStorePayouts": "No tienes liquidaciones pendientes de tienda online.",
+        "noPayoutHistory": "Todavía no tienes liquidaciones pagadas."
       }
     },
     "onlineStoreArticle": {

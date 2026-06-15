@@ -100,6 +100,7 @@
       "editStore": "Edit information",
       "myAuctions": "My live auctions",
       "myOnlineStore": "My Online Store",
+      "payouts": "Payouts and documents",
       "soldArticles": "Sold Articles",
       "auctioneerActive": "Active auctioneer",
       "auctioneerNotActive": "Inactive auctioneer"
@@ -183,6 +184,27 @@
         "all": "All",
         "bags": "Bags",
         "jewelry": "Jewelry"
+      },
+      "payoutsDashboard": {
+        "title": "My Payouts",
+        "description": "Review upcoming payouts and your payout history.",
+        "auctionsPendingPayouts": "Pending Auction Payouts",
+        "onlineStorePendingPayouts": "Pending Online Store Payouts",
+        "payoutHistory": "Payout History",
+        "auction": "Auction",
+        "article": "Article",
+        "articles": "Articles",
+        "articleNetAmount": "Net Article Amount",
+        "shipping": "Shipping",
+        "total": "Total",
+        "payableAt": "Available for Payout",
+        "paidAt": "Paid At",
+        "saleType": "Sale Type",
+        "source": "Source",
+        "viewDetails": "View Details",
+        "noPendingAuctionPayouts": "You have no pending auction payouts.",
+        "noPendingOnlineStorePayouts": "You have no pending online store payouts.",
+        "noPayoutHistory": "You don't have any paid payouts yet."
       }
     },
     "onlineStoreArticle": {

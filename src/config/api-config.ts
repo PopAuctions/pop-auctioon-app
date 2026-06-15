@@ -215,6 +215,11 @@ export const SECURE_ENDPOINTS = {
   },
   STORE: {
     EDIT: '/store/edit',
+    PAYOUTS: {
+      DASHBOARD: '/store/payouts',
+      SINGLE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}` as ApiEndpoint,
+    },
   },
   // Usuario y perfil
   USER: {

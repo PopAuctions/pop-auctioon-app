@@ -179,6 +179,20 @@ export default function AuctioneerLayout() {
           presentation: 'card',
         }}
       />
+      <Stack.Screen
+        name='payouts/index'
+        options={{
+          title: t('screens.auctioneer.payouts'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='payouts/[id]/index'
+        options={{
+          title: '',
+          presentation: 'card',
+        }}
+      />
     </Stack>
   );
 }
