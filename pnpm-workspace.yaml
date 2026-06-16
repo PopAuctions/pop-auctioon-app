@@ -1,3 +1,6 @@
+allowBuilds:
+  '@sentry/cli': false
+  unrs-resolver: false
 onlyBuiltDependencies:
   - '@sentry/cli'
   - unrs-resolver

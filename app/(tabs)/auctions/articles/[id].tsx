@@ -214,7 +214,7 @@ export default function ArticlesDetailScreen() {
                 {auction.status === AuctionStatus.LIVE && (
                   <CustomLink
                     mode='primary'
-                    href={`/auctions/live/${auction.id}`}
+                    href={`/(tabs)/auctions/live/${auction.id}`}
                     className='w-2/3'
                   >
                     <Text className='text-base text-white'>
@@ -246,7 +246,7 @@ export default function ArticlesDetailScreen() {
                 currentValue={articleBid.currentValue}
                 estimatedValue={article.estimatedValue}
                 reservePrice={article.reservePrice}
-                commissionValue={isCommissionReady ? commissionData : null}
+                buyerCommissionValue={isCommissionReady ? commissionData : null}
                 texts={{
                   highestBid: articleLang.highestBid,
                   estimatedValue: articleLang.estimatedValue,

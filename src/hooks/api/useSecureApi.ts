@@ -15,6 +15,7 @@ interface ApiResponse<T = any> {
   responseText: string;
   status: number;
   contentType: string;
+  headers?: Headers;
 }
 
 interface RequestOptions {
@@ -70,7 +71,8 @@ export const useSecureApi = () => {
       url: string,
       options: RequestInit,
       requestOptions: RequestOptions = {},
-      parseJson: boolean = true
+      parseJson: boolean = true,
+      includeHeaders: boolean = false
     ): Promise<Partial<ApiResponse<T>>> => {
       const { timeout = API_CONFIG.TIMEOUT, retries = API_CONFIG.MAX_RETRIES } =
         requestOptions;
@@ -129,6 +131,7 @@ export const useSecureApi = () => {
                 status: response.status,
                 error: undefined,
                 contentType,
+                ...(includeHeaders ? { headers: response.headers } : {}),
               };
             }
 
@@ -158,6 +161,7 @@ export const useSecureApi = () => {
               error: errorMessage,
               responseText,
               contentType,
+              ...(includeHeaders ? { headers: response.headers } : {}),
             };
           }
 
@@ -186,6 +190,7 @@ export const useSecureApi = () => {
               : responseData.data) as T | undefined,
             status: response.status,
             error: response.ok ? undefined : getErrorMessage(responseData),
+            ...(includeHeaders ? { headers: response.headers } : {}),
           };
         } catch (error) {
           if (attempt === retries) {
@@ -374,10 +379,12 @@ export const useSecureApi = () => {
       endpoint,
       options = {},
       parseJson = true,
+      includeHeaders = false,
     }: {
       endpoint: ApiEndpoint;
       options?: RequestOptions;
       parseJson?: boolean;
+      includeHeaders?: boolean;
     }): Promise<Partial<ApiResponse<T>>> => {
       try {
         const headers = await createSecureHeaders();
@@ -390,7 +397,8 @@ export const useSecureApi = () => {
             headers,
           },
           options,
-          parseJson
+          parseJson,
+          includeHeaders
         );
       } catch (error) {
         sentryErrorReport(error, `${endpoint} - secureGet failed`);

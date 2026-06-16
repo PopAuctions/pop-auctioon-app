@@ -3,7 +3,7 @@
     "owner": "pop-auctioon",
     "name": "PopAuctioon",
     "slug": "pop-auctioon-app",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "icon": "./assets/icons/pop-auctioon-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
@@ -27,6 +27,7 @@
         "foregroundImage": "./assets/icons/pop-auctioon-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "usesCleartextTraffic": true,
       "package": "com.popauctioon.popauctioonapp",
       "resizeableActivity": false,
       "predictiveBackGestureEnabled": false,
@@ -60,10 +61,7 @@
       [
         "expo-localization",
         {
-          "supportedLocales": [
-            "es",
-            "en"
-          ]
+          "supportedLocales": ["es", "en"]
         }
       ],
       [
@@ -74,10 +72,7 @@
         }
       ],
       "@sentry/react-native",
-      [
-        "@stripe/stripe-react-native",
-        {}
-      ],
+      ["@stripe/stripe-react-native", {}],
       "expo-web-browser",
       "expo-video"
     ],

@@ -27,7 +27,7 @@ export const OnlineStoreArticlesSection = ({
   const formatter = euroFormatter(lang);
 
   return (
-    <View className='mt-2 w-full gap-2'>
+    <View className='mb-4 mt-2 w-full gap-2'>
       <CustomText
         type='h2'
         className='text-center'

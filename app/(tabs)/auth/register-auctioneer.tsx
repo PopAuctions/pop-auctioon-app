@@ -48,6 +48,7 @@ export default function RegisterAuctioneerScreen() {
       province: '',
       country: '',
       cif: '',
+      legalName: '',
       postalCode: '',
     },
   });
@@ -85,6 +86,7 @@ export default function RegisterAuctioneerScreen() {
         country: data.country || '',
         postalCode: data.postalCode || '',
         cif: data.cif || '',
+        legalName: data.legalName || '',
       },
       APP_USER_ROLES.AUCTIONEER,
       locale

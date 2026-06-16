@@ -15,14 +15,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { euroFormatter } from '@/utils/euroFormatter';
-
-interface PaymentDetails {
-  subtotal: number;
-  commission: number;
-  shipping: number;
-  discount: number;
-  total: number;
-}
+import { PaymentDetails } from '@/utils/calculate-payment-details';
 
 interface AppliedDiscount {
   code: string;
@@ -51,7 +44,6 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
   const { t, locale } = useTranslation();
   const paymentTranslations = t('screens.payment');
   const formatter = euroFormatter(locale, 2);
-  const commissionDiscount = paymentDetails.subtotal * 0.1;
 
   return (
     <View className='mb-6'>
@@ -140,32 +132,34 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
         </View>
 
         {/* Comisión */}
-        <View className='mb-2 flex-row justify-between'>
+        <View className='mb-2 ml-4 flex-row justify-between'>
           <CustomText
-            type='body'
-            className='text-gray-600'
+            type='bodysmall'
+            className='text-slate-600'
           >
-            {paymentTranslations.commission} {paymentTranslations.commission2}:
+            {paymentTranslations.commission}:
           </CustomText>
           <CustomText
-            type='body'
-            className='font-medium'
+            type='bodysmall'
+            className='text-slate-600'
           >
-            {formatter.format(commissionDiscount)}
+            {formatter.format(paymentDetails.commission)}
           </CustomText>
         </View>
+
+        {/* IVA sobre comisión */}
         <View className='mb-2 flex-row justify-between'>
           <CustomText
             type='body'
             className='text-gray-600'
           >
-            {paymentTranslations.commissionDiscount}:
+            {paymentTranslations.taxes}:
           </CustomText>
           <CustomText
             type='body'
             className='font-medium'
           >
-            -{formatter.format(commissionDiscount)}
+            {formatter.format(paymentDetails.taxes)}
           </CustomText>
         </View>
 

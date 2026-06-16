@@ -43,7 +43,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     <View className='flex w-full flex-row gap-5 md:max-w-[200px] md:flex-col md:gap-0'>
       {/* IMAGE */}
       <CustomLink
-        href={`/online-store/article/${articleSecondChance.id}`}
+        href={`/(tabs)/online-store/articles/${articleSecondChance.id}`}
         className='w-1/2 justify-center overflow-hidden rounded-lg md:w-full'
       >
         <View className='w-full items-center justify-center overflow-hidden rounded-lg'>

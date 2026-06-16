@@ -1,9 +1,9 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
-import { useStripePayment } from '@/hooks/payment/useStripePayment';
+import { useRedsysPayment } from '@/hooks/payment/useRedsysPayment';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { Loading } from '@/components/ui/Loading';
@@ -23,12 +23,15 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
+import {
+  clearPaymentResultContext,
+  savePaymentResultContext,
+} from '@/utils/payments/payment-result-context';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
   const { callToast } = useToast(locale);
-  const didInitRef = useRef(false);
 
   const { articleId } = useLocalSearchParams<{
     articleId: string;
@@ -50,10 +53,10 @@ export default function SinglePaymentScreen() {
   } = useGetAddresses();
 
   const {
-    initializePaymentSheet,
-    presentPaymentSheet,
+    initializePaymentSession,
+    openPaymentBrowser,
     isLoading: paymentLoading,
-  } = useStripePayment();
+  } = useRedsysPayment();
 
   const { createPayment, rejectPayment } = useSingleArticlePayment();
 
@@ -66,9 +69,8 @@ export default function SinglePaymentScreen() {
     null
   );
   const [showAddressModal, setShowAddressModal] = useState(false);
-
   const [discountCode, setDiscountCode] = useState('');
-  const [isInitializingPayment, setIsInitializingPayment] =
+  const [isSubmittingPayment, setIsSubmittingPayment] =
     useState<boolean>(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{
     code: string;
@@ -111,6 +113,7 @@ export default function SinglePaymentScreen() {
         commission: 0,
         shipping: 0,
         discount: 0,
+        taxes: 0,
         total: subtotal,
       };
     }
@@ -120,6 +123,7 @@ export default function SinglePaymentScreen() {
       selectedCountry: selectedAddress?.country as CountryValue | null,
       commissionPercentage: paymentConfig.commission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
+      taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       auctionCountry: 'SPAIN',
       discount: appliedDiscount?.amount || 0,
     });
@@ -131,52 +135,6 @@ export default function SinglePaymentScreen() {
     paymentConfig,
   ]);
 
-  // Init Payment Sheet once on mount, only if article is already present
-  // (If the article loads async, you can switch this to depend on article?.id)
-  useEffect(() => {
-    if (!article?.id) return;
-    if (didInitRef.current) return;
-    didInitRef.current = true;
-
-    const initPaymentSheet = async () => {
-      try {
-        setIsInitializingPayment(true);
-        const paymentIntentId = await initializePaymentSheet(
-          paymentDetails.total,
-          [article.id]
-        );
-
-        if (!paymentIntentId) {
-          callToast({
-            variant: 'error',
-            description: {
-              es: 'Error al preparar el pago. Inténtalo de nuevo.',
-              en: 'Error preparing payment. Please try again.',
-            },
-          });
-        }
-      } catch {
-        callToast({
-          variant: 'error',
-          description: {
-            es: 'Error al preparar el pago. Inténtalo de nuevo.',
-            en: 'Error preparing payment. Please try again.',
-          },
-        });
-      } finally {
-        setIsInitializingPayment(false);
-      }
-    };
-
-    initPaymentSheet();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [article?.id]);
-
-  useEffect(() => {
-    didInitRef.current = false;
-  }, [articleId]);
-
-  // Apply discount
   const handleApplyDiscount = useCallback(async () => {
     if (!discountCode.trim()) {
       callToast({
@@ -246,18 +204,21 @@ export default function SinglePaymentScreen() {
     }
 
     try {
+      setIsSubmittingPayment(true);
+
       // 1) Re-init with final amount
-      const paymentIntentId = await initializePaymentSheet(
+
+      const redsysOrderId = await initializePaymentSession(
         paymentDetails.total,
         [Number(articleId)]
       );
 
-      if (!paymentIntentId) {
+      if (!redsysOrderId) {
         callToast({
           variant: 'error',
           description: {
             es: 'Error al preparar el pago con el monto actualizado',
-            en: 'Error preparing payment with updated amount',
+            en: 'Error preparing payment session',
           },
         });
         return;
@@ -267,7 +228,7 @@ export default function SinglePaymentScreen() {
       const { userPaymentId, error: createPaymentError } = await createPayment({
         articleId: articleId,
         clientTotalAmount: paymentDetails.total,
-        clientIntent: paymentIntentId,
+        clientIntent: redsysOrderId,
         country: selectedAddress.country,
         userAddressId: selectedAddressId,
         discount: appliedDiscount,
@@ -284,39 +245,26 @@ export default function SinglePaymentScreen() {
         return;
       }
 
-      // 3) Present sheet
-      const { success, error: presentError } = await presentPaymentSheet();
+      await savePaymentResultContext({
+        flow: 'single',
+        retryRoute: `/(tabs)/account/single-payment?articleId=${articleId}`,
+        paymentId: userPaymentId,
+        paymentIntent: redsysOrderId,
+      });
 
-      if (!success && presentError) {
-        // 4) Reject if failed
+      const browserResult = await openPaymentBrowser();
+
+      if (!browserResult.success) {
+        await clearPaymentResultContext();
         await rejectPayment({
           userPaymentId,
-          errorCode: presentError.code,
-          errorDescription: presentError.message,
+          errorCode: browserResult.error?.code,
+          errorDescription: browserResult.error?.message,
         });
-
-        if (presentError.code !== 'Canceled') {
-          callToast({
-            variant: 'error',
-            description: {
-              es: presentError.message || 'Error al procesar el pago',
-              en: presentError.message || 'Error processing payment',
-            },
-          });
-        }
         return;
       }
 
-      // 5) Success
-      callToast({
-        variant: 'success',
-        description: {
-          es: paymentTranslations.paymentSuccess,
-          en: paymentTranslations.paymentSuccess,
-        },
-      });
-
-      router.replace('/(tabs)/account/payments-history');
+      return;
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -326,6 +274,8 @@ export default function SinglePaymentScreen() {
           en: 'Unexpected error processing payment',
         },
       });
+    } finally {
+      setIsSubmittingPayment(false);
     }
   }, [
     article?.id,
@@ -334,12 +284,11 @@ export default function SinglePaymentScreen() {
     selectedAddress,
     paymentDetails.total,
     appliedDiscount,
-    initializePaymentSheet,
+    initializePaymentSession,
     createPayment,
     rejectPayment,
-    presentPaymentSheet,
+    openPaymentBrowser,
     callToast,
-    router,
     paymentTranslations,
   ]);
 
@@ -507,12 +456,12 @@ export default function SinglePaymentScreen() {
             !article?.id ||
             !selectedAddress ||
             paymentLoading ||
-            isInitializingPayment
+            isSubmittingPayment
           }
-          isLoading={paymentLoading || isInitializingPayment}
+          isLoading={paymentLoading || isSubmittingPayment}
           className='mb-6'
         >
-          {isInitializingPayment
+          {isSubmittingPayment
             ? paymentTranslations.processing
             : `${paymentTranslations.confirmAndPay} ${formatter.format(
                 paymentDetails.total

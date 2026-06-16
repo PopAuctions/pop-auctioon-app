@@ -6,7 +6,7 @@
  * 3. Permite seleccionar dirección de envío
  * 4. Calcula breakdown de costos (subtotal, comisión, envío, descuento)
  * 5. Aplica códigos de descuento
- * 6. Pasa datos a Stripe Payment Sheet
+ * 6. Crea sesiÃ³n Redsys y abre la pasarela en browser
  */
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
-import { useStripePayment } from '@/hooks/payment/useStripePayment';
+import { useRedsysPayment } from '@/hooks/payment/useRedsysPayment';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { useArticlesPayment } from '@/hooks/pages/payment/useArticlesPayment';
@@ -34,13 +34,15 @@ import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
+import {
+  clearPaymentResultContext,
+  savePaymentResultContext,
+} from '@/utils/payments/payment-result-context';
 import type { CountryValue } from '@/types/types';
-import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
   const router = useRouter();
-  const { navigateWithAuth } = useAuthNavigation();
   const { callToast } = useToast(locale);
   const { auctionId } = useLocalSearchParams<{ auctionId: string }>();
 
@@ -69,11 +71,10 @@ export default function PaymentScreen() {
   } = useGetAddresses();
 
   const {
-    initializePaymentSheet,
-    presentPaymentSheet,
+    initializePaymentSession,
+    openPaymentBrowser,
     isLoading: paymentLoading,
-  } = useStripePayment();
-
+  } = useRedsysPayment();
   const { createPayment, rejectPayment } = useArticlesPayment();
 
   // Hook para toggle de selección de artículos (sincronizar con backend)
@@ -96,12 +97,13 @@ export default function PaymentScreen() {
       setSelectedArticleIds(allIds);
     }
   }, [articles, selectedArticleIds.length]);
+
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null
   );
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
-  const [isInitializingPayment, setIsInitializingPayment] =
+  const [isSubmittingPayment, setIsSubmittingPayment] =
     useState<boolean>(false);
   const [appliedDiscount, setAppliedDiscount] = useState<{
     code: string;
@@ -139,6 +141,7 @@ export default function PaymentScreen() {
         commission: 0,
         shipping: 0,
         discount: 0,
+        taxes: 0,
         total: subtotal,
       };
     }
@@ -149,6 +152,7 @@ export default function PaymentScreen() {
       auctionCountry: auctionCountry,
       commissionPercentage: paymentConfig.commission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
+      taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       discount: appliedDiscount?.amount || 0,
     });
 
@@ -163,50 +167,6 @@ export default function PaymentScreen() {
   ]);
 
   // Inicializar Payment Sheet una sola vez al montar (como en web antes de React 18)
-  // NOTA: A diferencia de web, NO re-inicializamos en cada cambio porque crea loops
-  // El monto se actualiza solo en el momento de handlePayment
-  useEffect(() => {
-    // Solo inicializar si hay artículos seleccionados
-    if (selectedArticleIds.length === 0) {
-      return;
-    }
-
-    const initPaymentSheet = async () => {
-      try {
-        setIsInitializingPayment(true);
-
-        const paymentIntentId = await initializePaymentSheet(
-          paymentDetails.total,
-          selectedArticleIds
-        );
-
-        if (!paymentIntentId) {
-          callToast({
-            variant: 'error',
-            description: {
-              es: 'Error al preparar el pago. Inténtalo de nuevo.',
-              en: 'Error preparing payment. Please try again.',
-            },
-          });
-        }
-      } catch {
-        callToast({
-          variant: 'error',
-          description: {
-            es: 'Error al preparar el pago. Inténtalo de nuevo.',
-            en: 'Error preparing payment. Please try again.',
-          },
-        });
-      } finally {
-        setIsInitializingPayment(false);
-      }
-    };
-
-    initPaymentSheet();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Solo al montar, NO escuchar cambios
-
-  // Toggle selección de artículo (actualización optimística)
   const toggleArticleSelection = useCallback(
     (articleId: number) => {
       const isCurrentlySelected = selectedArticleIds.includes(articleId);
@@ -317,29 +277,29 @@ export default function PaymentScreen() {
     }
 
     try {
-      // PASO 1: Re-inicializar Payment Sheet con monto final actualizado
-      const paymentIntentId = await initializePaymentSheet(
+      setIsSubmittingPayment(true);
+
+      const redsysOrderId = await initializePaymentSession(
         paymentDetails.total,
         selectedArticleIds
       );
 
-      if (!paymentIntentId) {
+      if (!redsysOrderId) {
         callToast({
           variant: 'error',
           description: {
             es: 'Error al preparar el pago con el monto actualizado',
-            en: 'Error preparing payment with updated amount',
+            en: 'Error preparing payment session',
           },
         });
         return;
       }
 
-      // PASO 2: CRÍTICO - Crear registro en BD ANTES de confirmar pago
       const { userPaymentId, error: createPaymentError } = await createPayment({
         auctionId: auctionId || '',
         articlesIds: selectedArticleIds,
         clientTotalAmount: paymentDetails.total,
-        clientIntent: paymentIntentId, // Usar el ID devuelto directamente
+        clientIntent: redsysOrderId,
         country: selectedAddress.country,
         userAddressId: selectedAddressId,
         discount: appliedDiscount,
@@ -356,40 +316,26 @@ export default function PaymentScreen() {
         return;
       }
 
-      // PASO 3: Presentar Payment Sheet al usuario
-      const { success, error: presentError } = await presentPaymentSheet();
+      await savePaymentResultContext({
+        flow: 'auction',
+        retryRoute: `/(tabs)/account/payment?auctionId=${auctionId}`,
+        paymentId: userPaymentId,
+        paymentIntent: redsysOrderId,
+      });
 
-      if (!success && presentError) {
-        // PASO 4: CRÍTICO - Revertir registro en BD si el pago falla
+      const browserResult = await openPaymentBrowser();
+
+      if (!browserResult.success) {
+        await clearPaymentResultContext();
         await rejectPayment({
           userPaymentId,
-          errorCode: presentError.code,
-          errorDescription: presentError.message,
+          errorCode: browserResult.error?.code,
+          errorDescription: browserResult.error?.message,
         });
-
-        // Mostrar error solo si NO fue cancelación del usuario
-        if (presentError.code !== 'Canceled') {
-          callToast({
-            variant: 'error',
-            description: {
-              es: presentError.message || 'Error al procesar el pago',
-              en: presentError.message || 'Error processing payment',
-            },
-          });
-        }
         return;
       }
 
-      // PASO 5: Pago exitoso
-      callToast({
-        variant: 'success',
-        description: {
-          es: paymentTranslations.paymentSuccess,
-          en: paymentTranslations.paymentSuccess,
-        },
-      });
-
-      navigateWithAuth('/(tabs)/account/payments-history');
+      return;
     } catch (error: any) {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
@@ -399,6 +345,8 @@ export default function PaymentScreen() {
           en: 'Unexpected error processing payment',
         },
       });
+    } finally {
+      setIsSubmittingPayment(false);
     }
   }, [
     selectedArticleIds,
@@ -407,13 +355,12 @@ export default function PaymentScreen() {
     paymentDetails.total,
     auctionId,
     appliedDiscount,
-    initializePaymentSheet,
+    initializePaymentSession,
     createPayment,
     rejectPayment,
-    presentPaymentSheet,
+    openPaymentBrowser,
     callToast,
     paymentTranslations,
-    navigateWithAuth,
   ]);
 
   useFocusEffect(
@@ -422,7 +369,6 @@ export default function PaymentScreen() {
     }, [refetchArticles])
   );
 
-  // Validar que existe auctionId (después de todos los hooks)
   if (!auctionId) {
     return (
       <CustomError
@@ -435,7 +381,6 @@ export default function PaymentScreen() {
     );
   }
 
-  // Estados de carga y error (ambos hooks deben cargar primero)
   if (
     articlesStatus === REQUEST_STATUS.loading ||
     articlesStatus === REQUEST_STATUS.idle ||
@@ -522,7 +467,6 @@ export default function PaymentScreen() {
           </CustomText>
         </View>
 
-        {/* Selector de dirección */}
         <AddressSelector
           addresses={addresses || []}
           selectedAddressId={selectedAddressId}
@@ -558,12 +502,12 @@ export default function PaymentScreen() {
             selectedArticleIds.length === 0 ||
             !selectedAddress ||
             paymentLoading ||
-            isInitializingPayment
+            isSubmittingPayment
           }
-          isLoading={paymentLoading || isInitializingPayment}
+          isLoading={paymentLoading || isSubmittingPayment}
           className='mb-6'
         >
-          {isInitializingPayment
+          {isSubmittingPayment
             ? paymentTranslations.processing
             : `${paymentTranslations.confirmAndPay} ${formatter.format(paymentDetails.total)}`}
         </Button>

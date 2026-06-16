@@ -65,6 +65,13 @@ export default function AuctioneerLayout() {
 
       {/* MY AUCTIONS */}
       <Stack.Screen
+        name='edit/index'
+        options={{
+          title: t('screens.auctioneer.editStore'),
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
         name='my-auctions/index'
         options={{
           title: t('screens.auctioneer.myAuctions'),
@@ -169,6 +176,20 @@ export default function AuctioneerLayout() {
         name='sold-articles/[id]'
         options={{
           title: t('screens.account.soldArticle'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='payouts/index'
+        options={{
+          title: t('screens.auctioneer.payouts'),
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name='payouts/[id]'
+        options={{
+          title: '',
           presentation: 'card',
         }}
       />

@@ -30,6 +30,7 @@ interface PaymentConfigData {
   commission: number;
   shippingTaxes: PaymentShippingTax | null;
   taxPercentage: number;
+  taxPercentageArticles: number;
   countries: Record<string, CountryValue[]>;
   countriesLabel: Record<string, Record<CountryValue, string>>;
 }
@@ -39,6 +40,7 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
     commission: 0,
     shippingTaxes: null,
     taxPercentage: 0,
+    taxPercentageArticles: 0,
     countries: {},
     countriesLabel: {},
   });
@@ -74,6 +76,7 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
         commission: response.data.commissionsValue.STANDARD.PERCENTAGE,
         shippingTaxes: response.data.taxForShipping,
         taxPercentage: response.data.taxPercentageArticles,
+        taxPercentageArticles: response.data.taxPercentageArticles || 0,
         // Transform countries from array of objects to array of values
         countries: Object.keys(response.data.countries).reduce(
           (acc, locale) => {

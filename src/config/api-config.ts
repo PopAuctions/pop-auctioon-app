@@ -3,14 +3,50 @@
  * Contiene endpoints, constantes y configuraciones para la comunicación con Next.js
  */
 
+import { Platform } from 'react-native';
 import { ApiEndpoint } from '@/types/types';
 
 // ========================================
 // CONFIGURACIÓN BASE
 // ========================================
 
+const resolveBaseUrl = (): string => {
+  const envBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.trim();
+
+  if (envBaseUrl) {
+    if (__DEV__ && Platform.OS === 'android') {
+      try {
+        const url = new URL(envBaseUrl);
+
+        if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+          url.hostname = '10.0.2.2';
+          return url.toString().replace(/\/$/, '');
+        }
+      } catch {
+        if (envBaseUrl.includes('localhost')) {
+          return envBaseUrl.replace('localhost', '10.0.2.2');
+        }
+
+        if (envBaseUrl.includes('127.0.0.1')) {
+          return envBaseUrl.replace('127.0.0.1', '10.0.2.2');
+        }
+      }
+    }
+
+    return envBaseUrl;
+  }
+
+  if (__DEV__) {
+    return Platform.OS === 'android'
+      ? 'http://10.0.2.2:3000'
+      : 'http://localhost:3000';
+  }
+
+  return '';
+};
+
 export const API_CONFIG = {
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000',
+  BASE_URL: resolveBaseUrl(),
   API_KEY: process.env.EXPO_PUBLIC_API_KEY || '',
   TIMEOUT: 10000, // 10 segundos
   MAX_RETRIES: 2,
@@ -177,7 +213,18 @@ export const SECURE_ENDPOINTS = {
   GLOBALS: {
     COUNTRIES: '/globals/countries',
   },
-
+  STORE: {
+    EDIT: '/store/edit',
+    PAYOUTS: {
+      DASHBOARD: '/store/payouts',
+      SINGLE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}` as ApiEndpoint,
+      COMMISSION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/commission` as ApiEndpoint,
+      LIQUIDATION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/liquidation` as ApiEndpoint,
+    },
+  },
   // Usuario y perfil
   USER: {
     PROFILE: '/user/profile',
@@ -276,6 +323,7 @@ export const SECURE_ENDPOINTS = {
   // Payments (Stripe)
   PAYMENT: {
     CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
+    CREATE_REDSYS_SESSION: '/user/payments/create-redsys-session', // POST - Create Redsys redirect session
     CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
     REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
     CREATE_SINGLE_ARTICLE_PAYMENT:
