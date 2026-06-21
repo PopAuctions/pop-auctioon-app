@@ -245,9 +245,23 @@ Usuario                          Next.js (server action / route)      Redsys
 
 ---
 
-## 3. Flujo de devolución / anulación (web admin)
+## 3. Flujo de devolución (web admin)
 
 Solo desde el panel de administración web, sin cambios en la app.
+
+> **Actualización de alcance (junio 2026):** para PopAuction esta fase se implementará **solo con devolución REST `TRANSACTIONTYPE=3`**. Queda descartada la anulación `TYPE=9`.
+>
+> Esta actualización reemplaza cualquier referencia anterior en esta sección a "anulación primero, devolución si falla".
+>
+> Reglas cerradas para implementación:
+>
+> - Ventana máxima inicial: `30` días desde `UserPayment.createdAt`.
+> - Soporte requerido: devoluciones parciales por selección de artículos.
+> - El importe a devolver se calculará en servidor y se enviará en `DS_MERCHANT_AMOUNT`.
+> - El request usará el `DS_MERCHANT_ORDER` original guardado en `UserPayment.paymentIntent`.
+> - La UI irá en `src/app/[lang]/(main)/(protected)/(admin)/check-sold-article/[id]/page.tsx` con botón `Gestionar devolución` dentro del contenedor naranja.
+> - La interacción será mediante modal con el patrón existente `ConfirmModal` + `ModalTriggerButton`.
+> - Cada devolución deberá persistirse en una tabla dedicada (`PaymentRefund`) y acumularse en `UserPayment.amountRefunded` / `UserPayment.refundStatus`.
 
 Hay dos tipos de cancelación según cuándo ocurra:
 
@@ -295,20 +309,20 @@ Por tanto, la funcionalidad de devolución de pagos ya realizados (**Fase D**) e
 
 ## 4. Mapeo Stripe → Redsys
 
-| Campo Stripe                           | Campo Redsys                                                           | Notas                                                          |
-| -------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `clientSecret` (`pi_xxx`)              | `launchUrl` (URL bridge page)                                          | El "secreto" es el token efímero de la URL                     |
-| `paymentIntentId` (`pi_xxx`)           | `DS_MERCHANT_ORDER` (12 chars)                                         | 8 dígitos `Date.now()` + 4 hex random; primeros 4 numéricos    |
-| `chargeId` (`ch_xxx`)                  | `Ds_AuthorisationCode`                                                 | Código de 6 dígitos devuelto por Redsys                        |
-| `receiptUrl` (URL Stripe)              | `null`                                                                 | Generar página interna si se necesita                          |
-| `stripe.webhooks.constructEvent()`     | Decodificar `Ds_MerchantParameters` + verificar HMAC SHA256            | Misma seguridad, distinta implementación                       |
-| Evento `charge.succeeded`              | `Ds_Response` entre `"000"` y `"099"`                                  | Cualquier valor en ese rango = autorizado                      |
-| Evento `payment_intent.payment_failed` | `Ds_Response >= "0100"` o redirect a `urlKO`                           | Redsys redirige a `urlKO`; webhook puede llegar también        |
-| `stripe.refunds.create()`              | REST `TRANSACTIONTYPE: "9"` (anulación mismo día) o `"3"` (devolución) | Lógica: intentar anulación primero, caer a devolución si falla |
-| `convertToSubcurrency(amount)` × 100   | Igual — `DS_MERCHANT_AMOUNT` en céntimos                               | Sin cambio                                                     |
-| `NEXT_PUBLIC_STRIPE_PUBLIC_KEY`        | `REDSYS_MERCHANT_CODE` (env)                                           | Identificador del comercio                                     |
-| `STRIPE_SECRET_KEY`                    | `REDSYS_MERCHANT_KEY` (env)                                            | Clave de firma HMAC                                            |
-| `STRIPE_WEBHOOK_SECRET`                | `REDSYS_MERCHANT_KEY` (misma)                                          | Se usa para verificar firma del webhook                        |
+| Campo Stripe                           | Campo Redsys                                                | Notas                                                       |
+| -------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| `clientSecret` (`pi_xxx`)              | `launchUrl` (URL bridge page)                               | El "secreto" es el token efímero de la URL                  |
+| `paymentIntentId` (`pi_xxx`)           | `DS_MERCHANT_ORDER` (12 chars)                              | 8 dígitos `Date.now()` + 4 hex random; primeros 4 numéricos |
+| `chargeId` (`ch_xxx`)                  | `Ds_AuthorisationCode`                                      | Código de 6 dígitos devuelto por Redsys                     |
+| `receiptUrl` (URL Stripe)              | `null`                                                      | Generar página interna si se necesita                       |
+| `stripe.webhooks.constructEvent()`     | Decodificar `Ds_MerchantParameters` + verificar HMAC SHA256 | Misma seguridad, distinta implementación                    |
+| Evento `charge.succeeded`              | `Ds_Response` entre `"000"` y `"099"`                       | Cualquier valor en ese rango = autorizado                   |
+| Evento `payment_intent.payment_failed` | `Ds_Response >= "0100"` o redirect a `urlKO`                | Redsys redirige a `urlKO`; webhook puede llegar también     |
+| `stripe.refunds.create()`              | REST `TRANSACTIONTYPE: "3"`                                 | PopAuction usará solo devolución REST, incluyendo parciales |
+| `convertToSubcurrency(amount)` × 100   | Igual — `DS_MERCHANT_AMOUNT` en céntimos                    | Sin cambio                                                  |
+| `NEXT_PUBLIC_STRIPE_PUBLIC_KEY`        | `REDSYS_MERCHANT_CODE` (env)                                | Identificador del comercio                                  |
+| `STRIPE_SECRET_KEY`                    | `REDSYS_MERCHANT_KEY` (env)                                 | Clave de firma HMAC                                         |
+| `STRIPE_WEBHOOK_SECRET`                | `REDSYS_MERCHANT_KEY` (misma)                               | Se usa para verificar firma del webhook                     |
 
 ---
 
@@ -410,20 +424,28 @@ Equivalente exacto de `src/app/api/webhooks/stripe/route.ts`.
 // 5. Responde HTTP 200 "OK" (Redsys reintenta si recibe otro código)
 ```
 
-### `src/lib/payments/create-redsys-refund.ts` _(nuevo — anulación + devolución via REST)_
+### `src/lib/payments/create-redsys-refund.ts` _(nuevo — devolución via REST)_
 
-Server action para el panel de admin. Decide automáticamente entre anulación (`TYPE=9`) y devolución (`TYPE=3`).
+Server action para el panel de admin. Para PopAuction usará únicamente devolución REST (`TYPE=3`) y deberá soportar devoluciones parciales.
 
 ```typescript
-// Input:  redsysOrder (DS_MERCHANT_ORDER original), amount (en céntimos), createdAt (Date)
-// Output: ActionResponse & { type: 'anulacion' | 'devolucion' }
+// Input:
+//   paymentId
+//   redsysOrder (DS_MERCHANT_ORDER original)
+//   selectedArticleIds: number[]
+//   createdAt: Date
+//   adminUserId: string
+// Output:
+//   ActionResponse & { refundedAmount: number; refundRecordId?: string }
 //
 // Lógica:
-//   1. Si createdAt es hoy → intenta TYPE=9 (anulación)
-//      Ds_Response=400 → éxito, devuelve type='anulacion'
-//      Cualquier otro error → cae a paso 2
-//   2. TYPE=3 (devolución)
-//      Ds_Response=900 → éxito, devuelve type='devolucion'
+//   1. Valida que el payment exista y esté APPROVED
+//   2. Valida que payment.paymentIntent exista (DS_MERCHANT_ORDER)
+//   3. Valida ventana <= MAX_REDSYS_REFUND_DAYS
+//   4. Valida selectedArticleIds (mínimo 1, máximo artículos elegibles)
+//   5. Calcula amountToRefund mediante helper dedicado
+//   6. Llama Redsys REST con TRANSACTIONTYPE=3 y DS_MERCHANT_AMOUNT=amountToRefund
+//   7. Si Ds_Response=900, persiste refund + actualiza acumulados del payment
 //
 // No maneja datos de tarjeta → sin impacto PCI-DSS
 ```
@@ -665,9 +687,9 @@ Sin cambios — ya usa `clientIntent` como string genérico; el valor simplement
 
 ## 10. Base de datos
 
-### Tabla `UserPayment` — sin cambios de esquema
+### Tabla `UserPayment` — ampliar para estado de devoluciones
 
-Los mismos campos de `UserPayment` almacenan los valores nuevos:
+`UserPayment` ya guarda correctamente el `DS_MERCHANT_ORDER` en `paymentIntent`, pero no alcanza para devoluciones parciales trazables. Hoy el enum `PaymentStatus` solo tiene `PENDING | APPROVED | REJECTED`, así que no conviene sobrecargarlo con estados de refund.
 
 | Campo DB        | Valor Stripe (actual)                 | Valor Redsys (nuevo)                            |
 | --------------- | ------------------------------------- | ----------------------------------------------- |
@@ -676,6 +698,38 @@ Los mismos campos de `UserPayment` almacenan los valores nuevos:
 | `receiptUrl`    | `https://pay.stripe.com/receipts/...` | `null`                                          |
 | `status`        | `PENDING` / `APPROVED` / `REJECTED`   | Sin cambio                                      |
 | `articlesPaid`  | `[1, 2, 3]`                           | Sin cambio                                      |
+
+**Cambio propuesto:**
+
+- Mantener `UserPayment.status` como estado del cobro (`PENDING | APPROVED | REJECTED`).
+- Añadir `amountRefunded` con default `0`.
+- Añadir `refundStatus` con valores `NOT_REFUNDED | PARTIALLY_REFUNDED | REFUNDED`.
+- Mantener `totalAmount` como importe originalmente cobrado.
+
+> Esto evita romper flows existentes que hoy dependen de `status === APPROVED` para pagos válidos.
+
+### Tabla nueva `PaymentRefund`
+
+Crear una tabla de trazabilidad por intento exitoso o fallido de devolución.
+
+Campos mínimos:
+
+- `id`
+- `paymentId` → FK a `UserPayment.id`
+- `redsysOrder` → copia del `paymentIntent` usado en el request
+- `amount`
+- `status` → `PENDING | SUCCEEDED | FAILED`
+- `selectedArticleIds` → array/json
+- `calculationSnapshot` → json con subtotal/fees/taxes/shipping usados para ese refund
+- `redsysResponse` → json/text con payload de respuesta
+- `createdBy` → FK a `User.id`
+- `createdAt`
+
+Regla de negocio:
+
+- `refundStatus = REFUNDED` solo cuando `amountRefunded >= totalAmount`.
+- `refundStatus = PARTIALLY_REFUNDED` cuando `amountRefunded > 0` y `< totalAmount`.
+- `refundStatus = NOT_REFUNDED` cuando `amountRefunded = 0`.
 
 ### Tabla `RedsysSessions` — nueva migración
 
@@ -1366,25 +1420,46 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 - `src/app/[lang]/(main)/(protected)/(admin)/check-sold-article/[id]/page.tsx` (donde irá el botón)
 - `src/lib/payments/redsys-sign.ts` (Día 1 — necesita `signParamsRest`)
-- `src/components/globals/delete-button.tsx` (patrón de botón de confirmación ya existente)
-- Sección 3 de este plan (lógica anulación/devolución)
+- `src/components/modals/confirm-modal.tsx`
+- `src/components/modals/modal-trigger-button.tsx`
+- `src/lib/articles/get-sold-article.ts` (hoy no trae `paymentIntent`)
+- Sección 3 de este plan (lógica de devolución)
 
 **Tareas**:
 
 - [ ] Crear `src/lib/payments/create-redsys-refund.ts`
-  - Input: `redsysOrder: string, amount: number, createdAt: Date`
-  - Si `createdAt` es hoy → intenta `TRANSACTIONTYPE=9` (anulación)
-    - Si `Ds_Response=400` → éxito, tipo `'anulacion'`
-    - Si falla → caer a paso siguiente
-  - `TRANSACTIONTYPE=3` (devolución)
-    - Si `Ds_Response=900` → éxito, tipo `'devolucion'`
-  - Devuelve `{ success, type, error? }`
-- [ ] Añadir botón de devolución en `check-sold-article/[id]/page.tsx`
+  - Input: `paymentId`, `selectedArticleIds`, `adminUserId`
+  - Lookup interno del `UserPayment` para leer `paymentIntent` (`DS_MERCHANT_ORDER`) y validar `status === APPROVED`
+  - Validar ventana máxima de `30` días mediante constante
+  - Calcular el importe de devolución con helper dedicado, preparado para futuros fees/impuestos
+  - Enviar request REST a Redsys con `TRANSACTIONTYPE=3`
+  - Considerar éxito solo con `Ds_Response=900`
+  - Persistir fila en `PaymentRefund`
+  - Actualizar `UserPayment.amountRefunded` y `UserPayment.refundStatus`
+- [ ] Crear migración de BD para soporte de refunds
+  - Nueva tabla `PaymentRefund`
+  - Nuevas columnas en `UserPayment`: `amountRefunded`, `refundStatus`
+- [ ] Extender `getSoldArticle()` para incluir datos de refund necesarios
+  - `paymentIntent`
+  - `amountRefunded`
+  - `refundStatus`
+- [ ] Añadir botón `Gestionar devolución` dentro del contenedor naranja de información en `check-sold-article/[id]/page.tsx`
   - Solo visible si `payment.status === 'APPROVED'`
-  - Usar `DeleteButton` (ya existe, hace confirm antes de ejecutar)
-  - La action llama `createRedsysRefund(payment.paymentIntent, payment.totalAmount, payment.createdAt)`
-  - Tras éxito: actualizar `UserPayment.status = REFUNDED` (puede requerir añadir el valor al enum `PaymentStatus`)
-- [ ] Probar en entorno test: anulación mismo día, devolución día siguiente, fallback
+  - Mantener la UI existente del aside admin
+- [ ] Crear modal de gestión de devolución
+  - Basarse en `ConfirmModal` + `ModalTriggerButton`
+  - Mismo patrón de trigger/modal existente (`DialogTrigger asChild`, forwardRef en trigger)
+  - Listar artículos del pago con checkbox
+  - Selección mínima 1 artículo
+  - Bloquear artículos ya completamente devueltos
+  - Mostrar total dinámico de devolución
+  - Separar cálculo en helper para poder incluir fees/impuestos en el futuro sin reescribir UI
+- [ ] Probar en entorno test
+  - Refund parcial de 1 artículo
+  - Refund parcial de varios artículos
+  - Refund total hasta dejar `refundStatus = REFUNDED`
+  - Intento fuera de ventana (> 30 días)
+  - Intento con `paymentIntent` faltante
 
 ---
 
@@ -1493,14 +1568,13 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 | 16  | Observabilidad de adopción                      | 🟢 Fácil   | **1 h**      | Logs o métricas en `create-intent`, `create-redsys-session` y webhook Stripe para decidir el sunset real.                                       |
 |     | **Total Fase C**                                |            | **~10–17 h** |                                                                                                                                                 |
 
-### Fase D — Devoluciones y anulaciones admin
+### Fase D — Devoluciones admin
 
-| #   | Tarea                                                             | Dificultad | Estimado   | Notas                                                                                                    |
-| --- | ----------------------------------------------------------------- | ---------- | ---------- | -------------------------------------------------------------------------------------------------------- |
-| 16  | `create-redsys-refund.ts` con lógica `TYPE=9` + fallback `TYPE=3` | 🟡 Medio   | **3–4 h**  | Firma HMAC SHA512. Lógica de decisión por fecha + fallback automático si batch ya cerró.                 |
-| 16  | Nuevo botón/endpoint admin para reembolso de artículos `PAID`     | 🟡 Medio   | **2–3 h**  | Flujo nuevo, separado de `cancel-user-acquisition.ts` (que solo gestiona artículos no pagados).          |
-| 17  | Prueba en entorno test: `TYPE=3`, `TYPE=9`, y fallback            | 🟡 Medio   | **2–4 h**  | Probar los tres caminos: devolución normal, anulación mismo día, y el fallback cuando el batch ya cerró. |
-|     | **Total Fase D**                                                  |            | **~6–9 h** |                                                                                                          |
+| #   | Tarea                                                 | Dificultad | Estimado    | Notas                                                                               |
+| --- | ----------------------------------------------------- | ---------- | ----------- | ----------------------------------------------------------------------------------- |
+| 16  | `create-redsys-refund.ts` + cálculo de refund parcial | 🟡 Medio   | **4–6 h**   | Firma HMAC SHA512, cálculo desacoplado del monto y persistencia en `PaymentRefund`. |
+| 17  | Modal admin + pruebas de refund parcial/total         | 🟡 Medio   | **4–6 h**   | UI con selección de artículos, ventana 30 días y validación de acumulados.          |
+|     | **Total Fase D**                                      |            | **~8–12 h** |                                                                                     |
 
 ### Fase E — Limpieza
 
@@ -1513,14 +1587,14 @@ UPDATE "ArticleSecondChance" SET status = 'AVAILABLE' WHERE id = 188;
 
 ### Resumen total
 
-| Fase                     | Estimado     | Bloqueo principal                                                        |
-| ------------------------ | ------------ | ------------------------------------------------------------------------ |
-| A — Backend              | 12–17 h      | `redsys-sign.ts` (criptografía crítica)                                  |
-| B — Web end-to-end       | 8–14 h       | Tunnel para webhook local (ngrok/Cloudflare)                             |
-| C — App                  | 10–17 h      | Coexistencia build viejo/build nuevo + comportamiento Android Custom Tab |
-| D — Devoluciones/Anulac. | 6–9 h        | Probar fallback anulación→devolución                                     |
-| E — Limpieza             | 2–4 h        | Definir sunset real de Stripe móvil                                      |
-| **Total**                | **~38–61 h** | ≈ 5–8 días a jornada completa                                            |
+| Fase                   | Estimado     | Bloqueo principal                                                        |
+| ---------------------- | ------------ | ------------------------------------------------------------------------ |
+| A — Backend            | 12–17 h      | `redsys-sign.ts` (criptografía crítica)                                  |
+| B — Web end-to-end     | 8–14 h       | Tunnel para webhook local (ngrok/Cloudflare)                             |
+| C — App                | 10–17 h      | Coexistencia build viejo/build nuevo + comportamiento Android Custom Tab |
+| D — Devoluciones admin | 8–12 h       | Refund parcial por artículos, acumulados y ventana de 30 días            |
+| E — Limpieza           | 2–4 h        | Definir sunset real de Stripe móvil                                      |
+| **Total**              | **~38–61 h** | ≈ 5–8 días a jornada completa                                            |
 
 > La mayor incertidumbre es cuánto tiempo tarda Getnet en proveer las credenciales de test y si el entorno de sandbox tiene limitaciones. El desarrollo puro de código (sin esperas externas) debería estar en el extremo bajo del rango.
 
@@ -1633,7 +1707,7 @@ Getnet puede proveer una tarjeta de prueba para el entorno de producción ("tarj
 | Pago con tarjeta real por 0,01 €       | `UserPayment.status = APPROVED`, `chargeId` de 6 dígitos |
 | Webhook llega a `/api/webhooks/redsys` | Log en Sentry/servidor, HTTP 200 devuelto                |
 | Push notification llega al vendedor    | Cadena CDC → Supabase → push funciona                    |
-| Devolución inmediata (Día 8)           | `Ds_Response=400` (anulación) si es mismo día            |
+| Devolución parcial/total (Día 8)       | `Ds_Response=900` con `TRANSACTIONTYPE=3`                |
 
 ---
 
