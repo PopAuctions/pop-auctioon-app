@@ -10,17 +10,16 @@ export interface Filters {
   brand?: string;
   price?: string;
   model?: string;
-  codeNumber?: string;
-  category?: string;
+  material?: string;
+  color?: string;
   sortBy?: string;
 }
 
 export default function OnlineStoreScreen() {
   const { t, locale } = useTranslation();
   const params = useLocalSearchParams();
-  const { brand, price, model, codeNumber, category, sortBy } =
-    params as Filters;
-  const filtersKey = `${brand ?? ''}${price ?? ''}${model ?? ''}${codeNumber ?? ''}${category ?? ''}${sortBy || ''}`;
+  const { brand, price, model, material, color, sortBy } = params as Filters;
+  const filtersKey = `${brand ?? ''}${price ?? ''}${model ?? ''}${material ?? ''}${color ?? ''}${sortBy || ''}`;
 
   const shouldHide = useHideWhileStackBuilds();
 

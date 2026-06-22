@@ -6,8 +6,9 @@ import { FilterField } from '../fields/FilterField';
 import {
   ARTICLE_BRANDS,
   ARTICLE_PRICE_FILTER_LIST,
-  ARTICLE_CATEGORIES_FILTER_LIST,
   SORT_BY,
+  ARTICLE_COLORS_FILTER_LIST,
+  ARTICLE_MATERIALS_FILTER_LIST,
 } from '@/constants';
 import { Button } from '../ui/Button';
 import { Filters } from '@/app/(tabs)/online-store';
@@ -21,8 +22,8 @@ const FILTER_LABELS = {
     brand: 'Marca',
     price: 'Precio',
     model: 'Modelo',
-    code: 'Código',
-    category: 'Categoría',
+    material: 'Material',
+    color: 'Color',
     sort: 'Ordenar por',
     activeFilters: 'Filtros activos:',
     clearAll: 'Borrar filtros',
@@ -31,8 +32,8 @@ const FILTER_LABELS = {
     brand: 'Brand',
     price: 'Price',
     model: 'Model',
-    code: 'Code',
-    category: 'Category',
+    material: 'Material',
+    color: 'Color',
     sort: 'Sort by',
     activeFilters: 'Active filters:',
     clearAll: 'Clear filters',
@@ -51,8 +52,8 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
   const brandValue = getParam(searchParams.brand);
   const priceValue = getParam(searchParams.price);
   const modelValue = getParam(searchParams.model);
-  const codeValue = getParam(searchParams.codeNumber);
-  const categoryValue = getParam(searchParams.category);
+  const colorValue = getParam(searchParams.color);
+  const materialValue = getParam(searchParams.material);
   const sortValue = getParam(searchParams.sortBy) || SORT_BY[locale][0].value;
 
   const clearAllFilters = () => {
@@ -60,8 +61,8 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
       brand: '',
       price: '',
       model: '',
-      codeNumber: '',
-      category: '',
+      material: '',
+      color: '',
     });
   };
 
@@ -69,8 +70,8 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
     brandValue,
     priceValue,
     modelValue,
-    codeValue,
-    categoryValue,
+    colorValue,
+    materialValue,
   ].filter((v) => v !== '');
   const activeFiltersCount = activeFilters.length;
   const labels = FILTER_LABELS[locale];
@@ -117,12 +118,13 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
 
         <FilterField
           className='w-44'
-          key={`category-${categoryValue}`}
-          id='category'
-          label={labels.category}
+          key={`material-${materialValue}`}
+          id='material'
+          label={labels.material}
           type='select'
-          value={categoryValue}
-          options={ARTICLE_CATEGORIES_FILTER_LIST[locale]}
+          isSearchable
+          value={materialValue}
+          options={ARTICLE_MATERIALS_FILTER_LIST[locale]}
           isClearable={true}
         />
 
@@ -139,11 +141,13 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
 
         <FilterField
           className='w-48'
-          key={`code-${codeValue}`}
-          id='codeNumber'
-          label={labels.code}
-          type='input'
-          value={codeValue}
+          key={`color-${colorValue}`}
+          id='color'
+          label={labels.color}
+          type='select'
+          isSearchable
+          value={colorValue}
+          options={ARTICLE_COLORS_FILTER_LIST[locale]}
           isClearable={true}
         />
       </ScrollView>

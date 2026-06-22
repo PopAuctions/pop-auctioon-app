@@ -12,6 +12,8 @@ interface InputProps {
   isDisabled?: boolean;
   formField?: boolean;
   onChange?: (value: string | null) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export function TextField({
@@ -22,6 +24,8 @@ export function TextField({
   isDisabled = false,
   formField = false,
   onChange,
+  onFocus,
+  onBlur,
 }: InputProps) {
   const [localValue, setLocalValue] = useState(value ?? '');
   const debouncedValue = useDebounce<string>(localValue);
@@ -54,6 +58,10 @@ export function TextField({
     router.setParams({ [name]: (debouncedValue as any) ?? (undefined as any) });
   }, [debouncedValue, name]);
 
+  useEffect(() => {
+    setLocalValue(value ?? '');
+  }, [value]);
+
   return (
     <View className='relative w-full'>
       <TextInput
@@ -62,6 +70,8 @@ export function TextField({
         editable={!isDisabled}
         placeholder={placeholder || '...'}
         placeholderTextColor='#999'
+        onFocus={onFocus}
+        onBlur={onBlur}
         style={{
           height: 42,
           borderWidth: 1,
