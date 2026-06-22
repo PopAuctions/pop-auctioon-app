@@ -1,22 +1,23 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 
 type SelectOption = { label: string; value: string };
 
-interface Props {
+type Props = {
   name: string;
   value: string | null;
   options: SelectOption[];
-  placeholder?: string;
   isSearchable?: boolean;
   isClearable?: boolean;
   isDisabled?: boolean;
+  placeholder?: string;
   formField?: boolean;
   onChange?: (value: string | null) => void;
-}
+  onSearchChange?: (value: string) => void;
+};
 
 export function SelectField({
   name,
@@ -28,6 +29,7 @@ export function SelectField({
   placeholder,
   formField = false,
   onChange,
+  onSearchChange,
 }: Props) {
   const setParam = (val?: string) => {
     router.setParams({ [name]: (val as any) ?? (undefined as any) });
@@ -41,11 +43,7 @@ export function SelectField({
       onChange(nextVal || null);
     } else {
       // Query params mode: use router.setParams
-      if (nextVal) {
-        setParam(nextVal);
-      } else {
-        setParam(undefined);
-      }
+      setParam(nextVal || undefined);
     }
   };
 
@@ -57,6 +55,7 @@ export function SelectField({
       // Query params mode: use router.setParams
       setParam(undefined);
     }
+    onSearchChange?.('');
   };
 
   return (
@@ -68,6 +67,7 @@ export function SelectField({
         placeholder={placeholder || '...'}
         value={value}
         onChange={handleSelect}
+        onChangeText={onSearchChange}
         style={{
           borderWidth: 1,
           borderColor: isDisabled ? '#ccc' : '#000',
@@ -79,6 +79,25 @@ export function SelectField({
         selectedTextStyle={{ color: '#000' }}
         inputSearchStyle={{ color: '#000' }}
         search={isSearchable}
+        autoScroll={false}
+        renderInputSearch={(onSearch) => (
+          <TextInput
+            autoFocus
+            placeholder='...'
+            placeholderTextColor='#999'
+            onChangeText={onSearch}
+            style={{
+              height: 42,
+              margin: 8,
+              paddingHorizontal: 12,
+              borderWidth: 1,
+              borderColor: '#000',
+              borderRadius: 8,
+              color: '#000',
+              backgroundColor: '#fff',
+            }}
+          />
+        )}
         disable={isDisabled}
         showsVerticalScrollIndicator={false}
       />

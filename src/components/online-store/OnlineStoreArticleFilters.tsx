@@ -12,6 +12,7 @@ import {
 } from '@/constants';
 import { Button } from '../ui/Button';
 import { Filters } from '@/app/(tabs)/online-store';
+import { ArticlesSuggestionField } from '@/components/fields/ArticlesSuggestionField';
 
 interface Props {
   locale: Lang;
@@ -94,14 +95,13 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
           isClearable={false}
         />
 
-        <FilterField
-          className='w-48'
+        <ArticlesSuggestionField
+          className='w-56'
           key={`model-${modelValue}`}
           id='model'
           label={labels.model}
-          type='input'
           value={modelValue}
-          isClearable={true}
+          isClearable
         />
 
         <FilterField
