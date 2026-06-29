@@ -74,7 +74,7 @@ export default function PaymentScreen() {
     initializePaymentSession,
     openPaymentBrowser,
     isLoading: paymentLoading,
-  } = useRedsysPayment();
+  } = useRedsysPayment({ type: `auction_${auctionId}` });
   const { createPayment, rejectPayment } = useArticlesPayment();
 
   // Hook para toggle de selección de artículos (sincronizar con backend)

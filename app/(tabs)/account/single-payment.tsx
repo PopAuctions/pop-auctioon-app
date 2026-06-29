@@ -56,7 +56,7 @@ export default function SinglePaymentScreen() {
     initializePaymentSession,
     openPaymentBrowser,
     isLoading: paymentLoading,
-  } = useRedsysPayment();
+  } = useRedsysPayment({ type: 'online_store' });
 
   const { createPayment, rejectPayment } = useSingleArticlePayment();
 

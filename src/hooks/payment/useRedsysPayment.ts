@@ -47,7 +47,11 @@ const buildLaunchUrl = (launchUrl: string): string => {
   return `${baseUrl}${normalizedPath}`;
 };
 
-export const useRedsysPayment = (): UseRedsysPaymentReturn => {
+export const useRedsysPayment = ({
+  type,
+}: {
+  type: string;
+}): UseRedsysPaymentReturn => {
   const { securePost } = useSecureApi();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +72,7 @@ export const useRedsysPayment = (): UseRedsysPaymentReturn => {
           data: {
             amount,
             selectedItems,
+            type,
           },
         });
 
@@ -110,7 +115,7 @@ export const useRedsysPayment = (): UseRedsysPaymentReturn => {
         return null;
       }
     },
-    [securePost]
+    [securePost, type]
   );
 
   const openPaymentBrowser = useCallback(async () => {
