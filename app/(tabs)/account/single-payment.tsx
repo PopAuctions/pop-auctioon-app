@@ -23,10 +23,7 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
-import {
-  clearPaymentResultContext,
-  savePaymentResultContext,
-} from '@/utils/payments/payment-result-context';
+import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -255,12 +252,21 @@ export default function SinglePaymentScreen() {
       const browserResult = await openPaymentBrowser();
 
       if (!browserResult.success) {
-        await clearPaymentResultContext();
-        await rejectPayment({
-          userPaymentId,
-          errorCode: browserResult.error?.code,
-          errorDescription: browserResult.error?.message,
-        });
+        const redsysRejected =
+          browserResult.type === 'error' && browserResult.status === 'ko';
+
+        if (redsysRejected) {
+          await rejectPayment({
+            userPaymentId,
+            errorCode: browserResult.error.code,
+            errorDescription: browserResult.error.message,
+          });
+
+          router.replace('/payment-result?status=ko');
+          return;
+        }
+
+        router.replace('/payment-result?status=pending');
         return;
       }
 

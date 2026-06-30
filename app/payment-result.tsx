@@ -44,7 +44,10 @@ export default function PaymentResultScreen() {
     };
   }, []);
 
-  const isApproved = status === 'ok';
+  const resultStatus =
+    status === 'ok' ? 'ok' : status === 'pending' ? 'pending' : 'ko';
+  const isApproved = resultStatus === 'ok';
+  const isPending = resultStatus === 'pending';
 
   const copy = useMemo(() => {
     if (isApproved) {
@@ -58,6 +61,25 @@ export default function PaymentResultScreen() {
         description: {
           es: 'El pago fue autorizado por Redsys. Puedes revisar el detalle en tu historial de pagos.',
           en: 'The payment was authorized by Redsys. You can review the details in your payment history.',
+        },
+        primaryLabel: {
+          es: 'Ir a historial',
+          en: 'Go to history',
+        },
+      };
+    }
+
+    if (isPending) {
+      return {
+        icon: 'clock',
+        iconColor: '#d97706' as const,
+        title: {
+          es: 'Confirmando pago',
+          en: 'Confirming payment',
+        },
+        description: {
+          es: 'Estamos confirmando el resultado final del pago. Si Redsys ya lo autorizó, lo verás reflejado en tu historial en breve.',
+          en: 'We are confirming the final payment result. If Redsys already authorized it, it will appear in your payment history shortly.',
         },
         primaryLabel: {
           es: 'Ir a historial',
@@ -82,10 +104,10 @@ export default function PaymentResultScreen() {
         en: 'Try again',
       },
     };
-  }, [isApproved]);
+  }, [isApproved, isPending]);
 
   const handlePrimaryAction = () => {
-    if (isApproved) {
+    if (isApproved || isPending) {
       navigateWithAuth('/(tabs)/account/payments-history', {
         buildStack: true,
       });

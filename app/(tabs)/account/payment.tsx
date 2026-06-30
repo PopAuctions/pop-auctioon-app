@@ -34,10 +34,7 @@ import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
-import {
-  clearPaymentResultContext,
-  savePaymentResultContext,
-} from '@/utils/payments/payment-result-context';
+import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import type { CountryValue } from '@/types/types';
 
 export default function PaymentScreen() {
@@ -326,12 +323,21 @@ export default function PaymentScreen() {
       const browserResult = await openPaymentBrowser();
 
       if (!browserResult.success) {
-        await clearPaymentResultContext();
-        await rejectPayment({
-          userPaymentId,
-          errorCode: browserResult.error?.code,
-          errorDescription: browserResult.error?.message,
-        });
+        const redsysRejected =
+          browserResult.type === 'error' && browserResult.status === 'ko';
+
+        if (redsysRejected) {
+          await rejectPayment({
+            userPaymentId,
+            errorCode: browserResult.error.code,
+            errorDescription: browserResult.error.message,
+          });
+
+          router.replace('/payment-result?status=ko');
+          return;
+        }
+
+        router.replace('/payment-result?status=pending');
         return;
       }
 
