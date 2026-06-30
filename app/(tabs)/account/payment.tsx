@@ -367,6 +367,7 @@ export default function PaymentScreen() {
     openPaymentBrowser,
     callToast,
     paymentTranslations,
+    router,
   ]);
 
   useFocusEffect(

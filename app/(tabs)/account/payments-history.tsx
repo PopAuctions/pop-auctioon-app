@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -5,13 +6,15 @@ import { Loading } from '@/components/ui/Loading';
 import { PaymentCard } from '@/components/payment/PaymentCard';
 import { EmptyPaymentHistory } from '@/components/payment/EmptyPaymentHistory';
 import { useGetPaymentHistory } from '@/hooks/pages/payment/useGetPaymentHistory';
-import { useState, useCallback } from 'react';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomError } from '@/components/ui/CustomError';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 
 export default function PaymentsHistoryScreen() {
   const { locale } = useTranslation();
+  const { refresh } = useLocalSearchParams<{
+    refresh?: string;
+  }>();
   const {
     data: payments,
     status,
@@ -33,6 +36,14 @@ export default function PaymentsHistoryScreen() {
     }, [refetchPaymentHistory])
   );
 
+  useEffect(() => {
+    if (refresh !== '1') {
+      return;
+    }
+
+    void refetchPaymentHistory?.();
+  }, [refresh, refetchPaymentHistory]);
+
   if (
     (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) &&
     !refreshing
@@ -49,7 +60,6 @@ export default function PaymentsHistoryScreen() {
     );
   }
 
-  // Empty state
   if (payments.length === 0) {
     return (
       <EmptyPaymentHistory
@@ -74,7 +84,6 @@ export default function PaymentsHistoryScreen() {
           />
         }
       >
-        {/* Payment cards list */}
         <View className='mt-4'>
           {payments.map((payment) => (
             <PaymentCard

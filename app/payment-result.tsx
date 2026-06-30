@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import {
@@ -13,6 +15,36 @@ import {
   type PaymentResultContext,
 } from '@/utils/payments/payment-result-context';
 
+type ResultStatus = 'ok' | 'ko' | 'pending';
+
+type ServerPaymentStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+interface PaymentStatusLookup {
+  id: number;
+  paymentIntent: string | null;
+  status: ServerPaymentStatus;
+  createdAt: string;
+  totalAmount: number;
+}
+
+const STATUS_POLL_INTERVAL_MS = 2500;
+const STATUS_POLL_MAX_ATTEMPTS = 8;
+
+const normalizeResultStatus = (status?: string): ResultStatus => {
+  if (status === 'ok') return 'ok';
+  if (status === 'pending') return 'pending';
+  return 'ko';
+};
+
+const normalizeServerStatus = (
+  status: ServerPaymentStatus | null | undefined
+): ResultStatus | null => {
+  if (status === 'APPROVED') return 'ok';
+  if (status === 'PENDING') return 'pending';
+  if (status === 'REJECTED') return 'ko';
+  return null;
+};
+
 export default function PaymentResultScreen() {
   const { status } = useLocalSearchParams<{
     status?: string;
@@ -20,8 +52,22 @@ export default function PaymentResultScreen() {
   const router = useRouter();
   const { navigateWithAuth } = useAuthNavigation();
   const { locale } = useTranslation();
+  const { secureGet } = useSecureApi();
   const [context, setContext] = useState<PaymentResultContext | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const initialResultStatus = useMemo(
+    () => normalizeResultStatus(status),
+    [status]
+  );
+  const [resolvedStatus, setResolvedStatus] =
+    useState<ResultStatus>(initialResultStatus);
+  const [isInitialStatusCheckPending, setIsInitialStatusCheckPending] =
+    useState(initialResultStatus !== 'ok');
+
+  useEffect(() => {
+    setResolvedStatus(initialResultStatus);
+    setIsInitialStatusCheckPending(initialResultStatus !== 'ok');
+  }, [initialResultStatus]);
 
   useEffect(() => {
     let isMounted = true;
@@ -44,8 +90,109 @@ export default function PaymentResultScreen() {
     };
   }, []);
 
-  const resultStatus =
-    status === 'ok' ? 'ok' : status === 'pending' ? 'pending' : 'ko';
+  const paymentStatusEndpoint = useMemo(() => {
+    if (!context?.paymentId && !context?.paymentIntent) {
+      return null;
+    }
+
+    return SECURE_ENDPOINTS.USER.PAYMENT_STATUS({
+      paymentId: context?.paymentId,
+      paymentIntent: context?.paymentIntent,
+    });
+  }, [context?.paymentId, context?.paymentIntent]);
+
+  const fetchPaymentStatus = useCallback(async () => {
+    if (!paymentStatusEndpoint) {
+      return null;
+    }
+
+    const response = await secureGet<PaymentStatusLookup | null>({
+      endpoint: paymentStatusEndpoint,
+      options: {
+        retries: 0,
+        timeout: 6000,
+      },
+    });
+
+    if (response.error) {
+      return null;
+    }
+
+    return response.data ?? null;
+  }, [paymentStatusEndpoint, secureGet]);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    if (initialResultStatus === 'ok' || !paymentStatusEndpoint) {
+      setIsInitialStatusCheckPending(false);
+      return;
+    }
+
+    let isActive = true;
+
+    const reconcileStatus = async () => {
+      setIsInitialStatusCheckPending(true);
+      const payment = await fetchPaymentStatus();
+
+      if (!isActive) {
+        return;
+      }
+
+      const nextStatus = normalizeServerStatus(payment?.status);
+      setResolvedStatus(nextStatus ?? initialResultStatus);
+      setIsInitialStatusCheckPending(false);
+    };
+
+    void reconcileStatus();
+
+    return () => {
+      isActive = false;
+    };
+  }, [fetchPaymentStatus, initialResultStatus, isReady, paymentStatusEndpoint]);
+
+  useEffect(() => {
+    if (!isReady || resolvedStatus !== 'pending' || !paymentStatusEndpoint) {
+      return;
+    }
+
+    let isActive = true;
+
+    const pollStatus = async () => {
+      for (let attempt = 0; attempt < STATUS_POLL_MAX_ATTEMPTS; attempt += 1) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, STATUS_POLL_INTERVAL_MS)
+        );
+
+        if (!isActive) {
+          return;
+        }
+
+        const payment = await fetchPaymentStatus();
+
+        if (!isActive) {
+          return;
+        }
+
+        const nextStatus = normalizeServerStatus(payment?.status);
+
+        if (nextStatus && nextStatus !== 'pending') {
+          setResolvedStatus(nextStatus);
+          return;
+        }
+      }
+    };
+
+    void pollStatus();
+
+    return () => {
+      isActive = false;
+    };
+  }, [fetchPaymentStatus, isReady, paymentStatusEndpoint, resolvedStatus]);
+
+  const resultStatus = isInitialStatusCheckPending ? 'pending' : resolvedStatus;
   const isApproved = resultStatus === 'ok';
   const isPending = resultStatus === 'pending';
 
@@ -108,7 +255,7 @@ export default function PaymentResultScreen() {
 
   const handlePrimaryAction = () => {
     if (isApproved || isPending) {
-      navigateWithAuth('/(tabs)/account/payments-history', {
+      navigateWithAuth('/(tabs)/account/payments-history?refresh=1', {
         buildStack: true,
       });
       return;
