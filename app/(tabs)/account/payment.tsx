@@ -6,7 +6,7 @@
  * 3. Permite seleccionar dirección de envío
  * 4. Calcula breakdown de costos (subtotal, comisión, envío, descuento)
  * 5. Aplica códigos de descuento
- * 6. Crea sesiÃ³n Redsys y abre la pasarela en browser
+ * 6. Crea sesión Redsys y abre la pasarela en browser
  */
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
