@@ -148,6 +148,10 @@ export type CookiesPolicyData = {
       }[];
       note: string;
     };
+    updates: {
+      title: string;
+      content: string;
+    };
   };
   en: {
     title: string;
@@ -175,6 +179,10 @@ export type CookiesPolicyData = {
         url: string;
       }[];
       note: string;
+    };
+    updates: {
+      title: string;
+      content: string;
     };
   };
 };
