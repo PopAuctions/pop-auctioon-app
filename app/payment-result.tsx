@@ -142,9 +142,7 @@ export default function PaymentResultScreen() {
       }
 
       const nextStatus = normalizeServerStatus(payment?.status);
-      setResolvedStatus(
-        nextStatus ?? (initialResultStatus === 'ok' ? 'pending' : initialResultStatus)
-      );
+      setResolvedStatus(nextStatus ?? 'pending');
       setIsInitialStatusCheckPending(false);
     };
 
