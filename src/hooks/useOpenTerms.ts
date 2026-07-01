@@ -17,7 +17,7 @@ export const useOpenTerms = () => {
     // Obtener URL del backend
     const termsUrl =
       legalContent?.termsAndConditions?.pdfUrl ||
-      'https://www.popauction.com/documents/TC-2025-07-14.pdf';
+      'https://www.popauction.com/documents/TC-2026-07-01.pdf';
 
     const supported = await Linking.canOpenURL(termsUrl);
 
