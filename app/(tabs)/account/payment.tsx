@@ -323,14 +323,15 @@ export default function PaymentScreen() {
       const browserResult = await openPaymentBrowser();
 
       if (!browserResult.success) {
-        const redsysRejected =
-          browserResult.type === 'error' && browserResult.status === 'ko';
+        const shouldRejectPayment =
+          browserResult.type === 'cancel' ||
+          (browserResult.type === 'error' && browserResult.status === 'ko');
 
-        if (redsysRejected) {
+        if (shouldRejectPayment) {
           await rejectPayment({
             userPaymentId,
-            errorCode: browserResult.error.code,
-            errorDescription: browserResult.error.message,
+            errorCode: browserResult.error?.code,
+            errorDescription: browserResult.error?.message,
           });
 
           router.replace('/payment-result?status=ko');

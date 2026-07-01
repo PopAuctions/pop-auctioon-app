@@ -62,11 +62,11 @@ export default function PaymentResultScreen() {
   const [resolvedStatus, setResolvedStatus] =
     useState<ResultStatus>(initialResultStatus);
   const [isInitialStatusCheckPending, setIsInitialStatusCheckPending] =
-    useState(initialResultStatus !== 'ok');
+    useState(true);
 
   useEffect(() => {
     setResolvedStatus(initialResultStatus);
-    setIsInitialStatusCheckPending(initialResultStatus !== 'ok');
+    setIsInitialStatusCheckPending(true);
   }, [initialResultStatus]);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function PaymentResultScreen() {
       return;
     }
 
-    if (initialResultStatus === 'ok' || !paymentStatusEndpoint) {
+    if (!paymentStatusEndpoint) {
       setIsInitialStatusCheckPending(false);
       return;
     }
@@ -142,7 +142,9 @@ export default function PaymentResultScreen() {
       }
 
       const nextStatus = normalizeServerStatus(payment?.status);
-      setResolvedStatus(nextStatus ?? initialResultStatus);
+      setResolvedStatus(
+        nextStatus ?? (initialResultStatus === 'ok' ? 'pending' : initialResultStatus)
+      );
       setIsInitialStatusCheckPending(false);
     };
 
