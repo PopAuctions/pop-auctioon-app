@@ -246,6 +246,22 @@ export const SECURE_ENDPOINTS = {
     PAYMENT_HISTORY: '/user/payments', // GET payment history
     PAYMENT_BY_ID: (id: string): ApiEndpoint =>
       `/user/payments/${id}` as ApiEndpoint, // GET payment by ID
+    PAYMENT_STATUS: (params: {
+      paymentId?: number;
+      paymentIntent?: string;
+    }): ApiEndpoint => {
+      const searchParams = new URLSearchParams();
+
+      if (typeof params.paymentId === 'number') {
+        searchParams.set('paymentId', params.paymentId.toString());
+      }
+
+      if (params.paymentIntent) {
+        searchParams.set('paymentIntent', params.paymentIntent);
+      }
+
+      return `/user/payments/status?${searchParams.toString()}` as ApiEndpoint;
+    },
     WON_ARTICLES: (auctionId: string): ApiEndpoint =>
       `/user/won-articles?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados en subasta
     WON_ARTICLES_BY_AUCTION: '/user/won-articles-by-auction', // GET - Artículos ganados agrupados por subasta

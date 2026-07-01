@@ -6,7 +6,7 @@
  * 3. Permite seleccionar dirección de envío
  * 4. Calcula breakdown de costos (subtotal, comisión, envío, descuento)
  * 5. Aplica códigos de descuento
- * 6. Crea sesiÃ³n Redsys y abre la pasarela en browser
+ * 6. Crea sesión Redsys y abre la pasarela en browser
  */
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
@@ -34,10 +34,7 @@ import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
 import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
-import {
-  clearPaymentResultContext,
-  savePaymentResultContext,
-} from '@/utils/payments/payment-result-context';
+import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import type { CountryValue } from '@/types/types';
 
 export default function PaymentScreen() {
@@ -326,12 +323,22 @@ export default function PaymentScreen() {
       const browserResult = await openPaymentBrowser();
 
       if (!browserResult.success) {
-        await clearPaymentResultContext();
-        await rejectPayment({
-          userPaymentId,
-          errorCode: browserResult.error?.code,
-          errorDescription: browserResult.error?.message,
-        });
+        const shouldRejectPayment =
+          browserResult.type === 'cancel' ||
+          (browserResult.type === 'error' && browserResult.status === 'ko');
+
+        if (shouldRejectPayment) {
+          await rejectPayment({
+            userPaymentId,
+            errorCode: browserResult.error?.code,
+            errorDescription: browserResult.error?.message,
+          });
+
+          router.replace('/payment-result?status=ko');
+          return;
+        }
+
+        router.replace('/payment-result?status=pending');
         return;
       }
 
@@ -361,6 +368,7 @@ export default function PaymentScreen() {
     openPaymentBrowser,
     callToast,
     paymentTranslations,
+    router,
   ]);
 
   useFocusEffect(
