@@ -110,7 +110,7 @@ export const useSendBid = ({
     }
 
     // actual request
-    let timeoutHandle: number | null = null;
+    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
     try {
       setIsPending(true);
 

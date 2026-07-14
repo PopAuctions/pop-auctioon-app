@@ -5,8 +5,8 @@ import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
-// Mock de useIsFocused desde react-navigation
-jest.mock('@react-navigation/native', () => ({
+// Mock de useIsFocused desde Expo Router
+jest.mock('expo-router', () => ({
   useIsFocused: jest.fn(() => true),
 }));
 

@@ -4,11 +4,11 @@ import { Href, router, Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useAuth } from '@/context/auth-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { Text } from 'react-native';
+import { ColorValue, Text } from 'react-native';
 import { APP_USER_ROLES } from '@/constants/user';
 import { consumeTabReset } from '@/utils/navigation/crossTabNavigation';
 
-const TabLabel = ({ label, color }: { label: string; color: string }) => {
+const TabLabel = ({ label, color }: { label: string; color: ColorValue }) => {
   return (
     <Text
       numberOfLines={2}
