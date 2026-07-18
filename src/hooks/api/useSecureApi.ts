@@ -192,7 +192,7 @@ export const useSecureApi = () => {
             error: response.ok ? undefined : getErrorMessage(responseData),
             ...(includeHeaders ? { headers: response.headers } : {}),
           };
-        } catch (error) {
+        } catch {
           if (attempt === retries) {
             break;
           }

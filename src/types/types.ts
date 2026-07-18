@@ -885,10 +885,7 @@ export type CategoryFilter = {
 export type ApiEndpoint = `/${string}`;
 
 export type SubscribeStatus =
-  | 'SUBSCRIBED'
-  | 'TIMED_OUT'
-  | 'CLOSED'
-  | 'CHANNEL_ERROR';
+  'SUBSCRIBED' | 'TIMED_OUT' | 'CLOSED' | 'CHANNEL_ERROR';
 
 export interface SignupResponse {
   error: LangMap | null;

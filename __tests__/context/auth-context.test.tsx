@@ -58,8 +58,7 @@ describe('AuthContext', () => {
   };
 
   let authStateCallback:
-    | ((event: string, session: Session | null) => void)
-    | null = null;
+    ((event: string, session: Session | null) => void) | null = null;
 
   beforeEach(() => {
     jest.clearAllMocks();
