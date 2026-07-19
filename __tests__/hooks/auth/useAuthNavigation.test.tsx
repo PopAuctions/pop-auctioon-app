@@ -22,6 +22,14 @@ jest.mock('@/context/auth-context', () => ({
 
 // Mock de routeConfig
 jest.mock('@/components/navigation/routeConfig', () => ({
+  TAB_ROUTES: [
+    '/(tabs)/home',
+    '/(tabs)/auctions',
+    '/(tabs)/online-store',
+    '/(tabs)/auctioneer',
+    '/(tabs)/account',
+    '/(tabs)/auth',
+  ],
   PROTECTED_ROUTES: {
     'my-auctions': {
       requiredRole: 'AUCTIONEER',

@@ -105,7 +105,7 @@ describe('useGetWonArticles', () => {
     expect(result.current.errorMessage).toBeNull();
   });
 
-  it('should handle null data response as empty array', async () => {
+  it('should handle null data response as an error', async () => {
     mockSecureGet.mockResolvedValueOnce({
       data: null,
       error: null,
@@ -116,11 +116,14 @@ describe('useGetWonArticles', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.status).toBe('success');
+      expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.data).toEqual([]);
-    expect(result.current.errorMessage).toBeNull();
+    expect(result.current.data).toBeNull();
+    expect(result.current.errorMessage).toEqual({
+      es: 'Error al cargar artículos ganados',
+      en: 'Error loading won articles',
+    });
   });
 
   it('should handle missing auctionId', async () => {
@@ -157,7 +160,7 @@ describe('useGetWonArticles', () => {
     });
 
     expect(result.current.errorMessage).toEqual(mockError);
-    expect(result.current.data).toEqual([]);
+    expect(result.current.data).toBeNull();
   });
 
   it('should handle network/unexpected errors', async () => {

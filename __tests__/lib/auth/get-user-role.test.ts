@@ -76,7 +76,7 @@ describe('getUserRole', () => {
   describe('Error Handling', () => {
     it('should handle Supabase error', async () => {
       const error = { message: 'Database connection failed' };
-      mockFrom.mockReturnValue(createMockChain(null, error) as never);
+      mockFrom.mockReturnValue(createMockChain(null, false, error) as never);
 
       const result = await getUserRole({ id: 'user-123' });
 

@@ -37,7 +37,7 @@
       "env": {
         "EXPO_PUBLIC_API_BASE_URL": "https://pop-auction-web-staging.vercel.app/api",
         "EXPO_PUBLIC_BASE_URL": "https://pop-auction-web-staging.vercel.app",
-        "EXPO_PUBLIC_STREAM_URL": "https://pop-auction-web-staging.vercel.app/",
+        "EXPO_PUBLIC_STREAM_URL": "https://pop-auction-web-staging.vercel.app",
         "EXPO_PUBLIC_STRIPE_PUBLIC_KEY": "pk_test_51PoAU0DvRQtMWmfE9doP4rbLGiZve9YUehzaefsGpyewPmvBt2sjH9DF8v1wkxJbY6zBzzwFkEdv7BqIZY1qP82k00V51muAET",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2b2hncGd6dnhkd29vZXJkbmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4NDAwNzMsImV4cCI6MjA0NzQxNjA3M30.REN7rPMbhIJ3XlyNBfW4R04eWGAjL01udOCFtyAYx4w",
         "EXPO_PUBLIC_SUPABASE_URL": "https://xvohgpgzvxdwooerdnfb.supabase.co",

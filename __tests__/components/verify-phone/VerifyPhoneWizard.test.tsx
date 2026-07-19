@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { VerifyPhoneWizard } from '@/components/verify-phone/VerifyPhoneWizard';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 
 // Mock dependencies
 const mockSendOtp = jest.fn();
@@ -21,6 +21,7 @@ const mockToast = {
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
   usePathname: jest.fn(() => '/'),
+  router: { push: jest.fn(), replace: jest.fn() },
 }));
 
 jest.mock('@/hooks/pages/verify-phone/useVerifyPhone', () => ({
@@ -32,6 +33,10 @@ jest.mock('@/hooks/pages/verify-phone/useVerifyPhone', () => ({
     canResend: mockCanResend,
     remainingSeconds: mockRemainingSeconds,
   }),
+}));
+
+jest.mock('@/context/auth-context', () => ({
+  useAuth: () => ({ getSession: () => [{ user: { id: 'user-1' } }, 'USER'] }),
 }));
 
 jest.mock('@/hooks/useToast', () => ({
@@ -116,8 +121,10 @@ beforeEach(() => {
   mockVerifyOtp.mockResolvedValue({ success: true });
   (useRouter as jest.Mock).mockReturnValue({
     push: mockPush,
+    replace: mockPush,
     back: jest.fn(),
   });
+  (router.replace as jest.Mock).mockImplementation(mockPush);
 });
 
 describe('VerifyPhoneWizard', () => {

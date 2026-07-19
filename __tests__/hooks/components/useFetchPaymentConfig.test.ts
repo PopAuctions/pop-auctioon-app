@@ -73,6 +73,7 @@ describe('useFetchPaymentConfig', () => {
       GENERAL: 29,
     },
     taxPercentage: 21,
+    taxPercentageArticles: 21,
     countries: {
       es: ['SPAIN', 'FRANCE'],
       en: ['SPAIN', 'FRANCE'],
@@ -97,8 +98,9 @@ describe('useFetchPaymentConfig', () => {
     expect(result.current.status).toBe('loading');
     expect(result.current.data).toEqual({
       commission: 0,
-      shippingTaxes: {},
+      shippingTaxes: null,
       taxPercentage: 0,
+      taxPercentageArticles: 0,
       countries: {},
       countriesLabel: {},
     });
@@ -194,8 +196,9 @@ describe('useFetchPaymentConfig', () => {
     expect(result.current.errorMessage).toEqual(mockError);
     expect(result.current.data).toEqual({
       commission: 0,
-      shippingTaxes: {},
+      shippingTaxes: null,
       taxPercentage: 0,
+      taxPercentageArticles: 0,
       countries: {},
       countriesLabel: {},
     });

@@ -36,7 +36,7 @@ describe('EmptyPaymentHistory', () => {
         />
       );
 
-      expect(getByText('Payments History')).toBeTruthy();
+      expect(getByText('You have no registered payments')).toBeTruthy();
     });
 
     it('renders empty state message', () => {

@@ -44,7 +44,7 @@ describe('BillingFormModal', () => {
     expect(getByText('Billing address *')).toBeTruthy();
     expect(getByText('Tax ID / VAT number *')).toBeTruthy();
     // Placeholders
-    expect(getByPlaceholderText('E.g: Company, Personal, etc.')).toBeTruthy();
+    expect(getByPlaceholderText('E.g: Company, Home, etc.')).toBeTruthy();
     expect(getByPlaceholderText('Full name or company')).toBeTruthy();
     expect(getByPlaceholderText('Complete address')).toBeTruthy();
     expect(getByPlaceholderText('E.g.: B12345678')).toBeTruthy();
@@ -69,7 +69,7 @@ describe('BillingFormModal', () => {
     );
 
     fireEvent.changeText(
-      getByPlaceholderText('E.g: Company, Personal, etc.'),
+      getByPlaceholderText('E.g: Company, Home, etc.'),
       'Mi Factura'
     );
     fireEvent.changeText(
@@ -78,6 +78,9 @@ describe('BillingFormModal', () => {
     );
     fireEvent.changeText(getByPlaceholderText('Complete address'), 'Calle 123');
     fireEvent.changeText(getByPlaceholderText('E.g.: B12345678'), 'RFC123');
+    fireEvent.changeText(getByPlaceholderText('Country'), 'Spain');
+    fireEvent.changeText(getByPlaceholderText('City'), 'Madrid');
+    fireEvent.changeText(getByPlaceholderText('Postal Code'), '28001');
 
     fireEvent.press(getByText(/save/i));
 
@@ -87,6 +90,9 @@ describe('BillingFormModal', () => {
         billingName: 'Empresa S.A.',
         billingAddress: 'Calle 123',
         vatNumber: 'RFC123',
+        country: 'Spain',
+        city: 'Madrid',
+        postalCode: '28001',
       });
     });
   });
@@ -100,6 +106,9 @@ describe('BillingFormModal', () => {
       billingName: 'Edit S.A.',
       billingAddress: 'Edit 456',
       vatNumber: 'RFCEDIT',
+      country: 'Spain',
+      city: 'Madrid',
+      postalCode: '28001',
       userId: 'user-1',
       createdAt: '2024-01-01T00:00:00Z',
       updatedAt: '2024-01-01T00:00:00Z',
@@ -113,7 +122,7 @@ describe('BillingFormModal', () => {
     );
 
     fireEvent.changeText(
-      getByPlaceholderText('E.g: Company, Personal, etc.'),
+      getByPlaceholderText('E.g: Company, Home, etc.'),
       'Factura Nueva'
     );
 
@@ -125,6 +134,9 @@ describe('BillingFormModal', () => {
         billingName: 'Edit S.A.',
         billingAddress: 'Edit 456',
         vatNumber: 'RFCEDIT',
+        country: 'Spain',
+        city: 'Madrid',
+        postalCode: '28001',
       });
     });
   });
@@ -137,7 +149,7 @@ describe('BillingFormModal', () => {
     );
 
     fireEvent.changeText(
-      getByPlaceholderText('E.g: Company, Personal, etc.'),
+      getByPlaceholderText('E.g: Company, Home, etc.'),
       'Mi Factura'
     );
     fireEvent.changeText(
@@ -146,6 +158,9 @@ describe('BillingFormModal', () => {
     );
     fireEvent.changeText(getByPlaceholderText('Complete address'), 'Calle 123');
     fireEvent.changeText(getByPlaceholderText('E.g.: B12345678'), 'RFC123');
+    fireEvent.changeText(getByPlaceholderText('Country'), 'Spain');
+    fireEvent.changeText(getByPlaceholderText('City'), 'Madrid');
+    fireEvent.changeText(getByPlaceholderText('Postal Code'), '28001');
 
     fireEvent.press(getByText(/save/i));
 

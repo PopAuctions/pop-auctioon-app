@@ -133,7 +133,7 @@ describe('PaymentCard', () => {
         <PaymentCard payment={mockPaymentWithAuction} />
       );
 
-      expect(getByText(/€10,095/)).toBeTruthy();
+      expect(getByText(/€10,094.50/)).toBeTruthy();
     });
 
     it('displays correct articles count', () => {

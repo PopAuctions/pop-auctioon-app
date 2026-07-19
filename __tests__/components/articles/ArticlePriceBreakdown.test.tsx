@@ -8,7 +8,7 @@ describe('ArticlePriceBreakdown', () => {
       <ArticlePriceBreakdown
         lang='en'
         price={100}
-        commissionValue={0.15}
+        buyerCommissionValue={15}
         texts={{
           commission: 'Commission',
           shipping: 'Shipping',
@@ -16,7 +16,7 @@ describe('ArticlePriceBreakdown', () => {
         }}
       />
     );
-    // With price=100 and commissionValue=0.15 (15%)
+    // With price=100 and buyerCommissionValue=15 (15%)
     // Commissioned price = Math.round(100 * 1.15) = 115
     expect(getByText('€115')).toBeTruthy();
   });

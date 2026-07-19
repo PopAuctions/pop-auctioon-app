@@ -11,6 +11,22 @@ import { REQUEST_STATUS } from '@/constants';
 
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
+// The hook now uses the API abstraction; bridge this legacy RPC fixture to it.
+jest.mock('@/hooks/api/useSecureApi', () => {
+  const protectedGet = async () => {
+    const {
+      supabase: mockedSupabase,
+    } = require('@/utils/supabase/supabase-store');
+    const response = await mockedSupabase.rpc('filter_auctions_for_calendar', {
+      today: new Date().toISOString(),
+      start_of_month: new Date().toISOString(),
+      end_of_month: new Date().toISOString(),
+    });
+    return { data: response.data, error: response.error };
+  };
+  return { useSecureApi: () => ({ protectedGet }) };
+});
+
 jest.mock('@/lib/error/sentry-error-report', () => ({
   sentryErrorReport: jest.fn(),
 }));

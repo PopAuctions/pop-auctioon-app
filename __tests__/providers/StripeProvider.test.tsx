@@ -101,7 +101,7 @@ describe('StripeProvider', () => {
       );
 
       const errorText = getByTestId('custom-error').props.children;
-      expect(errorText).toContain('STRIPE_PUBLIC_KEY');
+      expect(errorText).toContain('Configuration error');
     });
   });
 
