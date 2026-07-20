@@ -761,6 +761,72 @@ export interface Database {
           },
         ];
       };
+      PaymentRefund: {
+        Row: {
+          amount: number;
+          calculationSnapshot: Json;
+          createdAt: string;
+          createdBy: string;
+          id: string;
+          manualOverrideAmount: number | null;
+          paymentId: number;
+          redsysOrder: string;
+          redsysResponse: Json | null;
+          requiresSettlementAdjustment: boolean;
+          selectedArticleIds: number[];
+          status: Database['public']['Enums']['PaymentRefundStatus'];
+          updatedAt: string;
+          usedManualOverride: boolean;
+        };
+        Insert: {
+          amount: number;
+          calculationSnapshot: Json;
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
+          manualOverrideAmount?: number | null;
+          paymentId: number;
+          redsysOrder: string;
+          redsysResponse?: Json | null;
+          requiresSettlementAdjustment?: boolean;
+          selectedArticleIds: number[];
+          status?: Database['public']['Enums']['PaymentRefundStatus'];
+          updatedAt?: string;
+          usedManualOverride?: boolean;
+        };
+        Update: {
+          amount?: number;
+          calculationSnapshot?: Json;
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          manualOverrideAmount?: number | null;
+          paymentId?: number;
+          redsysOrder?: string;
+          redsysResponse?: Json | null;
+          requiresSettlementAdjustment?: boolean;
+          selectedArticleIds?: number[];
+          status?: Database['public']['Enums']['PaymentRefundStatus'];
+          updatedAt?: string;
+          usedManualOverride?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'PaymentRefund_createdBy_fkey';
+            columns: ['createdBy'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'PaymentRefund_paymentId_fkey';
+            columns: ['paymentId'];
+            isOneToOne: false;
+            referencedRelation: 'UserPayment';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       PhoneOTP: {
         Row: {
           attemptCount: number | null;
@@ -842,6 +908,39 @@ export interface Database {
             referencedColumns: ['id'];
           },
         ];
+      };
+      RedsysSessions: {
+        Row: {
+          created_at: string;
+          expires_at: string;
+          lang: string;
+          redsys_order: string;
+          signed_params: Json;
+          token: string;
+          used: boolean;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          expires_at: string;
+          lang: string;
+          redsys_order: string;
+          signed_params: Json;
+          token: string;
+          used?: boolean;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          expires_at?: string;
+          lang?: string;
+          redsys_order?: string;
+          signed_params?: Json;
+          token?: string;
+          used?: boolean;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       Store: {
         Row: {
@@ -1574,6 +1673,7 @@ export interface Database {
       };
       UserPayment: {
         Row: {
+          amountRefunded: number;
           articlesAmount: number | null;
           articlesPaid: number[];
           auctionId: number | null;
@@ -1587,6 +1687,7 @@ export interface Database {
           id: number;
           paymentIntent: string | null;
           receiptUrl: string | null;
+          refundStatus: Database['public']['Enums']['UserPaymentRefundStatus'];
           shippingAmount: number | null;
           shippingCourier: string | null;
           shippingNumber: string | null;
@@ -1597,6 +1698,7 @@ export interface Database {
           userId: string;
         };
         Insert: {
+          amountRefunded?: number;
           articlesAmount?: number | null;
           articlesPaid: number[];
           auctionId?: number | null;
@@ -1610,6 +1712,7 @@ export interface Database {
           id?: number;
           paymentIntent?: string | null;
           receiptUrl?: string | null;
+          refundStatus?: Database['public']['Enums']['UserPaymentRefundStatus'];
           shippingAmount?: number | null;
           shippingCourier?: string | null;
           shippingNumber?: string | null;
@@ -1620,6 +1723,7 @@ export interface Database {
           userId: string;
         };
         Update: {
+          amountRefunded?: number;
           articlesAmount?: number | null;
           articlesPaid?: number[];
           auctionId?: number | null;
@@ -1633,6 +1737,7 @@ export interface Database {
           id?: number;
           paymentIntent?: string | null;
           receiptUrl?: string | null;
+          refundStatus?: Database['public']['Enums']['UserPaymentRefundStatus'];
           shippingAmount?: number | null;
           shippingCourier?: string | null;
           shippingNumber?: string | null;
@@ -1761,9 +1866,11 @@ export interface Database {
         Returns: string;
       };
       sell_article: { Args: { article_id: number }; Returns: Json };
+      show_limit: { Args: never; Returns: number };
+      show_trgm: { Args: { '': string }; Returns: string[] };
     };
     Enums: {
-      ArticleCategory: 'BAG' | 'ART' | 'JEWERLY' | 'WATCH';
+      ArticleCategory: 'BAG' | 'ART' | 'JEWERLY' | 'WATCH' | 'ALL';
       ArticleSecondChanceStatus: 'NOT_AVAILABLE' | 'AVAILABLE' | 'SOLD';
       ArticleSmell: 'TOBACCO' | 'PERFUME' | 'HUMIDITY' | 'NO_SMELL' | 'OTHER';
       ArticleState:
@@ -1778,7 +1885,7 @@ export interface Database {
         | 'CHANGES_MADE'
         | 'APPROVED'
         | 'PUBLISHED';
-      AuctionCategory: 'BAGS' | 'ART' | 'JEWERLY' | 'WATCHES';
+      AuctionCategory: 'BAGS' | 'ART' | 'JEWERLY' | 'WATCHES' | 'ALL';
       AuctionMode: 'LIVE' | 'AUTOMATIC';
       AuctionStatus:
         | 'NOT_AVAILABLE'
@@ -1795,11 +1902,16 @@ export interface Database {
       InvoiceType: 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
       LiveAuctionState: 'PENDING' | 'LIVE' | 'FINISHED';
       OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED';
+      PaymentRefundStatus: 'PENDING' | 'SUCCEEDED' | 'FAILED';
       PaymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
       StorePayoutMethod: 'BANK_TRANSFER' | 'STRIPE' | 'PAYPAL' | 'CASH';
       StorePayoutStatus: 'PAID' | 'CANCELLED';
       StoreSettlementSaleType: 'AUCTION' | 'ONLINE_STORE';
       StoreSettlementStatus: 'PENDING' | 'PROBLEM' | 'PAID' | 'CANCELLED';
+      UserPaymentRefundStatus:
+        | 'NOT_REFUNDED'
+        | 'PARTIALLY_REFUNDED'
+        | 'REFUNDED';
       UserRole: 'ADMIN' | 'USER' | 'AUCTIONEER';
       WonArticleStatus: 'NOT_PAID' | 'DRAFT' | 'PAID';
     };
@@ -1820,12 +1932,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1847,12 +1959,13 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    | keyof DefaultSchema['Tables']
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1871,12 +1984,13 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    | keyof DefaultSchema['Tables']
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1895,12 +2009,13 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    keyof DefaultSchema['Enums'] | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    | keyof DefaultSchema['Enums']
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never) = never,
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1913,11 +2028,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never) = never,
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1929,7 +2044,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      ArticleCategory: ['BAG', 'ART', 'JEWERLY', 'WATCH'],
+      ArticleCategory: ['BAG', 'ART', 'JEWERLY', 'WATCH', 'ALL'],
       ArticleSecondChanceStatus: ['NOT_AVAILABLE', 'AVAILABLE', 'SOLD'],
       ArticleSmell: ['TOBACCO', 'PERFUME', 'HUMIDITY', 'NO_SMELL', 'OTHER'],
       ArticleState: [
@@ -1946,7 +2061,7 @@ export const Constants = {
         'APPROVED',
         'PUBLISHED',
       ],
-      AuctionCategory: ['BAGS', 'ART', 'JEWERLY', 'WATCHES'],
+      AuctionCategory: ['BAGS', 'ART', 'JEWERLY', 'WATCHES', 'ALL'],
       AuctionMode: ['LIVE', 'AUTOMATIC'],
       AuctionStatus: [
         'NOT_AVAILABLE',
@@ -1964,11 +2079,17 @@ export const Constants = {
       InvoiceType: ['USER', 'AUCTIONEER', 'HOST_AUCTIONEER'],
       LiveAuctionState: ['PENDING', 'LIVE', 'FINISHED'],
       OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED'],
+      PaymentRefundStatus: ['PENDING', 'SUCCEEDED', 'FAILED'],
       PaymentStatus: ['PENDING', 'APPROVED', 'REJECTED'],
       StorePayoutMethod: ['BANK_TRANSFER', 'STRIPE', 'PAYPAL', 'CASH'],
       StorePayoutStatus: ['PAID', 'CANCELLED'],
       StoreSettlementSaleType: ['AUCTION', 'ONLINE_STORE'],
       StoreSettlementStatus: ['PENDING', 'PROBLEM', 'PAID', 'CANCELLED'],
+      UserPaymentRefundStatus: [
+        'NOT_REFUNDED',
+        'PARTIALLY_REFUNDED',
+        'REFUNDED',
+      ],
       UserRole: ['ADMIN', 'USER', 'AUCTIONEER'],
       WonArticleStatus: ['NOT_PAID', 'DRAFT', 'PAID'],
     },
