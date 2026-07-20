@@ -1,22 +1,6 @@
 // AsyncStorage key for user's language preference
 export const LANGUAGE_STORAGE_KEY = '@app_language';
 
-export const LOCALES = {
-  es: { value: 'es', label: 'Es', ariaLabel: 'Cambiar a español' },
-  en: { value: 'en', label: 'En', ariaLabel: 'Change to english' },
-} as const;
-
-export const AVAILABLE_COUNTRIES_LANG = {
-  es: [
-    { value: 'ES', label: 'España' },
-    { value: 'DE', label: 'Alemania' },
-  ],
-  en: [
-    { value: 'ES', label: 'Spain' },
-    { value: 'DE', label: 'Germany' },
-  ],
-} as const;
-
 /**
  * Flag indicating that the local language preference should take precedence
  * over the value stored in the DB on the next login. This may be set when the
