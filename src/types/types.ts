@@ -645,6 +645,7 @@ export const FromArticleCategoryToAuctionCategory: Record<
   JEWERLY: 'JEWERLY',
   WATCH: 'WATCHES',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export const AuctionCategoriesConst: Record<
@@ -655,6 +656,7 @@ export const AuctionCategoriesConst: Record<
   JEWERLY: 'JEWERLY',
   WATCHES: 'WATCHES',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export type AuctionCategories = Database['public']['Enums']['AuctionCategory'];
@@ -687,6 +689,7 @@ export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
   JEWERLY: 'JEWERLY',
   WATCH: 'WATCH',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export type ArticleCategories = Database['public']['Enums']['ArticleCategory'];
@@ -946,21 +949,28 @@ export interface UseSignupReturn {
 }
 
 export enum NotificationEventType {
+  // Auction
   AUCTION_STARTED = 'auction_started',
 
+  // Articles / bids
   ARTICLE_WON = 'article_won',
-
   OUTBID = 'outbid',
+  AUTO_BID_INELIGIBLE = 'auto_bid_inelegible',
 
+  // Offers
   OFFER_RECEIVED = 'offer_received',
-
   OFFER_ACCEPTED = 'offer_accepted',
-
   OFFER_REJECTED = 'offer_rejected',
 
+  // Counter offers
+  COUNTER_OFFER_RECEIVED_BY_USER = 'counter_offer_received_by_user',
+  COUNTER_OFFER_RECEIVED_BY_STORE = 'counter_offer_received_by_store',
+  COUNTER_OFFER_ACCEPTED_BY_USER = 'counter_offer_accepted_by_user',
+
+  // Payments
   PAYMENT_APPROVED = 'payment_approved',
   PAYMENT_RECEIVED = 'payment_received',
 
+  // Shipping
   SHIPPING_UPDATED = 'shipping_updated',
-  AUTO_BID_INELIGIBLE = 'auto_bid_inelegible',
 }
