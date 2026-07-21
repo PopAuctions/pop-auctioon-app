@@ -16,6 +16,12 @@ export const getNotificationRedirectUrl = ({
       return `/(tabs)/account/single-payment?articleId=${metadata?.id}`;
     case NotificationEventType.OFFER_REJECTED:
       return `/(tabs)/account/offers-made`;
+    case NotificationEventType.COUNTER_OFFER_RECEIVED_BY_USER:
+      return `/(tabs)/account/offers-made`;
+    case NotificationEventType.COUNTER_OFFER_RECEIVED_BY_STORE:
+      return `/(tabs)/auctioneer/my-online-store/articles/${metadata?.id}`;
+    case NotificationEventType.COUNTER_OFFER_ACCEPTED_BY_USER:
+      return `/(tabs)/auctioneer/my-online-store/articles/${metadata?.id}`;
     case NotificationEventType.SHIPPING_UPDATED:
       return `/(tabs)/account/payment/${metadata?.id}`;
     case NotificationEventType.PAYMENT_APPROVED:
