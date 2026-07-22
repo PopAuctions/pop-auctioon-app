@@ -53,6 +53,7 @@
     "expo-constants": "~57.0.6",
     "expo-dev-client": "~57.0.7",
     "expo-device": "~57.0.1",
+    "expo-file-system": "~57.0.1",
     "expo-font": "~57.0.1",
     "expo-haptics": "~57.0.1",
     "expo-image-manipulator": "~57.0.5",
@@ -77,6 +78,7 @@
     "react-dom": "19.2.3",
     "react-hook-form": "^7.82.0",
     "react-native": "0.86.0",
+    "react-native-css-interop": "0.2.6",
     "react-native-draggable-flatlist": "^4.0.3",
     "react-native-element-dropdown": "^2.12.4",
     "react-native-gesture-handler": "~2.32.0",
@@ -99,6 +101,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
+    "@sentry/cli": "^2.58.4",
     "@testing-library/react-native": "^13.3.3",
     "@types/aes-js": "^3.1.4",
     "@types/base-64": "^1.0.2",
