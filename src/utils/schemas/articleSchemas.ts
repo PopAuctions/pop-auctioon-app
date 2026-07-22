@@ -44,18 +44,24 @@ const commonSchema = z.object({
         es: 'El precio inicial mínimo es 1',
       }),
     }),
-  estimatedValue: z.string().regex(ONLY_INTEGERS_EMPTY_REGEX, {
-    message: JSON.stringify({
-      en: 'Must contain only numbers',
-      es: 'Debe contener solo números',
-    }),
-  }),
-  reservePrice: z.string().regex(ONLY_INTEGERS_EMPTY_REGEX, {
-    message: JSON.stringify({
-      en: 'Must contain only numbers',
-      es: 'Debe contener solo números',
-    }),
-  }),
+  estimatedValue: z
+    .string()
+    .regex(ONLY_INTEGERS_EMPTY_REGEX, {
+      message: JSON.stringify({
+        en: 'Must contain only numbers',
+        es: 'Debe contener solo números',
+      }),
+    })
+    .optional(),
+  reservePrice: z
+    .string()
+    .regex(ONLY_INTEGERS_EMPTY_REGEX, {
+      message: JSON.stringify({
+        en: 'Must contain only numbers',
+        es: 'Debe contener solo números',
+      }),
+    })
+    .optional(),
   images: z.string().optional(),
   codeNumber: z.string().optional(),
   description: z.string().min(5, {
@@ -238,6 +244,75 @@ export const NewArticleSchemaArt = commonSchema
     }
   );
 
+export const NewArticleSchemaAll = commonSchema
+  .extend({
+    material: z.string().optional(),
+    brand: z.string().optional(),
+    color: z.string().optional(),
+    smell: z.string().optional(),
+    length: z.string().optional(),
+    width: z.string().optional(),
+    height: z.string().optional(),
+    artType: z.string().optional(),
+    weight: z.string().optional(),
+    faceDiameter: z.string().optional(),
+    movement: z.string().optional(),
+    strapMaterial: z.string().optional(),
+    boxMaterial: z.string().optional(),
+    year: z.string().optional(),
+    box: z.boolean().optional(),
+    documentation: z.boolean().optional(),
+    size: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      const { length, width, height } = data;
+      const allEmpty = !length && !width && !height;
+      const allFilled = length && width && height;
+
+      return width || allEmpty || allFilled;
+    },
+    {
+      path: ['width'],
+      message: JSON.stringify({
+        en: 'All or none of the measurements are required',
+        es: 'Todas o ninguna de las medidas son requeridas',
+      }),
+    }
+  )
+  .refine(
+    (data) => {
+      const { length, width, height } = data;
+      const allEmpty = !length && !width && !height;
+      const allFilled = length && width && height;
+
+      return length || allEmpty || allFilled;
+    },
+    {
+      path: ['length'],
+      message: JSON.stringify({
+        en: 'All or none of the measurements are required',
+        es: 'Todas o ninguna de las medidas son requeridas',
+      }),
+    }
+  )
+  .refine(
+    (data) => {
+      const { length, width, height } = data;
+      const allEmpty = !length && !width && !height;
+      const allFilled = length && width && height;
+
+      return height || allEmpty || allFilled;
+    },
+    {
+      path: ['height'],
+      message: JSON.stringify({
+        en: 'All or none of the measurements are required',
+        es: 'Todas o ninguna de las medidas son requeridas',
+      }),
+    }
+  );
+
 const defaultCommonValues = {
   title: '',
   state: '',
@@ -289,6 +364,26 @@ export const DEFAULT_VALUES_MAP: ArticleDefaultValuesMap = {
     width: '',
     height: '',
   },
+  ALL: {
+    ...defaultCommonValues,
+    material: '',
+    brand: '',
+    color: '',
+    smell: '',
+    length: '',
+    width: '',
+    height: '',
+    artType: '',
+    weight: '',
+    faceDiameter: '',
+    movement: '',
+    strapMaterial: '',
+    boxMaterial: '',
+    year: '',
+    box: false,
+    documentation: false,
+    size: '',
+  },
 } as const;
 
 export const ArticleSchemasMap = {
@@ -296,6 +391,7 @@ export const ArticleSchemasMap = {
   JEWERLY: NewArticleSchemaJewrly,
   WATCHES: NewArticleSchemaWatches,
   ART: NewArticleSchemaArt,
+  ALL: NewArticleSchemaAll,
 } as const;
 
 type ArticleDefaultValuesMap = {

@@ -71,12 +71,14 @@ export const AUCTION_CATEGORIES_LABEL: Record<
     JEWERLY: 'Joyas',
     WATCHES: 'Relojes',
     ART: 'Arte',
+    ALL: 'Todas',
   },
   en: {
     BAGS: 'Bags',
     JEWERLY: 'Jewelry',
     WATCHES: 'Watches',
     ART: 'Art',
+    ALL: 'All',
   },
 };
 
