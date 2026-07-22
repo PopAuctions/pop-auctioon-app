@@ -645,6 +645,7 @@ export const FromArticleCategoryToAuctionCategory: Record<
   JEWERLY: 'JEWERLY',
   WATCH: 'WATCHES',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export const AuctionCategoriesConst: Record<
@@ -655,6 +656,7 @@ export const AuctionCategoriesConst: Record<
   JEWERLY: 'JEWERLY',
   WATCHES: 'WATCHES',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export type AuctionCategories = Database['public']['Enums']['AuctionCategory'];
@@ -687,6 +689,7 @@ export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
   JEWERLY: 'JEWERLY',
   WATCH: 'WATCH',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export type ArticleCategories = Database['public']['Enums']['ArticleCategory'];
