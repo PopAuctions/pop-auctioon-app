@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
+export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
@@ -212,8 +212,10 @@ export interface Database {
       };
       ArticleOffer: {
         Row: {
+          acceptedAmount: number | null;
           amount: number;
           articleSecondChanceId: number;
+          closedAt: string | null;
           createdAt: string;
           expiresAt: string | null;
           id: number;
@@ -221,8 +223,10 @@ export interface Database {
           userId: string;
         };
         Insert: {
+          acceptedAmount?: number | null;
           amount: number;
           articleSecondChanceId: number;
+          closedAt?: string | null;
           createdAt?: string;
           expiresAt?: string | null;
           id?: number;
@@ -230,8 +234,10 @@ export interface Database {
           userId: string;
         };
         Update: {
+          acceptedAmount?: number | null;
           amount?: number;
           articleSecondChanceId?: number;
+          closedAt?: string | null;
           createdAt?: string;
           expiresAt?: string | null;
           id?: number;
@@ -251,6 +257,44 @@ export interface Database {
             columns: ['userId'];
             isOneToOne: false;
             referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      ArticleOfferProposal: {
+        Row: {
+          amount: number;
+          articleOfferId: number;
+          createdAt: string;
+          createdBy: Database['public']['Enums']['OfferActor'];
+          expiresAt: string | null;
+          id: number;
+          status: Database['public']['Enums']['OfferProposalStatus'];
+        };
+        Insert: {
+          amount: number;
+          articleOfferId: number;
+          createdAt?: string;
+          createdBy: Database['public']['Enums']['OfferActor'];
+          expiresAt?: string | null;
+          id?: number;
+          status?: Database['public']['Enums']['OfferProposalStatus'];
+        };
+        Update: {
+          amount?: number;
+          articleOfferId?: number;
+          createdAt?: string;
+          createdBy?: Database['public']['Enums']['OfferActor'];
+          expiresAt?: string | null;
+          id?: number;
+          status?: Database['public']['Enums']['OfferProposalStatus'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'articleofferproposal_articleofferid_fkey';
+            columns: ['articleOfferId'];
+            isOneToOne: false;
+            referencedRelation: 'ArticleOffer';
             referencedColumns: ['id'];
           },
         ];
@@ -1797,6 +1841,10 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
+      accept_article_offer: {
+        Args: { p_article_offer_id: number };
+        Returns: Json;
+      };
       auto_advance_article: {
         Args: { p_auction_id: number; p_hard_timeout_ms: number };
         Returns: Json;
@@ -1817,6 +1865,14 @@ export interface Database {
       cancel_article_acquisition_send_to_online_store: {
         Args: { article_id: number; sold_price: number; user_id: string };
         Returns: Json;
+      };
+      counter_article_offer: {
+        Args: { p_amount: number; p_article_offer_id: number };
+        Returns: number;
+      };
+      create_article_offer_with_proposal: {
+        Args: { p_amount: number; p_article_second_chance_id: number };
+        Returns: number;
       };
       create_automatic_bid: {
         Args: {
@@ -1865,6 +1921,10 @@ export interface Database {
         Args: { article_id_input: number };
         Returns: string;
       };
+      reject_article_offer: {
+        Args: { p_article_offer_id: number };
+        Returns: undefined;
+      };
       sell_article: { Args: { article_id: number }; Returns: Json };
       show_limit: { Args: never; Returns: number };
       show_trgm: { Args: { '': string }; Returns: string[] };
@@ -1901,7 +1961,15 @@ export interface Database {
       BidSource: 'MANUAL' | 'AUTOMATIC';
       InvoiceType: 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
       LiveAuctionState: 'PENDING' | 'LIVE' | 'FINISHED';
-      OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED';
+      OfferActor: 'USER' | 'AUCTIONEER';
+      OfferProposalStatus:
+        | 'PENDING'
+        | 'ACCEPTED'
+        | 'REJECTED'
+        | 'EXPIRED'
+        | 'SUPERSEDED'
+        | 'ACCEPTED_BY_USER';
+      OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED' | 'COUNTERED';
       PaymentRefundStatus: 'PENDING' | 'SUCCEEDED' | 'FAILED';
       PaymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
       StorePayoutMethod: 'BANK_TRANSFER' | 'STRIPE' | 'PAYPAL' | 'CASH';
@@ -1909,9 +1977,7 @@ export interface Database {
       StoreSettlementSaleType: 'AUCTION' | 'ONLINE_STORE';
       StoreSettlementStatus: 'PENDING' | 'PROBLEM' | 'PAID' | 'CANCELLED';
       UserPaymentRefundStatus:
-        | 'NOT_REFUNDED'
-        | 'PARTIALLY_REFUNDED'
-        | 'REFUNDED';
+        'NOT_REFUNDED' | 'PARTIALLY_REFUNDED' | 'REFUNDED';
       UserRole: 'ADMIN' | 'USER' | 'AUCTIONEER';
       WonArticleStatus: 'NOT_PAID' | 'DRAFT' | 'PAID';
     };
@@ -1919,7 +1985,7 @@ export interface Database {
       [_ in never]: never;
     };
   };
-}
+};
 
 type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 
@@ -1932,12 +1998,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1959,13 +2025,12 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1984,13 +2049,12 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -2009,13 +2073,12 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    keyof DefaultSchema['Enums'] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -2028,11 +2091,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -2078,7 +2141,16 @@ export const Constants = {
       BidSource: ['MANUAL', 'AUTOMATIC'],
       InvoiceType: ['USER', 'AUCTIONEER', 'HOST_AUCTIONEER'],
       LiveAuctionState: ['PENDING', 'LIVE', 'FINISHED'],
-      OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED'],
+      OfferActor: ['USER', 'AUCTIONEER'],
+      OfferProposalStatus: [
+        'PENDING',
+        'ACCEPTED',
+        'REJECTED',
+        'EXPIRED',
+        'SUPERSEDED',
+        'ACCEPTED_BY_USER',
+      ],
+      OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED', 'COUNTERED'],
       PaymentRefundStatus: ['PENDING', 'SUCCEEDED', 'FAILED'],
       PaymentStatus: ['PENDING', 'APPROVED', 'REJECTED'],
       StorePayoutMethod: ['BANK_TRANSFER', 'STRIPE', 'PAYPAL', 'CASH'],
