@@ -1120,11 +1120,12 @@ http://localhost:3000/es/single-payment?articleId=188
 (artículo `mini pearl crush`, oferta ACCEPTED)
 
 **Tarjeta de test Redsys:**
-| Campo | Valor |
-|-------|-------|
-| Número | `4548 8120 4940 0004` |
-| CVV | `123` |
-| Caducidad | `12/26` |
+
+| Campo     | Valor                 |
+| --------- | --------------------- |
+| Número    | `4548 8120 4940 0004` |
+| CVV       | `123`                 |
+| Caducidad | `12/26`               |
 
 **Verificar en DB después del pago:**
 

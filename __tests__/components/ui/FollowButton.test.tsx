@@ -3,6 +3,10 @@ import { render } from '@testing-library/react-native';
 import { mockSupabase } from '../../setup/mocks.mock';
 import { FollowButton } from '@/components/ui/FollowButton';
 
+jest.mock('@/context/sign-in-modal-context', () => ({
+  useSignInAlertModal: () => ({ openSignInAlertModal: jest.fn() }),
+}));
+
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 
 describe('FollowButton', () => {
@@ -14,6 +18,7 @@ describe('FollowButton', () => {
         unfollowEndpoint='/unfollow'
         follows={false}
         lang='en'
+        isAvailable={true}
         extraDataIsLoaded={true}
       />
     );
@@ -28,6 +33,7 @@ describe('FollowButton', () => {
         unfollowEndpoint='/unfollow'
         follows={true}
         lang='en'
+        isAvailable={true}
         extraDataIsLoaded={true}
       />
     );
@@ -42,11 +48,10 @@ describe('FollowButton', () => {
         unfollowEndpoint='/unfollow'
         follows={false}
         lang='en'
-        isAvailable={true}
+        isAvailable={false}
         extraDataIsLoaded={true}
       />
     );
-    const button = getByRole('button');
-    expect(button.props.accessibilityState.disabled).toBe(true);
+    expect(() => getByRole('button')).toThrow();
   });
 });

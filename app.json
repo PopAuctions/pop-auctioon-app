@@ -7,12 +7,6 @@
     "icon": "./assets/icons/pop-auctioon-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash/blank.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.popauctioon.popauctioonapp",
@@ -27,16 +21,10 @@
         "foregroundImage": "./assets/icons/pop-auctioon-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "usesCleartextTraffic": true,
       "package": "com.popauctioon.popauctioonapp",
-      "resizeableActivity": false,
       "predictiveBackGestureEnabled": false,
       "softwareKeyboardLayoutMode": "resize",
-      "googleServicesFile": "./google-services.json",
-      "notification": {
-        "icon": "./assets/icons/pop-auctioon-icon.png",
-        "color": "#d75639"
-      }
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -45,8 +33,30 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash/blank.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
       "expo-secure-store",
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icons/pop-auctioon-icon.png",
+          "color": "#d75639"
+        }
+      ],
       "expo-font",
       "expo-apple-authentication",
       "expo-screen-orientation",

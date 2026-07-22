@@ -18,6 +18,41 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   },
 }));
 
+// React Native Reanimated requires native worklets that are unavailable in Jest.
+jest.mock('react-native-reanimated', () => {
+  const Animated = {
+    View: 'View',
+    Text: 'Text',
+    Image: 'Image',
+    ScrollView: 'ScrollView',
+    Pressable: 'Pressable',
+  };
+  return {
+    __esModule: true,
+    default: Animated,
+    ...Animated,
+    createAnimatedComponent: (component: unknown) => component,
+    useSharedValue: (value: unknown) => ({ value }),
+    useAnimatedStyle: (factory: () => unknown) => factory(),
+    useDerivedValue: (factory: () => unknown) => ({ value: factory() }),
+    withTiming: (value: unknown) => value,
+    withSpring: (value: unknown) => value,
+    withDelay: (_delay: number, value: unknown) => value,
+    withSequence: (...values: unknown[]) => values[values.length - 1],
+    runOnJS: (callback: Function) => callback,
+    runOnUI: (callback: Function) => callback,
+    Easing: { linear: jest.fn() },
+    FadeIn: {},
+    FadeInDown: {},
+    FadeInUp: {},
+    FadeOut: {},
+    FadeOutDown: {},
+    FadeOutUp: {},
+    SlideInRight: {},
+    SlideOutLeft: {},
+  };
+});
+
 // Mock expo-secure-store
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(() => Promise.resolve(null)),

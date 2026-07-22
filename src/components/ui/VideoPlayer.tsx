@@ -19,7 +19,7 @@ export const VideoPlayer = ({ uri, onEnd }: VideoPlayerProps) => {
   return (
     <VideoView
       player={player}
-      style={StyleSheet.absoluteFillObject}
+      style={StyleSheet.absoluteFill}
       nativeControls={false}
       contentFit='cover'
     />

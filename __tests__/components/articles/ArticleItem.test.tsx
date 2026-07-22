@@ -3,6 +3,10 @@ import { render } from '@testing-library/react-native';
 import { mockSupabase, mockSafeAreaContext } from '../../setup/mocks.mock';
 import { ArticleItem } from '@/components/articles/ArticleItem';
 
+jest.mock('@/context/sign-in-modal-context', () => ({
+  useSignInAlertModal: () => ({ openSignInAlertModal: jest.fn() }),
+}));
+
 jest.mock('@/utils/supabase/supabase-store', () => mockSupabase);
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 

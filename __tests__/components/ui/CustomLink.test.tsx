@@ -563,13 +563,6 @@ describe('CustomLink', () => {
       openURL: jest.fn(),
     };
 
-    beforeEach(() => {
-      jest.mock('react-native', () => ({
-        ...jest.requireActual('react-native'),
-        Linking: mockLinking,
-      }));
-    });
-
     it('should attempt to open external URL when outsideRedirect is true', async () => {
       mockLinking.canOpenURL.mockResolvedValue(true);
       mockLinking.openURL.mockResolvedValue(undefined);

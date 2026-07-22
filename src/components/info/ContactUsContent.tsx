@@ -83,7 +83,7 @@ export function ContactUsContent() {
         });
         reset();
       }
-    } catch (error) {
+    } catch {
       callToast({
         variant: 'error',
         description: 'screens.contactUs.errorMessage',

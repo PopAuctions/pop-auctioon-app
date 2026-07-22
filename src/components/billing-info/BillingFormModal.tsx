@@ -120,7 +120,7 @@ export function BillingFormModal({
         // CREATE - Use POST
         await createBilling(data);
       }
-    } catch (error) {
+    } catch {
       // Error handling is done in the parent screen (billing-info.tsx)
       isSubmittingRef.current = false;
     }

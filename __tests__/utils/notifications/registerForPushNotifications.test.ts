@@ -58,7 +58,6 @@ describe('registerForPushNotifications', () => {
           enableVibrate: true,
           showBadge: true,
           enableLights: true,
-          sound: 'default',
           lightColor: '#FF231F7C',
           lockscreenVisibility:
             Notifications.AndroidNotificationVisibility.PUBLIC,

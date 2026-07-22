@@ -69,6 +69,7 @@ export default function AuctionsLayout() {
           headerStyle: { backgroundColor: '#dc2626' },
           headerTintColor: '#ffffff',
           headerTitleStyle: { fontWeight: 'bold' },
+          gestureEnabled: false,
         }}
       />
     </Stack>

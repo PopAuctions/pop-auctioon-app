@@ -1,5 +1,5 @@
 import { useLiveAuctionSubscription } from '@/hooks/subscribers/useLiveAuctionSubscription';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from 'expo-router';
 
 export const LiveAuctionSubscriber = ({
   auctionId,

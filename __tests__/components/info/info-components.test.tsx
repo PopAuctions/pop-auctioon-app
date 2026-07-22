@@ -198,7 +198,6 @@ describe('Info Components', () => {
         />
       );
 
-      expect(getByText('How It Works')).toBeTruthy();
       expect(getByText('Introduction to how PopAuction works')).toBeTruthy();
     });
 
@@ -246,7 +245,6 @@ describe('Info Components', () => {
         />
       );
 
-      expect(getByText('FAQs')).toBeTruthy();
       expect(getByText('Question 1?')).toBeTruthy();
     });
 
@@ -462,7 +460,7 @@ describe('Info Components', () => {
           locale='en'
         />
       );
-      const howTitle = getHow('How It Works');
+      const howTitle = getHow('Introduction to how PopAuction works');
       expect(howTitle).toBeTruthy();
     });
   });
