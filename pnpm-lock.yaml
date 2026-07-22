@@ -152,6 +152,9 @@ importers:
       react-native:
         specifier: 0.86.0
         version: 0.86.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1)
+      react-native-css-interop:
+        specifier: 0.2.6
+        version: 0.2.6(dd423385e99667238f9c33d292e4d316)
       react-native-draggable-flatlist:
         specifier: ^4.0.3
         version: 4.0.3(c19d002cb74fd4a54dc4bd072aaf178b)
