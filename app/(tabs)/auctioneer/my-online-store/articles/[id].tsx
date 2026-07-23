@@ -2,7 +2,6 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
-import { useGetOnlineStoreArticle } from '@/hooks/pages/online-store/useGetOnlineStoreArticle';
 import { parseNumber } from '@/utils/parse-number';
 import { Loading } from '@/components/ui/Loading';
 import { REQUEST_STATUS } from '@/constants/app';
@@ -14,6 +13,7 @@ import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticleDetailsActions } from '@/components/my-online-store/ArticleDetailsActions';
 import { ArticleOffersCards } from '@/components/my-online-store/ArticleOffersCards';
+import { useGetMyOnlineStoreArticle } from '@/hooks/pages/my-online-store/useGetMyOnlineStoreArticle';
 
 export default function MyOnlineStoreArticleDetailsScreen() {
   const { t, locale } = useTranslation();
@@ -25,7 +25,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
     status,
     errorMessage,
     refetch,
-  } = useGetOnlineStoreArticle({
+  } = useGetMyOnlineStoreArticle({
     articleId,
   });
 
