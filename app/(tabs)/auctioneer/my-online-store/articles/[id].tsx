@@ -154,7 +154,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
 
             <View className='mt-2'>
               <ArticleOffersCards
-                offers={onlineStoreArticle?.ArticleOffer ?? []}
+                offers={onlineStoreArticle.ArticleOffer ?? []}
                 commissionValue={isCommissionReady ? commissionAmount : null}
                 locale={locale}
                 refetch={refetch}
@@ -162,6 +162,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
                   noOffers: articleOSDetailsLang.noOffers,
                   accept: articleOSDetailsLang.accept,
                   reject: articleOSDetailsLang.reject,
+                  counter: articleOSDetailsLang.counter,
                 }}
               />
             </View>

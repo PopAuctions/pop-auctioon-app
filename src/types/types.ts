@@ -360,16 +360,27 @@ export interface CustomArticleOffer {
   };
 }
 
+export type CustomArticleOfferWithProposals = Pick<
+  ArticleOffer,
+  | 'id'
+  | 'amount'
+  | 'acceptedAmount'
+  | 'expiresAt'
+  | 'closedAt'
+  | 'status'
+  | 'createdAt'
+> & {
+  User: Pick<User, 'username' | 'phoneNumber'>;
+  ArticleOfferProposal?: MyOfferProposal[];
+};
+
 export interface CustomFullArticleSecondChance {
   id: number;
   price: number;
   status: ArticleSecondChanceStatus;
   Article: Article;
   minOffer: number;
-  ArticleOffer?: Pick<
-    ArticleOffer,
-    'id' | 'amount' | 'expiresAt' | 'status' | 'createdAt'
-  >[];
+  ArticleOffer?: CustomArticleOfferWithProposals[];
 }
 
 export type UserArticlesWonRecord =

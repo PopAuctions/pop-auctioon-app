@@ -9,22 +9,27 @@ import {
   type MyOfferProposal,
 } from '@/types/types';
 
+type OfferHistoryPerspective = 'user' | 'store';
+
 interface OfferHistoryModalProps {
   visible: boolean;
   onClose: () => void;
   proposals: MyOfferProposal[];
   locale: Lang;
+  perspective?: OfferHistoryPerspective;
 }
 
 const TEXTS = {
   es: {
     title: 'Historial de ofertas',
     you: 'Tú',
+    buyer: 'Comprador',
     store: 'Tienda',
   },
   en: {
     title: 'Offer history',
     you: 'You',
+    buyer: 'Buyer',
     store: 'Store',
   },
 } satisfies Record<Lang, Record<string, string>>;
@@ -34,6 +39,7 @@ export function OfferHistoryModal({
   onClose,
   proposals,
   locale,
+  perspective = 'user',
 }: OfferHistoryModalProps) {
   const texts = TEXTS[locale];
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
@@ -46,6 +52,14 @@ export function OfferHistoryModal({
       ),
     [proposals]
   );
+
+  const getActorLabel = (createdBy: MyOfferProposal['createdBy']) => {
+    if (perspective === 'store') {
+      return createdBy === OfferActorConst.AUCTIONEER ? texts.you : texts.buyer;
+    }
+
+    return createdBy === OfferActorConst.USER ? texts.you : texts.store;
+  };
 
   return (
     <Modal
@@ -89,9 +103,7 @@ export function OfferHistoryModal({
                     className='flex-row items-center justify-between rounded-xl bg-neutral-50 px-3 py-3'
                   >
                     <CustomText type='body'>
-                      {proposal.createdBy === OfferActorConst.USER
-                        ? texts.you
-                        : texts.store}
+                      {getActorLabel(proposal.createdBy)}
                     </CustomText>
 
                     <CustomText

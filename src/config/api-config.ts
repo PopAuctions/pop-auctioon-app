@@ -337,6 +337,8 @@ export const SECURE_ENDPOINTS = {
       `/my-online-store/offers/${offerId}/accept` as ApiEndpoint,
     REJECT: (offerId: string | number): ApiEndpoint =>
       `/my-online-store/offers/${offerId}/reject` as ApiEndpoint,
+    COUNTER: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/counter` as ApiEndpoint,
   },
 
   // Payments (Stripe)
