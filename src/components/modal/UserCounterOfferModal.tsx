@@ -229,6 +229,7 @@ export function UserCounterOfferModal({
               <Button
                 mode='primary'
                 className='flex-1'
+                textClassName='text-center'
                 onPress={handleConfirm}
                 disabled={!isValidAmount || isLoading}
                 isLoading={isLoading}
@@ -239,6 +240,7 @@ export function UserCounterOfferModal({
               <Button
                 mode='secondary'
                 className='flex-1'
+                textClassName='text-center'
                 onPress={onClose}
                 disabled={isLoading}
               >

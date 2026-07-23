@@ -117,6 +117,7 @@ export function AcceptCounterOfferModal({
               <Button
                 mode='primary'
                 className='flex-1'
+                textClassName='text-center'
                 onPress={handleConfirm}
                 disabled={isLoading}
                 isLoading={isLoading}
@@ -127,6 +128,7 @@ export function AcceptCounterOfferModal({
               <Button
                 mode='secondary'
                 className='flex-1'
+                textClassName='text-center'
                 onPress={onClose}
                 disabled={isLoading}
               >
