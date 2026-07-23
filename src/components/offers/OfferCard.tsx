@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import {
   ArticleSecondChanceStatusConst,
+  LangMap,
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
@@ -20,6 +21,10 @@ import { AcceptCounterOfferModal } from '@/components/modal/AcceptCounterOfferMo
 import { Button } from '@/components/ui/Button';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { euroFormatter } from '@/utils/euroFormatter';
+import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { useToast } from '@/hooks/useToast';
+import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 
 interface OfferCardProps {
   offer: MyOffers;
@@ -104,6 +109,9 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   const [counterModalVisible, setCounterModalVisible] = useState(false);
   const [rejectModalVisible, setRejectModalVisible] = useState(false);
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
+  const { securePost } = useSecureApi();
+  const { callToast } = useToast(lang);
+
   const formatter = euroFormatter(lang);
 
   const { ArticleSecondChance: articleSecondChance, status } = offer;
@@ -188,161 +196,272 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   }
 
   const handleAcceptCounterOffer = async (): Promise<boolean> => {
-    if (!currentPendingProposal) return false;
+    if (!currentPendingProposal) {
+      return false;
+    }
 
-    // TODO: wire app API action
-    // const result = await acceptCounterOfferByUser({
-    //   articleOfferId: offer.id,
-    // });
+    try {
+      const response = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.OFFERS.USER_ACCEPT_OFFER,
+        data: {
+          articleOfferId: offer.id,
+        },
+      });
 
-    return true;
+      if (response.error) {
+        callToast({
+          variant: 'error',
+          description: response.error,
+        });
+
+        return false;
+      }
+
+      if (response.data) {
+        callToast({
+          variant: 'success',
+          description: response.data,
+        });
+      }
+
+      return true;
+    } catch (error: unknown) {
+      sentryErrorReport(error, 'USER_ACCEPT_COUNTER_OFFER');
+      return false;
+    }
   };
 
   const handleCounterOffer = async (amount: number): Promise<boolean> => {
-    // TODO: wire app API action
-    // const result = await counterArticleOfferByUser({
-    //   articleOfferId: offer.id,
-    //   amount,
-    // });
+    if (!currentPendingProposal) {
+      return false;
+    }
 
-    return true;
+    if (!Number.isSafeInteger(amount) || amount <= 0) {
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'Ingresa un número válido',
+          en: 'Enter a valid number',
+        },
+      });
+
+      return false;
+    }
+
+    if (amount === currentPendingProposal.amount) {
+      callToast({
+        variant: 'error',
+        description: {
+          es: 'La contraoferta debe ser diferente al importe actual',
+          en: 'The counter-offer must be different from the current amount',
+        },
+      });
+
+      return false;
+    }
+
+    try {
+      const response = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.OFFERS.USER_COUNTER_OFFER,
+        data: {
+          articleOfferId: offer.id,
+          amount,
+        },
+      });
+
+      if (response.error) {
+        callToast({
+          variant: 'error',
+          description: response.error,
+        });
+
+        return false;
+      }
+
+      if (response.data) {
+        callToast({
+          variant: 'success',
+          description: response.data,
+        });
+      }
+
+      return true;
+    } catch (error: unknown) {
+      sentryErrorReport(error, 'USER_COUNTER_ARTICLE_OFFER');
+      return false;
+    }
   };
 
   const handleRejectCounterOffer = async (): Promise<boolean> => {
-    // TODO: wire app API action
-    // const result = await rejectArticleOfferByUser({
-    //   articleOfferId: offer.id,
-    // });
+    if (!currentPendingProposal) {
+      return false;
+    }
 
-    return true;
+    try {
+      const response = await securePost<LangMap>({
+        endpoint: SECURE_ENDPOINTS.OFFERS.USER_REJECT_OFFER,
+        data: {
+          articleOfferId: offer.id,
+        },
+      });
+
+      if (response.error) {
+        callToast({
+          variant: 'error',
+          description: response.error,
+        });
+
+        return false;
+      }
+
+      if (response.data) {
+        callToast({
+          variant: 'success',
+          description: response.data,
+        });
+      }
+
+      return true;
+    } catch (error: unknown) {
+      sentryErrorReport(error, 'USER_REJECT_COUNTER_OFFER');
+      return false;
+    }
   };
 
   return (
     <>
       <View className='w-full overflow-hidden rounded-xl border border-neutral-200 bg-white'>
-        <CustomLink
-          href={`/(tabs)/online-store/articles/${articleSecondChance.id}`}
-          className='w-full overflow-hidden'
-        >
-          <View className='relative w-full overflow-hidden'>
-            <CustomImage
-              src={article.images[0]}
-              alt={article.title}
-              className='aspect-square w-full'
-              resizeMode='cover'
-            />
+        {/* MAIN CONTENT */}
+        <View className='flex-row gap-4 p-3'>
+          {/* IMAGE */}
+          <CustomLink
+            href={`/(tabs)/online-store/articles/${articleSecondChance.id}`}
+            className='w-[42%] overflow-hidden rounded-lg'
+          >
+            <View className='relative aspect-square w-full overflow-hidden rounded-lg bg-neutral-50'>
+              <CustomImage
+                src={article.images[0]}
+                alt={article.title}
+                className='h-full w-full'
+                resizeMode='contain'
+              />
 
-            {!isSold && (
-              <View className='absolute left-3 top-3'>
-                <Badge
-                  variant={statusVariant}
-                  className='self-start'
+              {!isSold && (
+                <View className='absolute left-2 top-2'>
+                  <Badge
+                    variant={statusVariant}
+                    className='self-start'
+                  >
+                    {displayStatus}
+                  </Badge>
+                </View>
+              )}
+            </View>
+          </CustomLink>
+
+          {/* DETAILS */}
+          <View className='flex-1 gap-3 py-1'>
+            <View>
+              <CustomText
+                type='subtitle'
+                className='font-semibold'
+                numberOfLines={2}
+              >
+                {article.title}
+              </CustomText>
+
+              <View className='mt-2'>
+                <CustomText
+                  type='h4'
+                  className='text-cinnabar'
                 >
-                  {displayStatus}
-                </Badge>
+                  {formatter.format(displayedAmount)}
+                </CustomText>
+
+                <CustomText
+                  type='body'
+                  className='text-sm text-neutral-500'
+                >
+                  {OFFER_CARD_AMOUNT_LABELS[amountLabelKey][lang]}
+                </CustomText>
+              </View>
+            </View>
+
+            {isSold && (
+              <View className='rounded-lg bg-red-50 p-2.5'>
+                <CustomText
+                  type='body'
+                  className='text-sm text-cinnabar'
+                >
+                  {texts.alreadySold}
+                </CustomText>
               </View>
             )}
-          </View>
-        </CustomLink>
 
-        <View className='gap-4 p-4'>
-          <View>
-            <CustomText
-              type='subtitle'
-              className='font-semibold'
-            >
-              {article.title}
-            </CustomText>
+            {!isSold && stateMessage && (
+              <View className='rounded-lg bg-neutral-50 p-2.5'>
+                <CustomText
+                  type='body'
+                  className='text-sm text-neutral-600'
+                >
+                  {stateMessage}
+                </CustomText>
+              </View>
+            )}
 
-            <View className='mt-2'>
-              <CustomText
-                type='h4'
-                className='text-cinnabar'
-              >
-                {formatter.format(displayedAmount)}
-              </CustomText>
-
+            <View className='flex-row items-center justify-between gap-2'>
               <CustomText
                 type='body'
-                className='text-sm text-neutral-500'
+                className='flex-1 text-sm text-neutral-500'
               >
-                {OFFER_CARD_AMOUNT_LABELS[amountLabelKey][lang]}
+                {OFFER_CARD_ACTION_LABELS.offerHistory[lang]}
               </CustomText>
+
+              <Pressable
+                onPress={() => setHistoryModalVisible(true)}
+                hitSlop={12}
+                className='items-center justify-center rounded-lg border border-neutral-200 p-2'
+              >
+                <FontAwesomeIcon
+                  variant='normal'
+                  name='book'
+                  size={16}
+                  color='cinnabar'
+                />
+              </Pressable>
             </View>
           </View>
+        </View>
 
-          {isSold && (
-            <View className='rounded-xl bg-red-50 p-3'>
-              <CustomText
-                type='body'
-                className='text-sm text-cinnabar'
-              >
-                {texts.alreadySold}
-              </CustomText>
-            </View>
-          )}
-
-          {!isSold && stateMessage && (
-            <View className='rounded-xl bg-neutral-50 p-3'>
-              <CustomText
-                type='body'
-                className='text-sm text-neutral-600'
-              >
-                {stateMessage}
-              </CustomText>
-            </View>
-          )}
-
-          <View className='flex-row items-center justify-between'>
-            <CustomText
-              type='body'
-              className='text-sm text-neutral-500'
+        {/* ACTIONS */}
+        {!isSold && isCounterReceived && currentPendingProposal && (
+          <View className='gap-2 border-t border-neutral-100 p-3'>
+            <Button
+              mode='primary'
+              onPress={() => setAcceptModalVisible(true)}
             >
-              {OFFER_CARD_ACTION_LABELS.offerHistory[lang]}
-            </CustomText>
+              {OFFER_CARD_ACTION_LABELS.acceptCounter[lang]}
+            </Button>
 
-            <Pressable
-              onPress={() => setHistoryModalVisible(true)}
-              hitSlop={12}
-              className='rounded-lg border border-neutral-200 p-2'
+            <Button
+              mode='secondary'
+              onPress={() => setCounterModalVisible(true)}
             >
-              <FontAwesomeIcon
-                variant='normal'
-                name='book'
-                size={16}
-                color='cinnabar'
-              />
-            </Pressable>
+              {OFFER_CARD_ACTION_LABELS.counter[lang]}
+            </Button>
+
+            <Button
+              mode='secondary'
+              onPress={() => setRejectModalVisible(true)}
+            >
+              {OFFER_CARD_ACTION_LABELS.reject[lang]}
+            </Button>
           </View>
+        )}
 
-          {!isSold && isCounterReceived && currentPendingProposal && (
-            <View className='gap-2'>
-              <Button
-                mode='primary'
-                onPress={() => setAcceptModalVisible(true)}
-              >
-                {OFFER_CARD_ACTION_LABELS.acceptCounter[lang]}
-              </Button>
-
-              <Button
-                mode='secondary'
-                onPress={() => setCounterModalVisible(true)}
-              >
-                {OFFER_CARD_ACTION_LABELS.counter[lang]}
-              </Button>
-
-              <Button
-                mode='secondary'
-                onPress={() => setRejectModalVisible(true)}
-              >
-                {OFFER_CARD_ACTION_LABELS.reject[lang]}
-              </Button>
-            </View>
-          )}
-
-          {!isSold &&
-            status === OfferStatusConst.ACCEPTED &&
-            (hasExpired ? (
+        {!isSold && status === OfferStatusConst.ACCEPTED && (
+          <View className='border-t border-neutral-100 p-3'>
+            {hasExpired ? (
               <CustomText
                 type='body'
                 className='text-cinnabar'
@@ -354,11 +473,13 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
                 href={`/(tabs)/account/single-payment?articleId=${articleSecondChance.id}`}
                 mode='primary'
                 size='small'
+                className='w-full'
               >
                 {texts.payNow}
               </CustomLink>
-            ))}
-        </View>
+            )}
+          </View>
+        )}
       </View>
 
       {currentPendingProposal && (
