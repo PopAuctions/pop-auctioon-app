@@ -219,6 +219,7 @@ export type Database = {
           createdAt: string;
           expiresAt: string | null;
           id: number;
+          rejectedBy: Database['public']['Enums']['OfferActor'] | null;
           status: Database['public']['Enums']['OfferStatus'];
           userId: string;
         };
@@ -230,6 +231,7 @@ export type Database = {
           createdAt?: string;
           expiresAt?: string | null;
           id?: number;
+          rejectedBy?: Database['public']['Enums']['OfferActor'] | null;
           status?: Database['public']['Enums']['OfferStatus'];
           userId: string;
         };
@@ -241,6 +243,7 @@ export type Database = {
           createdAt?: string;
           expiresAt?: string | null;
           id?: number;
+          rejectedBy?: Database['public']['Enums']['OfferActor'] | null;
           status?: Database['public']['Enums']['OfferStatus'];
           userId?: string;
         };
@@ -1867,6 +1870,10 @@ export type Database = {
         Returns: Json;
       };
       counter_article_offer: {
+        Args: { p_amount: number; p_article_offer_id: number };
+        Returns: number;
+      };
+      counter_article_offer_by_user: {
         Args: { p_amount: number; p_article_offer_id: number };
         Returns: number;
       };
