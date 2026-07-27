@@ -214,6 +214,7 @@ export const SECURE_ENDPOINTS = {
     COUNTRIES: '/globals/countries',
   },
   STORE: {
+    COMMISSION: '/store/commission',
     EDIT: '/store/edit',
     PAYOUTS: {
       DASHBOARD: '/store/payouts',

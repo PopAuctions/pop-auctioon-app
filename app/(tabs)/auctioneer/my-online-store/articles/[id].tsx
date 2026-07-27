@@ -14,6 +14,7 @@ import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { ArticleDetailsActions } from '@/components/my-online-store/ArticleDetailsActions';
 import { ArticleOffersCards } from '@/components/my-online-store/ArticleOffersCards';
 import { useGetMyOnlineStoreArticle } from '@/hooks/pages/my-online-store/useGetMyOnlineStoreArticle';
+import { useGetMyStoreCommission } from '@/hooks/pages/store/useGetMyStoreCommission';
 
 export default function MyOnlineStoreArticleDetailsScreen() {
   const { t, locale } = useTranslation();
@@ -29,10 +30,20 @@ export default function MyOnlineStoreArticleDetailsScreen() {
     articleId,
   });
 
+  const { data: storeCommission, status: storeCommissionStatus } =
+    useGetMyStoreCommission();
+
   const { data: commissionAmount, status: commissionStatus } =
     useFetchCommissions();
 
-  if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
+  if (
+    status === REQUEST_STATUS.idle ||
+    status === REQUEST_STATUS.loading ||
+    storeCommissionStatus === REQUEST_STATUS.idle ||
+    storeCommissionStatus === REQUEST_STATUS.loading ||
+    commissionStatus === REQUEST_STATUS.idle ||
+    commissionStatus === REQUEST_STATUS.loading
+  ) {
     return <Loading locale={locale} />;
   }
 
@@ -52,7 +63,6 @@ export default function MyOnlineStoreArticleDetailsScreen() {
 
   const articleOSDetailsLang = t('screens.articleOSDetails');
   const onlineStoreArticlePrice = onlineStoreArticle?.price;
-  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
   const formatter = euroFormatter(locale);
   const commissionedPrice = getArticleCommissionedPrice(
     onlineStoreArticlePrice ?? 0,
@@ -137,7 +147,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
                 }}
                 locale={locale}
                 currentStatus={onlineStoreArticle.status}
-                commissionValue={isCommissionReady ? commissionAmount : null}
+                commissionValue={commissionAmount}
                 refetch={refetch}
               />
             </View>
@@ -155,7 +165,8 @@ export default function MyOnlineStoreArticleDetailsScreen() {
             <View className='mt-2'>
               <ArticleOffersCards
                 offers={onlineStoreArticle.ArticleOffer ?? []}
-                commissionValue={isCommissionReady ? commissionAmount : null}
+                userCommissionValue={commissionAmount}
+                storeCommissionValue={storeCommission}
                 locale={locale}
                 refetch={refetch}
                 texts={{

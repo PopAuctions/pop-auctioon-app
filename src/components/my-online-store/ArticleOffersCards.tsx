@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { Divider } from '@/components/ui/Divider';
 import { Tooltip } from '@/components/ui/Tooltip';
-import { AMOUNT_PLACEHOLDER, OFFER_STATUS_LABELS } from '@/constants';
+import { OFFER_STATUS_LABELS } from '@/constants';
 import { formatDate } from '@/utils/formatDate';
 import { euroFormatter } from '@/utils/euroFormatter';
 import {
@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 import { Button } from '../ui/Button';
 import { StoreCounterOfferModal } from '../modal/StoreCounterOfferModal';
 import { OfferHistoryModal } from '../modal/OfferHistoryModal';
+import { getStorePayoutFromBuyerFacingAmount } from '@/utils/getStorePayoutFromBuyerFacingAmount';
 
 interface ArticleOffersCardsProps {
   offers: CustomFullArticleSecondChance['ArticleOffer'];
@@ -34,7 +35,8 @@ interface ArticleOffersCardsProps {
     reject: string;
     counter: string;
   };
-  commissionValue: number | null;
+  userCommissionValue: number;
+  storeCommissionValue: number;
   refetch: () => RefetchReturn;
 }
 
@@ -76,9 +78,15 @@ const TEXTS = {
 
 export function ArticleOffersCards({
   offers,
+
   texts,
+
   locale,
-  commissionValue,
+
+  userCommissionValue,
+
+  storeCommissionValue,
+
   refetch,
 }: ArticleOffersCardsProps) {
   const { securePost } = useSecureApi();
@@ -229,10 +237,12 @@ export function ArticleOffersCards({
           offer.status === OfferStatusConst.COUNTERED &&
           pendingProposal?.createdBy === OfferActorConst.AUCTIONEER;
 
-        const estimatedPayout =
-          commissionValue !== null
-            ? displayedAmount - displayedAmount * commissionValue
-            : null;
+        const estimatedPayout = getStorePayoutFromBuyerFacingAmount({
+          buyerFacingAmount: displayedAmount,
+          userCommissionPercentage: userCommissionValue,
+          storeCommissionPercentage: storeCommissionValue,
+        });
+        console.log({ estimatedPayout });
 
         return (
           <View
@@ -289,9 +299,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-sm font-semibold'
                 >
-                  {estimatedPayout !== null
-                    ? formatter.format(estimatedPayout)
-                    : AMOUNT_PLACEHOLDER}
+                  {formatter.format(estimatedPayout)}
                 </CustomText>
               </View>
 
