@@ -78,15 +78,10 @@ const TEXTS = {
 
 export function ArticleOffersCards({
   offers,
-
   texts,
-
   locale,
-
   userCommissionValue,
-
   storeCommissionValue,
-
   refetch,
 }: ArticleOffersCardsProps) {
   const { securePost } = useSecureApi();
@@ -99,7 +94,7 @@ export function ArticleOffersCards({
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const t = TEXTS[locale];
 
-  const handleAcceptOffer = async (offerId: number) => {
+  const handleAcceptOffer = async (offerId: number): Promise<boolean> => {
     setIsLoading(true);
 
     try {
@@ -116,12 +111,12 @@ export function ArticleOffersCards({
         return false;
       }
 
+      await refetch();
+
       callToast({
         variant: 'success',
         description: response.data,
       });
-
-      await refetch();
 
       return true;
     } finally {
@@ -129,7 +124,7 @@ export function ArticleOffersCards({
     }
   };
 
-  const handleRejectOffer = async (offerId: number) => {
+  const handleRejectOffer = async (offerId: number): Promise<boolean> => {
     setIsLoading(true);
 
     try {
@@ -146,12 +141,12 @@ export function ArticleOffersCards({
         return false;
       }
 
+      await refetch();
+
       callToast({
         variant: 'success',
         description: response.data,
       });
-
-      await refetch();
 
       return true;
     } finally {
@@ -182,12 +177,14 @@ export function ArticleOffersCards({
         return false;
       }
 
+      await refetch();
+
+      setCounterOfferId(null);
+
       callToast({
         variant: 'success',
         description: response.data,
       });
-
-      await refetch();
 
       return true;
     } finally {
@@ -242,7 +239,6 @@ export function ArticleOffersCards({
           userCommissionPercentage: userCommissionValue,
           storeCommissionPercentage: storeCommissionValue,
         });
-        console.log({ estimatedPayout });
 
         return (
           <View
