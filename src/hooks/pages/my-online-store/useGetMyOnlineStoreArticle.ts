@@ -55,7 +55,7 @@ export const useGetMyOnlineStoreArticle = ({
 
   const refetch = async () => {
     const res = await secureGet<CustomFullArticleSecondChance>({
-      endpoint: `/online-store/articles/${articleId}`,
+      endpoint: `/my-online-store/articles/${articleId}`,
     });
 
     if (res.error) {
