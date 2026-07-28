@@ -82,7 +82,6 @@
         }
       ],
       "@sentry/react-native",
-      ["@stripe/stripe-react-native", {}],
       "expo-web-browser",
       "expo-video"
     ],

@@ -20,7 +20,6 @@ export * from './locales';
 export * from './onboarding';
 
 // Códigos de error
-export * from './errors';
 
 // Meses y calendario
 export { MONTHS } from './months';

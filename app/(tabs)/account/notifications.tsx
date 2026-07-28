@@ -29,14 +29,16 @@ export default function UserNotificationsScreen() {
   const { securePatch } = useSecureApi();
   const { callToast } = useToast(locale);
   const [markingAsRead, setMarkingAsRead] = useState(false);
+  const notifications = useMemo(
+    () => (Array.isArray(notificationsData) ? notificationsData : []),
+    [notificationsData]
+  );
 
   const unreadCount = useMemo(() => {
-    const unread = notificationsData.filter(
-      (notification) => !notification.read
-    );
+    const unread = notifications.filter((notification) => !notification.read);
 
     return unread.length;
-  }, [notificationsData]);
+  }, [notifications]);
 
   useFocusEffect(
     useCallback(() => {
@@ -125,7 +127,7 @@ export default function UserNotificationsScreen() {
 
   return (
     <View className='flex-1 bg-white px-4 pt-4'>
-      {notificationsData.length === 0 ? (
+      {notifications.length === 0 ? (
         <View className='flex-1 items-center justify-center px-6'>
           <View className='border-gray-200 bg-gray-50 rounded-3xl border px-6 py-8'>
             <CustomText
@@ -138,7 +140,7 @@ export default function UserNotificationsScreen() {
         </View>
       ) : (
         <FlatList
-          data={notificationsData}
+          data={notifications}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingBottom: 24 }}
           showsVerticalScrollIndicator={false}
