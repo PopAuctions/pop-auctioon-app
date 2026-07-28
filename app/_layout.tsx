@@ -24,7 +24,6 @@ import { ProtectedRoute } from '@/components/navigation/ProtectedRoute';
 import { DeepLinkListener } from '@/components/navigation/DeepLinkListener';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from '@/providers/ToastProvider';
-import { StripeProvider } from '@/providers/StripeProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TranslationProvider } from '@/context/translation-context';
 import * as WebBrowser from 'expo-web-browser';
@@ -216,28 +215,26 @@ function RootLayoutNav() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={DefaultTheme}>
-        <StripeProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen
-                name='(tabs)'
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name='modal'
-                options={{ presentation: 'modal' }}
-              />
-            </Stack>
-            {/* <LiveSignal
-              size={20}
-              top={50}
-            /> */}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Stack>
+            <Stack.Screen
+              name='(tabs)'
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='modal'
+              options={{ presentation: 'modal' }}
+            />
+          </Stack>
+          {/* <LiveSignal
+            size={20}
+            top={50}
+          /> */}
 
-            <AuctionStartedModal />
-            <SignInAlertModal />
-            <ToastProvider />
-          </GestureHandlerRootView>
-        </StripeProvider>
+          <AuctionStartedModal />
+          <SignInAlertModal />
+          <ToastProvider />
+        </GestureHandlerRootView>
       </ThemeProvider>
     </SafeAreaProvider>
   );

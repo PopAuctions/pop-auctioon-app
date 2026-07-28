@@ -8,6 +8,7 @@ import {
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import { normalizeNotificationsData } from '@/utils/notifications/normalize-notifications-data';
 
 export const useGetUnreadUserNotifications = (): ActionResponse<
   DisplayedNotification[]
@@ -41,7 +42,7 @@ export const useGetUnreadUserNotifications = (): ActionResponse<
       };
     }
 
-    const notifications = res.data;
+    const notifications = normalizeNotificationsData(res.data);
     if (!notifications) {
       setStatus(REQUEST_STATUS.error);
       setNotifications([]);

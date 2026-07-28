@@ -2,9 +2,9 @@ import { SECURE_ENDPOINTS, PROTECTED_ENDPOINTS } from '@/config/api-config';
 
 describe('API Config - Payment Endpoints', () => {
   describe('SECURE_ENDPOINTS.PAYMENT', () => {
-    it('should have CREATE_PAYMENT_INTENT endpoint', () => {
-      expect(SECURE_ENDPOINTS.PAYMENT.CREATE_PAYMENT_INTENT).toBe(
-        '/user/payments/create-intent'
+    it('should have CREATE_REDSYS_SESSION endpoint', () => {
+      expect(SECURE_ENDPOINTS.PAYMENT.CREATE_REDSYS_SESSION).toBe(
+        '/user/payments/create-redsys-session'
       );
     });
 
@@ -78,7 +78,7 @@ describe('API Config - Payment Endpoints', () => {
 
   describe('Endpoint consistency', () => {
     it('should have all payment endpoints under /user/payments', () => {
-      expect(SECURE_ENDPOINTS.PAYMENT.CREATE_PAYMENT_INTENT).toContain(
+      expect(SECURE_ENDPOINTS.PAYMENT.CREATE_REDSYS_SESSION).toContain(
         '/user/payments/'
       );
       expect(SECURE_ENDPOINTS.PAYMENT.CREATE_ARTICLES_PAYMENT).toContain(

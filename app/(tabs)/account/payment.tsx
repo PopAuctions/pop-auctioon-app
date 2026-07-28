@@ -1,5 +1,5 @@
 /**
- * Pantalla de pago con Stripe
+ * Pantalla de pago con Redsys
  * Patrón similar a Next.js web:
  * 1. Recibe auctionId como query param
  * 2. Carga artículos ganados y direcciones
