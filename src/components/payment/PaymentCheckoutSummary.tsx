@@ -116,7 +116,7 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
         </View>
 
         {/* Subtotal */}
-        <View className='mb-2 flex-row justify-between'>
+        <View className='flex-row justify-between'>
           <CustomText
             type='body'
             className='text-gray-600'
@@ -132,7 +132,7 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
         </View>
 
         {/* Comisión */}
-        <View className='mb-2 ml-4 flex-row justify-between'>
+        <View className='ml-4 flex-row justify-between'>
           <CustomText
             type='bodysmall'
             className='text-slate-600'
@@ -148,16 +148,16 @@ export const PaymentCheckoutSummary = memo(function PaymentCheckoutSummary({
         </View>
 
         {/* IVA sobre comisión */}
-        <View className='mb-2 flex-row justify-between'>
+        <View className='mb-2 ml-4 flex-row justify-between'>
           <CustomText
-            type='body'
-            className='text-gray-600'
+            type='bodysmall'
+            className='text-slate-600'
           >
             {paymentTranslations.taxes}:
           </CustomText>
           <CustomText
-            type='body'
-            className='font-medium'
+            type='bodysmall'
+            className='text-slate-600'
           >
             {formatter.format(paymentDetails.taxes)}
           </CustomText>
