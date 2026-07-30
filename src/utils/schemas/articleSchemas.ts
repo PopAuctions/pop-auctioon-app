@@ -46,13 +46,24 @@ const commonSchema = z.object({
     }),
   estimatedValue: z
     .string()
+    .min(1, {
+      message: JSON.stringify({
+        en: 'Required',
+        es: 'Requerido',
+      }),
+    })
     .regex(ONLY_INTEGERS_EMPTY_REGEX, {
       message: JSON.stringify({
         en: 'Must contain only numbers',
         es: 'Debe contener solo números',
       }),
     })
-    .optional(),
+    .refine((val) => parseInt(val) >= 1, {
+      message: JSON.stringify({
+        en: 'Estimated value should be at least 1',
+        es: 'El valor estimado debería de ser al menos 1',
+      }),
+    }),
   reservePrice: z
     .string()
     .regex(ONLY_INTEGERS_EMPTY_REGEX, {
