@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/Button';
 import { AMOUNT_PLACEHOLDER } from '@/constants';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { toTotal } from '@/utils/toTotal';
 
 interface BidButtonProps {
@@ -27,10 +28,10 @@ export const BidButton = ({
 }: BidButtonProps) => {
   const effectiveBase = Math.max(currentValue, startingPrice);
 
-  const bidAmountCalculated = toTotal(
-    (bidAmount ?? 0) + effectiveBase,
-    commissionPercentage ?? 0
+  const bidAmountCalculated = ceilToNearestTen(
+    toTotal((bidAmount ?? 0) + effectiveBase, commissionPercentage)
   );
+
   const bidAmountFormatter = formatter.format(bidAmountCalculated);
 
   const allAmountsReady = startingPrice > 0;
