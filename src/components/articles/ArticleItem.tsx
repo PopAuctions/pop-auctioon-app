@@ -113,7 +113,7 @@ export function ArticleItem({
                 followEndpoint={`/articles/${articleId}/follow`}
                 unfollowEndpoint={`/articles/${articleId}/unfollow`}
                 lang={lang}
-                isAvailable={!article.sold}
+                isAvailable={article.ArticleBid.available}
                 extraDataIsLoaded={true}
                 actionAfterFollow={actionAfterFollow}
               />
@@ -155,7 +155,7 @@ export function ArticleItem({
             </CustomText>
           </View>
 
-          {showBidButton && !article.sold && (
+          {showBidButton && article.ArticleBid.available && (
             <BidButton
               startingPrice={article.startingPrice}
               currentValue={price}
