@@ -55,9 +55,11 @@ export const OFFER_STATUS_LABELS: {
     PENDING: 'Pendiente',
     ACCEPTED: 'Aceptada',
     REJECTED: 'Rechazada',
+    COUNTERED: 'Contraoferta',
   },
   en: {
     PENDING: 'Pending',
+    COUNTERED: 'Countered',
     ACCEPTED: 'Accepted',
     REJECTED: 'Rejected',
   },

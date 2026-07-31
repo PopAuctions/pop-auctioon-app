@@ -84,19 +84,15 @@ export function calculatePaymentDetails(
   const taxes = includedCommission * (taxPercentageArticles / 100);
 
   // Shipping calculation based on auction country from backend
-  const defaultShipping = shippingTaxes.DIFFERENT_COUNTRY;
+  const defaultShipping = shippingTaxes.SAME_COUNTRY;
   let shipping = defaultShipping;
 
-  if (
-    auctionCountry !== null &&
-    selectedCountry !== null &&
-    auctionCountry === selectedCountry
-  ) {
-    shipping = shippingTaxes.SAME_COUNTRY;
+  if (auctionCountry && selectedCountry && auctionCountry !== selectedCountry) {
+    shipping = shippingTaxes.DIFFERENT_COUNTRY;
   }
 
-  // Total = subtotal + VAT over commission + shipping - discount
-  const total = subtotal + taxes + shipping - discount;
+  // Total = subtotal + shipping - discount
+  const total = subtotal + shipping - discount;
 
   return {
     subtotal: Number(subtotal.toFixed(2)),

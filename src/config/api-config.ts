@@ -214,6 +214,7 @@ export const SECURE_ENDPOINTS = {
     COUNTRIES: '/globals/countries',
   },
   STORE: {
+    COMMISSION: '/store/commission',
     EDIT: '/store/edit',
     PAYOUTS: {
       DASHBOARD: '/store/payouts',
@@ -329,11 +330,16 @@ export const SECURE_ENDPOINTS = {
   },
   OFFERS: {
     CREATE: '/online-store/offers',
+    USER_ACCEPT_OFFER: '/online-store/offers/accept',
+    USER_COUNTER_OFFER: '/online-store/offers/counter',
+    USER_REJECT_OFFER: '/online-store/offers/reject',
     MADE: '/user/offers-made',
     ACCEPT: (offerId: string | number): ApiEndpoint =>
       `/my-online-store/offers/${offerId}/accept` as ApiEndpoint,
     REJECT: (offerId: string | number): ApiEndpoint =>
       `/my-online-store/offers/${offerId}/reject` as ApiEndpoint,
+    COUNTER: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/counter` as ApiEndpoint,
   },
 
   // Payments
