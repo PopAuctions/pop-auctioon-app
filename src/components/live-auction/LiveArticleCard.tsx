@@ -6,10 +6,13 @@ import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { CustomText } from '../ui/CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { ARTICLE_BRANDS_LABELS } from '@/constants';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
 interface LiveCurrentArticleCardProps {
   article: CustomArticleLiveAuto;
   lang: Lang;
+  commissionValue: number;
 }
 
 const UI = {
@@ -20,26 +23,38 @@ const UI = {
 export const LiveArticleCard = ({
   article,
   lang,
+  commissionValue,
 }: LiveCurrentArticleCardProps) => {
   const { t } = useTranslation();
   const { state } = useHighestBidderContext({});
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   const title = article.title;
+
   const brand = article.brand
     ? ARTICLE_BRANDS_LABELS[article.brand as keyof typeof ARTICLE_BRANDS_LABELS]
     : '--';
-  const estimatedValue = article?.estimatedValue ?? null;
+
+  const estimatedValue = article.estimatedValue ?? null;
   const currentValue = state.currentValue ?? null;
 
+  const commissionedCurrentValue = useMemo(() => {
+    if (currentValue === null) return null;
+
+    return ceilToNearestTen(
+      getArticleCommissionedPrice(currentValue, commissionValue ?? 0)
+    );
+  }, [currentValue, commissionValue]);
+
   const currentLabel =
-    currentValue != null ? formatter.format(currentValue) : '--';
+    commissionedCurrentValue !== null
+      ? formatter.format(commissionedCurrentValue)
+      : '--';
 
   const imageUrl = article.images?.[0] || null;
 
   return (
     <View className='w-full flex-row items-center justify-between rounded-2xl bg-white/90 px-3 py-2'>
-      {/* Left */}
       <View className='flex-1 flex-row items-center'>
         <View
           className='bg-neutral-200'
@@ -75,7 +90,7 @@ export const LiveArticleCard = ({
             {brand}
           </CustomText>
 
-          {estimatedValue != null && (
+          {estimatedValue !== null && (
             <CustomText
               type='bodysmall'
               numberOfLines={1}
@@ -88,14 +103,9 @@ export const LiveArticleCard = ({
         </View>
       </View>
 
-      {/* Right */}
       <View className='items-end pl-3'>
-        <CustomText
-          type='h4'
-          className=''
-        >
-          {t('screens.article.actualBid')}:
-        </CustomText>
+        <CustomText type='h4'>{t('screens.article.actualBid')}:</CustomText>
+
         <CustomText
           type='h4'
           className='text-cinnabar'

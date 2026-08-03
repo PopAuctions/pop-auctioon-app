@@ -2,14 +2,12 @@ import React, { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
-  KeyboardAvoidingView,
   Modal,
   Pressable,
   View,
 } from 'react-native';
 import SwipeButton from 'rn-swipe-button';
 import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
 import { useSendBid } from '@/hooks/components/useSendBid';
 import { BiddingAmounts, HighestBidderState } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
@@ -17,6 +15,8 @@ import { toTotal } from '@/utils/toTotal';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { hapticImpact } from '@/utils/triggerHaptic';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { BidAmountStepper } from './BidAmountStepper';
 
 type BidSliderProps = {
   biddingAmounts: BiddingAmounts;
@@ -55,12 +55,15 @@ export const BidSlider = ({
     bidAmount,
     tenPercent,
     articleAvailable,
-    handleInputChange,
+    canDecreaseBid,
+    canIncreaseBid,
+    decreaseBidAmount,
+    increaseBidAmount,
     sendBid,
     formatter,
   } = useSendBid({
-    biddingAmounts: biddingAmounts,
-    articleServerState: articleServerState,
+    biddingAmounts,
+    articleServerState,
     articleId,
     commissionPercentage,
   });
@@ -68,9 +71,14 @@ export const BidSlider = ({
   const [customOpen, setCustomOpen] = useState(false);
   const [swipeKey, setSwipeKey] = useState(0);
 
-  const slideAmount = useMemo(() => {
-    return toTotal(tenPercent + currentValue, commissionPercentage);
-  }, [tenPercent, currentValue, commissionPercentage]);
+  const slideAmount = useMemo(
+    () =>
+      ceilToNearestTen(
+        toTotal(tenPercent + currentValue, commissionPercentage)
+      ),
+    [tenPercent, currentValue, commissionPercentage]
+  );
+
   const isDisabled = isPending || !articleAvailable;
 
   const renderThumb = useCallback(
@@ -83,25 +91,19 @@ export const BidSlider = ({
     [isPending, articleAvailable]
   );
 
-  const handleBid = async (bidAmount: number) => {
+  const handleBid = async () => {
     hapticImpact();
 
-    const finalBase = bidAmount + currentValue;
-    const total = toTotal(finalBase, commissionPercentage);
+    await sendBid(slideAmount);
 
-    await sendBid(total);
-
-    // Reset swipe button after sendBid completes
     requestAnimationFrame(() => {
-      setSwipeKey((k) => k + 1);
+      setSwipeKey((key) => key + 1);
     });
   };
 
   return (
     <>
-      {/* Main row */}
       <View className='w-full flex-row items-center justify-start gap-3'>
-        {/* Left: Custom */}
         <Button
           mode='secondary'
           size='small'
@@ -116,7 +118,6 @@ export const BidSlider = ({
           {t('screens.liveAuction.customBid')}
         </Button>
 
-        {/* Right: Swipe */}
         <View
           className='my-auto h-full flex-[2]'
           style={{ maxHeight: UI.HEIGHT }}
@@ -125,14 +126,16 @@ export const BidSlider = ({
             key={swipeKey}
             disabled={isDisabled}
             swipeSuccessThreshold={UI.SWIPE_THRESHOLD}
-            title={`Min. ${t('screens.liveAuction.bids')}: ${formatter.format(slideAmount)}`}
+            title={`${t('screens.liveAuction.bids')}: ${formatter.format(
+              slideAmount
+            )}`}
             titleMaxLines={2}
             titleStyles={{
               paddingLeft: UI.THUMB_WIDTH,
               textAlign: 'center',
               color: isDisabled ? COLORS.BLACK : COLORS.PRIMARY,
             }}
-            onSwipeSuccess={() => handleBid(tenPercent)}
+            onSwipeSuccess={handleBid}
             titleFontSize={18}
             titleColor={COLORS.BLACK}
             railBackgroundColor={COLORS.WHITE}
@@ -154,10 +157,13 @@ export const BidSlider = ({
         disabled={isDisabled}
         onClose={() => setCustomOpen(false)}
         onSubmit={sendBid}
-        bidAmount={Number(bidAmount)}
-        handleInputChange={handleInputChange}
+        bidAmount={bidAmount}
         computedMinBid={computedMinBid}
         computedMaxBid={computedMaxBid}
+        canDecreaseBid={canDecreaseBid}
+        canIncreaseBid={canIncreaseBid}
+        decreaseBidAmount={decreaseBidAmount}
+        increaseBidAmount={increaseBidAmount}
         formatter={formatter}
         texts={{
           title: t('screens.liveAuction.customBid'),
@@ -206,23 +212,29 @@ const SwipeThumb = ({
 
 const CustomBidModal = ({
   visible,
-  disabled,
+  disabled = false,
   onClose,
   onSubmit,
   bidAmount,
-  handleInputChange,
   computedMinBid,
   computedMaxBid,
+  canDecreaseBid,
+  canIncreaseBid,
+  decreaseBidAmount,
+  increaseBidAmount,
   formatter,
   texts,
 }: {
   visible: boolean;
   disabled?: boolean;
-  bidAmount: number;
+  bidAmount: string;
   computedMinBid: number;
   computedMaxBid: number;
+  canDecreaseBid: boolean;
+  canIncreaseBid: boolean;
+  decreaseBidAmount: () => void;
+  increaseBidAmount: () => void;
   formatter: Intl.NumberFormat;
-  handleInputChange: (value: string) => void;
   onClose: () => void;
   onSubmit: () => Promise<void>;
   texts: {
@@ -231,10 +243,18 @@ const CustomBidModal = ({
     cancel: string;
   };
 }) => {
-  const isLow = bidAmount < computedMinBid;
-  const isHigh = bidAmount > computedMaxBid;
+  const numericBidAmount = bidAmount === '' ? null : Number(bidAmount);
 
-  const disabledFinal = disabled || isLow || isHigh;
+  const isLow = numericBidAmount !== null && numericBidAmount < computedMinBid;
+
+  const isHigh = numericBidAmount !== null && numericBidAmount > computedMaxBid;
+
+  const isInvalid =
+    numericBidAmount === null ||
+    !Number.isSafeInteger(numericBidAmount) ||
+    numericBidAmount % 10 !== 0;
+
+  const disabledFinal = disabled || isInvalid || isLow || isHigh;
 
   const handleSubmit = async () => {
     await onSubmit();
@@ -248,43 +268,42 @@ const CustomBidModal = ({
       animationType='fade'
       onRequestClose={onClose}
     >
-      {/* Overlay */}
       <Pressable
         onPress={onClose}
         className='flex-1 bg-black/50'
       >
-        <KeyboardAvoidingView
-          style={{ flex: 1, justifyContent: 'flex-end' }}
-          behavior='padding'
-          keyboardVerticalOffset={0}
-        >
-          {/* Card */}
+        <View className='flex-1 justify-end'>
           <Pressable
             onPress={() => {}}
             className='mx-5 mb-5 mt-auto rounded-3xl bg-white p-5'
           >
             <CustomText type='subtitle'>{texts.title}</CustomText>
 
-            <Input
-              value={bidAmount.toString()}
-              onChangeText={handleInputChange}
+            <BidAmountStepper
+              value={bidAmount}
               placeholder='...'
-              editable={!disabled}
-              keyboardType='numeric'
+              disabled={disabled}
+              canDecrease={canDecreaseBid}
+              canIncrease={canIncreaseBid}
+              onDecrease={decreaseBidAmount}
+              onIncrease={increaseBidAmount}
             />
-            {bidAmount <= computedMaxBid ? (
-              <CustomText
-                type='bodysmall'
-                className={`text-sm ${bidAmount < computedMinBid ? 'text-red-500' : 'text-neutral-500'}`}
-              >
-                Min: {formatter.format(computedMinBid)}
-              </CustomText>
-            ) : (
+
+            {isHigh ? (
               <CustomText
                 type='bodysmall'
                 className='text-sm text-red-500'
               >
                 Max: {formatter.format(computedMaxBid)}
+              </CustomText>
+            ) : (
+              <CustomText
+                type='bodysmall'
+                className={`text-sm ${
+                  isLow ? 'text-red-500' : 'text-neutral-500'
+                }`}
+              >
+                Min: {formatter.format(computedMinBid)}
               </CustomText>
             )}
 
@@ -308,7 +327,7 @@ const CustomBidModal = ({
               </Button>
             </View>
           </Pressable>
-        </KeyboardAvoidingView>
+        </View>
       </Pressable>
     </Modal>
   );
