@@ -908,7 +908,7 @@
       "sendBid": "Send bid",
       "bid": "Bid",
       "bidAmount": "Bid amount",
-      "anyBidAmount": "Or enter any bid amount",
+      "anyBidAmount": "Increase or decrease your bid",
       "minBid": "Minimum bid is:",
       "maxBid": "Maximum bid is:",
       "createAutomaticBid": "Configure automatic bid",

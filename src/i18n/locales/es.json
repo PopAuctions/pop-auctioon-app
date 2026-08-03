@@ -917,7 +917,7 @@
       "sendBid": "Enviar puja",
       "bid": "Puja",
       "bidAmount": "Monto a pujar",
-      "anyBidAmount": "O puja lo que quieras",
+      "anyBidAmount": "Aumenta o reduce tu puja",
       "minBid": "La puja mínima es de:",
       "maxBid": "La puja máxima es de:",
       "createAutomaticBid": "Configurar puja automática",
