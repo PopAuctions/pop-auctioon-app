@@ -8,11 +8,11 @@ import {
   LIVE_URL,
 } from '@/constants/auctions';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
-import { REQUEST_STATUS } from '@/constants';
+import { COUNTRIES_MAP_LABEL, REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { HowAutoLiveWorksModal } from '@/components/modal/HowAutoLiveWorks';
-import { AuctionMode } from '@/types/types';
+import { AuctionMode, Lang } from '@/types/types';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
@@ -119,11 +119,26 @@ export default function AuctionDetailScreen() {
             </CustomText>
 
             {auction.status !== AuctionStatus.LIVE && (
-              <AuctionDisplayDateTime
-                singleLine={true}
-                startDate={auction.startDate}
-                locale={locale}
-              />
+              <View className='flex w-full flex-row items-center justify-center gap-3'>
+                <CustomText type='subtitle'>
+                  {
+                    COUNTRIES_MAP_LABEL[locale][
+                      auction.country as keyof (typeof COUNTRIES_MAP_LABEL)[Lang]
+                    ]
+                  }
+                </CustomText>
+                <FontAwesomeIcon
+                  variant='bold'
+                  name='circle'
+                  size={5}
+                  color='#000'
+                />
+                <AuctionDisplayDateTime
+                  singleLine={true}
+                  startDate={auction.startDate}
+                  locale={locale}
+                />
+              </View>
             )}
           </View>
 
@@ -172,7 +187,7 @@ export default function AuctionDetailScreen() {
                 <CustomLink
                   className='w-1/2'
                   mode='primary'
-                  href={`/auctions/${LIVE_URL[auctionMode]}/${id}`}
+                  href={`/(tabs)/auctions/${LIVE_URL[auctionMode]}/${id}`}
                 >
                   {auctionLang.watchButton}
                 </CustomLink>

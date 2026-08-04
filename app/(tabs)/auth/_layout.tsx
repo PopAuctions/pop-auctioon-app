@@ -66,6 +66,7 @@ export default function AuthLayout() {
           presentation: 'card',
           headerShown: true,
           headerBackTitle: t('tabsNames.back'),
+          headerLeft: () => null,
         }}
       />
       <Stack.Screen

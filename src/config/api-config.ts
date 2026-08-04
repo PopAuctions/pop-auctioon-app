@@ -3,14 +3,50 @@
  * Contiene endpoints, constantes y configuraciones para la comunicación con Next.js
  */
 
+import { Platform } from 'react-native';
 import { ApiEndpoint } from '@/types/types';
 
 // ========================================
 // CONFIGURACIÓN BASE
 // ========================================
 
+const resolveBaseUrl = (): string => {
+  const envBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.trim();
+
+  if (envBaseUrl) {
+    if (__DEV__ && Platform.OS === 'android') {
+      try {
+        const url = new URL(envBaseUrl);
+
+        if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+          url.hostname = '10.0.2.2';
+          return url.toString().replace(/\/$/, '');
+        }
+      } catch {
+        if (envBaseUrl.includes('localhost')) {
+          return envBaseUrl.replace('localhost', '10.0.2.2');
+        }
+
+        if (envBaseUrl.includes('127.0.0.1')) {
+          return envBaseUrl.replace('127.0.0.1', '10.0.2.2');
+        }
+      }
+    }
+
+    return envBaseUrl;
+  }
+
+  if (__DEV__) {
+    return Platform.OS === 'android'
+      ? 'http://10.0.2.2:3000'
+      : 'http://localhost:3000';
+  }
+
+  return '';
+};
+
 export const API_CONFIG = {
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000',
+  BASE_URL: resolveBaseUrl(),
   API_KEY: process.env.EXPO_PUBLIC_API_KEY || '',
   TIMEOUT: 10000, // 10 segundos
   MAX_RETRIES: 2,
@@ -95,6 +131,7 @@ export const SECURE_ENDPOINTS = {
     VARIABLES: '/config/variables',
     APP_SETTINGS: '/config/app-settings',
     FEATURE_FLAGS: '/config/feature-flags',
+    APP_VERSION: '/config/app-version',
   },
 
   ARTICLES: {
@@ -176,7 +213,19 @@ export const SECURE_ENDPOINTS = {
   GLOBALS: {
     COUNTRIES: '/globals/countries',
   },
-
+  STORE: {
+    COMMISSION: '/store/commission',
+    EDIT: '/store/edit',
+    PAYOUTS: {
+      DASHBOARD: '/store/payouts',
+      SINGLE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}` as ApiEndpoint,
+      COMMISSION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/commission` as ApiEndpoint,
+      LIQUIDATION_INVOICE: (id: string): ApiEndpoint =>
+        `/store/payouts/${id}/invoice/liquidation` as ApiEndpoint,
+    },
+  },
   // Usuario y perfil
   USER: {
     PROFILE: '/user/profile',
@@ -186,6 +235,7 @@ export const SECURE_ENDPOINTS = {
     HISTORY: '/user/history',
     FAVORITES: '/user/favorites',
     ADDRESSES: '/user/addresses',
+    STORE: '/user/store',
     CREATE_ADDRESS: '/user/addresses/create',
     CURRENT_USER: '/user/current',
     UPDATE_LANGUAGE: '/user/language',
@@ -197,6 +247,22 @@ export const SECURE_ENDPOINTS = {
     PAYMENT_HISTORY: '/user/payments', // GET payment history
     PAYMENT_BY_ID: (id: string): ApiEndpoint =>
       `/user/payments/${id}` as ApiEndpoint, // GET payment by ID
+    PAYMENT_STATUS: (params: {
+      paymentId?: number;
+      paymentIntent?: string;
+    }): ApiEndpoint => {
+      const searchParams = new URLSearchParams();
+
+      if (typeof params.paymentId === 'number') {
+        searchParams.set('paymentId', params.paymentId.toString());
+      }
+
+      if (params.paymentIntent) {
+        searchParams.set('paymentIntent', params.paymentIntent);
+      }
+
+      return `/user/payments/status?${searchParams.toString()}` as ApiEndpoint;
+    },
     WON_ARTICLES: (auctionId: string): ApiEndpoint =>
       `/user/won-articles?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados en subasta
     WON_ARTICLES_BY_AUCTION: '/user/won-articles-by-auction', // GET - Artículos ganados agrupados por subasta
@@ -231,7 +297,9 @@ export const SECURE_ENDPOINTS = {
     CREATE: '/bids',
   },
   AUTO_BID: {
+    GET_ALL: '/auto-bid',
     CREATE: '/auto-bid',
+    DEACTIVATE: '/auto-bid',
     GET: (id: string): ApiEndpoint => `/auto-bid/${id}` as ApiEndpoint,
   },
   LIVE: {
@@ -262,16 +330,21 @@ export const SECURE_ENDPOINTS = {
   },
   OFFERS: {
     CREATE: '/online-store/offers',
+    USER_ACCEPT_OFFER: '/online-store/offers/accept',
+    USER_COUNTER_OFFER: '/online-store/offers/counter',
+    USER_REJECT_OFFER: '/online-store/offers/reject',
     MADE: '/user/offers-made',
     ACCEPT: (offerId: string | number): ApiEndpoint =>
       `/my-online-store/offers/${offerId}/accept` as ApiEndpoint,
     REJECT: (offerId: string | number): ApiEndpoint =>
       `/my-online-store/offers/${offerId}/reject` as ApiEndpoint,
+    COUNTER: (offerId: string | number): ApiEndpoint =>
+      `/my-online-store/offers/${offerId}/counter` as ApiEndpoint,
   },
 
-  // Payments (Stripe)
+  // Payments
   PAYMENT: {
-    CREATE_PAYMENT_INTENT: '/user/payments/create-intent', // POST - Create payment intent
+    CREATE_REDSYS_SESSION: '/user/payments/create-redsys-session', // POST - Create Redsys redirect session
     CREATE_ARTICLES_PAYMENT: '/user/payments/create-articles-payment', // POST - Create payment record in DB
     REJECT_ARTICLES_PAYMENT: '/user/payments/reject-articles-payment', // POST - Reject/revert payment on failure
     CREATE_SINGLE_ARTICLE_PAYMENT:

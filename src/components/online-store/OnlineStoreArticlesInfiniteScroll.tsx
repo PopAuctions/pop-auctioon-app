@@ -37,8 +37,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
 }) => {
   const { locale } = useTranslation();
   const params = useLocalSearchParams();
-  const { brand, price, model, codeNumber, category, sortBy } =
-    params as Filters;
+  const { brand, price, model, material, color, sortBy } = params as Filters;
 
   const { fetchArticles } = useFetchOnlineStoreArticlesInfinite();
   const { data: commissionData, status: commissionStatus } =
@@ -68,7 +67,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
 
   const formatter = euroFormatter(lang);
   const filtersActive = Boolean(
-    brand || price || model || codeNumber || category || sortBy
+    brand || price || model || material || color || sortBy
   );
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
@@ -84,8 +83,8 @@ export const OnlineStoreArticlesInfiniteScroll = ({
         brand,
         price,
         model,
-        codeNumber,
-        category,
+        material,
+        color,
         sortBy,
         offset: 0,
         limit: ITEMS_PER_PAGE,
@@ -102,7 +101,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     } finally {
       syncLoading(false);
     }
-  }, [fetchArticles, brand, price, model, codeNumber, category, sortBy]);
+  }, [fetchArticles, brand, price, model, material, color, sortBy]);
 
   const loadMore = useCallback(async () => {
     if (loadingRef.current || !hasMoreRef.current) return;
@@ -114,8 +113,8 @@ export const OnlineStoreArticlesInfiniteScroll = ({
         brand,
         price,
         model,
-        codeNumber,
-        category,
+        material,
+        color,
         sortBy,
         offset: offsetRef.current,
         limit: ITEMS_PER_PAGE,
@@ -145,7 +144,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     } finally {
       syncLoading(false);
     }
-  }, [fetchArticles, brand, price, model, codeNumber, category, sortBy]);
+  }, [fetchArticles, brand, price, model, material, color, sortBy]);
 
   useEffect(() => {
     loadInitial();
@@ -188,7 +187,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     <FlatList
       data={articles}
       keyExtractor={(item) => item.id.toString()}
-      extraData={{ brand, price, model, codeNumber, category, sortBy }}
+      extraData={{ brand, price, model, material, color, sortBy }}
       numColumns={2}
       columnWrapperStyle={{
         justifyContent: 'space-between',

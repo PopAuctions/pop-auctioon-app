@@ -16,10 +16,16 @@ import { AddressInfo } from '@/components/payment/AddressInfo';
 import { UserInvoice } from '@/components/invoices/UserInvoice';
 import { useGetBilling } from '@/hooks/pages/billing/useBilling';
 import { useGetUserInvoice } from '@/hooks/components/useUserInvoice';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function PaymentScreen() {
   const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const {
+    data: commissionData,
+    errorMessage: commissionError,
+    status: commissionStatus,
+  } = useFetchCommissions();
   const {
     data: paymentData,
     status,
@@ -31,19 +37,27 @@ export default function PaymentScreen() {
   });
 
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
+  const isCommissionLoading =
+    commissionStatus === REQUEST_STATUS.idle ||
+    commissionStatus === REQUEST_STATUS.loading;
 
-  if (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) {
+  if (
+    status === REQUEST_STATUS.loading ||
+    status === REQUEST_STATUS.idle ||
+    isCommissionLoading
+  ) {
     return <Loading locale={locale} />;
   }
 
   if (
     status === REQUEST_STATUS.error ||
+    commissionStatus === REQUEST_STATUS.error ||
     !paymentData ||
     !paymentData.userAddress
   ) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ?? commissionError}
         refreshRoute={`/(tabs)/account/payment/${id}`}
       />
     );
@@ -62,6 +76,7 @@ export default function PaymentScreen() {
   const paymentDate = new Date(paymentData.createdAt);
   const userAddress = paymentData.userAddress;
   const user = paymentData.user;
+  const isOnlineStorePayment = !paymentData.articles[0].auctionId;
 
   return (
     <ScrollView
@@ -87,6 +102,9 @@ export default function PaymentScreen() {
                 article={article}
                 lang={locale}
                 formatter={formatter}
+                commissionPercentage={
+                  isOnlineStorePayment ? undefined : commissionData
+                }
                 texts={{
                   paymentAmount: paymentDict.paid,
                   view: soldArticlesDict.view,

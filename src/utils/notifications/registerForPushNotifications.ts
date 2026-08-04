@@ -15,7 +15,8 @@ export async function registerForPushNotificationsAsync(): Promise<
       importance: Notifications.AndroidImportance.MAX, // 🔔 MAX = heads-up notification
       vibrationPattern: [0, 250, 250, 250], // 📳 Vibration pattern [delay, vibrate, pause, vibrate...]
       lightColor: '#FF231F7C', // 💡 LED color (if device has LED)
-      sound: 'default', // 🔊 Sound: 'default' or null for silent
+      // Do not set `sound: 'default'` here. Android treats every explicit
+      // string as a bundled custom sound; omitting it uses the system default.
       enableVibrate: true, // 📳 Enable vibration
       showBadge: true, // 🔴 Show badge on app icon
       enableLights: true, // 💡 Enable LED notification

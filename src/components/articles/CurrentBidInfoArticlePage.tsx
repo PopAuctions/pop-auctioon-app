@@ -12,7 +12,7 @@ type CurrentBidInfoArticlePageProps = {
   currentValue: number;
   estimatedValue: number | null;
   reservePrice: number | null;
-  commissionValue: number | null;
+  buyerCommissionValue: number | null;
   texts: {
     highestBid: string;
     estimatedValue: string;
@@ -28,7 +28,7 @@ export function CurrentBidInfoArticlePage({
   currentValue,
   estimatedValue,
   reservePrice,
-  commissionValue,
+  buyerCommissionValue,
   texts,
 }: CurrentBidInfoArticlePageProps) {
   const { state } = useHighestBidderContext({
@@ -45,7 +45,7 @@ export function CurrentBidInfoArticlePage({
       <ArticlePriceBreakdown
         lang={lang}
         price={price}
-        commissionValue={commissionValue}
+        buyerCommissionValue={buyerCommissionValue}
         texts={texts}
       />
       <Divider />

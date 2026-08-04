@@ -5,7 +5,7 @@ import { ImagesCarousel } from '@/components/ui/ImagesCarousel';
 describe('ImagesCarousel', () => {
   it('renders with no images', () => {
     const { toJSON } = render(<ImagesCarousel images={[]} />);
-    expect(toJSON()).toMatchSnapshot();
+    expect(toJSON()).toBeNull();
   });
 
   it('renders with multiple images', () => {

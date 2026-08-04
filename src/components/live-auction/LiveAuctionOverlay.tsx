@@ -270,6 +270,7 @@ export const LiveAuctionOverlay = ({
           >
             {currentArticle ? (
               <LiveArticleCard
+                commissionValue={commissionData}
                 article={currentArticle}
                 lang={locale}
               />

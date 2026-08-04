@@ -12,6 +12,7 @@ import { BidButton } from '@/components/bids/BidButton';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type ArticleItemProps = {
   article: SimpleArticle;
@@ -47,28 +48,30 @@ export function ArticleItem({
 
   const articleId = article.id;
   const price = article.ArticleBid.currentValue;
+  const minBidAmount = article.minBidAmount ?? 0;
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
+    () =>
+      ceilToNearestTen(
+        getArticleCommissionedPrice(price, commissionValue ?? 0)
+      ),
     [price, commissionValue]
   );
 
-  if (!article.images || article.images.length === 0) {
-    return null;
-  }
-
   const sendBid = async ({ amount }: { amount: number }) => {
     setIsLoading(true);
+
     const response = await securePost<LangMap>({
       endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
       data: {
         articleId,
-        amount: amount,
+        amount,
         clientCurrentAmount: price,
       },
     });
 
     setIsLoading(false);
+
     if (response.error) {
       callToast({
         variant: 'error',
@@ -82,9 +85,12 @@ export function ArticleItem({
       description: response.data,
     });
 
-    const rawAmount = Math.round(amount / (1 + (commissionValue ?? 0)));
-    onBidSuccess?.(articleId, rawAmount);
+    onBidSuccess?.(articleId, price + minBidAmount);
   };
+
+  if (!article.images || article.images.length === 0) {
+    return null;
+  }
 
   return (
     <View className='w-full gap-2'>
@@ -113,7 +119,7 @@ export function ArticleItem({
                 followEndpoint={`/articles/${articleId}/follow`}
                 unfollowEndpoint={`/articles/${articleId}/unfollow`}
                 lang={lang}
-                isAvailable={!article.sold}
+                isAvailable={article.ArticleBid.available}
                 extraDataIsLoaded={true}
                 actionAfterFollow={actionAfterFollow}
               />
@@ -155,7 +161,7 @@ export function ArticleItem({
             </CustomText>
           </View>
 
-          {showBidButton && !article.sold && (
+          {showBidButton && article.ArticleBid.available && (
             <BidButton
               startingPrice={article.startingPrice}
               currentValue={price}
@@ -164,7 +170,7 @@ export function ArticleItem({
               onPress={sendBid}
               text={{ bid: auctionLang.bid }}
               isLoading={isLoading}
-              bidAmount={article.minBidAmount ?? 0}
+              bidAmount={minBidAmount}
             />
           )}
         </View>

@@ -25,6 +25,33 @@ export type User = Database['public']['Tables']['User']['Row'] & {
 
 export type DiscountCode = Database['public']['Tables']['DiscountCode']['Row'];
 
+export type Store = Database['public']['Tables']['Store']['Row'];
+
+export type StorePayout = Database['public']['Tables']['StorePayout']['Row'];
+
+export type StoreSettlementShipping =
+  Database['public']['Tables']['StoreSettlementShipping']['Row'];
+
+export type StoreSettlementSaleTypeType =
+  Database['public']['Enums']['StoreSettlementSaleType'];
+
+export type StoreSettlementStatusType =
+  Database['public']['Enums']['StoreSettlementStatus'];
+
+export type StorePayoutStatusType =
+  Database['public']['Enums']['StorePayoutStatus'];
+
+export type StoreSettlementStatusFilter = StoreSettlementStatusType | 'ALL';
+
+export type StorePayoutMethod =
+  Database['public']['Enums']['StorePayoutMethod'];
+
+export type StoreSettlementItem =
+  Database['public']['Tables']['StoreSettlementItem']['Row'];
+
+export type StorePayoutMethodType =
+  Database['public']['Enums']['StorePayoutMethod'];
+
 export type PhoneOTP = Database['public']['Tables']['PhoneOTP']['Row'];
 
 export type UserDiscountCode =
@@ -32,9 +59,14 @@ export type UserDiscountCode =
 
 export type ArticleOffer = Database['public']['Tables']['ArticleOffer']['Row'];
 
+export type ArticleOfferProposal =
+  Database['public']['Tables']['ArticleOfferProposal']['Row'];
+
 export type Bids = Database['public']['Tables']['Bids']['Row'] & {
   User: Pick<User, 'username' | 'profilePicture'>;
 };
+
+export type AutomaticBid = Database['public']['Tables']['AutomaticBid']['Row'];
 
 export type Auction = Database['public']['Tables']['Auction']['Row'];
 
@@ -58,10 +90,26 @@ export type Article = Database['public']['Tables']['Article']['Row'] & {
 export type SimpleArticle = Pick<
   Article,
   'id' | 'images' | 'title' | 'brand' | 'sold' | 'auctionId' | 'startingPrice'
-> & { ArticleBid: Pick<ArticleBid, 'currentValue'> } & {
+> & { ArticleBid: Pick<ArticleBid, 'currentValue' | 'available'> } & {
   whenInAuction?: Date | null;
   minBidAmount?: number | null;
 };
+
+export interface AutoBidArticle {
+  id: string;
+  minBid: number;
+  maxAmount: number;
+  articleId: string;
+  isActive: boolean;
+  isEligible: boolean;
+  createdAt: string;
+  Article:
+    | (SimpleArticle & {
+        startingPrice: Pick<Article, 'startingPrice'>;
+        ArticleBid: Pick<ArticleBid, 'currentValue'> | null;
+      })
+    | null;
+}
 
 export type BlogArticle = Database['public']['Tables']['BlogArticle']['Row'];
 
@@ -103,6 +151,10 @@ export type CookiesPolicyData = {
       }[];
       note: string;
     };
+    updates: {
+      title: string;
+      content: string;
+    };
   };
   en: {
     title: string;
@@ -130,6 +182,10 @@ export type CookiesPolicyData = {
         url: string;
       }[];
       note: string;
+    };
+    updates: {
+      title: string;
+      content: string;
     };
   };
 };
@@ -304,16 +360,27 @@ export interface CustomArticleOffer {
   };
 }
 
+export type CustomArticleOfferWithProposals = Pick<
+  ArticleOffer,
+  | 'id'
+  | 'amount'
+  | 'acceptedAmount'
+  | 'expiresAt'
+  | 'closedAt'
+  | 'status'
+  | 'createdAt'
+> & {
+  User: Pick<User, 'username' | 'phoneNumber'>;
+  ArticleOfferProposal?: MyOfferProposal[];
+};
+
 export interface CustomFullArticleSecondChance {
   id: number;
   price: number;
   status: ArticleSecondChanceStatus;
   Article: Article;
   minOffer: number;
-  ArticleOffer?: Pick<
-    ArticleOffer,
-    'id' | 'amount' | 'expiresAt' | 'status' | 'createdAt'
-  >[];
+  ArticleOffer?: CustomArticleOfferWithProposals[];
 }
 
 export type UserArticlesWonRecord =
@@ -327,6 +394,8 @@ export type UserArticlesWon = Pick<
 export interface AuctionUserWonArticles {
   createdAt: string;
   title: string;
+  storeCommissionPercentage: number;
+
   articles: CustomArticle[];
   displayHideButton: boolean;
 }
@@ -385,10 +454,9 @@ export interface UserPayment {
   user: Partial<User>;
 }
 
-export type ArticleOwner = Pick<
-  User,
-  'id' | 'storeName' | 'email' | 'name' | 'lastName' | 'phoneNumber'
->;
+export type ArticleOwner = Pick<User, 'id' | 'email' | 'name' | 'lastName'> & {
+  Store: Pick<Store, 'name' | 'phoneNumber'>;
+};
 
 export interface CustomArticle {
   id: number;
@@ -419,7 +487,14 @@ export type LiveAuction = Database['public']['Tables']['LiveAuction']['Row'] & {
   >;
   Auction: Pick<
     Auction,
-    'id' | 'status' | 'title' | 'image' | 'mode' | 'startDate' | 'category'
+    | 'id'
+    | 'status'
+    | 'title'
+    | 'image'
+    | 'mode'
+    | 'startDate'
+    | 'category'
+    | 'country'
   >;
 };
 
@@ -584,6 +659,7 @@ export const FromArticleCategoryToAuctionCategory: Record<
   JEWERLY: 'JEWERLY',
   WATCH: 'WATCHES',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export const AuctionCategoriesConst: Record<
@@ -594,38 +670,77 @@ export const AuctionCategoriesConst: Record<
   JEWERLY: 'JEWERLY',
   WATCHES: 'WATCHES',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export type AuctionCategories = Database['public']['Enums']['AuctionCategory'];
 
 export type AnyArticleFormValues = ArticleFormValues<AuctionCategories>;
 
-export const OfferStatusConst: Record<OfferStatus, string> = {
+export const OfferStatusConst = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
+  COUNTERED: 'COUNTERED',
+} as const satisfies Record<OfferStatus, OfferStatus>;
+
+export type OfferStatus = Database['public']['Enums']['OfferStatus'];
+
+export const OfferActorConst: Record<OfferActor, string> = {
+  USER: 'USER',
+  AUCTIONEER: 'AUCTIONEER',
 } as const;
+
+export type OfferActor = Database['public']['Enums']['OfferActor'];
+
+export const OfferProposalStatusConst: Record<OfferProposalStatus, string> = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED',
+  SUPERSEDED: 'SUPERSEDED',
+  ACCEPTED_BY_USER: 'ACCEPTED_BY_USER',
+} as const;
+
+export type OfferProposalStatus =
+  Database['public']['Enums']['OfferProposalStatus'];
 
 export const OfferStatusLabels: Record<Lang, Record<OfferStatus, string>> = {
   en: {
     PENDING: 'Pending',
     ACCEPTED: 'Accepted',
     REJECTED: 'Rejected',
+    COUNTERED: 'Countered',
   },
   es: {
     PENDING: 'Pendiente',
     ACCEPTED: 'Aceptado',
     REJECTED: 'Rechazado',
+    COUNTERED: 'Contraoferta',
   },
 } as const;
 
-export type OfferStatus = Database['public']['Enums']['OfferStatus'];
+export type MyOfferProposal = Pick<
+  ArticleOfferProposal,
+  'id' | 'amount' | 'status' | 'createdBy' | 'createdAt' | 'expiresAt'
+>;
+
+export type MyOffers = Pick<
+  ArticleOffer,
+  'id' | 'amount' | 'acceptedAmount' | 'status' | 'expiresAt' | 'createdAt'
+> & {
+  ArticleOfferProposal: MyOfferProposal[];
+  ArticleSecondChance: Pick<ArticleSecondChance, 'id' | 'status'> & {
+    Article: Pick<Article, 'title' | 'images'>;
+  };
+};
 
 export const ArticleCategoriesConst: Record<ArticleCategories, string> = {
   BAG: 'BAG',
   JEWERLY: 'JEWERLY',
   WATCH: 'WATCH',
   ART: 'ART',
+  ALL: 'ALL',
 } as const;
 
 export type ArticleCategories = Database['public']['Enums']['ArticleCategory'];
@@ -756,21 +871,6 @@ export interface AddressOption {
   data: string[];
 }
 
-export interface MyOffers {
-  id: string;
-  amount: number;
-  status: OfferStatus;
-  expiresAt: Date;
-  ArticleSecondChance: {
-    id: string;
-    status: ArticleSecondChanceStatus;
-    Article: {
-      title: string;
-      images: string[];
-    };
-  };
-}
-
 export interface CustomArticleLiveAuto extends Pick<
   Article,
   'id' | 'startingPrice' | 'brand' | 'estimatedValue' | 'title' | 'images'
@@ -824,10 +924,7 @@ export type CategoryFilter = {
 export type ApiEndpoint = `/${string}`;
 
 export type SubscribeStatus =
-  | 'SUBSCRIBED'
-  | 'TIMED_OUT'
-  | 'CLOSED'
-  | 'CHANNEL_ERROR';
+  'SUBSCRIBED' | 'TIMED_OUT' | 'CLOSED' | 'CHANNEL_ERROR';
 
 export interface SignupResponse {
   error: LangMap | null;
@@ -861,6 +958,7 @@ export interface SignupData {
 
   // Additional fields for AUCTIONEER
   storeName?: string;
+  storePhoneNumber?: string;
   webPage?: string;
   socialMedia?: string;
   address?: string;
@@ -869,6 +967,7 @@ export interface SignupData {
   country?: string;
   postalCode?: string;
   cif?: string;
+  legalName?: string;
 }
 
 export interface UseSignupReturn {
@@ -886,20 +985,28 @@ export interface UseSignupReturn {
 }
 
 export enum NotificationEventType {
+  // Auction
   AUCTION_STARTED = 'auction_started',
 
+  // Articles / bids
   ARTICLE_WON = 'article_won',
-
   OUTBID = 'outbid',
+  AUTO_BID_INELIGIBLE = 'auto_bid_inelegible',
 
+  // Offers
   OFFER_RECEIVED = 'offer_received',
-
   OFFER_ACCEPTED = 'offer_accepted',
-
   OFFER_REJECTED = 'offer_rejected',
 
+  // Counter offers
+  COUNTER_OFFER_RECEIVED_BY_USER = 'counter_offer_received_by_user',
+  COUNTER_OFFER_RECEIVED_BY_STORE = 'counter_offer_received_by_store',
+  COUNTER_OFFER_ACCEPTED_BY_USER = 'counter_offer_accepted_by_user',
+
+  // Payments
   PAYMENT_APPROVED = 'payment_approved',
   PAYMENT_RECEIVED = 'payment_received',
 
+  // Shipping
   SHIPPING_UPDATED = 'shipping_updated',
 }

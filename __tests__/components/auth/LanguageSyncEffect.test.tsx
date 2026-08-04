@@ -251,7 +251,7 @@ describe('LanguageSyncEffect', () => {
       expect(mockSyncLanguageFromDb).not.toHaveBeenCalled();
     });
 
-    it('should still clear the flag even if the PATCH fails (avoid being stuck)', async () => {
+    it('should keep the flag when the PATCH fails so login can retry', async () => {
       mockAuthState = session();
       mockGetManualLanguageFlag.mockResolvedValue(true);
       mockGetCurrentLocale.mockReturnValue('en');
@@ -262,9 +262,8 @@ describe('LanguageSyncEffect', () => {
 
       render(<LanguageSyncEffect />);
 
-      await waitFor(() => {
-        expect(mockClearManualLanguageFlag).toHaveBeenCalledTimes(1);
-      });
+      await waitFor(() => expect(mockSecurePatch).toHaveBeenCalled());
+      expect(mockClearManualLanguageFlag).not.toHaveBeenCalled();
     });
   });
 

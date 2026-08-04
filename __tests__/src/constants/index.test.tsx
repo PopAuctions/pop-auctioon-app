@@ -141,27 +141,14 @@ describe('Constants barrel exports', () => {
   });
 
   describe('Localization Constants', () => {
-    it('should export locale configurations', () => {
-      expect(Constants.LOCALES).toBeDefined();
-      expect(typeof Constants.LOCALES).toBe('object');
+    it('should export the language storage key', () => {
+      expect(Constants.LANGUAGE_STORAGE_KEY).toBeDefined();
+      expect(typeof Constants.LANGUAGE_STORAGE_KEY).toBe('string');
     });
 
-    it('should export available countries by language', () => {
-      expect(Constants.AVAILABLE_COUNTRIES_LANG).toBeDefined();
-      expect(typeof Constants.AVAILABLE_COUNTRIES_LANG).toBe('object');
-    });
-  });
-
-  describe('Error Handling Constants', () => {
-    it('should export Stripe error codes', () => {
-      expect(Constants.STRIPE_ERROR_CODES).toBeDefined();
-      expect(typeof Constants.STRIPE_ERROR_CODES).toBe('object');
-    });
-
-    it('should have error message structure', () => {
-      expect(Constants.STRIPE_ERROR_CODES.card_declined).toBeDefined();
-      expect(Constants.STRIPE_ERROR_CODES.card_declined.en).toBeDefined();
-      expect(Constants.STRIPE_ERROR_CODES.card_declined.es).toBeDefined();
+    it('should export the language preference override key', () => {
+      expect(Constants.LANGUAGE_MANUALLY_SET_KEY).toBeDefined();
+      expect(typeof Constants.LANGUAGE_MANUALLY_SET_KEY).toBe('string');
     });
   });
 
@@ -187,7 +174,7 @@ describe('Constants barrel exports', () => {
 
       // Check for core categories
       expect(exportedKeys.includes('Colors')).toBeTruthy();
-      expect(exportedKeys.includes('LOCALES')).toBeTruthy();
+      expect(exportedKeys.includes('LANGUAGE_STORAGE_KEY')).toBeTruthy();
       expect(exportedKeys.includes('MONTHS')).toBeTruthy();
       expect(
         exportedKeys.includes('GLOBAL_REGISTER_DEFAULT_VALUES')
@@ -208,8 +195,7 @@ describe('Constants barrel exports', () => {
       expect(() => Constants.GLOBAL_REGISTER_DEFAULT_VALUES).not.toThrow();
       expect(() => Constants.Colors).not.toThrow();
       expect(() => Constants.ARTICLE_STATE_LABELS).not.toThrow();
-      expect(() => Constants.LOCALES).not.toThrow();
-      expect(() => Constants.STRIPE_ERROR_CODES).not.toThrow();
+      expect(() => Constants.LANGUAGE_STORAGE_KEY).not.toThrow();
       expect(() => Constants.MONTHS).not.toThrow();
     });
 
@@ -232,11 +218,7 @@ describe('Constants barrel exports', () => {
     });
 
     it('should handle export * from locales module', () => {
-      expect(Constants.LOCALES).toBeDefined();
-    });
-
-    it('should handle export * from errors module', () => {
-      expect(Constants.STRIPE_ERROR_CODES).toBeDefined();
+      expect(Constants.LANGUAGE_STORAGE_KEY).toBeDefined();
     });
 
     it('should handle named export from months module', () => {

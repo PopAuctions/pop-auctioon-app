@@ -1,9 +1,5 @@
-import { View, TextInput } from 'react-native';
-import type {
-  BiddingAmounts,
-  HighestBidderState,
-  LangMap,
-} from '@/types/types';
+import { View } from 'react-native';
+import type { BiddingAmounts, HighestBidderState } from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
@@ -12,11 +8,12 @@ import { useSendBid } from '@/hooks/components/useSendBid';
 import { AMOUNT_PLACEHOLDER } from '@/constants';
 import { AutomaticBidModal } from '../modal/AutomaticBidModal';
 import { useState } from 'react';
-import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { useUpsertAutoBid } from '@/hooks/pages/auto-bid/useUpsertAutoBid';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { BidAmountStepper } from './BidAmountStepper';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -37,11 +34,11 @@ export function SendBid({
   commissionPercentage,
   autoBidsAmount,
 }: SendBidProps) {
+  const { upsertAutoBid } = useUpsertAutoBid();
   const { locale } = useTranslation();
   const [automaticBidModalVisible, setAutomaticBidModalVisible] =
     useState(false);
   const [isAutomaticBidPending, setIsAutomaticBidPending] = useState(false);
-  const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
   const safeCommission = commissionPercentage ?? 0;
 
@@ -61,9 +58,11 @@ export function SendBid({
     fiftyPercent,
     articleAvailable,
     isTooLow,
-    isTooHigh,
+    canDecreaseBid,
+    canIncreaseBid,
+    decreaseBidAmount,
+    increaseBidAmount,
     setAmountToBid,
-    handleInputChange,
     sendBid,
     formatter,
   } = useSendBid({
@@ -92,12 +91,9 @@ export function SendBid({
 
     setIsAutomaticBidPending(true);
     try {
-      const data = await securePost<LangMap>({
-        endpoint: SECURE_ENDPOINTS.AUTO_BID.CREATE,
-        data: {
-          articleId: Number(articleId),
-          maxAmount: Number(amount),
-        },
+      const data = await upsertAutoBid({
+        articleId: Number(articleId),
+        maxAmount: Number(amount),
       });
 
       if (data.error) {
@@ -105,7 +101,7 @@ export function SendBid({
         return false;
       }
 
-      callToast({ variant: 'success', description: data.data });
+      callToast({ variant: 'success', description: data.success });
       return true;
     } catch (e) {
       callToast({
@@ -146,7 +142,9 @@ export function SendBid({
               {!isReady
                 ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(tenPercent + currentValue, safeCommission)
+                    ceilToNearestTen(
+                      toTotal(tenPercent + currentValue, safeCommission)
+                    )
                   )}
             </Button>
 
@@ -162,7 +160,9 @@ export function SendBid({
               {!isReady
                 ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(twentyFivePercent + currentValue, safeCommission)
+                    ceilToNearestTen(
+                      toTotal(twentyFivePercent + currentValue, safeCommission)
+                    )
                   )}
             </Button>
 
@@ -178,7 +178,9 @@ export function SendBid({
               {!isReady
                 ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(fiftyPercent + currentValue, safeCommission)
+                    ceilToNearestTen(
+                      toTotal(fiftyPercent + currentValue, safeCommission)
+                    )
                   )}
             </Button>
           </View>
@@ -192,15 +194,14 @@ export function SendBid({
             {bidLang.anyBidAmount}
           </CustomText>
 
-          <TextInput
-            keyboardType='number-pad'
+          <BidAmountStepper
             value={bidAmount}
-            placeholder='...'
-            editable={articleAvailable}
-            onChangeText={handleInputChange}
-            className={`mt-2 h-10 rounded-md border px-3 text-base text-black ${
-              isTooLow || isTooHigh ? 'border-red-500' : 'border-neutral-300'
-            }`}
+            placeholder={AMOUNT_PLACEHOLDER}
+            disabled={!articleAvailable || !isReady || isPending}
+            canDecrease={canDecreaseBid}
+            canIncrease={canIncreaseBid}
+            onDecrease={decreaseBidAmount}
+            onIncrease={increaseBidAmount}
           />
 
           {isReady ? (
@@ -246,7 +247,7 @@ export function SendBid({
           onPress={() => {
             setAutomaticBidModalVisible(true);
           }}
-          disabled={isAutomaticBidPending}
+          disabled={isAutomaticBidPending || !articleAvailable}
           isLoading={isAutomaticBidPending}
         >
           {bidLang.createAutomaticBid}
@@ -265,8 +266,8 @@ export function SendBid({
           en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
         }}
         extraMessage={{
-          es: 'Debes haber realizado al menos una puja manual antes de configurar una puja automática. Este proceso no crea una puja inmediata.',
-          en: 'You must place at least one manual bid before setting an automatic bid. This process does not place an immediate bid.',
+          es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
+          en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
         }}
         minAmount={computedMinBid}
       />
@@ -300,11 +301,15 @@ function SubmitBidButton({
   onPress: () => void;
   articleAvailable: boolean;
 }) {
+  const numericAmount = Number(bidAmount);
+
   const disabled =
     isPending ||
     bidAmount === '' ||
-    parseInt(bidAmount) < minBid ||
-    parseInt(bidAmount) > maxBid ||
+    !Number.isSafeInteger(numericAmount) ||
+    numericAmount % 10 !== 0 ||
+    numericAmount < minBid ||
+    numericAmount > maxBid ||
     !articleAvailable;
 
   return (

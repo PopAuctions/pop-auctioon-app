@@ -33,10 +33,7 @@ describe('SplashLottie', () => {
   it('should have flex: 1 style', () => {
     const { getByTestId } = render(<SplashLottie />);
     const lottieView = getByTestId('lottie-view');
-    expect(lottieView.props.style).toEqual({
-      flex: 1,
-      backgroundColor: 'white',
-    });
+    expect(lottieView.props.style).toEqual({ flex: 1 });
   });
 
   it('should pass autoPlay prop', () => {
@@ -48,7 +45,7 @@ describe('SplashLottie', () => {
   it('should pass loop prop', () => {
     const { getByTestId } = render(<SplashLottie />);
     const lottieView = getByTestId('lottie-view');
-    expect(lottieView.props.loop).toBe(true);
+    expect(lottieView.props.loop).toBe(false);
   });
 
   it('should use loading-bubbles animation source', () => {

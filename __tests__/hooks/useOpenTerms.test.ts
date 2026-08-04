@@ -36,10 +36,10 @@ describe('useOpenTerms', () => {
 
     await waitFor(() => {
       expect(Linking.canOpenURL).toHaveBeenCalledWith(
-        'https://www.popauction.com/documents/TC-2025-07-14.pdf'
+        'https://www.popauction.com/documents/TC-2026-07-01.pdf'
       );
       expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://www.popauction.com/documents/TC-2025-07-14.pdf'
+        'https://www.popauction.com/documents/TC-2026-07-01.pdf'
       );
       expect(mockCallToast).not.toHaveBeenCalled();
     });
@@ -54,7 +54,7 @@ describe('useOpenTerms', () => {
 
     await waitFor(() => {
       expect(Linking.canOpenURL).toHaveBeenCalledWith(
-        'https://www.popauction.com/documents/TC-2025-07-14.pdf'
+        'https://www.popauction.com/documents/TC-2026-07-01.pdf'
       );
       expect(Linking.openURL).not.toHaveBeenCalled();
       expect(mockCallToast).toHaveBeenCalledWith({

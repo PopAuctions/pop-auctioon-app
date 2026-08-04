@@ -13,7 +13,6 @@ import {
   ContactUsSchema,
   type ContactUsSchemaType,
 } from '@/utils/schemas/contact-us-schema';
-import { Checkbox } from 'expo-checkbox';
 import { Lang } from '@/types/types';
 
 // Helper function to safely parse bilingual error messages
@@ -84,7 +83,7 @@ export function ContactUsContent() {
         });
         reset();
       }
-    } catch (error) {
+    } catch {
       callToast({
         variant: 'error',
         description: 'screens.contactUs.errorMessage',

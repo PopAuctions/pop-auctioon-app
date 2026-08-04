@@ -10,8 +10,8 @@ export const useFetchOnlineStoreArticlesInfinite = () => {
       brand,
       price,
       model,
-      codeNumber,
-      category,
+      color,
+      material,
       sortBy,
       offset = 0,
       limit = 10,
@@ -19,8 +19,8 @@ export const useFetchOnlineStoreArticlesInfinite = () => {
       brand?: string;
       price?: string;
       model?: string;
-      codeNumber?: string;
-      category?: string;
+      color?: string;
+      material?: string;
       sortBy?: string;
       offset?: number;
       limit?: number;
@@ -33,8 +33,8 @@ export const useFetchOnlineStoreArticlesInfinite = () => {
       if (brand) params.append('brand', brand);
       if (price) params.append('price', price);
       if (model) params.append('model', model);
-      if (codeNumber) params.append('codeNumber', codeNumber);
-      if (category) params.append('category', category);
+      if (color) params.append('color', color);
+      if (material) params.append('material', material);
 
       params.append('sortBy', sortBy ?? '');
 

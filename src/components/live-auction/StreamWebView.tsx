@@ -39,8 +39,10 @@ export const StreamWebView = ({
       // Propiedades de rendimiento
       androidLayerType='hardware'
       mixedContentMode='always'
-      cacheEnabled={true}
-      cacheMode='LOAD_DEFAULT'
+      // A live stream must always request the current page. In particular, do
+      // not reuse cached redirects after the stream URL or server changes.
+      cacheEnabled={false}
+      cacheMode='LOAD_NO_CACHE'
       // Eventos
       onLoad={() => {
         setStreamLoaded(true);

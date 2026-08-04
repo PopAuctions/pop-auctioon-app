@@ -1,6 +1,6 @@
 import { AuctionStatus } from '@/constants/auctions';
 import { useAuctionSubscription } from '@/hooks/subscribers/useAuctionSubscription';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from 'expo-router';
 
 export const AuctionSubscriber = ({
   auctionId,

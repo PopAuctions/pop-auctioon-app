@@ -1,8 +1,8 @@
 import { AuctionCategories, AuctionModeEnum, Lang } from '@/types/types';
 
 export const LIVE_URL: Record<AuctionModeEnum, string> = {
-  AUTOMATIC: '/live-auto/',
-  LIVE: '/live/',
+  AUTOMATIC: '/live-auto',
+  LIVE: '/live',
 };
 
 export const AUCTION_MODE_LABEL: Record<
@@ -71,12 +71,14 @@ export const AUCTION_CATEGORIES_LABEL: Record<
     JEWERLY: 'Joyas',
     WATCHES: 'Relojes',
     ART: 'Arte',
+    ALL: 'Todas',
   },
   en: {
     BAGS: 'Bags',
     JEWERLY: 'Jewelry',
     WATCHES: 'Watches',
     ART: 'Art',
+    ALL: 'All',
   },
 };
 

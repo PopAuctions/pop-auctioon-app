@@ -5,11 +5,12 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { Lang } from '@/types/types';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type ArticlePriceBreakdownProps = {
   lang: Lang;
   price: number;
-  commissionValue: number | null;
+  buyerCommissionValue: number | null;
   texts: {
     commission: string;
     shipping: string;
@@ -22,7 +23,7 @@ export function ArticlePriceBreakdown({
   className = '',
   lang,
   price,
-  commissionValue,
+  buyerCommissionValue,
   texts,
 }: ArticlePriceBreakdownProps) {
   const [open, setOpen] = useState(false);
@@ -30,8 +31,11 @@ export function ArticlePriceBreakdown({
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
-    [price, commissionValue]
+    () =>
+      ceilToNearestTen(
+        getArticleCommissionedPrice(price, buyerCommissionValue ?? 0)
+      ),
+    [price, buyerCommissionValue]
   );
 
   const commissionFee = useMemo(

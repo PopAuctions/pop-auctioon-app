@@ -7,6 +7,7 @@ import { AMOUNT_PLACEHOLDER } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { SimpleCountdown } from '@/components/ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type ArticleItemProps = {
   article: SimpleArticle;
@@ -29,7 +30,10 @@ export function ArticleSliderItem({
   const price = article.ArticleBid.currentValue;
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
+    () =>
+      ceilToNearestTen(
+        getArticleCommissionedPrice(price, commissionValue ?? 0)
+      ),
     [price, commissionValue]
   );
 

@@ -217,12 +217,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           }
         }
       },
-      (error) => {
+      (pushTokenError) => {
         sentryErrorReport(
-          error,
+          pushTokenError,
           '[NotificationContext.L183] registerForPushNotificationsAsync - Failed to get Expo push token'
         );
-        setError(error);
+        setError(pushTokenError);
       }
     );
 
@@ -353,7 +353,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           if (response.error) {
             // Error already captured by Sentry in registerPushToken
           }
-        } catch (error) {
+        } catch {
           // Error already captured by Sentry
         }
       }

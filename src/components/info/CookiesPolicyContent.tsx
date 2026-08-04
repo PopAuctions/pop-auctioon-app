@@ -130,6 +130,19 @@ export function CookiesPolicyContent({
           {content.manageCookies.note}
         </CustomText>
 
+        <CustomText
+          type='h3'
+          className='mb-2 text-black'
+        >
+          {content.updates.title}
+        </CustomText>
+        <CustomText
+          type='body'
+          className='mb-4'
+        >
+          {content.updates.content}
+        </CustomText>
+
         {/* Espacio adicional al final */}
         <View className='h-8' />
       </View>

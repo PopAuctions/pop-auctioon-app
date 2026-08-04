@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
+export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
@@ -212,29 +212,38 @@ export interface Database {
       };
       ArticleOffer: {
         Row: {
+          acceptedAmount: number | null;
           amount: number;
           articleSecondChanceId: number;
+          closedAt: string | null;
           createdAt: string;
           expiresAt: string | null;
           id: number;
+          rejectedBy: Database['public']['Enums']['OfferActor'] | null;
           status: Database['public']['Enums']['OfferStatus'];
           userId: string;
         };
         Insert: {
+          acceptedAmount?: number | null;
           amount: number;
           articleSecondChanceId: number;
+          closedAt?: string | null;
           createdAt?: string;
           expiresAt?: string | null;
           id?: number;
+          rejectedBy?: Database['public']['Enums']['OfferActor'] | null;
           status?: Database['public']['Enums']['OfferStatus'];
           userId: string;
         };
         Update: {
+          acceptedAmount?: number | null;
           amount?: number;
           articleSecondChanceId?: number;
+          closedAt?: string | null;
           createdAt?: string;
           expiresAt?: string | null;
           id?: number;
+          rejectedBy?: Database['public']['Enums']['OfferActor'] | null;
           status?: Database['public']['Enums']['OfferStatus'];
           userId?: string;
         };
@@ -251,6 +260,44 @@ export interface Database {
             columns: ['userId'];
             isOneToOne: false;
             referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      ArticleOfferProposal: {
+        Row: {
+          amount: number;
+          articleOfferId: number;
+          createdAt: string;
+          createdBy: Database['public']['Enums']['OfferActor'];
+          expiresAt: string | null;
+          id: number;
+          status: Database['public']['Enums']['OfferProposalStatus'];
+        };
+        Insert: {
+          amount: number;
+          articleOfferId: number;
+          createdAt?: string;
+          createdBy: Database['public']['Enums']['OfferActor'];
+          expiresAt?: string | null;
+          id?: number;
+          status?: Database['public']['Enums']['OfferProposalStatus'];
+        };
+        Update: {
+          amount?: number;
+          articleOfferId?: number;
+          createdAt?: string;
+          createdBy?: Database['public']['Enums']['OfferActor'];
+          expiresAt?: string | null;
+          id?: number;
+          status?: Database['public']['Enums']['OfferProposalStatus'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'articleofferproposal_articleofferid_fkey';
+            columns: ['articleOfferId'];
+            isOneToOne: false;
+            referencedRelation: 'ArticleOffer';
             referencedColumns: ['id'];
           },
         ];
@@ -422,6 +469,54 @@ export interface Database {
           },
         ];
       };
+      AutomaticBid: {
+        Row: {
+          articleId: number;
+          createdAt: string;
+          id: string;
+          isActive: boolean;
+          isEligible: boolean;
+          maxAmount: number;
+          updatedAt: string;
+          userId: string;
+        };
+        Insert: {
+          articleId: number;
+          createdAt?: string;
+          id?: string;
+          isActive?: boolean;
+          isEligible?: boolean;
+          maxAmount: number;
+          updatedAt?: string;
+          userId: string;
+        };
+        Update: {
+          articleId?: number;
+          createdAt?: string;
+          id?: string;
+          isActive?: boolean;
+          isEligible?: boolean;
+          maxAmount?: number;
+          updatedAt?: string;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'AutomaticBid_articleId_fkey';
+            columns: ['articleId'];
+            isOneToOne: false;
+            referencedRelation: 'Article';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'AutomaticBid_userId_fkey';
+            columns: ['userId'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       Bids: {
         Row: {
           amount: number;
@@ -429,6 +524,7 @@ export interface Database {
           created_at: string;
           currentPrice: number;
           id: number;
+          source: Database['public']['Enums']['BidSource'];
           userId: string;
         };
         Insert: {
@@ -437,6 +533,7 @@ export interface Database {
           created_at?: string;
           currentPrice: number;
           id?: number;
+          source?: Database['public']['Enums']['BidSource'];
           userId: string;
         };
         Update: {
@@ -445,6 +542,7 @@ export interface Database {
           created_at?: string;
           currentPrice?: number;
           id?: number;
+          source?: Database['public']['Enums']['BidSource'];
           userId?: string;
         };
         Relationships: [
@@ -710,6 +808,72 @@ export interface Database {
           },
         ];
       };
+      PaymentRefund: {
+        Row: {
+          amount: number;
+          calculationSnapshot: Json;
+          createdAt: string;
+          createdBy: string;
+          id: string;
+          manualOverrideAmount: number | null;
+          paymentId: number;
+          redsysOrder: string;
+          redsysResponse: Json | null;
+          requiresSettlementAdjustment: boolean;
+          selectedArticleIds: number[];
+          status: Database['public']['Enums']['PaymentRefundStatus'];
+          updatedAt: string;
+          usedManualOverride: boolean;
+        };
+        Insert: {
+          amount: number;
+          calculationSnapshot: Json;
+          createdAt?: string;
+          createdBy: string;
+          id?: string;
+          manualOverrideAmount?: number | null;
+          paymentId: number;
+          redsysOrder: string;
+          redsysResponse?: Json | null;
+          requiresSettlementAdjustment?: boolean;
+          selectedArticleIds: number[];
+          status?: Database['public']['Enums']['PaymentRefundStatus'];
+          updatedAt?: string;
+          usedManualOverride?: boolean;
+        };
+        Update: {
+          amount?: number;
+          calculationSnapshot?: Json;
+          createdAt?: string;
+          createdBy?: string;
+          id?: string;
+          manualOverrideAmount?: number | null;
+          paymentId?: number;
+          redsysOrder?: string;
+          redsysResponse?: Json | null;
+          requiresSettlementAdjustment?: boolean;
+          selectedArticleIds?: number[];
+          status?: Database['public']['Enums']['PaymentRefundStatus'];
+          updatedAt?: string;
+          usedManualOverride?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'PaymentRefund_createdBy_fkey';
+            columns: ['createdBy'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'PaymentRefund_paymentId_fkey';
+            columns: ['paymentId'];
+            isOneToOne: false;
+            referencedRelation: 'UserPayment';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       PhoneOTP: {
         Row: {
           attemptCount: number | null;
@@ -792,90 +956,401 @@ export interface Database {
           },
         ];
       };
-      User: {
+      RedsysSessions: {
         Row: {
-          acceptedTerms: string;
+          created_at: string;
+          expires_at: string;
+          lang: string;
+          redsys_order: string;
+          signed_params: Json;
+          token: string;
+          used: boolean;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          expires_at: string;
+          lang: string;
+          redsys_order: string;
+          signed_params: Json;
+          token: string;
+          used?: boolean;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          expires_at?: string;
+          lang?: string;
+          redsys_order?: string;
+          signed_params?: Json;
+          token?: string;
+          used?: boolean;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      Store: {
+        Row: {
           active: boolean;
           address: string | null;
           cif: string | null;
+          commissionPercentage: number;
           country: string | null;
+          createdAt: string;
+          id: string;
+          isHostAuctioneer: boolean;
+          legalName: string | null;
+          logo: string | null;
+          name: string | null;
+          phoneNumber: string | null;
+          postalCode: string | null;
+          province: string | null;
+          socialMedia: string | null;
+          town: string | null;
+          updatedAt: string;
+          userId: string;
+          webPage: string | null;
+        };
+        Insert: {
+          active?: boolean;
+          address?: string | null;
+          cif?: string | null;
+          commissionPercentage?: number;
+          country?: string | null;
+          createdAt?: string;
+          id?: string;
+          isHostAuctioneer?: boolean;
+          legalName?: string | null;
+          logo?: string | null;
+          name?: string | null;
+          phoneNumber?: string | null;
+          postalCode?: string | null;
+          province?: string | null;
+          socialMedia?: string | null;
+          town?: string | null;
+          updatedAt?: string;
+          userId: string;
+          webPage?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          address?: string | null;
+          cif?: string | null;
+          commissionPercentage?: number;
+          country?: string | null;
+          createdAt?: string;
+          id?: string;
+          isHostAuctioneer?: boolean;
+          legalName?: string | null;
+          logo?: string | null;
+          name?: string | null;
+          phoneNumber?: string | null;
+          postalCode?: string | null;
+          province?: string | null;
+          socialMedia?: string | null;
+          town?: string | null;
+          updatedAt?: string;
+          userId?: string;
+          webPage?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'store_userid_fkey';
+            columns: ['userId'];
+            isOneToOne: true;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      StorePayout: {
+        Row: {
+          cancelledAt: string | null;
+          commissionInvoiceCorrelativeNumber: number | null;
+          commissionInvoiceId: string | null;
+          commissionInvoiceIssuedAt: string | null;
+          createdAt: string;
+          createdBy: string | null;
+          id: string;
+          liquidationCorrelativeNumber: number | null;
+          liquidationId: string | null;
+          liquidationIssuedAt: string | null;
+          method: Database['public']['Enums']['StorePayoutMethod'];
+          notes: string | null;
+          paidAt: string;
+          receiptUrl: string | null;
+          reference: string | null;
+          status: Database['public']['Enums']['StorePayoutStatus'];
+          storeId: string;
+          totalAmount: number;
+          totalItems: number;
+          updatedAt: string;
+        };
+        Insert: {
+          cancelledAt?: string | null;
+          commissionInvoiceCorrelativeNumber?: number | null;
+          commissionInvoiceId?: string | null;
+          commissionInvoiceIssuedAt?: string | null;
+          createdAt?: string;
+          createdBy?: string | null;
+          id?: string;
+          liquidationCorrelativeNumber?: number | null;
+          liquidationId?: string | null;
+          liquidationIssuedAt?: string | null;
+          method?: Database['public']['Enums']['StorePayoutMethod'];
+          notes?: string | null;
+          paidAt?: string;
+          receiptUrl?: string | null;
+          reference?: string | null;
+          status?: Database['public']['Enums']['StorePayoutStatus'];
+          storeId: string;
+          totalAmount: number;
+          totalItems: number;
+          updatedAt?: string;
+        };
+        Update: {
+          cancelledAt?: string | null;
+          commissionInvoiceCorrelativeNumber?: number | null;
+          commissionInvoiceId?: string | null;
+          commissionInvoiceIssuedAt?: string | null;
+          createdAt?: string;
+          createdBy?: string | null;
+          id?: string;
+          liquidationCorrelativeNumber?: number | null;
+          liquidationId?: string | null;
+          liquidationIssuedAt?: string | null;
+          method?: Database['public']['Enums']['StorePayoutMethod'];
+          notes?: string | null;
+          paidAt?: string;
+          receiptUrl?: string | null;
+          reference?: string | null;
+          status?: Database['public']['Enums']['StorePayoutStatus'];
+          storeId?: string;
+          totalAmount?: number;
+          totalItems?: number;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'storepayout_createdby_fkey';
+            columns: ['createdBy'];
+            isOneToOne: false;
+            referencedRelation: 'User';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storepayout_storeid_fkey';
+            columns: ['storeId'];
+            isOneToOne: false;
+            referencedRelation: 'Store';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      StoreSettlementItem: {
+        Row: {
+          articleId: number;
+          buyerCommissionAmount: number;
+          buyerCommissionPercentage: number;
+          createdAt: string;
+          grossAmount: number;
+          id: string;
+          paidAt: string | null;
+          payableAt: string;
+          payoutId: string | null;
+          platformTotalCommissionAmount: number;
+          saleType: Database['public']['Enums']['StoreSettlementSaleType'];
+          sellerCommissionAmount: number;
+          sellerCommissionPercentage: number;
+          sellerNetAmount: number;
+          soldAt: string;
+          status: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt: string;
+          userPaymentId: number;
+        };
+        Insert: {
+          articleId: number;
+          buyerCommissionAmount?: number;
+          buyerCommissionPercentage?: number;
+          createdAt?: string;
+          grossAmount: number;
+          id?: string;
+          paidAt?: string | null;
+          payableAt: string;
+          payoutId?: string | null;
+          platformTotalCommissionAmount?: number;
+          saleType: Database['public']['Enums']['StoreSettlementSaleType'];
+          sellerCommissionAmount?: number;
+          sellerCommissionPercentage?: number;
+          sellerNetAmount: number;
+          soldAt: string;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt?: string;
+          userPaymentId: number;
+        };
+        Update: {
+          articleId?: number;
+          buyerCommissionAmount?: number;
+          buyerCommissionPercentage?: number;
+          createdAt?: string;
+          grossAmount?: number;
+          id?: string;
+          paidAt?: string | null;
+          payableAt?: string;
+          payoutId?: string | null;
+          platformTotalCommissionAmount?: number;
+          saleType?: Database['public']['Enums']['StoreSettlementSaleType'];
+          sellerCommissionAmount?: number;
+          sellerCommissionPercentage?: number;
+          sellerNetAmount?: number;
+          soldAt?: string;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId?: string;
+          updatedAt?: string;
+          userPaymentId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'storesettlementitem_articleid_fkey';
+            columns: ['articleId'];
+            isOneToOne: false;
+            referencedRelation: 'Article';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementitem_payoutid_fkey';
+            columns: ['payoutId'];
+            isOneToOne: false;
+            referencedRelation: 'StorePayout';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementitem_storeid_fkey';
+            columns: ['storeId'];
+            isOneToOne: false;
+            referencedRelation: 'Store';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementitem_userpaymentid_fkey';
+            columns: ['userPaymentId'];
+            isOneToOne: false;
+            referencedRelation: 'UserPayment';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      StoreSettlementShipping: {
+        Row: {
+          createdAt: string;
+          id: string;
+          paidAt: string | null;
+          payoutId: string | null;
+          shippingAmount: number;
+          status: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt: string;
+          userPaymentId: number;
+        };
+        Insert: {
+          createdAt?: string;
+          id?: string;
+          paidAt?: string | null;
+          payoutId?: string | null;
+          shippingAmount: number;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId: string;
+          updatedAt?: string;
+          userPaymentId: number;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          paidAt?: string | null;
+          payoutId?: string | null;
+          shippingAmount?: number;
+          status?: Database['public']['Enums']['StoreSettlementStatus'];
+          storeId?: string;
+          updatedAt?: string;
+          userPaymentId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'storesettlementshipping_payoutid_fkey';
+            columns: ['payoutId'];
+            isOneToOne: false;
+            referencedRelation: 'StorePayout';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementshipping_storeid_fkey';
+            columns: ['storeId'];
+            isOneToOne: false;
+            referencedRelation: 'Store';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'storesettlementshipping_userpaymentid_fkey';
+            columns: ['userPaymentId'];
+            isOneToOne: true;
+            referencedRelation: 'UserPayment';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      User: {
+        Row: {
+          acceptedTerms: string;
           dni: string | null;
           email: string;
           emailVerified: string | null;
           id: string;
           isDisabled: boolean;
-          isHostAuctioneer: boolean;
           isReviewAccount: boolean;
           language: string | null;
           lastName: string;
           name: string;
           phoneNumber: string | null;
           phoneValidated: boolean;
-          postalCode: string | null;
           profilePicture: string | null;
-          province: string | null;
           role: Database['public']['Enums']['UserRole'];
-          socialMedia: string | null;
-          storeName: string | null;
-          town: string | null;
           username: string;
-          webPage: string | null;
         };
         Insert: {
           acceptedTerms: string;
-          active?: boolean;
-          address?: string | null;
-          cif?: string | null;
-          country?: string | null;
           dni?: string | null;
           email: string;
           emailVerified?: string | null;
           id: string;
           isDisabled?: boolean;
-          isHostAuctioneer?: boolean;
           isReviewAccount?: boolean;
           language?: string | null;
           lastName: string;
           name: string;
           phoneNumber?: string | null;
           phoneValidated?: boolean;
-          postalCode?: string | null;
           profilePicture?: string | null;
-          province?: string | null;
           role?: Database['public']['Enums']['UserRole'];
-          socialMedia?: string | null;
-          storeName?: string | null;
-          town?: string | null;
           username: string;
-          webPage?: string | null;
         };
         Update: {
           acceptedTerms?: string;
-          active?: boolean;
-          address?: string | null;
-          cif?: string | null;
-          country?: string | null;
           dni?: string | null;
           email?: string;
           emailVerified?: string | null;
           id?: string;
           isDisabled?: boolean;
-          isHostAuctioneer?: boolean;
           isReviewAccount?: boolean;
           language?: string | null;
           lastName?: string;
           name?: string;
           phoneNumber?: string | null;
           phoneValidated?: boolean;
-          postalCode?: string | null;
           profilePicture?: string | null;
-          province?: string | null;
           role?: Database['public']['Enums']['UserRole'];
-          socialMedia?: string | null;
-          storeName?: string | null;
-          town?: string | null;
           username?: string;
-          webPage?: string | null;
         };
         Relationships: [];
       };
@@ -1245,6 +1720,7 @@ export interface Database {
       };
       UserPayment: {
         Row: {
+          amountRefunded: number;
           articlesAmount: number | null;
           articlesPaid: number[];
           auctionId: number | null;
@@ -1258,6 +1734,7 @@ export interface Database {
           id: number;
           paymentIntent: string | null;
           receiptUrl: string | null;
+          refundStatus: Database['public']['Enums']['UserPaymentRefundStatus'];
           shippingAmount: number | null;
           shippingCourier: string | null;
           shippingNumber: string | null;
@@ -1268,6 +1745,7 @@ export interface Database {
           userId: string;
         };
         Insert: {
+          amountRefunded?: number;
           articlesAmount?: number | null;
           articlesPaid: number[];
           auctionId?: number | null;
@@ -1281,6 +1759,7 @@ export interface Database {
           id?: number;
           paymentIntent?: string | null;
           receiptUrl?: string | null;
+          refundStatus?: Database['public']['Enums']['UserPaymentRefundStatus'];
           shippingAmount?: number | null;
           shippingCourier?: string | null;
           shippingNumber?: string | null;
@@ -1291,6 +1770,7 @@ export interface Database {
           userId: string;
         };
         Update: {
+          amountRefunded?: number;
           articlesAmount?: number | null;
           articlesPaid?: number[];
           auctionId?: number | null;
@@ -1304,6 +1784,7 @@ export interface Database {
           id?: number;
           paymentIntent?: string | null;
           receiptUrl?: string | null;
+          refundStatus?: Database['public']['Enums']['UserPaymentRefundStatus'];
           shippingAmount?: number | null;
           shippingCourier?: string | null;
           shippingNumber?: string | null;
@@ -1363,6 +1844,10 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
+      accept_article_offer: {
+        Args: { p_article_offer_id: number };
+        Returns: Json;
+      };
       auto_advance_article: {
         Args: { p_auction_id: number; p_hard_timeout_ms: number };
         Returns: Json;
@@ -1382,6 +1867,29 @@ export interface Database {
       auto_start_countdown: { Args: { p_auction_id: number }; Returns: Json };
       cancel_article_acquisition_send_to_online_store: {
         Args: { article_id: number; sold_price: number; user_id: string };
+        Returns: Json;
+      };
+      counter_article_offer: {
+        Args: { p_amount: number; p_article_offer_id: number };
+        Returns: number;
+      };
+      counter_article_offer_by_user: {
+        Args: { p_amount: number; p_article_offer_id: number };
+        Returns: number;
+      };
+      create_article_offer_with_proposal: {
+        Args: { p_amount: number; p_article_second_chance_id: number };
+        Returns: number;
+      };
+      create_automatic_bid: {
+        Args: {
+          p_amount: number;
+          p_article_id: number;
+          p_triggering_bid_id?: number;
+          p_user_id: string;
+          p_user_image?: string;
+          p_username: string;
+        };
         Returns: Json;
       };
       create_bid: {
@@ -1408,6 +1916,10 @@ export interface Database {
         };
         Returns: Json;
       };
+      get_article_auto_bid_count: {
+        Args: { p_article_id: number };
+        Returns: number;
+      };
       grant_article_to_second_user: {
         Args: { article_id: number; new_price: number; second_user_id: string };
         Returns: Json;
@@ -1416,10 +1928,16 @@ export interface Database {
         Args: { article_id_input: number };
         Returns: string;
       };
+      reject_article_offer: {
+        Args: { p_article_offer_id: number };
+        Returns: undefined;
+      };
       sell_article: { Args: { article_id: number }; Returns: Json };
+      show_limit: { Args: never; Returns: number };
+      show_trgm: { Args: { '': string }; Returns: string[] };
     };
     Enums: {
-      ArticleCategory: 'BAG' | 'ART' | 'JEWERLY' | 'WATCH';
+      ArticleCategory: 'BAG' | 'ART' | 'JEWERLY' | 'WATCH' | 'ALL';
       ArticleSecondChanceStatus: 'NOT_AVAILABLE' | 'AVAILABLE' | 'SOLD';
       ArticleSmell: 'TOBACCO' | 'PERFUME' | 'HUMIDITY' | 'NO_SMELL' | 'OTHER';
       ArticleState:
@@ -1434,7 +1952,7 @@ export interface Database {
         | 'CHANGES_MADE'
         | 'APPROVED'
         | 'PUBLISHED';
-      AuctionCategory: 'BAGS' | 'ART' | 'JEWERLY' | 'WATCHES';
+      AuctionCategory: 'BAGS' | 'ART' | 'JEWERLY' | 'WATCHES' | 'ALL';
       AuctionMode: 'LIVE' | 'AUTOMATIC';
       AuctionStatus:
         | 'NOT_AVAILABLE'
@@ -1447,10 +1965,26 @@ export interface Database {
         | 'FINISHED'
         | 'IN_REVIEW'
         | 'PARTIALLY_AVAILABLE_CHANGES_MADE';
+      BidSource: 'MANUAL' | 'AUTOMATIC';
       InvoiceType: 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
       LiveAuctionState: 'PENDING' | 'LIVE' | 'FINISHED';
-      OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED';
+      OfferActor: 'USER' | 'AUCTIONEER';
+      OfferProposalStatus:
+        | 'PENDING'
+        | 'ACCEPTED'
+        | 'REJECTED'
+        | 'EXPIRED'
+        | 'SUPERSEDED'
+        | 'ACCEPTED_BY_USER';
+      OfferStatus: 'PENDING' | 'REJECTED' | 'ACCEPTED' | 'COUNTERED';
+      PaymentRefundStatus: 'PENDING' | 'SUCCEEDED' | 'FAILED';
       PaymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+      StorePayoutMethod: 'BANK_TRANSFER' | 'STRIPE' | 'PAYPAL' | 'CASH';
+      StorePayoutStatus: 'PAID' | 'CANCELLED';
+      StoreSettlementSaleType: 'AUCTION' | 'ONLINE_STORE';
+      StoreSettlementStatus: 'PENDING' | 'PROBLEM' | 'PAID' | 'CANCELLED';
+      UserPaymentRefundStatus:
+        'NOT_REFUNDED' | 'PARTIALLY_REFUNDED' | 'REFUNDED';
       UserRole: 'ADMIN' | 'USER' | 'AUCTIONEER';
       WonArticleStatus: 'NOT_PAID' | 'DRAFT' | 'PAID';
     };
@@ -1458,7 +1992,7 @@ export interface Database {
       [_ in never]: never;
     };
   };
-}
+};
 
 type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 
@@ -1471,12 +2005,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1498,13 +2032,12 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1523,13 +2056,12 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema['Tables'] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1548,13 +2080,12 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    keyof DefaultSchema['Enums'] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1567,11 +2098,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1583,7 +2114,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      ArticleCategory: ['BAG', 'ART', 'JEWERLY', 'WATCH'],
+      ArticleCategory: ['BAG', 'ART', 'JEWERLY', 'WATCH', 'ALL'],
       ArticleSecondChanceStatus: ['NOT_AVAILABLE', 'AVAILABLE', 'SOLD'],
       ArticleSmell: ['TOBACCO', 'PERFUME', 'HUMIDITY', 'NO_SMELL', 'OTHER'],
       ArticleState: [
@@ -1600,7 +2131,7 @@ export const Constants = {
         'APPROVED',
         'PUBLISHED',
       ],
-      AuctionCategory: ['BAGS', 'ART', 'JEWERLY', 'WATCHES'],
+      AuctionCategory: ['BAGS', 'ART', 'JEWERLY', 'WATCHES', 'ALL'],
       AuctionMode: ['LIVE', 'AUTOMATIC'],
       AuctionStatus: [
         'NOT_AVAILABLE',
@@ -1614,10 +2145,30 @@ export const Constants = {
         'IN_REVIEW',
         'PARTIALLY_AVAILABLE_CHANGES_MADE',
       ],
+      BidSource: ['MANUAL', 'AUTOMATIC'],
       InvoiceType: ['USER', 'AUCTIONEER', 'HOST_AUCTIONEER'],
       LiveAuctionState: ['PENDING', 'LIVE', 'FINISHED'],
-      OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED'],
+      OfferActor: ['USER', 'AUCTIONEER'],
+      OfferProposalStatus: [
+        'PENDING',
+        'ACCEPTED',
+        'REJECTED',
+        'EXPIRED',
+        'SUPERSEDED',
+        'ACCEPTED_BY_USER',
+      ],
+      OfferStatus: ['PENDING', 'REJECTED', 'ACCEPTED', 'COUNTERED'],
+      PaymentRefundStatus: ['PENDING', 'SUCCEEDED', 'FAILED'],
       PaymentStatus: ['PENDING', 'APPROVED', 'REJECTED'],
+      StorePayoutMethod: ['BANK_TRANSFER', 'STRIPE', 'PAYPAL', 'CASH'],
+      StorePayoutStatus: ['PAID', 'CANCELLED'],
+      StoreSettlementSaleType: ['AUCTION', 'ONLINE_STORE'],
+      StoreSettlementStatus: ['PENDING', 'PROBLEM', 'PAID', 'CANCELLED'],
+      UserPaymentRefundStatus: [
+        'NOT_REFUNDED',
+        'PARTIALLY_REFUNDED',
+        'REFUNDED',
+      ],
       UserRole: ['ADMIN', 'USER', 'AUCTIONEER'],
       WonArticleStatus: ['NOT_PAID', 'DRAFT', 'PAID'],
     },

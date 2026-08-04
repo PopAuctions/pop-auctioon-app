@@ -59,7 +59,7 @@ export default function LiveAuctionScreen() {
   // Fetch current article being bid on
   const { data: currentArticle, status: currentArticleStatus } =
     useFetchCurrentArticle({
-      articleId: liveAuction?.ArticleBid.articleId || 0,
+      articleId: liveAuction?.ArticleBid?.articleId || 0,
     });
 
   const {
@@ -67,8 +67,8 @@ export default function LiveAuctionScreen() {
     status: biddingAmountsStatus,
     refetch: refetchBiddingAmounts,
   } = useFetchBiddingAmounts({
-    articleId: liveAuction?.ArticleBid.articleId || null,
-    currentPrice: currentArticle?.ArticleBid.currentValue || null,
+    articleId: liveAuction?.ArticleBid?.articleId || null,
+    currentPrice: currentArticle?.ArticleBid?.currentValue || null,
     startingPrice: currentArticle?.startingPrice || null,
   });
 
@@ -170,9 +170,9 @@ export default function LiveAuctionScreen() {
   )}`;
 
   // Extract highest bidder details (only safe to read when liveAuction exists)
-  const highestBidderUsername = liveAuction?.ArticleBid.highestBidderUsername;
-  const highestBidderImage = liveAuction?.ArticleBid.highestBidderImage;
-  const liveArticleId = liveAuction?.ArticleBid.articleId ?? 0;
+  const highestBidderUsername = liveAuction?.ArticleBid?.highestBidderUsername;
+  const highestBidderImage = liveAuction?.ArticleBid?.highestBidderImage;
+  const liveArticleId = liveAuction?.ArticleBid?.articleId ?? 0;
 
   const isCurrentArticleReady =
     currentArticleStatus === REQUEST_STATUS.success &&
@@ -362,8 +362,8 @@ export default function LiveAuctionScreen() {
                 ? {
                     highestBidder: highestBidderUsername ?? '',
                     highestBidderImage: highestBidderImage ?? null,
-                    currentValue: currentArticle?.ArticleBid.currentValue ?? 0,
-                    available: currentArticle?.ArticleBid.available ?? false,
+                    currentValue: currentArticle?.ArticleBid?.currentValue ?? 0,
+                    available: currentArticle?.ArticleBid?.available ?? false,
                   }
                 : undefined
             }

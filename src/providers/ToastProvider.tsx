@@ -141,7 +141,7 @@ export const CustomToast = () => {
     <View
       pointerEvents='box-none'
       style={{
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
         zIndex: 9999,
         elevation: 9999,
       }}

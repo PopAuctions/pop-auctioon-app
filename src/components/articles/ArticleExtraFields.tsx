@@ -1,5 +1,5 @@
 import { View, Switch } from 'react-native';
-import { Controller, type Control, type FieldErrors } from 'react-hook-form';
+import { Controller, type FieldErrors } from 'react-hook-form';
 import { CustomText } from '@/components/ui/CustomText';
 import { Input } from '@/components/ui/Input';
 import { getErrorMessage } from '@/utils/form-errors';
@@ -19,7 +19,7 @@ import {
 import { Tooltip } from '../ui/Tooltip';
 
 interface ArticleExtraFieldsProps {
-  control: Control<any>;
+  control: any;
   errors: FieldErrors<any>;
   category: AuctionCategories;
   isLoading: boolean;

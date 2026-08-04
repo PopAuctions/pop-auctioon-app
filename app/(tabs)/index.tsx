@@ -8,7 +8,11 @@ import { useAuth } from '@/context/auth-context';
 export default function TabsIndex() {
   const { auth } = useAuth();
 
-  // Check auth status and redirect
+  // Wait for auth to finish loading or validating before deciding where to redirect.
+  if (auth.state === 'loading' || auth.state === 'pending') {
+    return null;
+  }
+
   if (auth.state === 'unauthenticated') {
     return <Redirect href='/(tabs)/auth' />;
   }

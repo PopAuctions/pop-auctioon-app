@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSecureApi } from '../api/useSecureApi';
 import { useToast } from '../useToast';
 import { BiddingAmounts, HighestBidderState, LangMap } from '@/types/types';
@@ -6,13 +6,15 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { toTotal } from '@/utils/toTotal';
 import { MAX_BID_OFFSET } from '@/constants/bid';
-import { ONLY_INTEGERS_REGEX } from '@/constants';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useTranslation } from '../i18n/useTranslation';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 const maxBidOffset = MAX_BID_OFFSET;
+
+const BID_STEP = 10;
 
 export const useSendBid = ({
   biddingAmounts,
@@ -28,95 +30,163 @@ export const useSendBid = ({
   const { openSignInAlertModal } = useSignInAlertModal();
   const [isPending, setIsPending] = useState(false);
   const [bidAmount, setBidAmount] = useState<string>('');
+
   const { t, locale } = useTranslation();
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
-  const bidlocale = t('components.bid');
+  const bidLocale = t('components.bid');
 
-  const { minBid, tenPercent, twentyFivePercent, fiftyPercent } =
-    biddingAmounts;
+  const {
+    minBid = 0,
+    tenPercent = 0,
+    twentyFivePercent = 0,
+    fiftyPercent = 0,
+  } = biddingAmounts;
 
   const { state } = useHighestBidderContext({
     initialValue: articleServerState,
     resetKey: articleId,
   });
+
   const { currentValue, available: articleAvailable } = state;
 
-  const computedMinBid = useMemo(
-    () => toTotal(minBid + currentValue, commissionPercentage),
-    [minBid, currentValue, commissionPercentage]
-  );
-  const computedMaxBid = useMemo(
-    () =>
-      toTotal(fiftyPercent + currentValue + maxBidOffset, commissionPercentage),
-    [fiftyPercent, currentValue, commissionPercentage]
-  );
+  const getCommissionInclusiveBid = useCallback(
+    (increment: number) => {
+      const baseAmount = currentValue + increment;
+      const totalWithCommission = toTotal(baseAmount, commissionPercentage);
 
-  const isTooLow = useMemo(
-    () => parseInt(bidAmount) < computedMinBid,
-    [bidAmount, computedMinBid]
-  );
-  const isTooHigh = useMemo(
-    () => parseInt(bidAmount) > computedMaxBid,
-    [bidAmount, computedMaxBid]
+      return ceilToNearestTen(totalWithCommission);
+    },
+    [currentValue, commissionPercentage]
   );
 
-  const setAmountToBid = (amountBase: number) => {
-    const finalBase = amountBase + currentValue;
-    const total = toTotal(finalBase, commissionPercentage);
-    setBidAmount(String(total));
-  };
+  const computedMinBid = getCommissionInclusiveBid(minBid);
 
-  const handleInputChange = (value: string) => {
-    const numericValue = Number(value);
+  const computedMaxBid = getCommissionInclusiveBid(fiftyPercent + maxBidOffset);
 
-    if (
-      value !== '' &&
-      (numericValue <= 0 ||
-        !Number.isInteger(numericValue) ||
-        value.includes('-'))
-    ) {
-      return;
-    }
+  const bidAmountNumber = bidAmount === '' ? null : Number(bidAmount);
 
-    if (value === '' || ONLY_INTEGERS_REGEX.test(value)) {
-      setBidAmount(value);
-    }
-  };
+  const isTooLow = bidAmountNumber !== null && bidAmountNumber < computedMinBid;
+
+  const isTooHigh =
+    bidAmountNumber !== null && bidAmountNumber > computedMaxBid;
+
+  const canDecreaseBid =
+    bidAmountNumber !== null && bidAmountNumber > computedMinBid && !isPending;
+
+  const canIncreaseBid =
+    (bidAmountNumber === null || bidAmountNumber < computedMaxBid) &&
+    !isPending;
+
+  const setAmountToBid = useCallback(
+    (amountBase: number) => {
+      const buyerAmount = getCommissionInclusiveBid(amountBase);
+
+      setBidAmount(String(buyerAmount));
+    },
+    [getCommissionInclusiveBid]
+  );
+
+  const decreaseBidAmount = useCallback(() => {
+    setBidAmount((currentAmount) => {
+      /*
+       * Both buttons initialize an empty input with the minimum bid.
+       */
+      if (currentAmount === '') {
+        return String(computedMinBid);
+      }
+
+      const numericAmount = Number(currentAmount);
+
+      if (
+        !Number.isSafeInteger(numericAmount) ||
+        numericAmount <= computedMinBid
+      ) {
+        return String(computedMinBid);
+      }
+
+      return String(Math.max(computedMinBid, numericAmount - BID_STEP));
+    });
+  }, [computedMinBid]);
+
+  const increaseBidAmount = useCallback(() => {
+    setBidAmount((currentAmount) => {
+      /*
+       * Both buttons initialize an empty input with the minimum bid.
+       */
+      if (currentAmount === '') {
+        return String(computedMinBid);
+      }
+
+      const numericAmount = Number(currentAmount);
+
+      if (!Number.isSafeInteger(numericAmount)) {
+        return String(computedMinBid);
+      }
+
+      return String(Math.min(computedMaxBid, numericAmount + BID_STEP));
+    });
+  }, [computedMinBid, computedMaxBid]);
 
   const sendBid = async (customAmount?: number) => {
-    const amount = customAmount ?? parseInt(bidAmount);
+    const amount = customAmount ?? (bidAmount === '' ? NaN : Number(bidAmount));
+
+    if (
+      !Number.isSafeInteger(amount) ||
+      amount <= 0 ||
+      amount % BID_STEP !== 0
+    ) {
+      callToast({
+        variant: 'error',
+        description: {
+          en: 'Invalid bid amount',
+          es: 'Cantidad de puja inválida',
+        },
+      });
+
+      return;
+    }
 
     if (amount < computedMinBid) {
-      const message = bidlocale.minBid + ' ' + formatter.format(computedMinBid);
+      const message = bidLocale.minBid + ' ' + formatter.format(computedMinBid);
+
       callToast({
         variant: 'error',
-        description: { es: message, en: message },
+        description: {
+          es: message,
+          en: message,
+        },
       });
 
       return;
     }
 
-    // enforce max
     if (amount > computedMaxBid) {
-      const message = bidlocale.maxBid + ' ' + formatter.format(computedMaxBid);
+      const message = bidLocale.maxBid + ' ' + formatter.format(computedMaxBid);
+
       callToast({
         variant: 'error',
-        description: { es: message, en: message },
+        description: {
+          es: message,
+          en: message,
+        },
       });
+
       return;
     }
 
-    // actual request
-    let timeoutHandle: number | null = null;
+    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+
     try {
       setIsPending(true);
 
       timeoutHandle = setTimeout(() => {
         sentryErrorReport('Bid request timeout', 'SEND_BID_TIMEOUT_10S');
+
         setIsPending(false);
+
         callToast({
           variant: 'error',
           description: {
@@ -130,33 +200,50 @@ export const useSendBid = ({
         endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
         data: {
           articleId,
-          amount: amount,
+          /*
+           * This is the exact rounded buyer-facing amount.
+           * The server resolves it back to the corresponding base value.
+           */
+          amount,
           clientCurrentAmount: currentValue,
         },
       });
 
-      // Clear timeout if request completes before timeout
       if (timeoutHandle) {
         clearTimeout(timeoutHandle);
+        timeoutHandle = null;
       }
-
-      const data = response?.data;
 
       if (response.error) {
         if (response.status === 401) {
           openSignInAlertModal();
         }
-        callToast({ variant: 'error', description: response.error });
+
+        callToast({
+          variant: 'error',
+          description: response.error,
+        });
+
         return;
       }
 
-      callToast({ variant: 'success', description: data });
+      callToast({
+        variant: 'success',
+        description: response.data,
+      });
+
       setBidAmount('');
-    } catch (e: any) {
+    } catch (error: unknown) {
       if (timeoutHandle) {
         clearTimeout(timeoutHandle);
+        timeoutHandle = null;
       }
-      sentryErrorReport(e?.message, 'CATCH_CREATE_BID - Unexpected error');
+
+      sentryErrorReport(
+        error instanceof Error ? error.message : String(error),
+        'CATCH_CREATE_BID - Unexpected error'
+      );
+
       callToast({
         variant: 'error',
         description: {
@@ -165,10 +252,10 @@ export const useSendBid = ({
         },
       });
     } finally {
-      // Final safety: always ensure pending is false
       if (timeoutHandle) {
         clearTimeout(timeoutHandle);
       }
+
       setIsPending(false);
     }
   };
@@ -182,8 +269,11 @@ export const useSendBid = ({
     articleAvailable,
     isTooLow,
     isTooHigh,
+    canDecreaseBid,
+    canIncreaseBid,
+    decreaseBidAmount,
+    increaseBidAmount,
     setAmountToBid,
-    handleInputChange,
     sendBid,
     formatter,
     currentValue,

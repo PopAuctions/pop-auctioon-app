@@ -10,6 +10,7 @@ export interface PaymentDetailsInput {
   selectedCountry: CountryValue | null;
   /** Country of the auction */
   auctionCountry: CountryValue | null;
+  taxPercentageArticles: number;
   /** Commission percentage (from useFetchCommissions hook) */
   commissionPercentage: number;
   /** Shipping taxes by country (from useFetchCommissions hook) */
@@ -24,6 +25,7 @@ export interface PaymentDetailsInput {
 export interface PaymentDetails {
   /** Subtotal (articles amount) */
   subtotal: number;
+  taxes: number;
   /** Commission fee (WITHOUT VAT - matches web) */
   commission: number;
   /** Shipping cost based on country */
@@ -67,37 +69,37 @@ export function calculatePaymentDetails(
     auctionCountry,
     commissionPercentage,
     shippingTaxes,
+    taxPercentageArticles = 21,
     discount = 0,
   } = input;
 
-  // Subtotal = suma de precios de artículos
+  // Subtotal = article price already includes buyer commission
   const subtotal = articlesAmount;
 
-  // Commission calculation (WITHOUT VAT - matches web behavior)
-  // commissionPercentage viene del hook useFetchCommissions (ej: 12.5 para 12.5%)
-  const commission = Math.round(subtotal * (commissionPercentage / 100));
+  // Commission included inside subtotal
+  const includedCommission =
+    subtotal - subtotal / (1 + commissionPercentage / 100);
+
+  // VAT calculated over included commission
+  const taxes = includedCommission * (taxPercentageArticles / 100);
 
   // Shipping calculation based on auction country from backend
-  // Default to DIFFERENT_COUNTRY (29€) if no country selected or no shipping data
-  const defaultShipping = shippingTaxes.DIFFERENT_COUNTRY;
+  const defaultShipping = shippingTaxes.SAME_COUNTRY;
   let shipping = defaultShipping;
 
-  if (
-    auctionCountry !== null &&
-    selectedCountry !== null &&
-    auctionCountry === selectedCountry
-  ) {
-    shipping = shippingTaxes.SAME_COUNTRY;
+  if (auctionCountry && selectedCountry && auctionCountry !== selectedCountry) {
+    shipping = shippingTaxes.DIFFERENT_COUNTRY;
   }
 
-  // Total = subtotal + commission + shipping - discount
-  const total = subtotal + commission + shipping - discount;
+  // Total = subtotal + shipping - discount
+  const total = subtotal + shipping - discount;
 
   return {
     subtotal: Number(subtotal.toFixed(2)),
-    commission: Number(commission.toFixed(2)),
+    commission: Number(includedCommission.toFixed(2)),
+    taxes: Number(taxes.toFixed(2)),
     shipping: Number(shipping.toFixed(2)),
     discount: Number(discount.toFixed(2)),
-    total: Number(total.toFixed(2)), // Backend convierte a centavos
+    total: Number(total.toFixed(2)),
   };
 }

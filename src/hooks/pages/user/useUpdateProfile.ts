@@ -3,14 +3,13 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
-import type { UserEditSchema, AuctioneerEditSchema } from '@/utils/schemas';
+import type { UserEditSchema } from '@/utils/schemas';
 import type * as z from 'zod';
 
 /**
  * Tipos inferidos de los schemas de edición
  */
 export type UserEditSchemaType = z.infer<typeof UserEditSchema>;
-export type AuctioneerEditSchemaType = z.infer<typeof AuctioneerEditSchema>;
 
 /**
  * Datos adicionales necesarios para la actualización de perfil
@@ -24,11 +23,7 @@ export interface UpdateProfileExtraData {
 /**
  * Tipo combinado que acepta datos de USER o AUCTIONEER + datos extra
  */
-export type UpdateProfileData = (
-  | UserEditSchemaType
-  | AuctioneerEditSchemaType
-) &
-  UpdateProfileExtraData;
+export type UpdateProfileData = UserEditSchemaType & UpdateProfileExtraData;
 
 /**
  * Hook para actualizar el perfil del usuario autenticado
@@ -87,18 +82,6 @@ export const useUpdateProfile = (): ActionResponse<null> & {
         formData.append('oldProfilePicture', data.oldProfilePicture);
         formData.append('oldPhoneNumber', data.oldPhoneNumber);
 
-        // Campos adicionales (AUCTIONEER)
-        if ('storeName' in data) {
-          formData.append('storeName', data.storeName || '');
-          formData.append('webPage', data.webPage || '');
-          formData.append('socialMedia', data.socialMedia || '');
-          formData.append('address', data.address || '');
-          formData.append('town', data.town || '');
-          formData.append('province', data.province || '');
-          formData.append('country', data.country || '');
-          formData.append('postalCode', data.postalCode || '');
-        }
-
         // Agregar archivo de imagen
         if (data.profilePicture) {
           const uriParts = data.profilePicture.split('.');
@@ -138,18 +121,6 @@ export const useUpdateProfile = (): ActionResponse<null> & {
           oldProfilePicture: data.oldProfilePicture,
           oldPhoneNumber: data.oldPhoneNumber,
         };
-
-        // Agregar campos de AUCTIONEER si existen
-        if ('storeName' in data) {
-          payload.storeName = data.storeName || '';
-          payload.webPage = data.webPage || '';
-          payload.socialMedia = data.socialMedia || '';
-          payload.address = data.address || '';
-          payload.town = data.town || '';
-          payload.province = data.province || '';
-          payload.country = data.country || '';
-          payload.postalCode = data.postalCode || '';
-        }
 
         const response = await securePost({
           endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
