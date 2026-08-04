@@ -46,24 +46,19 @@ const commonSchema = z.object({
     }),
   estimatedValue: z
     .string()
-    .min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
-    })
     .regex(ONLY_INTEGERS_EMPTY_REGEX, {
       message: JSON.stringify({
         en: 'Must contain only numbers',
         es: 'Debe contener solo números',
       }),
     })
-    .refine((val) => parseInt(val) >= 1, {
+    .refine((value) => value === '' || Number(value) >= 1, {
       message: JSON.stringify({
         en: 'Estimated value should be at least 1',
         es: 'El valor estimado debería de ser al menos 1',
       }),
-    }),
+    })
+    .optional(),
   reservePrice: z
     .string()
     .regex(ONLY_INTEGERS_EMPTY_REGEX, {
@@ -415,3 +410,25 @@ export type SchemaFor<C extends AuctionCategories> =
 export type ArticleFormValues<C extends AuctionCategories> = z.infer<
   SchemaFor<C>
 >;
+
+export const requireEstimatedValue = <T extends z.ZodTypeAny>(
+  schema: T
+): z.ZodType<z.output<T>, z.input<T>> =>
+  schema.superRefine((data, ctx) => {
+    const estimatedValue = (
+      data as {
+        estimatedValue?: string;
+      }
+    ).estimatedValue;
+
+    if (!estimatedValue) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['estimatedValue'],
+        message: JSON.stringify({
+          en: 'Required',
+          es: 'Requerido',
+        }),
+      });
+    }
+  }) as z.ZodType<z.output<T>, z.input<T>>;

@@ -83,6 +83,7 @@ export default function NewOnlineStoreArticleScreen() {
   } = useArticleForm({
     category: category,
     mode: 'create',
+    auctionArticleForm: false,
   });
 
   const startingPrice = watch('startingPrice');

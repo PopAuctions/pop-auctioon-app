@@ -7,6 +7,7 @@ import { CustomText } from '../ui/CustomText';
 import { Loading } from '../ui/Loading';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { CustomImage } from '../ui/CustomImage';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type ArticleBidsRecordModalProps = {
   visible: boolean;
@@ -35,9 +36,8 @@ export const ArticleBidsRecordModal = ({
 }: ArticleBidsRecordModalProps) => {
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
-  const commissionedPrice = getArticleCommissionedPrice(
-    initialPrice ?? 0,
-    commissionValue ?? 0
+  const commissionedPrice = ceilToNearestTen(
+    getArticleCommissionedPrice(initialPrice ?? 0, commissionValue ?? 0)
   );
 
   return (
@@ -76,6 +76,7 @@ export const ArticleBidsRecordModal = ({
               >
                 {texts.title}
               </CustomText>
+
               <CustomText
                 className='text-center text-lg'
                 type='body'
@@ -87,77 +88,88 @@ export const ArticleBidsRecordModal = ({
                 <View className='mt-4 h-48 w-full items-center justify-center'>
                   <Loading locale={lang} />
                 </View>
+              ) : bids.length === 0 ? (
+                <View className='mt-4 max-h-48 w-full rounded-xl border-2 border-cinnabar p-4'>
+                  <CustomText
+                    className='text-center text-lg'
+                    type='body'
+                  >
+                    {texts.noBidsYet}
+                  </CustomText>
+                </View>
               ) : (
-                <>
-                  {bids.length === 0 ? (
-                    <View className='mt-4 max-h-48 w-full rounded-xl border-2 border-cinnabar p-4'>
-                      <CustomText
-                        className='text-center text-lg'
-                        type='body'
+                <ScrollView className='mt-4 max-h-48 w-full rounded-xl border-2 border-cinnabar p-4'>
+                  {bids.map((bid) => {
+                    const { username, profilePicture } = bid.User;
+
+                    const initial = username
+                      ? username.charAt(0).toUpperCase()
+                      : '';
+
+                    const previousBuyerPrice = ceilToNearestTen(
+                      getArticleCommissionedPrice(
+                        bid.currentPrice,
+                        commissionValue ?? 0
+                      )
+                    );
+
+                    const newBasePrice = bid.currentPrice + bid.amount;
+
+                    const newBuyerPrice = ceilToNearestTen(
+                      getArticleCommissionedPrice(
+                        newBasePrice,
+                        commissionValue ?? 0
+                      )
+                    );
+
+                    const buyerIncrement = newBuyerPrice - previousBuyerPrice;
+
+                    return (
+                      <View
+                        key={bid.id}
+                        className='mb-2 flex flex-row items-center'
                       >
-                        {texts.noBidsYet}
-                      </CustomText>
-                    </View>
-                  ) : (
-                    <ScrollView className='mt-4 max-h-48 w-full rounded-xl border-2 border-cinnabar p-4'>
-                      {bids.map((bid, index) => {
-                        const { username, profilePicture } = bid.User;
-                        const initial = username
-                          ? username.charAt(0).toUpperCase()
-                          : '';
-                        const currentPrice = getArticleCommissionedPrice(
-                          bid.currentPrice,
-                          commissionValue ?? 0
-                        );
-
-                        return (
-                          <View
-                            key={index}
-                            className='mb-2 flex flex-row items-center'
-                          >
-                            <View className='w-[40%] flex-row items-center gap-x-1'>
-                              {profilePicture ? (
-                                <CustomImage
-                                  src={profilePicture}
-                                  alt='User image'
-                                  className='h-10 w-10 rounded-full'
-                                />
-                              ) : (
-                                <View className='h-10 w-10 items-center justify-center rounded-full bg-black/10'>
-                                  <Text className='font-semibold'>
-                                    {initial}
-                                  </Text>
-                                </View>
-                              )}
-                              <Text className='uppercase'>{username}</Text>
+                        <View className='w-[40%] flex-row items-center gap-x-1'>
+                          {profilePicture ? (
+                            <CustomImage
+                              src={profilePicture}
+                              alt='User image'
+                              className='h-10 w-10 rounded-full'
+                            />
+                          ) : (
+                            <View className='h-10 w-10 items-center justify-center rounded-full bg-black/10'>
+                              <Text className='font-semibold'>{initial}</Text>
                             </View>
+                          )}
 
-                            <View className='ml-3 w-[60%] flex-row justify-center gap-x-2 lg:justify-end'>
-                              <Text className='text-lg text-cinnabar'>
-                                {formatter.format(currentPrice)}
-                              </Text>
+                          <Text className='uppercase'>{username}</Text>
+                        </View>
 
-                              <View className='items-center'>
-                                <FontAwesomeIcon
-                                  variant='light'
-                                  name='arrow-right'
-                                  size={16}
-                                />
-                                <Text className='text-xs text-black/50'>
-                                  + {formatter.format(bid.amount)}
-                                </Text>
-                              </View>
+                        <View className='ml-3 w-[60%] flex-row justify-center gap-x-2 lg:justify-end'>
+                          <Text className='text-lg text-cinnabar'>
+                            {formatter.format(previousBuyerPrice)}
+                          </Text>
 
-                              <Text className='text-lg text-cinnabar'>
-                                {formatter.format(currentPrice + bid.amount)}
-                              </Text>
-                            </View>
+                          <View className='items-center'>
+                            <FontAwesomeIcon
+                              variant='light'
+                              name='arrow-right'
+                              size={16}
+                            />
+
+                            <Text className='text-xs text-black/50'>
+                              + {formatter.format(buyerIncrement)}
+                            </Text>
                           </View>
-                        );
-                      })}
-                    </ScrollView>
-                  )}
-                </>
+
+                          <Text className='text-lg text-cinnabar'>
+                            {formatter.format(newBuyerPrice)}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </ScrollView>
               )}
             </View>
           </View>

@@ -1,4 +1,4 @@
-import { View, TextInput } from 'react-native';
+import { View } from 'react-native';
 import type { BiddingAmounts, HighestBidderState } from '@/types/types';
 import type { Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
@@ -12,6 +12,8 @@ import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useUpsertAutoBid } from '@/hooks/pages/auto-bid/useUpsertAutoBid';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { BidAmountStepper } from './BidAmountStepper';
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -56,9 +58,11 @@ export function SendBid({
     fiftyPercent,
     articleAvailable,
     isTooLow,
-    isTooHigh,
+    canDecreaseBid,
+    canIncreaseBid,
+    decreaseBidAmount,
+    increaseBidAmount,
     setAmountToBid,
-    handleInputChange,
     sendBid,
     formatter,
   } = useSendBid({
@@ -138,7 +142,9 @@ export function SendBid({
               {!isReady
                 ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(tenPercent + currentValue, safeCommission)
+                    ceilToNearestTen(
+                      toTotal(tenPercent + currentValue, safeCommission)
+                    )
                   )}
             </Button>
 
@@ -154,7 +160,9 @@ export function SendBid({
               {!isReady
                 ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(twentyFivePercent + currentValue, safeCommission)
+                    ceilToNearestTen(
+                      toTotal(twentyFivePercent + currentValue, safeCommission)
+                    )
                   )}
             </Button>
 
@@ -170,7 +178,9 @@ export function SendBid({
               {!isReady
                 ? AMOUNT_PLACEHOLDER
                 : formatter.format(
-                    toTotal(fiftyPercent + currentValue, safeCommission)
+                    ceilToNearestTen(
+                      toTotal(fiftyPercent + currentValue, safeCommission)
+                    )
                   )}
             </Button>
           </View>
@@ -184,15 +194,14 @@ export function SendBid({
             {bidLang.anyBidAmount}
           </CustomText>
 
-          <TextInput
-            keyboardType='number-pad'
+          <BidAmountStepper
             value={bidAmount}
-            placeholder='...'
-            editable={articleAvailable}
-            onChangeText={handleInputChange}
-            className={`mt-2 h-10 rounded-md border px-3 text-base text-black ${
-              isTooLow || isTooHigh ? 'border-red-500' : 'border-neutral-300'
-            }`}
+            placeholder={AMOUNT_PLACEHOLDER}
+            disabled={!articleAvailable || !isReady || isPending}
+            canDecrease={canDecreaseBid}
+            canIncrease={canIncreaseBid}
+            onDecrease={decreaseBidAmount}
+            onIncrease={increaseBidAmount}
           />
 
           {isReady ? (
@@ -238,7 +247,7 @@ export function SendBid({
           onPress={() => {
             setAutomaticBidModalVisible(true);
           }}
-          disabled={isAutomaticBidPending}
+          disabled={isAutomaticBidPending || !articleAvailable}
           isLoading={isAutomaticBidPending}
         >
           {bidLang.createAutomaticBid}
@@ -292,11 +301,15 @@ function SubmitBidButton({
   onPress: () => void;
   articleAvailable: boolean;
 }) {
+  const numericAmount = Number(bidAmount);
+
   const disabled =
     isPending ||
     bidAmount === '' ||
-    parseInt(bidAmount) < minBid ||
-    parseInt(bidAmount) > maxBid ||
+    !Number.isSafeInteger(numericAmount) ||
+    numericAmount % 10 !== 0 ||
+    numericAmount < minBid ||
+    numericAmount > maxBid ||
     !articleAvailable;
 
   return (
