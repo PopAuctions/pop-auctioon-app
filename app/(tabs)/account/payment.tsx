@@ -36,6 +36,8 @@ import { calculatePaymentDetails } from '@/utils/calculate-payment-details';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import type { CountryValue } from '@/types/types';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
@@ -124,10 +126,29 @@ export default function PaymentScreen() {
 
   // Calcular subtotal de artículos seleccionados
   const subtotal = useMemo(() => {
+    const commissionPercentage = paymentConfig.commission;
+
     return articles
       .filter((article) => selectedArticleIds.includes(article.id))
-      .reduce((sum, article) => sum + (article.soldPrice || 0), 0);
-  }, [articles, selectedArticleIds]);
+      .reduce((sum, article) => {
+        const soldPriceBase = article.soldPrice ?? 0;
+
+        if (!isCommissionReady || commissionPercentage === undefined) {
+          return sum + soldPriceBase;
+        }
+
+        const buyerWinningBid = ceilToNearestTen(
+          getArticleCommissionedPrice(soldPriceBase, commissionPercentage)
+        );
+
+        return sum + buyerWinningBid;
+      }, 0);
+  }, [
+    articles,
+    selectedArticleIds,
+    isCommissionReady,
+    paymentConfig.commission,
+  ]);
 
   // Calcular el breakdown completo de pago
   const paymentDetails = useMemo(() => {
@@ -489,6 +510,7 @@ export default function PaymentScreen() {
           selectedArticleIds={selectedArticleIds}
           onToggleArticle={toggleArticleSelection}
           isLoading={isTogglingArticle}
+          commissionPercentage={paymentConfig.commission}
         />
 
         {/* Resumen de pago con código de descuento */}
@@ -509,10 +531,14 @@ export default function PaymentScreen() {
           disabled={
             selectedArticleIds.length === 0 ||
             !selectedAddress ||
+            !isCommissionReady ||
+            !paymentConfig.shippingTaxes ||
             paymentLoading ||
             isSubmittingPayment
           }
-          isLoading={paymentLoading || isSubmittingPayment}
+          isLoading={
+            !isCommissionReady || paymentLoading || isSubmittingPayment
+          }
           className='mb-6'
         >
           {isSubmittingPayment

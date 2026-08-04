@@ -10,6 +10,7 @@ import { ConfirmModal } from '../modal/ConfirmModal';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type WonArticlesProps = {
   wonArticles: Record<string, AuctionUserWonArticles>;
@@ -212,7 +213,8 @@ export const WonArticleItem = ({
 }: WonArticleItemProps) => {
   const soldPrice = article.soldPrice;
   const commissionedSoldPrice = useMemo(
-    () => getArticleCommissionedPrice(soldPrice, commissionValue),
+    () =>
+      ceilToNearestTen(getArticleCommissionedPrice(soldPrice, commissionValue)),
     [soldPrice, commissionValue]
   );
 

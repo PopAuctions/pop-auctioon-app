@@ -19,14 +19,17 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import { cn } from '@/utils/cn';
 import type { UserArticlesWon } from '@/types/types';
 import { ARTICLE_BRANDS_LABELS } from '@/constants/articles';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 
-interface PaymentArticlesListProps {
+type PaymentArticlesListProps = {
   articles: UserArticlesWon[];
   selectedArticleIds: number[];
   onToggleArticle: (articleId: number) => void;
+  commissionPercentage?: number;
   showCheckBoxes?: boolean;
-  isLoading?: boolean; // Loading state para deshabilitar checkboxes durante toggle
-}
+  isLoading?: boolean;
+};
 
 export const PaymentArticlesList = memo(function PaymentArticlesList({
   articles,
@@ -34,6 +37,7 @@ export const PaymentArticlesList = memo(function PaymentArticlesList({
   onToggleArticle,
   showCheckBoxes = true,
   isLoading = false,
+  commissionPercentage,
 }: PaymentArticlesListProps) {
   const { locale } = useTranslation();
   const formatter = euroFormatter(locale, 2);
@@ -42,6 +46,17 @@ export const PaymentArticlesList = memo(function PaymentArticlesList({
     <View className='mb-6 flex flex-col gap-4'>
       {articles.map((article) => {
         const isSelected = selectedArticleIds.includes(article.id);
+
+        const displayedPrice =
+          commissionPercentage === undefined
+            ? (article.soldPrice ?? 0)
+            : ceilToNearestTen(
+                getArticleCommissionedPrice(
+                  article.soldPrice ?? 0,
+
+                  commissionPercentage
+                )
+              );
 
         return (
           <Pressable
@@ -104,7 +119,7 @@ export const PaymentArticlesList = memo(function PaymentArticlesList({
                 type='body'
                 className='font-bold text-cinnabar'
               >
-                {formatter.format(article.soldPrice || 0)}
+                {formatter.format(displayedPrice || 0)}
               </CustomText>
             </View>
           </Pressable>

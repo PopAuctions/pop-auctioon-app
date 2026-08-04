@@ -16,10 +16,13 @@ import { AddressInfo } from '@/components/payment/AddressInfo';
 import { UserInvoice } from '@/components/invoices/UserInvoice';
 import { useGetBilling } from '@/hooks/pages/billing/useBilling';
 import { useGetUserInvoice } from '@/hooks/components/useUserInvoice';
+import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 
 export default function PaymentScreen() {
   const { t, locale } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: commissionData, status: commissionStatus } =
+    useFetchCommissions();
   const {
     data: paymentData,
     status,
@@ -31,8 +34,13 @@ export default function PaymentScreen() {
   });
 
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
+  const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
-  if (status === REQUEST_STATUS.loading || status === REQUEST_STATUS.idle) {
+  if (
+    status === REQUEST_STATUS.loading ||
+    status === REQUEST_STATUS.idle ||
+    !isCommissionReady
+  ) {
     return <Loading locale={locale} />;
   }
 
@@ -62,6 +70,7 @@ export default function PaymentScreen() {
   const paymentDate = new Date(paymentData.createdAt);
   const userAddress = paymentData.userAddress;
   const user = paymentData.user;
+  const isOnlineStorePayment = !paymentData.articles[0].auctionId;
 
   return (
     <ScrollView
@@ -87,6 +96,7 @@ export default function PaymentScreen() {
                 article={article}
                 lang={locale}
                 formatter={formatter}
+                commissionPercentage={isOnlineStorePayment ? 0 : commissionData}
                 texts={{
                   paymentAmount: paymentDict.paid,
                   view: soldArticlesDict.view,
