@@ -96,7 +96,9 @@ export default function PaymentScreen() {
                 article={article}
                 lang={locale}
                 formatter={formatter}
-                commissionPercentage={isOnlineStorePayment ? 0 : commissionData}
+                commissionPercentage={
+                  isOnlineStorePayment ? undefined : commissionData
+                }
                 texts={{
                   paymentAmount: paymentDict.paid,
                   view: soldArticlesDict.view,

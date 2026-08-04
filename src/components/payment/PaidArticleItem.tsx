@@ -12,7 +12,7 @@ type Props = {
   texts: { paymentAmount: string; view: string };
   formatter: Intl.NumberFormat;
   lang: Lang;
-  commissionPercentage: number;
+  commissionPercentage?: number;
 };
 
 export function PaidArticleItem({
