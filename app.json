@@ -71,7 +71,10 @@
       [
         "expo-localization",
         {
-          "supportedLocales": ["es", "en"]
+          "supportedLocales": [
+            "es",
+            "en"
+          ]
         }
       ],
       [
@@ -81,7 +84,6 @@
           "cameraPermission": "PopAuctioon accesses your camera so you can take photos for your profile picture or for articles when creating auction listings."
         }
       ],
-      "@sentry/react-native",
       "expo-web-browser",
       "expo-video"
     ],
