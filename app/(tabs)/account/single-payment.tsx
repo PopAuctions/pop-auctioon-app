@@ -24,6 +24,7 @@ import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
 import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
+import { useFetchStoreCountryByArticleId } from '@/hooks/components/useFetchStoreCountryByArticleId';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -60,6 +61,11 @@ export default function SinglePaymentScreen() {
   // Payment config
   const { data: paymentConfig, status: commissionStatus } =
     useFetchPaymentConfig();
+  const {
+    data: storeCountry,
+    errorMessage: storeCountryError,
+    status: storeCountryStatus,
+  } = useFetchStoreCountryByArticleId(articleId || '');
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
@@ -121,7 +127,7 @@ export default function SinglePaymentScreen() {
       commissionPercentage: paymentConfig.commission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
       taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
-      auctionCountry: 'SPAIN',
+      auctionCountry: storeCountry,
       discount: appliedDiscount?.amount || 0,
     });
   }, [
@@ -130,6 +136,7 @@ export default function SinglePaymentScreen() {
     appliedDiscount,
     isCommissionReady,
     paymentConfig,
+    storeCountry,
   ]);
 
   const handleApplyDiscount = useCallback(async () => {
@@ -323,7 +330,9 @@ export default function SinglePaymentScreen() {
     articleStatus === REQUEST_STATUS.loading ||
     articleStatus === REQUEST_STATUS.idle ||
     addressesStatus === REQUEST_STATUS.loading ||
-    addressesStatus === REQUEST_STATUS.idle
+    addressesStatus === REQUEST_STATUS.idle ||
+    storeCountryStatus === REQUEST_STATUS.loading ||
+    storeCountryStatus === REQUEST_STATUS.idle
   ) {
     return <Loading locale={locale} />;
   }
@@ -332,6 +341,15 @@ export default function SinglePaymentScreen() {
     return (
       <CustomError
         customMessage={articleError}
+        refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
+      />
+    );
+  }
+
+  if (storeCountryStatus === REQUEST_STATUS.error) {
+    return (
+      <CustomError
+        customMessage={storeCountryError}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );

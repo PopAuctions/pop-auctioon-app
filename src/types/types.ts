@@ -853,8 +853,6 @@ export interface CountryObject {
 export type Countries = Record<Lang, CountryObject[]>;
 
 export interface PaymentShippingTax {
-  GENERAL: number;
-  SPAIN: number;
   DIFFERENT_COUNTRY: number;
   SAME_COUNTRY: number;
 }

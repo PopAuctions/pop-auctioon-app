@@ -214,6 +214,8 @@ export const SECURE_ENDPOINTS = {
     COUNTRIES: '/globals/countries',
   },
   STORE: {
+    COUNTRY: (articleId: string): ApiEndpoint =>
+      `/store/country?articleId=${articleId}` as ApiEndpoint,
     COMMISSION: '/store/commission',
     EDIT: '/store/edit',
     PAYOUTS: {
