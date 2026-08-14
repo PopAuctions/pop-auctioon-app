@@ -20,10 +20,6 @@ import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 // AsyncStorage key for last known push token
 const LAST_PUSH_TOKEN_KEY = '@lastExpoPushToken';
 
-// AsyncStorage key for tracking last handled notification response
-// to prevent stale responses from causing unwanted redirects after app restart
-const LAST_HANDLED_NOTIFICATION_KEY = '@lastHandledNotificationId';
-
 interface NotificationContextType {
   expoPushToken: string | null;
   notification: Notifications.Notification | null;
@@ -85,60 +81,32 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       return null; // Not a nested route
     };
 
-    // 🚀 Async function to check if app was opened from a notification (when app was closed)
-    const checkLastNotificationResponse = async () => {
-      try {
-        const response = Notifications.getLastNotificationResponse();
-        if (response) {
-          // ✅ FIX: Only navigate if this is a NEW notification response
-          // (not one we've already handled before)
-          const responseId = response.notification.request.identifier;
-
-          // Check if we've already handled this response (persists across app closes)
-          const lastHandledId = await AsyncStorage.getItem(
-            LAST_HANDLED_NOTIFICATION_KEY
-          );
-
-          if (lastHandledId === responseId) {
-            console.log(
-              '⏭️ [NotificationContext] Skipping stale notification response (already handled on previous session)'
-            );
-            return;
-          }
-
-          const route = getNotificationRouteFromResponse(response);
-          if (route) {
-            // Mark this response as handled so we don't process it again
-            // even if the app is closed and reopened
-            await AsyncStorage.setItem(
-              LAST_HANDLED_NOTIFICATION_KEY,
-              responseId
-            );
-
-            setTimeout(() => {
-              const parentTab = getParentTab(route);
-              if (parentTab) {
-                router.replace(parentTab as any);
-                setTimeout(() => {
-                  router.push(route as any);
-                }, 100);
-              } else {
+    // 🚀 Check if app was opened from a notification (when app was closed)
+    try {
+      const response = Notifications.getLastNotificationResponse();
+      if (response) {
+        const route = getNotificationRouteFromResponse(response);
+        if (route) {
+          setTimeout(() => {
+            const parentTab = getParentTab(route);
+            if (parentTab) {
+              router.replace(parentTab as any);
+              setTimeout(() => {
                 router.push(route as any);
-              }
-            }, 1000);
-          }
+              }, 100);
+            } else {
+              router.push(route as any);
+            }
+          }, 1000);
         }
-      } catch (error) {
-        console.error('ERROR_GET_LAST_NOTIFICATION_RESPONSE', error);
-        sentryErrorReport(
-          error as Error,
-          '[NotificationContext.L104] getLastNotificationResponse - App opened from closed state'
-        );
       }
-    };
-
-    // Call the async function
-    checkLastNotificationResponse();
+    } catch (error) {
+      console.error('ERROR_GET_LAST_NOTIFICATION_RESPONSE', error);
+      sentryErrorReport(
+        error as Error,
+        '[NotificationContext.L104] getLastNotificationResponse - App opened from closed state'
+      );
+    }
 
     // �📡 Function to register push token via backend API
     const registerPushToken = async (token: string, userId?: string) => {
