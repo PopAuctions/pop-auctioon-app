@@ -900,7 +900,8 @@
       "finished": "The auction has ended",
       "thanksForWatching": "Thanks for watching!",
       "ifAnyArticleWon": "If you won any article, you can check it and pay for it in your account",
-      "goToArticlesWon": "Go to my won articles"
+      "goToArticlesWon": "Go to my won articles",
+      "leaveReview": "Would you like to leave a review?"
     }
   },
   "components": {

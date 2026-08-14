@@ -909,7 +909,8 @@
       "finished": "La subasta ha finalizado",
       "thanksForWatching": "¡Gracias por ver!",
       "ifAnyArticleWon": "Si has ganado algún artículo, podrás verlo y pagarlo desde tu perfil.",
-      "goToArticlesWon": "Ver artículos ganados"
+      "goToArticlesWon": "Ver artículos ganados",
+      "leaveReview": "Quisieras dejar una reseña?"
     }
   },
   "components": {

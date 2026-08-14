@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Lang } from '@/types/types';
 import type { VersionUpdateType } from '@/utils/appVersion';
+import { APP_STORE_URLS } from '@/constants/app';
 
 interface AppVersionGateProps {
   updateType: VersionUpdateType;
@@ -18,12 +19,6 @@ interface AppVersionGateTexts {
   updateButton: string;
   continueButton: string;
 }
-
-const STORE_URLS = {
-  android:
-    'https://play.google.com/store/apps/details?id=com.popauctioon.popauctioonapp',
-  ios: 'https://apps.apple.com/gt/app/popauctioon/id6758241896',
-} as const;
 
 const TEXTS: Record<Lang, AppVersionGateTexts> = {
   en: {
@@ -60,7 +55,8 @@ export function AppVersionGate({ updateType }: AppVersionGateProps) {
 
   const handleUpdate = async () => {
     try {
-      const url = Platform.OS === 'ios' ? STORE_URLS.ios : STORE_URLS.android;
+      const url =
+        Platform.OS === 'ios' ? APP_STORE_URLS.ios : APP_STORE_URLS.android;
       await Linking.openURL(url);
     } catch (error) {
       console.error('[AppVersionGate] Failed to open store URL:', error);
