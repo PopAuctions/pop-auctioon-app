@@ -94,6 +94,7 @@ export default function HomeScreen() {
           isAuctioneer={isUserAuctioneer}
           texts={{
             createAuction: t('screens.homePage.createAuction'),
+            sellArticle: t('screens.homePage.wantToSell'),
           }}
         />
 
