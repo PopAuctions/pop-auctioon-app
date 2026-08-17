@@ -12,11 +12,13 @@ import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { SelectCategoryModal } from '../modal/SelectCategoryModal';
+import { CustomLink } from '../ui/CustomLink';
 
 interface Props {
   locale: Lang;
   texts: {
     newArticle: string;
+    offers: string;
   };
 }
 
@@ -98,16 +100,25 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
           {labels.filters}
         </Button>
 
-        <SelectCategoryModal
-          title={{ es: 'Seleccionar categoría', en: 'Select category' }}
-          description={{
-            es: 'Selecciona la categoría del artículo a crear',
-            en: 'Select the category of the article to create',
-          }}
-          locale={locale}
-        >
-          {texts.newArticle}
-        </SelectCategoryModal>
+        <View className='flex flex-row gap-2'>
+          <SelectCategoryModal
+            title={{ es: 'Seleccionar categoría', en: 'Select category' }}
+            description={{
+              es: 'Selecciona la categoría del artículo a crear',
+              en: 'Select the category of the article to create',
+            }}
+            locale={locale}
+          >
+            {texts.newArticle}
+          </SelectCategoryModal>
+          <CustomLink
+            mode='secondary'
+            href={`/(tabs)/auctioneer/my-online-store/offers`}
+            size='small'
+          >
+            {texts.offers}
+          </CustomLink>
+        </View>
       </View>
       <View className='mt-1'>
         {activeFiltersCount > 0 && (

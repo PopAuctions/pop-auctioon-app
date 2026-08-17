@@ -27,7 +27,10 @@ export default function MyOnlineStoreScreen() {
       <View className='mb-4 mt-2 flex w-full flex-col'>
         <MyOnlineStoreArticleFilters
           locale={locale}
-          texts={{ newArticle: t('screens.myOnlineStore.createArticle') }}
+          texts={{
+            newArticle: t('screens.myOnlineStore.createArticle'),
+            offers: t('screens.store.offers'),
+          }}
         />
       </View>
     );
