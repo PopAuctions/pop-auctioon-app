@@ -7,10 +7,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { REQUEST_STATUS } from '@/constants';
-import {
-  useSafeAreaInsets,
-  SafeAreaView,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LiveAuctionOverlay } from '@/components/live-auction/LiveAuctionOverlay';
 import { StreamWebView } from '@/components/live-auction/StreamWebView';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
@@ -21,15 +18,14 @@ import { useFetchBiddingAmounts } from '@/hooks/components/useFetchBiddingAmount
 import { AuctionSubscriber } from '@/components/subscribers/AuctionSubscriber';
 import { LiveAuctionSubscriber } from '@/components/subscribers/LiveAuctionSubscribe';
 import { AuctionStatus } from '@/constants/auctions';
-import { CustomText } from '@/components/ui/CustomText';
-import { CustomLink } from '@/components/ui/CustomLink';
 import { useHideTabs } from '@/hooks/useHidetabs';
+import { FinishedAuction } from '@/components/auctions/FinishedAuction';
 
 const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t, locale } = useTranslation();
+  const { locale } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   useHideTabs();
@@ -204,62 +200,7 @@ export default function LiveAuctionScreen() {
   }
 
   if (liveAuctionData?.status === AuctionStatus.FINISHED) {
-    return (
-      <View
-        pointerEvents='auto'
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }}
-      >
-        <SafeAreaView
-          className='h-full w-full bg-white'
-          edges={[]}
-        >
-          <View className='flex h-full w-full flex-col items-center justify-center text-center'>
-            <CustomText
-              type='h3'
-              className='text-center'
-            >
-              {t('screens.liveAuction.finished')}
-            </CustomText>
-            <CustomText
-              type='h3'
-              className='text-center text-base'
-            >
-              {t('screens.liveAuction.thanksForWatching')}
-            </CustomText>
-            <CustomText
-              type='h4'
-              className='mt-2 text-center text-base text-cinnabar'
-            >
-              {t('screens.liveAuction.ifAnyArticleWon')}
-            </CustomText>
-            <View className='mt-6 flex w-1/2 flex-col gap-4'>
-              <CustomLink
-                href='/(tabs)/account/articles-won'
-                mode='primary'
-                dismissFirst
-                replace
-              >
-                {t('screens.liveAuction.goToArticlesWon')}
-              </CustomLink>
-              <CustomLink
-                href='/(tabs)/home'
-                mode='secondary'
-                dismissFirst
-                replace
-              >
-                {t('globals.goToHome')}
-              </CustomLink>
-            </View>
-          </View>
-        </SafeAreaView>
-      </View>
-    );
+    return <FinishedAuction auctionId={auctionId} />;
   }
 
   if (showError) {

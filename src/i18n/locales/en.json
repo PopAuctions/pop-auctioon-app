@@ -61,6 +61,7 @@
       "currentBid": "Current bid",
       "bags": "Bags",
       "createAuction": "Create new auction",
+      "wantToSell": "Sell article",
       "getToKnowUs": "Get to know us",
       "onlineAuction": "Online auctions",
       "allAuctions": "See all auctions",
@@ -173,6 +174,7 @@
       "subtitle": "Shop exclusive products",
       "noProducts": "No products available at the moment",
       "productDetail": "Product Details",
+      "offers": "Offers",
       "cart": "Shopping Cart",
       "categories": "Categories",
       "search": "Search Products",
@@ -274,6 +276,7 @@
       "subMessage": "Once confirmed, we ask that you set this article aside while waiting for the buyer to make the payment. If the payment is not made within 24 hours, the sale will be canceled and you can make the article available again in your store.",
       "actions": "Actions",
       "offers": "Offers",
+      "allOffers": "All offers",
       "noOffers": "No offers yet",
       "accept": "Accept",
       "reject": "Reject",
@@ -900,7 +903,8 @@
       "finished": "The auction has ended",
       "thanksForWatching": "Thanks for watching!",
       "ifAnyArticleWon": "If you won any article, you can check it and pay for it in your account",
-      "goToArticlesWon": "Go to my won articles"
+      "goToArticlesWon": "Go to my won articles",
+      "leaveReview": "Would you like to leave a review?"
     }
   },
   "components": {

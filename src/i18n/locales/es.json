@@ -61,6 +61,7 @@
       "currentBid": "Puja Actual",
       "bags": "Bolsos",
       "createAuction": "Crear nueva subasta",
+      "wantToSell": "Vender artículo",
       "getToKnowUs": "Conócenos",
       "onlineAuction": "Subastas online",
       "allAuctions": "Ver todas las subastas",
@@ -173,6 +174,7 @@
       "subtitle": "Compra productos exclusivos",
       "noProducts": "No hay productos disponibles en este momento",
       "productDetail": "Detalles del Producto",
+      "offers": "Ofertas",
       "cart": "Carrito de Compras",
       "categories": "Categorías",
       "search": "Buscar Productos",
@@ -274,6 +276,7 @@
       "subMessage": "Una vez confirmado, te pedimos que apartes este artículo mientras esperas el comprador hace el pago. De no hace el pago en 24h se cancelará la venta y puedes volver a poner el artículo a la disponible en tu tienda.",
       "actions": "Acciones",
       "offers": "Ofertas",
+      "allOffers": "Todas las ofertas",
       "noOffers": "No hay ofertas",
       "accept": "Aceptar",
       "reject": "Rechazar",
@@ -909,7 +912,8 @@
       "finished": "La subasta ha finalizado",
       "thanksForWatching": "¡Gracias por ver!",
       "ifAnyArticleWon": "Si has ganado algún artículo, podrás verlo y pagarlo desde tu perfil.",
-      "goToArticlesWon": "Ver artículos ganados"
+      "goToArticlesWon": "Ver artículos ganados",
+      "leaveReview": "Quisieras dejar una reseña?"
     }
   },
   "components": {

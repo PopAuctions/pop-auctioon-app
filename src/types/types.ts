@@ -791,6 +791,29 @@ export interface CustomPaidArticleFull {
   };
 }
 
+export type ArticleSecondChanceWithOffers = Pick<
+  ArticleSecondChance,
+  'id' | 'price' | 'status' | 'userId'
+> & {
+  Article: Pick<Article, 'id' | 'title' | 'images' | 'codeNumber'>;
+  ArticleOffer: (Pick<
+    ArticleOffer,
+    | 'id'
+    | 'amount'
+    | 'acceptedAmount'
+    | 'status'
+    | 'expiresAt'
+    | 'closedAt'
+    | 'createdAt'
+  > & {
+    User: Pick<User, 'username' | 'phoneNumber'> | null;
+    ArticleOfferProposal: Pick<
+      ArticleOfferProposal,
+      'id' | 'amount' | 'status' | 'createdBy' | 'createdAt' | 'expiresAt'
+    >[];
+  })[];
+};
+
 export type CustomUser = Pick<
   User,
   'id' | 'username' | 'email' | 'name' | 'lastName' | 'dni' | 'phoneNumber'

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import * as StoreReview from 'expo-store-review';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '@/components/ui/Button';
@@ -51,7 +52,7 @@ export default function PaymentResultScreen() {
   }>();
   const router = useRouter();
   const { navigateWithAuth } = useAuthNavigation();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const { secureGet } = useSecureApi();
   const [context, setContext] = useState<PaymentResultContext | null>(null);
   const [isReady, setIsReady] = useState(false);
@@ -284,6 +285,12 @@ export default function PaymentResultScreen() {
     });
   };
 
+  const requestReview = async () => {
+    if (await StoreReview.hasAction()) {
+      await StoreReview.requestReview();
+    }
+  };
+
   if (!isReady) {
     return (
       <SafeAreaView
@@ -369,6 +376,17 @@ export default function PaymentResultScreen() {
           >
             {locale === 'es' ? 'Ir a cuenta' : 'Go to account'}
           </Button>
+
+          {isApproved && (
+            <Button
+              onPress={requestReview}
+              mode='secondary'
+              className='mt-2'
+              textClassName='text-center'
+            >
+              {t('screens.liveAuction.leaveReview')}
+            </Button>
+          )}
         </View>
       </View>
     </SafeAreaView>

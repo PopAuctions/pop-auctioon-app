@@ -7,13 +7,12 @@ import { OFFER_STATUS_LABELS } from '@/constants';
 import { formatDate } from '@/utils/formatDate';
 import { euroFormatter } from '@/utils/euroFormatter';
 import {
-  CustomFullArticleSecondChance,
+  ArticleSecondChanceWithOffers,
   Lang,
   LangMap,
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
-  RefetchReturn,
 } from '@/types/types';
 import { ConfirmModal } from '../modal/ConfirmModal';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
@@ -24,59 +23,65 @@ import { Button } from '../ui/Button';
 import { StoreCounterOfferModal } from '../modal/StoreCounterOfferModal';
 import { OfferHistoryModal } from '../modal/OfferHistoryModal';
 import { getStorePayoutFromBuyerFacingAmount } from '@/utils/getStorePayoutFromBuyerFacingAmount';
+import { CustomLink } from '../ui/CustomLink';
+import { CustomImage } from '../ui/CustomImage';
 import { OFFER_STATUS_COLORS } from '@/constants/myOnlineStore';
 
-interface ArticleOffersCardsProps {
-  offers: CustomFullArticleSecondChance['ArticleOffer'];
+interface LatestArticleOffersCardsProps {
+  articles: ArticleSecondChanceWithOffers[];
   locale: Lang;
+  userCommissionValue: number;
+  storeCommissionValue: number;
+  refetch: () => Promise<unknown>;
   texts: {
     noOffers: string;
     accept: string;
     reject: string;
     counter: string;
   };
-  userCommissionValue: number;
-  storeCommissionValue: number;
-  refetch: () => RefetchReturn;
 }
 
 const TEXTS = {
   es: {
+    article: 'Artículo',
     status: 'Estado',
-    offer: 'Oferta actual',
-    noCommissionedOffer: 'Oferta sin comisión',
+    offer: 'Oferta',
+    noCommissionedOffer: 'Monto que recibirás',
     noCommissionedOfferTooltip:
-      'Cantidad que recibirás descontando la comisión de la plataforma.',
+      'Cantidad que recibirás si aceptas la oferta y el comprador completa el pago.',
+    user: 'Usuario',
     date: 'Fecha',
     expiresAt: 'Caduca en',
     actions: 'Acciones',
-    waitingForUser: 'Esperando respuesta del usuario',
-    userAcceptedCounter: 'El usuario ha aceptado tu contraoferta',
     offerHistory: 'Historial de ofertas',
+    userAcceptedCounter: 'El usuario ha aceptado tu contraoferta',
+    waitingForUser: 'Esperando respuesta del usuario',
   },
   en: {
+    article: 'Article',
     status: 'Status',
-    offer: 'Current offer',
-    noCommissionedOffer: 'No commissioned offer',
+    offer: 'Offer',
+    noCommissionedOffer: 'Amount you will receive',
     noCommissionedOfferTooltip:
-      'Amount you will receive after deducting the platform commission.',
+      'Amount you will receive if you accept the offer and the buyer completes the payment.',
+    user: 'User',
     date: 'Date',
     expiresAt: 'Expires at',
     actions: 'Actions',
-    waitingForUser: 'Waiting for user response',
-    userAcceptedCounter: 'The user accepted your counter-offer',
     offerHistory: 'Offer history',
+    userAcceptedCounter: 'The user accepted your counter-offer',
+    waitingForUser: 'Waiting for user response',
   },
-} satisfies Record<Lang, Record<string, string>>;
+};
 
-export function ArticleOffersCards({
-  offers,
+export function LatestArticleOffersCards({
+  articles,
   texts,
   locale,
   userCommissionValue,
   storeCommissionValue,
   refetch,
-}: ArticleOffersCardsProps) {
+}: LatestArticleOffersCardsProps) {
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
@@ -86,6 +91,17 @@ export function ArticleOffersCards({
 
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const t = TEXTS[locale];
+
+  const offersWithArticle = useMemo(
+    () =>
+      articles.flatMap((article) =>
+        article.ArticleOffer.map((offer) => ({
+          article,
+          offer,
+        }))
+      ),
+    [articles]
+  );
 
   const handleAcceptOffer = async (offerId: number): Promise<boolean> => {
     setIsLoading(true);
@@ -185,7 +201,7 @@ export function ArticleOffersCards({
     }
   };
 
-  if (!offers || offers.length === 0) {
+  if (offersWithArticle.length === 0) {
     return (
       <CustomText
         type='h4'
@@ -198,7 +214,7 @@ export function ArticleOffersCards({
 
   return (
     <View className='gap-3'>
-      {offers.map((offer) => {
+      {offersWithArticle.map(({ article, offer }) => {
         const pendingProposal = offer.ArticleOfferProposal?.find(
           (proposal) => proposal.status === OfferProposalStatusConst.PENDING
         );
@@ -238,6 +254,40 @@ export function ArticleOffersCards({
             key={offer.id}
             className='rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm'
           >
+            <CustomLink
+              href={`/(tabs)/auctioneer/my-online-store/articles/${article.id}`}
+              className='flex-row items-center gap-3'
+            >
+              <CustomImage
+                src={(article.Article.images as string[])[0]}
+                alt={`${article.Article.title} image`}
+                accessibilityLabel={`${article.Article.title} image`}
+                className='h-16 w-16 rounded-xl'
+                resizeMode='cover'
+              />
+
+              <View className='flex-1'>
+                <CustomText
+                  type='subtitle'
+                  className='text-cinnabar'
+                  numberOfLines={2}
+                >
+                  {article.Article.title}
+                </CustomText>
+
+                {!!article.Article.codeNumber && (
+                  <CustomText
+                    type='body'
+                    className='text-xs text-neutral-500'
+                  >
+                    {article.Article.codeNumber}
+                  </CustomText>
+                )}
+              </View>
+            </CustomLink>
+
+            <Divider className='my-3' />
+
             <View className='flex-row items-start justify-between gap-3'>
               <View
                 className={`self-start rounded-full px-2 py-1 ${
@@ -272,7 +322,7 @@ export function ArticleOffersCards({
             <Divider className='my-3' />
 
             <View className='gap-2'>
-              <View className='flex-row justify-between'>
+              <View className='flex-row justify-between gap-4'>
                 <View className='flex-row items-center gap-2'>
                   <CustomText
                     type='body'
@@ -292,7 +342,7 @@ export function ArticleOffersCards({
                 </CustomText>
               </View>
 
-              <View className='flex-row justify-between'>
+              <View className='flex-row justify-between gap-4'>
                 <CustomText
                   type='body'
                   className='text-sm text-neutral-600'
@@ -308,7 +358,7 @@ export function ArticleOffersCards({
                 </CustomText>
               </View>
 
-              <View className='flex-row justify-between'>
+              <View className='flex-row justify-between gap-4'>
                 <CustomText
                   type='body'
                   className='text-sm text-neutral-600'
@@ -374,6 +424,7 @@ export function ArticleOffersCards({
 
                   <Button
                     mode='secondary'
+                    size='small'
                     onPress={() => setCounterOfferId(offer.id)}
                     disabled={isLoading}
                   >

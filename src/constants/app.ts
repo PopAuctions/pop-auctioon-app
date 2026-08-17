@@ -65,3 +65,9 @@ export const LANGUAGE_OPTIONS = [
 ];
 
 export const REQUEST_EMAIL_COOLDOWN = 60; // 1 minute
+
+export const APP_STORE_URLS = {
+  android:
+    'https://play.google.com/store/apps/details?id=com.popauctioon.popauctioonapp',
+  ios: 'https://apps.apple.com/gt/app/popauctioon/id6758241896',
+};

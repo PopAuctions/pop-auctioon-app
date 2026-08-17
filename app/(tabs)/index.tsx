@@ -13,9 +13,9 @@ export default function TabsIndex() {
     return null;
   }
 
-  if (auth.state === 'unauthenticated') {
-    return <Redirect href='/(tabs)/auth' />;
-  }
-
+  // ✅ Always redirect to home - the default landing page for all users
+  // - Unauthenticated users can see public content
+  // - Authenticated users see full content
+  // - Home screen handles its own logic (onboarding, etc.)
   return <Redirect href='/(tabs)/home' />;
 }

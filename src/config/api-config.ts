@@ -268,6 +268,8 @@ export const SECURE_ENDPOINTS = {
     WON_ARTICLES: (auctionId: string): ApiEndpoint =>
       `/user/won-articles?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados en subasta
     WON_ARTICLES_BY_AUCTION: '/user/won-articles-by-auction', // GET - Artículos ganados agrupados por subasta
+    WON_ARTICLES_BY_AUCTION_ID: (auctionId: string): ApiEndpoint =>
+      `/user/won-articles-by-auction-id?auctionId=${auctionId}` as ApiEndpoint, // GET - Artículos ganados agrupados por subasta
     SOLD_ARTICLES: '/user/sold-articles', // GET - Artículos vendidos
     SOLD_ARTICLE: (articleId: string): ApiEndpoint =>
       `/user/sold-articles/${articleId}` as ApiEndpoint, // GET - Artículo vendido
