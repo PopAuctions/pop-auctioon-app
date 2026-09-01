@@ -15,7 +15,6 @@ import {
 } from '@expo-google-fonts/poppins';
 import { Rubik_400Regular, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
-import SplashLottie from '@/components/loading/splash-lottie';
 import * as Sentry from '@sentry/react-native';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import ErrorLoading from '@/components/loading/error-loading';
@@ -42,6 +41,7 @@ import { useFetchAppVersion } from '@/hooks/app/useFetchAppVersion';
 import { REQUEST_STATUS } from '@/constants';
 import { AppVersionGate } from '@/components/app/AppVersionGate';
 import { getVersionUpdateType } from '@/utils/appVersion';
+import SplashVideo from '@/components/loading/splash-video';
 
 // Disable font scaling globally to maintain consistent design
 disableFontScaling();
@@ -113,24 +113,30 @@ export default Sentry.wrap(function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
   const [fontError, setFontError] = useState<Error | null>(null);
   const [fontsReady, setFontsReady] = useState(false);
-  const [animationFinished, setAnimationFinished] = useState(false);
+
   const {
     data: serverAppVersion,
     status,
     errorMessage: appVersionError,
   } = useFetchAppVersion();
+
   const updateType = getVersionUpdateType(
     localAppVersion,
     String(serverAppVersion)
   );
 
-  // Lock orientation to portrait immediately on mount
+  const appVersionReady =
+    status !== REQUEST_STATUS.idle && status !== REQUEST_STATUS.loading;
+
+  const appReady = fontsReady && appVersionReady;
+
   useEffect(() => {
     const lockOrientation = async () => {
       try {
         await ScreenOrientation.lockAsync(
           ScreenOrientation.OrientationLock.PORTRAIT_UP
         );
+
         console.log('✅ [APP] Screen locked to PORTRAIT_UP');
       } catch (error) {
         console.error('❌ [APP] Failed to lock orientation:', error);
@@ -147,7 +153,6 @@ export default Sentry.wrap(function RootLayout() {
     }
   }, [error]);
 
-  // Ocultar splash nativo cuando fuentes estén listas
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -155,29 +160,16 @@ export default Sentry.wrap(function RootLayout() {
     }
   }, [loaded]);
 
-  // Ocultar splash Lottie solo cuando AMBOS estén listos: fuentes Y animación
-  useEffect(() => {
-    if (fontsReady && animationFinished) {
-      // Pequeño delay para transición suave
-      const timeout = setTimeout(() => {
-        setShowSplash(false);
-      }, 200);
-      return () => clearTimeout(timeout);
-    }
-  }, [fontsReady, animationFinished]);
-
   if (fontError || appVersionError) {
     return <ErrorLoading />;
   }
 
-  if (
-    !loaded ||
-    showSplash ||
-    status === REQUEST_STATUS.idle ||
-    status === REQUEST_STATUS.loading
-  ) {
+  if (!loaded || showSplash) {
     return (
-      <SplashLottie onAnimationFinish={() => setAnimationFinished(true)} />
+      <SplashVideo
+        isReady={appReady}
+        onFinish={() => setShowSplash(false)}
+      />
     );
   }
 
@@ -199,6 +191,7 @@ export default Sentry.wrap(function RootLayout() {
               <LanguageSyncEffect />
               <ProtectedRoute>
                 <RootLayoutNav />
+
                 {updateType === 'soft' && (
                   <AppVersionGate updateType={updateType} />
                 )}
