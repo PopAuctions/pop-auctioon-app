@@ -101,7 +101,8 @@ export default function MyOnlineStoreArticleDetailsScreen() {
 
               <View className='mt-4'>
                 <CustomText type='h4'>
-                  {articleOSDetailsLang.commissionedPrice}:{' '}
+                  {articleOSDetailsLang.commissionedPrice1}{' '}
+                  {articleOSDetailsLang.commissionedPrice2}:{' '}
                   {formatter.format(commissionedPrice)}
                 </CustomText>
 
