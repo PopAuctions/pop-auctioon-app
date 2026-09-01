@@ -290,7 +290,8 @@
       "remove": "Eliminar",
       "code": "Código",
       "articleNotFound": "Artículo no encontrado",
-      "commissionedPrice": "Precio con comisión"
+      "commissionedPrice1": "Precio",
+      "commissionedPrice2": "servicio incluído"
     },
     "editImages": {
       "title": "Editar imágenes"
