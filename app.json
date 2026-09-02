@@ -85,7 +85,8 @@
         }
       ],
       "expo-web-browser",
-      "expo-video"
+      "expo-video",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true
