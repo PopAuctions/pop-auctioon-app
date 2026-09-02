@@ -3,7 +3,7 @@
     "owner": "pop-auctioon",
     "name": "PopAuctioon",
     "slug": "pop-auctioon-app",
-    "version": "1.3.0",
+    "version": "1.3.3",
     "icon": "./assets/icons/pop-auctioon-icon.png",
     "scheme": "popauctioonapp",
     "userInterfaceStyle": "automatic",
@@ -71,10 +71,7 @@
       [
         "expo-localization",
         {
-          "supportedLocales": [
-            "es",
-            "en"
-          ]
+          "supportedLocales": ["es", "en"]
         }
       ],
       [
@@ -85,7 +82,8 @@
         }
       ],
       "expo-web-browser",
-      "expo-video"
+      "expo-video",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true

@@ -101,7 +101,8 @@ export default function MyOnlineStoreArticleDetailsScreen() {
 
               <View className='mt-4'>
                 <CustomText type='h4'>
-                  {articleOSDetailsLang.commissionedPrice}:{' '}
+                  {articleOSDetailsLang.commissionedPrice1}{' '}
+                  {articleOSDetailsLang.commissionedPrice2}:{' '}
                   {formatter.format(commissionedPrice)}
                 </CustomText>
 
@@ -161,6 +162,16 @@ export default function MyOnlineStoreArticleDetailsScreen() {
             >
               {articleOSDetailsLang.offers}
             </CustomText>
+
+            <View className='flex flex-row justify-end'>
+              <CustomLink
+                mode='secondary'
+                href={`/(tabs)/auctioneer/my-online-store/offers`}
+                size='small'
+              >
+                {articleOSDetailsLang.allOffers}
+              </CustomLink>
+            </View>
 
             <View className='mt-2'>
               <ArticleOffersCards

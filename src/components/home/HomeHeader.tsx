@@ -8,8 +8,11 @@ type HomeHeaderProps = {
   isAuctioneer: boolean;
   texts: {
     createAuction: string;
+    sellArticle: string;
   };
 };
+
+const baseUrl = process.env.EXPO_PUBLIC_BASE_URL as string;
 
 export function HomeHeader({
   unreadCount = 0,
@@ -35,17 +38,6 @@ export function HomeHeader({
         </CustomLink>
 
         <View className='flex flex-row gap-2'>
-          {isAuctioneer && (
-            <CustomLink
-              mode='primary'
-              size='small'
-              href='/(tabs)/auctioneer/my-auctions/new'
-              textClassName='text-sm'
-              className='p-2'
-            >
-              {texts.createAuction}
-            </CustomLink>
-          )}
           <CustomLink
             href={'/(tabs)/account/notifications'}
             className='relative h-11 w-11 items-center justify-center rounded-full'
@@ -67,6 +59,28 @@ export function HomeHeader({
               </View>
             ) : null}
           </CustomLink>
+          {isAuctioneer ? (
+            <CustomLink
+              mode='primary'
+              size='small'
+              href='/(tabs)/auctioneer/my-auctions/new'
+              textClassName='text-sm w-fit'
+              className='p-2'
+            >
+              {texts.createAuction}
+            </CustomLink>
+          ) : (
+            <CustomLink
+              mode='primary'
+              size='small'
+              outsideRedirect={true}
+              href={`${baseUrl}/sell-article`}
+              textClassName='text-sm w-fit'
+              className='w-fit p-2'
+            >
+              {texts.sellArticle}
+            </CustomLink>
+          )}
         </View>
       </View>
     </View>

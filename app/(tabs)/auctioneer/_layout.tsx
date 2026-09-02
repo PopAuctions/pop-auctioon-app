@@ -166,6 +166,15 @@ export default function AuctioneerLayout() {
         }}
       />
       <Stack.Screen
+        name='my-online-store/offers/index'
+        options={{
+          title: t('screens.store.offers'),
+          presentation: 'card',
+          headerShown: true,
+          headerBackTitle: t('tabsNames.back'),
+        }}
+      />
+      <Stack.Screen
         name='sold-articles'
         options={{
           title: t('screens.account.soldArticles'),
