@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { toTotal } from '@/utils/toTotal';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { ARTICLE_BRANDS_LABELS } from '@/constants';
@@ -51,7 +52,9 @@ export function AutomaticBidCard({
 
   const currentValue = article.ArticleBid.currentValue;
 
-  const computedMinBid = toTotal(minBid + currentValue, commissionAmount);
+  const computedMinBid = ceilToNearestTen(
+    toTotal(minBid + currentValue, commissionAmount)
+  );
 
   const currentValueWithCommission = getArticleCommissionedPrice(
     currentValue,
@@ -259,7 +262,7 @@ export function AutomaticBidCard({
               es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
               en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
             }}
-            defaultValue={String(Math.floor(maxAmountWithCommission))}
+            defaultValue={String(Math.floor(maxAmountWithCommission / 10) * 10)}
             minAmount={computedMinBid}
           />
         </View>

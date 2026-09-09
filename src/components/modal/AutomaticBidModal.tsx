@@ -25,7 +25,8 @@ const TEXTS = {
     inputLabel: 'Monto máximo',
     missingValue: 'Ingresa un valor',
     minimumPrice: (amount: string) => `El monto debe ser al menos ${amount}`,
-    noDecimals: 'No se permiten decimales',
+    noDecimals: 'Solo se permiten múltiplos enteros de 10 €',
+    multipleOfTen: 'El monto debe ser un múltiplo de 10 €',
   },
   en: {
     confirm: 'Confirm',
@@ -33,7 +34,8 @@ const TEXTS = {
     inputLabel: 'Maximum amount',
     missingValue: 'Please enter a value',
     minimumPrice: (amount: string) => `The amount must be at least ${amount}`,
-    noDecimals: 'Decimals are not allowed',
+    noDecimals: 'Only whole multiples of €10 are allowed',
+    multipleOfTen: 'The amount must be a multiple of €10',
   },
 } as const;
 
@@ -68,8 +70,15 @@ export function AutomaticBidModal({
       return;
     }
 
-    if (Number(inputValue) < minAmount) {
+    const numericInput = Number(inputValue);
+
+    if (numericInput < minAmount) {
       setError(TEXTS[locale].minimumPrice(formatter.format(minAmount)));
+      return;
+    }
+
+    if (numericInput % 10 !== 0) {
+      setError(TEXTS[locale].multipleOfTen);
       return;
     }
 
