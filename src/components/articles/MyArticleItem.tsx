@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type MyArticleItemProps = {
   article: Article;
@@ -82,7 +83,10 @@ export function MyArticleItem({
   const price = article.ArticleBid.currentValue;
 
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue ?? 0),
+    () =>
+      ceilToNearestTen(
+        getArticleCommissionedPrice(price, commissionValue ?? 0)
+      ),
     [price, commissionValue]
   );
 

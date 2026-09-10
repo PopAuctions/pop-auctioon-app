@@ -56,9 +56,8 @@ export function AutomaticBidCard({
     toTotal(minBid + currentValue, commissionAmount)
   );
 
-  const currentValueWithCommission = getArticleCommissionedPrice(
-    currentValue,
-    commissionAmount
+  const currentValueWithCommission = ceilToNearestTen(
+    getArticleCommissionedPrice(currentValue, commissionAmount)
   );
 
   const maxAmountWithCommission = ceilToNearestTen(
