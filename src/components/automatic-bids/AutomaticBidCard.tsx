@@ -61,9 +61,8 @@ export function AutomaticBidCard({
     commissionAmount
   );
 
-  const maxAmountWithCommission = getArticleCommissionedPrice(
-    maxAmount,
-    commissionAmount
+  const maxAmountWithCommission = ceilToNearestTen(
+    getArticleCommissionedPrice(maxAmount, commissionAmount)
   );
 
   const statusText = !isActive
@@ -262,7 +261,7 @@ export function AutomaticBidCard({
               es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
               en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
             }}
-            defaultValue={String(Math.floor(maxAmountWithCommission / 10) * 10)}
+            defaultValue={String(maxAmountWithCommission)}
             minAmount={computedMinBid}
           />
         </View>
