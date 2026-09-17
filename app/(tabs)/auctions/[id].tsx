@@ -72,6 +72,13 @@ export default function AuctionDetailScreen() {
     auction.status === AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE;
 
   const filtersKey = `${brand ?? ''}${price ?? ''}`;
+  const country =
+    COUNTRIES_MAP_LABEL[locale][
+      auction.country as keyof (typeof COUNTRIES_MAP_LABEL)[Lang]
+    ];
+  const formattedCountry = country.includes('-')
+    ? country.split('-')[0].trim()
+    : country;
 
   function renderAuctionHeader() {
     return (
@@ -120,13 +127,7 @@ export default function AuctionDetailScreen() {
 
             {auction.status !== AuctionStatus.LIVE && (
               <View className='flex w-full flex-row items-center justify-center gap-3'>
-                <CustomText type='subtitle'>
-                  {
-                    COUNTRIES_MAP_LABEL[locale][
-                      auction.country as keyof (typeof COUNTRIES_MAP_LABEL)[Lang]
-                    ]
-                  }
-                </CustomText>
+                <CustomText type='subtitle'>{formattedCountry}</CustomText>
                 <FontAwesomeIcon
                   variant='bold'
                   name='circle'
