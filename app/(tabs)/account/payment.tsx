@@ -38,6 +38,8 @@ import { savePaymentResultContext } from '@/utils/payments/payment-result-contex
 import type { CountryValue } from '@/types/types';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
+import { isValidPayableAmount } from '@/utils/is-valid-payable-amount';
+import { INVALID_DISCOUNT_AMOUNT_ERROR } from '@/constants/payment-errors';
 
 export default function PaymentScreen() {
   const { locale, t } = useTranslation();
@@ -150,6 +152,14 @@ export default function PaymentScreen() {
     paymentConfig.commission,
   ]);
 
+  const baseSubtotal = useMemo(
+    () =>
+      articles
+        .filter((article) => selectedArticleIds.includes(article.id))
+        .reduce((sum, article) => sum + (article.soldPrice ?? 0), 0),
+    [articles, selectedArticleIds]
+  );
+
   // Calcular el breakdown completo de pago
   const paymentDetails = useMemo(() => {
     // Siempre mostrar el subtotal aunque no tengamos comisión
@@ -169,6 +179,7 @@ export default function PaymentScreen() {
       selectedCountry: selectedAddress?.country as CountryValue | null,
       auctionCountry: auctionCountry,
       commissionPercentage: paymentConfig.commission || 0,
+      includedCommissionAmount: subtotal - baseSubtotal,
       shippingTaxes: paymentConfig.shippingTaxes,
       taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       discount: appliedDiscount?.amount || 0,
@@ -177,6 +188,7 @@ export default function PaymentScreen() {
     return details;
   }, [
     subtotal,
+    baseSubtotal,
     auctionCountry,
     selectedAddress,
     appliedDiscount,
@@ -236,6 +248,17 @@ export default function PaymentScreen() {
     const result = await validateCode(discountCode);
 
     if (result.isValid && result.data) {
+      const discountedTotal =
+        paymentDetails.subtotal + paymentDetails.shipping - result.data.amount;
+
+      if (!isValidPayableAmount(discountedTotal)) {
+        callToast({
+          variant: 'error',
+          description: INVALID_DISCOUNT_AMOUNT_ERROR,
+        });
+        return;
+      }
+
       setAppliedDiscount({
         code: result.data.code,
         amount: result.data.amount,
@@ -256,7 +279,25 @@ export default function PaymentScreen() {
           discountErrorMessage || 'screens.payments.invalidDiscountCode',
       });
     }
-  }, [discountCode, validateCode, discountErrorMessage, callToast, formatter]);
+  }, [
+    discountCode,
+    validateCode,
+    discountErrorMessage,
+    callToast,
+    formatter,
+    paymentDetails.subtotal,
+    paymentDetails.shipping,
+  ]);
+
+  useEffect(() => {
+    if (appliedDiscount && !isValidPayableAmount(paymentDetails.total)) {
+      setAppliedDiscount(null);
+      callToast({
+        variant: 'error',
+        description: INVALID_DISCOUNT_AMOUNT_ERROR,
+      });
+    }
+  }, [appliedDiscount, paymentDetails.total, callToast]);
 
   // Remover descuento aplicado
   const handleRemoveDiscount = useCallback(() => {
@@ -290,6 +331,14 @@ export default function PaymentScreen() {
           es: 'Selecciona una dirección de envío',
           en: 'Select a shipping address',
         },
+      });
+      return;
+    }
+
+    if (!isValidPayableAmount(paymentDetails.total)) {
+      callToast({
+        variant: 'error',
+        description: INVALID_DISCOUNT_AMOUNT_ERROR,
       });
       return;
     }
@@ -521,7 +570,11 @@ export default function PaymentScreen() {
           onDiscountCodeChange={setDiscountCode}
           onApplyDiscount={handleApplyDiscount}
           onRemoveDiscount={handleRemoveDiscount}
-          isValidatingDiscount={isValidatingDiscount}
+          isValidatingDiscount={
+            isValidatingDiscount ||
+            !isCommissionReady ||
+            !paymentConfig.shippingTaxes
+          }
         />
 
         {/* Botón de pago */}
@@ -534,7 +587,8 @@ export default function PaymentScreen() {
             !isCommissionReady ||
             !paymentConfig.shippingTaxes ||
             paymentLoading ||
-            isSubmittingPayment
+            isSubmittingPayment ||
+            !isValidPayableAmount(paymentDetails.total)
           }
           isLoading={
             !isCommissionReady || paymentLoading || isSubmittingPayment
