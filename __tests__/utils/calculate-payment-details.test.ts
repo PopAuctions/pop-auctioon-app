@@ -27,11 +27,11 @@ describe('calculatePaymentDetails', () => {
 
     expect(result).toEqual({
       subtotal: 1000,
-      commission: 111.11,
-      taxes: 23.33,
+      commission: 61.11,
+      taxes: 10.61,
       shipping: 10,
       discount: 50,
-      total: 983.33,
+      total: 960,
     });
   });
 
@@ -47,8 +47,8 @@ describe('calculatePaymentDetails', () => {
 
     expect(result.shipping).toBe(29);
     expect(result.commission).toBe(45.45);
-    expect(result.taxes).toBe(9.55);
-    expect(result.total).toBe(538.55);
+    expect(result.taxes).toBe(7.89);
+    expect(result.total).toBe(529);
   });
 
   it('uses SAME_COUNTRY shipping when the countries match', () => {
@@ -111,11 +111,11 @@ describe('calculatePaymentDetails', () => {
 
     expect(result).toEqual({
       subtotal: 10000,
-      commission: 1111.11,
-      taxes: 233.33,
+      commission: 611.11,
+      taxes: 106.06,
       shipping: 20,
       discount: 500,
-      total: 9753.33,
+      total: 9520,
     });
   });
 
@@ -151,14 +151,14 @@ describe('calculatePaymentDetails', () => {
     expect(result).toEqual({
       subtotal: 5,
       commission: 0.45,
-      taxes: 0.1,
-      shipping: 29,
+      taxes: 0.08,
+      shipping: 10,
       discount: 0,
-      total: 34.1,
+      total: 15,
     });
   });
 
-  it('uses DIFFERENT_COUNTRY shipping when only one country is known', () => {
+  it('uses SAME_COUNTRY shipping while no address is selected', () => {
     const result = calculatePaymentDetails(
       makeInput({
         selectedCountry: null,
@@ -168,10 +168,10 @@ describe('calculatePaymentDetails', () => {
       })
     );
 
-    expect(result.shipping).toBe(29);
+    expect(result.shipping).toBe(10);
   });
 
-  it('uses DIFFERENT_COUNTRY shipping when the auction country is missing', () => {
+  it('uses SAME_COUNTRY shipping when the auction country is missing', () => {
     const result = calculatePaymentDetails(
       makeInput({
         selectedCountry: 'SPAIN',
@@ -181,6 +181,29 @@ describe('calculatePaymentDetails', () => {
       })
     );
 
-    expect(result.shipping).toBe(29);
+    expect(result.shipping).toBe(10);
+  });
+
+  it('uses the rounded auction uplift and clamps service at zero', () => {
+    const result = calculatePaymentDetails(
+      makeInput({
+        articlesAmount: 220,
+        includedCommissionAmount: 20,
+        shippingTaxes: {
+          ...shippingTaxes,
+          SAME_COUNTRY: 15,
+        },
+        discount: 50,
+      })
+    );
+
+    expect(result).toEqual({
+      subtotal: 220,
+      commission: 0,
+      taxes: 0,
+      shipping: 15,
+      discount: 50,
+      total: 185,
+    });
   });
 });

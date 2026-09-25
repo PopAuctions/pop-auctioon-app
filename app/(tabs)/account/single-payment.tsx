@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -25,6 +25,8 @@ import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
 import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import { useFetchStoreCountryByArticleId } from '@/hooks/components/useFetchStoreCountryByArticleId';
+import { isValidPayableAmount } from '@/utils/is-valid-payable-amount';
+import { INVALID_DISCOUNT_AMOUNT_ERROR } from '@/constants/payment-errors';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -151,6 +153,17 @@ export default function SinglePaymentScreen() {
     const result = await validateCode(discountCode);
 
     if (result.isValid && result.data) {
+      const discountedTotal =
+        paymentDetails.subtotal + paymentDetails.shipping - result.data.amount;
+
+      if (!isValidPayableAmount(discountedTotal)) {
+        callToast({
+          variant: 'error',
+          description: INVALID_DISCOUNT_AMOUNT_ERROR,
+        });
+        return;
+      }
+
       setAppliedDiscount({
         code: result.data.code,
         amount: result.data.amount,
@@ -170,7 +183,25 @@ export default function SinglePaymentScreen() {
           discountErrorMessage || 'screens.payments.invalidDiscountCode',
       });
     }
-  }, [discountCode, validateCode, discountErrorMessage, callToast, formatter]);
+  }, [
+    discountCode,
+    validateCode,
+    discountErrorMessage,
+    callToast,
+    formatter,
+    paymentDetails.subtotal,
+    paymentDetails.shipping,
+  ]);
+
+  useEffect(() => {
+    if (appliedDiscount && !isValidPayableAmount(paymentDetails.total)) {
+      setAppliedDiscount(null);
+      callToast({
+        variant: 'error',
+        description: INVALID_DISCOUNT_AMOUNT_ERROR,
+      });
+    }
+  }, [appliedDiscount, paymentDetails.total, callToast]);
 
   const handleRemoveDiscount = useCallback(() => {
     setAppliedDiscount(null);
@@ -203,6 +234,14 @@ export default function SinglePaymentScreen() {
           es: 'Selecciona una dirección de envío',
           en: 'Select a shipping address',
         },
+      });
+      return;
+    }
+
+    if (!isValidPayableAmount(paymentDetails.total)) {
+      callToast({
+        variant: 'error',
+        description: INVALID_DISCOUNT_AMOUNT_ERROR,
       });
       return;
     }
@@ -471,7 +510,11 @@ export default function SinglePaymentScreen() {
           onDiscountCodeChange={setDiscountCode}
           onApplyDiscount={handleApplyDiscount}
           onRemoveDiscount={handleRemoveDiscount}
-          isValidatingDiscount={isValidatingDiscount}
+          isValidatingDiscount={
+            isValidatingDiscount ||
+            !isCommissionReady ||
+            !paymentConfig.shippingTaxes
+          }
         />
 
         {/* Pay button */}
@@ -482,7 +525,8 @@ export default function SinglePaymentScreen() {
             !article?.id ||
             !selectedAddress ||
             paymentLoading ||
-            isSubmittingPayment
+            isSubmittingPayment ||
+            !isValidPayableAmount(paymentDetails.total)
           }
           isLoading={paymentLoading || isSubmittingPayment}
           className='mb-6'

@@ -13,6 +13,8 @@ export interface PaymentDetailsInput {
   taxPercentageArticles: number;
   /** Commission percentage (from useFetchCommissions hook) */
   commissionPercentage: number;
+  /** Effective buyer uplift for rounded auction prices */
+  includedCommissionAmount?: number;
   /** Shipping taxes by country (from useFetchCommissions hook) */
   shippingTaxes: PaymentShippingTax;
   /** Discount amount (absolute value, not percentage) */
@@ -26,7 +28,7 @@ export interface PaymentDetails {
   /** Subtotal (articles amount) */
   subtotal: number;
   taxes: number;
-  /** Commission fee (WITHOUT VAT - matches web) */
+  /** Discounted commission fee (VAT included) */
   commission: number;
   /** Shipping cost based on country */
   shipping: number;
@@ -53,10 +55,10 @@ export interface PaymentDetails {
  * });
  * // {
  * //   subtotal: 1000,
- * //   commission: 125,
+ * //   commission: 61.11,
  * //   shipping: 10,
  * //   discount: 50,
- * //   total: 1085
+ * //   total: 960
  * // }
  * ```
  */
@@ -68,6 +70,7 @@ export function calculatePaymentDetails(
     selectedCountry,
     auctionCountry,
     commissionPercentage,
+    includedCommissionAmount,
     shippingTaxes,
     taxPercentageArticles = 21,
     discount = 0,
@@ -78,10 +81,17 @@ export function calculatePaymentDetails(
 
   // Commission included inside subtotal
   const includedCommission =
+    includedCommissionAmount ??
     subtotal - subtotal / (1 + commissionPercentage / 100);
 
-  // VAT calculated over included commission
-  const taxes = includedCommission * (taxPercentageArticles / 100);
+  // PopAuction funds the discount. It reduces the buyer service first, while
+  // any remainder continues reducing the total without affecting settlement.
+  const discountedCommission = Math.max(0, includedCommission - discount);
+
+  // The service is VAT-inclusive, so extract its VAT rather than adding VAT.
+  const taxes =
+    discountedCommission -
+    discountedCommission / (1 + taxPercentageArticles / 100);
 
   // Shipping calculation based on auction country from backend
   const defaultShipping = shippingTaxes.SAME_COUNTRY;
@@ -96,7 +106,7 @@ export function calculatePaymentDetails(
 
   return {
     subtotal: Number(subtotal.toFixed(2)),
-    commission: Number(includedCommission.toFixed(2)),
+    commission: Number(discountedCommission.toFixed(2)),
     taxes: Number(taxes.toFixed(2)),
     shipping: Number(shipping.toFixed(2)),
     discount: Number(discount.toFixed(2)),

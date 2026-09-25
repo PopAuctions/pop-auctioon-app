@@ -207,8 +207,8 @@ export default function PaymentResultScreen() {
           en: 'Payment approved',
         },
         description: {
-          es: 'El pago fue autorizado por Redsys. Puedes revisar el detalle en tu historial de pagos.',
-          en: 'The payment was authorized by Redsys. You can review the details in your payment history.',
+          es: 'El pago fue autorizado. Puedes revisar el detalle en tu historial de pagos.',
+          en: 'The payment was authorized. You can review the details in your payment history.',
         },
         primaryLabel: {
           es: 'Ir a historial',
@@ -226,8 +226,8 @@ export default function PaymentResultScreen() {
           en: 'Confirming payment',
         },
         description: {
-          es: 'Estamos confirmando el resultado final del pago. Si Redsys ya lo autorizó, lo verás reflejado en tu historial en breve.',
-          en: 'We are confirming the final payment result. If Redsys already authorized it, it will appear in your payment history shortly.',
+          es: 'Estamos confirmando el resultado final del pago. Una vez autorizado, lo verás reflejado en tu historial en breve.',
+          en: 'We are confirming the final payment result. Once authorized, it will appear in your payment history shortly.',
         },
         primaryLabel: {
           es: 'Ir a historial',
@@ -244,8 +244,8 @@ export default function PaymentResultScreen() {
         en: 'Payment rejected',
       },
       description: {
-        es: 'Redsys devolvió un rechazo para este pago. Puedes volver e intentarlo otra vez.',
-        en: 'Redsys returned a rejection for this payment. You can go back and try again.',
+        es: 'Pago rechazado. Puedes volver e intentarlo otra vez.',
+        en: 'Payment rejected. You can go back and try again.',
       },
       primaryLabel: {
         es: 'Intentar de nuevo',
