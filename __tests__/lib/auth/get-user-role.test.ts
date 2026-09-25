@@ -15,6 +15,7 @@ jest.mock('@/lib/error/sentry-error-report', () => ({
 }));
 
 describe('getUserRole', () => {
+  const accessToken = 'test-access-token';
   const mockFrom = supabase.from as jest.MockedFunction<typeof supabase.from>;
   const mockSentryErrorReport =
     sentryErrorReport.sentryErrorReport as jest.Mock;
@@ -26,6 +27,7 @@ describe('getUserRole', () => {
   ) => ({
     select: jest.fn().mockReturnThis(),
     eq: jest.fn().mockReturnThis(),
+    setHeader: jest.fn().mockReturnThis(),
     single: jest.fn().mockResolvedValue({
       data: role ? { role, isDisabled } : null,
       error,
@@ -43,6 +45,7 @@ describe('getUserRole', () => {
       const result: AsyncResponse<{ role: UserRoles; isDisabled: boolean }> =
         await getUserRole({
           id: 'user-123',
+          accessToken,
         });
 
       expect(result.data?.role).toBe('USER');
@@ -53,7 +56,7 @@ describe('getUserRole', () => {
     it('should return AUCTIONEER role successfully', async () => {
       mockFrom.mockReturnValue(createMockChain('AUCTIONEER') as never);
 
-      const result = await getUserRole({ id: 'user-456' });
+      const result = await getUserRole({ id: 'user-456', accessToken });
 
       expect(result.data?.role).toBe('AUCTIONEER');
       expect(result.data?.isDisabled).toBe(false);
@@ -64,11 +67,15 @@ describe('getUserRole', () => {
       const mockChain = createMockChain('USER');
       mockFrom.mockReturnValue(mockChain as never);
 
-      await getUserRole({ id: 'user-789' });
+      await getUserRole({ id: 'user-789', accessToken });
 
       expect(mockFrom).toHaveBeenCalledWith('User');
       expect(mockChain.select).toHaveBeenCalledWith('role, isDisabled');
       expect(mockChain.eq).toHaveBeenCalledWith('id', 'user-789');
+      expect(mockChain.setHeader).toHaveBeenCalledWith(
+        'Authorization',
+        `Bearer ${accessToken}`
+      );
       expect(mockChain.single).toHaveBeenCalled();
     });
   });
@@ -78,7 +85,7 @@ describe('getUserRole', () => {
       const error = { message: 'Database connection failed' };
       mockFrom.mockReturnValue(createMockChain(null, false, error) as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result.data).toBeNull();
       expect(result.error).toEqual({
@@ -94,7 +101,7 @@ describe('getUserRole', () => {
     it('should handle null data response', async () => {
       mockFrom.mockReturnValue(createMockChain(null) as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result.data).toBeNull();
       expect(result.error).toEqual({
@@ -106,7 +113,7 @@ describe('getUserRole', () => {
     it('should report null data to Sentry', async () => {
       mockFrom.mockReturnValue(createMockChain(null) as never);
 
-      await getUserRole({ id: 'user-456' });
+      await getUserRole({ id: 'user-456', accessToken });
 
       expect(mockSentryErrorReport).toHaveBeenCalledWith(
         null,
@@ -119,7 +126,7 @@ describe('getUserRole', () => {
     it('should handle empty user ID', async () => {
       mockFrom.mockReturnValue(createMockChain(null) as never);
 
-      const result = await getUserRole({ id: '' });
+      const result = await getUserRole({ id: '', accessToken });
 
       expect(mockFrom).toHaveBeenCalledWith('User');
       const mockChain = mockFrom.mock.results[0]?.value;
@@ -131,7 +138,7 @@ describe('getUserRole', () => {
       const error = { message: '' };
       mockFrom.mockReturnValue(createMockChain(null, false, error) as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result.data).toBeNull();
       expect(result.error).toBeDefined();
@@ -142,6 +149,7 @@ describe('getUserRole', () => {
       const mockChain = {
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
+        setHeader: jest.fn().mockReturnThis(),
         single: jest.fn().mockResolvedValue({
           data: { isDisabled: undefined },
           error: null,
@@ -149,7 +157,7 @@ describe('getUserRole', () => {
       };
       mockFrom.mockReturnValue(mockChain as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       // Data without role should still be returned with role as undefined
       expect(result.success).toBe(true);
@@ -165,6 +173,7 @@ describe('getUserRole', () => {
       const result: AsyncResponse<{ role: UserRoles; isDisabled: boolean }> =
         await getUserRole({
           id: 'user-123',
+          accessToken,
         });
 
       expect(result).toHaveProperty('data');
@@ -178,7 +187,7 @@ describe('getUserRole', () => {
     it('should return correct shape for error response', async () => {
       mockFrom.mockReturnValue(createMockChain(null) as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result).toHaveProperty('data');
       expect(result).toHaveProperty('error');
@@ -189,7 +198,7 @@ describe('getUserRole', () => {
     it('should never include success property', async () => {
       mockFrom.mockReturnValue(createMockChain('USER') as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result).toHaveProperty('success');
       expect(result.success).toBe(true);
@@ -198,7 +207,7 @@ describe('getUserRole', () => {
     it('should have proper TypeScript interface', async () => {
       mockFrom.mockReturnValue(createMockChain('USER') as never);
 
-      const result = await getUserRole({ id: 'user-123' });
+      const result = await getUserRole({ id: 'user-123', accessToken });
 
       // Type checking - should compile without errors
       const role: UserRoles | null | undefined = result.data?.role;
@@ -218,7 +227,10 @@ describe('getUserRole', () => {
       for (const role of roles) {
         mockFrom.mockReturnValue(createMockChain(role) as never);
 
-        const result = await getUserRole({ id: `user-${role}` });
+        const result = await getUserRole({
+          id: `user-${role}`,
+          accessToken,
+        });
 
         expect(result.data?.role).toBe(role);
         expect(result.error).toBeUndefined();
@@ -232,9 +244,9 @@ describe('getUserRole', () => {
       mockFrom.mockReturnValueOnce(createMockChain('AUCTIONEER') as never);
       mockFrom.mockReturnValueOnce(createMockChain(null) as never);
 
-      const result1 = await getUserRole({ id: 'user-1' });
-      const result2 = await getUserRole({ id: 'user-2' });
-      const result3 = await getUserRole({ id: 'user-3' });
+      const result1 = await getUserRole({ id: 'user-1', accessToken });
+      const result2 = await getUserRole({ id: 'user-2', accessToken });
+      const result3 = await getUserRole({ id: 'user-3', accessToken });
 
       expect(result1.data?.role).toBe('USER');
       expect(result2.data?.role).toBe('AUCTIONEER');
@@ -245,8 +257,8 @@ describe('getUserRole', () => {
       mockFrom.mockReturnValueOnce(createMockChain(null) as never);
       mockFrom.mockReturnValueOnce(createMockChain('USER') as never);
 
-      const result1 = await getUserRole({ id: 'user-1' });
-      const result2 = await getUserRole({ id: 'user-2' });
+      const result1 = await getUserRole({ id: 'user-1', accessToken });
+      const result2 = await getUserRole({ id: 'user-2', accessToken });
 
       expect(result1.error).toBeDefined();
       expect(result2.error).toBeUndefined();

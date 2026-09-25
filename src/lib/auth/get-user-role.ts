@@ -4,13 +4,16 @@ import { UserRoles, AsyncResponse } from '@/types/types';
 
 export const getUserRole = async ({
   id,
+  accessToken,
 }: {
   id: string;
+  accessToken: string;
 }): Promise<AsyncResponse<{ role: UserRoles; isDisabled: boolean }>> => {
   const { data, error } = await supabase
     .from('User')
     .select('role, isDisabled')
     .eq('id', id)
+    .setHeader('Authorization', `Bearer ${accessToken}`)
     .single();
 
   if (error || !data) {

@@ -24,6 +24,7 @@ jest.mock('@/utils/supabase/supabase-store', () => ({
     from: jest.fn(() => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
+      setHeader: jest.fn().mockReturnThis(),
       single: jest.fn().mockResolvedValue({
         data: { emailVerified: true },
         error: null,

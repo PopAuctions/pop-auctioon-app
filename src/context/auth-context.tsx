@@ -87,6 +87,7 @@ async function checkIsValidated(session: Session | null): Promise<boolean> {
     .from('User')
     .select('emailVerified')
     .eq('id', session.user.id)
+    .setHeader('Authorization', `Bearer ${session.access_token}`)
     .single();
 
   if (error) return false;
@@ -374,7 +375,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Fetch role right away for manual sign-in
         try {
-          const r = await getUserRole({ id: session.user.id });
+          const r = await getUserRole({
+            id: session.user.id,
+            accessToken: session.access_token,
+          });
 
           if (r.data?.isDisabled) {
             await logoutBecauseDisabled();
@@ -416,7 +420,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (session: Session, isAlive?: () => boolean) => {
       armRefresh(session, isAlive);
 
-      const r = await getUserRole({ id: session.user.id });
+      const r = await getUserRole({
+        id: session.user.id,
+        accessToken: session.access_token,
+      });
 
       if (isAlive && !isAlive()) return;
 
@@ -557,7 +564,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        const r = await getUserRole({ id: session.user.id });
+        const r = await getUserRole({
+          id: session.user.id,
+          accessToken: session.access_token,
+        });
 
         if (r.data?.isDisabled) {
           await logoutBecauseDisabled();
