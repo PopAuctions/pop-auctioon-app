@@ -537,6 +537,7 @@
       "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
       "compressionError": "Error al comprimir la imagen. Por favor intenta con otra.",
       "compressingImages": "Comprimiendo imágenes...",
+      "updateSuccess": "Perfil actualizado correctamente",
       "updateSuccessStore": "Información actualizada exitosamente",
       "updateError": "Error al actualizar el perfil",
       "loadError": "Error al cargar datos del usuario",
