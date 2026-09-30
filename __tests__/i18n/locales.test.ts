@@ -4,6 +4,7 @@ import {
   LOCALE_CONFIG,
   SUPPORTED_LANGUAGES,
   isLang,
+  resolveLang,
 } from '@/i18n/locales';
 
 describe('app locale registry', () => {
@@ -32,5 +33,12 @@ describe('app locale registry', () => {
     expect(isLang('en')).toBe(true);
     expect(isLang('fr')).toBe(false);
     expect(isLang(undefined)).toBe(false);
+  });
+
+  it('resolves untrusted locale values to a supported language', () => {
+    expect(resolveLang('en')).toBe('en');
+    expect(resolveLang('es')).toBe('es');
+    expect(resolveLang('it')).toBe(DEFAULT_LANG);
+    expect(resolveLang(null)).toBe(DEFAULT_LANG);
   });
 });

@@ -31,3 +31,7 @@ export function isLang(value: unknown): value is Lang {
     Object.prototype.hasOwnProperty.call(LOCALE_CONFIG, value)
   );
 }
+
+export function resolveLang(value: unknown): Lang {
+  return isLang(value) ? value : DEFAULT_LANG;
+}

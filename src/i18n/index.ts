@@ -14,6 +14,7 @@ import {
   DEFAULT_LANG,
   SUPPORTED_LANGUAGES,
   isLang,
+  resolveLang,
   type Lang,
 } from './locales';
 
@@ -38,7 +39,7 @@ const getInitialLocale = (): Lang => {
   const deviceLanguage = getLocales()[0]?.languageCode;
 
   // Return device language if supported, otherwise default to Spanish
-  return isLang(deviceLanguage) ? deviceLanguage : DEFAULT_LANG;
+  return resolveLang(deviceLanguage);
 };
 
 // Set initial locale (will be updated by TranslationProvider if user has saved preference)
@@ -51,8 +52,7 @@ i18n.defaultLocale = DEFAULT_LANG;
 export default i18n;
 
 // Helper function to get current locale
-export const getCurrentLocale = (): Lang =>
-  isLang(i18n.locale) ? i18n.locale : DEFAULT_LANG;
+export const getCurrentLocale = (): Lang => resolveLang(i18n.locale);
 
 // Helper function to save language preference to AsyncStorage
 export const saveLanguagePreference = async (locale: Lang): Promise<void> => {
