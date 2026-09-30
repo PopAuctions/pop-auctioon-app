@@ -1,4 +1,47 @@
 {
+  "common": {
+    "actions": {
+      "back": "Back",
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "home": "Go to home",
+      "login": "Log in",
+      "ok": "OK",
+      "retry": "Try again",
+      "save": "Save"
+    },
+    "status": {
+      "loading": "Loading..."
+    },
+    "toast": {
+      "success": "Success",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Info",
+      "loading": "Loading..."
+    }
+  },
+  "errors": {
+    "unexpected": "Something went wrong",
+    "network": "There was a connection problem. Please try again."
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "retry": "Try again"
+  },
+  "validation": {
+    "required": "Required",
+    "invalidEmail": "Enter a valid email address",
+    "invalidFormat": "Invalid format",
+    "minLength": "Must contain at least %{min} characters",
+    "maxLength": "Must contain no more than %{max} characters",
+    "minValue": "Must be at least %{min}",
+    "maxValue": "Must be no more than %{max}",
+    "passwordMismatch": "Passwords do not match",
+    "noSpaces": "Spaces are not allowed"
+  },
   "commonActions": {
     "loading": "Loading...",
     "error": "Error",

@@ -1,4 +1,47 @@
 {
+  "common": {
+    "actions": {
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "confirm": "Confirmar",
+      "home": "Ir al inicio",
+      "login": "Iniciar sesión",
+      "ok": "Aceptar",
+      "retry": "Intentar de nuevo",
+      "save": "Guardar"
+    },
+    "status": {
+      "loading": "Cargando..."
+    },
+    "toast": {
+      "success": "Éxito",
+      "error": "Error",
+      "warning": "Advertencia",
+      "info": "Información",
+      "loading": "Cargando..."
+    }
+  },
+  "errors": {
+    "unexpected": "Algo ha ido mal",
+    "network": "Ha habido un problema de conexión. Inténtalo de nuevo."
+  },
+  "errorBoundary": {
+    "title": "Algo ha ido mal",
+    "description": "Ha ocurrido un error inesperado. Inténtalo de nuevo.",
+    "retry": "Intentar de nuevo"
+  },
+  "validation": {
+    "required": "Requerido",
+    "invalidEmail": "Introduce una dirección de correo válida",
+    "invalidFormat": "Formato no válido",
+    "minLength": "Debe contener al menos %{min} caracteres",
+    "maxLength": "Debe contener como máximo %{max} caracteres",
+    "minValue": "Debe ser al menos %{min}",
+    "maxValue": "Debe ser como máximo %{max}",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "noSpaces": "No se permiten espacios"
+  },
   "commonActions": {
     "loading": "Cargando...",
     "error": "Error",
