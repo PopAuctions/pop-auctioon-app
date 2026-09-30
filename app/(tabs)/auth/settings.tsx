@@ -7,19 +7,18 @@ import { Loading } from '@/components/ui/Loading';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
-import { LANGUAGE_OPTIONS } from '@/constants/app';
-import { Lang } from '@/types/types';
+import { LANGUAGE_OPTIONS, isLang, type Lang } from '@/i18n/locales';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+  const [selectedLanguage, setSelectedLanguage] = useState<Lang>(locale);
   const { resetOnboarding } = useOnboarding();
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
-      changeLanguage(selectedLanguage as Lang);
+      changeLanguage(selectedLanguage);
       triggerHaptic('success', {
         throttleMs: 120,
       });
@@ -63,7 +62,9 @@ export default function SettingsScreen() {
                 options={LANGUAGE_OPTIONS}
                 placeholder={t('screens.account.selectLanguage')}
                 formField={true}
-                onChange={(value) => setSelectedLanguage(value || 'es')}
+                onChange={(value) => {
+                  if (isLang(value)) setSelectedLanguage(value);
+                }}
                 isDisabled={isPending}
               />
             </View>

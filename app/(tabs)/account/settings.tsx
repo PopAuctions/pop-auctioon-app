@@ -7,8 +7,8 @@ import { Loading } from '@/components/ui/Loading';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
-import { LANGUAGE_OPTIONS, REQUEST_STATUS } from '@/constants/app';
-import { Lang } from '@/types/types';
+import { REQUEST_STATUS } from '@/constants/app';
+import { LANGUAGE_OPTIONS, isLang, type Lang } from '@/i18n/locales';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { ConfirmModal } from '@/components/modal/ConfirmModal';
@@ -20,11 +20,11 @@ export default function SettingsScreen() {
   const { resetOnboarding } = useOnboarding();
   const { deleteAccount, status: deleteStatus } = useDeleteAccount(locale);
   const { updateLanguage } = useUpdateLanguage(locale);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+  const [selectedLanguage, setSelectedLanguage] = useState<Lang>(locale);
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
-      const newLang = selectedLanguage as Lang;
+      const newLang = selectedLanguage;
       changeLanguage(newLang);
       // Persist to DB so push notifications use the correct language
       updateLanguage(newLang);
@@ -71,7 +71,9 @@ export default function SettingsScreen() {
                 options={LANGUAGE_OPTIONS}
                 placeholder={t('screens.account.selectLanguage')}
                 formField={true}
-                onChange={(value) => setSelectedLanguage(value || 'es')}
+                onChange={(value) => {
+                  if (isLang(value)) setSelectedLanguage(value);
+                }}
                 isDisabled={isPending}
               />
             </View>

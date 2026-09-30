@@ -1,8 +1,9 @@
 import { OFFERS_OPTIONS_VALUES, type WonArticleStatus } from '@/constants';
+import { type Lang } from '@/i18n/locales';
 import { type Database } from '@/types/supabase';
 import { type ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
-export type Lang = 'es' | 'en';
+export type { Lang } from '@/i18n/locales';
 
 export type UserRoles = 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
 

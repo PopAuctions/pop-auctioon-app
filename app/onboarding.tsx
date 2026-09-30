@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { DEFAULT_LANG } from '@/i18n/locales';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
@@ -53,7 +54,7 @@ export default function OnboardingScreen() {
   const handleSelectLanguage = async (lang: OnboardingVideoLang) => {
     await triggerHaptic('selection');
 
-    changeLanguage(lang === 'it' ? 'es' : lang);
+    changeLanguage(lang === 'it' ? DEFAULT_LANG : lang);
     setSelectedLang(lang);
     setDisplayEndMessage(false);
     setStep('video');
