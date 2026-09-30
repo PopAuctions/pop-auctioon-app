@@ -22,6 +22,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useToast } from '@/hooks/useToast';
 import { Button } from '../ui/Button';
 import { getFileNameFromContentDisposition } from '@/utils/getFileNameFromContentDisposition';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export function StorePayoutDetail({
   payout,
@@ -37,7 +38,7 @@ export function StorePayoutDetail({
 
   const texts = t('screens.storeSettlements');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
   const payoutId = payout.id;
 
   const items = payout.StoreSettlementItem ?? [];

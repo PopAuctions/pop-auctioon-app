@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 interface AuctionDisplayDateTimeProps {
   startDate: string;
@@ -17,7 +18,7 @@ export const AuctionDisplayDateTime = ({
   singleLine = false,
   displayTime = true,
 }: AuctionDisplayDateTimeProps) => {
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
   const formattedDate = new Date(startDate);
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 

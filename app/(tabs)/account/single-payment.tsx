@@ -27,6 +27,7 @@ import { savePaymentResultContext } from '@/utils/payments/payment-result-contex
 import { useFetchStoreCountryByArticleId } from '@/hooks/components/useFetchStoreCountryByArticleId';
 import { isValidPayableAmount } from '@/utils/is-valid-payable-amount';
 import { INVALID_DISCOUNT_AMOUNT_ERROR } from '@/constants/payment-errors';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -91,7 +92,7 @@ export default function SinglePaymentScreen() {
   const paymentTranslations = t('screens.payment');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const userLimitTimeDate = new Date(buyData?.userLimitTime ?? '');
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
 
   const article = buyData?.article ?? null;
 

@@ -1,5 +1,6 @@
 import { MONTHS } from '@/constants';
 import { type MonthEntry } from '@/types/types';
+import { DEFAULT_LANG, LOCALE_CONFIG, type Lang } from '@/i18n/locales';
 
 /**
  * Genera un mapa de los próximos meses desde hoy para uso en calendarios
@@ -89,7 +90,7 @@ export function isCurrentMonth(date: Date): boolean {
  */
 export function formatCalendarDate(
   date: Date,
-  locale: string = 'es-ES'
+  locale: string = LOCALE_CONFIG[DEFAULT_LANG].intlLocale
 ): string {
   return date.toLocaleDateString(locale, {
     year: 'numeric',
@@ -108,10 +109,10 @@ export function formatCalendarDate(
  */
 export function formatPaymentDate(
   dateString: string,
-  lang: 'es' | 'en' = 'es'
+  lang: Lang = DEFAULT_LANG
 ): string {
   const formattedDate = new Date(dateString);
-  const dateLang = lang === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[lang].intlLocale;
 
   return formattedDate.toLocaleDateString(dateLang, {
     year: 'numeric',

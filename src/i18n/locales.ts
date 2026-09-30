@@ -4,12 +4,14 @@ export const LOCALE_CONFIG = {
     shortLabel: 'Es',
     flag: '🇪🇸',
     intlLocale: 'es-ES',
+    currencyLocale: 'es-ES',
   },
   en: {
     label: 'English',
     shortLabel: 'En',
     flag: '🇺🇸',
     intlLocale: 'en-US',
+    currencyLocale: 'en-IE',
   },
 } as const;
 

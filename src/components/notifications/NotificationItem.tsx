@@ -3,8 +3,9 @@ import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomText } from '@/components/ui/CustomText';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { DisplayedNotification, Lang } from '@/types/types';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
-const formatRelativeDate = (dateString: string, locale: string) => {
+const formatRelativeDate = (dateString: string, locale: string, lang: Lang) => {
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -19,7 +20,7 @@ const formatRelativeDate = (dateString: string, locale: string) => {
   if (hours < 24) return locale === 'es' ? `Hace ${hours} h` : `${hours} h ago`;
   if (days < 7) return locale === 'es' ? `Hace ${days} d` : `${days} d ago`;
 
-  return date.toLocaleDateString(locale);
+  return date.toLocaleDateString(LOCALE_CONFIG[lang].intlLocale);
 };
 
 export const NotificationItem = ({
@@ -90,7 +91,7 @@ export const NotificationItem = ({
           type='bodysmall'
           className='text-slate-900'
         >
-          {formatRelativeDate(notification.createdAt, locale)}
+          {formatRelativeDate(notification.createdAt, locale, lang)}
         </CustomText>
       </View>
     </Pressable>

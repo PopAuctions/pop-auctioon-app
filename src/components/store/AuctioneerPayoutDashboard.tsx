@@ -10,6 +10,7 @@ import { EmptyPayoutMessage } from './EmptyPayoutMessage';
 import { PayoutInfoRow } from './PayoutInfoRow';
 import { SALE_TYPE_MAP } from '@/constants/store';
 import { AuctioneerPayoutDashboard as AuctioneerPayoutDashboardType } from '@/types/payouts';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export function AuctioneerPayoutDashboard({
   dashboard,
@@ -19,7 +20,7 @@ export function AuctioneerPayoutDashboard({
   const { locale, t } = useTranslation();
   const texts = t('screens.store.payoutsDashboard');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
 
   const pendingAuctionTotal = dashboard.auctionPendingPayouts.reduce(
     (total, payout) => total + payout.totalAmount,
