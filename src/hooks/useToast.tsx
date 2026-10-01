@@ -1,10 +1,17 @@
 import Toast from 'react-native-toast-message';
 import type { Lang, LangMap } from '@/types/types';
-import { TOAST_TEXTS, ToastVariant } from '@/providers/ToastProvider';
+import { type ToastVariant } from '@/providers/ToastProvider';
 import { t } from '@/i18n';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
 type ToastPosition = 'top' | 'bottom';
+
+const TOAST_TITLE_KEYS = {
+  success: 'common.toast.success',
+  error: 'common.toast.error',
+  warning: 'common.toast.warning',
+  info: 'common.toast.info',
+} as const satisfies Record<ToastVariant, string>;
 
 export function useToast(lang: Lang) {
   const callToast = ({
@@ -55,7 +62,7 @@ export function useToast(lang: Lang) {
     Toast.show({
       type: variant,
       position,
-      text1: TOAST_TEXTS[lang][variant],
+      text1: t(TOAST_TITLE_KEYS[variant], { locale: lang }),
       text2,
       visibilityTime: durationMs,
       props: { actionLabel, onAction },

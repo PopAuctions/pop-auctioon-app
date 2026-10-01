@@ -13,27 +13,9 @@ jest.mock('@/utils/triggerHaptic', () => ({
   triggerHaptic: jest.fn(),
 }));
 
-// Mock ToastProvider constants
-jest.mock('@/providers/ToastProvider', () => ({
-  TOAST_TEXTS: {
-    es: {
-      success: 'Éxito',
-      error: 'Error',
-      warning: 'Advertencia',
-      info: 'Información',
-    },
-    en: {
-      success: 'Success',
-      error: 'Error',
-      warning: 'Warning',
-      info: 'Information',
-    },
-  },
-}));
-
 // Mock i18n
 jest.mock('@/i18n', () => ({
-  t: jest.fn((key: string) => {
+  t: jest.fn((key: string, options?: { locale?: 'es' | 'en' }) => {
     const translations: Record<string, string> = {
       'screens.editProfile.updateSuccess': 'Profile updated successfully',
       'screens.addresses.success': 'Address saved successfully',
@@ -41,6 +23,26 @@ jest.mock('@/i18n', () => ({
       'screens.verifyPhone.codeSentSuccess': 'Code sent successfully',
       'screens.editProfile.compressionError': 'Failed to compress image',
     };
+
+    const toastTitles = {
+      es: {
+        'common.toast.success': 'Éxito',
+        'common.toast.error': 'Error',
+        'common.toast.warning': 'Advertencia',
+        'common.toast.info': 'Información',
+      },
+      en: {
+        'common.toast.success': 'Success',
+        'common.toast.error': 'Error',
+        'common.toast.warning': 'Warning',
+        'common.toast.info': 'Info',
+      },
+    };
+
+    const toastTitle = toastTitles[options?.locale ?? 'en'][key];
+
+    if (toastTitle) return toastTitle;
+
     return translations[key] || key;
   }),
 }));
