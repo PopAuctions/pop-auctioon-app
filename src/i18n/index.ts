@@ -17,6 +17,7 @@ import {
   resolveLang,
   type Lang,
 } from './locales';
+import { reportMissingMessage } from './report-missing-message';
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
@@ -120,9 +121,52 @@ export const getManualLanguageFlag = async (): Promise<boolean> => {
 // Helper function to get available locales
 export const getAvailableLocales = (): Lang[] => [...SUPPORTED_LANGUAGES];
 
+function getTranslationValue(dictionary: object, key: string): unknown {
+  let value: unknown = dictionary;
+
+  for (const segment of key.split('.')) {
+    if (
+      !segment ||
+      typeof value !== 'object' ||
+      value === null ||
+      Array.isArray(value) ||
+      !Object.prototype.hasOwnProperty.call(value, segment)
+    ) {
+      return undefined;
+    }
+
+    value = (value as Record<string, unknown>)[segment];
+  }
+
+  return value;
+}
+
 export function t<K extends Path<Dictionary>>(
   key: K,
   options?: any
 ): PathValue<Dictionary, K> {
+  const keyString = key as string;
+  const locale = resolveLang(options?.locale ?? i18n.locale);
+  const requestedValue = getTranslationValue(translations[locale], keyString);
+
+  if (requestedValue === undefined || requestedValue === null) {
+    const defaultValue = getTranslationValue(
+      translations[DEFAULT_LANG],
+      keyString
+    );
+    const fallback =
+      locale !== DEFAULT_LANG &&
+      defaultValue !== undefined &&
+      defaultValue !== null
+        ? 'default-locale'
+        : 'generic-error';
+
+    reportMissingMessage({ fallback, key: keyString, locale });
+
+    if (fallback === 'generic-error') {
+      return translations[locale].errors.unexpected as PathValue<Dictionary, K>;
+    }
+  }
+
   return i18n.t(key as string, options) as PathValue<Dictionary, K>;
 }
