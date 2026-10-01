@@ -5,6 +5,20 @@ import { t } from '@/i18n';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
 type ToastPosition = 'top' | 'bottom';
+type ToastMessageParams = Record<string, string | number | boolean>;
+
+export type ToastErrorCode = 'errors.unexpected' | 'errors.network';
+
+export type ToastMessageDescriptor = {
+  code: ToastErrorCode;
+  params?: ToastMessageParams;
+};
+
+/** @deprecated Remove after legacy mobile API responses use error codes. */
+export type LegacyToastDescription = LangMap;
+
+export type ToastDescription =
+  string | ToastMessageDescriptor | LegacyToastDescription;
 
 const TOAST_TITLE_KEYS = {
   success: 'common.toast.success',
@@ -24,7 +38,7 @@ export function useToast(lang: Lang) {
     onAction,
   }: {
     variant?: ToastVariant;
-    description?: LangMap | string | null;
+    description?: ToastDescription | null;
     position?: ToastPosition;
     durationMs?: number;
     haptics?: boolean;
@@ -46,16 +60,21 @@ export function useToast(lang: Lang) {
       });
     }
 
-    // Handle description: can be LangMap, translation key string, or null
+    // New callers use a translated string/key or an error descriptor. Legacy
+    // bilingual API responses stay supported until the API migration finishes.
     let text2: string | undefined;
     if (description) {
-      if (typeof description === 'object' && description !== null) {
-        // LangMap object - prioritize this over string
-        // Extract the text for current language
-        text2 = description[lang];
-      } else if (typeof description === 'string') {
+      if (typeof description === 'string') {
         // Translation key string - translate it
-        text2 = t(description as any);
+        text2 = t(description as any, { locale: lang });
+      } else if ('code' in description) {
+        text2 = t(description.code, {
+          ...description.params,
+          locale: lang,
+        });
+      } else {
+        // Temporary adapter for legacy bilingual API responses.
+        text2 = description[lang];
       }
     }
 

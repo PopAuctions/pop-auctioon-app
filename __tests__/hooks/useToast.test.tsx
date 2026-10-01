@@ -15,36 +15,43 @@ jest.mock('@/utils/triggerHaptic', () => ({
 
 // Mock i18n
 jest.mock('@/i18n', () => ({
-  t: jest.fn((key: string, options?: { locale?: 'es' | 'en' }) => {
-    const translations: Record<string, string> = {
-      'screens.editProfile.updateSuccess': 'Profile updated successfully',
-      'screens.addresses.success': 'Address saved successfully',
-      'screens.billingInfo.deleteSuccess': 'Billing information deleted',
-      'screens.verifyPhone.codeSentSuccess': 'Code sent successfully',
-      'screens.editProfile.compressionError': 'Failed to compress image',
-    };
+  t: jest.fn(
+    (
+      key: string,
+      options?: Record<string, string | number | boolean | undefined>
+    ) => {
+      const translations: Record<string, string> = {
+        'screens.editProfile.updateSuccess': 'Profile updated successfully',
+        'screens.addresses.success': 'Address saved successfully',
+        'screens.billingInfo.deleteSuccess': 'Billing information deleted',
+        'screens.verifyPhone.codeSentSuccess': 'Code sent successfully',
+        'screens.editProfile.compressionError': 'Failed to compress image',
+        'errors.network': `Network failed for ${String(options?.operation ?? '{operation}')}`,
+      };
 
-    const toastTitles = {
-      es: {
-        'common.toast.success': 'Éxito',
-        'common.toast.error': 'Error',
-        'common.toast.warning': 'Advertencia',
-        'common.toast.info': 'Información',
-      },
-      en: {
-        'common.toast.success': 'Success',
-        'common.toast.error': 'Error',
-        'common.toast.warning': 'Warning',
-        'common.toast.info': 'Info',
-      },
-    };
+      const toastTitles = {
+        es: {
+          'common.toast.success': 'Éxito',
+          'common.toast.error': 'Error',
+          'common.toast.warning': 'Advertencia',
+          'common.toast.info': 'Información',
+        },
+        en: {
+          'common.toast.success': 'Success',
+          'common.toast.error': 'Error',
+          'common.toast.warning': 'Warning',
+          'common.toast.info': 'Info',
+        },
+      };
 
-    const toastTitle = toastTitles[options?.locale ?? 'en'][key];
+      const locale = options?.locale === 'es' ? 'es' : 'en';
+      const toastTitle = toastTitles[locale][key];
 
-    if (toastTitle) return toastTitle;
+      if (toastTitle) return toastTitle;
 
-    return translations[key] || key;
-  }),
+      return translations[key] || key;
+    }
+  ),
 }));
 
 beforeEach(() => {
@@ -668,6 +675,26 @@ describe('useToast', () => {
   });
 
   describe('Translation key support', () => {
+    it('should translate an error code with parameters', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.error({
+          description: {
+            code: 'errors.network',
+            params: { operation: 'checkout' },
+          },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text1: 'Error',
+          text2: 'Network failed for checkout',
+        })
+      );
+    });
+
     it('should accept translation key as string and translate it', () => {
       const { result } = renderHook(() => useToast('en'));
 
