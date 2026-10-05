@@ -9,7 +9,6 @@ import { CustomText } from '@/components/ui/CustomText';
 import { SoldArticlesFilters } from '@/components/articles/SoldArticlesFilters';
 import { useGetMyAuctions } from '@/hooks/pages/my-auctions/useGetMyAuctions';
 import { useLocalSearchParams } from 'expo-router';
-import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function SoldArticlesScreen() {
   const searchParams = useLocalSearchParams<{
@@ -48,9 +47,7 @@ export default function SoldArticlesScreen() {
     auctions &&
     auctions.map((auction) => ({
       value: String(auction.id),
-      label: `${auction.title} (${new Date(
-        auction.startDate
-      ).toLocaleDateString(LOCALE_CONFIG[locale].intlLocale)})`,
+      label: `${auction.title} (${new Date(auction.startDate).toLocaleDateString()})`,
     }));
 
   return (

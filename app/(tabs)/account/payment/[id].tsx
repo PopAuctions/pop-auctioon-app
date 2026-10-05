@@ -17,7 +17,6 @@ import { UserInvoice } from '@/components/invoices/UserInvoice';
 import { useGetBilling } from '@/hooks/pages/billing/useBilling';
 import { useGetUserInvoice } from '@/hooks/components/useUserInvoice';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
-import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function PaymentScreen() {
   const { t, locale } = useTranslation();
@@ -123,16 +122,13 @@ export default function PaymentScreen() {
               className='text-center text-cinnabar'
             >
               {paymentDict.paymentDate}{' '}
-              {paymentDate.toLocaleDateString(
-                LOCALE_CONFIG[locale].intlLocale,
-                {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }
-              )}
+              {paymentDate.toLocaleDateString(locale, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </CustomText>
             <CustomText type='subtitle'>
               {paymentDict.articles}: {paymentData.articles.length}

@@ -7,7 +7,7 @@ import { Loading } from '@/components/ui/Loading';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
-import { LANGUAGE_OPTIONS, isLang, type Lang } from '@/i18n/locales';
+import { DEFAULT_LANG, LANGUAGE_OPTIONS, type Lang } from '@/i18n/locales';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
@@ -62,9 +62,9 @@ export default function SettingsScreen() {
                 options={LANGUAGE_OPTIONS}
                 placeholder={t('screens.account.selectLanguage')}
                 formField={true}
-                onChange={(value) => {
-                  if (isLang(value)) setSelectedLanguage(value);
-                }}
+                onChange={(value) =>
+                  setSelectedLanguage((value || DEFAULT_LANG) as Lang)
+                }
                 isDisabled={isPending}
               />
             </View>
