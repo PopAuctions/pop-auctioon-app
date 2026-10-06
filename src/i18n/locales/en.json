@@ -56,6 +56,7 @@
     "or": "or"
   },
   "onboarding": {
+    "loading": "Loading tutorial...",
     "errorLoadingTutorial": "Could not load tutorial",
     "skipHint": "Skip the tutorial and continue to the app",
     "slidesLabel": "Tutorial slides"
@@ -363,6 +364,8 @@
       "newArticle": "New article",
       "noArticles": "There are no articles yet",
       "noResults": "No results",
+      "noArticlesFoundWithFilters": "No articles found with the selected filters",
+      "articlesFetchError": "An error occurred while fetching articles",
       "rearrangeArticles": "Rearrange articles",
       "delete": "Delete",
       "remove": "Remove from auction",
@@ -943,6 +946,8 @@
       "errorMessage": "An error occurred while sending the message. Please try again."
     },
     "liveAuction": {
+      "loadingInfo": "Loading auction info...",
+      "loadingStream": "Loading auction stream...",
       "articles": "Articles",
       "currentBid": "Current bid",
       "liveNow": "Live now",

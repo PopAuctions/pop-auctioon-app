@@ -35,6 +35,8 @@ export const MyAuctionArticles = ({
     orderImagesText: string;
     featuredText: string;
     unfeaturedText: string;
+    noArticlesFoundText: string;
+    articlesFetchErrorText: string;
   };
   isOrderingItems: boolean;
   onChangeOrder: (newOrder: number[]) => void;
@@ -141,11 +143,14 @@ export const MyAuctionArticles = ({
         <>
           {ListHeaderComponent}
           <MyAuctionArticlesState
-            lang={lang}
             isLoading={isLoading}
             status={status}
-            errorMessage={errorMessage}
+            errorMessage={errorMessage?.[lang] ?? null}
             showNoResults={showNoResults}
+            texts={{
+              noArticlesFound: texts.noArticlesFoundText,
+              errorOccurred: texts.articlesFetchErrorText,
+            }}
           />
         </>
       }

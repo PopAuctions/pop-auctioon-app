@@ -183,6 +183,8 @@ export const MyAuctionArticlesSection = ({
             orderImagesText: auctionLang.orderImages,
             featuredText: auctionLang.setAsFeatured,
             unfeaturedText: auctionLang.unsetAsFeatured,
+            noArticlesFoundText: auctionLang.noArticlesFoundWithFilters,
+            articlesFetchErrorText: auctionLang.articlesFetchError,
           }}
           order={effectiveOrder}
           isOrderingItems={isOrderingItems}

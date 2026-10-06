@@ -36,10 +36,7 @@ export default function SettingsScreen() {
         <View className='absolute inset-0 z-10 items-center justify-center bg-white/80'>
           <Loading
             locale={locale}
-            customMessage={{
-              es: 'Cambiando idioma...',
-              en: 'Changing language...',
-            }}
+            customMessage={t('screens.account.changingLanguage')}
           />
         </View>
       )}

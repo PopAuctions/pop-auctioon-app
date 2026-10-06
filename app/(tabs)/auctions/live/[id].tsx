@@ -25,7 +25,7 @@ const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   useHideTabs();
@@ -278,14 +278,8 @@ export default function LiveAuctionScreen() {
               locale={locale}
               customMessage={
                 showLoading
-                  ? {
-                      es: 'Cargando información de la subasta...',
-                      en: 'Loading auction info...',
-                    }
-                  : {
-                      es: 'Cargando stream de la subasta...',
-                      en: 'Loading auction stream...',
-                    }
+                  ? t('screens.liveAuction.loadingInfo')
+                  : t('screens.liveAuction.loadingStream')
               }
             />
           </View>

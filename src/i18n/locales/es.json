@@ -56,6 +56,7 @@
     "or": "o"
   },
   "onboarding": {
+    "loading": "Cargando tutorial...",
     "errorLoadingTutorial": "No se pudo cargar el tutorial",
     "skipHint": "Omitir el tutorial y continuar a la aplicación",
     "slidesLabel": "Diapositivas del tutorial"
@@ -363,6 +364,8 @@
       "newArticle": "Nuevo artículo",
       "noArticles": "Aún no hay artículos",
       "noResults": "No se encontraron resultados",
+      "noArticlesFoundWithFilters": "No se han encontrado artículos con los filtros seleccionados",
+      "articlesFetchError": "Ocurrió un error al obtener los artículos",
       "rearrangeArticles": "Reordenar artículos",
       "delete": "Eliminar",
       "remove": "Sacar de la subasta",
@@ -943,6 +946,8 @@
       "errorMessage": "Ocurrió un error al enviar el mensaje. Por favor, intenta de nuevo."
     },
     "liveAuction": {
+      "loadingInfo": "Cargando información de la subasta...",
+      "loadingStream": "Cargando stream de la subasta...",
       "articles": "Artículos",
       "currentBid": "Puja Actual",
       "liveNow": "En vivo",

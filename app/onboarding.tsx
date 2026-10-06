@@ -111,10 +111,7 @@ export default function OnboardingScreen() {
         <Stack.Screen options={{ headerShown: false }} />
         <Loading
           locale={locale}
-          customMessage={{
-            es: 'Cargando tutorial...',
-            en: 'Loading tutorial...',
-          }}
+          customMessage={t('onboarding.loading')}
         />
       </>
     );
