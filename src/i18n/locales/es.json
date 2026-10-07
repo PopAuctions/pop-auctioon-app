@@ -1111,6 +1111,23 @@
       "confirm": "Confirmar",
       "cancel": "Cancelar"
     },
+    "filters": {
+      "brand": "Marca",
+      "price": "Precio",
+      "model": "Modelo",
+      "material": "Material",
+      "color": "Color",
+      "sort": "Ordenar por",
+      "activeFilters": "Filtros activos:",
+      "clearAll": "Borrar filtros",
+      "filters": "Filtros",
+      "codeNumber": "Código",
+      "status": "Estado",
+      "offersStatus": "Estado de ofertas",
+      "close": "Cerrar",
+      "auction": "Subasta",
+      "myAuctionArticleName": "Name"
+    },
     "offerCards": {
       "common": {
         "date": "Fecha",

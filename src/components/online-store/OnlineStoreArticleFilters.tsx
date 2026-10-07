@@ -13,37 +13,16 @@ import {
 import { Button } from '../ui/Button';
 import { Filters } from '@/app/(tabs)/online-store';
 import { ArticlesSuggestionField } from '@/components/fields/ArticlesSuggestionField';
+import { t } from '@/i18n';
 
 interface Props {
   locale: Lang;
 }
 
-const FILTER_LABELS = {
-  es: {
-    brand: 'Marca',
-    price: 'Precio',
-    model: 'Modelo',
-    material: 'Material',
-    color: 'Color',
-    sort: 'Ordenar por',
-    activeFilters: 'Filtros activos:',
-    clearAll: 'Borrar filtros',
-  },
-  en: {
-    brand: 'Brand',
-    price: 'Price',
-    model: 'Model',
-    material: 'Material',
-    color: 'Color',
-    sort: 'Sort by',
-    activeFilters: 'Active filters:',
-    clearAll: 'Clear filters',
-  },
-};
-
 export function OnlineStoreArticleFilters({ locale }: Props) {
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
+  const labels = t('components.filters', { locale });
 
   const getParam = (v: unknown): string => {
     if (Array.isArray(v)) return v[0] ?? '';
@@ -75,8 +54,6 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
     materialValue,
   ].filter((v) => v !== '');
   const activeFiltersCount = activeFilters.length;
-  const labels = FILTER_LABELS[locale];
-
   return (
     <>
       <ScrollView

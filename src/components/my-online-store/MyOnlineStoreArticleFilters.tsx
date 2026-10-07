@@ -23,36 +23,10 @@ interface Props {
   };
 }
 
-const FILTER_LABELS = {
-  es: {
-    filters: 'Filtros',
-    brand: 'Marca',
-    model: 'Modelo',
-    codeNumber: 'Código',
-    status: 'Estado',
-    offersStatus: 'Estado de ofertas',
-    activeFilters: 'Filtros activos:',
-    clearAll: 'Borrar filtros',
-    apply: 'Aplicar',
-    close: 'Cerrar',
-  },
-  en: {
-    filters: 'Filters',
-    brand: 'Brand',
-    model: 'Model',
-    codeNumber: 'Code',
-    status: 'Status',
-    offersStatus: 'Offers status',
-    activeFilters: 'Active filters:',
-    apply: 'Apply',
-    clearAll: 'Clear filters',
-    close: 'Close',
-  },
-};
-
 export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
   const { t } = useTranslation();
   const modalTexts = t('components.modals.onlineStoreArticle', { locale });
+  const labels = t('components.filters', { locale });
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
@@ -87,8 +61,6 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
     offersStatusValue,
   ].filter((v) => v !== '');
   const activeFiltersCount = activeFilters.length;
-  const labels = FILTER_LABELS[locale];
-
   return (
     <>
       {/* Top bar: Filters button + Sort select */}

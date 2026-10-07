@@ -2,23 +2,16 @@ import React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { Lang } from '@/types/types';
 import { FilterField } from '../fields/FilterField';
+import { t } from '@/i18n';
 
 interface Props {
   locale: Lang;
   isDisabled?: boolean;
 }
 
-const FILTER_LABELS = {
-  es: {
-    name: 'Name',
-  },
-  en: {
-    name: 'Name',
-  },
-};
-
 export function MyAuctionArticlesFilters({ locale, isDisabled }: Props) {
   const searchParams = useLocalSearchParams();
+  const labels = t('components.filters', { locale });
 
   const getParam = (v: unknown): string => {
     if (Array.isArray(v)) return v[0] ?? '';
@@ -32,7 +25,7 @@ export function MyAuctionArticlesFilters({ locale, isDisabled }: Props) {
     <FilterField
       key={`${activeFilters.join('-')}-name`}
       id='name'
-      label={FILTER_LABELS[locale].name}
+      label={labels.myAuctionArticleName}
       type='input'
       value={nameValue}
       isClearable={true}

@@ -1111,6 +1111,23 @@
       "confirm": "Confirm",
       "cancel": "Cancel"
     },
+    "filters": {
+      "brand": "Brand",
+      "price": "Price",
+      "model": "Model",
+      "material": "Material",
+      "color": "Color",
+      "sort": "Sort by",
+      "activeFilters": "Active filters:",
+      "clearAll": "Clear filters",
+      "filters": "Filters",
+      "codeNumber": "Code",
+      "status": "Status",
+      "offersStatus": "Offers status",
+      "close": "Close",
+      "auction": "Auction",
+      "myAuctionArticleName": "Name"
+    },
     "offerCards": {
       "common": {
         "date": "Date",
