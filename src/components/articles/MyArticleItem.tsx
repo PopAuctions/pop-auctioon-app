@@ -18,6 +18,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type MyArticleItemProps = {
   article: Article;
@@ -39,26 +40,6 @@ type MyArticleItemProps = {
   refetch: () => void;
 };
 
-const MODAL_TITLE_REMOVE = {
-  es: 'Eliminar artículo de la subasta',
-  en: 'Remove article from auction',
-};
-
-const MODAL_DESCRIPTION_REMOVE = {
-  es: 'Después de esta acción, no podrás agregar de nuevo este artículo. ¿Estás seguro de que quieres realizar esta acción?',
-  en: 'After this action, you will not be able to add this article again. Are you sure you want to perform this action?',
-};
-
-const MODAL_TITLE_FEATURE = {
-  es: 'Destacar artículo',
-  en: 'Feature article',
-};
-
-const MODAL_TITLE_UNFEATURE = {
-  es: 'Quitar artículo de destacado',
-  en: 'Unfeature article',
-};
-
 export function MyArticleItem({
   article,
   texts: {
@@ -78,6 +59,8 @@ export function MyArticleItem({
   auctionStatus,
   refetch,
 }: MyArticleItemProps) {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.auctionArticle', { locale });
   const { callToast } = useToast(locale);
   const { securePost } = useSecureApi();
   const price = article.ArticleBid.currentValue;
@@ -236,21 +219,14 @@ export function MyArticleItem({
                   onConfirm={toggleArticleFeatured}
                   title={
                     article.isFeatured
-                      ? MODAL_TITLE_UNFEATURE
-                      : MODAL_TITLE_FEATURE
+                      ? modalTexts.unfeatureTitle
+                      : modalTexts.featureTitle
                   }
                   description={
                     article.isFeatured
-                      ? {
-                          es: '¿Quieres quitar este artículo de destacado?',
-                          en: 'Do you want to unfeature this article?',
-                        }
-                      : {
-                          es: '¿Quieres destacar este artículo?',
-                          en: 'Do you want to feature this article?',
-                        }
+                      ? modalTexts.unfeatureDescription
+                      : modalTexts.featureDescription
                   }
-                  locale={locale}
                 >
                   {article.isFeatured ? unfeaturedText : featuredText}
                 </ConfirmModal>
@@ -262,9 +238,8 @@ export function MyArticleItem({
               <ConfirmModal
                 mode='primary'
                 onConfirm={removeArticle}
-                title={MODAL_TITLE_REMOVE}
-                description={MODAL_DESCRIPTION_REMOVE}
-                locale={locale}
+                title={modalTexts.removeTitle}
+                description={modalTexts.removeDescription}
               >
                 {removeText}
               </ConfirmModal>

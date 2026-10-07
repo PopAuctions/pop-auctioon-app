@@ -25,6 +25,7 @@ import { StoreCounterOfferModal } from '../modal/StoreCounterOfferModal';
 import { OfferHistoryModal } from '../modal/OfferHistoryModal';
 import { getStorePayoutFromBuyerFacingAmount } from '@/utils/getStorePayoutFromBuyerFacingAmount';
 import { OFFER_STATUS_COLORS } from '@/constants/myOnlineStore';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface ArticleOffersCardsProps {
   offers: CustomFullArticleSecondChance['ArticleOffer'];
@@ -77,6 +78,8 @@ export function ArticleOffersCards({
   storeCommissionValue,
   refetch,
 }: ArticleOffersCardsProps) {
+  const { t: translate } = useTranslation();
+  const modalTexts = translate('components.modals.offers', { locale });
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
@@ -359,15 +362,8 @@ export function ArticleOffersCards({
                       await handleAcceptOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Accept offer',
-                      es: 'Aceptar oferta',
-                    }}
-                    description={{
-                      en: 'Once accepted, the buyer will have 24 hours to complete the payment.',
-                      es: 'Una vez aceptada, el comprador dispondrá de 24 horas para realizar el pago.',
-                    }}
-                    locale={locale}
+                    title={modalTexts.acceptTitle}
+                    description={modalTexts.acceptDescription}
                   >
                     {texts.accept}
                   </ConfirmModal>
@@ -386,15 +382,8 @@ export function ArticleOffersCards({
                       await handleRejectOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Reject offer',
-                      es: 'Rechazar oferta',
-                    }}
-                    description={{
-                      en: 'Are you sure you want to reject this offer? This action cannot be undone.',
-                      es: '¿Estás seguro de que quieres rechazar esta oferta? Esta acción no se puede deshacer.',
-                    }}
-                    locale={locale}
+                    title={modalTexts.rejectTitle}
+                    description={modalTexts.rejectDescription}
                   >
                     {texts.reject}
                   </ConfirmModal>
@@ -418,19 +407,14 @@ export function ArticleOffersCards({
                       await handleAcceptOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Confirm sale',
-                      es: 'Confirmar venta',
-                    }}
-                    description={{
-                      en: `The buyer accepted your counter-offer of ${formatter.format(
-                        acceptedByUserProposal.amount
-                      )}. Confirm that the article is still available. The buyer will then have 24 hours to pay.`,
-                      es: `El comprador ha aceptado tu contraoferta de ${formatter.format(
-                        acceptedByUserProposal.amount
-                      )}. Confirma que el artículo sigue disponible. Después dispondrá de 24 horas para pagar.`,
-                    }}
-                    locale={locale}
+                    title={modalTexts.confirmSaleTitle}
+                    description={translate(
+                      'components.modals.offers.confirmSaleDescription',
+                      {
+                        locale,
+                        amount: formatter.format(acceptedByUserProposal.amount),
+                      }
+                    )}
                   >
                     {texts.accept}
                   </ConfirmModal>
@@ -441,15 +425,8 @@ export function ArticleOffersCards({
                       await handleRejectOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Reject sale',
-                      es: 'Rechazar venta',
-                    }}
-                    description={{
-                      en: 'Reject this agreement if the article is no longer available. This will close the negotiation.',
-                      es: 'Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación.',
-                    }}
-                    locale={locale}
+                    title={modalTexts.rejectSaleTitle}
+                    description={modalTexts.rejectSaleDescription}
                   >
                     {texts.reject}
                   </ConfirmModal>

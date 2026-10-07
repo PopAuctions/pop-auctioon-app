@@ -15,27 +15,7 @@ import {
   RefetchReturn,
 } from '@/types/types';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-
-const DESCRIPTIONS = {
-  es: {
-    remove:
-      'Si el artículo ya no está disponible, por favor elimínalo de la tienda.',
-    changePrice:
-      'Cambia el precio del artículo siempre y cuando no tenga ninguna oferta.',
-    noDecimalsText: 'El precio no puede tener decimales.',
-    assignToAuction:
-      'Puedes asignar el artículo a una subasta que esté en estado "Disponible".',
-  },
-  en: {
-    remove:
-      'If the article is no longer available, please remove it from the store.',
-    changePrice:
-      'Change the price of the article as long as it does not have any offers.',
-    noDecimalsText: 'The price cannot have decimals.',
-    assignToAuction:
-      'You can assign the article to an auction that is in "Available" status.',
-  },
-};
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export const ArticleDetailsActions = ({
   TEXTS: { assignToAuction, remove, changePrice, orderImages, editImages },
@@ -60,6 +40,8 @@ export const ArticleDetailsActions = ({
   commissionValue: number | null;
   refetch: () => RefetchReturn;
 }) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.onlineStoreArticle', { locale });
   const [isChangePriceModalOpen, setChangePriceModalOpen] = useState(false);
   const [isAssignToAuctionModalOpen, setAssignToAuctionModalOpen] =
     useState(false);
@@ -202,13 +184,9 @@ export const ArticleDetailsActions = ({
           <ConfirmModal
             mode='primary'
             onConfirm={handleRemoveArticle}
-            title={{ es: 'Eliminar artículo', en: 'Remove article' }}
+            title={modalTexts.removeTitle}
             isDisabled={isLoading}
-            description={{
-              es: '¿Estás seguro de que quieres eliminar este artículo de la tienda online?',
-              en: 'Are you sure you want to remove this article from the online store?',
-            }}
-            locale={locale}
+            description={modalTexts.removeDescription}
           >
             {remove}
           </ConfirmModal>
@@ -220,32 +198,21 @@ export const ArticleDetailsActions = ({
         visible={isAssignToAuctionModalOpen}
         onClose={() => setAssignToAuctionModalOpen(false)}
         onConfirm={handleAssignToAuction}
-        title={{ es: 'Asignar a una subasta', en: 'Assign to auction' }}
-        description={{
-          en: 'You can only assign the article to an auction that is in "Available" status.',
-          es: 'Solo puedes asignar el artículo a una subasta que esté en estado "Disponible".',
-        }}
-        locale={locale}
+        title={modalTexts.assignTitle}
+        description={modalTexts.assignDescription}
         defaultValue={currentPrice.toString()}
-        helperText={DESCRIPTIONS[locale].noDecimalsText}
+        helperText={modalTexts.noDecimals}
       />
       <ChangePriceModal
         id='price'
         visible={isChangePriceModalOpen}
         onClose={() => setChangePriceModalOpen(false)}
         onConfirm={handlePriceChange}
-        title={{ es: 'Cambiar precio', en: 'Change price' }}
-        description={{
-          es: 'Solo puedes cambiar el precio si el artículo no tiene ofertas.',
-          en: 'You can only change the price if the article has no offers.',
-        }}
-        label={{
-          es: 'Precio (€)',
-          en: 'Price (€)',
-        }}
-        locale={locale}
+        title={modalTexts.changePriceTitle}
+        description={modalTexts.changePriceDescription}
+        label={modalTexts.priceLabel}
         defaultValue={currentPrice.toString()}
-        helperText={DESCRIPTIONS[locale].noDecimalsText}
+        helperText={modalTexts.noDecimals}
         commissionValue={commissionValue}
       />
     </>

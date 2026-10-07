@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export const MyAuctionActions = ({
   auctionId,
@@ -22,6 +23,8 @@ export const MyAuctionActions = ({
   locale: Lang;
   refetch: () => void;
 }) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.auctionReview', { locale });
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
@@ -63,16 +66,9 @@ export const MyAuctionActions = ({
         auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE ||
         auctionStatus === AuctionStatus.WAITING_MIN_ARTICLES_AMOUNT) && (
         <ConfirmModal
-          locale={locale}
           mode='primary'
-          title={{
-            es: 'Solicitar revisión',
-            en: 'Request review',
-          }}
-          description={{
-            es: 'Después de esta acción, si la subasta es aceptada, ya no podrás modificar la información de subasta ni de sus artículos. ¿Estás seguro de que quieres realizar esta acción?',
-            en: 'After this action, if the auction is accepted, you will no longer be able to modify the auction information or its articles. Are you sure you want to perform this action?',
-          }}
+          title={modalTexts.title}
+          description={modalTexts.description}
           onConfirm={requestReviewFunction}
         >
           {auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE

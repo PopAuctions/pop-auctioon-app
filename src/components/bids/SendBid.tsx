@@ -35,7 +35,8 @@ export function SendBid({
   autoBidsAmount,
 }: SendBidProps) {
   const { upsertAutoBid } = useUpsertAutoBid();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
+  const modalTexts = t('components.modals.automaticBid');
   const [automaticBidModalVisible, setAutomaticBidModalVisible] =
     useState(false);
   const [isAutomaticBidPending, setIsAutomaticBidPending] = useState(false);
@@ -257,18 +258,9 @@ export function SendBid({
         visible={automaticBidModalVisible}
         onClose={() => setAutomaticBidModalVisible(false)}
         onConfirm={createAutomaticBid}
-        title={{
-          es: 'Configurar puja automática',
-          en: 'Set automatic bid',
-        }}
-        description={{
-          es: 'La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.',
-          en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
-        }}
-        extraMessage={{
-          es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
-          en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
-        }}
+        title={modalTexts.setTitle}
+        description={modalTexts.description}
+        extraMessage={modalTexts.extraMessage}
         minAmount={computedMinBid}
       />
       {autoBidsAmount !== undefined && autoBidsAmount > 0 && (

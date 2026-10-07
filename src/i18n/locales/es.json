@@ -977,6 +977,77 @@
       "createAutomaticBid": "Configurar puja automática",
       "automaticBid": "puja automática configurada",
       "automaticBids": "pujas automáticas configuradas"
+    },
+    "modals": {
+      "accountDeletion": {
+        "title": "Eliminar Cuenta",
+        "description": "¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.",
+        "importantMessage": "Esta acción no se puede deshacer."
+      },
+      "auctionArticle": {
+        "removeTitle": "Eliminar artículo de la subasta",
+        "removeDescription": "Después de esta acción, no podrás agregar de nuevo este artículo. ¿Estás seguro de que quieres realizar esta acción?",
+        "featureTitle": "Destacar artículo",
+        "unfeatureTitle": "Quitar artículo de destacado",
+        "featureDescription": "¿Quieres destacar este artículo?",
+        "unfeatureDescription": "¿Quieres quitar este artículo de destacado?"
+      },
+      "wonArticles": {
+        "title": "Eliminar artículos de esta subasta",
+        "description": "¿Estás seguro de que quieres quitar los artículos ganados en esta subasta?",
+        "importantMessage": "No los podrás recuperar después de eliminarlos"
+      },
+      "auctionReview": {
+        "title": "Solicitar revisión",
+        "description": "Después de esta acción, si la subasta es aceptada, ya no podrás modificar la información de subasta ni de sus artículos. ¿Estás seguro de que quieres realizar esta acción?"
+      },
+      "automaticBid": {
+        "setTitle": "Configurar puja automática",
+        "updateTitle": "Editar puja automática",
+        "description": "La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.",
+        "extraMessage": "Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.",
+        "inputLabel": "Monto máximo",
+        "missingValue": "Ingresa un valor",
+        "minimumPrice": "El monto debe ser al menos %{amount}",
+        "noDecimals": "Solo se permiten múltiplos enteros de 10 €",
+        "multipleOfTen": "El monto debe ser un múltiplo de 10 €"
+      },
+      "onlineStoreArticle": {
+        "removeTitle": "Eliminar artículo",
+        "removeDescription": "¿Estás seguro de que quieres eliminar este artículo de la tienda online?",
+        "assignTitle": "Asignar a una subasta",
+        "assignDescription": "Solo puedes asignar el artículo a una subasta que esté en estado \"Disponible\".",
+        "changePriceTitle": "Cambiar precio",
+        "changePriceDescription": "Solo puedes cambiar el precio si el artículo no tiene ofertas.",
+        "priceLabel": "Precio (€)",
+        "priceInputLabel": "Precio (€)",
+        "auctionSelectLabel": "Seleccionar subasta",
+        "commissionedPrice": "Precio con comisión",
+        "noDecimals": "No se permiten decimales",
+        "selectCategoryTitle": "Seleccionar categoría",
+        "selectCategoryDescription": "Selecciona la categoría del artículo a crear"
+      },
+      "offers": {
+        "acceptTitle": "Aceptar oferta",
+        "acceptDescription": "Una vez aceptada, el comprador dispondrá de 24 horas para realizar el pago.",
+        "rejectTitle": "Rechazar oferta",
+        "rejectDescription": "¿Estás seguro de que quieres rechazar esta oferta? Esta acción no se puede deshacer.",
+        "confirmSaleTitle": "Confirmar venta",
+        "confirmSaleDescription": "El comprador ha aceptado tu contraoferta de %{amount}. Confirma que el artículo sigue disponible. Después dispondrá de 24 horas para pagar.",
+        "rejectSaleTitle": "Rechazar venta",
+        "rejectSaleDescription": "Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación."
+      },
+      "soldArticle": {
+        "importantMessage": "No podrás revertir esta acción.",
+        "notifyAgainTitle": "Notificar de nuevo",
+        "notifyAgainDescription": "¿Estás seguro de que quieres notificar de nuevo al usuario? Se le enviará un correo electrónico con las instrucciones para completar el pago.",
+        "sendToOnlineStoreTitle": "Enviar a tienda online",
+        "sendToOnlineStoreDescription": "¿Estás seguro de que quieres enviar el artículo a la tienda en linea? El usuario ya no podrá hacer el pago por este artículo y deberas activar el artículo manualmente en tus artículos de la tienda online",
+        "cancelAcquisitionTitle": "Cancelar adquisición",
+        "cancelAcquisitionDescription": "¿Estás seguro de que quieres cancelar la adquisición? El usuario ya no podrá hacer el pago por este artículo y no podrás gestionar más este artículo.",
+        "grantSecondTitle": "Otorgar a segundo mayor postor",
+        "grantSecondDescription": "¿Está seguro de que desea otorgar el artículo al segundo mayor postor?"
+      }
     }
   },
   "globals": {

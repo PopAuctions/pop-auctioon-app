@@ -5,41 +5,21 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Loading } from '@/components/ui/Loading';
-import { Lang } from '@/types/types';
 import { useFetchMyAvailableAuctions } from '@/hooks/components/useFetchMyAvailableAuctions';
 import { REQUEST_STATUS } from '@/constants';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface AssignToAuctionModalProps {
   visible: boolean;
   onClose: () => void;
   onConfirm: (value: string, price: string) => Promise<boolean>;
   defaultValue?: string;
-  title: { en: string; es: string };
-  description: { en: string; es: string };
+  title: string;
+  description: string;
   id: string;
-  locale: Lang;
-  inputPlaceholder?: { en: string; es: string };
+  inputPlaceholder?: string;
   helperText?: string;
 }
-
-const TEXTS = {
-  es: {
-    auction: 'Selecciona la subasta',
-    inputLabel: 'Precio (€)',
-    selectLabel: 'Seleccionar subasta',
-    confirm: 'Confirmar',
-    cancel: 'Cancelar',
-    noDecimals: 'No se permiten decimales',
-  },
-  en: {
-    auction: 'Select auction',
-    inputLabel: 'Price (€)',
-    selectLabel: 'Select auction',
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-    noDecimals: 'No decimals allowed',
-  },
-} as const;
 
 export function AssignToAuctionModal({
   visible,
@@ -49,10 +29,11 @@ export function AssignToAuctionModal({
   title,
   description,
   id,
-  locale,
   inputPlaceholder,
   helperText,
 }: AssignToAuctionModalProps) {
+  const { locale, t } = useTranslation();
+  const texts = t('components.modals.onlineStoreArticle');
   const {
     data: availableAuctions,
     status,
@@ -107,7 +88,7 @@ export function AssignToAuctionModal({
         <View className='flex-1 items-center justify-center px-6'>
           <View className='w-full max-w-[420px] rounded-xl bg-white p-4 shadow-lg'>
             <View className='flex flex-row justify-between'>
-              <CustomText type='h4'>{title[locale]}</CustomText>
+              <CustomText type='h4'>{title}</CustomText>
               <Pressable
                 onPress={onClose}
                 hitSlop={16}
@@ -126,7 +107,7 @@ export function AssignToAuctionModal({
               type='body'
               className='text-sm text-neutral-600'
             >
-              {description[locale]}
+              {description}
             </CustomText>
 
             {/* Form */}
@@ -147,16 +128,12 @@ export function AssignToAuctionModal({
               ) : (
                 <>
                   <View className='mb-4'>
-                    <CustomText type='body'>
-                      {TEXTS[locale].inputLabel}
-                    </CustomText>
+                    <CustomText type='body'>{texts.priceInputLabel}</CustomText>
 
                     <TextInput
                       value={inputValue}
                       onChangeText={handleInputChange}
-                      placeholder={
-                        inputPlaceholder ? inputPlaceholder[locale] : ''
-                      }
+                      placeholder={inputPlaceholder ?? ''}
                       keyboardType='number-pad'
                       inputMode='numeric'
                       className='w-full rounded-xl border border-neutral-300 px-4 py-3 text-base'
@@ -167,14 +144,14 @@ export function AssignToAuctionModal({
                         type='body'
                         className='text-xs text-neutral-500'
                       >
-                        {TEXTS[locale].noDecimals}
+                        {texts.noDecimals}
                       </CustomText>
                     )}
                   </View>
 
                   <View className='mb-4'>
                     <CustomText type='body'>
-                      {TEXTS[locale].selectLabel}
+                      {texts.auctionSelectLabel}
                     </CustomText>
                     <SelectField
                       name='selected-auction'
@@ -198,7 +175,7 @@ export function AssignToAuctionModal({
                 disabled={isLoading || !enteredDataIsValid}
                 isLoading={isLoading}
               >
-                {TEXTS[locale].confirm}
+                {t('common.actions.confirm')}
               </Button>
 
               <Button
@@ -207,7 +184,7 @@ export function AssignToAuctionModal({
                 onPress={onClose}
                 disabled={isLoading}
               >
-                {TEXTS[locale].cancel}
+                {t('common.actions.cancel')}
               </Button>
             </View>
           </View>

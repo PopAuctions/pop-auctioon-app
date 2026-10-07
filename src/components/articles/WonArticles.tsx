@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type WonArticlesProps = {
   wonArticles: Record<string, AuctionUserWonArticles>;
@@ -35,6 +36,8 @@ export const WonArticles = ({
   texts: { winningBid, payArticles, view, noArticlesWon, removeArticles },
   refetchArticles,
 }: WonArticlesProps) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.wonArticles', { locale: lang });
   const [isRemoving, setIsRemoving] = useState<Record<string, boolean> | null>(
     null
   );
@@ -154,19 +157,9 @@ export const WonArticles = ({
                   await handleRemoveArticles(section.auctionId);
                 }}
                 isDisabled={isRemoving?.[section.auctionId]}
-                title={{
-                  es: 'Eliminar artículos de esta subasta',
-                  en: 'Remove auction won articles',
-                }}
-                description={{
-                  es: '¿Estás seguro de que quieres quitar los artículos ganados en esta subasta?',
-                  en: 'Are you sure you want to remove the won articles in this auction?',
-                }}
-                importantMessage={{
-                  es: 'No los podrás recuperar después de eliminarlos',
-                  en: 'You will not be able to recover them after removing',
-                }}
-                locale={lang}
+                title={modalTexts.title}
+                description={modalTexts.description}
+                importantMessage={modalTexts.importantMessage}
               >
                 {removeArticles}
               </ConfirmModal>

@@ -45,6 +45,7 @@ export function AutomaticBidCard({
   const { securePost, securePatch } = useSecureApi();
 
   const texts = t('screens.autoBids');
+  const modalTexts = t('components.modals.automaticBid');
 
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
 
@@ -217,29 +218,10 @@ export function AutomaticBidCard({
             mode='secondary'
             onConfirm={handleToggleAutomaticBid}
             isDisabled={isLoading}
-            title={
-              isActive
-                ? {
-                    es: texts.deactivateTitle,
-                    en: texts.deactivateTitle,
-                  }
-                : {
-                    es: texts.activateTitle,
-                    en: texts.activateTitle,
-                  }
-            }
+            title={isActive ? texts.deactivateTitle : texts.activateTitle}
             description={
-              isActive
-                ? {
-                    es: texts.deactivateDescription,
-                    en: texts.deactivateDescription,
-                  }
-                : {
-                    es: texts.activateDescription,
-                    en: texts.activateDescription,
-                  }
+              isActive ? texts.deactivateDescription : texts.activateDescription
             }
-            locale={locale}
           >
             {isActive ? texts.deactivate : texts.activate}
           </ConfirmModal>
@@ -248,18 +230,9 @@ export function AutomaticBidCard({
             visible={automaticBidModalVisible}
             onClose={() => setAutomaticBidModalVisible(false)}
             onConfirm={handleUpdateAutomaticBid}
-            title={{
-              es: 'Editar puja automática',
-              en: 'Update automatic bid',
-            }}
-            description={{
-              es: 'La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.',
-              en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
-            }}
-            extraMessage={{
-              es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
-              en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
-            }}
+            title={modalTexts.updateTitle}
+            description={modalTexts.description}
+            extraMessage={modalTexts.extraMessage}
             defaultValue={String(maxAmountWithCommission)}
             minAmount={computedMinBid}
           />

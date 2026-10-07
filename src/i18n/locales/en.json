@@ -977,6 +977,77 @@
       "createAutomaticBid": "Configure automatic bid",
       "automaticBid": "automatic bid configured",
       "automaticBids": "automatic bids configured"
+    },
+    "modals": {
+      "accountDeletion": {
+        "title": "Delete Account",
+        "description": "Are you sure you want to delete your account? This will permanently delete all your data.",
+        "importantMessage": "This action cannot be undone."
+      },
+      "auctionArticle": {
+        "removeTitle": "Remove article from auction",
+        "removeDescription": "After this action, you will not be able to add this article again. Are you sure you want to perform this action?",
+        "featureTitle": "Feature article",
+        "unfeatureTitle": "Unfeature article",
+        "featureDescription": "Do you want to feature this article?",
+        "unfeatureDescription": "Do you want to unfeature this article?"
+      },
+      "wonArticles": {
+        "title": "Remove auction won articles",
+        "description": "Are you sure you want to remove the won articles in this auction?",
+        "importantMessage": "You will not be able to recover them after removing"
+      },
+      "auctionReview": {
+        "title": "Request review",
+        "description": "After this action, if the auction is accepted, you will no longer be able to modify the auction information or its articles. Are you sure you want to perform this action?"
+      },
+      "automaticBid": {
+        "setTitle": "Set automatic bid",
+        "updateTitle": "Update automatic bid",
+        "description": "Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.",
+        "extraMessage": "If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.",
+        "inputLabel": "Maximum amount",
+        "missingValue": "Please enter a value",
+        "minimumPrice": "The amount must be at least %{amount}",
+        "noDecimals": "Only whole multiples of €10 are allowed",
+        "multipleOfTen": "The amount must be a multiple of €10"
+      },
+      "onlineStoreArticle": {
+        "removeTitle": "Remove article",
+        "removeDescription": "Are you sure you want to remove this article from the online store?",
+        "assignTitle": "Assign to auction",
+        "assignDescription": "You can only assign the article to an auction that is in \"Available\" status.",
+        "changePriceTitle": "Change price",
+        "changePriceDescription": "You can only change the price if the article has no offers.",
+        "priceLabel": "Price (€)",
+        "priceInputLabel": "Price (€)",
+        "auctionSelectLabel": "Select auction",
+        "commissionedPrice": "Commissioned Price",
+        "noDecimals": "No decimals allowed",
+        "selectCategoryTitle": "Select category",
+        "selectCategoryDescription": "Select the category of the article to create"
+      },
+      "offers": {
+        "acceptTitle": "Accept offer",
+        "acceptDescription": "Once accepted, the buyer will have 24 hours to complete the payment.",
+        "rejectTitle": "Reject offer",
+        "rejectDescription": "Are you sure you want to reject this offer? This action cannot be undone.",
+        "confirmSaleTitle": "Confirm sale",
+        "confirmSaleDescription": "The buyer accepted your counter-offer of %{amount}. Confirm that the article is still available. The buyer will then have 24 hours to pay.",
+        "rejectSaleTitle": "Reject sale",
+        "rejectSaleDescription": "Reject this agreement if the article is no longer available. This will close the negotiation."
+      },
+      "soldArticle": {
+        "importantMessage": "You will not be able to revert this action.",
+        "notifyAgainTitle": "Notify again",
+        "notifyAgainDescription": "Are you sure you want to notify the user again? An email will be sent to them with instructions to complete the payment.",
+        "sendToOnlineStoreTitle": "Send to online store",
+        "sendToOnlineStoreDescription": "Are you sure you want to send this article to the online store? The user will no longer be able to make the payment for this article and you will have to manually enable the article on your online store articles",
+        "cancelAcquisitionTitle": "Cancel acquisition",
+        "cancelAcquisitionDescription": "Are you sure you want to cancel the acquisition? The user will no longer be able to make the payment for this article and you will not be able to manage this article any more.",
+        "grantSecondTitle": "Grant to second highest bidder",
+        "grantSecondDescription": "Are you sure you want to grant the article to the second highest bidder?"
+      }
     }
   },
   "globals": {

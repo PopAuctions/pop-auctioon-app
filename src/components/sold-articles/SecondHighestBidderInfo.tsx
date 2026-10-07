@@ -6,6 +6,7 @@ import { Lang, LangMap } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface SecondHighestBidderInfoProps {
   articleId: string | number;
@@ -27,6 +28,8 @@ export const SecondHighestBidderInfo = ({
   texts,
   secondHighestBidUser,
 }: SecondHighestBidderInfoProps) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.soldArticle', { locale });
   const [isLoading, setIsLoading] = useState(false);
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
@@ -77,19 +80,9 @@ export const SecondHighestBidderInfo = ({
           mode='primary'
           onConfirm={handleGrantToSecondUser}
           isDisabled={isLoading}
-          title={{
-            es: 'Otorgar a segundo mayor postor',
-            en: 'Grant to second highest bidder',
-          }}
-          description={{
-            es: '¿Está seguro de que desea otorgar el artículo al segundo mayor postor?',
-            en: 'Are you sure you want to grant the article to the second highest bidder?',
-          }}
-          importantMessage={{
-            es: 'No podrás revertir esta acción.',
-            en: 'You will not be able to revert this action.',
-          }}
-          locale={locale}
+          title={modalTexts.grantSecondTitle}
+          description={modalTexts.grantSecondDescription}
+          importantMessage={modalTexts.importantMessage}
         >
           {texts.grantToSecondUser}
         </ConfirmModal>

@@ -13,6 +13,7 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { SelectCategoryModal } from '../modal/SelectCategoryModal';
 import { CustomLink } from '../ui/CustomLink';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface Props {
   locale: Lang;
@@ -50,6 +51,8 @@ const FILTER_LABELS = {
 };
 
 export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.onlineStoreArticle', { locale });
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
@@ -102,12 +105,8 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
 
         <View className='flex flex-row gap-2'>
           <SelectCategoryModal
-            title={{ es: 'Seleccionar categoría', en: 'Select category' }}
-            description={{
-              es: 'Selecciona la categoría del artículo a crear',
-              en: 'Select the category of the article to create',
-            }}
-            locale={locale}
+            title={modalTexts.selectCategoryTitle}
+            description={modalTexts.selectCategoryDescription}
           >
             {texts.newArticle}
           </SelectCategoryModal>

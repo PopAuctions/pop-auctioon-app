@@ -147,16 +147,11 @@ export default function SettingsScreen() {
               mode='primary'
               onConfirm={deleteAccount}
               isDisabled={deleteStatus === REQUEST_STATUS.loading}
-              title={{ en: 'Delete Account', es: 'Eliminar Cuenta' }}
-              description={{
-                en: 'Are you sure you want to delete your account? This will permanently delete all your data.',
-                es: '¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.',
-              }}
-              importantMessage={{
-                en: 'This action cannot be undone.',
-                es: 'Esta acción no se puede deshacer.',
-              }}
-              locale={locale}
+              title={t('components.modals.accountDeletion.title')}
+              description={t('components.modals.accountDeletion.description')}
+              importantMessage={t(
+                'components.modals.accountDeletion.importantMessage'
+              )}
             >
               {t('screens.account.delete')}
             </ConfirmModal>
