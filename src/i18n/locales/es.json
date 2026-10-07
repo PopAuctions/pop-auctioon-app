@@ -55,7 +55,9 @@
     },
     "notification": {
       "loadFailed": "Error al obtener las notificaciones",
-      "none": "No hay notificaciones"
+      "none": "No hay notificaciones",
+      "noUnread": "No hay notificaciones sin leer",
+      "markAllReadFailed": "Hubo un error marcando como leídas las notificaciones"
     },
     "bid": {
       "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar."
@@ -67,6 +69,9 @@
     },
     "document": {
       "openFailed": "No se pudo abrir el documento"
+    },
+    "user": {
+      "languageUpdateFailed": "Error al actualizar el idioma"
     }
   },
   "errorBoundary": {
@@ -153,6 +158,11 @@
       "sendFailed": "Error enviando correo",
       "tryAgainIn": "Intenta de nuevo en"
     }
+  },
+  "invoice": {
+    "selectBillingInformation": "Selecciona una información de facturación.",
+    "downloadFailed": "Error al descargar la factura. Si el problema persiste, contacta con soporte.",
+    "createdSuccessfully": "Factura creada con éxito"
   },
   "tabsNames": {
     "home": "Inicio",

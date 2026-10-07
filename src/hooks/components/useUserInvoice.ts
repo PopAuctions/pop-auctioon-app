@@ -11,6 +11,10 @@ import type {
 } from '@/types/types';
 import type { InvoicePayloadType } from '@/utils/schemas/invoiceSchemas';
 import { useToast } from '../useToast';
+import type { MessageKey } from '@/i18n';
+
+const INVOICE_CREATED_MESSAGE =
+  'invoice.createdSuccessfully' as const satisfies MessageKey;
 
 // ==================== GET INVOICE ====================
 export const useGetUserInvoice = ({
@@ -111,10 +115,7 @@ export const useCreateUserInvoice = ({
 
       callToast({
         variant: 'success',
-        description: {
-          es: 'Factura creada con éxito',
-          en: 'Invoice created successfully',
-        },
+        description: INVOICE_CREATED_MESSAGE,
       });
 
       setStatus('success');

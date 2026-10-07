@@ -16,6 +16,12 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useToast } from '@/hooks/useToast';
 import { Button } from '@/components/ui/Button';
+import type { MessageKey } from '@/i18n';
+
+const NO_UNREAD_NOTIFICATIONS =
+  'errors.notification.noUnread' as const satisfies MessageKey;
+const MARK_NOTIFICATIONS_READ_ERROR =
+  'errors.notification.markAllReadFailed' as const satisfies MessageKey;
 
 export default function UserNotificationsScreen() {
   const { t, locale } = useTranslation();
@@ -63,10 +69,7 @@ export default function UserNotificationsScreen() {
     if (unreadCount === 0) {
       callToast({
         variant: 'info',
-        description: {
-          es: 'No hay notificaciones sin leer',
-          en: 'There are no unread notifications',
-        },
+        description: NO_UNREAD_NOTIFICATIONS,
       });
 
       return;
@@ -81,10 +84,7 @@ export default function UserNotificationsScreen() {
     if (!response) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Hubo un error marcando como leídas las notificaciones',
-          en: 'There was an error marking notifications as read',
-        },
+        description: MARK_NOTIFICATIONS_READ_ERROR,
       });
       setMarkingAsRead(false);
       return;
