@@ -3,16 +3,8 @@ import { View, AppState, AppStateStatus } from 'react-native';
 import { CustomText } from '../ui/CustomText';
 import { CustomLink } from '../ui/CustomLink';
 import { AuctionMode, AuctionModeEnum, Lang } from '@/types/types';
-import { Translations } from '@/i18n';
+import { t, Translations } from '@/i18n';
 import { diffToDHMS, DHMS } from '@/utils/diffToDHMS';
-
-const TEXTS: Record<Lang, { left: string; enterBefore: string }> = {
-  es: {
-    left: 'Queda:',
-    enterBefore: 'Empieza a prepararte',
-  },
-  en: { left: 'Left:', enterBefore: 'Get ready for the auction' },
-};
 
 export function AuctionCountdownComponent({
   dateString,
@@ -66,7 +58,7 @@ export function AuctionCountdownComponent({
     };
   }, [targetDate]);
 
-  const texts = TEXTS[locale] ?? TEXTS.es;
+  const texts = t('components.auctionCountdown', { locale });
 
   if (state.completed) {
     return (

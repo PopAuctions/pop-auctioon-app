@@ -501,7 +501,7 @@
         },
         "tooltip": {
           "category": {
-            "main": "Elige la categoría que mejor corresponda a tu subasta.",
+            "main": "Elige la categoría que mejor corresponda a la subasta.",
             "strong": "Esto no podrá cambiarse después."
           }
         }
@@ -1094,6 +1094,41 @@
       "follow": "Seguir",
       "unfollow": "Dejar de seguir",
       "notAvailable": "Ya no está disponible"
+    },
+    "appVersionGate": {
+      "forceTitle": "Actualización requerida",
+      "softTitle": "Actualización disponible",
+      "forceDescription": "Necesitas actualizar PopAuctioon para seguir usando la app.",
+      "softDescription": "Hay una nueva versión de PopAuctioon disponible. Puedes actualizar ahora o continuar usando la app.",
+      "updateButton": "Actualizar app",
+      "continueButton": "Continuar por ahora"
+    },
+    "auctionCountdown": {
+      "left": "Queda:",
+      "enterBefore": "Empieza a prepararte"
+    },
+    "dateInput": {
+      "confirm": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "offerCards": {
+      "common": {
+        "date": "Fecha",
+        "expiresAt": "Caduca en",
+        "offerHistory": "Historial de ofertas",
+        "userAcceptedCounter": "El usuario ha aceptado tu contraoferta",
+        "waitingForUser": "Esperando respuesta del usuario"
+      },
+      "article": {
+        "offer": "Oferta actual",
+        "noCommissionedOffer": "Oferta sin comisión",
+        "noCommissionedOfferTooltip": "Cantidad que recibirás descontando la comisión de la plataforma."
+      },
+      "latest": {
+        "offer": "Oferta",
+        "noCommissionedOffer": "Monto que recibirás",
+        "noCommissionedOfferTooltip": "Cantidad que recibirás si aceptas la oferta y el comprador completa el pago."
+      }
     },
     "offerCard": {
       "status": {

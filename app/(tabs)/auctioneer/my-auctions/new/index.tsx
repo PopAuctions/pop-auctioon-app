@@ -29,21 +29,12 @@ import type { MessageKey } from '@/i18n';
 const AUCTION_IMAGE_UPLOAD_ERROR =
   'errors.articleImages.uploadFailedSingular' as const satisfies MessageKey;
 
-const TOOLTIP_MESSAGE = {
-  en: {
-    main: 'Choose the category that best matches the auction.',
-    strong: 'This cannot be changed later.',
-  },
-  es: {
-    main: 'Elige la categoría que mejor corresponda a la subasta.',
-    strong: 'Esto no podrá cambiarse después.',
-  },
-};
-
 export default function MyANewAuctionScreen() {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const [isUploadingAuction, setIsUploadingAuction] = useState(false);
+  const tooltipTexts = t('screens.myAuction.newAuction.tooltip.category');
+  const createAuctionError = t('screens.myAuction.newAuction.errors.generic');
 
   const { createAuction } = useAuction();
 
@@ -82,13 +73,13 @@ export default function MyANewAuctionScreen() {
         type='body'
         className='text-sm text-black/70'
       >
-        {TOOLTIP_MESSAGE[locale].main}
+        {tooltipTexts.main}
       </CustomText>
       <CustomText
         type='body'
         className='text-sm text-black/70'
       >
-        {TOOLTIP_MESSAGE[locale].strong}
+        {tooltipTexts.strong}
       </CustomText>
     </View>
   );
@@ -128,10 +119,7 @@ export default function MyANewAuctionScreen() {
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          en: 'There was an error creating the auction.',
-          es: 'Hubo un error al crear la subasta.',
-        },
+        description: createAuctionError,
       });
     } finally {
       setIsUploadingAuction(false);

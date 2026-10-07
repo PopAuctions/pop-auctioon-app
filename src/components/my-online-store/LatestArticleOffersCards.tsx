@@ -42,39 +42,6 @@ interface LatestArticleOffersCardsProps {
   };
 }
 
-const TEXTS = {
-  es: {
-    article: 'Artículo',
-    status: 'Estado',
-    offer: 'Oferta',
-    noCommissionedOffer: 'Monto que recibirás',
-    noCommissionedOfferTooltip:
-      'Cantidad que recibirás si aceptas la oferta y el comprador completa el pago.',
-    user: 'Usuario',
-    date: 'Fecha',
-    expiresAt: 'Caduca en',
-    actions: 'Acciones',
-    offerHistory: 'Historial de ofertas',
-    userAcceptedCounter: 'El usuario ha aceptado tu contraoferta',
-    waitingForUser: 'Esperando respuesta del usuario',
-  },
-  en: {
-    article: 'Article',
-    status: 'Status',
-    offer: 'Offer',
-    noCommissionedOffer: 'Amount you will receive',
-    noCommissionedOfferTooltip:
-      'Amount you will receive if you accept the offer and the buyer completes the payment.',
-    user: 'User',
-    date: 'Date',
-    expiresAt: 'Expires at',
-    actions: 'Actions',
-    offerHistory: 'Offer history',
-    userAcceptedCounter: 'The user accepted your counter-offer',
-    waitingForUser: 'Waiting for user response',
-  },
-};
-
 export function LatestArticleOffersCards({
   articles,
   texts,
@@ -93,7 +60,9 @@ export function LatestArticleOffersCards({
   const [historyOfferId, setHistoryOfferId] = useState<number | null>(null);
 
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
-  const t = TEXTS[locale];
+  const offerCardTexts = translate('components.offerCards', { locale });
+  const commonTexts = offerCardTexts.common;
+  const cardTexts = offerCardTexts.latest;
 
   const offersWithArticle = useMemo(
     () =>
@@ -317,7 +286,7 @@ export function LatestArticleOffersCards({
                   type='body'
                   className='text-xs text-neutral-500'
                 >
-                  {t.offer}
+                  {cardTexts.offer}
                 </CustomText>
               </View>
             </View>
@@ -331,10 +300,10 @@ export function LatestArticleOffersCards({
                     type='body'
                     className='text-sm text-neutral-600'
                   >
-                    {t.noCommissionedOffer}
+                    {cardTexts.noCommissionedOffer}
                   </CustomText>
 
-                  <Tooltip content={t.noCommissionedOfferTooltip} />
+                  <Tooltip content={cardTexts.noCommissionedOfferTooltip} />
                 </View>
 
                 <CustomText
@@ -350,7 +319,7 @@ export function LatestArticleOffersCards({
                   type='body'
                   className='text-sm text-neutral-600'
                 >
-                  {t.date}
+                  {commonTexts.date}
                 </CustomText>
 
                 <CustomText
@@ -366,7 +335,7 @@ export function LatestArticleOffersCards({
                   type='body'
                   className='text-sm text-neutral-600'
                 >
-                  {t.expiresAt}
+                  {commonTexts.expiresAt}
                 </CustomText>
 
                 <CustomText
@@ -385,7 +354,7 @@ export function LatestArticleOffersCards({
                 type='body'
                 className='text-sm text-neutral-500'
               >
-                {t.offerHistory}
+                {commonTexts.offerHistory}
               </CustomText>
 
               <Pressable
@@ -449,7 +418,7 @@ export function LatestArticleOffersCards({
                     type='body'
                     className='text-sm text-neutral-600'
                   >
-                    {t.userAcceptedCounter}
+                    {commonTexts.userAcceptedCounter}
                   </CustomText>
 
                   <ConfirmModal
@@ -491,7 +460,7 @@ export function LatestArticleOffersCards({
                   type='body'
                   className='text-sm text-neutral-500'
                 >
-                  {t.waitingForUser}
+                  {commonTexts.waitingForUser}
                 </CustomText>
               </>
             ) : null}

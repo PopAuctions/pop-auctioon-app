@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { Lang } from '@/types/types';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 import { cn } from '@/utils/cn';
 
@@ -25,17 +24,6 @@ type DateInputFieldProps<T extends FieldValues> = {
   disabled?: boolean;
   minimumDate?: Date;
   title?: string;
-};
-
-const TEXTS: Record<Lang, { confirm: string; cancel: string }> = {
-  es: {
-    confirm: 'Confirmar',
-    cancel: 'Cancelar',
-  },
-  en: {
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-  },
 };
 
 const formatDate = (date: Date) => {
@@ -62,10 +50,11 @@ export function DateInputField<T extends FieldValues>({
   minimumDate,
   title,
 }: DateInputFieldProps<T>) {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const defaultClassNames = useDefaultClassNames();
   const [isOpen, setIsOpen] = useState(false);
   const [draftDate, setDraftDate] = useState<Date | null>(null);
+  const texts = t('components.dateInput', { locale });
 
   const pickerClassNames = {
     ...defaultClassNames,
@@ -187,7 +176,7 @@ export function DateInputField<T extends FieldValues>({
                         mode='secondary'
                         onPress={handleCancel}
                       >
-                        {TEXTS[locale].cancel}
+                        {texts.cancel}
                       </Button>
                     </View>
 
@@ -196,7 +185,7 @@ export function DateInputField<T extends FieldValues>({
                         mode='primary'
                         onPress={handleConfirm}
                       >
-                        {TEXTS[locale].confirm}
+                        {texts.confirm}
                       </Button>
                     </View>
                   </View>

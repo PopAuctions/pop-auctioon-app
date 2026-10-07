@@ -501,7 +501,7 @@
         },
         "tooltip": {
           "category": {
-            "main": "Choose the category that best matches your auction.",
+            "main": "Choose the category that best matches the auction.",
             "strong": "This cannot be changed later."
           }
         }
@@ -1094,6 +1094,41 @@
       "follow": "Follow",
       "unfollow": "Unfollow",
       "notAvailable": "No longer available"
+    },
+    "appVersionGate": {
+      "forceTitle": "Update required",
+      "softTitle": "Update available",
+      "forceDescription": "You need to update PopAuctioon to keep using the app.",
+      "softDescription": "A newer version of PopAuctioon is available. You can update now or continue using the app.",
+      "updateButton": "Update app",
+      "continueButton": "Continue for now"
+    },
+    "auctionCountdown": {
+      "left": "Left:",
+      "enterBefore": "Get ready for the auction"
+    },
+    "dateInput": {
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "offerCards": {
+      "common": {
+        "date": "Date",
+        "expiresAt": "Expires at",
+        "offerHistory": "Offer history",
+        "userAcceptedCounter": "The user accepted your counter-offer",
+        "waitingForUser": "Waiting for user response"
+      },
+      "article": {
+        "offer": "Current offer",
+        "noCommissionedOffer": "No commissioned offer",
+        "noCommissionedOfferTooltip": "Amount you will receive after deducting the platform commission."
+      },
+      "latest": {
+        "offer": "Offer",
+        "noCommissionedOffer": "Amount you will receive",
+        "noCommissionedOfferTooltip": "Amount you will receive if you accept the offer and the buyer completes the payment."
+      }
     },
     "offerCard": {
       "status": {
