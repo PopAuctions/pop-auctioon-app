@@ -49,6 +49,7 @@ export default function AuctionDetailScreen() {
   const { data: userArticlesFollowed } = useGetArticlesUserFollows();
   const liveAuction = liveAuctionData?.auction;
   const auctionLang = t('screens.auction');
+  const shareButtonTexts = t('components.shareButton');
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
@@ -213,10 +214,7 @@ export default function AuctionDetailScreen() {
                 lang={locale}
                 className='w-1/2'
                 mode='secondary'
-                title={{
-                  es: 'Mira esta subasta en Popauctioon',
-                  en: 'Check out this auction on Popauction',
-                }}
+                title={shareButtonTexts.auctionTitle}
               >
                 {auctionLang.share}
               </ShareButton>

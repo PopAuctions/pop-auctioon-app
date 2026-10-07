@@ -47,6 +47,7 @@ describe('ShareButton', () => {
       <ShareButton
         mode='primary'
         lang='en'
+        title='Share this'
       >
         Share
       </ShareButton>
@@ -59,6 +60,7 @@ describe('ShareButton', () => {
       <ShareButton
         mode='primary'
         lang='en'
+        title='Share this'
       >
         Share
       </ShareButton>
@@ -77,6 +79,7 @@ describe('ShareButton', () => {
       <ShareButton
         mode='primary'
         lang='en'
+        title='Share this'
       >
         Share
       </ShareButton>
@@ -97,6 +100,7 @@ describe('ShareButton', () => {
       <ShareButton
         mode='primary'
         lang='es'
+        title='Compartir esto'
       >
         Share
       </ShareButton>
@@ -116,7 +120,7 @@ describe('ShareButton', () => {
       <ShareButton
         mode='primary'
         lang='en'
-        title={{ es: 'Compartir esto', en: 'Share this' }}
+        title='Share this'
       >
         Share
       </ShareButton>
@@ -138,6 +142,7 @@ describe('ShareButton', () => {
       <ShareButton
         mode='primary'
         lang='en'
+        title='Share this'
       >
         Share
       </ShareButton>
@@ -149,10 +154,7 @@ describe('ShareButton', () => {
     await waitFor(() => {
       expect(mockCallToast).toHaveBeenCalledWith({
         variant: 'error',
-        description: {
-          es: 'Hubo un error al compartir',
-          en: 'There was an error sharing',
-        },
+        description: 'components.shareButton.error',
       });
     });
   });

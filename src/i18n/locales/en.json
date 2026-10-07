@@ -967,6 +967,17 @@
     }
   },
   "components": {
+    "shareButton": {
+      "articleTitle": "Check out this article!",
+      "auctionTitle": "Check out this auction on Popauction",
+      "liveAuctionTitle": "Live auction on PopAuctioon",
+      "error": "There was an error sharing"
+    },
+    "simpleCountdown": {
+      "articleStartSoon": "Starting soon",
+      "auctionStartSoon": "Starting soon",
+      "completed": "Auction already started"
+    },
     "bid": {
       "sendBid": "Send bid",
       "bid": "Bid",

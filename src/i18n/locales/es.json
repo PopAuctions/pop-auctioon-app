@@ -967,6 +967,17 @@
     }
   },
   "components": {
+    "shareButton": {
+      "articleTitle": "¡Mira este artículo!",
+      "auctionTitle": "Mira esta subasta en Popauctioon",
+      "liveAuctionTitle": "Subasta en vivo en PopAuctioon",
+      "error": "Hubo un error al compartir"
+    },
+    "simpleCountdown": {
+      "articleStartSoon": "Comienza pronto",
+      "auctionStartSoon": "Comenzará pronto",
+      "completed": "La subasta ya comenzó"
+    },
     "bid": {
       "sendBid": "Enviar puja",
       "bid": "Puja",

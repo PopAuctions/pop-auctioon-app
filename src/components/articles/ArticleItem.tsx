@@ -13,6 +13,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { t } from '@/i18n';
 
 type ArticleItemProps = {
   article: SimpleArticle;
@@ -44,6 +45,7 @@ export function ArticleItem({
 }: ArticleItemProps) {
   const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
+  const countdownTexts = t('components.simpleCountdown', { locale: lang });
   const [isLoading, setIsLoading] = useState(false);
 
   const articleId = article.id;
@@ -127,13 +129,9 @@ export function ArticleItem({
             {article.whenInAuction && (
               <SimpleCountdown
                 dateString={article.whenInAuction}
-                locale={lang}
                 texts={{
-                  startSoon: { en: 'Starting soon', es: 'Comienza pronto' },
-                  completed: {
-                    en: 'Auction already started',
-                    es: 'La subasta ya comenzó',
-                  },
+                  startSoon: countdownTexts.articleStartSoon,
+                  completed: countdownTexts.completed,
                 }}
               />
             )}

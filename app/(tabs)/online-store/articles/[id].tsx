@@ -19,6 +19,7 @@ export default function ArticlesDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const articleLang = t('screens.article');
   const onlineStoreArticleTexts = t('screens.onlineStoreArticle');
+  const shareButtonTexts = t('components.shareButton');
   const articleId = parseNumber(id);
 
   const {
@@ -111,10 +112,7 @@ export default function ArticlesDetailScreen() {
                 size='small'
                 className='w-1/2'
                 mode='secondary'
-                title={{
-                  es: '¡Mira este artículo!',
-                  en: 'Check out this article!',
-                }}
+                title={shareButtonTexts.articleTitle}
               >
                 {t('screens.auction.share')}
               </ShareButton>

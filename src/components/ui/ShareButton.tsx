@@ -3,7 +3,7 @@ import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Button, ButtonMode, ButtonSize } from './Button';
 import { useToast } from '@/hooks/useToast';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 import * as Haptics from 'expo-haptics';
 
 interface ShareButtonProps {
@@ -11,7 +11,7 @@ interface ShareButtonProps {
   mode: ButtonMode;
   className?: string;
   lang: Lang;
-  title: LangMap;
+  title: string;
   size?: ButtonSize;
 }
 
@@ -41,7 +41,7 @@ export function ShareButton({
 
       // Generate smart share URL with locale
       const shareUrl = `${baseUrl}/api/share?url=${encodeURIComponent(path)}&locale=${lang}`;
-      const shareTitle = title?.[lang];
+      const shareTitle = title;
 
       // Add haptic feedback
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -58,10 +58,7 @@ export function ShareButton({
       console.error('Error sharing URL', error);
       callToast({
         variant: 'error',
-        description: {
-          es: 'Hubo un error al compartir',
-          en: 'There was an error sharing',
-        },
+        description: 'components.shareButton.error',
       });
     }
   };
