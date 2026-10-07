@@ -56,6 +56,14 @@
     "notification": {
       "loadFailed": "Error al obtener las notificaciones",
       "none": "No hay notificaciones"
+    },
+    "bid": {
+      "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar."
+    },
+    "live": {
+      "articlesLoadFailed": "Error al obtener los artículos.",
+      "articlesLoadRetry": "Error al obtener los artículos. Haz clic para reintentar.",
+      "currentArticleLoadFailed": "Error al obtener el artículo."
     }
   },
   "errorBoundary": {

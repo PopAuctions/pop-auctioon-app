@@ -3,19 +3,22 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import type {
   ActionResponse,
   CustomArticleLiveAuto,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import type { MessageKey } from '@/i18n';
+
+const CURRENT_ARTICLE_LOAD_ERROR =
+  'errors.live.currentArticleLoadFailed' as const satisfies MessageKey;
 
 export const useFetchCurrentArticle = ({
   articleId,
 }: {
   articleId: number;
-}): ActionResponse<CustomArticleLiveAuto | null> => {
+}): ActionResponse<CustomArticleLiveAuto | null, MessageKey> => {
   const [article, setArticle] = useState<CustomArticleLiveAuto | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchArticle = useCallback(async () => {
@@ -27,15 +30,9 @@ export const useFetchCurrentArticle = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching article information.',
-        es: 'Error al obtener el artículo.',
-      });
+      setErrorMessage(CURRENT_ARTICLE_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching article information.',
-          es: 'Error al obtener el artículo.',
-        },
+        message: CURRENT_ARTICLE_LOAD_ERROR,
       };
     }
 

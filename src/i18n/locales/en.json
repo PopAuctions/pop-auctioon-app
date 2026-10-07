@@ -56,6 +56,14 @@
     "notification": {
       "loadFailed": "Error fetching notifications",
       "none": "No notifications"
+    },
+    "bid": {
+      "updateAmountsFailed": "Error updating bidding amounts. Click to retry."
+    },
+    "live": {
+      "articlesLoadFailed": "Error fetching articles information.",
+      "articlesLoadRetry": "Error fetching articles information. Click to retry.",
+      "currentArticleLoadFailed": "Error fetching article information."
     }
   },
   "errorBoundary": {
