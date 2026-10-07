@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type {
-  ActionResponse,
-  Auction,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import type { ActionResponse, Auction, RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+
+const AUCTIONS_LOAD_ERROR =
+  'errors.auction.auctionsLoadFailed' as const satisfies MessageKey;
 
 interface MyOldAuctionsApiResponse {
   data: Auction[] | null;
@@ -23,11 +22,14 @@ interface UseGetMyOldAuctionsResponse {
 
 const DEFAULT_PAGE_SIZE = 3;
 
-export const useGetMyOldAuctions = (): ActionResponse<Auction[] | null> &
+export const useGetMyOldAuctions = (): ActionResponse<
+  Auction[] | null,
+  MessageKey
+> &
   UseGetMyOldAuctionsResponse => {
   const [auctions, setAuctions] = useState<Auction[] | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
 
   const [page, setPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -46,18 +48,12 @@ export const useGetMyOldAuctions = (): ActionResponse<Auction[] | null> &
 
       if (!res || res.error) {
         setStatus('error');
-        setErrorMessage({
-          en: 'Error fetching auctions',
-          es: 'Error al obtener subastas',
-        });
+        setErrorMessage(AUCTIONS_LOAD_ERROR);
         setAuctions(null);
         setTotalItems(0);
 
         return {
-          message: {
-            en: 'Error fetching auctions',
-            es: 'Error al obtener subastas',
-          },
+          message: AUCTIONS_LOAD_ERROR,
         };
       }
 

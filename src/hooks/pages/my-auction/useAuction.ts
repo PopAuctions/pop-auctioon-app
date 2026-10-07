@@ -4,8 +4,14 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import type { LangMap } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import { parseLocalDateTime } from '@/utils/getMinDateToStartAuction';
 import { AuctionFormValues } from '@/utils/schemas/auctionSchemas';
+
+const AUCTION_CREATION_ERROR =
+  'errors.auction.creationFailed' as const satisfies MessageKey;
+const AUCTION_UPDATE_ERROR =
+  'errors.auction.updateFailed' as const satisfies MessageKey;
 
 interface FunctionResponse {
   status: 'success' | 'error';
@@ -69,12 +75,7 @@ export const useAuction = (): {
 
       console.error('ERROR_CREATE_AUCTION_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error creating auction',
-        es: 'Error al crear la subasta',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: AUCTION_CREATION_ERROR });
       return { status: 'error' };
     }
   };
@@ -113,12 +114,7 @@ export const useAuction = (): {
 
       console.error('ERROR_EDIT_AUCTION_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating auction',
-        es: 'Error al actualizar la subasta',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: AUCTION_UPDATE_ERROR });
       return { status: 'error' };
     }
   };

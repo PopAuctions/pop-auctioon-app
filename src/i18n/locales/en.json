@@ -35,11 +35,17 @@
       "mostViewedArticlesLoadFailed": "Error fetching most viewed articles",
       "newestArticlesLoadFailed": "Error fetching newest articles",
       "articlesLoadFailed": "Error fetching articles",
-      "noArticlesWon": "No articles won"
+      "noArticlesWon": "No articles won",
+      "commentsLoadFailed": "Error fetching comments",
+      "creationFailed": "Error creating article",
+      "updateFailed": "Error updating article"
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error fetching followed auctions",
-      "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions"
+      "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions",
+      "auctionsLoadFailed": "Error fetching auctions",
+      "creationFailed": "Error creating auction",
+      "updateFailed": "Error updating auction"
     },
     "autoBid": {
       "loadFailed": "Error fetching autoBids made"
