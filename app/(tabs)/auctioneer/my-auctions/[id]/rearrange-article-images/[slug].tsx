@@ -33,7 +33,7 @@ export default function RearrangeArticleImagesScreen() {
   if (status === REQUEST_STATUS.error || !article || !article.images) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/rearrange-article-images/${articleId}`}
       />
     );

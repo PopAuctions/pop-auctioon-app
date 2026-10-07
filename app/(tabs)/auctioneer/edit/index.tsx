@@ -123,7 +123,7 @@ export default function EditStoreScreen() {
   if (!isAuctioneer) {
     return (
       <CustomError
-        customMessage={{ es: 'Permiso denegado', en: 'Permission denied' }}
+        customMessage={t('commonErrors.permissionDenied')}
         refreshRoute='/(tabs)/auctioneer/edit'
       />
     );
@@ -138,7 +138,7 @@ export default function EditStoreScreen() {
   if (storeFetchStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={storeFetchError}
+        customMessage={storeFetchError?.[locale]}
         refreshRoute='/(tabs)/auctioneer/edit'
       />
     );

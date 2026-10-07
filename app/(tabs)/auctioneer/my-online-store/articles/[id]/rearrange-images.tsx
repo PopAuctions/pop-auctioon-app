@@ -37,7 +37,7 @@ export default function MyOnlineStoreArticleRearrangeImagesScreen() {
   ) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute={`/(tabs)/auctioneer/my-online-store/articles/${articleId}/rearrange-images`}
       />
     );

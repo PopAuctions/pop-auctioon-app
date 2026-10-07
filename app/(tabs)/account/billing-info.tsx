@@ -106,7 +106,7 @@ export default function BillingInfoScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={fetchError}
+        customMessage={fetchError?.[locale]}
         refreshRoute='/(tabs)/account/billing-info'
       />
     );

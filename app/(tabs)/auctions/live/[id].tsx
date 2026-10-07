@@ -190,10 +190,7 @@ export default function LiveAuctionScreen() {
       >
         <CustomError
           refreshRoute={`/(tabs)/auctions`}
-          customMessage={{
-            es: 'ID de subasta inválido',
-            en: 'Invalid auction ID',
-          }}
+          customMessage={t('commonErrors.invalidAuctionId')}
         />
       </View>
     );
@@ -218,10 +215,9 @@ export default function LiveAuctionScreen() {
         <CustomError
           refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
           customMessage={
-            errorMessage ?? {
-              es: 'Hubo un error al cargar la información',
-              en: 'There was an error loading information',
-            }
+            errorMessage
+              ? errorMessage[locale]
+              : t('commonErrors.liveAuctionInfoLoadFailed')
           }
         />
       </View>
@@ -242,10 +238,7 @@ export default function LiveAuctionScreen() {
       >
         <CustomError
           refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
-          customMessage={{
-            es: 'Error al cargar el stream de la subasta',
-            en: 'Error loading auction stream',
-          }}
+          customMessage={t('commonErrors.liveAuctionStreamLoadFailed')}
         />
       </View>
     );

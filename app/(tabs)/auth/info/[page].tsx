@@ -112,7 +112,7 @@ export default function InfoScreen() {
     if (status === REQUEST_STATUS.error || !legalContent) {
       return (
         <CustomError
-          customMessage={errorMessage}
+          customMessage={errorMessage?.[locale]}
           refreshRoute={`/(tabs)/auth/info/${page}`}
         />
       );
@@ -131,7 +131,7 @@ export default function InfoScreen() {
     if (infoStatus === REQUEST_STATUS.error || !infoContent) {
       return (
         <CustomError
-          customMessage={infoErrorMessage}
+          customMessage={infoErrorMessage?.[locale]}
           refreshRoute={`/(tabs)/auth/info/${page}`}
         />
       );

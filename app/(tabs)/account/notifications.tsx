@@ -53,7 +53,7 @@ export default function UserNotificationsScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute='/(tabs)/account/notifications'
       />
     );

@@ -30,10 +30,7 @@ export default function AuctioneerLayout() {
   if (!userStore.active) {
     return (
       <CustomError
-        customMessage={{
-          en: 'Your account is not yet active. Wait for activation or contact support for more information.',
-          es: 'Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.',
-        }}
+        customMessage={t('commonErrors.inactiveAuctioneerAccount')}
         refreshRoute='/(tabs)/auctioneer'
       />
     );

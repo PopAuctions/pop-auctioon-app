@@ -450,10 +450,7 @@ export default function PaymentScreen() {
   if (!auctionId) {
     return (
       <CustomError
-        customMessage={{
-          es: 'ID de subasta requerido',
-          en: 'Auction ID required',
-        }}
+        customMessage={t('commonErrors.auctionIdRequired')}
         refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );
@@ -471,7 +468,7 @@ export default function PaymentScreen() {
   if (articlesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={articlesError}
+        customMessage={articlesError?.[locale]}
         refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );
@@ -480,7 +477,7 @@ export default function PaymentScreen() {
   if (addressesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={addressesError}
+        customMessage={addressesError?.[locale]}
         refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );

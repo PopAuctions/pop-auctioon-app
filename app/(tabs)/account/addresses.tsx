@@ -65,7 +65,7 @@ export default function AddressesScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute='/(tabs)/account/addresses'
       />
     );

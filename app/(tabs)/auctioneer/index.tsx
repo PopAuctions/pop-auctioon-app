@@ -17,7 +17,7 @@ import { useGetCurrentUser } from '@/hooks/pages/user/useGetCurrentUser';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 
 export default function AuctioneerTab() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { data: currentUser, status, errorMessage } = useGetCurrentUser();
   const {
     data: userStore,
@@ -60,7 +60,7 @@ export default function AuctioneerTab() {
   ) {
     return (
       <CustomError
-        customMessage={errorMessage || storeError}
+        customMessage={(errorMessage || storeError)?.[locale]}
         refreshRoute='/(tabs)/auctioneer'
       />
     );

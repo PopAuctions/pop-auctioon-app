@@ -198,7 +198,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
   if (error) {
     return (
       <CustomError
-        customMessage={error}
+        customMessage={error?.[locale]}
         refreshRoute='/(tabs)/auctioneer/my-online-store'
       />
     );

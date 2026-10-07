@@ -7,8 +7,10 @@ import { CustomError } from '@/components/ui/CustomError';
 import { useHideWhileStackBuilds } from '@/hooks/useHideWhileStackBuilds';
 import { useGetArticlesByAuctionAmount } from '@/hooks/pages/article/useGetArticlesByAuctionAmount';
 import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGetUnreadUserNotifications';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function AccountTab() {
+  const { locale } = useTranslation();
   const {
     data: currentUser,
     status,
@@ -49,7 +51,7 @@ export default function AccountTab() {
   if (status === REQUEST_STATUS.error || !currentUser) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute='/(tabs)/account'
       />
     );

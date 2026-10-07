@@ -356,10 +356,7 @@ export default function SinglePaymentScreen() {
   if (!articleId) {
     return (
       <CustomError
-        customMessage={{
-          es: 'ID de artículo requerido',
-          en: 'Article ID required',
-        }}
+        customMessage={t('commonErrors.articleIdRequired')}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -380,7 +377,7 @@ export default function SinglePaymentScreen() {
   if (articleStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={articleError}
+        customMessage={articleError?.[locale]}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -389,7 +386,7 @@ export default function SinglePaymentScreen() {
   if (storeCountryStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={storeCountryError}
+        customMessage={storeCountryError?.[locale]}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -398,7 +395,7 @@ export default function SinglePaymentScreen() {
   if (addressesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={addressesError}
+        customMessage={addressesError?.[locale]}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );

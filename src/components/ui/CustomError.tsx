@@ -4,23 +4,20 @@ import { CustomText } from './CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Button } from './Button';
 import { type Href, usePathname, useRouter } from 'expo-router';
-import { LangMap } from '@/types/types';
 import { getParentRoute } from '@/utils/deeplinks/getParentRoute';
 
 interface CustomErrorProps {
   refreshRoute: string;
-  customMessage?: LangMap | null;
+  customMessage?: string | null;
 }
 
 export const CustomError = ({
   refreshRoute,
   customMessage,
 }: CustomErrorProps) => {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const pathname = usePathname();
   const router = useRouter();
-
-  const message = customMessage?.[locale];
 
   const handleRefresh = () => {
     router.replace({
@@ -50,12 +47,12 @@ export const CustomError = ({
         >
           {t('commonErrors.generic')}
         </CustomText>
-        {message && (
+        {customMessage && (
           <CustomText
             type='h3'
             className='mb-2 text-center'
           >
-            {message}
+            {customMessage}
           </CustomText>
         )}
         <CustomText

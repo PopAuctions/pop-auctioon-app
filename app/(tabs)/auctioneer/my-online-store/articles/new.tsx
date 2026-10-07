@@ -99,7 +99,7 @@ export default function NewOnlineStoreArticleScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute='/(tabs)/auctioneer/my-online-store/articles/new'
       />
     );

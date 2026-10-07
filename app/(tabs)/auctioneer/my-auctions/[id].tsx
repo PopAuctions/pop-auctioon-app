@@ -47,7 +47,7 @@ export default function MyAuctionDetailScreen() {
   if (status === REQUEST_STATUS.error || !auction) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${id}`}
       />
     );

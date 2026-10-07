@@ -36,7 +36,7 @@ export default function ArticlesDetailScreen() {
   if (status === REQUEST_STATUS.error || !onlineStoreArticle) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute={`/(tabs)/online-store/articles/${id}`}
       />
     );

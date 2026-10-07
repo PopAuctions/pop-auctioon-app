@@ -994,6 +994,15 @@
     "loadFailedMessage": "Could not load information. Please try again.",
     "retryButton": "Retry",
     "missingAuctionId": "Auction ID was not provided",
+    "auctionIdRequired": "Auction ID required",
+    "articleIdRequired": "Article ID required",
+    "inactiveAuctioneerAccount": "Your account is not yet active. Wait for activation or contact support for more information.",
+    "permissionDenied": "Permission denied",
+    "auctionsLoadFailed": "Failed to load auctions.",
+    "invalidAuctionId": "Invalid auction ID",
+    "liveAuctionInfoLoadFailed": "There was an error loading information",
+    "liveAuctionStreamLoadFailed": "Error loading auction stream",
+    "emailMissing": "Email is missing.",
     "invalidLoginCredentials": "Invalid login credentials",
     "emailNotConfirmed": "Email not confirmed",
     "userNotFound": "User not found",
@@ -1013,6 +1022,7 @@
     "loginToChat": "Log in to participate in the chat",
     "sendError": "Could not send the message",
     "connectionError": "Error connecting to chat",
+    "connectionFailed": "Failed to connect to chat",
     "send": "Send"
   },
   "notFound": {

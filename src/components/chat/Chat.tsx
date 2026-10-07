@@ -100,7 +100,7 @@ export const Chat = ({
   if (status === REQUEST_STATUS.error && errorMessage) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute='/(tabs)/auctions'
       />
     );
@@ -114,10 +114,7 @@ export const Chat = ({
   ) {
     return (
       <CustomError
-        customMessage={{
-          es: 'Error al conectar con el chat',
-          en: 'Failed to connect to chat',
-        }}
+        customMessage={t('chat.connectionFailed')}
         refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
       />
     );

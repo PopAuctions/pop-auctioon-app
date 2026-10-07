@@ -54,7 +54,7 @@ export default function PaymentsHistoryScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage?.[locale]}
         refreshRoute='/(tabs)/account/payments-history'
       />
     );

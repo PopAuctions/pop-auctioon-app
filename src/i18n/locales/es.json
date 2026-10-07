@@ -994,6 +994,15 @@
     "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
     "retryButton": "Reintentar",
     "missingAuctionId": "No se proporcionó el ID de la subasta",
+    "auctionIdRequired": "ID de subasta requerido",
+    "articleIdRequired": "ID de artículo requerido",
+    "inactiveAuctioneerAccount": "Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.",
+    "permissionDenied": "Permiso denegado",
+    "auctionsLoadFailed": "No se pudieron cargar las subastas.",
+    "invalidAuctionId": "ID de subasta inválido",
+    "liveAuctionInfoLoadFailed": "Hubo un error al cargar la información",
+    "liveAuctionStreamLoadFailed": "Error al cargar el stream de la subasta",
+    "emailMissing": "Falta el correo electrónico.",
     "invalidLoginCredentials": "Credenciales de acceso inválidas",
     "emailNotConfirmed": "Email no confirmado",
     "userNotFound": "Usuario no encontrado",
@@ -1013,6 +1022,7 @@
     "loginToChat": "Inicia sesión para participar en el chat",
     "sendError": "No se pudo enviar el mensaje",
     "connectionError": "Error al conectar con el chat",
+    "connectionFailed": "Error al conectar con el chat",
     "send": "Enviar"
   },
   "notFound": {
