@@ -7,6 +7,16 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { ProviderButton } from './ProviderButton';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
+import type { MessageKey } from '@/i18n';
+
+const APPLE_SIGN_IN_START_ERROR =
+  'auth.oauth.apple.startFailed' as const satisfies MessageKey;
+const APPLE_SIGN_IN_CANCELLED_ERROR =
+  'auth.oauth.apple.cancelledOrFailed' as const satisfies MessageKey;
+const APPLE_SIGN_IN_CODE_ERROR =
+  'auth.oauth.apple.codeMissing' as const satisfies MessageKey;
+const APPLE_SIGN_IN_UNEXPECTED_ERROR =
+  'auth.oauth.apple.unexpected' as const satisfies MessageKey;
 
 export const AppleButton = ({
   buttonText,
@@ -37,20 +47,14 @@ export const AppleButton = ({
       if (error) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to initiate Apple sign-in. Please try again.',
-            es: 'No se pudo iniciar el inicio de sesión con Apple. Por favor, inténtelo de nuevo.',
-          },
+          description: APPLE_SIGN_IN_START_ERROR,
         });
         return;
       }
       if (!data.url) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to initiate Apple sign-in. Please try again.',
-            es: 'No se pudo iniciar el inicio de sesión con Apple. Por favor, inténtelo de nuevo.',
-          },
+          description: APPLE_SIGN_IN_START_ERROR,
         });
         return;
       }
@@ -60,10 +64,7 @@ export const AppleButton = ({
       if (res.type !== 'success') {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Apple sign-in was cancelled or failed. Please try again.',
-            es: 'El inicio de sesión con Apple fue cancelado o fallido. Por favor, inténtelo de nuevo.',
-          },
+          description: APPLE_SIGN_IN_CANCELLED_ERROR,
         });
         return;
       }
@@ -74,10 +75,7 @@ export const AppleButton = ({
       if (typeof code !== 'string') {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to retrieve authentication code from Apple. Please try again.',
-            es: 'No se pudo obtener el código de autenticación de Apple. Por favor, inténtelo de nuevo.',
-          },
+          description: APPLE_SIGN_IN_CODE_ERROR,
         });
         return;
       }
@@ -86,10 +84,7 @@ export const AppleButton = ({
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          en: 'An unexpected error occurred during Apple sign-in. Please try again.',
-          es: 'Ocurrió un error inesperado durante el inicio de sesión con Apple. Por favor, inténtelo de nuevo.',
-        },
+        description: APPLE_SIGN_IN_UNEXPECTED_ERROR,
       });
     } finally {
       oauthInFlightRef.current = false;

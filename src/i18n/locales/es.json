@@ -123,6 +123,27 @@
     "authenticationFailed": "La autenticación ha fallado. Por favor, inténtelo de nuevo.",
     "authenticationSuccess": "¡Autenticación exitosa!"
   },
+  "auth": {
+    "oauth": {
+      "google": {
+        "startFailed": "No se pudo iniciar el inicio de sesión con Google. Por favor, inténtelo de nuevo.",
+        "cancelledOrFailed": "El inicio de sesión con Google fue cancelado o fallido. Por favor, inténtelo de nuevo.",
+        "codeMissing": "No se pudo obtener el código de autenticación de Google. Por favor, inténtelo de nuevo.",
+        "unexpected": "Ocurrió un error inesperado durante el inicio de sesión con Google. Por favor, inténtelo de nuevo."
+      },
+      "apple": {
+        "startFailed": "No se pudo iniciar el inicio de sesión con Apple. Por favor, inténtelo de nuevo.",
+        "cancelledOrFailed": "El inicio de sesión con Apple fue cancelado o fallido. Por favor, inténtelo de nuevo.",
+        "codeMissing": "No se pudo obtener el código de autenticación de Apple. Por favor, inténtelo de nuevo.",
+        "unexpected": "Ocurrió un error inesperado durante el inicio de sesión con Apple. Por favor, inténtelo de nuevo."
+      }
+    },
+    "registration": {
+      "acceptTerms": "Debes aceptar los términos y condiciones",
+      "userCreated": "Usuario creado. Revisa tu email para confirmar tu cuenta.",
+      "auctioneerCreated": "Subastador creado. Revisa tu email para confirmar tu cuenta."
+    }
+  },
   "tabsNames": {
     "home": "Inicio",
     "account": "Cuenta",

@@ -16,6 +16,12 @@ import { useSignup } from '@/hooks/auth/useSignup';
 import { useToast } from '@/hooks/useToast';
 import { APP_USER_ROLES } from '@/constants/user';
 import { useOpenTerms } from '@/hooks/useOpenTerms';
+import type { MessageKey } from '@/i18n';
+
+const ACCEPT_TERMS_ERROR =
+  'auth.registration.acceptTerms' as const satisfies MessageKey;
+const USER_CREATED_MESSAGE =
+  'auth.registration.userCreated' as const satisfies MessageKey;
 
 export default function RegisterUserScreen() {
   const { t, locale } = useTranslation();
@@ -47,10 +53,7 @@ export default function RegisterUserScreen() {
     if (!acceptedTerms) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Debes aceptar los términos y condiciones',
-          en: 'You must accept the terms and conditions',
-        },
+        description: ACCEPT_TERMS_ERROR,
       });
       return;
     }
@@ -74,10 +77,7 @@ export default function RegisterUserScreen() {
     if (result.success && result.email) {
       callToast({
         variant: 'success',
-        description: {
-          es: 'Usuario creado. Revisa tu email para confirmar tu cuenta.',
-          en: 'User created. Check your email to confirm your account.',
-        },
+        description: USER_CREATED_MESSAGE,
       });
 
       router.push({

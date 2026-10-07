@@ -123,6 +123,27 @@
     "authenticationFailed": "Authentication failed. Please try again.",
     "authenticationSuccess": "Successfully authenticated!"
   },
+  "auth": {
+    "oauth": {
+      "google": {
+        "startFailed": "Failed to initiate Google sign-in. Please try again.",
+        "cancelledOrFailed": "Google sign-in was cancelled or failed. Please try again.",
+        "codeMissing": "Failed to retrieve authentication code from Google. Please try again.",
+        "unexpected": "An unexpected error occurred during Google sign-in. Please try again."
+      },
+      "apple": {
+        "startFailed": "Failed to initiate Apple sign-in. Please try again.",
+        "cancelledOrFailed": "Apple sign-in was cancelled or failed. Please try again.",
+        "codeMissing": "Failed to retrieve authentication code from Apple. Please try again.",
+        "unexpected": "An unexpected error occurred during Apple sign-in. Please try again."
+      }
+    },
+    "registration": {
+      "acceptTerms": "You must accept the terms and conditions",
+      "userCreated": "User created. Check your email to confirm your account.",
+      "auctioneerCreated": "Auctioneer created. Check your email to confirm your account."
+    }
+  },
   "tabsNames": {
     "home": "Home",
     "account": "Account",
