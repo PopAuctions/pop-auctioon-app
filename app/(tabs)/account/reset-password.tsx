@@ -16,6 +16,10 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { LangMap } from '@/types/types';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import type { MessageKey } from '@/i18n';
+
+const RESET_PASSWORD_UNEXPECTED_ERROR =
+  'auth.passwordReset.unexpected' as const satisfies MessageKey;
 
 export default function ResetPasswordScreen() {
   const { t, locale } = useTranslation();
@@ -57,10 +61,7 @@ export default function ResetPasswordScreen() {
       sentryErrorReport(e?.message, 'CATCH_RESET_PASSWORD - Unexpected error');
       callToast({
         variant: 'error',
-        description: {
-          en: 'An unexpected error occurred. Please try again later.',
-          es: 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.',
-        },
+        description: RESET_PASSWORD_UNEXPECTED_ERROR,
       });
     } finally {
       setLoading(false);

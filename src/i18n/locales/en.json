@@ -64,6 +64,9 @@
       "articlesLoadFailed": "Error fetching articles information.",
       "articlesLoadRetry": "Error fetching articles information. Click to retry.",
       "currentArticleLoadFailed": "Error fetching article information."
+    },
+    "document": {
+      "openFailed": "Could not open document"
     }
   },
   "errorBoundary": {
@@ -142,6 +145,13 @@
       "acceptTerms": "You must accept the terms and conditions",
       "userCreated": "User created. Check your email to confirm your account.",
       "auctioneerCreated": "Auctioneer created. Check your email to confirm your account."
+    },
+    "passwordReset": {
+      "unexpected": "An unexpected error occurred. Please try again later."
+    },
+    "emailConfirmation": {
+      "sendFailed": "Error sending email",
+      "tryAgainIn": "Try again in"
     }
   },
   "tabsNames": {

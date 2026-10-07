@@ -64,6 +64,9 @@
       "articlesLoadFailed": "Error al obtener los artículos.",
       "articlesLoadRetry": "Error al obtener los artículos. Haz clic para reintentar.",
       "currentArticleLoadFailed": "Error al obtener el artículo."
+    },
+    "document": {
+      "openFailed": "No se pudo abrir el documento"
     }
   },
   "errorBoundary": {
@@ -142,6 +145,13 @@
       "acceptTerms": "Debes aceptar los términos y condiciones",
       "userCreated": "Usuario creado. Revisa tu email para confirmar tu cuenta.",
       "auctioneerCreated": "Subastador creado. Revisa tu email para confirmar tu cuenta."
+    },
+    "passwordReset": {
+      "unexpected": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+    },
+    "emailConfirmation": {
+      "sendFailed": "Error enviando correo",
+      "tryAgainIn": "Intenta de nuevo en"
     }
   },
   "tabsNames": {

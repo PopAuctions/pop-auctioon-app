@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { t } from '@/i18n';
+import type { MessageKey } from '@/i18n';
 
-const TEXTS = {
-  es: { tryAgainIn: 'Intenta de nuevo en' },
-  en: { tryAgainIn: 'Try again in' },
-} as const;
+const EMAIL_SEND_ERROR =
+  'auth.emailConfirmation.sendFailed' as const satisfies MessageKey;
 
 interface RequestConfirmationTokenButtonProps {
   email: string;
@@ -32,6 +32,7 @@ export function RequestConfirmationTokenButton({
   const [cooldown, setCooldown] = useState(initialCooldownAmount);
   const { protectedPost } = useSecureApi();
   const { callToast } = useToast(locale);
+  const tryAgainIn = t('auth.emailConfirmation.tryAgainIn', { locale });
 
   const handleResendEmail = async () => {
     if (cooldown > 0 || isLoading) return;
@@ -62,10 +63,7 @@ export function RequestConfirmationTokenButton({
 
       callToast({
         variant: 'error',
-        description: {
-          en: 'Error sending email',
-          es: 'Error enviando correo',
-        },
+        description: EMAIL_SEND_ERROR,
       });
     } finally {
       setIsLoading(false);
@@ -107,7 +105,7 @@ export function RequestConfirmationTokenButton({
           type='body'
           className='text-xs text-slate-400'
         >
-          {TEXTS[locale].tryAgainIn} {cooldown}s
+          {tryAgainIn} {cooldown}s
         </CustomText>
       ) : null}
     </View>
