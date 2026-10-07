@@ -51,7 +51,9 @@
       "loadFailed": "Error fetching autoBids made"
     },
     "offer": {
-      "offersMadeLoadFailed": "Error fetching offers made"
+      "offersMadeLoadFailed": "Error fetching offers made",
+      "invalidNumber": "Enter a valid number",
+      "counterAmountUnchanged": "The counter-offer must be different from the current amount"
     },
     "notification": {
       "loadFailed": "Error fetching notifications",
@@ -1078,6 +1080,30 @@
       "auctionStartSoon": "Starting soon",
       "completed": "Auction already started"
     },
+    "offerCard": {
+      "status": {
+        "counterReceived": "Counter-offer received",
+        "pendingFinalApproval": "Pending approval",
+        "counterSent": "Counter-offer sent"
+      },
+      "amount": {
+        "current": "Current amount",
+        "counter": "Current counter-offer",
+        "accepted": "Accepted amount"
+      },
+      "state": {
+        "initialOffer": "Your offer has been sent. Waiting for the store to respond.",
+        "counterReceived": "The store has made a new proposal.",
+        "waitingForStore": "You sent a counter-offer. Waiting for the store to respond.",
+        "pendingFinalApproval": "You accepted the counter-offer. The store must confirm that the article is still available before proceeding with payment."
+      },
+      "actions": {
+        "offerHistory": "Offer history",
+        "acceptCounter": "Accept counter-offer",
+        "counter": "Counter",
+        "reject": "Reject"
+      }
+    },
     "bid": {
       "sendBid": "Send bid",
       "bid": "Bid",
@@ -1146,7 +1172,52 @@
         "confirmSaleTitle": "Confirm sale",
         "confirmSaleDescription": "The buyer accepted your counter-offer of %{amount}. Confirm that the article is still available. The buyer will then have 24 hours to pay.",
         "rejectSaleTitle": "Reject sale",
-        "rejectSaleDescription": "Reject this agreement if the article is no longer available. This will close the negotiation."
+        "rejectSaleDescription": "Reject this agreement if the article is no longer available. This will close the negotiation.",
+        "acceptCounter": {
+          "title": "Accept counter-offer",
+          "description": "You are accepting the store’s counter-offer. The store must confirm that the article is still available before you can proceed with payment.",
+          "amount": "Agreed amount",
+          "confirm": "Accept counter-offer",
+          "cancel": "Cancel"
+        },
+        "rejectCounter": {
+          "title": "Reject counter-offer",
+          "description": "Are you sure you want to reject this counter-offer? The negotiation will be closed and this action cannot be undone.",
+          "confirm": "Reject counter-offer",
+          "cancel": "Cancel"
+        },
+        "userCounter": {
+          "title": "Make counter-offer",
+          "description": "Enter the amount you want to propose to the store.",
+          "currentOffer": "Current offer",
+          "negotiationHistory": "Negotiation history",
+          "you": "You",
+          "store": "Store",
+          "label": "Counter-offer amount (€)",
+          "invalidAmount": "Enter a valid amount",
+          "sameAmount": "The counter-offer must be different from the current amount",
+          "confirm": "Send counter-offer",
+          "cancel": "Cancel"
+        },
+        "storeCounter": {
+          "title": "Make counter-offer",
+          "description": "Enter the amount you want to propose to the buyer.",
+          "currentOffer": "Current offer",
+          "negotiationHistory": "Negotiation history",
+          "buyer": "Buyer",
+          "store": "Store",
+          "label": "Counter-offer amount (€)",
+          "invalidAmount": "Enter a valid amount",
+          "sameAmount": "The counter-offer must be different from the current amount",
+          "confirm": "Send counter-offer",
+          "cancel": "Cancel"
+        },
+        "history": {
+          "title": "Offer history",
+          "you": "You",
+          "buyer": "Buyer",
+          "store": "Store"
+        }
       },
       "soldArticle": {
         "importantMessage": "You will not be able to revert this action.",

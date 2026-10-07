@@ -14,6 +14,10 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { parseNumber } from '@/utils/parse-number';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
+import type { MessageKey } from '@/i18n';
+
+const INVALID_OFFER_AMOUNT =
+  'errors.offer.invalidNumber' as const satisfies MessageKey;
 
 type ArticleOfferFormProps = {
   texts: { minOffer: string; submit: string; penalty: string };
@@ -49,10 +53,7 @@ export function ArticleOfferForm({
     if (Number.isNaN(parsed) || parsed <= 0) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Ingresa un número válido',
-          en: 'Enter a valid number',
-        },
+        description: INVALID_OFFER_AMOUNT,
       });
       return;
     }

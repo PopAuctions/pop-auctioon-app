@@ -51,7 +51,9 @@
       "loadFailed": "Error al obtener las ofertas realizadas"
     },
     "offer": {
-      "offersMadeLoadFailed": "Error al obtener las ofertas realizadas"
+      "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",
+      "invalidNumber": "Ingresa un número válido",
+      "counterAmountUnchanged": "La contraoferta debe ser diferente al importe actual"
     },
     "notification": {
       "loadFailed": "Error al obtener las notificaciones",
@@ -1078,6 +1080,30 @@
       "auctionStartSoon": "Comenzará pronto",
       "completed": "La subasta ya comenzó"
     },
+    "offerCard": {
+      "status": {
+        "counterReceived": "Contraoferta recibida",
+        "pendingFinalApproval": "Pendiente de aprobación",
+        "counterSent": "Contraoferta enviada"
+      },
+      "amount": {
+        "current": "Importe actual",
+        "counter": "Contraoferta actual",
+        "accepted": "Importe aceptado"
+      },
+      "state": {
+        "initialOffer": "Tu oferta ha sido enviada. Esperando la respuesta de la tienda.",
+        "counterReceived": "La tienda ha realizado una nueva propuesta.",
+        "waitingForStore": "Has enviado una contraoferta. Esperando la respuesta de la tienda.",
+        "pendingFinalApproval": "Has aceptado la contraoferta. La tienda debe confirmar que el artículo sigue disponible antes de proceder con el pago."
+      },
+      "actions": {
+        "offerHistory": "Historial de ofertas",
+        "acceptCounter": "Aceptar contraoferta",
+        "counter": "Contraofertar",
+        "reject": "Rechazar"
+      }
+    },
     "bid": {
       "sendBid": "Enviar puja",
       "bid": "Puja",
@@ -1146,7 +1172,52 @@
         "confirmSaleTitle": "Confirmar venta",
         "confirmSaleDescription": "El comprador ha aceptado tu contraoferta de %{amount}. Confirma que el artículo sigue disponible. Después dispondrá de 24 horas para pagar.",
         "rejectSaleTitle": "Rechazar venta",
-        "rejectSaleDescription": "Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación."
+        "rejectSaleDescription": "Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación.",
+        "acceptCounter": {
+          "title": "Aceptar contraoferta",
+          "description": "Estás aceptando la contraoferta de la tienda. La tienda deberá confirmar que el artículo sigue disponible antes de que puedas realizar el pago.",
+          "amount": "Importe acordado",
+          "confirm": "Aceptar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "rejectCounter": {
+          "title": "Rechazar contraoferta",
+          "description": "¿Estás seguro de que quieres rechazar esta contraoferta? La negociación se cerrará y esta acción no se puede deshacer.",
+          "confirm": "Rechazar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "userCounter": {
+          "title": "Realizar contraoferta",
+          "description": "Introduce el importe que deseas proponer a la tienda.",
+          "currentOffer": "Oferta actual",
+          "negotiationHistory": "Historial de negociación",
+          "you": "Tú",
+          "store": "Tienda",
+          "label": "Importe de la contraoferta (€)",
+          "invalidAmount": "Introduce un importe válido",
+          "sameAmount": "La contraoferta debe ser diferente al importe actual",
+          "confirm": "Enviar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "storeCounter": {
+          "title": "Realizar contraoferta",
+          "description": "Introduce el importe que deseas proponer al comprador.",
+          "currentOffer": "Oferta actual",
+          "negotiationHistory": "Historial de negociación",
+          "buyer": "Comprador",
+          "store": "Tienda",
+          "label": "Importe de la contraoferta (€)",
+          "invalidAmount": "Introduce un importe válido",
+          "sameAmount": "La contraoferta debe ser diferente al importe actual",
+          "confirm": "Enviar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "history": {
+          "title": "Historial de ofertas",
+          "you": "Tú",
+          "buyer": "Comprador",
+          "store": "Tienda"
+        }
       },
       "soldArticle": {
         "importantMessage": "No podrás revertir esta acción.",

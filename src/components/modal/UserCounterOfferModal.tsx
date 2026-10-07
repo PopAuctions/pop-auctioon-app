@@ -9,6 +9,7 @@ import {
   type Lang,
   type MyOfferProposal,
 } from '@/types/types';
+import { t } from '@/i18n';
 
 interface UserCounterOfferModalProps {
   visible: boolean;
@@ -19,35 +20,6 @@ interface UserCounterOfferModalProps {
   proposals: MyOfferProposal[];
   locale: Lang;
 }
-
-const TEXTS = {
-  es: {
-    title: 'Realizar contraoferta',
-    description: 'Introduce el importe que deseas proponer a la tienda.',
-    currentOffer: 'Oferta actual',
-    negotiationHistory: 'Historial de negociación',
-    you: 'Tú',
-    store: 'Tienda',
-    label: 'Importe de la contraoferta (€)',
-    invalidAmount: 'Introduce un importe válido',
-    sameAmount: 'La contraoferta debe ser diferente al importe actual',
-    confirm: 'Enviar contraoferta',
-    cancel: 'Cancelar',
-  },
-  en: {
-    title: 'Make counter-offer',
-    description: 'Enter the amount you want to propose to the store.',
-    currentOffer: 'Current offer',
-    negotiationHistory: 'Negotiation history',
-    you: 'You',
-    store: 'Store',
-    label: 'Counter-offer amount (€)',
-    invalidAmount: 'Enter a valid amount',
-    sameAmount: 'The counter-offer must be different from the current amount',
-    confirm: 'Send counter-offer',
-    cancel: 'Cancel',
-  },
-} satisfies Record<Lang, Record<string, string>>;
 
 export function UserCounterOfferModal({
   visible,
@@ -60,7 +32,7 @@ export function UserCounterOfferModal({
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const texts = TEXTS[locale];
+  const texts = t('components.modals.offers.userCounter', { locale });
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
 
   const numericAmount = Number(inputValue);
