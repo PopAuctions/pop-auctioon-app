@@ -1,6 +1,10 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { ActionResponse, Bids, LangMap, RequestStatus } from '@/types/types';
+import { ActionResponse, Bids, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLE_BIDS_LOAD_ERROR =
+  'errors.article.bidsLoadFailed' as const satisfies MessageKey;
 
 export const useGetArticleBids = ({
   articleId,
@@ -8,10 +12,10 @@ export const useGetArticleBids = ({
 }: {
   articleId: number;
   shouldFetch: boolean;
-}): ActionResponse<Bids[]> => {
+}): ActionResponse<Bids[], MessageKey> => {
   const [article, setArticle] = useState<Bids[]>([]);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchArticleBids = useCallback(async () => {
@@ -23,15 +27,9 @@ export const useGetArticleBids = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching article bids',
-        es: 'Error al obtener las pujas del artículo',
-      });
+      setErrorMessage(ARTICLE_BIDS_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching article bids',
-          es: 'Error al obtener las pujas del artículo',
-        },
+        message: ARTICLE_BIDS_LOAD_ERROR,
       };
     }
 

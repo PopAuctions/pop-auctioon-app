@@ -26,7 +26,11 @@
     "unexpected": "Algo ha ido mal",
     "network": "Ha habido un problema de conexión. Inténtalo de nuevo.",
     "article": {
-      "followedArticlesLoadFailed": "Error al obtener los artículos seguidos"
+      "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
+      "loadFailed": "Error al obtener el artículo",
+      "bidsLoadFailed": "Error al obtener las pujas del artículo",
+      "pageInfoLoadFailed": "Error al obtener información de la página",
+      "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja"
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas"

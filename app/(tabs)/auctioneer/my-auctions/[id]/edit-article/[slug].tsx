@@ -138,7 +138,7 @@ export default function EditAuctionArticleScreen() {
   if (status === REQUEST_STATUS.error || !article) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/edit-article/${articleId}`}
       />
     );

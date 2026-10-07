@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/useToast';
 
 export default function RearrangeArticleImagesScreen() {
   const { id, slug } = useLocalSearchParams<{ id: string; slug: string }>();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const { callToast } = useToast(locale);
 
@@ -33,7 +33,7 @@ export default function RearrangeArticleImagesScreen() {
   if (status === REQUEST_STATUS.error || !article || !article.images) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/rearrange-article-images/${articleId}`}
       />
     );

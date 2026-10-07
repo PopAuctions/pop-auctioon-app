@@ -78,7 +78,7 @@ export default function ArticlesDetailScreen() {
   if (status === REQUEST_STATUS.error || !article || !article?.images) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute={`/(tabs)/auctions/articles/${id}`}
       />
     );

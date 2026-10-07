@@ -26,7 +26,11 @@
     "unexpected": "Something went wrong",
     "network": "There was a connection problem. Please try again.",
     "article": {
-      "followedArticlesLoadFailed": "Error fetching followed articles"
+      "followedArticlesLoadFailed": "Error fetching followed articles",
+      "loadFailed": "Error fetching article",
+      "bidsLoadFailed": "Error fetching article bids",
+      "pageInfoLoadFailed": "Error fetching page info",
+      "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts"
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error fetching followed auctions"
