@@ -28,7 +28,7 @@ export default function OffersMadeScreen() {
   if (status === REQUEST_STATUS.error || offers === null) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute='/(tabs)/account/offers-made'
       />
     );

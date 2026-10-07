@@ -1,19 +1,21 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import type {
-  ActionResponse,
-  LangMap,
-  MyOffers,
-  RequestStatus,
-} from '@/types/types';
+import type { ActionResponse, MyOffers, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
 
-export const useGetOffersMade = (): ActionResponse<MyOffers[] | null> & {
+const OFFERS_MADE_LOAD_ERROR =
+  'errors.offer.offersMadeLoadFailed' as const satisfies MessageKey;
+
+export const useGetOffersMade = (): ActionResponse<
+  MyOffers[] | null,
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [offers, setOffers] = useState<MyOffers[] | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchOffersMade = useCallback(async () => {
@@ -25,15 +27,9 @@ export const useGetOffersMade = (): ActionResponse<MyOffers[] | null> & {
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching offers made',
-        es: 'Error al obtener las ofertas realizadas',
-      });
+      setErrorMessage(OFFERS_MADE_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching offers made',
-          es: 'Error al obtener las ofertas realizadas',
-        },
+        message: OFFERS_MADE_LOAD_ERROR,
       };
     }
 

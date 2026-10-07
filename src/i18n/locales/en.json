@@ -30,6 +30,16 @@
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error fetching followed auctions"
+    },
+    "autoBid": {
+      "loadFailed": "Error fetching autoBids made"
+    },
+    "offer": {
+      "offersMadeLoadFailed": "Error fetching offers made"
+    },
+    "notification": {
+      "loadFailed": "Error fetching notifications",
+      "none": "No notifications"
     }
   },
   "errorBoundary": {

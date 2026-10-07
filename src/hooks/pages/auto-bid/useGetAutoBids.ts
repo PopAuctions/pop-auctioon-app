@@ -2,18 +2,24 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import type {
   ActionResponse,
-  LangMap,
   AutoBidArticle,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
 
-export const useGetAutoBids = (): ActionResponse<AutoBidArticle[] | null> & {
+const AUTO_BIDS_LOAD_ERROR =
+  'errors.autoBid.loadFailed' as const satisfies MessageKey;
+
+export const useGetAutoBids = (): ActionResponse<
+  AutoBidArticle[] | null,
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [autoBids, setAutoBids] = useState<AutoBidArticle[] | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchOffersMade = useCallback(async () => {
@@ -25,15 +31,9 @@ export const useGetAutoBids = (): ActionResponse<AutoBidArticle[] | null> & {
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching autoBids made',
-        es: 'Error al obtener las ofertas realizadas',
-      });
+      setErrorMessage(AUTO_BIDS_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching autoBids made',
-          es: 'Error al obtener las ofertas realizadas',
-        },
+        message: AUTO_BIDS_LOAD_ERROR,
       };
     }
 

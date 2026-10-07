@@ -30,6 +30,16 @@
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas"
+    },
+    "autoBid": {
+      "loadFailed": "Error al obtener las ofertas realizadas"
+    },
+    "offer": {
+      "offersMadeLoadFailed": "Error al obtener las ofertas realizadas"
+    },
+    "notification": {
+      "loadFailed": "Error al obtener las notificaciones",
+      "none": "No hay notificaciones"
     }
   },
   "errorBoundary": {
