@@ -119,6 +119,10 @@
     "title": "Iniciar Sesión",
     "signIn": "Iniciar Sesión"
   },
+  "authCallback": {
+    "authenticationFailed": "La autenticación ha fallado. Por favor, inténtelo de nuevo.",
+    "authenticationSuccess": "¡Autenticación exitosa!"
+  },
   "tabsNames": {
     "home": "Inicio",
     "account": "Cuenta",

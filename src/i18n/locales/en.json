@@ -119,6 +119,10 @@
     "title": "Sign In",
     "signIn": "Sign In"
   },
+  "authCallback": {
+    "authenticationFailed": "Authentication failed. Please try again.",
+    "authenticationSuccess": "Successfully authenticated!"
+  },
   "tabsNames": {
     "home": "Home",
     "account": "Account",
