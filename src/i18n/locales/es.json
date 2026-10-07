@@ -1080,6 +1080,21 @@
       "auctionStartSoon": "Comenzará pronto",
       "completed": "La subasta ya comenzó"
     },
+    "articleBidsRecord": {
+      "label": "Historial de pujas",
+      "title": "Pujas",
+      "initialPrice": "Precio inicial",
+      "noBidsYet": "No hay pujas aún."
+    },
+    "articleLists": {
+      "noMoreArticles": "No hay más artículos",
+      "noArticlesFound": "No se han encontrado artículos con los filtros seleccionados"
+    },
+    "followButton": {
+      "follow": "Seguir",
+      "unfollow": "Dejar de seguir",
+      "notAvailable": "Ya no está disponible"
+    },
     "offerCard": {
       "status": {
         "counterReceived": "Contraoferta recibida",

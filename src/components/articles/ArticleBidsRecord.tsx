@@ -4,27 +4,13 @@ import { Button } from '../ui/Button';
 import { ArticleBidsRecordModal } from '../modal/ArticleBidsRecordModal';
 import { useGetArticleBids } from '@/hooks/pages/article/useGetArticleBids';
 import { REQUEST_STATUS } from '@/constants/app';
+import { t } from '@/i18n';
 
 type ArticleBidsRecordProps = {
   articleId: number;
   lang: Lang;
   initialPrice: number;
   commissionValue: number | null;
-};
-
-const TEXTS = {
-  en: {
-    label: 'Bids record',
-    title: 'Bids',
-    initialPrice: 'Initial price',
-    noBidsYet: 'No bids yet.',
-  },
-  es: {
-    label: 'Historial de pujas',
-    title: 'Pujas',
-    initialPrice: 'Precio inicial',
-    noBidsYet: 'No hay pujas aún.',
-  },
 };
 
 export function ArticleBidsRecord({
@@ -35,7 +21,7 @@ export function ArticleBidsRecord({
 }: ArticleBidsRecordProps) {
   const [open, setOpen] = useState(false);
   const { data, status } = useGetArticleBids({ articleId, shouldFetch: open });
-  const texts = TEXTS[lang];
+  const texts = t('components.articleBidsRecord', { locale: lang });
 
   const isLoading = status === REQUEST_STATUS.loading;
 

@@ -7,6 +7,7 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 import { FontAwesomeIcon } from './FontAwesomeIcon';
+import { t } from '@/i18n';
 
 interface FollowButtonProps {
   mode: ButtonMode;
@@ -21,21 +22,6 @@ interface FollowButtonProps {
   actionAfterFollow?: () => void;
   heartIcon?: boolean;
 }
-
-const TEXTS = {
-  follow: {
-    en: 'Follow',
-    es: 'Seguir',
-  },
-  unfollow: {
-    en: 'Unfollow',
-    es: 'Dejar de seguir',
-  },
-  notAviable: {
-    en: 'No longer available',
-    es: 'Ya no está disponible',
-  },
-} as const;
 
 export function FollowButton({
   mode,
@@ -55,6 +41,7 @@ export function FollowButton({
   const [status, setStatus] = useState<RequestStatus>('idle');
   const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
+  const texts = t('components.followButton', { locale: lang });
 
   const isLoading = status === REQUEST_STATUS.loading;
 
@@ -91,9 +78,9 @@ export function FollowButton({
 
   const label = isAvailable
     ? isFollowing
-      ? TEXTS.unfollow[lang]
-      : TEXTS.follow[lang]
-    : TEXTS.notAviable[lang];
+      ? texts.unfollow
+      : texts.follow
+    : texts.notAvailable;
 
   if (!isAvailable) {
     return null;

@@ -12,18 +12,9 @@ import { useFetchMyOnlineStoreArticlesInfinite } from '@/hooks/components/useFet
 import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { MyOnlineStoreArticleItem } from './MyOnlineStoreArticleItem';
 import { CustomError } from '../ui/CustomError';
+import { t } from '@/i18n';
 
 const ITEMS_PER_PAGE = 4;
-const TEXTS = {
-  noMoreArticles: {
-    en: 'No more articles',
-    es: 'No hay más artículos',
-  },
-  noArticlesFound: {
-    en: 'No articles found with the selected filters',
-    es: 'No se han encontrado artículos con los filtros seleccionados',
-  },
-};
 
 export const MyOnlineStoreArticlesInfiniteScroll = ({
   lang,
@@ -77,6 +68,12 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
     brand || model || codeNumber || offersStatus || status
   );
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
+  const noMoreArticlesText = t('components.articleLists.noMoreArticles', {
+    locale: lang,
+  });
+  const noArticlesFoundText = t('components.articleLists.noArticlesFound', {
+    locale: lang,
+  });
 
   const loadInitial = useCallback(async () => {
     if (loadingRef.current) return;
@@ -173,7 +170,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
             type='h4'
             className='text-center text-cinnabar'
           >
-            {TEXTS.noArticlesFound[lang]}
+            {noArticlesFoundText}
           </CustomText>
         </View>
       );
@@ -186,14 +183,22 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
             type='body'
             className='text-center text-cinnabar'
           >
-            {TEXTS.noMoreArticles[lang]}
+            {noMoreArticlesText}
           </CustomText>
         </View>
       );
     }
 
     return null;
-  }, [isLoading, hasMore, lang, locale, filtersActive, articles.length]);
+  }, [
+    isLoading,
+    hasMore,
+    noArticlesFoundText,
+    noMoreArticlesText,
+    locale,
+    filtersActive,
+    articles.length,
+  ]);
 
   if (error) {
     return (

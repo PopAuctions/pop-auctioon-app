@@ -1080,6 +1080,21 @@
       "auctionStartSoon": "Starting soon",
       "completed": "Auction already started"
     },
+    "articleBidsRecord": {
+      "label": "Bids record",
+      "title": "Bids",
+      "initialPrice": "Initial price",
+      "noBidsYet": "No bids yet."
+    },
+    "articleLists": {
+      "noMoreArticles": "No more articles",
+      "noArticlesFound": "No articles found with the selected filters"
+    },
+    "followButton": {
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "notAvailable": "No longer available"
+    },
     "offerCard": {
       "status": {
         "counterReceived": "Counter-offer received",

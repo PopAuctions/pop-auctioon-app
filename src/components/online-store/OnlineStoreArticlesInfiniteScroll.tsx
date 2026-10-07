@@ -11,18 +11,9 @@ import { useFetchOnlineStoreArticlesInfinite } from '@/hooks/components/useFetch
 import { Filters } from '@/app/(tabs)/online-store';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { REQUEST_STATUS } from '@/constants';
+import { t } from '@/i18n';
 
 const ITEMS_PER_PAGE = 4;
-const TEXTS = {
-  noMoreArticles: {
-    en: 'No more articles',
-    es: 'No hay más artículos',
-  },
-  noArticlesFound: {
-    en: 'No articles found with the selected filters',
-    es: 'No se han encontrado artículos con los filtros seleccionados',
-  },
-};
 
 export const OnlineStoreArticlesInfiniteScroll = ({
   lang,
@@ -70,6 +61,12 @@ export const OnlineStoreArticlesInfiniteScroll = ({
     brand || price || model || material || color || sortBy
   );
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
+  const noMoreArticlesText = t('components.articleLists.noMoreArticles', {
+    locale: lang,
+  });
+  const noArticlesFoundText = t('components.articleLists.noArticlesFound', {
+    locale: lang,
+  });
 
   const loadInitial = useCallback(async () => {
     if (loadingRef.current) return;
@@ -161,7 +158,7 @@ export const OnlineStoreArticlesInfiniteScroll = ({
             type='h4'
             className='text-center text-cinnabar'
           >
-            {TEXTS.noArticlesFound[lang]}
+            {noArticlesFoundText}
           </CustomText>
         </View>
       );
@@ -174,14 +171,22 @@ export const OnlineStoreArticlesInfiniteScroll = ({
             type='body'
             className='text-center text-cinnabar'
           >
-            {TEXTS.noMoreArticles[lang]}
+            {noMoreArticlesText}
           </CustomText>
         </View>
       );
     }
 
     return null;
-  }, [isLoading, hasMore, lang, locale, filtersActive, articles.length]);
+  }, [
+    isLoading,
+    hasMore,
+    noArticlesFoundText,
+    noMoreArticlesText,
+    locale,
+    filtersActive,
+    articles.length,
+  ]);
 
   return (
     <FlatList
