@@ -173,8 +173,8 @@ export default function EditAuctionArticleScreen() {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe haber al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `There must be at least ${ARTICLE_IMAGES_MIN} images.`,
+          code: 'errors.articleImages.minimumExistingRequired',
+          params: { min: ARTICLE_IMAGES_MIN },
         },
       });
 

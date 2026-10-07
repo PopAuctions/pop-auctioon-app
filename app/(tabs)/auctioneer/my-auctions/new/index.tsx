@@ -24,6 +24,10 @@ import { getMinDateToStartAuction } from '@/utils/getMinDateToStartAuction';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { useFetchAvailableCountries } from '@/hooks/globals/useFetchAvailableCountries';
 import { REQUEST_STATUS } from '@/constants';
+import type { MessageKey } from '@/i18n';
+
+const AUCTION_IMAGE_UPLOAD_ERROR =
+  'errors.articleImages.uploadFailedSingular' as const satisfies MessageKey;
 
 const TOOLTIP_MESSAGE = {
   en: {
@@ -104,10 +108,7 @@ export default function MyANewAuctionScreen() {
       if (!imageUrl) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'There was an error uploading the image.',
-            es: 'Hubo un error subiendo la imagen.',
-          },
+          description: AUCTION_IMAGE_UPLOAD_ERROR,
         });
         setIsUploadingAuction(false);
         return;

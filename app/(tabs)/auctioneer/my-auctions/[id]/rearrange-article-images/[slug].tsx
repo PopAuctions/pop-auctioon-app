@@ -9,6 +9,10 @@ import { CustomError } from '@/components/ui/CustomError';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useArticle } from '@/hooks/pages/my-auction/useArticle';
 import { useToast } from '@/hooks/useToast';
+import type { MessageKey } from '@/i18n';
+
+const NO_IMAGE_ORDER_CHANGES =
+  'errors.articleImages.noChanges' as const satisfies MessageKey;
 
 export default function RearrangeArticleImagesScreen() {
   const { id, slug } = useLocalSearchParams<{ id: string; slug: string }>();
@@ -46,10 +50,7 @@ export default function RearrangeArticleImagesScreen() {
       setIsSaving(false);
       callToast({
         variant: 'error',
-        description: {
-          en: 'No changes to save',
-          es: 'No hay cambios para guardar',
-        },
+        description: NO_IMAGE_ORDER_CHANGES,
       });
       return;
     }

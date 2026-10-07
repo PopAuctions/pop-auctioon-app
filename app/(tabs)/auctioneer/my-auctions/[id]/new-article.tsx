@@ -30,6 +30,10 @@ import { SelectField } from '@/components/fields/SelectField';
 import { useArticle } from '@/hooks/pages/my-auction/useArticle';
 import { useState } from 'react';
 import { useGetMyAuction } from '@/hooks/pages/auction/useGetMyAuction';
+import type { MessageKey } from '@/i18n';
+
+const IMAGES_STILL_COMPRESSING =
+  'errors.articleImages.stillCompressing' as const satisfies MessageKey;
 
 export default function NewAuctionArticleScreen() {
   const params = useLocalSearchParams<{
@@ -122,10 +126,7 @@ export default function NewAuctionArticleScreen() {
     if (isCompressingImages) {
       callToast({
         variant: 'error',
-        description: {
-          en: `Images are still being compressed. Please wait a moment and try again.`,
-          es: `Las imágenes aún se están comprimiendo. Por favor espera un momento e intenta de nuevo.`,
-        },
+        description: IMAGES_STILL_COMPRESSING,
       });
       return;
     }
@@ -135,8 +136,8 @@ export default function NewAuctionArticleScreen() {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe subir al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `You must upload at least ${ARTICLE_IMAGES_MIN} images.`,
+          code: 'errors.articleImages.minimumUploadRequired',
+          params: { min: ARTICLE_IMAGES_MIN },
         },
       });
       setIsUploadingArticle(false);

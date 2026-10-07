@@ -72,6 +72,15 @@
     },
     "user": {
       "languageUpdateFailed": "Error al actualizar el idioma"
+    },
+    "articleImages": {
+      "noChanges": "No hay cambios para guardar",
+      "minimumRequired": "Debes agregar al menos %{min} imágenes.",
+      "minimumUploadRequired": "Debe subir al menos %{min} imágenes.",
+      "minimumExistingRequired": "Debe haber al menos %{min} imágenes.",
+      "uploadFailedPlural": "Hubo un error al subir las imágenes.",
+      "uploadFailedSingular": "Hubo un error subiendo la imagen.",
+      "stillCompressing": "Las imágenes aún se están comprimiendo. Por favor espera un momento e intenta de nuevo."
     }
   },
   "errorBoundary": {

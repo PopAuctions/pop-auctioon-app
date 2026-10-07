@@ -135,8 +135,8 @@ export default function NewOnlineStoreArticleScreen() {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe subir al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `You must upload at least ${ARTICLE_IMAGES_MIN} images.`,
+          code: 'errors.articleImages.minimumUploadRequired',
+          params: { min: ARTICLE_IMAGES_MIN },
         },
       });
       setIsUploadingArticle(false);

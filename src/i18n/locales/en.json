@@ -72,6 +72,15 @@
     },
     "user": {
       "languageUpdateFailed": "Error updating language preference"
+    },
+    "articleImages": {
+      "noChanges": "No changes to save",
+      "minimumRequired": "You must add at least %{min} images.",
+      "minimumUploadRequired": "You must upload at least %{min} images.",
+      "minimumExistingRequired": "There must be at least %{min} images.",
+      "uploadFailedPlural": "There was an error uploading the images.",
+      "uploadFailedSingular": "There was an error uploading the image.",
+      "stillCompressing": "Images are still being compressed. Please wait a moment and try again."
     }
   },
   "errorBoundary": {

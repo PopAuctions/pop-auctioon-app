@@ -2,12 +2,13 @@ import Toast from 'react-native-toast-message';
 import type { Lang, LangMap } from '@/types/types';
 import { type ToastVariant } from '@/providers/ToastProvider';
 import { t } from '@/i18n';
+import type { MessageKey } from '@/i18n';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
 type ToastPosition = 'top' | 'bottom';
 type ToastMessageParams = Record<string, string | number | boolean>;
 
-export type ToastErrorCode = 'errors.unexpected' | 'errors.network';
+export type ToastErrorCode = MessageKey;
 
 export type ToastMessageDescriptor = {
   code: ToastErrorCode;
