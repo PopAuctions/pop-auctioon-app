@@ -4,22 +4,26 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   CustomPaidArticle,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLES_LOAD_ERROR =
+  'errors.article.articlesLoadFailed' as const satisfies MessageKey;
 
 export const useGetSoldArticles = ({
   auctionId,
   status,
 }: { auctionId?: string; status?: string } = {}): ActionResponse<
-  CustomPaidArticle[]
+  CustomPaidArticle[],
+  MessageKey
 > => {
   const [soldArticle, setSoldArticle] = useState<CustomPaidArticle[]>([]);
   const [requestStatus, setRequestStatus] = useState<RequestStatus>(
     REQUEST_STATUS.idle
   );
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchSoldArticles = useCallback(async () => {
@@ -35,16 +39,10 @@ export const useGetSoldArticles = ({
 
     if (res.error) {
       setRequestStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching articles',
-        es: 'Error al obtener los artículos',
-      });
+      setErrorMessage(ARTICLES_LOAD_ERROR);
       setSoldArticle([]);
       return {
-        message: {
-          en: 'Error fetching articles',
-          es: 'Error al obtener los artículos',
-        },
+        message: ARTICLES_LOAD_ERROR,
       };
     }
 

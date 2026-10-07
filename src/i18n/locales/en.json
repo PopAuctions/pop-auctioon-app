@@ -33,7 +33,9 @@
       "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts",
       "featuredArticlesLoadFailed": "Error fetching featured articles",
       "mostViewedArticlesLoadFailed": "Error fetching most viewed articles",
-      "newestArticlesLoadFailed": "Error fetching newest articles"
+      "newestArticlesLoadFailed": "Error fetching newest articles",
+      "articlesLoadFailed": "Error fetching articles",
+      "noArticlesWon": "No articles won"
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error fetching followed auctions",

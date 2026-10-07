@@ -3,17 +3,23 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   AuctionUserWonArticles,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLES_LOAD_ERROR =
+  'errors.article.articlesLoadFailed' as const satisfies MessageKey;
 
 type ResponseType = Record<string, AuctionUserWonArticles> | null;
 
-export const useGetWonArticlesByAuction = (): ActionResponse<ResponseType> => {
+export const useGetWonArticlesByAuction = (): ActionResponse<
+  ResponseType,
+  MessageKey
+> => {
   const [wonArticle, setWonArticle] = useState<ResponseType>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchWonArticles = useCallback(async () => {
@@ -25,16 +31,10 @@ export const useGetWonArticlesByAuction = (): ActionResponse<ResponseType> => {
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching articles',
-        es: 'Error al obtener los artículos',
-      });
+      setErrorMessage(ARTICLES_LOAD_ERROR);
       setWonArticle(null);
       return {
-        message: {
-          en: 'Error fetching articles',
-          es: 'Error al obtener los artículos',
-        },
+        message: ARTICLES_LOAD_ERROR,
       };
     }
 

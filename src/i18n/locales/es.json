@@ -33,7 +33,9 @@
       "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja",
       "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
       "mostViewedArticlesLoadFailed": "Error al obtener los artículos más vistos",
-      "newestArticlesLoadFailed": "Error al obtener los artículos más recientes"
+      "newestArticlesLoadFailed": "Error al obtener los artículos más recientes",
+      "articlesLoadFailed": "Error al obtener los artículos",
+      "noArticlesWon": "No hay artículos ganados"
     },
     "auction": {
       "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas",

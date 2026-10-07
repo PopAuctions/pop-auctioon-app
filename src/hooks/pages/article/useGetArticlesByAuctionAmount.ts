@@ -3,17 +3,25 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   AuctionUserWonArticles,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLES_LOAD_ERROR =
+  'errors.article.articlesLoadFailed' as const satisfies MessageKey;
+const NO_ARTICLES_WON_MESSAGE =
+  'errors.article.noArticlesWon' as const satisfies MessageKey;
 
 type ResponseType = Record<string, AuctionUserWonArticles> | null;
 
-export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
+export const useGetArticlesByAuctionAmount = (): ActionResponse<
+  number,
+  MessageKey
+> => {
   const [wonArticle, setWonArticle] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchArticleBids = useCallback(async () => {
@@ -25,16 +33,10 @@ export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching articles',
-        es: 'Error al obtener los artículos',
-      });
+      setErrorMessage(ARTICLES_LOAD_ERROR);
       setWonArticle(0);
       return {
-        message: {
-          en: 'Error fetching articles',
-          es: 'Error al obtener los artículos',
-        },
+        message: ARTICLES_LOAD_ERROR,
       };
     }
 
@@ -43,10 +45,7 @@ export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
       setStatus('error');
       setWonArticle(0);
       return {
-        message: {
-          en: 'No articles won',
-          es: 'No hay artículos ganados',
-        },
+        message: NO_ARTICLES_WON_MESSAGE,
       };
     }
 
@@ -55,10 +54,7 @@ export const useGetArticlesByAuctionAmount = (): ActionResponse<number> => {
       setStatus('error');
       setWonArticle(0);
       return {
-        message: {
-          en: 'No articles won',
-          es: 'No hay artículos ganados',
-        },
+        message: NO_ARTICLES_WON_MESSAGE,
       };
     }
 

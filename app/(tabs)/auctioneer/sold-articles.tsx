@@ -37,7 +37,7 @@ export default function SoldArticlesScreen() {
   if (requestStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute='/(tabs)/auctioneer/sold-articles'
       />
     );

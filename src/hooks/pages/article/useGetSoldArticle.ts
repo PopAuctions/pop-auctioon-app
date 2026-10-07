@@ -6,9 +6,12 @@ import {
   ActionResponse,
   CustomPaidArticleFull,
   CustomUser,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLE_LOAD_ERROR =
+  'errors.article.loadFailed' as const satisfies MessageKey;
 
 interface FetchSoldArticleResponse {
   article: CustomPaidArticleFull | null;
@@ -17,11 +20,11 @@ interface FetchSoldArticleResponse {
 
 export const useGetSoldArticle = (
   articleId: string
-): ActionResponse<FetchSoldArticleResponse | null> => {
+): ActionResponse<FetchSoldArticleResponse | null, MessageKey> => {
   const [soldArticle, setSoldArticle] =
     useState<FetchSoldArticleResponse | null>(null);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchSoldArticle = useCallback(async () => {
@@ -33,16 +36,10 @@ export const useGetSoldArticle = (
 
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching article',
-        es: 'Error al obtener el artículo',
-      });
+      setErrorMessage(ARTICLE_LOAD_ERROR);
       setSoldArticle(null);
       return {
-        message: {
-          en: 'Error fetching article',
-          es: 'Error al obtener el artículo',
-        },
+        message: ARTICLE_LOAD_ERROR,
       };
     }
 
