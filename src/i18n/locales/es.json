@@ -30,10 +30,14 @@
       "loadFailed": "Error al obtener el artículo",
       "bidsLoadFailed": "Error al obtener las pujas del artículo",
       "pageInfoLoadFailed": "Error al obtener información de la página",
-      "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja"
+      "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja",
+      "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
+      "mostViewedArticlesLoadFailed": "Error al obtener los artículos más vistos",
+      "newestArticlesLoadFailed": "Error al obtener los artículos más recientes"
     },
     "auction": {
-      "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas"
+      "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas",
+      "upcomingAuctionsLoadFailed": "Error al obtener las subastas próximas"
     },
     "autoBid": {
       "loadFailed": "Error al obtener las ofertas realizadas"

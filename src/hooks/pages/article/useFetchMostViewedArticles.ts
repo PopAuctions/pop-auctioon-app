@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 import { REQUEST_STATUS } from '@/constants';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import {
-  ActionResponse,
-  SimpleArticle,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import { ActionResponse, SimpleArticle, RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+
+const MOST_VIEWED_ARTICLES_LOAD_ERROR =
+  'errors.article.mostViewedArticlesLoadFailed' as const satisfies MessageKey;
 
 export const useFetchMostViewedArticles = (): ActionResponse<
-  SimpleArticle[]
+  SimpleArticle[],
+  MessageKey
 > => {
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchMostViewedArticles = useCallback(async () => {
@@ -24,15 +24,9 @@ export const useFetchMostViewedArticles = (): ActionResponse<
 
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching most viewed articles',
-        es: 'Error al obtener los artículos más vistos',
-      });
+      setErrorMessage(MOST_VIEWED_ARTICLES_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching most viewed articles',
-          es: 'Error al obtener los artículos más vistos',
-        },
+        message: MOST_VIEWED_ARTICLES_LOAD_ERROR,
       };
     }
 

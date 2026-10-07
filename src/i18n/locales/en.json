@@ -30,10 +30,14 @@
       "loadFailed": "Error fetching article",
       "bidsLoadFailed": "Error fetching article bids",
       "pageInfoLoadFailed": "Error fetching page info",
-      "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts"
+      "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts",
+      "featuredArticlesLoadFailed": "Error fetching featured articles",
+      "mostViewedArticlesLoadFailed": "Error fetching most viewed articles",
+      "newestArticlesLoadFailed": "Error fetching newest articles"
     },
     "auction": {
-      "followedAuctionsLoadFailed": "Error fetching followed auctions"
+      "followedAuctionsLoadFailed": "Error fetching followed auctions",
+      "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions"
     },
     "autoBid": {
       "loadFailed": "Error fetching autoBids made"
