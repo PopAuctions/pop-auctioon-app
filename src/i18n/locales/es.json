@@ -60,7 +60,13 @@
       "markAllReadFailed": "Hubo un error marcando como leídas las notificaciones"
     },
     "bid": {
-      "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar."
+      "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar.",
+      "invalidAmount": "Cantidad de puja inválida",
+      "minimumAmount": "La puja mínima es de: %{amount}",
+      "maximumAmount": "La puja máxima es de: %{amount}",
+      "requestTimeout": "La solicitud de puja agotó el tiempo. Por favor, inténtalo de nuevo.",
+      "processingFailed": "La puja no pudo ser procesada",
+      "automaticBidFailed": "La puja automática no pudo ser configurada"
     },
     "live": {
       "articlesLoadFailed": "Error al obtener los artículos.",

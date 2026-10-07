@@ -60,7 +60,13 @@
       "markAllReadFailed": "There was an error marking notifications as read"
     },
     "bid": {
-      "updateAmountsFailed": "Error updating bidding amounts. Click to retry."
+      "updateAmountsFailed": "Error updating bidding amounts. Click to retry.",
+      "invalidAmount": "Invalid bid amount",
+      "minimumAmount": "Minimum bid is: %{amount}",
+      "maximumAmount": "Maximum bid is: %{amount}",
+      "requestTimeout": "Bid request timed out. Please try again.",
+      "processingFailed": "The bid could not be processed",
+      "automaticBidFailed": "The automatic bid could not be set"
     },
     "live": {
       "articlesLoadFailed": "Error fetching articles information.",

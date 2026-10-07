@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import type { BiddingAmounts, HighestBidderState } from '@/types/types';
-import type { Translations } from '@/i18n';
+import type { MessageKey, Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
@@ -14,6 +14,8 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useUpsertAutoBid } from '@/hooks/pages/auto-bid/useUpsertAutoBid';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { BidAmountStepper } from './BidAmountStepper';
+const AUTOMATIC_BID_ERROR =
+  'errors.bid.automaticBidFailed' as const satisfies MessageKey;
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -80,11 +82,12 @@ export function SendBid({
 
   const createAutomaticBid = async (amount: string) => {
     if (Number(amount) < computedMinBid) {
-      const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
-
       callToast({
         variant: 'error',
-        description: { es: message, en: message },
+        description: {
+          code: 'errors.bid.minimumAmount',
+          params: { amount: formatter.format(computedMinBid) },
+        },
       });
 
       return false;
@@ -107,10 +110,7 @@ export function SendBid({
     } catch (e) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'The automatic bid could not be set',
-          es: 'La puja automática no pudo ser configurada',
-        },
+        description: AUTOMATIC_BID_ERROR,
       });
 
       sentryErrorReport(
