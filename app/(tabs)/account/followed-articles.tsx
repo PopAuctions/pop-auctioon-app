@@ -30,7 +30,9 @@ export default function FollowedArticlesScreen() {
   if (status === REQUEST_STATUS.error || articles === null) {
     return (
       <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
+        <CustomText type='h2'>
+          {errorMessage ? t(errorMessage) : undefined}
+        </CustomText>
       </View>
     );
   }

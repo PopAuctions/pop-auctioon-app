@@ -1,24 +1,24 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import type {
-  ActionResponse,
-  Article,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import type { ActionResponse, Article, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
 
 interface CustomArticle {
   id: string;
   Article: Article & { ArticleBid: { currentValue: number } };
 }
 
+const FOLLOWED_ARTICLES_LOAD_ERROR =
+  'errors.article.followedArticlesLoadFailed' as const satisfies MessageKey;
+
 export const useGetFollowedArticles = (): ActionResponse<
-  CustomArticle[] | null
+  CustomArticle[] | null,
+  MessageKey
 > => {
   const [articles, setArticles] = useState<CustomArticle[] | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchFollowedArticles = useCallback(async () => {
@@ -30,15 +30,9 @@ export const useGetFollowedArticles = (): ActionResponse<
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching followed articles',
-        es: 'Error al obtener los artículos seguidos',
-      });
+      setErrorMessage(FOLLOWED_ARTICLES_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching followed articles',
-          es: 'Error al obtener los artículos seguidos',
-        },
+        message: FOLLOWED_ARTICLES_LOAD_ERROR,
       };
     }
 
@@ -59,10 +53,7 @@ export const useGetFollowedArticles = (): ActionResponse<
 
     if (res.error) {
       return {
-        message: {
-          en: 'Error fetching followed articles',
-          es: 'Error al obtener los artículos seguidos',
-        },
+        message: FOLLOWED_ARTICLES_LOAD_ERROR,
       };
     }
 

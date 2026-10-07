@@ -24,7 +24,13 @@
   },
   "errors": {
     "unexpected": "Algo ha ido mal",
-    "network": "Ha habido un problema de conexión. Inténtalo de nuevo."
+    "network": "Ha habido un problema de conexión. Inténtalo de nuevo.",
+    "article": {
+      "followedArticlesLoadFailed": "Error al obtener los artículos seguidos"
+    },
+    "auction": {
+      "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas"
+    }
   },
   "errorBoundary": {
     "title": "Algo ha ido mal",

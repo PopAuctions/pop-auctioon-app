@@ -9,7 +9,7 @@ import {
 // Import translation files
 import es from './locales/es.json';
 import en from './locales/en.json';
-import { Path, PathValue } from '@/types/i18n';
+import { Path, PathValue, StringPath } from '@/types/i18n';
 import {
   DEFAULT_LANG,
   SUPPORTED_LANGUAGES,
@@ -27,6 +27,7 @@ const translations = {
 
 export type Translations = typeof translations;
 export type Dictionary = Translations[typeof DEFAULT_LANG];
+export type MessageKey = StringPath<Dictionary>;
 
 // Create the i18n instance
 const i18n = new I18n(translations);

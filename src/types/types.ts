@@ -519,12 +519,12 @@ export type OnboardingVideo = {
  * Includes React state setters and refetch capabilities
  * Use for: useGetLiveAuction, useGetAuctions, etc.
  */
-export interface ActionResponse<TData = unknown> {
+export interface ActionResponse<TData = unknown, TErrorMessage = LangMap> {
   data: TData;
   status: RequestStatus;
-  refetch?: () => RefetchReturn;
-  errorMessage: LangMap | null;
-  setErrorMessage: React.Dispatch<React.SetStateAction<LangMap | null>>;
+  refetch?: () => RefetchReturn<TErrorMessage>;
+  errorMessage: TErrorMessage | null;
+  setErrorMessage: React.Dispatch<React.SetStateAction<TErrorMessage | null>>;
 }
 
 /**
@@ -538,7 +538,9 @@ export interface AsyncResponse<TData = unknown> {
   success: boolean;
 }
 
-export type RefetchReturn = Promise<{ message?: LangMap } | void>;
+export type RefetchReturn<TMessage = LangMap> = Promise<{
+  message?: TMessage;
+} | void>;
 
 export type VerificationToken =
   Database['public']['Tables']['VerificationToken']['Row'];
