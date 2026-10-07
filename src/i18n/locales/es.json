@@ -1116,6 +1116,37 @@
       "automaticBids": "pujas automáticas configuradas"
     },
     "modals": {
+      "signInAlert": {
+        "title": "Necesitas iniciar sesión para realizar esta acción",
+        "description": "Inicia sesión o crea una cuenta",
+        "goToSignIn": "Iniciar sesión",
+        "goToCreateAccount": "Crear cuenta",
+        "close": "Cerrar"
+      },
+      "wonArticlesAlert": {
+        "title": "¡Tienes artículos por pagar!",
+        "description": "Parece que has ganado algunos artículos. Ve a tu perfil para verlos y completar el pago.",
+        "goToAuction": "Ir a mis artículos ganados",
+        "close": "Cerrar"
+      },
+      "auctionStarted": {
+        "title": "¡Una subasta acaba de comenzar!",
+        "goToAuction": "Ir a la subasta en vivo",
+        "close": "Cerrar"
+      },
+      "howAutoLiveWorks": {
+        "title": "¡Bienvenido a la subasta automática en vivo!",
+        "description": {
+          "intro": "¿Cómo funciona?:"
+        },
+        "behavior": {
+          "duration": "Cada artículo está en subasta durante 60 segundos.  Una vez que el artículo “entra en vivo”, ¡puedes pujar por él!",
+          "countdown": "Cuando han transcurrido 45 segundos, comienza la cuenta regresiva.",
+          "reset": "Si se realiza una puja mientras la cuenta corre, el temporizador se reinicia y vuelve a empezar la cuenta regresiva.",
+          "winner": "Cuando la cuenta llega a cero, el artículo se adjudica al mejor postor y automáticamente pasamos al siguiente artículo."
+        },
+        "back": "Atrás"
+      },
       "accountDeletion": {
         "title": "Eliminar Cuenta",
         "description": "¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.",

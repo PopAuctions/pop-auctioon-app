@@ -1,5 +1,5 @@
-import { Lang } from '@/types/types';
-import React, { useCallback, useMemo, useState } from 'react';
+import type { Lang } from '@/types/types';
+import React, { useCallback, useState } from 'react';
 import {
   Modal,
   View,
@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { CustomText } from '../ui/CustomText';
+import { t } from '@/i18n';
 
 interface HowAutoLiveWorksModalProps {
   locale: Lang;
@@ -17,39 +18,6 @@ interface HowAutoLiveWorksModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
-
-const TEXTS: Record<
-  Lang,
-  {
-    title: string;
-    description: string[];
-    behavior: string[];
-    back: string;
-  }
-> = {
-  es: {
-    title: '¡Bienvenido a la subasta automática en vivo!',
-    description: ['¿Cómo funciona?:'],
-    behavior: [
-      'Cada artículo está en subasta durante 60 segundos.  Una vez que el artículo “entra en vivo”, ¡puedes pujar por él!',
-      'Cuando han transcurrido 45 segundos, comienza la cuenta regresiva.',
-      'Si se realiza una puja mientras la cuenta corre, el temporizador se reinicia y vuelve a empezar la cuenta regresiva.',
-      'Cuando la cuenta llega a cero, el artículo se adjudica al mejor postor y automáticamente pasamos al siguiente artículo.',
-    ],
-    back: 'Atrás',
-  },
-  en: {
-    title: 'Welcome to the live auto auction!',
-    description: ['How it works:'],
-    behavior: [
-      'Each article is on auction for 60 seconds. Once the article goes live, you can place your bid!',
-      'After 45 seconds have passed, the countdown begins.',
-      'If a bid is placed while the countdown is running, the timer resets and the countdown restarts.',
-      'When the countdown reaches zero, the article is awarded to the highest bidder and we automatically move to the next article.',
-    ],
-    back: 'Back',
-  },
-};
 
 export function HowAutoLiveWorksModal({
   locale,
@@ -61,7 +29,9 @@ export function HowAutoLiveWorksModal({
   const isControlled = typeof open === 'boolean';
   const visible = isControlled ? open! : internalOpen;
 
-  const texts = useMemo(() => TEXTS[locale] ?? TEXTS.es, [locale]);
+  const texts = t('components.modals.howAutoLiveWorks', { locale });
+  const descriptionLines = Object.values(texts.description);
+  const behaviorLines = Object.values(texts.behavior);
 
   const setOpen = useCallback(
     (next: boolean) => {
@@ -111,7 +81,7 @@ export function HowAutoLiveWorksModal({
                     {texts.title}
                   </CustomText>
                   <View className='mt-2'>
-                    {texts.description.map((line, i) => (
+                    {descriptionLines.map((line, i) => (
                       <CustomText
                         key={i}
                         type='h4'
@@ -125,7 +95,7 @@ export function HowAutoLiveWorksModal({
 
                 <View className='mb-4'>
                   <View className='pl-4'>
-                    {texts.behavior.map((line, i) => (
+                    {behaviorLines.map((line, i) => (
                       <View
                         key={i}
                         className='-ml-4 mb-2 flex-row'

@@ -1116,6 +1116,37 @@
       "automaticBids": "automatic bids configured"
     },
     "modals": {
+      "signInAlert": {
+        "title": "You need to be signed in to perform this action",
+        "description": "Sign in or create an account",
+        "goToSignIn": "Sign in",
+        "goToCreateAccount": "Create account",
+        "close": "Close"
+      },
+      "wonArticlesAlert": {
+        "title": "You have articles to pay!",
+        "description": "It looks like you've won some articles. Go to your profile to see them and complete the payment.",
+        "goToAuction": "Go to my won articles",
+        "close": "Close"
+      },
+      "auctionStarted": {
+        "title": "An auction has just started!",
+        "goToAuction": "Go to live auction",
+        "close": "Close"
+      },
+      "howAutoLiveWorks": {
+        "title": "Welcome to the live auto auction!",
+        "description": {
+          "intro": "How it works:"
+        },
+        "behavior": {
+          "duration": "Each article is on auction for 60 seconds. Once the article goes live, you can place your bid!",
+          "countdown": "After 45 seconds have passed, the countdown begins.",
+          "reset": "If a bid is placed while the countdown is running, the timer resets and the countdown restarts.",
+          "winner": "When the countdown reaches zero, the article is awarded to the highest bidder and we automatically move to the next article."
+        },
+        "back": "Back"
+      },
       "accountDeletion": {
         "title": "Delete Account",
         "description": "Are you sure you want to delete your account? This will permanently delete all your data.",

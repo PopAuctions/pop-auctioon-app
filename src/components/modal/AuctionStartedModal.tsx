@@ -5,19 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useAuctionStartedModal } from '@/context/auction-started-context';
-
-const TEXTS = {
-  es: {
-    title: '¡Una subasta acaba de comenzar!',
-    goToAuction: 'Ir a la subasta en vivo',
-    close: 'Cerrar',
-  },
-  en: {
-    title: 'An auction has just started!',
-    goToAuction: 'Go to live auction',
-    close: 'Close',
-  },
-};
+import { t } from '@/i18n';
 
 export function AuctionStartedModal() {
   const { locale } = useTranslation();
@@ -27,7 +15,7 @@ export function AuctionStartedModal() {
     auctionId,
   } = useAuctionStartedModal();
   const { navigateWithAuth } = useAuthNavigation();
-  const texts = TEXTS[locale];
+  const texts = t('components.modals.auctionStarted', { locale });
 
   const handleGoToAuction = () => {
     const target = auctionId;
