@@ -26,7 +26,10 @@ import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticleP
 import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import { useFetchStoreCountryByArticleId } from '@/hooks/components/useFetchStoreCountryByArticleId';
 import { isValidPayableAmount } from '@/utils/is-valid-payable-amount';
-import { INVALID_DISCOUNT_AMOUNT_ERROR } from '@/constants/payment-errors';
+import {
+  INVALID_DISCOUNT_AMOUNT_ERROR,
+  PAYMENT_TOAST_KEYS,
+} from '@/constants/payment-errors';
 import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function SinglePaymentScreen() {
@@ -173,8 +176,8 @@ export default function SinglePaymentScreen() {
       callToast({
         variant: 'success',
         description: {
-          es: `Código aplicado: ${formatter.format(result.data.amount)} de descuento`,
-          en: `Code applied: ${formatter.format(result.data.amount)} discount`,
+          code: PAYMENT_TOAST_KEYS.discountApplied,
+          params: { amount: formatter.format(result.data.amount) },
         },
       });
     } else {
@@ -208,10 +211,7 @@ export default function SinglePaymentScreen() {
     setAppliedDiscount(null);
     callToast({
       variant: 'info',
-      description: {
-        es: 'Descuento removido',
-        en: 'Discount removed',
-      },
+      description: PAYMENT_TOAST_KEYS.discountRemoved,
     });
   }, [callToast]);
 
@@ -220,10 +220,7 @@ export default function SinglePaymentScreen() {
     if (!article?.id) {
       callToast({
         variant: 'warning',
-        description: {
-          es: paymentTranslations.noPendingItems,
-          en: paymentTranslations.noPendingItems,
-        },
+        description: PAYMENT_TOAST_KEYS.noPendingItems,
       });
       return;
     }
@@ -231,10 +228,7 @@ export default function SinglePaymentScreen() {
     if (!selectedAddressId || !selectedAddress) {
       callToast({
         variant: 'warning',
-        description: {
-          es: 'Selecciona una dirección de envío',
-          en: 'Select a shipping address',
-        },
+        description: PAYMENT_TOAST_KEYS.selectShippingAddress,
       });
       return;
     }
@@ -260,10 +254,7 @@ export default function SinglePaymentScreen() {
       if (!redsysOrderId) {
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al preparar el pago con el monto actualizado',
-            en: 'Error preparing payment session',
-          },
+          description: PAYMENT_TOAST_KEYS.paymentSessionPreparationFailed,
         });
         return;
       }
@@ -281,10 +272,9 @@ export default function SinglePaymentScreen() {
       if (createPaymentError || !userPaymentId) {
         callToast({
           variant: 'error',
-          description: createPaymentError || {
-            es: 'Error al crear el registro de pago',
-            en: 'Error creating payment record',
-          },
+          description:
+            createPaymentError ||
+            PAYMENT_TOAST_KEYS.paymentRecordCreationFailed,
         });
         return;
       }
@@ -323,10 +313,7 @@ export default function SinglePaymentScreen() {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
         variant: 'error',
-        description: {
-          es: 'Error inesperado al procesar el pago',
-          en: 'Unexpected error processing payment',
-        },
+        description: PAYMENT_TOAST_KEYS.unexpectedProcessingError,
       });
     } finally {
       setIsSubmittingPayment(false);
@@ -343,7 +330,6 @@ export default function SinglePaymentScreen() {
     rejectPayment,
     openPaymentBrowser,
     callToast,
-    paymentTranslations,
     router,
   ]);
 

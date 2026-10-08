@@ -751,11 +751,38 @@
       "applyCoupon": "Apply",
       "couponApplied": "Code applied",
       "invalidCoupon": "Invalid code",
+      "discountApplied": "Code applied: %{amount} discount",
+      "discountRemoved": "Discount removed",
+      "selectShippingAddress": "Select a shipping address",
+      "paymentSessionPreparationFailed": "Error preparing payment session",
+      "paymentRecordCreationFailed": "Error creating payment record",
+      "unexpectedProcessingError": "Unexpected error processing payment",
+      "invalidDiscountAmount": "This discount code cannot be applied to the selected articles. Please contact support.",
       "paymentAlert": "Please make sure your address and profile information is correct before continuing with the payment.",
       "cannotDeselectLastItem": "You cannot deselect the last item",
       "summary": "Summary",
       "paymentData": "Payment data",
       "processing": "Processing..."
+    },
+    "paymentResult": {
+      "loading": "Loading payment result...",
+      "paymentOrder": "Payment order",
+      "goToAccount": "Go to account",
+      "approved": {
+        "title": "Payment approved",
+        "description": "The payment was authorized. You can review the details in your payment history.",
+        "primaryAction": "Go to history"
+      },
+      "pending": {
+        "title": "Confirming payment",
+        "description": "We are confirming the final payment result. Once authorized, it will appear in your payment history shortly.",
+        "primaryAction": "Go to history"
+      },
+      "rejected": {
+        "title": "Payment rejected",
+        "description": "Payment rejected. You can go back and try again.",
+        "primaryAction": "Try again"
+      }
     },
     "payments": {
       "title": "Payment",

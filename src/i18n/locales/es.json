@@ -751,11 +751,38 @@
       "applyCoupon": "Aplicar",
       "couponApplied": "Código aplicado",
       "invalidCoupon": "Código inválido",
+      "discountApplied": "Código aplicado: %{amount} de descuento",
+      "discountRemoved": "Descuento removido",
+      "selectShippingAddress": "Selecciona una dirección de envío",
+      "paymentSessionPreparationFailed": "Error al preparar el pago con el monto actualizado",
+      "paymentRecordCreationFailed": "Error al crear el registro de pago",
+      "unexpectedProcessingError": "Error inesperado al procesar el pago",
+      "invalidDiscountAmount": "Este código de descuento no se puede aplicar a los artículos seleccionados. Ponte en contacto con soporte.",
       "paymentAlert": "Por favor, asegúrate de que la información de tus direcciones y perfil sea correcta antes de continuar con el pago.",
       "cannotDeselectLastItem": "No puedes deseleccionar el último artículo",
       "summary": "Resumen",
       "paymentData": "Datos de pago",
       "processing": "Procesando..."
+    },
+    "paymentResult": {
+      "loading": "Cargando resultado del pago...",
+      "paymentOrder": "Orden de pago",
+      "goToAccount": "Ir a cuenta",
+      "approved": {
+        "title": "Pago aprobado",
+        "description": "El pago fue autorizado. Puedes revisar el detalle en tu historial de pagos.",
+        "primaryAction": "Ir a historial"
+      },
+      "pending": {
+        "title": "Confirmando pago",
+        "description": "Estamos confirmando el resultado final del pago. Una vez autorizado, lo verás reflejado en tu historial en breve.",
+        "primaryAction": "Ir a historial"
+      },
+      "rejected": {
+        "title": "Pago rechazado",
+        "description": "Pago rechazado. Puedes volver e intentarlo otra vez.",
+        "primaryAction": "Intentar de nuevo"
+      }
     },
     "resetPassword": {
       "title": "Restablecer contraseña",
