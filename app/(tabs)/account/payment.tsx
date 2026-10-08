@@ -593,8 +593,10 @@ export default function PaymentScreen() {
           // Refetch addresses para actualizar la lista
           refetchAddresses();
         }}
-        countries={isCommissionReady ? paymentConfig.countries : null}
-        countriesLabel={isCommissionReady ? paymentConfig.countriesLabel : null}
+        countries={isCommissionReady ? paymentConfig.countries[locale] : null}
+        countryLabels={
+          isCommissionReady ? paymentConfig.countriesLabel[locale] : null
+        }
       />
     </SafeAreaView>
   );

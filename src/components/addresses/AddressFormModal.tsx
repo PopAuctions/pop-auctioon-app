@@ -18,7 +18,7 @@ import { SelectField } from '@/components/fields/SelectField';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useCreateAddress } from '@/hooks/pages/address/useCreateAddress';
 import { getErrorMessage } from '@/utils/form-errors';
-import { COUNTRIES_MAP } from '@/constants/payment';
+import { COUNTRIES_ARRAY } from '@/constants/payment';
 import type { CountryObject, CountryValue } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { REQUEST_STATUS } from '@/constants';
@@ -27,8 +27,8 @@ interface AddressFormModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  countries?: Record<string, CountryValue[]> | null;
-  countriesLabel?: Record<string, Record<CountryValue, string>> | null;
+  countries?: readonly CountryValue[] | null;
+  countryLabels?: Partial<Record<CountryValue, string>> | null;
 }
 
 export function AddressFormModal({
@@ -36,25 +36,25 @@ export function AddressFormModal({
   onClose,
   onSuccess,
   countries: countriesProp,
-  countriesLabel: countriesLabelProp,
+  countryLabels: countryLabelsProp,
 }: AddressFormModalProps) {
   const { t, locale } = useTranslation();
+  const fallbackCountryLabels = t('displayLabels.country', { locale });
   const { callToast } = useToast(locale);
   const { createAddress, status, errorMessage } = useCreateAddress();
   const isSubmittingRef = useRef(false);
 
   // Use countries from prop (if available) or fallback to constants
   const countries: readonly CountryObject[] =
-    countriesProp &&
-    countriesProp[locale] &&
-    Array.isArray(countriesProp[locale]) &&
-    countriesLabelProp &&
-    countriesLabelProp[locale]
-      ? countriesProp[locale].map((value) => ({
+    countriesProp && countryLabelsProp
+      ? countriesProp.map((value) => ({
           value,
-          label: countriesLabelProp[locale][value] || value,
+          label: countryLabelsProp[value] || value,
         }))
-      : COUNTRIES_MAP[locale] || [];
+      : COUNTRIES_ARRAY.map((value) => ({
+          value,
+          label: fallbackCountryLabels[value],
+        }));
 
   const {
     control,

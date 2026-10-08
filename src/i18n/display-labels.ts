@@ -17,6 +17,7 @@ import type {
   ArticleSecondChanceStatus,
   AuctionCategories,
   AuctionModeEnum,
+  CountryValue,
   OfferStatus,
   OffersOptionValue,
   StorePayoutMethodType,
@@ -45,6 +46,7 @@ export interface DisplayLabelDictionary {
   auctionStatus: Record<AuctionStatus, string>;
   auctionCategory: Record<AuctionCategories, string>;
   calendarMonth: Record<CalendarMonthKey, string>;
+  country: Record<CountryValue, string>;
   paymentStatus: Record<UserPaymentStatus, string>;
   articleStatus: Record<ArticleStatus, string>;
   onlineStoreArticleStatus: Record<ArticleSecondChanceStatus, string>;

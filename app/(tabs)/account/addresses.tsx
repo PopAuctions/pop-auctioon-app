@@ -12,11 +12,11 @@ import { Loading } from '@/components/ui/Loading';
 import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { EmptyAddressState } from '@/components/addresses/EmptyAddressState';
 import { AddressCard } from '@/components/addresses/AddressCard';
-import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
 import type { CountryValue } from '@/types/types';
 
 export default function AddressesScreen() {
   const { t, locale } = useTranslation();
+  const countryLabels = t('displayLabels.country', { locale });
   const { data: addresses, status, refetch, errorMessage } = useGetAddresses();
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -48,9 +48,7 @@ export default function AddressesScreen() {
   };
 
   const getCountryLabel = (countryValue: string) => {
-    return (
-      COUNTRIES_MAP_LABEL[locale][countryValue as CountryValue] || countryValue
-    );
+    return countryLabels[countryValue as CountryValue] || countryValue;
   };
 
   // Loading state - Solo mostrar si NO es un refresh manual

@@ -4,12 +4,16 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type {
   ActionResponse,
   Countries,
+  CountryObject,
+  Lang,
   LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useFetchAvailableCountries = (): ActionResponse<Countries> & {
+export const useFetchAvailableCountries = (
+  locale: Lang
+): ActionResponse<CountryObject[]> & {
   refetch: () => Promise<void>;
 } => {
   const [countries, setCountries] = useState<Countries | null>(null);
@@ -55,7 +59,7 @@ export const useFetchAvailableCountries = (): ActionResponse<Countries> & {
   }, [fetchCountries]);
 
   return {
-    data: countries as Countries,
+    data: (countries ? (countries[locale] ?? []) : null) as CountryObject[],
     status,
     errorMessage,
     setErrorMessage,

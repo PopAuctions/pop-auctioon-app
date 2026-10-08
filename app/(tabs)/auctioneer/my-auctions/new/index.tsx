@@ -54,7 +54,7 @@ export default function MyANewAuctionScreen() {
   });
 
   const { data: countries, status: countriesStatus } =
-    useFetchAvailableCountries();
+    useFetchAvailableCountries(locale);
 
   const {
     control,
@@ -203,7 +203,7 @@ export default function MyANewAuctionScreen() {
                   <SelectField
                     name='country'
                     value={value ?? null}
-                    options={countries?.[locale] ?? []}
+                    options={countries ?? []}
                     placeholder={t('screens.myAuction.newAuction.country')}
                     isSearchable={true}
                     isDisabled={isLoading}

@@ -530,8 +530,10 @@ export default function SinglePaymentScreen() {
           setShowAddressModal(false);
           refetchAddresses();
         }}
-        countries={isCommissionReady ? paymentConfig.countries : null}
-        countriesLabel={isCommissionReady ? paymentConfig.countriesLabel : null}
+        countries={isCommissionReady ? paymentConfig.countries[locale] : null}
+        countryLabels={
+          isCommissionReady ? paymentConfig.countriesLabel[locale] : null
+        }
       />
     </SafeAreaView>
   );

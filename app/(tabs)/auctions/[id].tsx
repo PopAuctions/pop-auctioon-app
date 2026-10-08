@@ -4,11 +4,11 @@ import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
 import { AuctionStatus, LIVE_URL } from '@/constants/auctions';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
-import { COUNTRIES_MAP_LABEL, REQUEST_STATUS } from '@/constants';
+import { REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { HowAutoLiveWorksModal } from '@/components/modal/HowAutoLiveWorks';
-import { AuctionMode, Lang } from '@/types/types';
+import { AuctionMode, type CountryValue } from '@/types/types';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
@@ -47,6 +47,7 @@ export default function AuctionDetailScreen() {
   const auctionLang = t('screens.auction');
   const shareButtonTexts = t('components.shareButton');
   const auctionModeLabels = t('displayLabels.auctionMode', { locale });
+  const countryLabels = t('displayLabels.country', { locale });
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
@@ -70,10 +71,7 @@ export default function AuctionDetailScreen() {
     auction.status === AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE;
 
   const filtersKey = `${brand ?? ''}${price ?? ''}`;
-  const country =
-    COUNTRIES_MAP_LABEL[locale][
-      auction.country as keyof (typeof COUNTRIES_MAP_LABEL)[Lang]
-    ];
+  const country = countryLabels[auction.country as CountryValue];
   const formattedCountry = country.includes('-')
     ? country.split('-')[0].trim()
     : country;
