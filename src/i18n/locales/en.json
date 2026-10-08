@@ -60,6 +60,30 @@
       "PAID": "Paid",
       "CANCELLED": "Cancelled"
     },
+    "sortBy": {
+      "NEWEST": "Newest",
+      "OLDEST": "Oldest",
+      "HIGHER_PRICE": "Highest price",
+      "LOWER_PRICE": "Lowest price"
+    },
+    "paidFilter": {
+      "ALL": "All",
+      "NOT_PAID": "Not paid",
+      "PAID_NOT_SHIPPED": "Paid not shipped",
+      "PAID_SHIPPED": "Paid shipped"
+    },
+    "offersFilter": {
+      "ALL": "All",
+      "WITH_ACCEPTED_OFFERS": "With accepted offers",
+      "WITH_PENDING_OFFERS": "With pending offers",
+      "WITHOUT_OFFERS": "Without offers"
+    },
+    "auctionCategorySelection": {
+      "BAGS": "Bags",
+      "JEWERLY": "Jewelry",
+      "WATCHES": "Watches",
+      "ART": "Art"
+    },
     "articleSpecification": {
       "state": {
         "NEVER_WORN_WITH_TAG": "Never Worn with Tag",

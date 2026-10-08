@@ -5,10 +5,13 @@ import type {
   BoxMaterialValue,
   StrapMaterialValue,
 } from '@/constants/articles';
-import type { UserPaymentStatus } from '@/constants/payment';
+import type { PaidFilterValues, UserPaymentStatus } from '@/constants/payment';
+import type { SortByValue } from '@/constants/onlineStore';
 import type {
   ArticleSecondChanceStatus,
+  AuctionCategories,
   OfferStatus,
+  OffersOptionValue,
   StorePayoutMethodType,
   StorePayoutStatusType,
   StoreSettlementSaleTypeType,
@@ -42,5 +45,9 @@ export interface DisplayLabelDictionary {
   saleType: Record<StoreSettlementSaleTypeType, string>;
   payoutMethod: Record<StorePayoutMethodType, string>;
   payoutStatus: Record<StorePayoutStatusType, string>;
+  sortBy: Record<SortByValue, string>;
+  paidFilter: Record<PaidFilterValues, string>;
+  offersFilter: Record<OffersOptionValue, string>;
+  auctionCategorySelection: Record<Exclude<AuctionCategories, 'ALL'>, string>;
   articleSpecification: ArticleSpecificationLabels;
 }

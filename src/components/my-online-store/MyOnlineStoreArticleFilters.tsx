@@ -5,8 +5,8 @@ import { Lang } from '@/types/types';
 import { FilterField } from '@/components/fields/FilterField';
 import {
   ARTICLE_BRANDS,
-  OFFERS_OPTIONS,
-  ONLINE_STORE_ARTICLE_STATUS,
+  OFFERS_OPTION_VALUE_ORDER,
+  ONLINE_STORE_ARTICLE_STATUS_VALUES,
 } from '@/constants';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
@@ -27,6 +27,20 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
   const { t } = useTranslation();
   const modalTexts = t('components.modals.onlineStoreArticle', { locale });
   const labels = t('components.filters', { locale });
+  const offerFilterLabels = t('displayLabels.offersFilter', { locale });
+  const articleStatusLabels = t('displayLabels.onlineStoreArticleStatus', {
+    locale,
+  });
+  const offerFilterOptions = OFFERS_OPTION_VALUE_ORDER.map((value) => ({
+    value,
+    label: offerFilterLabels[value],
+  }));
+  const articleStatusOptions = ONLINE_STORE_ARTICLE_STATUS_VALUES.map(
+    (value) => ({
+      value,
+      label: articleStatusLabels[value],
+    })
+  );
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
@@ -153,7 +167,7 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
                   label={labels.offersStatus}
                   type='select'
                   value={offersStatusValue}
-                  options={OFFERS_OPTIONS[locale]}
+                  options={offerFilterOptions}
                   isClearable={true}
                 />
 
@@ -177,7 +191,7 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
                   type='select'
                   value={statusValue}
                   isSearchable
-                  options={ONLINE_STORE_ARTICLE_STATUS[locale]}
+                  options={articleStatusOptions}
                   isClearable={true}
                 />
 

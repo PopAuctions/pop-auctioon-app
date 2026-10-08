@@ -82,22 +82,11 @@ export const AUCTION_CATEGORIES_LABEL: Record<
   },
 };
 
-export const AUCTION_CATEGORIES_LANG: Record<
-  Lang,
-  { value: AuctionCategories; label: string }[]
-> = {
-  es: [
-    { value: 'BAGS', label: 'Bolsos' },
-    { value: 'JEWERLY', label: 'Joyería' },
-    { value: 'WATCHES', label: 'Relojes' },
-    { value: 'ART', label: 'Arte' },
-  ],
-  en: [
-    { value: 'BAGS', label: 'Bags' },
-    { value: 'JEWERLY', label: 'Jewelry' },
-    { value: 'WATCHES', label: 'Watches' },
-    { value: 'ART', label: 'Art' },
-  ],
-};
+export const SELECTABLE_AUCTION_CATEGORIES = [
+  'BAGS',
+  'JEWERLY',
+  'WATCHES',
+  'ART',
+] as const satisfies readonly Exclude<AuctionCategories, 'ALL'>[];
 
 export const MIN_DAYS_TO_START_AUCTION = 10;

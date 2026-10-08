@@ -1,4 +1,4 @@
-import type { Countries, CountryValue, Lang } from '@/types/types';
+import type { Countries, CountryValue } from '@/types/types';
 
 export enum UserPaymentStatus {
   PENDING = 'PENDING',
@@ -17,26 +17,12 @@ export enum PaidFilterValues {
   PAID_SHIPPED = 'PAID_SHIPPED',
 }
 
-export const PAID_FILTER_OPTIONS: Record<
-  Lang,
-  { value: PaidFilterValues; label: string }[]
-> = {
-  es: [
-    { value: PaidFilterValues.ALL, label: 'Todos' },
-    { value: PaidFilterValues.NOT_PAID, label: 'No pagados' },
-    {
-      value: PaidFilterValues.PAID_NOT_SHIPPED,
-      label: 'Pagados pero no enviados',
-    },
-    { value: PaidFilterValues.PAID_SHIPPED, label: 'Pagados y enviados' },
-  ],
-  en: [
-    { value: PaidFilterValues.ALL, label: 'All' },
-    { value: PaidFilterValues.NOT_PAID, label: 'Not paid' },
-    { value: PaidFilterValues.PAID_NOT_SHIPPED, label: 'Paid not shipped' },
-    { value: PaidFilterValues.PAID_SHIPPED, label: 'Paid shipped' },
-  ],
-};
+export const PAID_FILTER_VALUE_ORDER = [
+  PaidFilterValues.ALL,
+  PaidFilterValues.NOT_PAID,
+  PaidFilterValues.PAID_NOT_SHIPPED,
+  PaidFilterValues.PAID_SHIPPED,
+] as const;
 
 // ========================================
 // COUNTRIES DATA

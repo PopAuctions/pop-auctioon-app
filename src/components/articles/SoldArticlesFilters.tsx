@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { FilterField } from '@/components/fields/FilterField';
 import { Lang } from '@/types/types';
-import { PAID_FILTER_OPTIONS } from '@/constants';
+import { PAID_FILTER_VALUE_ORDER } from '@/constants';
 import { t } from '@/i18n';
 
 interface Props {
@@ -14,6 +14,11 @@ interface Props {
 export function SoldArticlesFilters({ locale, auctionsList }: Props) {
   const searchParams = useLocalSearchParams();
   const labels = t('components.filters', { locale });
+  const paidFilterLabels = t('displayLabels.paidFilter', { locale });
+  const paidFilterOptions = PAID_FILTER_VALUE_ORDER.map((value) => ({
+    value,
+    label: paidFilterLabels[value],
+  }));
 
   const getParam = (v: unknown): string => {
     if (Array.isArray(v)) return v[0] ?? '';
@@ -44,7 +49,7 @@ export function SoldArticlesFilters({ locale, auctionsList }: Props) {
         label={labels.status}
         type='select'
         value={statusValue}
-        options={PAID_FILTER_OPTIONS[locale]}
+        options={paidFilterOptions}
         isClearable={true}
       />
     </View>
