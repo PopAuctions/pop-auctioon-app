@@ -66,7 +66,7 @@ export default function SinglePaymentScreen() {
 
   // Payment config
   const { data: paymentConfig, status: commissionStatus } =
-    useFetchPaymentConfig();
+    useFetchPaymentConfig(locale);
   const {
     data: storeCountry,
     errorMessage: storeCountryError,
@@ -530,10 +530,8 @@ export default function SinglePaymentScreen() {
           setShowAddressModal(false);
           refetchAddresses();
         }}
-        countries={isCommissionReady ? paymentConfig.countries[locale] : null}
-        countryLabels={
-          isCommissionReady ? paymentConfig.countriesLabel[locale] : null
-        }
+        countries={isCommissionReady ? paymentConfig.countries : null}
+        countryLabels={isCommissionReady ? paymentConfig.countryLabels : null}
       />
     </SafeAreaView>
   );

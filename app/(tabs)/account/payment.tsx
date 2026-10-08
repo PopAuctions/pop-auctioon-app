@@ -89,7 +89,7 @@ export default function PaymentScreen() {
 
   // Hook para obtener porcentaje de comisión y costos de envío dinámicos
   const { data: paymentConfig, status: commissionStatus } =
-    useFetchPaymentConfig();
+    useFetchPaymentConfig(locale);
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const [selectedArticleIds, setSelectedArticleIds] = useState<number[]>([]);
@@ -593,10 +593,8 @@ export default function PaymentScreen() {
           // Refetch addresses para actualizar la lista
           refetchAddresses();
         }}
-        countries={isCommissionReady ? paymentConfig.countries[locale] : null}
-        countryLabels={
-          isCommissionReady ? paymentConfig.countriesLabel[locale] : null
-        }
+        countries={isCommissionReady ? paymentConfig.countries : null}
+        countryLabels={isCommissionReady ? paymentConfig.countryLabels : null}
       />
     </SafeAreaView>
   );

@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
   ActionResponse,
   LangMap,
+  Lang,
   RequestStatus,
   CountryValue,
   PaymentShippingTax,
@@ -26,7 +27,7 @@ interface BackendPaymentConfig {
 }
 
 // Frontend format (nuestro hook retorna esto)
-interface PaymentConfigData {
+interface PaymentConfigState {
   commission: number;
   shippingTaxes: PaymentShippingTax | null;
   taxPercentage: number;
@@ -35,8 +36,19 @@ interface PaymentConfigData {
   countriesLabel: Record<string, Record<CountryValue, string>>;
 }
 
-export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
-  const [data, setData] = useState<PaymentConfigData>({
+interface PaymentConfigData {
+  commission: number;
+  shippingTaxes: PaymentShippingTax | null;
+  taxPercentage: number;
+  taxPercentageArticles: number;
+  countries: CountryValue[];
+  countryLabels: Partial<Record<CountryValue, string>>;
+}
+
+export const useFetchPaymentConfig = (
+  locale: Lang
+): ActionResponse<PaymentConfigData> => {
+  const [data, setData] = useState<PaymentConfigState>({
     commission: 0,
     shippingTaxes: null,
     taxPercentage: 0,
@@ -72,7 +84,7 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
       }
 
       // Transform backend data to frontend format
-      const transformedData: PaymentConfigData = {
+      const transformedData: PaymentConfigState = {
         commission: response.data.commissionsValue.STANDARD.PERCENTAGE,
         shippingTaxes: response.data.taxForShipping,
         taxPercentage: response.data.taxPercentageArticles,
@@ -112,8 +124,21 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
   useEffect(() => {
     fetchPaymentConfig();
   }, [fetchPaymentConfig]);
+
+  const localizedData = useMemo<PaymentConfigData>(
+    () => ({
+      commission: data.commission,
+      shippingTaxes: data.shippingTaxes,
+      taxPercentage: data.taxPercentage,
+      taxPercentageArticles: data.taxPercentageArticles,
+      countries: data.countries[locale] ?? [],
+      countryLabels: data.countriesLabel[locale] ?? {},
+    }),
+    [data, locale]
+  );
+
   return {
-    data,
+    data: localizedData,
     status,
     errorMessage,
     setErrorMessage,
