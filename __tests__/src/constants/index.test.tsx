@@ -114,11 +114,6 @@ describe('Constants barrel exports', () => {
   });
 
   describe('Article Related Constants', () => {
-    it('should export article state labels', () => {
-      expect(Constants.ARTICLE_STATE_LABELS).toBeDefined();
-      expect(typeof Constants.ARTICLE_STATE_LABELS).toBe('object');
-    });
-
     it('should export brand information', () => {
       expect(Constants.ARTICLE_BRANDS_LABELS).toBeDefined();
       expect(typeof Constants.ARTICLE_BRANDS_LABELS).toBe('object');
@@ -194,7 +189,6 @@ describe('Constants barrel exports', () => {
       expect(() => Constants.LOCALE_PATTERN).not.toThrow();
       expect(() => Constants.GLOBAL_REGISTER_DEFAULT_VALUES).not.toThrow();
       expect(() => Constants.Colors).not.toThrow();
-      expect(() => Constants.ARTICLE_STATE_LABELS).not.toThrow();
       expect(() => Constants.LANGUAGE_STORAGE_KEY).not.toThrow();
       expect(() => Constants.MONTHS).not.toThrow();
     });
@@ -212,7 +206,6 @@ describe('Constants barrel exports', () => {
     });
 
     it('should handle export * from articles module', () => {
-      expect(Constants.ARTICLE_STATE_LABELS).toBeDefined();
       expect(Constants.ARTICLE_BRANDS_LABELS).toBeDefined();
       expect(Constants.ARTICLE_CATEGORIES_FILTER_LIST).toBeDefined();
     });

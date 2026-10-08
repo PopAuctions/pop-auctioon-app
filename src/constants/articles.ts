@@ -11,23 +11,6 @@ import type {
   OfferOption,
 } from '@/types/types';
 
-export const ARTICLE_STATE_LABELS: LabelsByLanguage = {
-  es: {
-    NEVER_WORN_WITH_TAG: 'Nunca Usado con Etiqueta',
-    NEVER_WORN: 'Nunca Usado',
-    VERY_GOOD_CONDITION: 'Muy Buen Estado',
-    GOOD_CONDITION: 'Buen Estado',
-    FAIR_CONDITION: 'Estado Aceptable',
-  },
-  en: {
-    NEVER_WORN_WITH_TAG: 'Never Worn with Tag',
-    NEVER_WORN: 'Never Worn',
-    VERY_GOOD_CONDITION: 'Very Good Condition',
-    GOOD_CONDITION: 'Good Condition',
-    FAIR_CONDITION: 'Fair Condition',
-  },
-};
-
 export const ARTICLE_STATE = {
   es: [
     { value: 'NEVER_WORN_WITH_TAG', label: 'Nunca Usado con Etiqueta' },
@@ -52,50 +35,6 @@ export enum ArticleStatus {
   APPROVED = 'APPROVED',
   PUBLISHED = 'PUBLISHED',
 }
-
-export const ARTICLE_STATE_DESCRIPTION: LabelsByLanguage = {
-  es: {
-    NEVER_WORN_WITH_TAG:
-      'Como nuevo, con la etiqueta original aún adherida y sin signos de uso, daño o modificaciones.',
-    NEVER_WORN:
-      'En estado impecable, sin señales de desgaste, daños o alteraciones.',
-    VERY_GOOD_CONDITION:
-      'Ligeramente usado, bien conservado, sin rasgaduras, bolitas o decoloración.',
-    GOOD_CONDITION:
-      'Usado moderadamente, aún en buen estado pero puede mostrar un ligero desgaste del tejido o pequeñas imperfecciones.',
-    FAIR_CONDITION:
-      'Muy usado, con defectos visibles y signos evidentes de uso frecuente.',
-  },
-  en: {
-    NEVER_WORN_WITH_TAG:
-      'Like new, with the original tag still attached, and no signs of wear, damage, or modifications.',
-    NEVER_WORN:
-      'Flawless condition, showing no signs of wear, damage, or alterations.',
-    VERY_GOOD_CONDITION:
-      'Gently worn, carefully preserved with no rips, fuzzing, or fading.',
-    GOOD_CONDITION:
-      'Moderately used, still in good shape but may show minor fabric wear or small imperfections.',
-    FAIR_CONDITION:
-      'Heavily worn, with noticeable defects and signs of frequent use.',
-  },
-};
-
-export const ARTICLE_SMELL_LABELS: LabelsByLanguage = {
-  es: {
-    TOBACCO: 'Tabaco',
-    PERFUME: 'Perfume',
-    HUMIDITY: 'Humedad',
-    NO_SMELL: 'Sin olor',
-    OTHER: 'Otro',
-  },
-  en: {
-    TOBACCO: 'Tobacco',
-    PERFUME: 'Perfume',
-    HUMIDITY: 'Humidity',
-    NO_SMELL: 'No smell',
-    OTHER: 'Other',
-  },
-};
 
 export const ARTICLE_BRANDS = [
   { value: 'NON_SIGNE', label: 'non signé' },
@@ -993,25 +932,6 @@ export const WATCH_MOVEMENTS = {
   ],
 };
 
-export const WATCH_MOVEMENTS_LABELS: LabelsByLanguage = {
-  es: {
-    AUTOMATIC: 'Automático',
-    QUARTZ: 'Cuarzo',
-    MANUAL_WINDING: 'Cuerda manual',
-    SMART_WATCH: 'Reloj inteligente',
-    SOLAR: 'Solar',
-    OTHER: 'Otro',
-  },
-  en: {
-    AUTOMATIC: 'Automatic',
-    QUARTZ: 'Quartz',
-    MANUAL_WINDING: 'Manual winding',
-    SMART_WATCH: 'Smartwatch',
-    SOLAR: 'Solar',
-    OTHER: 'Other',
-  },
-};
-
 export const ART_TYPES = {
   es: [
     { value: 'OTHER', label: 'Otro' },
@@ -1039,35 +959,6 @@ export const ART_TYPES = {
     { value: 'SCULPTURE', label: 'Sculpture' },
     { value: 'WOOD_ART', label: 'Wood Art' },
   ],
-};
-
-export const ART_TYPES_LABELS: LabelsByLanguage = {
-  es: {
-    OTHER: 'Otro',
-    ANTIQUE: 'Antigüedad',
-    CERAMIC: 'Cerámica',
-    COLLECTIBLE: 'Coleccionable',
-    DRAWING: 'Dibujo',
-    FURNITURE: 'Mueble',
-    GLASS_ART: 'Arte en vidrio',
-    METAL_ART: 'Arte en metal',
-    PAINTING: 'Pintura',
-    SCULPTURE: 'Escultura',
-    WOOD_ART: 'Arte en madera',
-  },
-  en: {
-    OTHER: 'Other',
-    ANTIQUE: 'Antique',
-    CERAMIC: 'Ceramic',
-    COLLECTIBLE: 'Collectible',
-    DRAWING: 'Drawing',
-    FURNITURE: 'Furniture',
-    GLASS_ART: 'Glass Art',
-    METAL_ART: 'Metal Art',
-    PAINTING: 'Painting',
-    SCULPTURE: 'Sculpture',
-    WOOD_ART: 'Wood Art',
-  },
 };
 
 export const ARTICLE_CATEGORIES_FILTER_LIST: Record<string, CategoryFilter[]> =

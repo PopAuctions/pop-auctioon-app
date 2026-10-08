@@ -10,13 +10,7 @@ import { getErrorMessage } from '@/utils/form-errors';
 import { useToast } from '@/hooks/useToast';
 import { useArticleForm } from '@/hooks/components/useArticleForm';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
-import {
-  ARTICLE_IMAGES_MAX,
-  ARTICLE_STATE,
-  ARTICLE_STATE_DESCRIPTION,
-  ARTICLE_STATE_LABELS,
-  REQUEST_STATUS,
-} from '@/constants';
+import { ARTICLE_IMAGES_MAX, ARTICLE_STATE, REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
@@ -40,6 +34,9 @@ export default function NewAuctionArticleScreen() {
     id: string;
   }>();
   const { t, locale } = useTranslation();
+  const articleSpecificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
   const [isCompressingImages, setIsCompressingImages] = useState(false);
@@ -102,23 +99,25 @@ export default function NewAuctionArticleScreen() {
 
   const tooltipContent = (
     <View className='gap-2'>
-      {Object.entries(ARTICLE_STATE_DESCRIPTION[locale]).map(([key, value]) => {
-        const label =
-          ARTICLE_STATE_LABELS[locale][
-            key as keyof (typeof ARTICLE_STATE_LABELS)['en']
-          ];
+      {Object.entries(articleSpecificationLabels.stateDescription).map(
+        ([key, value]) => {
+          const label =
+            articleSpecificationLabels.state[
+              key as keyof typeof articleSpecificationLabels.state
+            ];
 
-        return (
-          <CustomText
-            key={key}
-            type='body'
-            className='text-sm text-black/70'
-          >
-            <Text className='font-bold text-black'>{label}</Text>
-            {`: ${value}`}
-          </CustomText>
-        );
-      })}
+          return (
+            <CustomText
+              key={key}
+              type='body'
+              className='text-sm text-black/70'
+            >
+              <Text className='font-bold text-black'>{label}</Text>
+              {`: ${value}`}
+            </CustomText>
+          );
+        }
+      )}
     </View>
   );
 

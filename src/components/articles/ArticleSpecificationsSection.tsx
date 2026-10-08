@@ -8,18 +8,13 @@ import {
   ArticleCategoriesConst,
   Lang,
 } from '@/types/types';
-import { Translations } from '@/i18n';
+import { t, type Translations } from '@/i18n';
 import {
-  ART_TYPES_LABELS,
   ARTICLE_BRANDS_LABELS,
   ARTICLE_COLORS_LABELS,
   ARTICLE_MATERIALS_LABELS,
-  ARTICLE_SMELL_LABELS,
-  ARTICLE_STATE_DESCRIPTION,
-  ARTICLE_STATE_LABELS,
   BOX_MATERIALS_LABELS,
   STRAP_MATERIALS_LABELS,
-  WATCH_MOVEMENTS_LABELS,
 } from '@/constants';
 import { formatMeasures } from '@/utils/formatMeasures';
 import { isRecognizedBrand } from '@/utils/isRecognizedBrand';
@@ -40,6 +35,9 @@ export function ArticleSpecificationsSection({
   articleCategory,
   liveAuctoView = false,
 }: ArticleSpecificationsSectionProps) {
+  const specificationLabels = t('displayLabels.articleSpecification', {
+    locale: lang,
+  });
   const measures = formatMeasures({
     width: article.width,
     height: article.height,
@@ -48,9 +46,7 @@ export function ArticleSpecificationsSection({
 
   const recognizedBrand = isRecognizedBrand(article.brand ?? '');
   const conditionDescription = article.state
-    ? ARTICLE_STATE_DESCRIPTION[lang]?.[
-        article.state as keyof (typeof ARTICLE_STATE_DESCRIPTION)['es']
-      ]
+    ? specificationLabels.stateDescription[article.state]
     : undefined;
 
   return (
@@ -100,9 +96,7 @@ export function ArticleSpecificationsSection({
       <View className='mb-2'>
         <ArticleSpecificationItem
           label={articleLang.condition}
-          value={
-            article.state ? ARTICLE_STATE_LABELS[lang][article.state] : '-'
-          }
+          value={article.state ? specificationLabels.state[article.state] : '-'}
           tooltip={
             conditionDescription ? (
               <Tooltip content={conditionDescription} />
@@ -119,8 +113,8 @@ export function ArticleSpecificationsSection({
               label={articleLang.artType}
               value={
                 article.artType
-                  ? ART_TYPES_LABELS[lang][
-                      article.artType as keyof (typeof ART_TYPES_LABELS)[typeof lang]
+                  ? specificationLabels.artType[
+                      article.artType as keyof typeof specificationLabels.artType
                     ]
                   : '-'
               }
@@ -162,8 +156,8 @@ export function ArticleSpecificationsSection({
               label={articleLang.movement}
               value={
                 article.movement
-                  ? WATCH_MOVEMENTS_LABELS[lang][
-                      article.movement as keyof (typeof WATCH_MOVEMENTS_LABELS)[typeof lang]
+                  ? specificationLabels.movement[
+                      article.movement as keyof typeof specificationLabels.movement
                     ]
                   : '-'
               }
@@ -237,7 +231,7 @@ export function ArticleSpecificationsSection({
           <ArticleSpecificationItem
             label={articleLang.smell}
             value={
-              article.smell ? ARTICLE_SMELL_LABELS[lang][article.smell] : '-'
+              article.smell ? specificationLabels.smell[article.smell] : '-'
             }
           />
         </View>

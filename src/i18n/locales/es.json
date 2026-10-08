@@ -59,6 +59,50 @@
     "payoutStatus": {
       "PAID": "Pagado",
       "CANCELLED": "Cancelado"
+    },
+    "articleSpecification": {
+      "state": {
+        "NEVER_WORN_WITH_TAG": "Nunca Usado con Etiqueta",
+        "NEVER_WORN": "Nunca Usado",
+        "VERY_GOOD_CONDITION": "Muy Buen Estado",
+        "GOOD_CONDITION": "Buen Estado",
+        "FAIR_CONDITION": "Estado Aceptable"
+      },
+      "stateDescription": {
+        "NEVER_WORN_WITH_TAG": "Como nuevo, con la etiqueta original aún adherida y sin signos de uso, daño o modificaciones.",
+        "NEVER_WORN": "En estado impecable, sin señales de desgaste, daños o alteraciones.",
+        "VERY_GOOD_CONDITION": "Ligeramente usado, bien conservado, sin rasgaduras, bolitas o decoloración.",
+        "GOOD_CONDITION": "Usado moderadamente, aún en buen estado pero puede mostrar un ligero desgaste del tejido o pequeñas imperfecciones.",
+        "FAIR_CONDITION": "Muy usado, con defectos visibles y signos evidentes de uso frecuente."
+      },
+      "smell": {
+        "TOBACCO": "Tabaco",
+        "PERFUME": "Perfume",
+        "HUMIDITY": "Humedad",
+        "NO_SMELL": "Sin olor",
+        "OTHER": "Otro"
+      },
+      "movement": {
+        "AUTOMATIC": "Automático",
+        "QUARTZ": "Cuarzo",
+        "MANUAL_WINDING": "Cuerda manual",
+        "SMART_WATCH": "Reloj inteligente",
+        "SOLAR": "Solar",
+        "OTHER": "Otro"
+      },
+      "artType": {
+        "OTHER": "Otro",
+        "ANTIQUE": "Antigüedad",
+        "CERAMIC": "Cerámica",
+        "COLLECTIBLE": "Coleccionable",
+        "DRAWING": "Dibujo",
+        "FURNITURE": "Mueble",
+        "GLASS_ART": "Arte en vidrio",
+        "METAL_ART": "Arte en metal",
+        "PAINTING": "Pintura",
+        "SCULPTURE": "Escultura",
+        "WOOD_ART": "Arte en madera"
+      }
     }
   },
   "errors": {

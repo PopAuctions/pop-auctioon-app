@@ -7,6 +7,18 @@ import type {
   StorePayoutStatusType,
   StoreSettlementSaleTypeType,
 } from '@/types/types';
+import type { Database } from '@/types/supabase';
+
+type ArticleState = Database['public']['Enums']['ArticleState'];
+type ArticleSmell = Database['public']['Enums']['ArticleSmell'];
+
+interface ArticleSpecificationLabels {
+  state: Record<ArticleState, string>;
+  stateDescription: Record<ArticleState, string>;
+  smell: Record<ArticleSmell, string>;
+  movement: Record<string, string>;
+  artType: Record<string, string>;
+}
 
 /**
  * Connects user-facing dictionary labels to their canonical domain values.
@@ -20,4 +32,5 @@ export interface DisplayLabelDictionary {
   saleType: Record<StoreSettlementSaleTypeType, string>;
   payoutMethod: Record<StorePayoutMethodType, string>;
   payoutStatus: Record<StorePayoutStatusType, string>;
+  articleSpecification: ArticleSpecificationLabels;
 }

@@ -80,6 +80,7 @@ describe('ArticleSpecificationsSection', () => {
     );
     expect(getByText('Test Article')).toBeTruthy();
     expect(getByText('Test Brand')).toBeTruthy();
+    expect(getByText('Good Condition')).toBeTruthy();
   });
 
   it('renders measures when provided', () => {
