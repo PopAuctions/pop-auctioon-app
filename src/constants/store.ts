@@ -1,7 +1,6 @@
 import {
   Lang,
   StorePayoutMethod,
-  StorePayoutMethodType,
   StorePayoutStatusType,
   StoreSettlementSaleTypeType,
   StoreSettlementStatusFilter,
@@ -28,20 +27,6 @@ export const STORE_SETTLEMENT_STATUS_FILTERS_MAP: Record<
   },
 };
 
-export const SALE_TYPE_MAP: Record<
-  Lang,
-  Record<StoreSettlementSaleTypeType, string>
-> = {
-  es: {
-    AUCTION: 'Subasta',
-    ONLINE_STORE: 'Tienda online',
-  },
-  en: {
-    AUCTION: 'Auction',
-    ONLINE_STORE: 'Online store',
-  },
-};
-
 export const PAYOUT_METHOD_OPTIONS: Record<
   Lang,
   { value: StorePayoutMethod; label: string }[]
@@ -58,38 +43,6 @@ export const PAYOUT_METHOD_OPTIONS: Record<
     { value: 'STRIPE', label: 'Stripe' },
     { value: 'PAYPAL', label: 'PayPal' },
   ],
-};
-
-export const STORE_PAYOUT_METHOD_MAP: Record<
-  Lang,
-  Record<StorePayoutMethodType, string>
-> = {
-  en: {
-    CASH: 'Cash',
-    BANK_TRANSFER: 'Bank transfer',
-    PAYPAL: 'PayPal',
-    STRIPE: 'Stripe',
-  },
-  es: {
-    CASH: 'Efectivo',
-    BANK_TRANSFER: 'Transferencia bancaria',
-    PAYPAL: 'PayPal',
-    STRIPE: 'Stripe',
-  },
-};
-
-export const STORE_PAYOUT_STATUS_MAP: Record<
-  Lang,
-  Record<StorePayoutStatusType, string>
-> = {
-  en: {
-    PAID: 'Paid',
-    CANCELLED: 'Cancelled',
-  },
-  es: {
-    PAID: 'Pagado',
-    CANCELLED: 'Cancelado',
-  },
 };
 
 export const StoreSettlementStatus: Record<

@@ -22,6 +22,45 @@
       "loading": "Cargando..."
     }
   },
+  "displayLabels": {
+    "paymentStatus": {
+      "PENDING": "Procesando",
+      "APPROVED": "Pagado",
+      "REJECTED": "Rechazado"
+    },
+    "articleStatus": {
+      "NOT_PUBLISHED": "No publicado",
+      "NEED_CHANGES": "Necesita cambios",
+      "CHANGES_MADE": "Cambios realizados",
+      "APPROVED": "Aprobado",
+      "PUBLISHED": "Publicado"
+    },
+    "onlineStoreArticleStatus": {
+      "NOT_AVAILABLE": "No disponible",
+      "AVAILABLE": "Disponible",
+      "SOLD": "Vendido"
+    },
+    "offerStatus": {
+      "PENDING": "Pendiente",
+      "ACCEPTED": "Aceptada",
+      "REJECTED": "Rechazada",
+      "COUNTERED": "Contraoferta"
+    },
+    "saleType": {
+      "AUCTION": "Subasta",
+      "ONLINE_STORE": "Tienda online"
+    },
+    "payoutMethod": {
+      "CASH": "Efectivo",
+      "BANK_TRANSFER": "Transferencia bancaria",
+      "PAYPAL": "PayPal",
+      "STRIPE": "Stripe"
+    },
+    "payoutStatus": {
+      "PAID": "Pagado",
+      "CANCELLED": "Cancelado"
+    }
+  },
   "errors": {
     "unexpected": "Algo ha ido mal",
     "network": "Ha habido un problema de conexión. Inténtalo de nuevo.",
@@ -1196,6 +1235,10 @@
     },
     "offerCard": {
       "status": {
+        "PENDING": "Pendiente",
+        "ACCEPTED": "Aceptado",
+        "REJECTED": "Rechazado",
+        "COUNTERED": "Contraoferta",
         "counterReceived": "Contraoferta recibida",
         "pendingFinalApproval": "Pendiente de aprobación",
         "counterSent": "Contraoferta enviada"

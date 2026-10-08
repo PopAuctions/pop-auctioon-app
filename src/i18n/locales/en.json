@@ -22,6 +22,45 @@
       "loading": "Loading..."
     }
   },
+  "displayLabels": {
+    "paymentStatus": {
+      "PENDING": "Processing",
+      "APPROVED": "Paid",
+      "REJECTED": "Rejected"
+    },
+    "articleStatus": {
+      "NOT_PUBLISHED": "Not published",
+      "NEED_CHANGES": "Needs changes",
+      "CHANGES_MADE": "Changes made",
+      "APPROVED": "Approved",
+      "PUBLISHED": "Published"
+    },
+    "onlineStoreArticleStatus": {
+      "NOT_AVAILABLE": "Not available",
+      "AVAILABLE": "Available",
+      "SOLD": "Sold"
+    },
+    "offerStatus": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Rejected",
+      "COUNTERED": "Countered"
+    },
+    "saleType": {
+      "AUCTION": "Auction",
+      "ONLINE_STORE": "Online store"
+    },
+    "payoutMethod": {
+      "CASH": "Cash",
+      "BANK_TRANSFER": "Bank transfer",
+      "PAYPAL": "PayPal",
+      "STRIPE": "Stripe"
+    },
+    "payoutStatus": {
+      "PAID": "Paid",
+      "CANCELLED": "Cancelled"
+    }
+  },
   "errors": {
     "unexpected": "Something went wrong",
     "network": "There was a connection problem. Please try again.",
@@ -1196,6 +1235,10 @@
     },
     "offerCard": {
       "status": {
+        "PENDING": "Pending",
+        "ACCEPTED": "Accepted",
+        "REJECTED": "Rejected",
+        "COUNTERED": "Countered",
         "counterReceived": "Counter-offer received",
         "pendingFinalApproval": "Pending approval",
         "counterSent": "Counter-offer sent"

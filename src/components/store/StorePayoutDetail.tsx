@@ -10,11 +10,8 @@ import { CustomImage } from '../ui/CustomImage';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import {
-  SALE_TYPE_MAP,
   STORE_INVOICE_TYPES,
   STORE_INVOICE_TYPES_LABEL,
-  STORE_PAYOUT_METHOD_MAP,
-  STORE_PAYOUT_STATUS_MAP,
 } from '@/constants/store';
 import { StoreInvoiceTypes, StorePayoutWithItems } from '@/types/payouts';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
@@ -41,6 +38,9 @@ export function StorePayoutDetail({
   const { callToast } = useToast(locale);
 
   const texts = t('screens.storeSettlements');
+  const saleTypeLabels = t('displayLabels.saleType', { locale });
+  const payoutMethodLabels = t('displayLabels.payoutMethod', { locale });
+  const payoutStatusLabels = t('displayLabels.payoutStatus', { locale });
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const dateLang = LOCALE_CONFIG[locale].intlLocale;
   const payoutId = payout.id;
@@ -130,7 +130,7 @@ export function StorePayoutDetail({
       <View className='gap-3'>
         <PayoutSummaryCard
           label={texts.method}
-          value={STORE_PAYOUT_METHOD_MAP[locale][payout.method]}
+          value={payoutMethodLabels[payout.method]}
         />
         <View className='flex flex-row gap-3'>
           <PayoutSummaryCard
@@ -139,7 +139,7 @@ export function StorePayoutDetail({
           />
           <PayoutSummaryCard
             label={texts.status}
-            value={STORE_PAYOUT_STATUS_MAP[locale][payout.status]}
+            value={payoutStatusLabels[payout.status]}
           />
         </View>
       </View>
@@ -258,7 +258,7 @@ export function StorePayoutDetail({
                   type='bodysmall'
                   className='text-gray'
                 >
-                  {SALE_TYPE_MAP[locale][item.saleType]}
+                  {saleTypeLabels[item.saleType]}
                 </CustomText>
               </View>
             </View>

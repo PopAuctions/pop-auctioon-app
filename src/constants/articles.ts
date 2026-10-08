@@ -45,23 +45,6 @@ export const ARTICLE_STATE = {
   ],
 };
 
-export const ARTICLE_STATUS_LABELS = {
-  es: {
-    NOT_PUBLISHED: 'No publicado',
-    NEED_CHANGES: 'Necesita cambios',
-    CHANGES_MADE: 'Cambios realizados',
-    APPROVED: 'Aprobado',
-    PUBLISHED: 'Publicado',
-  },
-  en: {
-    NOT_PUBLISHED: 'Not published',
-    NEED_CHANGES: 'Needs changes',
-    CHANGES_MADE: 'Changes made',
-    APPROVED: 'Approved',
-    PUBLISHED: 'Published',
-  },
-};
-
 export enum ArticleStatus {
   NOT_PUBLISHED = 'NOT_PUBLISHED',
   NEED_CHANGES = 'NEED_CHANGES',

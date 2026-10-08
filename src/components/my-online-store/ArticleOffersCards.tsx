@@ -3,7 +3,6 @@ import { Pressable, View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { Divider } from '@/components/ui/Divider';
 import { Tooltip } from '@/components/ui/Tooltip';
-import { OFFER_STATUS_LABELS } from '@/constants';
 import { formatDate } from '@/utils/formatDate';
 import { euroFormatter } from '@/utils/euroFormatter';
 import {
@@ -62,6 +61,7 @@ export function ArticleOffersCards({
   const offerCardTexts = translate('components.offerCards', { locale });
   const commonTexts = offerCardTexts.common;
   const cardTexts = offerCardTexts.article;
+  const offerStatusLabels = translate('displayLabels.offerStatus', { locale });
 
   const handleAcceptOffer = async (offerId: number): Promise<boolean> => {
     setIsLoading(true);
@@ -224,7 +224,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-xs font-semibold'
                 >
-                  {OFFER_STATUS_LABELS[locale][offer.status]}
+                  {offerStatusLabels[offer.status]}
                 </CustomText>
               </View>
 

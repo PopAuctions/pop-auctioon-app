@@ -4,11 +4,8 @@ import { CustomPaidArticle, Lang } from '@/types/types';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { CustomText } from '@/components/ui/CustomText';
-import {
-  UserPaymentStatus,
-  UserPaymentStatusLabels,
-  WonArticleStatus,
-} from '@/constants';
+import { UserPaymentStatus, WonArticleStatus } from '@/constants';
+import { t } from '@/i18n';
 
 interface SoldArticleItemProps {
   lang: Lang;
@@ -30,18 +27,27 @@ export function SoldArticleItem({
   reviewUrl,
 }: SoldArticleItemProps) {
   const formatter = useMemo(() => euroFormatter(lang, 2), [lang]);
+  const paymentStatusLabels = t('displayLabels.paymentStatus', {
+    locale: lang,
+  });
 
   const status = useMemo(() => {
     if (article?.payment) {
       const paymentStatus = article.payment
-        .status as keyof typeof UserPaymentStatusLabels;
-      return UserPaymentStatusLabels[paymentStatus]?.[lang] ?? '';
+        .status as keyof typeof paymentStatusLabels;
+      return paymentStatusLabels[paymentStatus] ?? '';
     }
 
     return article.status !== WonArticleStatus.PAID
       ? texts.pending
       : texts.paid;
-  }, [article?.payment, article?.status, lang, texts.pending, texts.paid]);
+  }, [
+    article?.payment,
+    article?.status,
+    paymentStatusLabels,
+    texts.pending,
+    texts.paid,
+  ]);
 
   const approved = article?.payment?.status === UserPaymentStatus.APPROVED;
 

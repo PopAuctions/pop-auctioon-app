@@ -5,7 +5,6 @@ import { CustomText } from '../ui/CustomText';
 import {
   AMOUNT_PLACEHOLDER,
   ARTICLE_BRANDS_LABELS,
-  ARTICLE_STATUS_LABELS,
   ArticleStatus,
 } from '@/constants';
 import { CustomImage } from '../ui/CustomImage';
@@ -61,6 +60,7 @@ export function MyArticleItem({
 }: MyArticleItemProps) {
   const { t } = useTranslation();
   const modalTexts = t('components.modals.auctionArticle', { locale });
+  const articleStatusLabels = t('displayLabels.articleStatus', { locale });
   const { callToast } = useToast(locale);
   const { securePost } = useSecureApi();
   const price = article.ArticleBid.currentValue;
@@ -155,7 +155,7 @@ export function MyArticleItem({
             type='h4'
             className={statusColor}
           >
-            {ARTICLE_STATUS_LABELS[locale][article.status]}
+            {articleStatusLabels[article.status]}
           </CustomText>
           <CustomText
             type='h4'

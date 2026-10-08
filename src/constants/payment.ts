@@ -6,21 +6,6 @@ export enum UserPaymentStatus {
   REJECTED = 'REJECTED',
 }
 
-export const UserPaymentStatusLabels = {
-  PENDING: {
-    es: 'Procesando',
-    en: 'Processing',
-  },
-  APPROVED: {
-    es: 'Pagado',
-    en: 'Paid',
-  },
-  REJECTED: {
-    es: 'Rechazado',
-    en: 'Rejected',
-  },
-};
-
 // ========================================
 // PAYMENT FILTERS
 // ========================================

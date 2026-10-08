@@ -708,21 +708,6 @@ export const OfferProposalStatusConst: Record<OfferProposalStatus, string> = {
 export type OfferProposalStatus =
   Database['public']['Enums']['OfferProposalStatus'];
 
-export const OfferStatusLabels: Record<Lang, Record<OfferStatus, string>> = {
-  en: {
-    PENDING: 'Pending',
-    ACCEPTED: 'Accepted',
-    REJECTED: 'Rejected',
-    COUNTERED: 'Countered',
-  },
-  es: {
-    PENDING: 'Pendiente',
-    ACCEPTED: 'Aceptado',
-    REJECTED: 'Rechazado',
-    COUNTERED: 'Contraoferta',
-  },
-} as const;
-
 export type MyOfferProposal = Pick<
   ArticleOfferProposal,
   'id' | 'amount' | 'status' | 'createdBy' | 'createdAt' | 'expiresAt'

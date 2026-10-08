@@ -6,7 +6,6 @@ import {
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
-  OfferStatusLabels,
   type Lang,
   type MyOffers,
 } from '@/types/types';
@@ -104,7 +103,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   const statusVariant =
     status === OfferStatusConst.ACCEPTED ? 'default' : 'secondary';
 
-  let displayStatus = OfferStatusLabels[lang][status];
+  let displayStatus = offerCardTexts.status[status];
 
   if (isCounterReceived) {
     displayStatus = offerCardTexts.status.counterReceived;
