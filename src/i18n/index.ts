@@ -18,12 +18,13 @@ import {
   type Lang,
 } from './locales';
 import { reportMissingMessage } from './report-missing-message';
+import type { DisplayLabelDictionary } from './display-labels';
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
   es,
   en,
-} as const satisfies Record<Lang, object>;
+} as const satisfies Record<Lang, { displayLabels: DisplayLabelDictionary }>;
 
 export type Translations = typeof translations;
 export type Dictionary = Translations[typeof DEFAULT_LANG];
