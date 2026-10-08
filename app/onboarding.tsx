@@ -7,33 +7,31 @@ import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { DEFAULT_LANG } from '@/i18n/locales';
+import {
+  DEFAULT_LANG,
+  LOCALE_CONFIG,
+  SUPPORTED_LANGUAGES,
+  type Lang,
+} from '@/i18n/locales';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { HAS_SEEN_ONBOARDING_KEY } from '@/constants/onboarding';
 import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useEffect, useState } from 'react';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
-import { Lang } from '@/types/types';
 
 type OnboardingStep = 'language' | 'video';
 type OnboardingVideoLang = Lang | 'it';
 
-const texts = {
-  skip: { es: 'Omitir', en: 'Skip', it: 'Salta' },
-  next: { es: 'Siguiente', en: 'Next', it: 'Avanti' },
-  start: { es: 'Empezar', en: 'Get Started', it: 'Inizia' },
-  welcome: {
-    es: '¡Bienvenido a PopAuctioon!',
-    en: 'Welcome to PopAuctioon!',
-    it: 'Benvenuto su PopAuctioon!',
-  },
-  description: {
-    es: 'Descubre subastas en vivo y encuentra piezas únicas.',
-    en: 'Discover live auctions and find unique pieces.',
-    it: 'Scopri aste dal vivo e trova pezzi unici.',
-  },
-};
+const ITALIAN_ONBOARDING = {
+  chooseLanguage: 'Scegli la tua lingua',
+  languageLabel: 'Italiano',
+  skip: 'Salta',
+  welcome: 'Benvenuto su PopAuctioon!',
+  description: 'Scopri aste dal vivo e trova pezzi unici.',
+  register: 'Registrati',
+  signIn: 'Inizia sessione',
+} as const;
 
 export default function OnboardingScreen() {
   const { locale, t, changeLanguage } = useTranslation();
@@ -46,6 +44,40 @@ export default function OnboardingScreen() {
     null
   );
   const [displayEndMessage, setDisplayEndMessage] = useState(false);
+
+  const languageOptions = [
+    ...SUPPORTED_LANGUAGES.map((language) => ({
+      value: language as OnboardingVideoLang,
+      label: LOCALE_CONFIG[language].label,
+      prompt: t('onboarding.chooseLanguage', { locale: language }),
+    })),
+    {
+      value: 'it' as const,
+      label: ITALIAN_ONBOARDING.languageLabel,
+      prompt: ITALIAN_ONBOARDING.chooseLanguage,
+    },
+  ];
+  const selectedLocale = selectedLang === 'it' ? DEFAULT_LANG : selectedLang;
+  const selectedTexts =
+    selectedLang === 'it'
+      ? ITALIAN_ONBOARDING
+      : {
+          skip: t('onboarding.skip', {
+            locale: selectedLocale ?? locale,
+          }),
+          welcome: t('onboarding.welcome', {
+            locale: selectedLocale ?? locale,
+          }),
+          description: t('onboarding.description', {
+            locale: selectedLocale ?? locale,
+          }),
+          register: t('loginPage.register', {
+            locale: selectedLocale ?? locale,
+          }),
+          signIn: t('loginPage.signIn', {
+            locale: selectedLocale ?? locale,
+          }),
+        };
 
   const selectedVideoUrl = selectedLang
     ? videosData?.videos[selectedLang]
@@ -176,43 +208,25 @@ export default function OnboardingScreen() {
         <Stack.Screen options={{ headerShown: false }} />
 
         <View className='flex-1 items-center justify-center bg-white px-8'>
-          <CustomText
-            type='h3'
-            className='mb-1 text-center'
-          >
-            Elige tu idioma
-          </CustomText>
-          <CustomText
-            type='body'
-            className='mb-1 text-center'
-          >
-            Choose your language
-          </CustomText>
-          <CustomText
-            type='body'
-            className='mb-1 text-center'
-          >
-            Scegli la tua lingua
-          </CustomText>
+          {languageOptions.map(({ value, prompt }, index) => (
+            <CustomText
+              key={value}
+              type={index === 0 ? 'h3' : 'body'}
+              className='mb-1 text-center'
+            >
+              {prompt}
+            </CustomText>
+          ))}
           <View className='mt-4 w-full gap-2'>
-            <Button
-              mode='secondary'
-              onPress={() => handleSelectLanguage('es')}
-            >
-              Español
-            </Button>
-            <Button
-              mode='secondary'
-              onPress={() => handleSelectLanguage('en')}
-            >
-              English
-            </Button>
-            <Button
-              mode='secondary'
-              onPress={() => handleSelectLanguage('it')}
-            >
-              Italiano
-            </Button>
+            {languageOptions.map(({ value, label }) => (
+              <Button
+                key={value}
+                mode='secondary'
+                onPress={() => handleSelectLanguage(value)}
+              >
+                {label}
+              </Button>
+            ))}
           </View>
         </View>
       </>
@@ -241,7 +255,7 @@ export default function OnboardingScreen() {
             onPress={onSkip}
             hitSlop={10}
             accessibilityRole='button'
-            accessibilityLabel={texts.skip[selectedLang ?? locale]}
+            accessibilityLabel={selectedTexts.skip}
             accessibilityHint={t('onboarding.skipHint')}
           >
             <View className='rounded-full bg-cinnabar px-4 py-2'>
@@ -249,7 +263,7 @@ export default function OnboardingScreen() {
                 type='bodysmall'
                 className='font-semibold text-white'
               >
-                {texts.skip[selectedLang ?? locale]}
+                {selectedTexts.skip}
               </CustomText>
             </View>
           </Pressable>
@@ -265,14 +279,14 @@ export default function OnboardingScreen() {
               type='h1'
               className='mb-2 text-center'
             >
-              {texts.welcome[selectedLang ?? locale]}
+              {selectedTexts.welcome}
             </CustomText>
 
             <CustomText
               type='body'
               className='text-gray-500 mb-6 text-center'
             >
-              {texts.description[selectedLang ?? locale]}
+              {selectedTexts.description}
             </CustomText>
 
             {/* Actions */}
@@ -282,7 +296,7 @@ export default function OnboardingScreen() {
                 className='flex-1'
                 onPress={onRegister}
               >
-                {selectedLang === 'it' ? 'Registrati' : t('loginPage.register')}
+                {selectedTexts.register}
               </Button>
 
               <Button
@@ -290,9 +304,7 @@ export default function OnboardingScreen() {
                 className='flex-1'
                 onPress={onLogin}
               >
-                {selectedLang === 'it'
-                  ? 'Inizia sessione'
-                  : t('loginPage.signIn')}
+                {selectedTexts.signIn}
               </Button>
             </View>
           </Animated.View>

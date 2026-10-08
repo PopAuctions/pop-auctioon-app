@@ -34,10 +34,13 @@ jest.mock('@/hooks/i18n/useTranslation', () => ({
         'globals.refreshPage': 'Reintentar',
         'globals.goToHome': 'Ir a inicio',
         'commonActions.loading': 'Cargando...',
+        'onboarding.loading': 'Cargando tutorial...',
+        'onboarding.errorLoadingTutorial': 'No se pudo cargar el tutorial',
       };
       return translations[key] || key;
     },
     locale: 'es',
+    changeLanguage: jest.fn(),
   }),
 }));
 

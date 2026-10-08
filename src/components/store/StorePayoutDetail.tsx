@@ -23,6 +23,10 @@ import { useToast } from '@/hooks/useToast';
 import { Button } from '../ui/Button';
 import { getFileNameFromContentDisposition } from '@/utils/getFileNameFromContentDisposition';
 import { LOCALE_CONFIG } from '@/i18n/locales';
+import type { MessageKey } from '@/i18n';
+
+const INVOICE_DOWNLOAD_FAILED =
+  'invoice.downloadFailed' as const satisfies MessageKey;
 
 export function StorePayoutDetail({
   payout,
@@ -79,10 +83,7 @@ export function StorePayoutDetail({
         setDownloading(null);
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
-            en: 'Error downloading the invoice. If the problem persists, contact support.',
-          },
+          description: INVOICE_DOWNLOAD_FAILED,
           durationMs: 5000,
         });
         return;
@@ -116,10 +117,7 @@ export function StorePayoutDetail({
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
-          en: 'Error downloading the invoice. If the problem persists, contact support.',
-        },
+        description: INVOICE_DOWNLOAD_FAILED,
         durationMs: 5000,
       });
     } finally {

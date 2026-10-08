@@ -12,6 +12,10 @@ import { Button } from '@/components/ui/Button';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { LangMap } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+
+const SHIPPING_UPDATED =
+  'screens.payments.shippingUpdated' as const satisfies MessageKey;
 
 interface PaymentCourierInfo {
   courier?: string | null;
@@ -91,10 +95,7 @@ export function ShippingForm({
 
       callToast({
         variant: 'success',
-        description: response?.data ?? {
-          es: 'Información de envío actualizada correctamente.',
-          en: 'Shipping information updated successfully.',
-        },
+        description: response?.data ?? SHIPPING_UPDATED,
       });
     } finally {
       setIsLoading(false);

@@ -124,7 +124,11 @@
     "loading": "Loading tutorial...",
     "errorLoadingTutorial": "Could not load tutorial",
     "skipHint": "Skip the tutorial and continue to the app",
-    "slidesLabel": "Tutorial slides"
+    "slidesLabel": "Tutorial slides",
+    "chooseLanguage": "Choose your language",
+    "skip": "Skip",
+    "welcome": "Welcome to PopAuctioon!",
+    "description": "Discover live auctions and find unique pieces."
   },
   "loginPage": {
     "login": "Login",
@@ -469,6 +473,7 @@
       "noArticlesFoundWithFilters": "No articles found with the selected filters",
       "articlesFetchError": "An error occurred while fetching articles",
       "rearrangeArticles": "Rearrange articles",
+      "reorderBlockedByFilters": "You cannot reorder articles while you have active filters.",
       "delete": "Delete",
       "remove": "Remove from auction",
       "orderImages": "Rearrange images",
@@ -821,6 +826,7 @@
       "paymentNeedsConfirmation": "Payment needs confirmation.",
       "newAddressText": "+",
       "trackingNumber": "Tracking number",
+      "shippingUpdated": "Shipping information updated successfully.",
       "addressTitle": "Address",
       "primaryAddress": "Set as primary address",
       "paymentAlertTitle": "Attention needed",
@@ -1127,6 +1133,20 @@
       "close": "Close",
       "auction": "Auction",
       "myAuctionArticleName": "Name"
+    },
+    "wonArticles": {
+      "noArticlesToRemove": "There are no articles to remove",
+      "removeFailed": "Error removing articles",
+      "removedSuccessfully": "Articles removed successfully"
+    },
+    "notification": {
+      "imageAlt": "Notification Image",
+      "relativeTime": {
+        "now": "Just now",
+        "minutes": "%{count} min ago",
+        "hours": "%{count} h ago",
+        "days": "%{count} d ago"
+      }
     },
     "offerCards": {
       "common": {

@@ -13,6 +13,10 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { LangMap } from '@/types/types';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import type { MessageKey } from '@/i18n';
+
+const REORDER_BLOCKED_BY_FILTERS =
+  'screens.myAuction.reorderBlockedByFilters' as const satisfies MessageKey;
 
 export const MyAuctionArticlesSection = ({
   auctionId,
@@ -41,10 +45,7 @@ export const MyAuctionArticlesSection = ({
     if (searchParams.name) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'No puedes reordenar los artículos mientras tienes filtros activos.',
-          en: 'You cannot reorder articles while you have active filters.',
-        },
+        description: REORDER_BLOCKED_BY_FILTERS,
       });
       return;
     }

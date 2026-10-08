@@ -12,6 +12,14 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
+
+const NO_ARTICLES_TO_REMOVE =
+  'components.wonArticles.noArticlesToRemove' as const satisfies MessageKey;
+const REMOVE_ARTICLES_FAILED =
+  'components.wonArticles.removeFailed' as const satisfies MessageKey;
+const ARTICLES_REMOVED =
+  'components.wonArticles.removedSuccessfully' as const satisfies MessageKey;
 
 type WonArticlesProps = {
   wonArticles: Record<string, AuctionUserWonArticles>;
@@ -55,10 +63,7 @@ export const WonArticles = ({
       if (articlesId.length === 0) {
         callToast({
           variant: 'error',
-          description: {
-            es: 'No hay artículos para eliminar',
-            en: 'There are no articles to remove',
-          },
+          description: NO_ARTICLES_TO_REMOVE,
         });
         return;
       }
@@ -73,20 +78,14 @@ export const WonArticles = ({
       if (response.error) {
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al eliminar los artículos',
-            en: 'Error removing articles',
-          },
+          description: REMOVE_ARTICLES_FAILED,
         });
         return;
       }
 
       callToast({
         variant: 'success',
-        description: {
-          es: 'Artículos eliminados correctamente',
-          en: 'Articles removed successfully',
-        },
+        description: ARTICLES_REMOVED,
       });
 
       refetchArticles?.();
