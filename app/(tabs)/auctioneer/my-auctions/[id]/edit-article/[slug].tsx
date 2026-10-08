@@ -17,7 +17,11 @@ import {
   AuctionCategoriesConst,
   FromArticleCategoryToAuctionCategory,
 } from '@/types/types';
-import { ARTICLE_IMAGES_MAX, ARTICLE_STATE, REQUEST_STATUS } from '@/constants';
+import {
+  ARTICLE_IMAGES_MAX,
+  ARTICLE_STATE_VALUES,
+  REQUEST_STATUS,
+} from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
 import { supabase } from '@/utils/supabase/supabase-store';
@@ -46,6 +50,10 @@ export default function EditAuctionArticleScreen() {
   const articleSpecificationLabels = t('displayLabels.articleSpecification', {
     locale,
   });
+  const articleStateOptions = ARTICLE_STATE_VALUES.map((value) => ({
+    value,
+    label: articleSpecificationLabels.state[value],
+  }));
   const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isSavingArticle, setIsSavingArticle] = useState(false);
@@ -279,7 +287,7 @@ export default function EditAuctionArticleScreen() {
                 <SelectField
                   name='state'
                   value={value ?? null}
-                  options={ARTICLE_STATE[locale]}
+                  options={articleStateOptions}
                   placeholder={t('screens.newArticle.state')}
                   isSearchable={true}
                   isDisabled={isLoading}

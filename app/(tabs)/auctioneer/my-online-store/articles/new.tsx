@@ -21,7 +21,7 @@ import { ARTICLE_IMAGES_MIN } from '@/constants/files';
 import {
   AMOUNT_PLACEHOLDER,
   ARTICLE_IMAGES_MAX,
-  ARTICLE_STATE,
+  ARTICLE_STATE_VALUES,
   REQUEST_STATUS,
 } from '@/constants';
 import {
@@ -43,6 +43,10 @@ export default function NewOnlineStoreArticleScreen() {
   const articleSpecificationLabels = t('displayLabels.articleSpecification', {
     locale,
   });
+  const articleStateOptions = ARTICLE_STATE_VALUES.map((value) => ({
+    value,
+    label: articleSpecificationLabels.state[value],
+  }));
   const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
@@ -242,7 +246,7 @@ export default function NewOnlineStoreArticleScreen() {
                 <SelectField
                   name='state'
                   value={value ?? null}
-                  options={ARTICLE_STATE[locale]}
+                  options={articleStateOptions}
                   placeholder={t('screens.newArticle.state')}
                   isSearchable={true}
                   isDisabled={isLoading}

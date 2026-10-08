@@ -129,10 +129,50 @@ describe('Constants barrel exports', () => {
       expect(Constants.ARTICLE_COLOR_VALUES[0]).toBe('MULTICOLOUR');
     });
 
+    it('should preserve article option value order', () => {
+      expect(Constants.ARTICLE_STATE_VALUES).toEqual([
+        'NEVER_WORN_WITH_TAG',
+        'NEVER_WORN',
+        'VERY_GOOD_CONDITION',
+        'GOOD_CONDITION',
+        'FAIR_CONDITION',
+      ]);
+      expect(Constants.ARTICLE_SMELL_VALUES).toEqual([
+        'TOBACCO',
+        'PERFUME',
+        'HUMIDITY',
+        'OTHER',
+        'NO_SMELL',
+      ]);
+      expect(Constants.WATCH_MOVEMENT_VALUES).toEqual([
+        'AUTOMATIC',
+        'QUARTZ',
+        'MANUAL_WINDING',
+        'SMART_WATCH',
+        'SOLAR',
+        'OTHER',
+      ]);
+      expect(Constants.ART_TYPE_VALUES).toEqual([
+        'OTHER',
+        'ANTIQUE',
+        'CERAMIC',
+        'COLLECTIBLE',
+        'DRAWING',
+        'FURNITURE',
+        'GLASS_ART',
+        'METAL_ART',
+        'PAINTING',
+        'SCULPTURE',
+        'WOOD_ART',
+      ]);
+    });
+
     it('should preserve article-material values and detail availability', () => {
       expect(Constants.ARTICLE_MATERIAL_VALUES).toHaveLength(45);
       expect(Constants.ARTICLE_MATERIAL_VALUES[0]).toBe('CASHMERE');
       expect(Constants.ARTICLE_MATERIAL_VALUES.at(-1)).toBe('YELLOW_GOLD');
+      expect(Constants.ARTICLE_MATERIAL_FILTER_VALUES).toHaveLength(44);
+      expect(Constants.ARTICLE_MATERIAL_FILTER_VALUES).not.toContain('CANVAS');
       expect(Constants.hasArticleMaterialDisplayLabel('LEATHER')).toBe(true);
       expect(Constants.hasArticleMaterialDisplayLabel('CANVAS')).toBe(false);
     });

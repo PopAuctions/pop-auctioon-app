@@ -9,23 +9,18 @@ import type {
   CategoryFilter,
   Lang,
 } from '@/types/types';
+import type { Database } from '@/types/supabase';
 
-export const ARTICLE_STATE = {
-  es: [
-    { value: 'NEVER_WORN_WITH_TAG', label: 'Nunca Usado con Etiqueta' },
-    { value: 'NEVER_WORN', label: 'Nunca Usado' },
-    { value: 'VERY_GOOD_CONDITION', label: 'Muy Buen Estado' },
-    { value: 'GOOD_CONDITION', label: 'Buen Estado' },
-    { value: 'FAIR_CONDITION', label: 'Estado Aceptable' },
-  ],
-  en: [
-    { value: 'NEVER_WORN_WITH_TAG', label: 'Never Worn with Tag' },
-    { value: 'NEVER_WORN', label: 'Never Worn' },
-    { value: 'VERY_GOOD_CONDITION', label: 'Very Good Condition' },
-    { value: 'GOOD_CONDITION', label: 'Good Condition' },
-    { value: 'FAIR_CONDITION', label: 'Fair Condition' },
-  ],
-};
+export type ArticleStateValue = Database['public']['Enums']['ArticleState'];
+export type ArticleSmellValue = Database['public']['Enums']['ArticleSmell'];
+
+export const ARTICLE_STATE_VALUES = [
+  'NEVER_WORN_WITH_TAG',
+  'NEVER_WORN',
+  'VERY_GOOD_CONDITION',
+  'GOOD_CONDITION',
+  'FAIR_CONDITION',
+] as const satisfies readonly ArticleStateValue[];
 
 export enum ArticleStatus {
   NOT_PUBLISHED = 'NOT_PUBLISHED',
@@ -478,220 +473,45 @@ export function getBoxMaterialValues(
   return BOX_MATERIAL_VALUE_ORDER_OVERRIDES[locale] ?? BOX_MATERIAL_VALUES;
 }
 
-export const ARTICLE_COLORS_FILTER_LIST = {
-  es: [
-    { value: 'MULTICOLOUR', label: 'Multicolor' },
-    { value: 'OTHER', label: 'Otro' },
-    { value: 'BEIGE', label: 'Beige' },
-    { value: 'BLACK', label: 'Negro' },
-    { value: 'BLUE', label: 'Azul' },
-    { value: 'BROWN', label: 'Marrón' },
-    { value: 'BURGUNDY', label: 'Burdeos' },
-    { value: 'CAMEL', label: 'Camel' },
-    { value: 'CHARCOAL', label: 'Carbón' },
-    { value: 'ECRU', label: 'Crudo' },
-    { value: 'GOLD', label: 'Dorado' },
-    { value: 'GREEN', label: 'Verde' },
-    { value: 'GREY', label: 'Gris' },
-    { value: 'KHAKI', label: 'Caqui' },
-    { value: 'METALLIC', label: 'Metálico' },
-    { value: 'NAVY', label: 'Azul Marino' },
-    { value: 'ORANGE', label: 'Naranja' },
-    { value: 'PINK', label: 'Rosa' },
-    { value: 'PURPLE', label: 'Morado' },
-    { value: 'RED', label: 'Rojo' },
-    { value: 'SILVER', label: 'Plateado' },
-    { value: 'TURQUOISE', label: 'Turquesa' },
-    { value: 'WHITE', label: 'Blanco' },
-    { value: 'YELLOW', label: 'Amarillo' },
-  ],
-  en: [
-    { value: 'MULTICOLOUR', label: 'Multicolour' },
-    { value: 'OTHER', label: 'Other' },
-    { value: 'BEIGE', label: 'Beige' },
-    { value: 'BLACK', label: 'Black' },
-    { value: 'BLUE', label: 'Blue' },
-    { value: 'BROWN', label: 'Brown' },
-    { value: 'BURGUNDY', label: 'Burgundy' },
-    { value: 'CAMEL', label: 'Camel' },
-    { value: 'CHARCOAL', label: 'Charcoal' },
-    { value: 'ECRU', label: 'Ecru' },
-    { value: 'GOLD', label: 'Gold' },
-    { value: 'GREEN', label: 'Green' },
-    { value: 'GREY', label: 'Grey' },
-    { value: 'KHAKI', label: 'Khaki' },
-    { value: 'METALLIC', label: 'Metallic' },
-    { value: 'NAVY', label: 'Navy' },
-    { value: 'ORANGE', label: 'Orange' },
-    { value: 'PINK', label: 'Pink' },
-    { value: 'PURPLE', label: 'Purple' },
-    { value: 'RED', label: 'Red' },
-    { value: 'SILVER', label: 'Silver' },
-    { value: 'TURQUOISE', label: 'Turquoise' },
-    { value: 'WHITE', label: 'White' },
-    { value: 'YELLOW', label: 'Yellow' },
-  ],
-};
+export const ARTICLE_MATERIAL_FILTER_VALUES = ARTICLE_MATERIAL_VALUES.filter(
+  (value): value is Exclude<ArticleMaterialValue, 'CANVAS'> =>
+    value !== 'CANVAS'
+);
 
-export const ARTICLE_MATERIALS_FILTER_LIST = {
-  es: [
-    { value: 'CASHMERE', label: 'Cachemira' },
-    { value: 'CLOTH', label: 'Tela' },
-    { value: 'COTTON', label: 'Algodón' },
-    { value: 'COTTON_ELASTHANE', label: 'Algodón - elastano' },
-    { value: 'CRYSTAL', label: 'Cristal' },
-    { value: 'DENIM_JEANS', label: 'Denim - Jeans' },
-    { value: 'EXOTIC_LEATHERS', label: 'Cueros exóticos' },
-    { value: 'FAUX_FUR', label: 'Piel sintética' },
-    { value: 'FUR', label: 'Piel' },
-    { value: 'GLASS', label: 'Vidrio' },
-    { value: 'GLITTER', label: 'Purpurina' },
-    { value: 'GOLD_PLATED', label: 'Chapado en oro' },
-    { value: 'LACE', label: 'Encaje' },
-    { value: 'LEATHER', label: 'Cuero' },
-    { value: 'LINEN', label: 'Lino' },
-    { value: 'LYCRA', label: 'Lycra' },
-    { value: 'METAL', label: 'Metal' },
-    { value: 'NOT_SPECIFIED', label: 'No especificado' },
-    { value: 'OTHER', label: 'Otro' },
-    { value: 'PATENT_LEATHER', label: 'Cuero charolado' },
-    { value: 'PEARL', label: 'Perla' },
-    { value: 'PINK_GOLD', label: 'Oro rosa' },
-    { value: 'PLASTIC', label: 'Plástico' },
-    { value: 'POLYAMIDE', label: 'Poliamida' },
-    { value: 'POLYESTER', label: 'Poliéster' },
-    { value: 'PONY_STYLE_CALFSKIN', label: 'Piel de ternero estilo pony' },
-    { value: 'RUBBER', label: 'Caucho' },
-    { value: 'SILK', label: 'Seda' },
-    { value: 'SILVER', label: 'Plata' },
-    { value: 'SILVER_PLATED', label: 'Chapado en plata' },
-    { value: 'SPANDEX', label: 'Spandex' },
-    { value: 'SPONGE', label: 'Esponja' },
-    { value: 'STEEL', label: 'Acero' },
-    { value: 'SUEDE', label: 'Gamuza' },
-    { value: 'SYNTHETIC', label: 'Sintético' },
-    { value: 'TWEED', label: 'Tweed' },
-    { value: 'VEGAN_LEATHER', label: 'Cuero vegano' },
-    { value: 'VELVET', label: 'Terciopelo' },
-    { value: 'VINYL', label: 'Vinilo' },
-    { value: 'VISCOSE', label: 'Viscosa' },
-    { value: 'WHITE_GOLD', label: 'Oro blanco' },
-    { value: 'WICKER', label: 'Mimbre' },
-    { value: 'WOOL', label: 'Lana' },
-    { value: 'YELLOW_GOLD', label: 'Oro amarillo' },
-  ],
-  en: [
-    { value: 'CASHMERE', label: 'Cashmere' },
-    { value: 'CLOTH', label: 'Cloth' },
-    { value: 'COTTON', label: 'Cotton' },
-    { value: 'COTTON_ELASTHANE', label: 'Cotton - Elasthane' },
-    { value: 'CRYSTAL', label: 'Crystal' },
-    { value: 'DENIM_JEANS', label: 'Denim - Jeans' },
-    { value: 'EXOTIC_LEATHERS', label: 'Exotic Leathers' },
-    { value: 'FAUX_FUR', label: 'Faux Fur' },
-    { value: 'FUR', label: 'Fur' },
-    { value: 'GLASS', label: 'Glass' },
-    { value: 'GLITTER', label: 'Glitter' },
-    { value: 'GOLD_PLATED', label: 'Gold Plated' },
-    { value: 'LACE', label: 'Lace' },
-    { value: 'LEATHER', label: 'Leather' },
-    { value: 'LINEN', label: 'Linen' },
-    { value: 'LYCRA', label: 'Lycra' },
-    { value: 'METAL', label: 'Metal' },
-    { value: 'NOT_SPECIFIED', label: 'Not Specified' },
-    { value: 'OTHER', label: 'Other' },
-    { value: 'PATENT_LEATHER', label: 'Patent Leather' },
-    { value: 'PEARL', label: 'Pearl' },
-    { value: 'PINK_GOLD', label: 'Pink Gold' },
-    { value: 'PLASTIC', label: 'Plastic' },
-    { value: 'POLYAMIDE', label: 'Polyamide' },
-    { value: 'POLYESTER', label: 'Polyester' },
-    { value: 'PONY_STYLE_CALFSKIN', label: 'Pony-Style Calfskin' },
-    { value: 'RUBBER', label: 'Rubber' },
-    { value: 'SILK', label: 'Silk' },
-    { value: 'SILVER', label: 'Silver' },
-    { value: 'SILVER_PLATED', label: 'Silver Plated' },
-    { value: 'SPANDEX', label: 'Spandex' },
-    { value: 'SPONGE', label: 'Sponge' },
-    { value: 'STEEL', label: 'Steel' },
-    { value: 'SUEDE', label: 'Suede' },
-    { value: 'SYNTHETIC', label: 'Synthetic' },
-    { value: 'TWEED', label: 'Tweed' },
-    { value: 'VEGAN_LEATHER', label: 'Vegan Leather' },
-    { value: 'VELVET', label: 'Velvet' },
-    { value: 'VINYL', label: 'Vinyl' },
-    { value: 'VISCOSE', label: 'Viscose' },
-    { value: 'WHITE_GOLD', label: 'White Gold' },
-    { value: 'WICKER', label: 'Wicker' },
-    { value: 'WOOL', label: 'Wool' },
-    { value: 'YELLOW_GOLD', label: 'Yellow Gold' },
-  ],
-};
+export const ARTICLE_SMELL_VALUES = [
+  'TOBACCO',
+  'PERFUME',
+  'HUMIDITY',
+  'OTHER',
+  'NO_SMELL',
+] as const satisfies readonly ArticleSmellValue[];
 
-export const ARTICLE_SMELL = {
-  es: [
-    { value: 'TOBACCO', label: 'Tabaco' },
-    { value: 'PERFUME', label: 'Perfume' },
-    { value: 'HUMIDITY', label: 'Humedad' },
-    { value: 'OTHER', label: 'Otro' },
-    { value: 'NO_SMELL', label: 'Sin olor' },
-  ],
-  en: [
-    { value: 'TOBACCO', label: 'Tobacco' },
-    { value: 'PERFUME', label: 'Perfume' },
-    { value: 'HUMIDITY', label: 'Humidity' },
-    { value: 'OTHER', label: 'Other' },
-    { value: 'NO_SMELL', label: 'No smell' },
-  ],
-};
+export const WATCH_MOVEMENT_VALUES = [
+  'AUTOMATIC',
+  'QUARTZ',
+  'MANUAL_WINDING',
+  'SMART_WATCH',
+  'SOLAR',
+  'OTHER',
+] as const;
 
-export const WATCH_MOVEMENTS = {
-  es: [
-    { value: 'AUTOMATIC', label: 'Automático' },
-    { value: 'QUARTZ', label: 'Cuarzo' },
-    { value: 'MANUAL_WINDING', label: 'Cuerda manual' },
-    { value: 'SMART_WATCH', label: 'Reloj inteligente' },
-    { value: 'SOLAR', label: 'Solar' },
-    { value: 'OTHER', label: 'Otro' },
-  ],
-  en: [
-    { value: 'AUTOMATIC', label: 'Automatic' },
-    { value: 'QUARTZ', label: 'Quartz' },
-    { value: 'MANUAL_WINDING', label: 'Manual winding' },
-    { value: 'SMART_WATCH', label: 'Smartwatch' },
-    { value: 'SOLAR', label: 'Solar' },
-    { value: 'OTHER', label: 'Other' },
-  ],
-};
+export type WatchMovementValue = (typeof WATCH_MOVEMENT_VALUES)[number];
 
-export const ART_TYPES = {
-  es: [
-    { value: 'OTHER', label: 'Otro' },
-    { value: 'ANTIQUE', label: 'Antigüedad' },
-    { value: 'CERAMIC', label: 'Cerámica' },
-    { value: 'COLLECTIBLE', label: 'Coleccionable' },
-    { value: 'DRAWING', label: 'Dibujo' },
-    { value: 'FURNITURE', label: 'Mueble' },
-    { value: 'GLASS_ART', label: 'Arte en vidrio' },
-    { value: 'METAL_ART', label: 'Arte en metal' },
-    { value: 'PAINTING', label: 'Pintura' },
-    { value: 'SCULPTURE', label: 'Escultura' },
-    { value: 'WOOD_ART', label: 'Arte en madera' },
-  ],
-  en: [
-    { value: 'OTHER', label: 'Other' },
-    { value: 'ANTIQUE', label: 'Antique' },
-    { value: 'CERAMIC', label: 'Ceramic' },
-    { value: 'COLLECTIBLE', label: 'Collectible' },
-    { value: 'DRAWING', label: 'Drawing' },
-    { value: 'FURNITURE', label: 'Furniture' },
-    { value: 'GLASS_ART', label: 'Glass Art' },
-    { value: 'METAL_ART', label: 'Metal Art' },
-    { value: 'PAINTING', label: 'Painting' },
-    { value: 'SCULPTURE', label: 'Sculpture' },
-    { value: 'WOOD_ART', label: 'Wood Art' },
-  ],
-};
+export const ART_TYPE_VALUES = [
+  'OTHER',
+  'ANTIQUE',
+  'CERAMIC',
+  'COLLECTIBLE',
+  'DRAWING',
+  'FURNITURE',
+  'GLASS_ART',
+  'METAL_ART',
+  'PAINTING',
+  'SCULPTURE',
+  'WOOD_ART',
+] as const;
+
+export type ArtTypeValue = (typeof ART_TYPE_VALUES)[number];
 
 export const ARTICLE_CATEGORIES_FILTER_LIST: Record<string, CategoryFilter[]> =
   {

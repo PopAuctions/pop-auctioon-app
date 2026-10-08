@@ -5,10 +5,10 @@ import { Lang } from '@/types/types';
 import { FilterField } from '../fields/FilterField';
 import {
   ARTICLE_BRANDS,
+  ARTICLE_COLOR_VALUES,
+  ARTICLE_MATERIAL_FILTER_VALUES,
   ARTICLE_PRICE_FILTER_LIST,
   SORT_BY_VALUES,
-  ARTICLE_COLORS_FILTER_LIST,
-  ARTICLE_MATERIALS_FILTER_LIST,
 } from '@/constants';
 import { Button } from '../ui/Button';
 import { Filters } from '@/app/(tabs)/online-store';
@@ -23,10 +23,21 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
   const labels = t('components.filters', { locale });
+  const specificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
   const sortLabels = t('displayLabels.sortBy', { locale });
   const sortOptions = SORT_BY_VALUES.map((value) => ({
     value,
     label: sortLabels[value],
+  }));
+  const materialOptions = ARTICLE_MATERIAL_FILTER_VALUES.map((value) => ({
+    value,
+    label: specificationLabels.material[value],
+  }));
+  const colorOptions = ARTICLE_COLOR_VALUES.map((value) => ({
+    value,
+    label: specificationLabels.color[value],
   }));
 
   const getParam = (v: unknown): string => {
@@ -106,7 +117,7 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
           type='select'
           isSearchable
           value={materialValue}
-          options={ARTICLE_MATERIALS_FILTER_LIST[locale]}
+          options={materialOptions}
           isClearable={true}
         />
 
@@ -129,7 +140,7 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
           type='select'
           isSearchable
           value={colorValue}
-          options={ARTICLE_COLORS_FILTER_LIST[locale]}
+          options={colorOptions}
           isClearable={true}
         />
       </ScrollView>
