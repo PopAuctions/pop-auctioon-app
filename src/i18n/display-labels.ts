@@ -7,9 +7,12 @@ import type {
 } from '@/constants/articles';
 import type { PaidFilterValues, UserPaymentStatus } from '@/constants/payment';
 import type { SortByValue } from '@/constants/onlineStore';
+import type { AuctionStatus } from '@/constants/auctions';
+import type { CalendarMonthKey } from '@/constants/months';
 import type {
   ArticleSecondChanceStatus,
   AuctionCategories,
+  AuctionModeEnum,
   OfferStatus,
   OffersOptionValue,
   StorePayoutMethodType,
@@ -38,6 +41,10 @@ interface ArticleSpecificationLabels {
  * Adding a new status or method requires every locale to provide its label.
  */
 export interface DisplayLabelDictionary {
+  auctionMode: Record<AuctionModeEnum, string>;
+  auctionStatus: Record<AuctionStatus, string>;
+  auctionCategory: Record<AuctionCategories, string>;
+  calendarMonth: Record<CalendarMonthKey, string>;
   paymentStatus: Record<UserPaymentStatus, string>;
   articleStatus: Record<ArticleStatus, string>;
   onlineStoreArticleStatus: Record<ArticleSecondChanceStatus, string>;

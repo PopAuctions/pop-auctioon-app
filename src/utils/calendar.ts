@@ -1,6 +1,10 @@
-import { MONTHS } from '@/constants';
-import { type MonthEntry } from '@/types/types';
+import { CALENDAR_MONTH_VALUES, isCalendarMonthKey } from '@/constants/months';
+import { t } from '@/i18n';
 import { DEFAULT_LANG, LOCALE_CONFIG, type Lang } from '@/i18n/locales';
+
+interface CalendarMonthEntry {
+  value: number;
+}
 
 /**
  * Genera un mapa de los próximos meses desde hoy para uso en calendarios
@@ -8,7 +12,7 @@ import { DEFAULT_LANG, LOCALE_CONFIG, type Lang } from '@/i18n/locales';
  *
  * @returns Map con los meses disponibles donde la key es el número del mes como string
  */
-export function getCalendarMonths(): Map<string, MonthEntry> {
+export function getCalendarMonths(): Map<string, CalendarMonthEntry> {
   const today = new Date();
   // we add 1 because getMonth() returns a 0-based index
   const currentMonth = today.getMonth() + 1;
@@ -20,19 +24,16 @@ export function getCalendarMonths(): Map<string, MonthEntry> {
   });
 
   // Use a Map to preserve the insertion order
-  const months = new Map<string, MonthEntry>();
+  const months = new Map<string, CalendarMonthEntry>();
 
   // Insert '0' for 'Today'
-  months.set('0', { es: 'Hoy', en: 'Today', value: 0 });
+  months.set('0', { value: CALENDAR_MONTH_VALUES['0'] });
 
   // Iterate through the months in the order they should appear
   threeNextMonthsFromToday.forEach((month) => {
     const monthKey = month.toString();
 
-    months.set(monthKey, {
-      ...MONTHS[monthKey as keyof typeof MONTHS],
-      value: month,
-    });
+    months.set(monthKey, { value: month });
   });
 
   return months;
@@ -44,12 +45,11 @@ export function getCalendarMonths(): Map<string, MonthEntry> {
  * @param locale - 'es' | 'en'
  * @returns Nombre del mes actual
  */
-export function getCurrentMonthName(locale: 'es' | 'en' = 'es'): string {
+export function getCurrentMonthName(locale: Lang = DEFAULT_LANG): string {
   const today = new Date();
   const currentMonth = (today.getMonth() + 1).toString();
 
-  const monthData = MONTHS[currentMonth as keyof typeof MONTHS];
-  return monthData ? monthData[locale] : '';
+  return getMonthName(currentMonth, locale);
 }
 
 /**
@@ -61,10 +61,13 @@ export function getCurrentMonthName(locale: 'es' | 'en' = 'es'): string {
  */
 export function getMonthName(
   monthNumber: string | number,
-  locale: 'es' | 'en' = 'es'
+  locale: Lang = DEFAULT_LANG
 ): string {
-  const monthKey = monthNumber.toString() as keyof typeof MONTHS;
-  return MONTHS[monthKey] ? MONTHS[monthKey][locale] : '';
+  const monthKey = monthNumber.toString();
+
+  if (!isCalendarMonthKey(monthKey)) return '';
+
+  return t('displayLabels.calendarMonth', { locale })[monthKey];
 }
 
 /**

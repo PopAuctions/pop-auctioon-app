@@ -17,7 +17,6 @@ import { useArticleForm } from '@/hooks/components/useArticleForm';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { getErrorMessage } from '@/utils/form-errors';
 import { supabase } from '@/utils/supabase/supabase-store';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
 import {
   AMOUNT_PLACEHOLDER,
@@ -44,6 +43,7 @@ export default function NewOnlineStoreArticleScreen() {
   const articleSpecificationLabels = t('displayLabels.articleSpecification', {
     locale,
   });
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
 
@@ -181,7 +181,7 @@ export default function NewOnlineStoreArticleScreen() {
               type='subtitle'
               className='mb-4 text-center text-3xl text-cinnabar'
             >
-              {AUCTION_CATEGORIES_LABEL[locale][category as AuctionCategories]}
+              {auctionCategoryLabels[category as AuctionCategories]}
             </CustomText>
 
             {/* Info: category / required fields */}

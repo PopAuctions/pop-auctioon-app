@@ -13,7 +13,6 @@ import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
 import { ARTICLE_IMAGES_MAX, ARTICLE_STATE, REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
@@ -37,6 +36,7 @@ export default function NewAuctionArticleScreen() {
   const articleSpecificationLabels = t('displayLabels.articleSpecification', {
     locale,
   });
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
   const [isCompressingImages, setIsCompressingImages] = useState(false);
@@ -179,11 +179,7 @@ export default function NewAuctionArticleScreen() {
                 type='subtitle'
                 className='mb-4 text-center text-3xl text-cinnabar'
               >
-                {
-                  AUCTION_CATEGORIES_LABEL[locale][
-                    auctionCategory as AuctionCategories
-                  ]
-                }
+                {auctionCategoryLabels[auctionCategory as AuctionCategories]}
               </CustomText>
 
               {/* Info: category / required fields */}

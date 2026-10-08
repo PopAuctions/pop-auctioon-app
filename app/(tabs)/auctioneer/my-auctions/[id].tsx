@@ -1,12 +1,7 @@
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
-import {
-  AUCTION_CATEGORIES_LABEL,
-  AUCTION_MODE_LABEL,
-  AUCTION_STATUS_LABEL,
-  AuctionStatus,
-} from '@/constants/auctions';
+import { AuctionStatus } from '@/constants/auctions';
 import { REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
@@ -37,6 +32,9 @@ export default function MyAuctionDetailScreen() {
     validateIsLive: false,
   });
   const auctionLang = t('screens.myAuction');
+  const auctionModeLabels = t('displayLabels.auctionMode', { locale });
+  const auctionStatusLabels = t('displayLabels.auctionStatus', { locale });
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const liveAuction = liveAuctionData?.auction;
   const auction = auctionData?.auction;
 
@@ -75,7 +73,7 @@ export default function MyAuctionDetailScreen() {
           type='h4'
           className='text-center text-cinnabar'
         >
-          {AUCTION_MODE_LABEL[locale][auctionMode]}
+          {auctionModeLabels[auctionMode]}
         </CustomText>
 
         <CustomText
@@ -93,21 +91,13 @@ export default function MyAuctionDetailScreen() {
           type='h4'
           className={`text-center ${statusColor}`}
         >
-          {
-            AUCTION_STATUS_LABEL[locale as keyof typeof AUCTION_STATUS_LABEL][
-              auction.status
-            ]
-          }
+          {auctionStatusLabels[auction.status]}
         </CustomText>
         <CustomText
           type='body'
           className='text-center text-black'
         >
-          {
-            AUCTION_CATEGORIES_LABEL[
-              locale as keyof typeof AUCTION_CATEGORIES_LABEL
-            ][auction.category]
-          }
+          {auctionCategoryLabels[auction.category]}
         </CustomText>
       </View>
       <MyAuctionActions

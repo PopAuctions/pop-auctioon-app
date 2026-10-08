@@ -15,12 +15,12 @@ describe('Calendar Utils', () => {
       expect(months.size).toBeGreaterThan(0);
     });
 
-    it('should include "Hoy/Today" as month 0', () => {
+    it('should include the today value as month 0', () => {
       const months = getCalendarMonths();
       expect(months.has('0')).toBe(true);
-      expect(months.get('0')?.es).toBe('Hoy');
-      expect(months.get('0')?.en).toBe('Today');
       expect(months.get('0')?.value).toBe(0);
+      expect(getMonthName('0', 'es')).toBe('Hoy');
+      expect(getMonthName('0', 'en')).toBe('Today');
     });
 
     it('should return next 2 months from current date', () => {

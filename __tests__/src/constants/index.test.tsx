@@ -168,15 +168,15 @@ describe('Constants barrel exports', () => {
   });
 
   describe('Time and Calendar Constants', () => {
-    it('should export month definitions', () => {
-      expect(Constants.MONTHS).toBeDefined();
-      expect(typeof Constants.MONTHS).toBe('object');
+    it('should export canonical calendar month values', () => {
+      expect(Constants.CALENDAR_MONTH_VALUES).toBeDefined();
+      expect(typeof Constants.CALENDAR_MONTH_VALUES).toBe('object');
     });
 
-    it('should have correct month structure', () => {
-      expect(Constants.MONTHS['0']).toBeDefined();
-      expect(Constants.MONTHS['0'].es).toBe('Hoy');
-      expect(Constants.MONTHS['0'].en).toBe('Today');
+    it('should preserve calendar month values', () => {
+      expect(Constants.CALENDAR_MONTH_VALUES['0']).toBe(0);
+      expect(Constants.CALENDAR_MONTH_VALUES['1']).toBe(1);
+      expect(Constants.CALENDAR_MONTH_VALUES['12']).toBe(12);
     });
   });
 
@@ -190,7 +190,7 @@ describe('Constants barrel exports', () => {
       // Check for core categories
       expect(exportedKeys.includes('Colors')).toBeTruthy();
       expect(exportedKeys.includes('LANGUAGE_STORAGE_KEY')).toBeTruthy();
-      expect(exportedKeys.includes('MONTHS')).toBeTruthy();
+      expect(exportedKeys.includes('CALENDAR_MONTH_VALUES')).toBeTruthy();
       expect(
         exportedKeys.includes('GLOBAL_REGISTER_DEFAULT_VALUES')
       ).toBeTruthy();
@@ -210,7 +210,7 @@ describe('Constants barrel exports', () => {
       expect(() => Constants.GLOBAL_REGISTER_DEFAULT_VALUES).not.toThrow();
       expect(() => Constants.Colors).not.toThrow();
       expect(() => Constants.LANGUAGE_STORAGE_KEY).not.toThrow();
-      expect(() => Constants.MONTHS).not.toThrow();
+      expect(() => Constants.CALENDAR_MONTH_VALUES).not.toThrow();
     });
 
     // Test each export line specifically to ensure branch coverage
@@ -234,9 +234,11 @@ describe('Constants barrel exports', () => {
       expect(Constants.LANGUAGE_STORAGE_KEY).toBeDefined();
     });
 
-    it('should handle named export from months module', () => {
-      expect(Constants.MONTHS).toBeDefined();
-      expect(typeof Constants.MONTHS).toBe('object');
+    it('should handle exports from months module', () => {
+      expect(Constants.CALENDAR_MONTH_VALUES).toBeDefined();
+      expect(typeof Constants.CALENDAR_MONTH_VALUES).toBe('object');
+      expect(Constants.isCalendarMonthKey('12')).toBe(true);
+      expect(Constants.isCalendarMonthKey('13')).toBe(false);
     });
 
     it('should handle default export as Colors', () => {

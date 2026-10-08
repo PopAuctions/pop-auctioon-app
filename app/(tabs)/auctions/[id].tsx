@@ -2,11 +2,7 @@ import { View, Pressable } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
-import {
-  AUCTION_MODE_LABEL,
-  AuctionStatus,
-  LIVE_URL,
-} from '@/constants/auctions';
+import { AuctionStatus, LIVE_URL } from '@/constants/auctions';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
 import { COUNTRIES_MAP_LABEL, REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
@@ -50,6 +46,7 @@ export default function AuctionDetailScreen() {
   const liveAuction = liveAuctionData?.auction;
   const auctionLang = t('screens.auction');
   const shareButtonTexts = t('components.shareButton');
+  const auctionModeLabels = t('displayLabels.auctionMode', { locale });
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
@@ -99,7 +96,7 @@ export default function AuctionDetailScreen() {
                         type='h4'
                         className='text-cinnabar underline'
                       >
-                        {AUCTION_MODE_LABEL[locale][auctionMode]}
+                        {auctionModeLabels[auctionMode]}
                       </CustomText>
                       <FontAwesomeIcon
                         name='info-circle'
@@ -114,7 +111,7 @@ export default function AuctionDetailScreen() {
                   type='h4'
                   className='text-base text-cinnabar'
                 >
-                  {AUCTION_MODE_LABEL[locale][auctionMode]}
+                  {auctionModeLabels[auctionMode]}
                 </CustomText>
               )}
             </View>

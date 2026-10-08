@@ -23,6 +23,44 @@
     }
   },
   "displayLabels": {
+    "auctionMode": {
+      "AUTOMATIC": "Subasta automática",
+      "LIVE": "Subasta en vivo"
+    },
+    "auctionStatus": {
+      "NOT_AVAILABLE": "No disponible",
+      "NEED_CHANGES": "Necesita cambios",
+      "CHANGES_MADE": "Cambios realizados",
+      "PARTIALLY_AVAILABLE": "Parcialmente disponible",
+      "PARTIALLY_AVAILABLE_CHANGES_MADE": "Parcialmente disponible | Cambios realizados",
+      "AVAILABLE": "Disponible",
+      "IN_REVIEW": "En revisión",
+      "LIVE": "En vivo",
+      "FINISHED": "Finalizada",
+      "WAITING_MIN_ARTICLES_AMOUNT": "Esperando cantidad mínima de artículos correctos"
+    },
+    "auctionCategory": {
+      "BAGS": "Bolsos",
+      "JEWERLY": "Joyas",
+      "WATCHES": "Relojes",
+      "ART": "Arte",
+      "ALL": "Todas"
+    },
+    "calendarMonth": {
+      "0": "Hoy",
+      "1": "Enero",
+      "2": "Febrero",
+      "3": "Marzo",
+      "4": "Abril",
+      "5": "Mayo",
+      "6": "Junio",
+      "7": "Julio",
+      "8": "Agosto",
+      "9": "Septiembre",
+      "10": "Octubre",
+      "11": "Noviembre",
+      "12": "Diciembre"
+    },
     "paymentStatus": {
       "PENDING": "Procesando",
       "APPROVED": "Pagado",

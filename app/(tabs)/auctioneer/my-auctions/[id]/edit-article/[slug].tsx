@@ -20,7 +20,6 @@ import {
 import { ARTICLE_IMAGES_MAX, ARTICLE_STATE, REQUEST_STATUS } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
@@ -47,6 +46,7 @@ export default function EditAuctionArticleScreen() {
   const articleSpecificationLabels = t('displayLabels.articleSpecification', {
     locale,
   });
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isSavingArticle, setIsSavingArticle] = useState(false);
   const hasHydratedForm = useRef(false);
@@ -217,11 +217,7 @@ export default function EditAuctionArticleScreen() {
             type='subtitle'
             className='mb-4 text-center text-3xl text-cinnabar'
           >
-            {
-              AUCTION_CATEGORIES_LABEL[locale][
-                auctionCategory as AuctionCategories
-              ]
-            }
+            {auctionCategoryLabels[auctionCategory as AuctionCategories]}
           </CustomText>
 
           {comments && comments?.length > 0 && (

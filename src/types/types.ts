@@ -573,14 +573,6 @@ export interface ArticleStatusType {
   PUBLISHED: 'PUBLISHED';
 }
 
-export type CalendarMonths = Record<string, MonthEntry>;
-
-export interface MonthEntry {
-  es: string;
-  en: string;
-  value: string | number;
-}
-
 export interface Comment {
   es: string;
   en: string;

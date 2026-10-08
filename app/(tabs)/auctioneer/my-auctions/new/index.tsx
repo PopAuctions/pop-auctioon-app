@@ -11,7 +11,6 @@ import { SelectField } from '@/components/fields/SelectField';
 import { getErrorMessage } from '@/utils/form-errors';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase/supabase-store';
@@ -35,6 +34,7 @@ export default function MyANewAuctionScreen() {
   const [isUploadingAuction, setIsUploadingAuction] = useState(false);
   const tooltipTexts = t('screens.myAuction.newAuction.tooltip.category');
   const createAuctionError = t('screens.myAuction.newAuction.errors.generic');
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
 
   const { createAuction } = useAuction();
 
@@ -245,9 +245,7 @@ export default function MyANewAuctionScreen() {
                     options={Object.entries(AuctionCategoriesConst).map(
                       ([, category]) => ({
                         label:
-                          AUCTION_CATEGORIES_LABEL[locale][
-                            category as AuctionCategories
-                          ],
+                          auctionCategoryLabels[category as AuctionCategories],
                         value: category,
                       })
                     )}
