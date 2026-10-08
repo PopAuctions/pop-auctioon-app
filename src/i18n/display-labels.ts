@@ -1,4 +1,8 @@
-import type { ArticleStatus } from '@/constants/articles';
+import type {
+  ArticleColorValue,
+  ArticleStatus,
+  BoxMaterialValue,
+} from '@/constants/articles';
 import type { UserPaymentStatus } from '@/constants/payment';
 import type {
   ArticleSecondChanceStatus,
@@ -18,6 +22,8 @@ interface ArticleSpecificationLabels {
   smell: Record<ArticleSmell, string>;
   movement: Record<string, string>;
   artType: Record<string, string>;
+  color: Record<ArticleColorValue, string>;
+  boxMaterial: Record<BoxMaterialValue, string>;
 }
 
 /**

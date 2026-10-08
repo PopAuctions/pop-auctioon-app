@@ -124,14 +124,19 @@ describe('Constants barrel exports', () => {
       expect(typeof Constants.ARTICLE_CATEGORIES_FILTER_LIST).toBe('object');
     });
 
-    it('should export article colors', () => {
-      expect(Constants.ARTICLE_COLORS_LABELS).toBeDefined();
-      expect(typeof Constants.ARTICLE_COLORS_LABELS).toBe('object');
+    it('should export canonical article color values', () => {
+      expect(Constants.ARTICLE_COLOR_VALUES).toHaveLength(24);
+      expect(Constants.ARTICLE_COLOR_VALUES[0]).toBe('MULTICOLOUR');
     });
 
     it('should export article materials', () => {
       expect(Constants.ARTICLE_MATERIALS_LABELS).toBeDefined();
       expect(typeof Constants.ARTICLE_MATERIALS_LABELS).toBe('object');
+    });
+
+    it('should preserve localized box-material option order', () => {
+      expect(Constants.getBoxMaterialValues('en')[0]).toBe('ALUMINUM');
+      expect(Constants.getBoxMaterialValues('es')[0]).toBe('STEEL');
     });
   });
 

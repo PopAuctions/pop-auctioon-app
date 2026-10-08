@@ -104,6 +104,58 @@ describe('centralized display labels', () => {
           SCULPTURE: 'Sculpture',
           WOOD_ART: 'Wood Art',
         },
+        color: {
+          MULTICOLOUR: 'Multicolour',
+          OTHER: 'Other',
+          BEIGE: 'Beige',
+          BLACK: 'Black',
+          BLUE: 'Blue',
+          BROWN: 'Brown',
+          BURGUNDY: 'Burgundy',
+          CAMEL: 'Camel',
+          CHARCOAL: 'Charcoal',
+          ECRU: 'Ecru',
+          GOLD: 'Gold',
+          GREEN: 'Green',
+          GREY: 'Grey',
+          KHAKI: 'Khaki',
+          METALLIC: 'Metallic',
+          NAVY: 'Navy',
+          ORANGE: 'Orange',
+          PINK: 'Pink',
+          PURPLE: 'Purple',
+          RED: 'Red',
+          SILVER: 'Silver',
+          TURQUOISE: 'Turquoise',
+          WHITE: 'White',
+          YELLOW: 'Yellow',
+        },
+        boxMaterial: {
+          ALUMINUM: 'Aluminum',
+          BRASS: 'Brass',
+          BRONZE: 'Bronze',
+          CARBON: 'Carbon',
+          CERAMIC: 'Ceramic',
+          SAPPHIRE_CRYSTAL: 'Sapphire Crystal',
+          GOLD_PLATED: 'Gold Plated',
+          PALLADIUM: 'Palladium',
+          PLASTIC: 'Plastic',
+          PLATINUM: 'Platinum',
+          SILVER: 'Silver',
+          STEEL: 'Steel',
+          STEEL_AND_GOLD: 'Steel and Gold',
+          TANTALUM: 'Tantalum',
+          TITANIUM: 'Titanium',
+          TUNGSTEN: 'Tungsten',
+          RED_GOLD: 'Red Gold',
+          ROSE_GOLD: 'Rose Gold',
+          ROSE_GOLD_AND_STEEL: 'Rose Gold and Steel',
+          WHITE_GOLD: 'White Gold',
+          WHITE_GOLD_AND_STEEL: 'White Gold and Steel',
+          YELLOW_GOLD: 'Yellow Gold',
+          YELLOW_GOLD_AND_STEEL: 'Yellow Gold and Steel',
+          UNSPECIFIED: 'Unspecified',
+        },
       },
     });
   });
@@ -137,6 +189,10 @@ describe('centralized display labels', () => {
     );
     expect(es.displayLabels.articleSpecification.artType.GLASS_ART).toBe(
       'Arte en vidrio'
+    );
+    expect(es.displayLabels.articleSpecification.color.BLUE).toBe('Azul');
+    expect(es.displayLabels.articleSpecification.boxMaterial.STEEL).toBe(
+      'Acero'
     );
   });
 });

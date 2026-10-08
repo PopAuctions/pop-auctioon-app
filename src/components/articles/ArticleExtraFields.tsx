@@ -9,10 +9,10 @@ import { SelectField } from '../fields/SelectField';
 import {
   ART_TYPES,
   ARTICLE_BRANDS,
-  ARTICLE_COLORS,
+  ARTICLE_COLOR_VALUES,
   ARTICLE_MATERIALS,
   ARTICLE_SMELL,
-  BOX_MATERIALS,
+  getBoxMaterialValues,
   STRAP_MATERIALS,
   WATCH_MOVEMENTS,
 } from '@/constants';
@@ -38,6 +38,17 @@ export const ArticleExtraFields = ({
   const isJewelry = category === AuctionCategoriesConst.JEWERLY;
   const isWatches = category === AuctionCategoriesConst.WATCHES;
   const isArt = category === AuctionCategoriesConst.ART;
+  const specificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
+  const articleColorOptions = ARTICLE_COLOR_VALUES.map((value) => ({
+    value,
+    label: specificationLabels.color[value],
+  }));
+  const boxMaterialOptions = getBoxMaterialValues(locale).map((value) => ({
+    value,
+    label: specificationLabels.boxMaterial[value],
+  }));
 
   return (
     <>
@@ -214,7 +225,7 @@ export const ArticleExtraFields = ({
                 <SelectField
                   name='color'
                   value={value ?? null}
-                  options={ARTICLE_COLORS[locale]}
+                  options={articleColorOptions}
                   placeholder={t('screens.newArticle.color')}
                   isSearchable={true}
                   isDisabled={isLoading}
@@ -368,7 +379,7 @@ export const ArticleExtraFields = ({
                 <SelectField
                   name='boxMaterial'
                   value={value ?? null}
-                  options={BOX_MATERIALS[locale]}
+                  options={boxMaterialOptions}
                   placeholder={t('screens.newArticle.boxMaterial')}
                   isSearchable={true}
                   isDisabled={isLoading}

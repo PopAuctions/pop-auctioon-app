@@ -11,9 +11,7 @@ import {
 import { t, type Translations } from '@/i18n';
 import {
   ARTICLE_BRANDS_LABELS,
-  ARTICLE_COLORS_LABELS,
   ARTICLE_MATERIALS_LABELS,
-  BOX_MATERIALS_LABELS,
   STRAP_MATERIALS_LABELS,
 } from '@/constants';
 import { formatMeasures } from '@/utils/formatMeasures';
@@ -182,8 +180,8 @@ export function ArticleSpecificationsSection({
               label={articleLang.boxMaterial}
               value={
                 article.boxMaterial
-                  ? BOX_MATERIALS_LABELS[lang][
-                      article.boxMaterial as keyof (typeof BOX_MATERIALS_LABELS)[typeof lang]
+                  ? specificationLabels.boxMaterial[
+                      article.boxMaterial as keyof typeof specificationLabels.boxMaterial
                     ]
                   : '-'
               }
@@ -206,8 +204,8 @@ export function ArticleSpecificationsSection({
             label={articleLang.color}
             value={
               article.color
-                ? ARTICLE_COLORS_LABELS[lang][
-                    article.color as keyof (typeof ARTICLE_COLORS_LABELS)[typeof lang]
+                ? specificationLabels.color[
+                    article.color as keyof typeof specificationLabels.color
                   ]
                 : '-'
             }

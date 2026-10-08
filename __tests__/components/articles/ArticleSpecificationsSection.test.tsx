@@ -95,4 +95,22 @@ describe('ArticleSpecificationsSection', () => {
     // Measures formatted as "10x20x30cm" (no spaces)
     expect(getByText('10x20x30cm')).toBeTruthy();
   });
+
+  it('renders localized color and box-material labels', () => {
+    const { getByText } = render(
+      <ArticleSpecificationsSection
+        article={{
+          ...mockArticle,
+          color: 'BLUE',
+          boxMaterial: 'STEEL',
+        }}
+        articleLang={mockArticleLang as any}
+        lang='en'
+        articleCategory='WATCH'
+      />
+    );
+
+    expect(getByText('Blue')).toBeTruthy();
+    expect(getByText('Steel')).toBeTruthy();
+  });
 });
