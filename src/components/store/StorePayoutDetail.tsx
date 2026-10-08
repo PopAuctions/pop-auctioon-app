@@ -9,10 +9,7 @@ import { PayoutInfoRow } from './PayoutInfoRow';
 import { CustomImage } from '../ui/CustomImage';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import {
-  STORE_INVOICE_TYPES,
-  STORE_INVOICE_TYPES_LABEL,
-} from '@/constants/store';
+import { STORE_INVOICE_TYPES } from '@/constants/store';
 import { StoreInvoiceTypes, StorePayoutWithItems } from '@/types/payouts';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
@@ -41,6 +38,7 @@ export function StorePayoutDetail({
   const saleTypeLabels = t('displayLabels.saleType', { locale });
   const payoutMethodLabels = t('displayLabels.payoutMethod', { locale });
   const payoutStatusLabels = t('displayLabels.payoutStatus', { locale });
+  const invoiceFileNames = t('displayLabels.invoiceFileName', { locale });
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const dateLang = LOCALE_CONFIG[locale].intlLocale;
   const payoutId = payout.id;
@@ -92,15 +90,14 @@ export function StorePayoutDetail({
       const fileName =
         response.headers?.get('x-file-name') ??
         response.headers?.get('content-disposition') ??
-        `${STORE_INVOICE_TYPES_LABEL[mode]}`;
+        invoiceFileNames[mode];
 
       const arrayBuffer = response.data as ArrayBuffer;
       const uint8Array = new Uint8Array(arrayBuffer);
       const file = new File(
         Paths.document,
         `${
-          getFileNameFromContentDisposition(fileName) ??
-          STORE_INVOICE_TYPES_LABEL[mode][locale]
+          getFileNameFromContentDisposition(fileName) ?? invoiceFileNames[mode]
         }.pdf`
       );
 

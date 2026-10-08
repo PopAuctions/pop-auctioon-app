@@ -91,6 +91,10 @@
       "SLOVENIA": "Slovenia",
       "SWEDEN": "Sweden"
     },
+    "invoiceFileName": {
+      "COMMISSION_INVOICE": "commission-invoice",
+      "LIQUIDATION_INVOICE": "liquidation-invoice"
+    },
     "paymentStatus": {
       "PENDING": "Processing",
       "APPROVED": "Paid",

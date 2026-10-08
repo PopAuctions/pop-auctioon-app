@@ -24,6 +24,7 @@ import type {
   StorePayoutStatusType,
   StoreSettlementSaleTypeType,
 } from '@/types/types';
+import type { StoreInvoiceTypes } from '@/types/payouts';
 
 interface ArticleSpecificationLabels {
   state: Record<ArticleStateValue, string>;
@@ -47,6 +48,7 @@ export interface DisplayLabelDictionary {
   auctionCategory: Record<AuctionCategories, string>;
   calendarMonth: Record<CalendarMonthKey, string>;
   country: Record<CountryValue, string>;
+  invoiceFileName: Record<StoreInvoiceTypes, string>;
   paymentStatus: Record<UserPaymentStatus, string>;
   articleStatus: Record<ArticleStatus, string>;
   onlineStoreArticleStatus: Record<ArticleSecondChanceStatus, string>;
