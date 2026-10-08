@@ -103,6 +103,7 @@ describe('ArticleSpecificationsSection', () => {
           ...mockArticle,
           color: 'BLUE',
           boxMaterial: 'STEEL',
+          strapMaterial: 'LEATHER',
         }}
         articleLang={mockArticleLang as any}
         lang='en'
@@ -112,5 +113,34 @@ describe('ArticleSpecificationsSection', () => {
 
     expect(getByText('Blue')).toBeTruthy();
     expect(getByText('Steel')).toBeTruthy();
+    expect(getByText('Leather')).toBeTruthy();
+  });
+
+  it('preserves missing detail labels from the previous maps', () => {
+    const canvasArticle = render(
+      <ArticleSpecificationsSection
+        article={{
+          ...mockArticle,
+          material: 'CANVAS',
+        }}
+        articleLang={mockArticleLang as any}
+        lang='en'
+        articleCategory='BAG'
+      />
+    );
+    const rubberStrapArticle = render(
+      <ArticleSpecificationsSection
+        article={{
+          ...mockArticle,
+          strapMaterial: 'RUBBER',
+        }}
+        articleLang={mockArticleLang as any}
+        lang='en'
+        articleCategory='WATCH'
+      />
+    );
+
+    expect(canvasArticle.queryByText('Canvas')).toBeNull();
+    expect(rubberStrapArticle.queryByText('Rubber')).toBeNull();
   });
 });

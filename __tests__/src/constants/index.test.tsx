@@ -129,9 +129,24 @@ describe('Constants barrel exports', () => {
       expect(Constants.ARTICLE_COLOR_VALUES[0]).toBe('MULTICOLOUR');
     });
 
-    it('should export article materials', () => {
-      expect(Constants.ARTICLE_MATERIALS_LABELS).toBeDefined();
-      expect(typeof Constants.ARTICLE_MATERIALS_LABELS).toBe('object');
+    it('should preserve article-material values and detail availability', () => {
+      expect(Constants.ARTICLE_MATERIAL_VALUES).toHaveLength(45);
+      expect(Constants.ARTICLE_MATERIAL_VALUES[0]).toBe('CASHMERE');
+      expect(Constants.ARTICLE_MATERIAL_VALUES.at(-1)).toBe('YELLOW_GOLD');
+      expect(Constants.hasArticleMaterialDisplayLabel('LEATHER')).toBe(true);
+      expect(Constants.hasArticleMaterialDisplayLabel('CANVAS')).toBe(false);
+    });
+
+    it('should preserve localized strap-material availability and order', () => {
+      expect(Constants.getStrapMaterialValues('en')).toHaveLength(27);
+      expect(Constants.getStrapMaterialValues('en')[0]).toBe('ALUMINUM');
+      expect(Constants.getStrapMaterialValues('en')).not.toContain('RUBBER');
+      expect(Constants.getStrapMaterialValues('es')).toHaveLength(26);
+      expect(Constants.getStrapMaterialValues('es')[0]).toBe('STEEL');
+      expect(Constants.getStrapMaterialValues('es')).toContain('RUBBER');
+      expect(Constants.getStrapMaterialValues('es')).not.toContain(
+        'SAPPHIRE_CRYSTAL'
+      );
     });
 
     it('should preserve localized box-material option order', () => {

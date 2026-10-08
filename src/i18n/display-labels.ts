@@ -1,7 +1,9 @@
 import type {
   ArticleColorValue,
+  ArticleMaterialValue,
   ArticleStatus,
   BoxMaterialValue,
+  StrapMaterialValue,
 } from '@/constants/articles';
 import type { UserPaymentStatus } from '@/constants/payment';
 import type {
@@ -24,6 +26,8 @@ interface ArticleSpecificationLabels {
   artType: Record<string, string>;
   color: Record<ArticleColorValue, string>;
   boxMaterial: Record<BoxMaterialValue, string>;
+  material: Record<ArticleMaterialValue, string>;
+  strapMaterial: Record<StrapMaterialValue, string>;
 }
 
 /**

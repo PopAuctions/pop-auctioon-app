@@ -11,8 +11,8 @@ import {
 import { t, type Translations } from '@/i18n';
 import {
   ARTICLE_BRANDS_LABELS,
-  ARTICLE_MATERIALS_LABELS,
-  STRAP_MATERIALS_LABELS,
+  hasArticleMaterialDisplayLabel,
+  isAvailableStrapMaterialValue,
 } from '@/constants';
 import { formatMeasures } from '@/utils/formatMeasures';
 import { isRecognizedBrand } from '@/utils/isRecognizedBrand';
@@ -81,9 +81,9 @@ export function ArticleSpecificationsSection({
             label={articleLang.material}
             value={
               article.material
-                ? ARTICLE_MATERIALS_LABELS[lang][
-                    article.material as keyof (typeof ARTICLE_MATERIALS_LABELS)[typeof lang]
-                  ]
+                ? hasArticleMaterialDisplayLabel(article.material)
+                  ? specificationLabels.material[article.material]
+                  : undefined
                 : '-'
             }
           />
@@ -167,9 +167,9 @@ export function ArticleSpecificationsSection({
               label={articleLang.strapMaterial}
               value={
                 article.strapMaterial
-                  ? STRAP_MATERIALS_LABELS[lang][
-                      article.strapMaterial as keyof (typeof STRAP_MATERIALS_LABELS)[typeof lang]
-                    ]
+                  ? isAvailableStrapMaterialValue(lang, article.strapMaterial)
+                    ? specificationLabels.strapMaterial[article.strapMaterial]
+                    : undefined
                   : '-'
               }
             />

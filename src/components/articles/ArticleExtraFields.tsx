@@ -10,10 +10,10 @@ import {
   ART_TYPES,
   ARTICLE_BRANDS,
   ARTICLE_COLOR_VALUES,
-  ARTICLE_MATERIALS,
+  ARTICLE_MATERIAL_VALUES,
   ARTICLE_SMELL,
   getBoxMaterialValues,
-  STRAP_MATERIALS,
+  getStrapMaterialValues,
   WATCH_MOVEMENTS,
 } from '@/constants';
 import { Tooltip } from '../ui/Tooltip';
@@ -44,6 +44,14 @@ export const ArticleExtraFields = ({
   const articleColorOptions = ARTICLE_COLOR_VALUES.map((value) => ({
     value,
     label: specificationLabels.color[value],
+  }));
+  const articleMaterialOptions = ARTICLE_MATERIAL_VALUES.map((value) => ({
+    value,
+    label: specificationLabels.material[value],
+  }));
+  const strapMaterialOptions = getStrapMaterialValues(locale).map((value) => ({
+    value,
+    label: specificationLabels.strapMaterial[value],
   }));
   const boxMaterialOptions = getBoxMaterialValues(locale).map((value) => ({
     value,
@@ -108,7 +116,7 @@ export const ArticleExtraFields = ({
               <SelectField
                 name='material'
                 value={value ?? null}
-                options={ARTICLE_MATERIALS[locale]}
+                options={articleMaterialOptions}
                 placeholder={t('screens.newArticle.material')}
                 isSearchable={true}
                 isDisabled={isLoading}
@@ -341,7 +349,7 @@ export const ArticleExtraFields = ({
                 <SelectField
                   name='strapMaterial'
                   value={value ?? null}
-                  options={STRAP_MATERIALS[locale]}
+                  options={strapMaterialOptions}
                   placeholder={t('screens.newArticle.strapMaterial')}
                   isSearchable={true}
                   isDisabled={isLoading}

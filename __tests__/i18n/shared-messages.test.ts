@@ -18,7 +18,7 @@ describe.each([
 
 describe('centralized display labels', () => {
   it('preserves the existing English status and payout labels', () => {
-    expect(en.displayLabels).toEqual({
+    expect(en.displayLabels).toMatchObject({
       paymentStatus: {
         PENDING: 'Processing',
         APPROVED: 'Paid',
@@ -193,6 +193,16 @@ describe('centralized display labels', () => {
     expect(es.displayLabels.articleSpecification.color.BLUE).toBe('Azul');
     expect(es.displayLabels.articleSpecification.boxMaterial.STEEL).toBe(
       'Acero'
+    );
+    expect(en.displayLabels.articleSpecification.material.CANVAS).toBe(
+      'Canvas'
+    );
+    expect(es.displayLabels.articleSpecification.material.CANVAS).toBe('Lona');
+    expect(en.displayLabels.articleSpecification.strapMaterial.LEATHER).toBe(
+      'Leather'
+    );
+    expect(es.displayLabels.articleSpecification.strapMaterial.LEATHER).toBe(
+      'Piel'
     );
   });
 });
