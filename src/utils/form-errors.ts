@@ -8,7 +8,7 @@ export const getErrorMessage = (
 ): string => {
   if (!message || !isLang(locale)) return message ?? '';
 
-  return renderValidationMessage(message, locale, (key, params) =>
+  return renderValidationMessage(message, (key, params) =>
     String(t(key, { ...params, locale }))
   );
 };

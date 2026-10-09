@@ -11,7 +11,7 @@
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "i18n:check": "node scripts/check-i18n.mjs",
+    "i18n:check": "node scripts/check-i18n.mjs && node scripts/check-validation-i18n.mjs",
     "lint": "pnpm exec expo lint",
     "lint:fix": "pnpm exec expo lint -- --fix",
     "prettier:check": "prettier --check .",

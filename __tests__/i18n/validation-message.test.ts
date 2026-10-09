@@ -16,7 +16,7 @@ describe('validation messages', () => {
       key: 'validation.minLength',
       params: { min: 3 },
     });
-    expect(renderValidationMessage(encoded, 'en', translate)).toBe(
+    expect(renderValidationMessage(encoded, translate)).toBe(
       'validation.minLength:3'
     );
   });
@@ -29,19 +29,11 @@ describe('validation messages', () => {
     });
   });
 
-  it('preserves legacy localized and plain messages during migration', () => {
-    const legacyMessage = JSON.stringify({
-      en: 'message-en',
-      es: 'message-es',
-    });
-
-    expect(renderValidationMessage(legacyMessage, 'es', translate)).toBe(
-      'message-es'
-    );
-    expect(renderValidationMessage('plain-message', 'en', translate)).toBe(
+  it('preserves plain messages and handles missing messages', () => {
+    expect(renderValidationMessage('plain-message', translate)).toBe(
       'plain-message'
     );
-    expect(renderValidationMessage(undefined, 'en', translate)).toBe('');
+    expect(renderValidationMessage(undefined, translate)).toBe('');
   });
 
   it('does not treat malformed or unknown payloads as typed messages', () => {

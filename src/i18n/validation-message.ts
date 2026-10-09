@@ -1,5 +1,4 @@
 import defaultDictionary from '@/i18n/locales/es.json';
-import type { Lang } from '@/i18n/locales';
 
 export type ValidationMessageParam = string | number | boolean;
 export type ValidationMessageParams = Readonly<
@@ -89,30 +88,8 @@ export function parseValidationMessage(
   }
 }
 
-function renderLegacyValidationMessage(message: string, locale: Lang): string {
-  try {
-    const parsed: unknown = JSON.parse(message);
-
-    if (
-      typeof parsed === 'object' &&
-      parsed !== null &&
-      !Array.isArray(parsed)
-    ) {
-      const localizedMessage = (parsed as Record<string, unknown>)[locale];
-      if (typeof localizedMessage === 'string' && localizedMessage) {
-        return localizedMessage;
-      }
-    }
-  } catch {
-    // Plain strings remain valid while existing schemas are migrated.
-  }
-
-  return message;
-}
-
 export function renderValidationMessage(
   message: string | undefined,
-  locale: Lang,
   translate: ValidationMessageTranslator
 ): string {
   if (!message) return '';
@@ -122,5 +99,5 @@ export function renderValidationMessage(
     return translate(validationMessage.key, validationMessage.params);
   }
 
-  return renderLegacyValidationMessage(message, locale);
+  return message;
 }
