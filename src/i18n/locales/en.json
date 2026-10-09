@@ -333,6 +333,18 @@
   "errors": {
     "unexpected": "Something went wrong",
     "network": "There was a connection problem. Please try again.",
+    "server": {
+      "internal": "Internal server error"
+    },
+    "file": {
+      "invalidProfilePicture": "Invalid profile picture format. Must have: src, name, type, and arrayBuffer"
+    },
+    "validation": {
+      "invalidRoleMobile": "Invalid role.",
+      "invalidLanguage": "Invalid language.",
+      "invalidFieldsMobile": "Invalid Fields. Please check you have the latest version of the app.",
+      "missingParameters": "Missing parameters"
+    },
     "article": {
       "followedArticlesLoadFailed": "Error fetching followed articles",
       "loadFailed": "Error fetching article",
@@ -398,6 +410,15 @@
       "uploadFailedSingular": "There was an error uploading the image.",
       "stillCompressing": "Images are still being compressed. Please wait a moment and try again."
     }
+  },
+  "signUp": {
+    "accountCreated": "User created"
+  },
+  "confirmEmail": {
+    "resendSuccess": "A confirmation email has been sent"
+  },
+  "resetPassword": {
+    "resetEmailSent": "Reset email sent"
   },
   "errorBoundary": {
     "title": "Something went wrong",

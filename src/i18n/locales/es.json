@@ -333,6 +333,18 @@
   "errors": {
     "unexpected": "Algo ha ido mal",
     "network": "Ha habido un problema de conexión. Inténtalo de nuevo.",
+    "server": {
+      "internal": "Error interno del servidor"
+    },
+    "file": {
+      "invalidProfilePicture": "Formato de foto de perfil inválido. Debe tener: src, name, type y arrayBuffer"
+    },
+    "validation": {
+      "invalidRoleMobile": "Rol inválido.",
+      "invalidLanguage": "Idioma inválido.",
+      "invalidFieldsMobile": "Campos inválidos. Por favor, asegúrate de tener la última versión de la aplicación.",
+      "missingParameters": "Faltan parámetros"
+    },
     "article": {
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",
@@ -398,6 +410,15 @@
       "uploadFailedSingular": "Hubo un error subiendo la imagen.",
       "stillCompressing": "Las imágenes aún se están comprimiendo. Por favor espera un momento e intenta de nuevo."
     }
+  },
+  "signUp": {
+    "accountCreated": "Usuario creado"
+  },
+  "confirmEmail": {
+    "resendSuccess": "Se ha enviado un correo de confirmación"
+  },
+  "resetPassword": {
+    "resetEmailSent": "Correo de restablecimiento enviado"
   },
   "errorBoundary": {
     "title": "Algo ha ido mal",

@@ -53,7 +53,7 @@ export function RequestConfirmationTokenButton({
         return;
       }
 
-      const data = response?.data;
+      const data = response.success ?? response.data;
 
       callToast({ variant: 'success', description: data });
     } catch (error: any) {
