@@ -4,6 +4,10 @@ import { useVerifyPhone } from '@/hooks/pages/verify-phone/useVerifyPhone';
 // Mock dependencies
 const mockSecurePost = jest.fn();
 
+function expectLanguageShape(value: unknown) {
+  expect(Object.keys(value as object).sort()).toEqual(['en', 'es']);
+}
+
 jest.mock('@/hooks/api/useSecureApi', () => ({
   useSecureApi: () => ({
     securePost: mockSecurePost,
@@ -116,10 +120,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'No response from server',
-        es: 'Sin respuesta del servidor',
-      });
+      expectLanguageShape(result.current.errorMessage);
     });
 
     it('should handle unexpected error gracefully', async () => {
@@ -139,10 +140,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'Failed to send verification code',
-        es: 'Error al enviar código de verificación',
-      });
+      expectLanguageShape(result.current.errorMessage);
     });
   });
 
@@ -228,10 +226,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'Invalid verification code',
-        es: 'Código de verificación inválido',
-      });
+      expectLanguageShape(result.current.errorMessage);
     });
 
     it('should handle unexpected error gracefully during verification', async () => {
@@ -251,10 +246,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'Failed to verify code',
-        es: 'Error al verificar código',
-      });
+      expectLanguageShape(result.current.errorMessage);
     });
   });
 

@@ -386,6 +386,30 @@
       "webUpdateUnexpected": "Error updating user",
       "imageProcessingFailed": "There was a problem processing the image"
     },
+    "otp": {
+      "authRequired": "You must be logged in to request OTP",
+      "invalidPhoneNumber": "Invalid phone number format",
+      "attemptCheckFailed": "Error checking previous OTP attempts",
+      "cooldown": "You must wait {seconds} seconds before requesting another OTP",
+      "hourlyLimit": "You have reached the limit of OTP requests per hour",
+      "resendTrackingFailed": "Error tracking OTP resend",
+      "smsResendFailed": "Error resending SMS",
+      "generationFailed": "Error generating OTP",
+      "smsSendFailed": "Error sending SMS",
+      "notFound": "OTP not found or expired",
+      "alreadyUsed": "This OTP has already been used",
+      "expired": "This OTP has expired",
+      "incorrect": "The code is incorrect",
+      "updateFailed": "Error updating OTP",
+      "userUpdateFailed": "Error updating user phone number",
+      "deleteFailed": "Error deleting OTP",
+      "phoneRequired": "Phone number is required",
+      "codeRequired": "OTP code is required",
+      "noResponse": "No response from server",
+      "sendFailed": "Failed to send verification code",
+      "invalidVerificationCode": "Invalid verification code",
+      "verifyFailed": "Failed to verify code"
+    },
     "article": {
       "followedArticlesLoadFailed": "Error fetching followed articles",
       "loadFailed": "Error fetching article",
@@ -477,6 +501,11 @@
   },
   "profile": {
     "updatedSuccessfully": "User updated"
+  },
+  "otp": {
+    "sentSuccessfully": "OTP sent successfully",
+    "resentSuccessfully": "OTP resent successfully",
+    "phoneVerifiedSuccessfully": "Phone verified successfully"
   },
   "account": {
     "deletedSuccessfully": "Account deleted successfully",

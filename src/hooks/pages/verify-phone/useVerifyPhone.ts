@@ -3,6 +3,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { RequestStatus, LangMap } from '@/types/types';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 interface UseVerifyPhoneReturn {
   // Actions
@@ -102,10 +103,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         }
 
         // No data received
-        const noDataError = {
-          en: 'No response from server',
-          es: 'Sin respuesta del servidor',
-        };
+        const noDataError = createLocalizedMessage('errors.otp.noResponse');
         setStatus('error');
         setErrorMessage(noDataError);
         return { success: false };
@@ -118,10 +116,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
           'USE_VERIFY_PHONE - Unexpected error sending OTP'
         );
 
-        const catchError = {
-          en: 'Failed to send verification code',
-          es: 'Error al enviar código de verificación',
-        };
+        const catchError = createLocalizedMessage('errors.otp.sendFailed');
         setStatus('error');
         setErrorMessage(catchError);
         return { success: false };
@@ -159,10 +154,9 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         }
 
         // No data received
-        const invalidCodeError = {
-          en: 'Invalid verification code',
-          es: 'Código de verificación inválido',
-        };
+        const invalidCodeError = createLocalizedMessage(
+          'errors.otp.invalidVerificationCode'
+        );
         setStatus('error');
         setErrorMessage(invalidCodeError);
         return { success: false };
@@ -175,10 +169,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
           'USE_VERIFY_PHONE - Unexpected error verifying OTP'
         );
 
-        const verifyError = {
-          en: 'Failed to verify code',
-          es: 'Error al verificar código',
-        };
+        const verifyError = createLocalizedMessage('errors.otp.verifyFailed');
         setStatus('error');
         setErrorMessage(verifyError);
         return { success: false };

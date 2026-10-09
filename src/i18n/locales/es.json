@@ -386,6 +386,30 @@
       "webUpdateUnexpected": "Error actualizando usuario",
       "imageProcessingFailed": "Hubo un problema procesando la imagen"
     },
+    "otp": {
+      "authRequired": "Debes iniciar sesión para solicitar un OTP",
+      "invalidPhoneNumber": "Formato de número de teléfono inválido",
+      "attemptCheckFailed": "Error verificando intentos anteriores de OTP",
+      "cooldown": "Debes esperar {seconds} segundos antes de solicitar otro OTP",
+      "hourlyLimit": "Has alcanzado el límite de OTP por hora",
+      "resendTrackingFailed": "Error registrando el reenvío del OTP",
+      "smsResendFailed": "Error reenviando el SMS",
+      "generationFailed": "Error generando OTP",
+      "smsSendFailed": "Error enviando el SMS",
+      "notFound": "El OTP no existe o ha expirado",
+      "alreadyUsed": "Este código ya fue utilizado",
+      "expired": "Este código ha expirado",
+      "incorrect": "El código ingresado es incorrecto",
+      "updateFailed": "Error actualizando OTP",
+      "userUpdateFailed": "Error actualizando el número de teléfono del usuario",
+      "deleteFailed": "Error eliminando OTP",
+      "phoneRequired": "Número de teléfono requerido",
+      "codeRequired": "Código OTP requerido",
+      "noResponse": "Sin respuesta del servidor",
+      "sendFailed": "Error al enviar código de verificación",
+      "invalidVerificationCode": "Código de verificación inválido",
+      "verifyFailed": "Error al verificar código"
+    },
     "article": {
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",
@@ -477,6 +501,11 @@
   },
   "profile": {
     "updatedSuccessfully": "Usuario actualizado"
+  },
+  "otp": {
+    "sentSuccessfully": "OTP enviado correctamente",
+    "resentSuccessfully": "OTP reenviado correctamente",
+    "phoneVerifiedSuccessfully": "Teléfono verificado con éxito"
   },
   "account": {
     "deletedSuccessfully": "Cuenta eliminada correctamente",
