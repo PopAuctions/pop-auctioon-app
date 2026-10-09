@@ -5,6 +5,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import type { UserEditSchema } from '@/utils/schemas';
 import type * as z from 'zod';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 /**
  * Tipos inferidos de los schemas de edición
@@ -67,10 +68,14 @@ export const useUpdateProfile = (): ActionResponse<null> & {
       setStatus('loading');
       setErrorMessage(null);
 
-      // Detectar si hay imagen para decidir entre FormData o JSON
-      const hasImage = data.profilePicture && data.profilePicture !== '';
+      // Use FormData only when the user selected a new image. The form is
+      // initialized with the existing remote URL, which must not be uploaded
+      // again as though it were a local file.
+      const hasNewImage =
+        Boolean(data.profilePicture) &&
+        data.profilePicture !== data.oldProfilePicture;
 
-      if (hasImage) {
+      if (hasNewImage) {
         // CASO 1: Con imagen - usar FormData
         const formData = new FormData();
 
@@ -145,10 +150,7 @@ export const useUpdateProfile = (): ActionResponse<null> & {
 
       console.error('ERROR_UPDATE_PROFILE_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error updating profile',
-        es: 'Error al actualizar el perfil',
-      };
+      const message = createLocalizedMessage('errors.profile.updateUnexpected');
 
       setStatus('error');
       setErrorMessage(message);
