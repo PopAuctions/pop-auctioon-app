@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { createValidationMessage } from '@/i18n/validation-message';
 import {
   MIN_USER_PASSWORD_LENGTH,
   MIN_USERNAME_LENGTH,
@@ -7,32 +8,20 @@ import {
 
 export const LoginSchema = z.object({
   email: z.string().email({
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   password: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   code: z.optional(z.string()),
 });
 
 export const ShippingInfoSchema = z.object({
   shippingCourier: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   shippingNumber: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
 });
 
@@ -40,54 +29,30 @@ export type ShippingInfoSchemaType = z.infer<typeof ShippingInfoSchema>;
 
 export const PaymentSchema = z.object({
   country: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   userAddressId: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
 });
 export const AddressSchema = z.object({
   nameAddress: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required. Use a name to identify the address',
-      es: 'Requerido. Usa un nombre para identificar la dirección',
-    }),
+    message: createValidationMessage('validation.addressNameRequired'),
   }),
   address: z.string().min(3, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   city: z.string().min(2, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   state: z.string().min(2, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   country: z.string().min(2, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   postalCode: z.string().min(2, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   primaryAddress: z.boolean().optional(),
 });
@@ -97,36 +62,25 @@ export type AddressSchemaType = z.infer<typeof AddressSchema>;
 // Edit Profile Schema
 export const EditProfileSchema = z.object({
   name: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   lastName: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   username: z
     .string()
     .min(MIN_USERNAME_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USERNAME_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USERNAME_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.usernameMinLength', {
+        min: MIN_USERNAME_LENGTH,
       }),
     })
     .max(MAX_USERNAME_LENGTH, {
-      message: JSON.stringify({
-        en: `Max. ${MAX_USERNAME_LENGTH} characters`,
-        es: `Máx. ${MAX_USERNAME_LENGTH} caracteres`,
+      message: createValidationMessage('validation.usernameMaxLength', {
+        max: MAX_USERNAME_LENGTH,
       }),
     })
     .refine((val) => !val.includes(' '), {
-      message: JSON.stringify({
-        en: 'No spaces allowed',
-        es: 'No se permiten espacios',
-      }),
+      message: createValidationMessage('validation.noSpacesAllowed'),
     }),
   phoneNumber: z.string().optional(),
   profilePicture: z.string().optional(),
@@ -137,47 +91,34 @@ export type EditProfileSchemaType = z.infer<typeof EditProfileSchema>;
 export const UserRegisterSchema = z
   .object({
     name: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     lastName: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     email: z.string().email({
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     username: z
       .string()
       .min(MIN_USERNAME_LENGTH, {
-        message: JSON.stringify({
-          en: `Required (Min. ${MIN_USERNAME_LENGTH} characters)`,
-          es: `Requerido (Mín. ${MIN_USERNAME_LENGTH} caracteres)`,
+        message: createValidationMessage('validation.usernameMinLength', {
+          min: MIN_USERNAME_LENGTH,
         }),
       })
       .max(MAX_USERNAME_LENGTH, {
-        message: JSON.stringify({
-          en: `Max. ${MAX_USERNAME_LENGTH} characters`,
-          es: `Máx. ${MAX_USERNAME_LENGTH} caracteres`,
+        message: createValidationMessage('validation.usernameMaxLength', {
+          max: MAX_USERNAME_LENGTH,
         }),
       }),
     password: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USER_PASSWORD_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USER_PASSWORD_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.passwordMinLength', {
+        min: MIN_USER_PASSWORD_LENGTH,
       }),
     }),
     confirmPassword: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USER_PASSWORD_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USER_PASSWORD_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.passwordMinLength', {
+        min: MIN_USER_PASSWORD_LENGTH,
       }),
     }),
     dni: z.string().optional(),
@@ -192,10 +133,7 @@ export const UserRegisterSchema = z
     },
     {
       path: ['username'],
-      message: JSON.stringify({
-        en: 'No spaces allowed.',
-        es: 'No se permiten espacios.',
-      }),
+      message: createValidationMessage('validation.noSpacesAllowedPeriod'),
     }
   )
   .refine(
@@ -207,10 +145,7 @@ export const UserRegisterSchema = z
     },
     {
       path: ['password'],
-      message: JSON.stringify({
-        en: 'Passwords do not match.',
-        es: 'Las contraseñas no coinciden.',
-      }),
+      message: createValidationMessage('validation.passwordMismatchPeriod'),
     }
   );
 
@@ -219,128 +154,80 @@ export type UserRegisterSchemaType = z.infer<typeof UserRegisterSchema>;
 export const AuctioneerRegisterSchema = z
   .object({
     name: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     lastName: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     email: z.string().email({
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     username: z
       .string()
       .min(MIN_USERNAME_LENGTH, {
-        message: JSON.stringify({
-          en: `Required (Min. ${MIN_USERNAME_LENGTH} characters)`,
-          es: `Requerido (Mín. ${MIN_USERNAME_LENGTH} caracteres)`,
+        message: createValidationMessage('validation.usernameMinLength', {
+          min: MIN_USERNAME_LENGTH,
         }),
       })
       .max(MAX_USERNAME_LENGTH, {
-        message: JSON.stringify({
-          en: `Max. ${MAX_USERNAME_LENGTH} characters`,
-          es: `Máx. ${MAX_USERNAME_LENGTH} caracteres)`,
-        }),
+        message: createValidationMessage(
+          'validation.usernameMaxLengthAuctioneer',
+          { max: MAX_USERNAME_LENGTH }
+        ),
       }),
     password: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USER_PASSWORD_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USER_PASSWORD_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.passwordMinLength', {
+        min: MIN_USER_PASSWORD_LENGTH,
       }),
     }),
     confirmPassword: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USER_PASSWORD_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USER_PASSWORD_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.passwordMinLength', {
+        min: MIN_USER_PASSWORD_LENGTH,
       }),
     }),
     dni: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     profilePicture: z.string().optional(),
     phoneNumber: z.string().optional(),
     storePhoneNumber: z.string().min(5, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     cif: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     legalName: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     address: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     town: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     province: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     country: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     postalCode: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     webPage: z
       .string()
       .url()
       .min(1, {
-        message: JSON.stringify({
-          en: 'Required',
-          es: 'Requerido',
-        }),
+        message: createValidationMessage('validation.required'),
       }),
     socialMedia: z
       .string()
       .url()
       .min(1, {
-        message: JSON.stringify({
-          en: 'Required',
-          es: 'Requerido',
-        }),
+        message: createValidationMessage('validation.required'),
       }),
     storeName: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     terms: z.boolean().optional(),
   })
@@ -352,10 +239,7 @@ export const AuctioneerRegisterSchema = z
     },
     {
       path: ['username'],
-      message: JSON.stringify({
-        en: 'No spaces allowed.',
-        es: 'No se permiten espacios.',
-      }),
+      message: createValidationMessage('validation.noSpacesAllowedPeriod'),
     }
   )
   .refine(
@@ -367,10 +251,7 @@ export const AuctioneerRegisterSchema = z
     },
     {
       path: ['password'],
-      message: JSON.stringify({
-        en: 'Passwords do not match.',
-        es: 'Las contraseñas no coinciden.',
-      }),
+      message: createValidationMessage('validation.passwordMismatchPeriod'),
     }
   );
 
@@ -381,30 +262,22 @@ export type AuctioneerRegisterSchemaType = z.infer<
 export const UserEditSchema = z
   .object({
     name: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     lastName: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     phoneNumber: z.string(),
     username: z
       .string()
       .min(MIN_USERNAME_LENGTH, {
-        message: JSON.stringify({
-          en: `Required (Min. ${MIN_USERNAME_LENGTH} characters)`,
-          es: `Requerido (Mín. ${MIN_USERNAME_LENGTH} caracteres)`,
+        message: createValidationMessage('validation.usernameMinLength', {
+          min: MIN_USERNAME_LENGTH,
         }),
       })
       .max(MAX_USERNAME_LENGTH, {
-        message: JSON.stringify({
-          en: `Max. ${MAX_USERNAME_LENGTH} characters`,
-          es: `Máx. ${MAX_USERNAME_LENGTH} caracteres`,
+        message: createValidationMessage('validation.usernameMaxLength', {
+          max: MAX_USERNAME_LENGTH,
         }),
       }),
     // dni: z.string(),
@@ -418,10 +291,7 @@ export const UserEditSchema = z
     },
     {
       path: ['username'],
-      message: JSON.stringify({
-        en: 'No spaces allowed.',
-        es: 'No se permiten espacios.',
-      }),
+      message: createValidationMessage('validation.noSpacesAllowedPeriod'),
     }
   );
 
@@ -442,25 +312,20 @@ export const AuctioneerEditSchema = z.object({
 
 export const ResetSchema = z.object({
   email: z.string().email({
-    message: JSON.stringify({
-      en: 'Email required',
-      es: 'Email requerido',
-    }),
+    message: createValidationMessage('validation.emailRequired'),
   }),
 });
 
 export const NewPasswordSchema = z
   .object({
     password: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USER_PASSWORD_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USER_PASSWORD_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.passwordMinLength', {
+        min: MIN_USER_PASSWORD_LENGTH,
       }),
     }),
     confirmPassword: z.string().min(MIN_USER_PASSWORD_LENGTH, {
-      message: JSON.stringify({
-        en: `Required (Min. ${MIN_USER_PASSWORD_LENGTH} characters)`,
-        es: `Requerido (Mín. ${MIN_USER_PASSWORD_LENGTH} caracteres)`,
+      message: createValidationMessage('validation.passwordMinLength', {
+        min: MIN_USER_PASSWORD_LENGTH,
       }),
     }),
   })
@@ -473,9 +338,6 @@ export const NewPasswordSchema = z
     },
     {
       path: ['confirmPassword'],
-      message: JSON.stringify({
-        en: 'Passwords do not match.',
-        es: 'Las contraseñas no coinciden.',
-      }),
+      message: createValidationMessage('validation.passwordMismatchPeriod'),
     }
   );

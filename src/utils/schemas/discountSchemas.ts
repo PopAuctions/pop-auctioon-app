@@ -1,26 +1,18 @@
 import { z } from 'zod';
+import { createValidationMessage } from '@/i18n/validation-message';
 
 export const NewDiscountSchema = z.object({
   code: z
     .string()
     .min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     })
     .regex(/^\S+$/, {
-      message: JSON.stringify({
-        en: 'No spaces allowed',
-        es: 'No se permiten espacios',
-      }),
+      message: createValidationMessage('validation.noSpacesAllowed'),
     })
     .transform((val) => val.toUpperCase()),
   discountValue: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   expiresAt: z.preprocess(
     (val) => (val === '' ? null : val),

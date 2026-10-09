@@ -1,35 +1,21 @@
 import * as z from 'zod';
+import { createValidationMessage } from '@/i18n/validation-message';
 
 export const AuctionSchema = z.object({
   title: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   startDate: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   startTime: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   country: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   category: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   image: z.string(),
 });

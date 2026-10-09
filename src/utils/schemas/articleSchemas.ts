@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { createValidationMessage } from '@/i18n/validation-message';
 import { ONLY_INTEGERS_EMPTY_REGEX, ONLY_INTEGERS_REGEX } from '@/constants';
 import { AuctionCategories } from '@/types/types';
 
@@ -6,75 +7,42 @@ const commonSchema = z.object({
   title: z
     .string()
     .min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     })
-    .max(
-      25,
-      JSON.stringify({
-        en: 'Max 25 characters',
-        es: 'Máximo 25 caracteres',
-      })
-    ),
+    .max(25, createValidationMessage('validation.max25Characters')),
   state: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   startingPrice: z
     .string()
     .min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     })
     .regex(ONLY_INTEGERS_REGEX, {
-      message: JSON.stringify({
-        en: 'Must contain only numbers',
-        es: 'Debe contener solo números',
-      }),
+      message: createValidationMessage('validation.numbersOnly'),
     })
     .refine((val) => parseInt(val) >= 1, {
-      message: JSON.stringify({
-        en: 'The minimum starting price is 1',
-        es: 'El precio inicial mínimo es 1',
-      }),
+      message: createValidationMessage('validation.minimumStartingPrice'),
     }),
   estimatedValue: z
     .string()
     .regex(ONLY_INTEGERS_EMPTY_REGEX, {
-      message: JSON.stringify({
-        en: 'Must contain only numbers',
-        es: 'Debe contener solo números',
-      }),
+      message: createValidationMessage('validation.numbersOnly'),
     })
     .refine((value) => value === '' || Number(value) >= 1, {
-      message: JSON.stringify({
-        en: 'Estimated value should be at least 1',
-        es: 'El valor estimado debería de ser al menos 1',
-      }),
+      message: createValidationMessage('validation.estimatedValueMinimum'),
     })
     .optional(),
   reservePrice: z
     .string()
     .regex(ONLY_INTEGERS_EMPTY_REGEX, {
-      message: JSON.stringify({
-        en: 'Must contain only numbers',
-        es: 'Debe contener solo números',
-      }),
+      message: createValidationMessage('validation.numbersOnly'),
     })
     .optional(),
   images: z.string().optional(),
   codeNumber: z.string().optional(),
   description: z.string().min(5, {
-    message: JSON.stringify({
-      en: 'Required (Min. 5)',
-      es: 'Requerido (Min. 5)',
-    }),
+    message: createValidationMessage('validation.requiredMin5'),
   }),
   observations: z.string().optional(),
 });
@@ -82,23 +50,14 @@ const commonSchema = z.object({
 export const NewArticleSchemaBags = commonSchema
   .extend({
     material: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     brand: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     color: z.string().optional(),
     smell: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     length: z.string().optional(),
     width: z.string().optional(),
@@ -114,10 +73,7 @@ export const NewArticleSchemaBags = commonSchema
     },
     {
       path: ['width'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   )
   .refine(
@@ -130,10 +86,7 @@ export const NewArticleSchemaBags = commonSchema
     },
     {
       path: ['length'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   )
   .refine(
@@ -146,25 +99,16 @@ export const NewArticleSchemaBags = commonSchema
     },
     {
       path: ['height'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   );
 
 export const NewArticleSchemaJewrly = commonSchema.extend({
   material: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   brand: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   size: z.string().optional(),
   color: z.string().optional(),
@@ -173,10 +117,7 @@ export const NewArticleSchemaJewrly = commonSchema.extend({
 
 export const NewArticleSchemaWatches = commonSchema.extend({
   brand: z.string().min(1, {
-    message: JSON.stringify({
-      en: 'Required',
-      es: 'Requerido',
-    }),
+    message: createValidationMessage('validation.required'),
   }),
   faceDiameter: z.string().optional(),
   movement: z.string().optional(),
@@ -191,10 +132,7 @@ export const NewArticleSchemaWatches = commonSchema.extend({
 export const NewArticleSchemaArt = commonSchema
   .extend({
     artType: z.string().min(1, {
-      message: JSON.stringify({
-        en: 'Required',
-        es: 'Requerido',
-      }),
+      message: createValidationMessage('validation.required'),
     }),
     weight: z.string().optional(),
     length: z.string().optional(),
@@ -211,10 +149,7 @@ export const NewArticleSchemaArt = commonSchema
     },
     {
       path: ['width'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   )
   .refine(
@@ -227,10 +162,7 @@ export const NewArticleSchemaArt = commonSchema
     },
     {
       path: ['length'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   )
   .refine(
@@ -243,10 +175,7 @@ export const NewArticleSchemaArt = commonSchema
     },
     {
       path: ['height'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   );
 
@@ -280,10 +209,7 @@ export const NewArticleSchemaAll = commonSchema
     },
     {
       path: ['width'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   )
   .refine(
@@ -296,10 +222,7 @@ export const NewArticleSchemaAll = commonSchema
     },
     {
       path: ['length'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   )
   .refine(
@@ -312,10 +235,7 @@ export const NewArticleSchemaAll = commonSchema
     },
     {
       path: ['height'],
-      message: JSON.stringify({
-        en: 'All or none of the measurements are required',
-        es: 'Todas o ninguna de las medidas son requeridas',
-      }),
+      message: createValidationMessage('validation.allMeasurementsOrNone'),
     }
   );
 
@@ -425,10 +345,7 @@ export const requireEstimatedValue = <T extends z.ZodTypeAny>(
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['estimatedValue'],
-        message: JSON.stringify({
-          en: 'Required',
-          es: 'Requerido',
-        }),
+        message: createValidationMessage('validation.required'),
       });
     }
   }) as z.ZodType<z.output<T>, z.input<T>>;

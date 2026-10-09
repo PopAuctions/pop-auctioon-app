@@ -14,6 +14,7 @@ import {
   BillingSchema,
   type BillingSchemaType,
 } from '@/utils/schemas/billingSchemas';
+import { getErrorMessage } from '@/utils/form-errors';
 import { useToast } from '@/hooks/useToast';
 import { REQUEST_STATUS } from '@/constants';
 
@@ -174,8 +175,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.label.message || '{}')[locale] ||
-                  errors.label.message}
+                {getErrorMessage(errors.label.message, locale)}
               </CustomText>
             )}
           </View>
@@ -204,8 +204,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.billingName.message || '{}')[locale] ||
-                  errors.billingName.message}
+                {getErrorMessage(errors.billingName.message, locale)}
               </CustomText>
             )}
           </View>
@@ -238,8 +237,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.billingAddress.message || '{}')[locale] ||
-                  errors.billingAddress.message}
+                {getErrorMessage(errors.billingAddress.message, locale)}
               </CustomText>
             )}
           </View>
@@ -268,8 +266,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.vatNumber.message || '{}')[locale] ||
-                  errors.vatNumber.message}
+                {getErrorMessage(errors.vatNumber.message, locale)}
               </CustomText>
             )}
           </View>
@@ -298,8 +295,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.country.message || '{}')[locale] ||
-                  errors.country.message}
+                {getErrorMessage(errors.country.message, locale)}
               </CustomText>
             )}
           </View>
@@ -328,8 +324,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.city.message || '{}')[locale] ||
-                  errors.city.message}
+                {getErrorMessage(errors.city.message, locale)}
               </CustomText>
             )}
           </View>
@@ -358,8 +353,7 @@ export function BillingFormModal({
                 type='error'
                 className='mt-1'
               >
-                {JSON.parse(errors.postalCode.message || '{}')[locale] ||
-                  errors.postalCode.message}
+                {getErrorMessage(errors.postalCode.message, locale)}
               </CustomText>
             )}
           </View>
