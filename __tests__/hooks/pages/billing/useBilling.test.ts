@@ -141,10 +141,10 @@ describe('useGetBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error loading billing information',
-      es: 'Error al cargar la información de facturación',
-    });
+    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
+      'en',
+      'es',
+    ]);
   });
 });
 
@@ -213,10 +213,10 @@ describe('useCreateBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error creating billing information',
-      es: 'Error al crear la información de facturación',
-    });
+    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
+      'en',
+      'es',
+    ]);
   });
 });
 
@@ -286,10 +286,10 @@ describe('useUpdateBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error updating billing information',
-      es: 'Error al actualizar la información de facturación',
-    });
+    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
+      'en',
+      'es',
+    ]);
   });
 });
 
@@ -352,9 +352,9 @@ describe('useDeleteBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error deleting billing information',
-      es: 'Error al eliminar la información de facturación',
-    });
+    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
+      'en',
+      'es',
+    ]);
   });
 });

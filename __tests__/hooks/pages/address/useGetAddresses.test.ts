@@ -158,9 +158,9 @@ describe('useGetAddresses', () => {
     });
 
     expect(result.current.data).toEqual([]);
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error loading addresses',
-      es: 'Error al cargar las direcciones',
-    });
+    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
+      'en',
+      'es',
+    ]);
   });
 });

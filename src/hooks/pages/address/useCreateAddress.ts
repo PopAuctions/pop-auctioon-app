@@ -4,6 +4,7 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import type { AddressSchemaType } from '@/utils/schemas';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useCreateAddress = (): ActionResponse<null> & {
   createAddress: (data: AddressSchemaType) => Promise<void>;
@@ -41,10 +42,7 @@ export const useCreateAddress = (): ActionResponse<null> & {
 
       console.error('ERROR_CREATE_ADDRESS_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error creating address',
-        es: 'Error al crear la dirección',
-      };
+      const message = createLocalizedMessage('errors.address.createUnexpected');
 
       setStatus('error');
       setErrorMessage(message);

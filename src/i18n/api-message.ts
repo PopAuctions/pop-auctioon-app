@@ -45,10 +45,10 @@ export function getApiMessageMetadata(
   };
 }
 
-function translateApiMessage({
-  messageCode,
-  messageParams,
-}: ApiMessageMetadata): LangMap {
+export function createLocalizedMessage(
+  messageCode: MessageKey,
+  messageParams: ApiMessageParams = {}
+): LangMap {
   return Object.fromEntries(
     SUPPORTED_LANGUAGES.map((locale) => [
       locale,
@@ -82,6 +82,6 @@ export function resolveApiMessage(
 
   const metadata = getApiMessageMetadata(payload);
   return metadata
-    ? translateApiMessage(metadata)
+    ? createLocalizedMessage(metadata.messageCode, metadata.messageParams)
     : getLegacyMessage(payload, field);
 }

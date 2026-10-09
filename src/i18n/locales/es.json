@@ -343,7 +343,33 @@
       "invalidRoleMobile": "Rol inválido.",
       "invalidLanguage": "Idioma inválido.",
       "invalidFieldsMobile": "Campos inválidos. Por favor, asegúrate de tener la última versión de la aplicación.",
+      "invalidFieldsGeneric": "Campos inválidos",
       "missingParameters": "Faltan parámetros"
+    },
+    "auth": {
+      "userNotAuthenticated": "Usuario no autenticado"
+    },
+    "account": {
+      "invalidUser": "Usuario inválido"
+    },
+    "address": {
+      "fetchFailed": "Error obteniendo direcciones",
+      "loadFailed": "Error al cargar las direcciones",
+      "createFailed": "Error creando la dirección. Por favor, inténtalo de nuevo.",
+      "createUnexpected": "Error al crear la dirección",
+      "updateFailed": "Error actualizando la dirección. Por favor intenta de nuevo."
+    },
+    "billing": {
+      "idRequired": "ID de facturación requerido",
+      "retrieveFailed": "Error al obtener los datos de facturación",
+      "noData": "No se recibieron datos de facturación",
+      "loadFailed": "Error al cargar la información de facturación",
+      "createFailed": "Error creando datos de factuación",
+      "createUnexpected": "Error al crear la información de facturación",
+      "updateFailed": "Error actualizando datos de factuación",
+      "updateUnexpected": "Error al actualizar la información de facturación",
+      "deleteFailed": "Error eliminando dirección de facturación",
+      "deleteUnexpected": "Error al eliminar la información de facturación"
     },
     "article": {
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
@@ -419,6 +445,16 @@
   },
   "resetPassword": {
     "resetEmailSent": "Correo de restablecimiento enviado"
+  },
+  "addresses": {
+    "createdSuccessfully": "Dirección creada satisfactoriamente",
+    "updatedSuccessfully": "Dirección actualizada satisfactoriamente"
+  },
+  "billing": {
+    "loadedSuccessfully": "Datos de facturación cargados correctamente",
+    "createdSuccessfully": "Datos de facturación creados satisfactoriamente",
+    "updatedSuccessfully": "Datos de facturación actualizados satisfactoriamente",
+    "deletedSuccessfully": "Dirección de facturación eliminada correctamente"
   },
   "errorBoundary": {
     "title": "Algo ha ido mal",

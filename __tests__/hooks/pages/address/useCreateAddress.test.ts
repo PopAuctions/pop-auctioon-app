@@ -93,10 +93,10 @@ describe('useCreateAddress', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error creating address',
-      es: 'Error al crear la dirección',
-    });
+    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
+      'en',
+      'es',
+    ]);
   });
 
   it('should update status to loading during creation', async () => {

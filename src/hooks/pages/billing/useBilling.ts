@@ -9,6 +9,7 @@ import type {
   UserBillingInfo,
 } from '@/types/types';
 import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 // ==================== GET BILLING ====================
 export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
@@ -39,10 +40,7 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
 
       if (!response.data) {
         console.error('ERROR_NO_BILLING_DATA_RECEIVED');
-        const message: LangMap = {
-          en: 'No billing data received',
-          es: 'No se recibieron datos de facturación',
-        };
+        const message = createLocalizedMessage('errors.billing.noData');
         setStatus('error');
         setErrorMessage(message);
         return;
@@ -58,10 +56,7 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
 
       console.error('ERROR_LOAD_BILLING_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error loading billing information',
-        es: 'Error al cargar la información de facturación',
-      };
+      const message = createLocalizedMessage('errors.billing.loadFailed');
 
       setStatus('error');
       setErrorMessage(message);
@@ -118,10 +113,7 @@ export const useCreateBilling = (): ActionResponse<null> & {
 
       console.error('ERROR_CREATE_BILLING_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error creating billing information',
-        es: 'Error al crear la información de facturación',
-      };
+      const message = createLocalizedMessage('errors.billing.createUnexpected');
 
       setStatus('error');
       setErrorMessage(message);
@@ -177,10 +169,7 @@ export const useUpdateBilling = (): ActionResponse<null> & {
 
       console.error('ERROR_UPDATE_BILLING_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error updating billing information',
-        es: 'Error al actualizar la información de facturación',
-      };
+      const message = createLocalizedMessage('errors.billing.updateUnexpected');
 
       setStatus('error');
       setErrorMessage(message);
@@ -235,10 +224,7 @@ export const useDeleteBilling = (): ActionResponse<null> & {
 
       console.error('ERROR_DELETE_BILLING_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error deleting billing information',
-        es: 'Error al eliminar la información de facturación',
-      };
+      const message = createLocalizedMessage('errors.billing.deleteUnexpected');
 
       setStatus('error');
       setErrorMessage(message);

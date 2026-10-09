@@ -343,7 +343,33 @@
       "invalidRoleMobile": "Invalid role.",
       "invalidLanguage": "Invalid language.",
       "invalidFieldsMobile": "Invalid Fields. Please check you have the latest version of the app.",
+      "invalidFieldsGeneric": "Invalid fields",
       "missingParameters": "Missing parameters"
+    },
+    "auth": {
+      "userNotAuthenticated": "User not authenticated"
+    },
+    "account": {
+      "invalidUser": "User invalid"
+    },
+    "address": {
+      "fetchFailed": "Error fetching addresses",
+      "loadFailed": "Error loading addresses",
+      "createFailed": "Error creating address. Please try again.",
+      "createUnexpected": "Error creating address",
+      "updateFailed": "Error updating address. Please try again."
+    },
+    "billing": {
+      "idRequired": "Billing ID is required",
+      "retrieveFailed": "Error retrieving billing data",
+      "noData": "No billing data received",
+      "loadFailed": "Error loading billing information",
+      "createFailed": "Error creating billing data",
+      "createUnexpected": "Error creating billing information",
+      "updateFailed": "Error updating billing data",
+      "updateUnexpected": "Error updating billing information",
+      "deleteFailed": "Error deleting billing address",
+      "deleteUnexpected": "Error deleting billing information"
     },
     "article": {
       "followedArticlesLoadFailed": "Error fetching followed articles",
@@ -419,6 +445,16 @@
   },
   "resetPassword": {
     "resetEmailSent": "Reset email sent"
+  },
+  "addresses": {
+    "createdSuccessfully": "Address created successfully",
+    "updatedSuccessfully": "Address updated successfully"
+  },
+  "billing": {
+    "loadedSuccessfully": "Billing data loaded successfully",
+    "createdSuccessfully": "Billing data created successfully",
+    "updatedSuccessfully": "Billing data updated successfully",
+    "deletedSuccessfully": "Billing address deleted successfully"
   },
   "errorBoundary": {
     "title": "Something went wrong",

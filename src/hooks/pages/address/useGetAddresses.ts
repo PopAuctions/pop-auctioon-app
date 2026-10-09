@@ -8,6 +8,7 @@ import type {
   UserAddress,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useGetAddresses = (): ActionResponse<UserAddress[]> & {
   refetch: () => Promise<void>;
@@ -50,10 +51,7 @@ export const useGetAddresses = (): ActionResponse<UserAddress[]> & {
       console.error('ERROR_LOAD_ADDRESSES_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage({
-        en: 'Error loading addresses',
-        es: 'Error al cargar las direcciones',
-      });
+      setErrorMessage(createLocalizedMessage('errors.address.loadFailed'));
     }
   }, [secureGet]);
 
