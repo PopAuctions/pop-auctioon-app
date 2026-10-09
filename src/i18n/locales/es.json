@@ -337,20 +337,29 @@
       "internal": "Error interno del servidor"
     },
     "file": {
-      "invalidProfilePicture": "Formato de foto de perfil inválido. Debe tener: src, name, type y arrayBuffer"
+      "invalidProfilePicture": "Formato de foto de perfil inválido. Debe tener: src, name, type y arrayBuffer",
+      "imageTooHeavy": "La imagen es demasiado pesada",
+      "uploadFailed": "Error subiendo imagen"
     },
     "validation": {
       "invalidRoleMobile": "Rol inválido.",
       "invalidLanguage": "Idioma inválido.",
       "invalidFieldsMobile": "Campos inválidos. Por favor, asegúrate de tener la última versión de la aplicación.",
       "invalidFieldsGeneric": "Campos inválidos",
+      "invalidFieldsProfile": "Campos inválidos",
+      "languageRequired": "El campo language es requerido y debe ser una cadena de texto",
+      "unsupportedLanguage": "Idioma no soportado.",
       "missingParameters": "Faltan parámetros"
     },
     "auth": {
-      "userNotAuthenticated": "Usuario no autenticado"
+      "userNotAuthenticated": "Usuario no autenticado",
+      "notAuthorized": "No autorizado"
     },
     "account": {
-      "invalidUser": "Usuario inválido"
+      "invalidUser": "Usuario inválido",
+      "deleteFailed": "No se pudo eliminar tu cuenta. Inténtalo de nuevo.",
+      "deleteUnexpected": "Ocurrió un error al eliminar su cuenta.",
+      "deleteRetryLater": "No se pudo eliminar la cuenta. Por favor, inténtelo de nuevo más tarde."
     },
     "address": {
       "fetchFailed": "Error obteniendo direcciones",
@@ -370,6 +379,12 @@
       "updateUnexpected": "Error al actualizar la información de facturación",
       "deleteFailed": "Error eliminando dirección de facturación",
       "deleteUnexpected": "Error al eliminar la información de facturación"
+    },
+    "profile": {
+      "updateFailed": "Error actualizando información de usuario",
+      "updateUnexpected": "Error al actualizar el perfil",
+      "webUpdateUnexpected": "Error actualizando usuario",
+      "imageProcessingFailed": "Hubo un problema procesando la imagen"
     },
     "article": {
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
@@ -425,6 +440,10 @@
       "openFailed": "No se pudo abrir el documento"
     },
     "user": {
+      "notFound": "Usuario no encontrado",
+      "noData": "No se recibieron datos del usuario",
+      "loadFailed": "Error al cargar datos del usuario",
+      "refreshFailed": "No se pudieron actualizar los datos del usuario",
       "languageUpdateFailed": "Error al actualizar el idioma"
     },
     "articleImages": {
@@ -455,6 +474,13 @@
     "createdSuccessfully": "Datos de facturación creados satisfactoriamente",
     "updatedSuccessfully": "Datos de facturación actualizados satisfactoriamente",
     "deletedSuccessfully": "Dirección de facturación eliminada correctamente"
+  },
+  "profile": {
+    "updatedSuccessfully": "Usuario actualizado"
+  },
+  "account": {
+    "deletedSuccessfully": "Cuenta eliminada correctamente",
+    "pendingDeletion": "Tu cuenta fue desactivada. Estamos finalizando la eliminación."
   },
   "errorBoundary": {
     "title": "Algo ha ido mal",

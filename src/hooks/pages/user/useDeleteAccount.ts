@@ -5,6 +5,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { Lang, LangMap, RefetchReturn, RequestStatus } from '@/types/types';
 import { useState } from 'react';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useDeleteAccount = (
   locale: Lang
@@ -41,26 +42,27 @@ export const useDeleteAccount = (
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: response.success ?? response.data,
       });
 
       return {
-        message: response.data,
+        message: response.success ?? response.data,
       };
     } catch {
+      const toastMessage = createLocalizedMessage(
+        'errors.account.deleteUnexpected'
+      );
+      const resultMessage = createLocalizedMessage(
+        'errors.account.deleteRetryLater'
+      );
+
       callToast({
         variant: 'error',
-        description: {
-          en: 'An error occurred while deleting your account.',
-          es: 'Ocurrió un error al eliminar su cuenta.',
-        },
+        description: toastMessage,
       });
       setStatus(REQUEST_STATUS.error);
       return {
-        message: {
-          en: 'Failed to delete account. Please try again later.',
-          es: 'No se pudo eliminar la cuenta. Por favor, inténtelo de nuevo más tarde.',
-        },
+        message: resultMessage,
       };
     } finally {
       setStatus(REQUEST_STATUS.idle);

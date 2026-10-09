@@ -337,20 +337,29 @@
       "internal": "Internal server error"
     },
     "file": {
-      "invalidProfilePicture": "Invalid profile picture format. Must have: src, name, type, and arrayBuffer"
+      "invalidProfilePicture": "Invalid profile picture format. Must have: src, name, type, and arrayBuffer",
+      "imageTooHeavy": "Image is too heavy",
+      "uploadFailed": "Error uploading image"
     },
     "validation": {
       "invalidRoleMobile": "Invalid role.",
       "invalidLanguage": "Invalid language.",
       "invalidFieldsMobile": "Invalid Fields. Please check you have the latest version of the app.",
       "invalidFieldsGeneric": "Invalid fields",
+      "invalidFieldsProfile": "Invalid Fields",
+      "languageRequired": "language is required and must be a string",
+      "unsupportedLanguage": "Unsupported language.",
       "missingParameters": "Missing parameters"
     },
     "auth": {
-      "userNotAuthenticated": "User not authenticated"
+      "userNotAuthenticated": "User not authenticated",
+      "notAuthorized": "Not authorized"
     },
     "account": {
-      "invalidUser": "User invalid"
+      "invalidUser": "User invalid",
+      "deleteFailed": "Could not delete your account. Please try again.",
+      "deleteUnexpected": "An error occurred while deleting your account.",
+      "deleteRetryLater": "Failed to delete account. Please try again later."
     },
     "address": {
       "fetchFailed": "Error fetching addresses",
@@ -370,6 +379,12 @@
       "updateUnexpected": "Error updating billing information",
       "deleteFailed": "Error deleting billing address",
       "deleteUnexpected": "Error deleting billing information"
+    },
+    "profile": {
+      "updateFailed": "Error updating user info",
+      "updateUnexpected": "Error updating profile",
+      "webUpdateUnexpected": "Error updating user",
+      "imageProcessingFailed": "There was a problem processing the image"
     },
     "article": {
       "followedArticlesLoadFailed": "Error fetching followed articles",
@@ -425,6 +440,10 @@
       "openFailed": "Could not open document"
     },
     "user": {
+      "notFound": "User not found",
+      "noData": "No user data received",
+      "loadFailed": "Error loading user data",
+      "refreshFailed": "Could not update user data",
       "languageUpdateFailed": "Error updating language preference"
     },
     "articleImages": {
@@ -455,6 +474,13 @@
     "createdSuccessfully": "Billing data created successfully",
     "updatedSuccessfully": "Billing data updated successfully",
     "deletedSuccessfully": "Billing address deleted successfully"
+  },
+  "profile": {
+    "updatedSuccessfully": "User updated"
+  },
+  "account": {
+    "deletedSuccessfully": "Account deleted successfully",
+    "pendingDeletion": "Your account has been deactivated. We’re finishing the deletion."
   },
   "errorBoundary": {
     "title": "Something went wrong",
