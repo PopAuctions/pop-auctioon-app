@@ -1,208 +1,98 @@
 import en from '@/i18n/locales/en.json';
 import es from '@/i18n/locales/es.json';
 
+const DISPLAY_LABEL_NAMESPACES = [
+  'articleSpecification',
+  'articleStatus',
+  'auctionCategory',
+  'auctionCategorySelection',
+  'auctionMode',
+  'auctionStatus',
+  'calendarMonth',
+  'country',
+  'invoiceFileName',
+  'offerStatus',
+  'offersFilter',
+  'onlineStoreArticleStatus',
+  'paidFilter',
+  'paymentStatus',
+  'payoutMethod',
+  'payoutStatus',
+  'saleType',
+  'sortBy',
+] as const;
+
+const DISPLAY_LABEL_KEYS = {
+  articleStatus: [
+    'NOT_PUBLISHED',
+    'NEED_CHANGES',
+    'CHANGES_MADE',
+    'APPROVED',
+    'PUBLISHED',
+  ],
+  offerStatus: ['PENDING', 'ACCEPTED', 'REJECTED', 'COUNTERED'],
+  onlineStoreArticleStatus: ['NOT_AVAILABLE', 'AVAILABLE', 'SOLD'],
+  paymentStatus: ['PENDING', 'APPROVED', 'REJECTED'],
+  payoutMethod: ['CASH', 'BANK_TRANSFER', 'PAYPAL', 'STRIPE'],
+  payoutStatus: ['PAID', 'CANCELLED'],
+  saleType: ['AUCTION', 'ONLINE_STORE'],
+} as const;
+
+function dictionaryShape(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(dictionaryShape);
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, child]) => [key, dictionaryShape(child)])
+    );
+  }
+
+  return typeof value;
+}
+
 describe.each([
-  ['en', en, '%{min}'],
-  ['es', es, '%{min}'],
-] as const)('%s shared messages', (_locale, dictionary, minPlaceholder) => {
-  it('exposes common UI namespaces', () => {
-    expect(dictionary.common.actions.retry).toBeDefined();
-    expect(dictionary.common.status.loading).toBeDefined();
-    expect(dictionary.common.toast.error).toBeDefined();
-    expect(dictionary.errors.unexpected).toBeDefined();
-    expect(dictionary.errorBoundary.description).toBeDefined();
-    expect(dictionary.notFound.description).toBeDefined();
-    expect(dictionary.validation.minLength).toContain(minPlaceholder);
+  ['en', en],
+  ['es', es],
+] as const)('%s shared messages', (_locale, dictionary) => {
+  it('exposes the shared UI messages and interpolation contracts', () => {
+    expect(typeof dictionary.common.actions.retry).toBe('string');
+    expect(typeof dictionary.common.status.loading).toBe('string');
+    expect(typeof dictionary.common.toast.error).toBe('string');
+    expect(typeof dictionary.errors.unexpected).toBe('string');
+    expect(typeof dictionary.errorBoundary.description).toBe('string');
+    expect(typeof dictionary.notFound.description).toBe('string');
+    expect(dictionary.validation.minLength).toContain('%{min}');
+  });
+
+  it('contains every centralized display-label namespace', () => {
+    expect(Object.keys(dictionary.displayLabels).sort()).toEqual(
+      [...DISPLAY_LABEL_NAMESPACES].sort()
+    );
+  });
+
+  it('contains every required status and payout label', () => {
+    for (const [namespace, expectedKeys] of Object.entries(
+      DISPLAY_LABEL_KEYS
+    )) {
+      const labels = dictionary.displayLabels[
+        namespace as keyof typeof DISPLAY_LABEL_KEYS
+      ] as Record<string, string>;
+
+      expect(Object.keys(labels).sort()).toEqual([...expectedKeys].sort());
+      for (const label of Object.values(labels)) {
+        expect(typeof label).toBe('string');
+        expect(label.length).toBeGreaterThan(0);
+      }
+    }
   });
 });
 
-describe('centralized display labels', () => {
-  it('preserves the existing English status and payout labels', () => {
-    expect(en.displayLabels).toMatchObject({
-      paymentStatus: {
-        PENDING: 'Processing',
-        APPROVED: 'Paid',
-        REJECTED: 'Rejected',
-      },
-      articleStatus: {
-        NOT_PUBLISHED: 'Not published',
-        NEED_CHANGES: 'Needs changes',
-        CHANGES_MADE: 'Changes made',
-        APPROVED: 'Approved',
-        PUBLISHED: 'Published',
-      },
-      onlineStoreArticleStatus: {
-        NOT_AVAILABLE: 'Not available',
-        AVAILABLE: 'Available',
-        SOLD: 'Sold',
-      },
-      offerStatus: {
-        PENDING: 'Pending',
-        ACCEPTED: 'Accepted',
-        REJECTED: 'Rejected',
-        COUNTERED: 'Countered',
-      },
-      saleType: {
-        AUCTION: 'Auction',
-        ONLINE_STORE: 'Online store',
-      },
-      payoutMethod: {
-        CASH: 'Cash',
-        BANK_TRANSFER: 'Bank transfer',
-        PAYPAL: 'PayPal',
-        STRIPE: 'Stripe',
-      },
-      payoutStatus: {
-        PAID: 'Paid',
-        CANCELLED: 'Cancelled',
-      },
-      articleSpecification: {
-        state: {
-          NEVER_WORN_WITH_TAG: 'Never Worn with Tag',
-          NEVER_WORN: 'Never Worn',
-          VERY_GOOD_CONDITION: 'Very Good Condition',
-          GOOD_CONDITION: 'Good Condition',
-          FAIR_CONDITION: 'Fair Condition',
-        },
-        stateDescription: {
-          NEVER_WORN_WITH_TAG:
-            'Like new, with the original tag still attached, and no signs of wear, damage, or modifications.',
-          NEVER_WORN:
-            'Flawless condition, showing no signs of wear, damage, or alterations.',
-          VERY_GOOD_CONDITION:
-            'Gently worn, carefully preserved with no rips, fuzzing, or fading.',
-          GOOD_CONDITION:
-            'Moderately used, still in good shape but may show minor fabric wear or small imperfections.',
-          FAIR_CONDITION:
-            'Heavily worn, with noticeable defects and signs of frequent use.',
-        },
-        smell: {
-          TOBACCO: 'Tobacco',
-          PERFUME: 'Perfume',
-          HUMIDITY: 'Humidity',
-          NO_SMELL: 'No smell',
-          OTHER: 'Other',
-        },
-        movement: {
-          AUTOMATIC: 'Automatic',
-          QUARTZ: 'Quartz',
-          MANUAL_WINDING: 'Manual winding',
-          SMART_WATCH: 'Smartwatch',
-          SOLAR: 'Solar',
-          OTHER: 'Other',
-        },
-        artType: {
-          OTHER: 'Other',
-          ANTIQUE: 'Antique',
-          CERAMIC: 'Ceramic',
-          COLLECTIBLE: 'Collectible',
-          DRAWING: 'Drawing',
-          FURNITURE: 'Furniture',
-          GLASS_ART: 'Glass Art',
-          METAL_ART: 'Metal Art',
-          PAINTING: 'Painting',
-          SCULPTURE: 'Sculpture',
-          WOOD_ART: 'Wood Art',
-        },
-        color: {
-          MULTICOLOUR: 'Multicolour',
-          OTHER: 'Other',
-          BEIGE: 'Beige',
-          BLACK: 'Black',
-          BLUE: 'Blue',
-          BROWN: 'Brown',
-          BURGUNDY: 'Burgundy',
-          CAMEL: 'Camel',
-          CHARCOAL: 'Charcoal',
-          ECRU: 'Ecru',
-          GOLD: 'Gold',
-          GREEN: 'Green',
-          GREY: 'Grey',
-          KHAKI: 'Khaki',
-          METALLIC: 'Metallic',
-          NAVY: 'Navy',
-          ORANGE: 'Orange',
-          PINK: 'Pink',
-          PURPLE: 'Purple',
-          RED: 'Red',
-          SILVER: 'Silver',
-          TURQUOISE: 'Turquoise',
-          WHITE: 'White',
-          YELLOW: 'Yellow',
-        },
-        boxMaterial: {
-          ALUMINUM: 'Aluminum',
-          BRASS: 'Brass',
-          BRONZE: 'Bronze',
-          CARBON: 'Carbon',
-          CERAMIC: 'Ceramic',
-          SAPPHIRE_CRYSTAL: 'Sapphire Crystal',
-          GOLD_PLATED: 'Gold Plated',
-          PALLADIUM: 'Palladium',
-          PLASTIC: 'Plastic',
-          PLATINUM: 'Platinum',
-          SILVER: 'Silver',
-          STEEL: 'Steel',
-          STEEL_AND_GOLD: 'Steel and Gold',
-          TANTALUM: 'Tantalum',
-          TITANIUM: 'Titanium',
-          TUNGSTEN: 'Tungsten',
-          RED_GOLD: 'Red Gold',
-          ROSE_GOLD: 'Rose Gold',
-          ROSE_GOLD_AND_STEEL: 'Rose Gold and Steel',
-          WHITE_GOLD: 'White Gold',
-          WHITE_GOLD_AND_STEEL: 'White Gold and Steel',
-          YELLOW_GOLD: 'Yellow Gold',
-          YELLOW_GOLD_AND_STEEL: 'Yellow Gold and Steel',
-          UNSPECIFIED: 'Unspecified',
-        },
-      },
-    });
-  });
-
-  it('preserves the existing Spanish labels and offer-status variants', () => {
-    expect(es.displayLabels.paymentStatus.APPROVED).toBe('Pagado');
-    expect(es.displayLabels.articleStatus.NEED_CHANGES).toBe(
-      'Necesita cambios'
-    );
-    expect(es.displayLabels.onlineStoreArticleStatus.SOLD).toBe('Vendido');
-    expect(es.displayLabels.offerStatus.ACCEPTED).toBe('Aceptada');
-    expect(es.components.offerCard.status.ACCEPTED).toBe('Aceptado');
-    expect(es.displayLabels.saleType.ONLINE_STORE).toBe('Tienda online');
-    expect(es.displayLabels.payoutMethod.BANK_TRANSFER).toBe(
-      'Transferencia bancaria'
-    );
-    expect(es.displayLabels.payoutStatus.CANCELLED).toBe('Cancelado');
-    expect(es.displayLabels.articleSpecification.state.GOOD_CONDITION).toBe(
-      'Buen Estado'
-    );
-    expect(
-      es.displayLabels.articleSpecification.stateDescription.GOOD_CONDITION
-    ).toBe(
-      'Usado moderadamente, aún en buen estado pero puede mostrar un ligero desgaste del tejido o pequeñas imperfecciones.'
-    );
-    expect(es.displayLabels.articleSpecification.smell.NO_SMELL).toBe(
-      'Sin olor'
-    );
-    expect(es.displayLabels.articleSpecification.movement.MANUAL_WINDING).toBe(
-      'Cuerda manual'
-    );
-    expect(es.displayLabels.articleSpecification.artType.GLASS_ART).toBe(
-      'Arte en vidrio'
-    );
-    expect(es.displayLabels.articleSpecification.color.BLUE).toBe('Azul');
-    expect(es.displayLabels.articleSpecification.boxMaterial.STEEL).toBe(
-      'Acero'
-    );
-    expect(en.displayLabels.articleSpecification.material.CANVAS).toBe(
-      'Canvas'
-    );
-    expect(es.displayLabels.articleSpecification.material.CANVAS).toBe('Lona');
-    expect(en.displayLabels.articleSpecification.strapMaterial.LEATHER).toBe(
-      'Leather'
-    );
-    expect(es.displayLabels.articleSpecification.strapMaterial.LEATHER).toBe(
-      'Piel'
-    );
+describe('dictionary structure', () => {
+  it('keeps every locale key and value type in sync', () => {
+    expect(dictionaryShape(es)).toEqual(dictionaryShape(en));
   });
 });

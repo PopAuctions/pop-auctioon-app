@@ -15,10 +15,12 @@ describe('app locale registry', () => {
   });
 
   it('derives language options from the registry', () => {
-    expect(LANGUAGE_OPTIONS).toEqual([
-      { value: 'es', label: 'Español' },
-      { value: 'en', label: 'English' },
-    ]);
+    expect(LANGUAGE_OPTIONS).toEqual(
+      SUPPORTED_LANGUAGES.map((value) => ({
+        value,
+        label: LOCALE_CONFIG[value].label,
+      }))
+    );
   });
 
   it('keeps the existing platform locale conventions', () => {

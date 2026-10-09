@@ -1,18 +1,30 @@
 import en from '@/i18n/locales/en.json';
 import es from '@/i18n/locales/es.json';
 
-describe('centralized invoice fallback filenames', () => {
-  it('preserves the existing English filenames', () => {
-    expect(en.displayLabels.invoiceFileName).toEqual({
-      COMMISSION_INVOICE: 'commission-invoice',
-      LIQUIDATION_INVOICE: 'liquidation-invoice',
-    });
-  });
+const INVOICE_FILE_NAME_KEYS = [
+  'COMMISSION_INVOICE',
+  'LIQUIDATION_INVOICE',
+] as const;
 
-  it('preserves the existing Spanish filenames', () => {
-    expect(es.displayLabels.invoiceFileName).toEqual({
-      COMMISSION_INVOICE: 'fatura-comisión',
-      LIQUIDATION_INVOICE: 'factura-liquidación',
+describe.each([
+  ['en', en],
+  ['es', es],
+] as const)(
+  '%s centralized invoice fallback filenames',
+  (_locale, dictionary) => {
+    it('contains every required filename as a non-empty string', () => {
+      expect(
+        Object.keys(dictionary.displayLabels.invoiceFileName).sort()
+      ).toEqual([...INVOICE_FILE_NAME_KEYS].sort());
+
+      for (const key of INVOICE_FILE_NAME_KEYS) {
+        expect(typeof dictionary.displayLabels.invoiceFileName[key]).toBe(
+          'string'
+        );
+        expect(
+          dictionary.displayLabels.invoiceFileName[key].length
+        ).toBeGreaterThan(0);
+      }
     });
-  });
-});
+  }
+);

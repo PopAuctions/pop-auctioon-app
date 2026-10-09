@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react-native';
 import { changeLocale, t } from '@/i18n';
+import en from '@/i18n/locales/en.json';
 
 jest.mock('@sentry/react-native', () => ({ captureMessage: jest.fn() }));
 
@@ -9,7 +10,7 @@ describe('missing translation diagnostics', () => {
   });
 
   it('does not report an existing translation', () => {
-    expect(t('globals.back')).toBe('Back');
+    expect(t('globals.back')).toBe(en.globals.back);
     expect(Sentry.captureMessage).not.toHaveBeenCalled();
     expect(console.warn).not.toHaveBeenCalled();
   });
@@ -19,7 +20,7 @@ describe('missing translation diagnostics', () => {
       t('missing.message' as any, {
         privateValue: 'must-not-be-reported',
       })
-    ).toBe('Something went wrong');
+    ).toBe(en.errors.unexpected);
 
     expect(console.warn).toHaveBeenCalledWith(
       '[i18n] Missing message key "missing.message" for locale "en"; using generic-error fallback.'

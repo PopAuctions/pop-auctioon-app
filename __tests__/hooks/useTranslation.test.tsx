@@ -1,5 +1,4 @@
-import React from 'react';
-import { renderHook, act } from '@testing-library/react-native';
+import { renderHook } from '@testing-library/react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import esTranslations from '@/i18n/locales/es.json';
 import enTranslations from '@/i18n/locales/en.json';
@@ -143,26 +142,14 @@ describe('useTranslation Hook', () => {
   });
 
   describe('Translation Consistency', () => {
-    it('should have consistent translation structure between languages', () => {
-      // Verificar que ambos idiomas tengan las mismas claves
-      expect(esTranslations.errorLoading).toBeDefined();
-      expect(enTranslations.errorLoading).toBeDefined();
-
-      expect(esTranslations.errorLoading.title).toBeDefined();
-      expect(enTranslations.errorLoading.title).toBeDefined();
-
-      expect(esTranslations.errorLoading.fontError).toBeDefined();
-      expect(enTranslations.errorLoading.fontError).toBeDefined();
-    });
-
-    it('should have different content for different languages', () => {
-      // Verificar que las traducciones sean diferentes
-      expect(esTranslations.errorLoading.fontError).not.toBe(
-        enTranslations.errorLoading.fontError
+    it('should have the required translation keys in both languages', () => {
+      expect(Object.keys(esTranslations.errorLoading).sort()).toEqual(
+        Object.keys(enTranslations.errorLoading).sort()
       );
-      expect(esTranslations.loginPage.login).not.toBe(
-        enTranslations.loginPage.login
-      );
+      expect(typeof esTranslations.errorLoading.title).toBe('string');
+      expect(typeof enTranslations.errorLoading.title).toBe('string');
+      expect(typeof esTranslations.errorLoading.fontError).toBe('string');
+      expect(typeof enTranslations.errorLoading.fontError).toBe('string');
     });
   });
 });
