@@ -432,6 +432,10 @@
     "auction": {
       "followedListLoadFailed": "Error getting followed auctions",
       "followedListUserMissing": "No user",
+      "followStatusUserInvalid": "Invalid user",
+      "followStatusLoadFailed": "Error getting user info",
+      "idRequired": "Missing auctionId",
+      "userFollowInfoLoadFailed": "Error fetching user information",
       "followedAuctionsLoadFailed": "Error fetching followed auctions",
       "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions",
       "auctionsLoadFailed": "Error fetching auctions",

@@ -432,6 +432,10 @@
     "auction": {
       "followedListLoadFailed": "Error al obtener las subastas seguidas",
       "followedListUserMissing": "No hay usuario",
+      "followStatusUserInvalid": "Usuario inválido",
+      "followStatusLoadFailed": "Error al obtener la información del usuario",
+      "idRequired": "Falta auctionId",
+      "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
       "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas",
       "upcomingAuctionsLoadFailed": "Error al obtener las subastas próximas",
       "auctionsLoadFailed": "Error al obtener subastas",

@@ -2,6 +2,10 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const USER_FOLLOW_INFO_LOAD_ERROR =
+  'errors.auction.userFollowInfoLoadFailed' as const satisfies MessageKey;
 
 export const useGetUserFollowsAuction = ({
   auctionId,
@@ -25,10 +29,7 @@ export const useGetUserFollowsAuction = ({
         setErrorMessage(res.error);
         setFollows(false);
         return {
-          message: {
-            en: 'Error fetching user information',
-            es: 'Error al obtener la información del usuario',
-          },
+          message: USER_FOLLOW_INFO_LOAD_ERROR,
         };
       }
 
@@ -54,10 +55,7 @@ export const useGetUserFollowsAuction = ({
       console.error('Unexpected error fetching auctions:', errorMessage);
 
       return {
-        message: {
-          en: 'Error fetching user information',
-          es: 'Error al obtener la información del usuario',
-        },
+        message: USER_FOLLOW_INFO_LOAD_ERROR,
       };
     }
   }, [auctionId, secureGet]);
