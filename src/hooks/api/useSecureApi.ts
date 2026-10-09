@@ -8,10 +8,18 @@ import {
 } from '@/config/api-config';
 import { ApiEndpoint, LangMap } from '@/types/types';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import {
+  getApiMessageMetadata,
+  resolveApiMessage,
+  type ApiMessageMetadata,
+} from '@/i18n/api-message';
 
 interface ApiResponse<T = any> {
   data: T;
   error: LangMap;
+  success: LangMap;
+  messageCode: ApiMessageMetadata['messageCode'];
+  messageParams: ApiMessageMetadata['messageParams'];
   responseText: string;
   status: number;
   contentType: string;
@@ -99,22 +107,7 @@ export const useSecureApi = () => {
           };
 
           const getErrorMessage = (data: unknown): LangMap => {
-            if (data && typeof data === 'object' && 'error' in data) {
-              const anyData = data as any;
-
-              if (anyData.error && typeof anyData.error === 'object') {
-                return anyData.error as LangMap;
-              }
-
-              if (typeof anyData.error === 'string') {
-                return {
-                  en: anyData.error,
-                  es: anyData.error,
-                };
-              }
-            }
-
-            return defaultError;
+            return resolveApiMessage(data, 'error') ?? defaultError;
           };
 
           // 🔹 BINARY / NON-JSON MODE (parseJson === false)
@@ -138,10 +131,12 @@ export const useSecureApi = () => {
             // ❌ Error: try to parse JSON error, then text
             let errorMessage = defaultError;
             let responseText = '';
+            let messageMetadata: ApiMessageMetadata | undefined;
 
             try {
               const maybeJson = await responseClone.json();
               errorMessage = getErrorMessage(maybeJson);
+              messageMetadata = getApiMessageMetadata(maybeJson);
             } catch {
               try {
                 const textResponse = await responseClone.text();
@@ -161,6 +156,7 @@ export const useSecureApi = () => {
               error: errorMessage,
               responseText,
               contentType,
+              ...(messageMetadata ?? {}),
               ...(includeHeaders ? { headers: response.headers } : {}),
             };
           }
@@ -183,6 +179,11 @@ export const useSecureApi = () => {
             };
           }
 
+          const messageMetadata = getApiMessageMetadata(responseData);
+          const successMessage = response.ok
+            ? resolveApiMessage(responseData, 'success')
+            : undefined;
+
           return {
             // Si responseData tiene .data, usarlo; si no, usar responseData completo
             data: (responseData.data === undefined
@@ -190,6 +191,8 @@ export const useSecureApi = () => {
               : responseData.data) as T | undefined,
             status: response.status,
             error: response.ok ? undefined : getErrorMessage(responseData),
+            ...(successMessage ? { success: successMessage } : {}),
+            ...(messageMetadata ?? {}),
             ...(includeHeaders ? { headers: response.headers } : {}),
           };
         } catch {

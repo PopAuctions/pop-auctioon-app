@@ -242,6 +242,69 @@ describe('useSecureApi - Simple Tests', () => {
     });
   });
 
+  it('prefers a valid local error code over the legacy error map', async () => {
+    const payload = {
+      error: { en: 'legacy-en', es: 'legacy-es' },
+      messageCode: 'validation.usernameMinLength',
+      messageParams: { min: 3 },
+      data: null,
+    };
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      json: () => Promise.resolve(payload),
+      clone: () => ({
+        text: () => Promise.resolve(JSON.stringify(payload)),
+        json: () => Promise.resolve(payload),
+      }),
+      headers: { get: () => 'application/json' },
+    });
+
+    const { result } = renderHook(() => useSecureApi());
+    const response = await result.current.protectedGet({ endpoint: '/test' });
+
+    expect(response.status).toBe(400);
+    expect(response.data).toBeNull();
+    expect(Object.keys(response.error ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.values(response.error ?? {})).toEqual(
+      expect.arrayContaining([expect.stringContaining('3')])
+    );
+    expect(response.error).not.toEqual(payload.error);
+    expect(response.messageCode).toBe(payload.messageCode);
+    expect(response.messageParams).toEqual(payload.messageParams);
+  });
+
+  it('translates a valid success code without changing response data', async () => {
+    const payload = {
+      error: null,
+      success: { en: 'legacy-en', es: 'legacy-es' },
+      messageCode: 'common.toast.success',
+      messageParams: {},
+      data: { id: 7 },
+    };
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(payload),
+      clone: () => ({
+        text: () => Promise.resolve(JSON.stringify(payload)),
+        json: () => Promise.resolve(payload),
+      }),
+      headers: { get: () => 'application/json' },
+    });
+
+    const { result } = renderHook(() => useSecureApi());
+    const response = await result.current.protectedGet({ endpoint: '/test' });
+
+    expect(response.status).toBe(200);
+    expect(response.data).toEqual(payload.data);
+    expect(response.error).toBeUndefined();
+    expect(Object.keys(response.success ?? {}).sort()).toEqual(['en', 'es']);
+    expect(response.success).not.toEqual(payload.success);
+    expect(response.messageCode).toBe(payload.messageCode);
+    expect(response.messageParams).toEqual({});
+  });
+
   it('should handle non-JSON response', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,

@@ -143,6 +143,13 @@ function getTranslationValue(dictionary: object, key: string): unknown {
   return value;
 }
 
+export function isMessageKey(value: unknown): value is MessageKey {
+  return (
+    typeof value === 'string' &&
+    typeof getTranslationValue(translations[DEFAULT_LANG], value) === 'string'
+  );
+}
+
 export function t<K extends Path<Dictionary>>(
   key: K,
   options?: any
