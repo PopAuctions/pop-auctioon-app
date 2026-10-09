@@ -428,6 +428,8 @@
       "updateFailed": "Error al actualizar el artículo"
     },
     "auction": {
+      "followedListLoadFailed": "Error al obtener las subastas seguidas",
+      "followedListUserMissing": "No hay usuario",
       "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas",
       "upcomingAuctionsLoadFailed": "Error al obtener las subastas próximas",
       "auctionsLoadFailed": "Error al obtener subastas",

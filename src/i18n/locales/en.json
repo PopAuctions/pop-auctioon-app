@@ -428,6 +428,8 @@
       "updateFailed": "Error updating article"
     },
     "auction": {
+      "followedListLoadFailed": "Error getting followed auctions",
+      "followedListUserMissing": "No user",
       "followedAuctionsLoadFailed": "Error fetching followed auctions",
       "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions",
       "auctionsLoadFailed": "Error fetching auctions",
