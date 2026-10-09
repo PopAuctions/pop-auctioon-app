@@ -413,6 +413,8 @@
     "article": {
       "followedListLoadFailed": "Error al obtener los artículos seguidos",
       "followedListUserMissing": "No hay usuario",
+      "followIdsUserInvalid": "Usuario inválido",
+      "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",
       "bidsLoadFailed": "Error al obtener las pujas del artículo",

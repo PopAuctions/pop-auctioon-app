@@ -413,6 +413,8 @@
     "article": {
       "followedListLoadFailed": "Error getting followed articles",
       "followedListUserMissing": "No user",
+      "followIdsUserInvalid": "Invalid user",
+      "userFollowInfoLoadFailed": "Error fetching user information",
       "followedArticlesLoadFailed": "Error fetching followed articles",
       "loadFailed": "Error fetching article",
       "bidsLoadFailed": "Error fetching article bids",
