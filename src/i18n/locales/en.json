@@ -411,6 +411,8 @@
       "verifyFailed": "Failed to verify code"
     },
     "article": {
+      "followedListLoadFailed": "Error getting followed articles",
+      "followedListUserMissing": "No user",
       "followedArticlesLoadFailed": "Error fetching followed articles",
       "loadFailed": "Error fetching article",
       "bidsLoadFailed": "Error fetching article bids",

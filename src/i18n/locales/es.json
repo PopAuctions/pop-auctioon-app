@@ -411,6 +411,8 @@
       "verifyFailed": "Error al verificar código"
     },
     "article": {
+      "followedListLoadFailed": "Error al obtener los artículos seguidos",
+      "followedListUserMissing": "No hay usuario",
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",
       "bidsLoadFailed": "Error al obtener las pujas del artículo",
