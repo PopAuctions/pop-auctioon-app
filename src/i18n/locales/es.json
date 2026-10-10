@@ -416,6 +416,7 @@
       "followIdsUserInvalid": "Usuario inválido",
       "followStatusUserInvalid": "Usuario inválido",
       "followStatusLoadFailed": "Error al obtener el artículo",
+      "neighboursLoadFailed": "Error obteniendo los artículos vecinos",
       "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",

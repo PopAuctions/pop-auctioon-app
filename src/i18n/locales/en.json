@@ -416,6 +416,7 @@
       "followIdsUserInvalid": "Invalid user",
       "followStatusUserInvalid": "Invalid user",
       "followStatusLoadFailed": "Error getting article",
+      "neighboursLoadFailed": "Error getting neighbour articles",
       "userFollowInfoLoadFailed": "Error fetching user information",
       "followedArticlesLoadFailed": "Error fetching followed articles",
       "loadFailed": "Error fetching article",
