@@ -422,6 +422,8 @@
       "loadFailed": "Error al obtener el artículo",
       "bidsLoadFailed": "Error al obtener las pujas del artículo",
       "autoBidsLoadFailed": "Error obteniendo las pujas automáticas",
+      "liveListLoadFailed": "Error al obtener los artículos",
+      "liveListNotFound": "Error al obtener el artículo",
       "pageInfoLoadFailed": "Error al obtener información de la página",
       "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja",
       "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
@@ -449,7 +451,9 @@
       "updateFailed": "Error al actualizar la subasta"
     },
     "autoBid": {
-      "loadFailed": "Error al obtener las ofertas realizadas"
+      "loadFailed": "Error al obtener las ofertas realizadas",
+      "userMissing": "Usuario no encontrado",
+      "listLoadFailed": "Error obteniendo pujas automáticas"
     },
     "offer": {
       "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",

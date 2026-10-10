@@ -422,6 +422,8 @@
       "loadFailed": "Error fetching article",
       "bidsLoadFailed": "Error fetching article bids",
       "autoBidsLoadFailed": "Error getting automatic bids",
+      "liveListLoadFailed": "Error getting articles",
+      "liveListNotFound": "Articles not found",
       "pageInfoLoadFailed": "Error fetching page info",
       "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts",
       "featuredArticlesLoadFailed": "Error fetching featured articles",
@@ -449,7 +451,9 @@
       "updateFailed": "Error updating auction"
     },
     "autoBid": {
-      "loadFailed": "Error fetching autoBids made"
+      "loadFailed": "Error fetching autoBids made",
+      "userMissing": "Missing user",
+      "listLoadFailed": "Error fetching auto bids"
     },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",
