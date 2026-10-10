@@ -421,6 +421,7 @@
       "followedArticlesLoadFailed": "Error fetching followed articles",
       "loadFailed": "Error fetching article",
       "bidsLoadFailed": "Error fetching article bids",
+      "autoBidsLoadFailed": "Error getting automatic bids",
       "pageInfoLoadFailed": "Error fetching page info",
       "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts",
       "featuredArticlesLoadFailed": "Error fetching featured articles",

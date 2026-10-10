@@ -421,6 +421,7 @@
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",
       "bidsLoadFailed": "Error al obtener las pujas del artículo",
+      "autoBidsLoadFailed": "Error obteniendo las pujas automáticas",
       "pageInfoLoadFailed": "Error al obtener información de la página",
       "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja",
       "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
