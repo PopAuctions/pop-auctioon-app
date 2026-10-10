@@ -414,6 +414,8 @@
       "followedListLoadFailed": "Error al obtener los artículos seguidos",
       "followedListUserMissing": "No hay usuario",
       "followIdsUserInvalid": "Usuario inválido",
+      "followStatusUserInvalid": "Usuario inválido",
+      "followStatusLoadFailed": "Error al obtener el artículo",
       "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
       "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
       "loadFailed": "Error al obtener el artículo",
