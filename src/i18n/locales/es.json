@@ -442,6 +442,8 @@
       "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
       "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas",
       "upcomingAuctionsLoadFailed": "Error al obtener las subastas próximas",
+      "upcomingLoadFailed": "Error al obtener las subastas próximas",
+      "calendarLoadFailed": "Error al obtener las subastas del mes",
       "auctionsLoadFailed": "Error al obtener subastas",
       "creationFailed": "Error al crear la subasta",
       "updateFailed": "Error al actualizar la subasta"

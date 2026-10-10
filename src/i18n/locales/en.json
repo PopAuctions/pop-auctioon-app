@@ -442,6 +442,8 @@
       "userFollowInfoLoadFailed": "Error fetching user information",
       "followedAuctionsLoadFailed": "Error fetching followed auctions",
       "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions",
+      "upcomingLoadFailed": "Error getting upcoming auctions",
+      "calendarLoadFailed": "Error getting auctions of the month",
       "auctionsLoadFailed": "Error fetching auctions",
       "creationFailed": "Error creating auction",
       "updateFailed": "Error updating auction"
