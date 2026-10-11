@@ -457,6 +457,9 @@
       "imageOrderUpdateFailed": "Error actualizando el orden de las imágenes",
       "imageOrderSaveUnexpected": "Ocurrió un error al guardar el orden. Por favor, inténtelo de nuevo.",
       "imageOrderContainerUnavailable": "Hubo un error",
+      "orderUserInvalid": "Usuario inválido",
+      "orderUpdateFailed": "Error actualizando el orden de los articulos",
+      "orderEditUnavailable": "No se puede editar el orden de los articulos",
       "creationFailed": "Error al crear el artículo",
       "updateFailed": "Error al actualizar el artículo"
     },
@@ -572,7 +575,8 @@
     "unfollowedSuccessfully": "Artículo dejado de seguir",
     "removedFromAuctionSuccessfully": "Artículo removido exitosamente",
     "wonArticlesRemovedSuccessfully": "Artículos eliminados",
-    "imageOrderUpdatedSuccessfully": "Orden actualizado"
+    "imageOrderUpdatedSuccessfully": "Orden actualizado",
+    "orderUpdatedSuccessfully": "Orden actualizado"
   },
   "auction": {
     "followedSuccessfully": "Subasta seguida",

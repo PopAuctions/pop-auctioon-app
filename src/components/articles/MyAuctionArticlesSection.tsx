@@ -78,7 +78,10 @@ export const MyAuctionArticlesSection = ({
         return;
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: response.success ?? response.data,
+      });
     } catch (e: any) {
       sentryErrorReport(
         e?.message,

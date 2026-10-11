@@ -457,6 +457,9 @@
       "imageOrderUpdateFailed": "Error updating images order",
       "imageOrderSaveUnexpected": "An error occurred while saving the order. Please try again.",
       "imageOrderContainerUnavailable": "There was an error",
+      "orderUserInvalid": "User not valid",
+      "orderUpdateFailed": "Error updating articles order",
+      "orderEditUnavailable": "No longer can edit articles order",
       "creationFailed": "Error creating article",
       "updateFailed": "Error updating article"
     },
@@ -572,7 +575,8 @@
     "unfollowedSuccessfully": "Article unfollowed",
     "removedFromAuctionSuccessfully": "Article removed successfully",
     "wonArticlesRemovedSuccessfully": "Articles removed",
-    "imageOrderUpdatedSuccessfully": "Order updated"
+    "imageOrderUpdatedSuccessfully": "Order updated",
+    "orderUpdatedSuccessfully": "Order updated"
   },
   "auction": {
     "followedSuccessfully": "Auction followed",

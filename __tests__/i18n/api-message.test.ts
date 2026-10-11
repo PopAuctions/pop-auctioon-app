@@ -24,6 +24,7 @@ describe('API message compatibility', () => {
     'auction.reviewRequestedSuccessfully',
     'article.wonArticlesRemovedSuccessfully',
     'article.imageOrderUpdatedSuccessfully',
+    'article.orderUpdatedSuccessfully',
   ])('recognizes the typed web/app message contract for %s', (messageCode) => {
     expect(
       getApiMessageMetadata({ messageCode, messageParams: {} })
