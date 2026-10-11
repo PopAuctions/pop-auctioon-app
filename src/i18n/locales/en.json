@@ -448,6 +448,9 @@
       "upcomingAuctionsLoadFailed": "Error fetching upcoming auctions",
       "upcomingLoadFailed": "Error getting upcoming auctions",
       "calendarLoadFailed": "Error getting auctions of the month",
+      "liveNotFound": "Auction not found",
+      "liveFinished": "Auction has finished",
+      "notLive": "Auction not live",
       "auctionsLoadFailed": "Error fetching auctions",
       "creationFailed": "Error creating auction",
       "updateFailed": "Error updating auction"

@@ -448,6 +448,9 @@
       "upcomingAuctionsLoadFailed": "Error al obtener las subastas próximas",
       "upcomingLoadFailed": "Error al obtener las subastas próximas",
       "calendarLoadFailed": "Error al obtener las subastas del mes",
+      "liveNotFound": "Subasta no encontrada",
+      "liveFinished": "La subasta ha finalizado",
+      "notLive": "La subasta aún no está en vivo",
       "auctionsLoadFailed": "Error al obtener subastas",
       "creationFailed": "Error al crear la subasta",
       "updateFailed": "Error al actualizar la subasta"
