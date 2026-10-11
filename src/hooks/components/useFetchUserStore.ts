@@ -10,6 +10,7 @@ import type {
 import { useCallback, useEffect, useState } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useFetchUserStore = (): ActionResponse<Store | null> & {
   refetch: () => Promise<void>;
@@ -47,10 +48,9 @@ export const useFetchUserStore = (): ActionResponse<Store | null> & {
       console.error('ERROR_LOAD_CURRENT_USER_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage({
-        en: 'Error loading user data',
-        es: 'Error al cargar datos del usuario',
-      });
+      setErrorMessage(
+        createLocalizedMessage('errors.store.userDataLoadFailed')
+      );
     }
   }, [secureGet]);
 
@@ -62,10 +62,7 @@ export const useFetchUserStore = (): ActionResponse<Store | null> & {
     if (response.error) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Could not update user data',
-          es: 'No se pudieron actualizar los datos del usuario',
-        },
+        description: { code: 'errors.store.userDataRefreshFailed' },
       });
       return;
     }

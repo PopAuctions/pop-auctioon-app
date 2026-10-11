@@ -5,6 +5,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import type { AuctioneerEditSchema } from '@/utils/schemas';
 import type * as z from 'zod';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 /**
  * Tipos inferidos de los schemas de edición
@@ -154,13 +155,8 @@ export const useUpdateStore = (): ActionResponse<null> & {
 
       console.error('ERROR_UPDATE_STORE_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error updating data',
-        es: 'Error al actualizar',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(createLocalizedMessage('errors.store.updateDataFailed'));
     }
   };
 

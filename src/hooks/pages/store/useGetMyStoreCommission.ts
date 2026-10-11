@@ -2,6 +2,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useGetMyStoreCommission = (): ActionResponse<number> => {
   const [commission, setCommission] = useState<number>(0);
@@ -19,25 +20,17 @@ export const useGetMyStoreCommission = (): ActionResponse<number> => {
     if (res.error) {
       setStatus('error');
       setErrorMessage(
-        res?.error ?? {
-          en: 'Error fetching commission',
-          es: 'Error al obtener la comisión',
-        }
+        res?.error ??
+          createLocalizedMessage('errors.store.commissionFetchFailed')
       );
       return {
-        message: {
-          en: 'Error fetching commission',
-          es: 'Error al obtener la comisión',
-        },
+        message: createLocalizedMessage('errors.store.commissionFetchFailed'),
       };
     }
 
     if (res.data === null || res.data === undefined) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Commission data is missing',
-        es: 'Faltan los datos de comisión',
-      });
+      setErrorMessage(createLocalizedMessage('errors.store.commissionMissing'));
       return;
     }
 

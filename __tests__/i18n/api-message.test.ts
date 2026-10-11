@@ -37,6 +37,13 @@ describe('API message compatibility', () => {
     'offer.counterSentSuccessfully',
     'offer.counterAcceptedSuccessfully',
     'offer.counterRejectedSuccessfully',
+    'store.updatedSuccessfully',
+    'store.commissionUpdatedSuccessfully',
+    'soldArticle.acquisitionCancelledSuccessfully',
+    'soldArticle.sentToOnlineStoreSuccessfully',
+    'soldArticle.emailSentSuccessfully',
+    'soldArticle.grantedSuccessfully',
+    'soldArticle.shippingUpdatedSuccessfully',
   ])('recognizes the typed web/app message contract for %s', (messageCode) => {
     expect(
       getApiMessageMetadata({ messageCode, messageParams: {} })
@@ -150,6 +157,68 @@ describe('API message compatibility', () => {
     'errors.offer.activeExists',
     'errors.offer.acceptedActiveExists',
   ])('recognizes the offer contract for %s', (messageCode) => {
+    const resolved = resolveApiMessage(
+      {
+        error: { en: 'legacy-en', es: 'legacy-es' },
+        messageCode,
+        messageParams: {},
+      },
+      'error'
+    );
+
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+  });
+
+  it.each([
+    'errors.store.notAuthorized',
+    'errors.store.permissionDenied',
+    'errors.store.userInvalid',
+    'errors.store.userNotFound',
+    'errors.store.auctioneerInactive',
+    'errors.store.fieldsInvalid',
+    'errors.store.socialUrlInvalid',
+    'errors.store.webUrlInvalid',
+    'errors.store.updateFailed',
+    'errors.store.imageUploadFailed',
+    'errors.store.userLoadFailed',
+    'errors.store.notFound',
+    'errors.store.loadFailed',
+    'errors.store.dataLoadFailed',
+    'errors.store.countryLoadFailed',
+    'errors.store.articleIdRequired',
+    'errors.store.articleIdInvalid',
+    'errors.store.commissionLoadFailed',
+    'errors.store.commissionInvalid',
+    'errors.store.commissionUpdateFailed',
+    'errors.soldArticle.userInvalid',
+    'errors.soldArticle.notFound',
+    'errors.soldArticle.loadFailed',
+    'errors.soldArticle.listLoadFailed',
+    'errors.soldArticle.auctionIdInvalid',
+    'errors.soldArticle.articleIdInvalid',
+    'errors.soldArticle.requestBodyInvalid',
+    'errors.soldArticle.dataInvalid',
+    'errors.soldArticle.acquisitionCancelFailed',
+    'errors.soldArticle.acquisitionNotFound',
+    'errors.soldArticle.ownerMismatch',
+    'errors.soldArticle.alreadyPaid',
+    'errors.soldArticle.cancelTooEarly',
+    'errors.soldArticle.sendStoreFailed',
+    'errors.soldArticle.sendStoreTooEarly',
+    'errors.soldArticle.notifyEmailFailed',
+    'errors.soldArticle.notSold',
+    'errors.soldArticle.priceInvalid',
+    'errors.soldArticle.notifyNotNeeded',
+    'errors.soldArticle.grantFailed',
+    'errors.soldArticle.alreadyGranted',
+    'errors.soldArticle.grantTooEarly',
+    'errors.soldArticle.notEnoughBids',
+    'errors.soldArticle.firstUserInvalid',
+    'errors.soldArticle.secondBidderInvalid',
+    'errors.soldArticle.shippingNotAuthorized',
+    'errors.soldArticle.shippingInfoInvalid',
+    'errors.soldArticle.shippingUpdateFailed',
+  ])('recognizes the store and sold-article contract for %s', (messageCode) => {
     const resolved = resolveApiMessage(
       {
         error: { en: 'legacy-en', es: 'legacy-es' },

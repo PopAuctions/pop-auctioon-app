@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants/app';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useFetchStoreCountryByArticleId = (
   articleId: string
@@ -34,10 +35,7 @@ export const useFetchStoreCountryByArticleId = (
 
       if (response.data === null || response.data === undefined) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage({
-          en: 'Store country data is missing',
-          es: 'Faltan los datos del país de la tienda',
-        });
+        setErrorMessage(createLocalizedMessage('errors.store.countryMissing'));
         return;
       }
 
@@ -52,13 +50,10 @@ export const useFetchStoreCountryByArticleId = (
         'USE_FETCH_STORE_COUNTRY_BY_ARTICLE_ID - Unexpected error'
       );
 
-      const message: LangMap = {
-        en: 'Error fetching store country data',
-        es: 'Error al cargar los datos del país de la tienda',
-      };
-
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage(message);
+      setErrorMessage(
+        createLocalizedMessage('errors.store.countryFetchFailed')
+      );
     }
   }, [secureGet, articleId]);
 

@@ -95,7 +95,7 @@ export function ShippingForm({
 
       callToast({
         variant: 'success',
-        description: response?.data ?? SHIPPING_UPDATED,
+        description: response.messageCode ?? SHIPPING_UPDATED,
       });
     } finally {
       setIsLoading(false);
