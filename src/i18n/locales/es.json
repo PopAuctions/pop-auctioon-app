@@ -351,6 +351,15 @@
       "contentMissing": "Faltan los datos del contenido informativo",
       "contentLoadFailed": "Error al cargar el contenido informativo"
     },
+    "contact": {
+      "requiredFields": "Faltan campos requeridos",
+      "emailSendFailed": "Error al enviar el correo",
+      "nameRequired": "El nombre es requerido",
+      "emailRequired": "El email es requerido",
+      "messageRequired": "El mensaje es requerido",
+      "maxImages": "Máximo 5 imágenes permitidas",
+      "invalidImageFormat": "Formato de imagen inválido. Cada imagen debe tener: src, name, type y arrayBuffer"
+    },
     "store": {
       "notAuthorized": "No autorizado",
       "permissionDenied": "Permiso denegado",

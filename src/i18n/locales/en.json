@@ -351,6 +351,15 @@
       "contentMissing": "Info content data is missing",
       "contentLoadFailed": "Error fetching info content"
     },
+    "contact": {
+      "requiredFields": "Missing required fields",
+      "emailSendFailed": "Error sending email",
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "messageRequired": "Message is required",
+      "maxImages": "Maximum 5 images allowed",
+      "invalidImageFormat": "Invalid image format. Each image must have: src, name, type, and arrayBuffer"
+    },
     "store": {
       "notAuthorized": "Not authorized",
       "permissionDenied": "Permission denied",
