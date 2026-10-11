@@ -537,6 +537,7 @@
       "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja",
       "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
       "mostViewedArticlesLoadFailed": "Error al obtener los artículos más vistos",
+      "newestDiscoveryLoadFailed": "Error al obtener artículos más recientes",
       "newestArticlesLoadFailed": "Error al obtener los artículos más recientes",
       "onlineStoreListLoadFailed": "Error al obtener los artículos",
       "onlineStoreDetailQueryFailed": "Error al obtener el artículos",

@@ -537,6 +537,7 @@
       "updatedBiddingAmountsLoadFailed": "Error fetching updated bidding amounts",
       "featuredArticlesLoadFailed": "Error fetching featured articles",
       "mostViewedArticlesLoadFailed": "Error fetching most viewed articles",
+      "newestDiscoveryLoadFailed": "Error getting newest articles",
       "newestArticlesLoadFailed": "Error fetching newest articles",
       "onlineStoreListLoadFailed": "Error getting articles",
       "onlineStoreDetailQueryFailed": "Error getting article",
