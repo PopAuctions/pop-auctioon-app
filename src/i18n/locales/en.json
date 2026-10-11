@@ -450,6 +450,13 @@
       "removeWonEmpty": "There are no articles to remove",
       "removeWonAuctionIdRequired": "Auction ID is required",
       "removeWonAuctionIdInvalid": "Invalid auction ID",
+      "imageOrderUserMissing": "Missing user",
+      "imageOrderUserInvalid": "User not valid",
+      "imageOrderLoadFailed": "Error updating images order",
+      "imageOrderEditUnavailable": "No longer can edit images order",
+      "imageOrderUpdateFailed": "Error updating images order",
+      "imageOrderSaveUnexpected": "An error occurred while saving the order. Please try again.",
+      "imageOrderContainerUnavailable": "There was an error",
       "creationFailed": "Error creating article",
       "updateFailed": "Error updating article"
     },
@@ -564,7 +571,8 @@
     "followedSuccessfully": "Article followed",
     "unfollowedSuccessfully": "Article unfollowed",
     "removedFromAuctionSuccessfully": "Article removed successfully",
-    "wonArticlesRemovedSuccessfully": "Articles removed"
+    "wonArticlesRemovedSuccessfully": "Articles removed",
+    "imageOrderUpdatedSuccessfully": "Order updated"
   },
   "auction": {
     "followedSuccessfully": "Auction followed",

@@ -450,6 +450,13 @@
       "removeWonEmpty": "No hay artículos para eliminar",
       "removeWonAuctionIdRequired": "El ID de la subasta es requerido",
       "removeWonAuctionIdInvalid": "ID de subasta inválido",
+      "imageOrderUserMissing": "Usuario no encontrado",
+      "imageOrderUserInvalid": "Usuario inválido",
+      "imageOrderLoadFailed": "Error actualizando el orden de las imagenes",
+      "imageOrderEditUnavailable": "No se puede editar el orden de las imagenes",
+      "imageOrderUpdateFailed": "Error actualizando el orden de las imágenes",
+      "imageOrderSaveUnexpected": "Ocurrió un error al guardar el orden. Por favor, inténtelo de nuevo.",
+      "imageOrderContainerUnavailable": "Hubo un error",
       "creationFailed": "Error al crear el artículo",
       "updateFailed": "Error al actualizar el artículo"
     },
@@ -564,7 +571,8 @@
     "followedSuccessfully": "Artículo seguido",
     "unfollowedSuccessfully": "Artículo dejado de seguir",
     "removedFromAuctionSuccessfully": "Artículo removido exitosamente",
-    "wonArticlesRemovedSuccessfully": "Artículos eliminados"
+    "wonArticlesRemovedSuccessfully": "Artículos eliminados",
+    "imageOrderUpdatedSuccessfully": "Orden actualizado"
   },
   "auction": {
     "followedSuccessfully": "Subasta seguida",

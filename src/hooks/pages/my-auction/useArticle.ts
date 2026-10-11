@@ -153,7 +153,10 @@ export const useArticle = ({
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: response.success ?? response.data,
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
