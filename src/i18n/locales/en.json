@@ -440,6 +440,11 @@
       "alreadyFollowed": "Article already followed",
       "unfollowUserMissing": "No user",
       "unfollowFailed": "Error unfollowing article",
+      "removeUserInvalid": "User not valid",
+      "removeAuctionNotFound": "Auction not found",
+      "removeUnavailable": "No longer can remove articles",
+      "removeFailed": "Couldn't remove article from auction",
+      "removeSold": "Couldn't remove article from auction because it has been sold",
       "creationFailed": "Error creating article",
       "updateFailed": "Error updating article"
     },
@@ -537,6 +542,19 @@
   },
   "profile": {
     "updatedSuccessfully": "User updated"
+  },
+  "article": {
+    "followedSuccessfully": "Article followed",
+    "unfollowedSuccessfully": "Article unfollowed",
+    "removedFromAuctionSuccessfully": "Article removed successfully"
+  },
+  "auction": {
+    "followedSuccessfully": "Auction followed",
+    "unfollowedSuccessfully": "Auction unfollowed",
+    "finished": "Auction finished"
+  },
+  "liveAuction": {
+    "articleChangedSuccessfully": "Article changed successfully"
   },
   "otp": {
     "sentSuccessfully": "OTP sent successfully",

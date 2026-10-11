@@ -440,6 +440,11 @@
       "alreadyFollowed": "Artículo ya seguido",
       "unfollowUserMissing": "No hay usuario",
       "unfollowFailed": "Error al dejar de seguir el artículo",
+      "removeUserInvalid": "Usuario inválido",
+      "removeAuctionNotFound": "Subasta no encontrada",
+      "removeUnavailable": "Ya no se pueden remover artículos",
+      "removeFailed": "No se pudo sacar el artículo de la subasta",
+      "removeSold": "No se pudo sacar el artículo de la subasta porque ya fue vendido",
       "creationFailed": "Error al crear el artículo",
       "updateFailed": "Error al actualizar el artículo"
     },
@@ -537,6 +542,19 @@
   },
   "profile": {
     "updatedSuccessfully": "Usuario actualizado"
+  },
+  "article": {
+    "followedSuccessfully": "Artículo seguido",
+    "unfollowedSuccessfully": "Artículo dejado de seguir",
+    "removedFromAuctionSuccessfully": "Artículo removido exitosamente"
+  },
+  "auction": {
+    "followedSuccessfully": "Subasta seguida",
+    "unfollowedSuccessfully": "Subasta dejada de seguir",
+    "finished": "Subasta finalizada"
+  },
+  "liveAuction": {
+    "articleChangedSuccessfully": "Artículo cambiado correctamente"
   },
   "otp": {
     "sentSuccessfully": "OTP enviado correctamente",
