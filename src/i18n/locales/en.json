@@ -434,6 +434,12 @@
       "commentsLoadFailed": "Error fetching comments",
       "commentsAuthRequired": "User not authenticated",
       "commentsUserInvalid": "Invalid user",
+      "followUserMissing": "Missing user",
+      "followFailed": "Error following article",
+      "followUnavailable": "Article no longer available to follow",
+      "alreadyFollowed": "Article already followed",
+      "unfollowUserMissing": "No user",
+      "unfollowFailed": "Error unfollowing article",
       "creationFailed": "Error creating article",
       "updateFailed": "Error updating article"
     },
@@ -451,6 +457,11 @@
       "liveNotFound": "Auction not found",
       "liveFinished": "Auction has finished",
       "notLive": "Auction not live",
+      "followUserMissing": "No user",
+      "followFailed": "Error following auction",
+      "followUnavailable": "Auction no longer available to follow",
+      "unfollowUserMissing": "No user",
+      "unfollowFailed": "Error unfollowing article",
       "auctionsLoadFailed": "Error fetching auctions",
       "creationFailed": "Error creating auction",
       "updateFailed": "Error updating auction"
@@ -737,7 +748,9 @@
       "auctionNotFound": "Auction not found or not longer available",
       "noArticlesFound": "No articles found",
       "specialMessage": "For this auction, no commission will be charged for any of the articles",
-      "noFollowedAuctions": "You have no followed auctions"
+      "noFollowedAuctions": "You have no followed auctions",
+      "followedSuccessfully": "Auction followed",
+      "unfollowedSuccessfully": "Auction unfollowed"
     },
     "article": {
       "title": "Auction ",
@@ -780,7 +793,9 @@
       "articleNotFound": "Article not found",
       "bidsHistory": "Bids record",
       "comments": "Comments",
-      "noFollowedArticles": "You have no followed articles"
+      "noFollowedArticles": "You have no followed articles",
+      "followedSuccessfully": "Article followed",
+      "unfollowedSuccessfully": "Article unfollowed"
     },
     "store": {
       "title": "Online Store",

@@ -434,6 +434,12 @@
       "commentsLoadFailed": "Error al obtener comentarios",
       "commentsAuthRequired": "Usuario no autenticado",
       "commentsUserInvalid": "Usuario inválido",
+      "followUserMissing": "Usuario no encontrado",
+      "followFailed": "Error al seguir el artículo",
+      "followUnavailable": "El artículo ya no esta disponible para seguir",
+      "alreadyFollowed": "Artículo ya seguido",
+      "unfollowUserMissing": "No hay usuario",
+      "unfollowFailed": "Error al dejar de seguir el artículo",
       "creationFailed": "Error al crear el artículo",
       "updateFailed": "Error al actualizar el artículo"
     },
@@ -451,6 +457,11 @@
       "liveNotFound": "Subasta no encontrada",
       "liveFinished": "La subasta ha finalizado",
       "notLive": "La subasta aún no está en vivo",
+      "followUserMissing": "No hay usuario",
+      "followFailed": "Error al seguir la subasta",
+      "followUnavailable": "La subasta ya no esta disponible para seguir",
+      "unfollowUserMissing": "No hay usuario",
+      "unfollowFailed": "Error al dejar de seguir el artículo",
       "auctionsLoadFailed": "Error al obtener subastas",
       "creationFailed": "Error al crear la subasta",
       "updateFailed": "Error al actualizar la subasta"
@@ -737,7 +748,9 @@
       "auctionNotFound": "Subasta no encontrada o ya no se encuentra disponible",
       "noArticlesFound": "No se encontraron artículos",
       "specialMessage": "Para esta subasta, no se pagará comisión para ninguno de los artículos",
-      "noFollowedAuctions": "No tienes subastas seguidas"
+      "noFollowedAuctions": "No tienes subastas seguidas",
+      "followedSuccessfully": "Subasta seguida",
+      "unfollowedSuccessfully": "Subasta dejada de seguir"
     },
     "article": {
       "title": "Subasta ",
@@ -780,7 +793,9 @@
       "articleNotFound": "Artículo no encontrado",
       "bidsHistory": "Historial de pujas",
       "comments": "Comentarios",
-      "noFollowedArticles": "No tienes artículos seguidos"
+      "noFollowedArticles": "No tienes artículos seguidos",
+      "followedSuccessfully": "Artículo seguido",
+      "unfollowedSuccessfully": "Artículo dejado de seguir"
     },
     "store": {
       "title": "Tienda Online",
