@@ -8,6 +8,7 @@ import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { useGetMyStoreCommission } from '@/hooks/pages/store/useGetMyStoreCommission';
 import { useGetMyOnlineStoreLatestOffers } from '@/hooks/pages/my-online-store/useGetMyOnlineStoreLatestOffers';
 import { LatestArticleOffersCards } from '@/components/my-online-store/LatestArticleOffersCards';
+import { t as translate } from '@/i18n';
 
 export default function MyOnlineStoreOffersScreen() {
   const { t, locale } = useTranslation();
@@ -43,7 +44,7 @@ export default function MyOnlineStoreOffersScreen() {
           type='h2'
           className='text-center'
         >
-          {errorMessage?.[locale]}
+          {errorMessage ? translate(errorMessage, { locale }) : ''}
         </CustomText>
       </View>
     );

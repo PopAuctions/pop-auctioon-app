@@ -31,6 +31,12 @@ describe('API message compatibility', () => {
     'article.onlineStorePriceUpdatedSuccessfully',
     'article.onlineStoreEnabledSuccessfully',
     'article.onlineStoreAssignedSuccessfully',
+    'offer.madeSuccessfully',
+    'offer.acceptedSuccessfully',
+    'offer.rejectedSuccessfully',
+    'offer.counterSentSuccessfully',
+    'offer.counterAcceptedSuccessfully',
+    'offer.counterRejectedSuccessfully',
   ])('recognizes the typed web/app message contract for %s', (messageCode) => {
     expect(
       getApiMessageMetadata({ messageCode, messageParams: {} })
@@ -90,6 +96,71 @@ describe('API message compatibility', () => {
       expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
     }
   );
+
+  it.each([
+    'errors.offer.unauthorized',
+    'errors.offer.invalid',
+    'errors.offer.notFound',
+    'errors.offer.articleUnavailable',
+    'errors.offer.articleUnavailableNoArticle',
+    'errors.offer.inactive',
+    'errors.offer.unavailable',
+    'errors.offer.negotiationInactive',
+    'errors.offer.negotiationUnavailable',
+    'errors.offer.negotiationUnavailableShort',
+    'errors.offer.alreadyUpdated',
+    'errors.offer.alreadyUpdatedStore',
+    'errors.offer.acceptFailed',
+    'errors.offer.notReadyAccept',
+    'errors.offer.counterAcceptFailed',
+    'errors.offer.noCounterAccept',
+    'errors.offer.counterNotFoundSupport',
+    'errors.offer.counterUnavailableSupport',
+    'errors.offer.counterInfoInvalid',
+    'errors.offer.counterLoadFailed',
+    'errors.offer.noCounterResponse',
+    'errors.offer.currentCounterNotFound',
+    'errors.offer.waitStore',
+    'errors.offer.userCounterSame',
+    'errors.offer.userCounterSendFailed',
+    'errors.offer.storeCounterLoadFailed',
+    'errors.offer.currentProposalNotFound',
+    'errors.offer.waitBuyer',
+    'errors.offer.storeCounterSame',
+    'errors.offer.storeCounterSendFailed',
+    'errors.offer.rejectFailed',
+    'errors.offer.notReadyReject',
+    'errors.offer.counterRejectFailed',
+    'errors.offer.noCounterReject',
+    'errors.offer.counterNotFound',
+    'errors.offer.counterUnavailable',
+    'errors.offer.myListUserMissing',
+    'errors.offer.myListLoadFailed',
+    'errors.offer.latestListUserInvalid',
+    'errors.offer.latestListLoadFailed',
+    'errors.offer.makeAuthRequired',
+    'errors.offer.reviewAccount',
+    'errors.offer.phoneRequired',
+    'errors.offer.articleIdInvalid',
+    'errors.offer.amountInvalid',
+    'errors.offer.makeFailed',
+    'errors.offer.makeArticleUnavailable',
+    'errors.offer.ownArticle',
+    'errors.offer.minAmount',
+    'errors.offer.activeExists',
+    'errors.offer.acceptedActiveExists',
+  ])('recognizes the offer contract for %s', (messageCode) => {
+    const resolved = resolveApiMessage(
+      {
+        error: { en: 'legacy-en', es: 'legacy-es' },
+        messageCode,
+        messageParams: {},
+      },
+      'error'
+    );
+
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+  });
 
   it.each([
     'errors.onlineStoreArticle.userInvalid',
