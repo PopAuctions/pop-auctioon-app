@@ -3,12 +3,43 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const localeConfigPath = resolve(repositoryRoot, 'src/i18n/locales.ts');
 
-const dictionaryPair = {
-  name: 'app dictionaries',
-  english: 'src/i18n/locales/en.json',
-  spanish: 'src/i18n/locales/es.json',
-};
+function fail(message) {
+  console.error(`i18n:check: ${message}`);
+  process.exit(1);
+}
+
+function readLocaleRegistry() {
+  const source = readFileSync(localeConfigPath, 'utf8');
+  const configMatch = source.match(
+    /export const LOCALE_CONFIG\s*=\s*\{([\s\S]*?)\n\} as const;/
+  );
+  const defaultMatch = source.match(
+    /export const DEFAULT_LANG\s*:\s*Lang\s*=\s*['"]([^'"]+)['"]/
+  );
+
+  if (!configMatch || !defaultMatch) {
+    fail(
+      'could not read LOCALE_CONFIG and DEFAULT_LANG from src/i18n/locales.ts.'
+    );
+  }
+
+  const locales = new Set();
+  const entryPattern = /^ {2}(?:'([^']+)'|"([^"]+)"|([A-Za-z][\w-]*))\s*:/gm;
+
+  for (const match of configMatch[1].matchAll(entryPattern)) {
+    locales.add(match[1] ?? match[2] ?? match[3]);
+  }
+
+  const defaultLocale = defaultMatch[1];
+
+  if (!locales.has(defaultLocale)) {
+    fail(`DEFAULT_LANG "${defaultLocale}" is not registered in LOCALE_CONFIG.`);
+  }
+
+  return { locales: [...locales].sort(), defaultLocale };
+}
 
 function readDictionary(relativePath) {
   const absolutePath = resolve(repositoryRoot, relativePath);
@@ -63,71 +94,106 @@ function isEmptyTranslation(value) {
   return false;
 }
 
-function comparePair({ name, english, spanish }) {
-  const englishLeaves = flattenLeaves(readDictionary(english));
-  const spanishLeaves = flattenLeaves(readDictionary(spanish));
+function isUntranslatedTemplate(value) {
+  if (typeof value === 'string') return value.includes('TODO_TRANSLATE[');
+  if (Array.isArray(value)) {
+    return value.some(
+      (item) => typeof item === 'string' && item.includes('TODO_TRANSLATE[')
+    );
+  }
+  return false;
+}
+
+function comparePair({ reference, translation, referenceLocale, locale }) {
+  const referenceLeaves = flattenLeaves(readDictionary(reference));
+  const translationLeaves = flattenLeaves(readDictionary(translation));
   const errors = [];
 
-  for (const key of englishLeaves.keys()) {
-    if (!spanishLeaves.has(key)) {
-      errors.push(`${name}: missing Spanish key "${key}"`);
+  for (const key of referenceLeaves.keys()) {
+    if (!translationLeaves.has(key)) {
+      errors.push(`app dictionaries: missing ${locale} key "${key}"`);
     }
   }
 
-  for (const key of spanishLeaves.keys()) {
-    if (!englishLeaves.has(key)) {
-      errors.push(`${name}: missing English key "${key}"`);
+  for (const key of translationLeaves.keys()) {
+    if (!referenceLeaves.has(key)) {
+      errors.push(`app dictionaries: unexpected ${locale} key "${key}"`);
     }
   }
 
-  for (const [key, englishValue] of englishLeaves) {
-    if (!spanishLeaves.has(key)) continue;
+  for (const [key, referenceValue] of referenceLeaves) {
+    if (!translationLeaves.has(key)) continue;
 
-    const spanishValue = spanishLeaves.get(key);
+    const translationValue = translationLeaves.get(key);
 
-    if (isEmptyTranslation(englishValue)) {
-      errors.push(`${name}: empty English translation at "${key}"`);
-    }
-    if (isEmptyTranslation(spanishValue)) {
-      errors.push(`${name}: empty Spanish translation at "${key}"`);
-    }
-
-    const englishType = valueType(englishValue);
-    const spanishType = valueType(spanishValue);
-
-    if (englishType !== spanishType) {
+    if (isEmptyTranslation(referenceValue)) {
       errors.push(
-        `${name}: type mismatch at "${key}" (English: ${englishType}, Spanish: ${spanishType})`
+        `app dictionaries: empty ${referenceLocale} translation at "${key}"`
+      );
+    }
+    if (isEmptyTranslation(translationValue)) {
+      errors.push(`app dictionaries: empty ${locale} translation at "${key}"`);
+    }
+    if (isUntranslatedTemplate(referenceValue)) {
+      errors.push(
+        `app dictionaries: unfinished ${referenceLocale} template at "${key}"`
+      );
+    }
+    if (isUntranslatedTemplate(translationValue)) {
+      errors.push(
+        `app dictionaries: unfinished ${locale} template at "${key}"`
+      );
+    }
+
+    const referenceType = valueType(referenceValue);
+    const translationType = valueType(translationValue);
+
+    if (referenceType !== translationType) {
+      errors.push(
+        `app dictionaries: type mismatch at "${key}" (${referenceLocale}: ${referenceType}, ${locale}: ${translationType})`
       );
       continue;
     }
 
-    const englishPlaceholders = collectPlaceholders(englishValue);
-    const spanishPlaceholders = collectPlaceholders(spanishValue);
+    const referencePlaceholders = collectPlaceholders(referenceValue);
+    const translationPlaceholders = collectPlaceholders(translationValue);
 
-    if (englishPlaceholders.join('|') !== spanishPlaceholders.join('|')) {
+    if (referencePlaceholders.join('|') !== translationPlaceholders.join('|')) {
       errors.push(
-        `${name}: placeholder mismatch at "${key}" (English: [${englishPlaceholders.join(', ')}], Spanish: [${spanishPlaceholders.join(', ')}])`
+        `app dictionaries: placeholder mismatch at "${key}" (${referenceLocale}: [${referencePlaceholders.join(', ')}], ${locale}: [${translationPlaceholders.join(', ')}])`
       );
     }
   }
 
   return {
     errors,
-    summary: `${name}: ${englishLeaves.size} English keys, ${spanishLeaves.size} Spanish keys`,
+    summary: `app dictionaries (${referenceLocale} → ${locale}): ${referenceLeaves.size} ${referenceLocale} keys, ${translationLeaves.size} ${locale} keys`,
   };
 }
 
-const result = comparePair(dictionaryPair);
-
-console.log(`✓ ${result.summary}`);
-
-if (result.errors.length > 0) {
-  console.error(
-    `\nFound ${result.errors.length} i18n consistency error${result.errors.length === 1 ? '' : 's'}:`
+const { locales, defaultLocale } = readLocaleRegistry();
+const results = locales
+  .filter((locale) => locale !== defaultLocale)
+  .map((locale) =>
+    comparePair({
+      reference: `src/i18n/locales/${defaultLocale}.json`,
+      translation: `src/i18n/locales/${locale}.json`,
+      referenceLocale: defaultLocale,
+      locale,
+    })
   );
-  for (const error of result.errors) console.error(`- ${error}`);
+const errors = results.flatMap((result) => result.errors);
+
+for (const result of results) {
+  console.log(`✓ ${result.summary}`);
+}
+
+if (errors.length > 0) {
+  console.error(
+    `\nFound ${errors.length} i18n consistency error${errors.length === 1 ? '' : 's'}:`
+  );
+  for (const error of errors) console.error(`- ${error}`);
   process.exitCode = 1;
 } else {
-  console.log('\nThe English and Spanish dictionaries are consistent.');
+  console.log('\nAll registered dictionaries are consistent.');
 }
