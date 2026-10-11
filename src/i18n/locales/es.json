@@ -731,7 +731,10 @@
       "loadFailed": "Error al obtener las notificaciones",
       "none": "No hay notificaciones",
       "noUnread": "No hay notificaciones sin leer",
-      "markAllReadFailed": "Hubo un error marcando como leídas las notificaciones"
+      "markAllReadFailed": "Hubo un error marcando como leídas las notificaciones",
+      "idInvalid": "ID de notificación inválido",
+      "readFailed": "Error al leer la notificación",
+      "deleteFailed": "Error al eliminar la notificación"
     },
     "bid": {
       "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar.",

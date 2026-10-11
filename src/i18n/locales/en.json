@@ -731,7 +731,10 @@
       "loadFailed": "Error fetching notifications",
       "none": "No notifications",
       "noUnread": "There are no unread notifications",
-      "markAllReadFailed": "There was an error marking notifications as read"
+      "markAllReadFailed": "There was an error marking notifications as read",
+      "idInvalid": "Invalid notificationId",
+      "readFailed": "Error reading notification",
+      "deleteFailed": "Error deleting notification"
     },
     "bid": {
       "updateAmountsFailed": "Error updating bidding amounts. Click to retry.",
