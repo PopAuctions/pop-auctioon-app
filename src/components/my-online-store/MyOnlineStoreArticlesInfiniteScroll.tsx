@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { FlatList, View } from 'react-native';
 import { euroFormatter } from '@/utils/euroFormatter';
-import { CustomArticleSecondChance, Lang, LangMap } from '@/types/types';
+import { CustomArticleSecondChance, Lang } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import { Loading } from '../ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -12,7 +12,7 @@ import { useFetchMyOnlineStoreArticlesInfinite } from '@/hooks/components/useFet
 import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { MyOnlineStoreArticleItem } from './MyOnlineStoreArticleItem';
 import { CustomError } from '../ui/CustomError';
-import { t } from '@/i18n';
+import { t, type MessageKey } from '@/i18n';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -41,7 +41,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
     useFetchCommissions();
 
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
-  const [error, setError] = useState<LangMap | null>(null);
+  const [error, setError] = useState<MessageKey | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
@@ -203,7 +203,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
   if (error) {
     return (
       <CustomError
-        customMessage={error?.[locale]}
+        customMessage={t(error, { locale })}
         refreshRoute='/(tabs)/auctioneer/my-online-store'
       />
     );

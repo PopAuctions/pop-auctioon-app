@@ -2,6 +2,14 @@ import { CustomArticleSecondChance } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import type { MessageKey } from '@/i18n';
+
+const LIST_LOAD_ERROR =
+  'errors.onlineStoreArticle.listLoadFailed' satisfies MessageKey;
+
+type FetchArticlesResult =
+  | { error: MessageKey; data: CustomArticleSecondChance[] }
+  | { error: null; data: CustomArticleSecondChance[] };
 
 export const useFetchMyOnlineStoreArticlesInfinite = () => {
   const { secureGet } = useSecureApi();
@@ -23,7 +31,7 @@ export const useFetchMyOnlineStoreArticlesInfinite = () => {
       offersStatus?: string;
       offset?: number;
       limit?: number;
-    }) => {
+    }): Promise<FetchArticlesResult> => {
       const params = new URLSearchParams({
         limit: limit.toString(),
         offset: offset.toString(),
@@ -41,15 +49,12 @@ export const useFetchMyOnlineStoreArticlesInfinite = () => {
 
       if (res.error) {
         return {
-          error: res.error ?? {
-            es: 'Error al obtener artículos',
-            en: 'Error fetching articles',
-          },
+          error: LIST_LOAD_ERROR,
           data: [],
         };
       }
 
-      return res;
+      return { error: null, data: res.data ?? [] };
     },
     [secureGet]
   );

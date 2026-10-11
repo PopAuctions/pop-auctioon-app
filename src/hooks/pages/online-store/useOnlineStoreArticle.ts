@@ -3,6 +3,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
 import type {
   AnyArticleFormValues,
   AuctionCategories,
@@ -31,6 +32,13 @@ interface EditArticleImagesOrderArgs {
   articleId: number;
   newOrder: string[];
 }
+
+const CREATE_ERROR =
+  'errors.onlineStoreArticle.createFailed' satisfies MessageKey;
+const UPDATE_ERROR =
+  'errors.onlineStoreArticle.updateFailed' satisfies MessageKey;
+const IMAGE_ORDER_ERROR =
+  'errors.onlineStoreArticle.imageUpdateFailed' satisfies MessageKey;
 
 export const useOnlineStoreArticle = (): {
   createArticle: (args: CreateArticleArgs) => Promise<FunctionResponse>;
@@ -81,12 +89,7 @@ export const useOnlineStoreArticle = (): {
 
       console.error('ERROR_CREATE_ONLINE_STORE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error creating article',
-        es: 'Error al crear el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: CREATE_ERROR });
       return { status: 'error' };
     }
   };
@@ -131,12 +134,7 @@ export const useOnlineStoreArticle = (): {
 
       console.error('ERROR_EDIT_ONLINE_STORE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating article',
-        es: 'Error al actualizar el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: UPDATE_ERROR });
       return { status: 'error' };
     }
   };
@@ -170,12 +168,7 @@ export const useOnlineStoreArticle = (): {
 
       console.error('ERROR_EDIT_IMAGES_ORDER_ONLINE_STORE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating article images order',
-        es: 'Error al actualizar el orden de las imágenes del artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: IMAGE_ORDER_ERROR });
       return { status: 'error' };
     }
   };
