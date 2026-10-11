@@ -25,6 +25,7 @@ describe('API message compatibility', () => {
     'article.wonArticlesRemovedSuccessfully',
     'article.imageOrderUpdatedSuccessfully',
     'article.orderUpdatedSuccessfully',
+    'article.refreshedSuccessfully',
   ])('recognizes the typed web/app message contract for %s', (messageCode) => {
     expect(
       getApiMessageMetadata({ messageCode, messageParams: {} })
@@ -64,6 +65,26 @@ describe('API message compatibility', () => {
 
     expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
   });
+
+  it.each([
+    'errors.article.onlineStoreDetailQueryFailed',
+    'errors.article.onlineStoreDetailNotFound',
+    'errors.article.onlineStoreDetailLoadFailed',
+  ])(
+    'recognizes the online-store detail error contract for %s',
+    (messageCode) => {
+      const resolved = resolveApiMessage(
+        {
+          error: { en: 'legacy-en', es: 'legacy-es' },
+          messageCode,
+          messageParams: {},
+        },
+        'error'
+      );
+
+      expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    }
+  );
 
   it('uses the legacy map when message parameters are malformed', () => {
     const legacy = { en: 'legacy-en', es: 'legacy-es' };

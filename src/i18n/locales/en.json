@@ -430,6 +430,9 @@
       "mostViewedArticlesLoadFailed": "Error fetching most viewed articles",
       "newestArticlesLoadFailed": "Error fetching newest articles",
       "onlineStoreListLoadFailed": "Error getting articles",
+      "onlineStoreDetailQueryFailed": "Error getting article",
+      "onlineStoreDetailNotFound": "Article not found or no longer available",
+      "onlineStoreDetailLoadFailed": "Error getting article",
       "articlesLoadFailed": "Error fetching articles",
       "noArticlesWon": "No articles won",
       "commentsLoadFailed": "Error fetching comments",
@@ -577,7 +580,8 @@
     "removedFromAuctionSuccessfully": "Article removed successfully",
     "wonArticlesRemovedSuccessfully": "Articles removed",
     "imageOrderUpdatedSuccessfully": "Order updated",
-    "orderUpdatedSuccessfully": "Order updated"
+    "orderUpdatedSuccessfully": "Order updated",
+    "refreshedSuccessfully": "Article updated successfully"
   },
   "auction": {
     "followedSuccessfully": "Auction followed",

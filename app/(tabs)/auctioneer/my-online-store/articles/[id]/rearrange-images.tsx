@@ -16,7 +16,7 @@ const NO_IMAGE_ORDER_CHANGES =
 
 export default function MyOnlineStoreArticleRearrangeImagesScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { locale } = useTranslation();
+  const { t, locale } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
   const { callToast } = useToast(locale);
 
@@ -41,7 +41,7 @@ export default function MyOnlineStoreArticleRearrangeImagesScreen() {
   ) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-online-store/articles/${articleId}/rearrange-images`}
       />
     );

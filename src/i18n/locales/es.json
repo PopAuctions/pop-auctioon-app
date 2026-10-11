@@ -430,6 +430,9 @@
       "mostViewedArticlesLoadFailed": "Error al obtener los artículos más vistos",
       "newestArticlesLoadFailed": "Error al obtener los artículos más recientes",
       "onlineStoreListLoadFailed": "Error al obtener los artículos",
+      "onlineStoreDetailQueryFailed": "Error al obtener el artículos",
+      "onlineStoreDetailNotFound": "Artículo no encontrado o ya no se encuentra disponible",
+      "onlineStoreDetailLoadFailed": "Error al obtener el artículo",
       "articlesLoadFailed": "Error al obtener los artículos",
       "noArticlesWon": "No hay artículos ganados",
       "commentsLoadFailed": "Error al obtener comentarios",
@@ -577,7 +580,8 @@
     "removedFromAuctionSuccessfully": "Artículo removido exitosamente",
     "wonArticlesRemovedSuccessfully": "Artículos eliminados",
     "imageOrderUpdatedSuccessfully": "Orden actualizado",
-    "orderUpdatedSuccessfully": "Orden actualizado"
+    "orderUpdatedSuccessfully": "Orden actualizado",
+    "refreshedSuccessfully": "Artículo actualizado correctamente"
   },
   "auction": {
     "followedSuccessfully": "Subasta seguida",
