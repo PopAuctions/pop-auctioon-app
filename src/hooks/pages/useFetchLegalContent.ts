@@ -8,6 +8,7 @@ import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 /**
  * Hook para obtener todo el contenido legal de la app:
@@ -38,10 +39,9 @@ export const useFetchLegalContent =
 
         if (!response.data) {
           setStatus('error');
-          setErrorMessage({
-            en: 'Legal content data is missing',
-            es: 'Faltan los datos del contenido legal',
-          });
+          setErrorMessage(
+            createLocalizedMessage('errors.legal.contentMissing')
+          );
           return;
         }
 
@@ -56,13 +56,10 @@ export const useFetchLegalContent =
           'USE_FETCH_LEGAL_CONTENT - Unexpected error'
         );
 
-        const message: LangMap = {
-          en: 'Error fetching legal content',
-          es: 'Error al cargar el contenido legal',
-        };
-
         setStatus('error');
-        setErrorMessage(message);
+        setErrorMessage(
+          createLocalizedMessage('errors.legal.contentLoadFailed')
+        );
       }
     }, [protectedGet]);
 

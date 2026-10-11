@@ -336,6 +336,21 @@
     "server": {
       "internal": "Error interno del servidor"
     },
+    "chat": {
+      "invalidAuctionId": "ID de subasta inválido",
+      "auctionNotFound": "Chat no encontrado para esta subasta",
+      "noData": "No se recibieron datos del servidor",
+      "invalidTokenFormat": "Formato de token inválido recibido",
+      "initializationFailed": "Error al inicializar el chat"
+    },
+    "legal": {
+      "contentMissing": "Faltan los datos del contenido legal",
+      "contentLoadFailed": "Error al cargar el contenido legal"
+    },
+    "info": {
+      "contentMissing": "Faltan los datos del contenido informativo",
+      "contentLoadFailed": "Error al cargar el contenido informativo"
+    },
     "store": {
       "notAuthorized": "No autorizado",
       "permissionDenied": "Permiso denegado",

@@ -336,6 +336,21 @@
     "server": {
       "internal": "Internal server error"
     },
+    "chat": {
+      "invalidAuctionId": "Invalid auction ID",
+      "auctionNotFound": "Chat not found for this auction",
+      "noData": "No data received from server",
+      "invalidTokenFormat": "Invalid token format received",
+      "initializationFailed": "Error initializing chat"
+    },
+    "legal": {
+      "contentMissing": "Legal content data is missing",
+      "contentLoadFailed": "Error fetching legal content"
+    },
+    "info": {
+      "contentMissing": "Info content data is missing",
+      "contentLoadFailed": "Error fetching info content"
+    },
     "store": {
       "notAuthorized": "Not authorized",
       "permissionDenied": "Permission denied",

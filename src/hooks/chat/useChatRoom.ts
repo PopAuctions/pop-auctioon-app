@@ -13,6 +13,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import type { LangMap, RequestStatus } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 interface UseChatRoomProps {
   auctionId: string;
@@ -70,12 +71,8 @@ export const useChatRoom = ({
 
         // Verificar si la respuesta tiene la estructura esperada
         if (!response.data) {
-          const message: LangMap = {
-            en: 'No data received from server',
-            es: 'No se recibieron datos del servidor',
-          };
           setStatus('error');
-          setErrorMessage(message);
+          setErrorMessage(createLocalizedMessage('errors.chat.noData'));
           return;
         }
 
@@ -99,12 +96,10 @@ export const useChatRoom = ({
           // Si data es un objeto con token
           chatToken = (response.data as any).token;
         } else {
-          const message: LangMap = {
-            en: 'Invalid token format received',
-            es: 'Formato de token inválido recibido',
-          };
           setStatus('error');
-          setErrorMessage(message);
+          setErrorMessage(
+            createLocalizedMessage('errors.chat.invalidTokenFormat')
+          );
           return;
         }
 
@@ -172,12 +167,10 @@ export const useChatRoom = ({
           chatRoom.disconnect();
         };
       } catch (error: any) {
-        const message: LangMap = {
-          en: 'Error initializing chat',
-          es: 'Error al inicializar el chat',
-        };
         setStatus('error');
-        setErrorMessage(message);
+        setErrorMessage(
+          createLocalizedMessage('errors.chat.initializationFailed')
+        );
         Sentry.captureException(
           `CHAT_INIT_ERROR: ${error?.message ?? 'Unknown'} | auctionId: ${auctionId}`
         );

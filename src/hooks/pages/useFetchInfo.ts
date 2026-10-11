@@ -8,6 +8,7 @@ import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 /**
  * Hook para obtener todo el contenido informativo de la app:
@@ -37,10 +38,7 @@ export const useFetchInfo = (): ActionResponse<InfoContentData | null> => {
 
       if (!response.data) {
         setStatus('error');
-        setErrorMessage({
-          en: 'Info content data is missing',
-          es: 'Faltan los datos del contenido informativo',
-        });
+        setErrorMessage(createLocalizedMessage('errors.info.contentMissing'));
         return;
       }
 
@@ -52,13 +50,8 @@ export const useFetchInfo = (): ActionResponse<InfoContentData | null> => {
 
       sentryErrorReport(errorMsg, 'USE_FETCH_INFO - Unexpected error');
 
-      const message: LangMap = {
-        en: 'Error fetching info content',
-        es: 'Error al cargar el contenido informativo',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(createLocalizedMessage('errors.info.contentLoadFailed'));
     }
   }, [protectedGet]);
 
