@@ -16,6 +16,7 @@ import {
 } from '@/types/types';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
 
 export const ArticleDetailsActions = ({
   TEXTS: { assignToAuction, remove, changePrice, orderImages, editImages },
@@ -38,7 +39,7 @@ export const ArticleDetailsActions = ({
   locale: Lang;
   currentStatus: ArticleSecondChanceStatus;
   commissionValue: number | null;
-  refetch: () => RefetchReturn;
+  refetch: () => RefetchReturn<MessageKey>;
 }) => {
   const { t } = useTranslation();
   const modalTexts = t('components.modals.onlineStoreArticle', { locale });

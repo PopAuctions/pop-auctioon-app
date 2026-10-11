@@ -86,6 +86,27 @@ describe('API message compatibility', () => {
     }
   );
 
+  it.each([
+    'errors.article.myOnlineStoreDetailUserInvalid',
+    'errors.article.myOnlineStoreDetailArticleInvalid',
+    'errors.article.myOnlineStoreDetailLoadFailed',
+    'errors.article.myOnlineStoreDetailNotFound',
+  ])(
+    'recognizes the seller article-detail error contract for %s',
+    (messageCode) => {
+      const resolved = resolveApiMessage(
+        {
+          error: { en: 'legacy-en', es: 'legacy-es' },
+          messageCode,
+          messageParams: {},
+        },
+        'error'
+      );
+
+      expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    }
+  );
+
   it('uses the legacy map when message parameters are malformed', () => {
     const legacy = { en: 'legacy-en', es: 'legacy-es' };
 

@@ -25,6 +25,7 @@ import { OfferHistoryModal } from '../modal/OfferHistoryModal';
 import { getStorePayoutFromBuyerFacingAmount } from '@/utils/getStorePayoutFromBuyerFacingAmount';
 import { OFFER_STATUS_COLORS } from '@/constants/myOnlineStore';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
 
 interface ArticleOffersCardsProps {
   offers: CustomFullArticleSecondChance['ArticleOffer'];
@@ -37,7 +38,7 @@ interface ArticleOffersCardsProps {
   };
   userCommissionValue: number;
   storeCommissionValue: number;
-  refetch: () => RefetchReturn;
+  refetch: () => RefetchReturn<MessageKey>;
 }
 
 export function ArticleOffersCards({
