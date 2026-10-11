@@ -467,6 +467,16 @@
       "followUnavailable": "Auction no longer available to follow",
       "unfollowUserMissing": "No user",
       "unfollowFailed": "Error unfollowing article",
+      "reviewRequestInvalidData": "Invalid request data",
+      "reviewRequestUserMissing": "Missing user",
+      "reviewRequestForbidden": "Permission denied",
+      "reviewRequestProcessFailed": "Unable to process request",
+      "reviewRequestChangesMissing": "Missing changes in auction",
+      "reviewRequestNotAllowed": "Action not allowed",
+      "reviewRequestArticlesLoadFailed": "Issue retrieving data",
+      "reviewRequestMinArticles": "A minimum of %{min} articles is required to proceed",
+      "reviewRequestArticleChangesMissing": "Missing changes in some articles",
+      "reviewRequestUpdateFailed": "Update failed",
       "auctionsLoadFailed": "Error fetching auctions",
       "creationFailed": "Error creating auction",
       "updateFailed": "Error updating auction"
@@ -553,7 +563,8 @@
   "auction": {
     "followedSuccessfully": "Auction followed",
     "unfollowedSuccessfully": "Auction unfollowed",
-    "finished": "Auction finished"
+    "finished": "Auction finished",
+    "reviewRequestedSuccessfully": "Asked review successfully"
   },
   "liveAuction": {
     "articleChangedSuccessfully": "Article changed successfully"

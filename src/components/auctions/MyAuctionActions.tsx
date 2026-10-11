@@ -39,7 +39,10 @@ export const MyAuctionActions = ({
         return;
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: response.success ?? response.data,
+      });
       refetch();
     } catch (e: any) {
       sentryErrorReport(e?.message, `REQUEST_REVIEW`);
