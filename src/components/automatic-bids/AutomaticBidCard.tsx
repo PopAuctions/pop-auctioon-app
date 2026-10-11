@@ -79,11 +79,12 @@ export function AutomaticBidCard({
 
   const handleUpdateAutomaticBid = async (amount: string) => {
     if (Number(amount) < computedMinBid) {
-      const message = texts.minBid + ' ' + formatter.format(computedMinBid);
-
       callToast({
         variant: 'error',
-        description: { es: message, en: message },
+        description: {
+          code: 'screens.autoBids.minimumBid',
+          params: { amount: formatter.format(computedMinBid) },
+        },
       });
 
       return false;

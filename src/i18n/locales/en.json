@@ -1698,6 +1698,7 @@
       "currentBid": "Current bid",
       "configuredAmount": "Configured amount",
       "minBid": "Minimum bid is",
+      "minimumBid": "Minimum bid is %{amount}",
       "edit": "Edit",
       "active": "Active",
       "unactive": "Inactive",

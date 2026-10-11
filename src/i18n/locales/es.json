@@ -1808,6 +1808,7 @@
       "currentBid": "Puja actual",
       "configuredAmount": "Monto configurado",
       "minBid": "La puja mínima es",
+      "minimumBid": "La puja mínima es %{amount}",
       "edit": "Editar",
       "active": "Activa",
       "unactive": "Inactiva",
