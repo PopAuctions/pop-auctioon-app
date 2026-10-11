@@ -432,6 +432,8 @@
       "articlesLoadFailed": "Error al obtener los artículos",
       "noArticlesWon": "No hay artículos ganados",
       "commentsLoadFailed": "Error al obtener comentarios",
+      "commentsAuthRequired": "Usuario no autenticado",
+      "commentsUserInvalid": "Usuario inválido",
       "creationFailed": "Error al crear el artículo",
       "updateFailed": "Error al actualizar el artículo"
     },
