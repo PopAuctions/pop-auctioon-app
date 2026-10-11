@@ -474,7 +474,9 @@
     "autoBid": {
       "loadFailed": "Error al obtener las ofertas realizadas",
       "userMissing": "Usuario no encontrado",
-      "listLoadFailed": "Error obteniendo pujas automáticas"
+      "listLoadFailed": "Error obteniendo pujas automáticas",
+      "toggleUserMissing": "Usuario no encontrado",
+      "toggleFailed": "Error desactivando la puja automática"
     },
     "offer": {
       "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",
@@ -555,6 +557,9 @@
   },
   "liveAuction": {
     "articleChangedSuccessfully": "Artículo cambiado correctamente"
+  },
+  "autoBid": {
+    "deactivatedSuccessfully": "Puja automática desactivada"
   },
   "otp": {
     "sentSuccessfully": "OTP enviado correctamente",

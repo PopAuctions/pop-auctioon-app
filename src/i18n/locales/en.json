@@ -474,7 +474,9 @@
     "autoBid": {
       "loadFailed": "Error fetching autoBids made",
       "userMissing": "Missing user",
-      "listLoadFailed": "Error fetching auto bids"
+      "listLoadFailed": "Error fetching auto bids",
+      "toggleUserMissing": "Missing user",
+      "toggleFailed": "Error deactivating automatic bid"
     },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",
@@ -555,6 +557,9 @@
   },
   "liveAuction": {
     "articleChangedSuccessfully": "Article changed successfully"
+  },
+  "autoBid": {
+    "deactivatedSuccessfully": "Automatic bid deactivated"
   },
   "otp": {
     "sentSuccessfully": "OTP sent successfully",

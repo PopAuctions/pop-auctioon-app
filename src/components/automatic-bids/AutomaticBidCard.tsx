@@ -138,7 +138,7 @@ export function AutomaticBidCard({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: response.success ?? response.data,
       });
 
       await onRefresh();
