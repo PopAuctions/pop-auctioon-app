@@ -445,6 +445,11 @@
       "removeUnavailable": "No longer can remove articles",
       "removeFailed": "Couldn't remove article from auction",
       "removeSold": "Couldn't remove article from auction because it has been sold",
+      "removeWonUserMissing": "No user",
+      "removeWonFailed": "Error removing won articles",
+      "removeWonEmpty": "There are no articles to remove",
+      "removeWonAuctionIdRequired": "Auction ID is required",
+      "removeWonAuctionIdInvalid": "Invalid auction ID",
       "creationFailed": "Error creating article",
       "updateFailed": "Error updating article"
     },
@@ -558,7 +563,8 @@
   "article": {
     "followedSuccessfully": "Article followed",
     "unfollowedSuccessfully": "Article unfollowed",
-    "removedFromAuctionSuccessfully": "Article removed successfully"
+    "removedFromAuctionSuccessfully": "Article removed successfully",
+    "wonArticlesRemovedSuccessfully": "Articles removed"
   },
   "auction": {
     "followedSuccessfully": "Auction followed",

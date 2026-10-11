@@ -445,6 +445,11 @@
       "removeUnavailable": "Ya no se pueden remover artículos",
       "removeFailed": "No se pudo sacar el artículo de la subasta",
       "removeSold": "No se pudo sacar el artículo de la subasta porque ya fue vendido",
+      "removeWonUserMissing": "No hay usuario",
+      "removeWonFailed": "Error al eliminar los artículos ganados",
+      "removeWonEmpty": "No hay artículos para eliminar",
+      "removeWonAuctionIdRequired": "El ID de la subasta es requerido",
+      "removeWonAuctionIdInvalid": "ID de subasta inválido",
       "creationFailed": "Error al crear el artículo",
       "updateFailed": "Error al actualizar el artículo"
     },
@@ -558,7 +563,8 @@
   "article": {
     "followedSuccessfully": "Artículo seguido",
     "unfollowedSuccessfully": "Artículo dejado de seguir",
-    "removedFromAuctionSuccessfully": "Artículo removido exitosamente"
+    "removedFromAuctionSuccessfully": "Artículo removido exitosamente",
+    "wonArticlesRemovedSuccessfully": "Artículos eliminados"
   },
   "auction": {
     "followedSuccessfully": "Subasta seguida",
