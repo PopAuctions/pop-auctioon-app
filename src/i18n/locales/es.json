@@ -429,6 +429,7 @@
       "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
       "mostViewedArticlesLoadFailed": "Error al obtener los artículos más vistos",
       "newestArticlesLoadFailed": "Error al obtener los artículos más recientes",
+      "onlineStoreListLoadFailed": "Error al obtener los artículos",
       "articlesLoadFailed": "Error al obtener los artículos",
       "noArticlesWon": "No hay artículos ganados",
       "commentsLoadFailed": "Error al obtener comentarios",

@@ -52,6 +52,19 @@ describe('API message compatibility', () => {
     ).toEqual(legacy);
   });
 
+  it('recognizes the online-store list error contract by structure', () => {
+    const resolved = resolveApiMessage(
+      {
+        error: { en: 'legacy-en', es: 'legacy-es' },
+        messageCode: 'errors.article.onlineStoreListLoadFailed',
+        messageParams: {},
+      },
+      'error'
+    );
+
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+  });
+
   it('uses the legacy map when message parameters are malformed', () => {
     const legacy = { en: 'legacy-en', es: 'legacy-es' };
 
