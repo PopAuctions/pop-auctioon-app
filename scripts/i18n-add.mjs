@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const repositoryRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const localeConfigPath = resolve(repositoryRoot, 'src/i18n/locales.ts');
 const dictionariesDirectory = resolve(repositoryRoot, 'src/i18n/locales');
+const translationsPath = resolve(repositoryRoot, 'src/i18n/index.ts');
 const LOCALE_PATTERN = /^[a-z]{2,3}(?:-[a-z0-9]+)*$/;
 
 function fail(message) {
@@ -107,6 +108,45 @@ function readDictionary(path) {
   }
 }
 
+function localeIdentifier(locale) {
+  return `locale${locale
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join('')}`;
+}
+
+function insertBeforeMarker(source, marker, entry) {
+  if (!source.includes(marker)) {
+    fail(`could not find ${marker} in ${translationsPath}.`);
+  }
+
+  return {
+    source: source.replace(marker, `${entry}\n${marker}`),
+    changed: true,
+  };
+}
+
+function hasTranslationImport(source, locale) {
+  return source.includes(`from './locales/${locale}.json';`);
+}
+
+function hasTranslationMapEntry(source, locale) {
+  const start = source.indexOf('const translations = {');
+  const end = source.indexOf('} as const satisfies', start);
+
+  if (start === -1 || end === -1) {
+    fail('could not find the translations map.');
+  }
+
+  const localePattern = new RegExp(
+    `^\\s*(?:['\"]${locale}['\"]\\s*:|${locale}\\s*,)`,
+    'm'
+  );
+
+  return localePattern.test(source.slice(start, end));
+}
+
 const { locale, dryRun } = parseArguments(process.argv.slice(2));
 const { locales, defaultLocale } = readLocaleRegistry();
 
@@ -122,6 +162,26 @@ if (!locales.has(defaultLocale)) {
 
 const source = resolve(dictionariesDirectory, `${defaultLocale}.json`);
 const target = resolve(dictionariesDirectory, `${locale}.json`);
+const identifier = localeIdentifier(locale);
+let translationsSource = readFileSync(translationsPath, 'utf8');
+const importUpdate = hasTranslationImport(translationsSource, locale)
+  ? { source: translationsSource, changed: false }
+  : insertBeforeMarker(
+      translationsSource,
+      '// i18n:add:translation-import',
+      `import ${identifier} from './locales/${locale}.json';`
+    );
+translationsSource = importUpdate.source;
+const translationMapUpdate = hasTranslationMapEntry(translationsSource, locale)
+  ? { source: translationsSource, changed: false }
+  : insertBeforeMarker(
+      translationsSource,
+      '  // i18n:add:translation-map',
+      `  ${JSON.stringify(locale)}: ${identifier},`
+    );
+translationsSource = translationMapUpdate.source;
+const translationsChanged =
+  importUpdate.changed || translationMapUpdate.changed;
 
 if (!dryRun && existsSync(target)) {
   fail(`refusing to overwrite existing dictionary ${target}.`);
@@ -134,6 +194,17 @@ if (!dryRun) {
 }
 
 console.log(`${dryRun ? 'Would create' : 'Created'} ${target}`);
+
+if (translationsChanged) {
+  if (!dryRun) {
+    writeFileSync(translationsPath, translationsSource);
+  }
+
+  console.log(
+    `${dryRun ? 'Would update' : 'Updated'} ${translationsPath} with the ${locale} translation import and map entry`
+  );
+}
+
 console.log(
-  `Next: replace every TODO_TRANSLATE[${locale}] value, add ${locale} to the explicit translation imports and map, then run pnpm i18n:check.`
+  `Next: replace every TODO_TRANSLATE[${locale}] value, then run pnpm i18n:check.`
 );
