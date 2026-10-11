@@ -3,6 +3,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { StorePayoutWithItems } from '@/types/payouts';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useGetStorePayoutById = ({
   payoutId,
@@ -24,16 +25,11 @@ export const useGetStorePayoutById = ({
     if (res.error) {
       setStatus('error');
       setErrorMessage(
-        res?.error ?? {
-          en: 'Error fetching auctions',
-          es: 'Error al obtener subastas',
-        }
+        res?.error ??
+          createLocalizedMessage('errors.auction.auctionsLoadFailed')
       );
       return {
-        message: {
-          en: 'Error fetching auctions',
-          es: 'Error al obtener subastas',
-        },
+        message: createLocalizedMessage('errors.auction.auctionsLoadFailed'),
       };
     }
 

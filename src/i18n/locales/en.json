@@ -365,6 +365,41 @@
       "commissionMissing": "Commission data is missing",
       "updateDataFailed": "Error updating data"
     },
+    "payout": {
+      "permissionDenied": "Permission denied",
+      "storeNotFound": "Store not found",
+      "dashboardLoadFailed": "Error loading payout information",
+      "loadFailed": "Error getting store payout",
+      "listLoadFailed": "Error getting store payouts",
+      "settlementItemsLoadFailed": "Error getting settlement items",
+      "historyLoadFailed": "Error getting store payout history",
+      "storeItemsLoadFailed": "Error getting store settlement items",
+      "storeShippingItemsLoadFailed": "Error getting store shipping settlement items",
+      "noItemsSelected": "No settlement items selected",
+      "selectedItemsValidationFailed": "Error validating selected settlement items",
+      "selectedArticlesNotFound": "Some selected articles were not found.",
+      "selectedItemsNotFound": "Some selected items were not found.",
+      "mixedStores": "Selected articles must belong to the same store.",
+      "mixedSaleTypes": "Auction articles and online store articles cannot be paid in the same payout.",
+      "paymentDateInvalid": "Invalid payment date",
+      "paymentDateFuture": "Payment date cannot be in the future",
+      "shippingValidationFailed": "Error validating selected shipping payments",
+      "itemsNotPayable": "Some selected items cannot be paid yet.",
+      "liquidationNumberCreateFailed": "Error creating liquidation document number",
+      "commissionNumberCreateFailed": "Error creating commission invoice number",
+      "createFailed": "Error creating store payout",
+      "createdItemsUpdateFailed": "Store payout was created, but settlement items could not be updated.",
+      "createdShippingUpdateFailed": "Store payout was created, but shipping payments could not be updated.",
+      "invalidCurrentStatus": "Some selected items cannot be updated because of their current status.",
+      "payableDatePending": "Some selected items cannot be marked as paid because their payable date has not arrived yet.",
+      "itemsUpdateFailed": "Error updating settlement items",
+      "commissionInvoiceLoadFailed": "Error getting commission invoice document",
+      "commissionInvoiceMissing": "Commission invoice data is missing",
+      "liquidationLoadFailed": "Error getting liquidation document",
+      "liquidationMissing": "Liquidation document data is missing",
+      "idInvalid": "Invalid id",
+      "invoiceNotFound": "Invoice not found"
+    },
     "soldArticle": {
       "userInvalid": "Invalid user",
       "notFound": "Article not found",
@@ -765,6 +800,10 @@
   "store": {
     "updatedSuccessfully": "Store updated",
     "commissionUpdatedSuccessfully": "Store commission updated successfully"
+  },
+  "payout": {
+    "createdSuccessfully": "Store payout created successfully.",
+    "itemsUpdatedSuccessfully": "Settlement items updated successfully"
   },
   "soldArticle": {
     "acquisitionCancelledSuccessfully": "Acquisition canceled successfully",

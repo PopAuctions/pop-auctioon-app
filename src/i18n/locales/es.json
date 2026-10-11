@@ -365,6 +365,41 @@
       "commissionMissing": "Faltan los datos de comisión",
       "updateDataFailed": "Error al actualizar"
     },
+    "payout": {
+      "permissionDenied": "Permiso denegado",
+      "storeNotFound": "Tienda no encontrada",
+      "dashboardLoadFailed": "Error cargando la información de pagos",
+      "loadFailed": "Error obteniendo el pago de tienda",
+      "listLoadFailed": "Error obteniendo los pagos de la tienda",
+      "settlementItemsLoadFailed": "Error obteniendo los pagos de tiendas",
+      "historyLoadFailed": "Error obteniendo el historial de pagos de tiendas",
+      "storeItemsLoadFailed": "Error obteniendo los pagos de la tienda",
+      "storeShippingItemsLoadFailed": "Error obteniendo los pagos de envío de la tienda",
+      "noItemsSelected": "No se seleccionaron pagos",
+      "selectedItemsValidationFailed": "Error validando los pagos seleccionados",
+      "selectedArticlesNotFound": "Algunos artículos seleccionados no fueron encontrados.",
+      "selectedItemsNotFound": "Algunos pagos seleccionados no fueron encontrados.",
+      "mixedStores": "Los artículos seleccionados deben pertenecer a la misma tienda.",
+      "mixedSaleTypes": "Los artículos de subasta y tienda online no se pueden pagar en la misma liquidación.",
+      "paymentDateInvalid": "Fecha de pago inválida",
+      "paymentDateFuture": "La fecha de pago no puede estar en el futuro",
+      "shippingValidationFailed": "Error validando los pagos de envío seleccionados",
+      "itemsNotPayable": "Algunos pagos seleccionados aún no se pueden pagar.",
+      "liquidationNumberCreateFailed": "Error creando el número de liquidación",
+      "commissionNumberCreateFailed": "Error creando el número de factura de comisión",
+      "createFailed": "Error creando el pago de tienda",
+      "createdItemsUpdateFailed": "El pago de tienda fue creado, pero no se pudieron actualizar los pagos seleccionados.",
+      "createdShippingUpdateFailed": "El pago de tienda fue creado, pero no se pudieron actualizar los pagos de envío.",
+      "invalidCurrentStatus": "Algunos pagos seleccionados no se pueden actualizar por su estado actual.",
+      "payableDatePending": "Algunos pagos seleccionados no se pueden marcar como pagados porque aún no ha llegado su fecha de pago.",
+      "itemsUpdateFailed": "Error actualizando los pagos",
+      "commissionInvoiceLoadFailed": "Error obteniendo la factura de comisión",
+      "commissionInvoiceMissing": "Faltan datos de la factura de comisión",
+      "liquidationLoadFailed": "Error obteniendo el documento de liquidación",
+      "liquidationMissing": "Faltan datos del documento de liquidación",
+      "idInvalid": "id inválido",
+      "invoiceNotFound": "Factura no encontrada"
+    },
     "soldArticle": {
       "userInvalid": "Usuario inválido",
       "notFound": "No se encontró el artículo",
@@ -765,6 +800,10 @@
   "store": {
     "updatedSuccessfully": "Tienda actualizada",
     "commissionUpdatedSuccessfully": "Comisión de tienda actualizada correctamente"
+  },
+  "payout": {
+    "createdSuccessfully": "Pago de tienda creado correctamente.",
+    "itemsUpdatedSuccessfully": "Pagos actualizados correctamente"
   },
   "soldArticle": {
     "acquisitionCancelledSuccessfully": "Adquisición cancelada con éxito",

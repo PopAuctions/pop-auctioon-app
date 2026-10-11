@@ -3,6 +3,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { AuctioneerPayoutDashboard } from '@/types/payouts';
 import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import { createLocalizedMessage } from '@/i18n/api-message';
 
 export const useGetAuctioneerPayoutDashboard =
   (): ActionResponse<AuctioneerPayoutDashboard | null> => {
@@ -23,16 +24,11 @@ export const useGetAuctioneerPayoutDashboard =
       if (res.error) {
         setStatus('error');
         setErrorMessage(
-          res?.error ?? {
-            en: 'Error fetching auctions',
-            es: 'Error al obtener subastas',
-          }
+          res?.error ??
+            createLocalizedMessage('errors.auction.auctionsLoadFailed')
         );
         return {
-          message: {
-            en: 'Error fetching auctions',
-            es: 'Error al obtener subastas',
-          },
+          message: createLocalizedMessage('errors.auction.auctionsLoadFailed'),
         };
       }
 
