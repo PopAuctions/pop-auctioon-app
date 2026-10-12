@@ -356,7 +356,8 @@
       "selectionBooleanInvalid": "isSelected must be a boolean"
     },
     "server": {
-      "internal": "Internal server error"
+      "internal": "Internal server error",
+      "connection": "Error connecting to server"
     },
     "country": {
       "listLoadFailed": "Error loading countries"
@@ -370,7 +371,8 @@
       "auctionNotFound": "Chat not found for this auction",
       "noData": "No data received from server",
       "invalidTokenFormat": "Invalid token format received",
-      "initializationFailed": "Error initializing chat"
+      "initializationFailed": "Error initializing chat",
+      "sendFailed": "Could not send message"
     },
     "legal": {
       "contentMissing": "Legal content data is missing",
@@ -500,7 +502,11 @@
     },
     "auth": {
       "userNotAuthenticated": "User not authenticated",
-      "notAuthorized": "Not authorized"
+      "notAuthorized": "Not authorized",
+      "signupImageProcessingFailed": "Error processing profile picture",
+      "signupFailed": "Registration error",
+      "signupUnexpected": "Unexpected error during registration",
+      "signupNetwork": "Connection error. Please check your internet."
     },
     "account": {
       "invalidUser": "User invalid",

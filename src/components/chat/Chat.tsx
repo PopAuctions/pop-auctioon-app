@@ -100,7 +100,7 @@ export const Chat = ({
   if (status === REQUEST_STATUS.error && errorMessage) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={t(errorMessage, { locale })}
         refreshRoute='/(tabs)/auctions'
       />
     );

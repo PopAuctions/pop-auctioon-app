@@ -1,4 +1,5 @@
 import { OFFERS_OPTIONS_VALUES, type WonArticleStatus } from '@/constants';
+import { type MessageKey } from '@/i18n';
 import { type Lang } from '@/i18n/locales';
 import { type Database } from '@/types/supabase';
 import { type ArticleFormValues } from '@/utils/schemas/articleSchemas';
@@ -979,10 +980,10 @@ export interface UseSignupReturn {
   ) => Promise<{
     success: boolean;
     email?: string;
-    error?: LangMap;
+    error?: MessageKey;
   }>;
   isLoading: boolean;
-  errorMessage: LangMap | null;
+  errorMessage: MessageKey | null;
 }
 
 export enum NotificationEventType {

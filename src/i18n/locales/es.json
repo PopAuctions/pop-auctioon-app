@@ -356,7 +356,8 @@
       "selectionBooleanInvalid": "isSelected debe ser un booleano"
     },
     "server": {
-      "internal": "Error interno del servidor"
+      "internal": "Error interno del servidor",
+      "connection": "Error al conectar con el servidor"
     },
     "country": {
       "listLoadFailed": "Error al cargar los países"
@@ -370,7 +371,8 @@
       "auctionNotFound": "Chat no encontrado para esta subasta",
       "noData": "No se recibieron datos del servidor",
       "invalidTokenFormat": "Formato de token inválido recibido",
-      "initializationFailed": "Error al inicializar el chat"
+      "initializationFailed": "Error al inicializar el chat",
+      "sendFailed": "No se pudo enviar el mensaje"
     },
     "legal": {
       "contentMissing": "Faltan los datos del contenido legal",
@@ -500,7 +502,11 @@
     },
     "auth": {
       "userNotAuthenticated": "Usuario no autenticado",
-      "notAuthorized": "No autorizado"
+      "notAuthorized": "No autorizado",
+      "signupImageProcessingFailed": "Error al procesar la imagen de perfil",
+      "signupFailed": "Error en el registro",
+      "signupUnexpected": "Error inesperado durante el registro",
+      "signupNetwork": "Error de conexión. Por favor, verifica tu internet."
     },
     "account": {
       "invalidUser": "Usuario inválido",
