@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ConfirmModal } from '@/components/modal/ConfirmModal';
 import { CustomText } from '@/components/ui/CustomText';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface SecondHighestBidderInfoProps {
   articleId: string | number;
@@ -37,13 +38,21 @@ export const SecondHighestBidderInfo = ({
   const handleGrantToSecondUser = async () => {
     setIsLoading(true);
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint:
           SECURE_ENDPOINTS['SOLD-ARTICLES'].GRANT_TO_SECOND_BIDDER(articleId),
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
     } finally {

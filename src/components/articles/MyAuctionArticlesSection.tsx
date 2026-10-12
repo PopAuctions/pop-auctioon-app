@@ -11,9 +11,9 @@ import { useLocalSearchParams } from 'expo-router';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import { LangMap } from '@/types/types';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 const REORDER_BLOCKED_BY_FILTERS =
   'screens.myAuction.reorderBlockedByFilters' as const satisfies MessageKey;
@@ -65,7 +65,7 @@ export const MyAuctionArticlesSection = ({
 
     try {
       setIsLoading(true);
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint:
           SECURE_ENDPOINTS.AUCTIONS.REORDER_MY_AUCTION_ARTICLES(auctionId),
         data: {
@@ -74,13 +74,26 @@ export const MyAuctionArticlesSection = ({
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.article.orderUpdateFailed'
+          ),
+        });
         return;
       }
 
       callToast({
         variant: 'success',
-        description: response.success ?? response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'article.orderUpdatedSuccessfully'
+        ),
       });
     } catch (e: any) {
       sentryErrorReport(

@@ -8,15 +8,11 @@ import { AssignToAuctionModal } from '@/components/modal/AssignToAuctionModal';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import {
-  ArticleSecondChanceStatus,
-  Lang,
-  LangMap,
-  RefetchReturn,
-} from '@/types/types';
+import { ArticleSecondChanceStatus, Lang, RefetchReturn } from '@/types/types';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 export const ArticleDetailsActions = ({
   TEXTS: { assignToAuction, remove, changePrice, orderImages, editImages },
@@ -53,7 +49,7 @@ export const ArticleDetailsActions = ({
 
   const handlePriceChange = async (newPrice: string) => {
     setIsLoading(true);
-    const response = await securePatch<LangMap>({
+    const response = await securePatch<unknown>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.UPDATE_PRICE(
         articleSecondChanceId
       ),
@@ -65,7 +61,12 @@ export const ArticleDetailsActions = ({
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          locale,
+          'errors.server.connection'
+        ),
       });
       setIsLoading(false);
       return false;
@@ -73,7 +74,12 @@ export const ArticleDetailsActions = ({
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        locale,
+        'article.onlineStorePriceUpdatedSuccessfully'
+      ),
     });
     refetch();
     setIsLoading(false);
@@ -82,7 +88,7 @@ export const ArticleDetailsActions = ({
 
   const handleAssignToAuction = async (auctionId: string, price: string) => {
     setIsLoading(true);
-    const response = await securePost<LangMap>({
+    const response = await securePost<unknown>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.CHAGE_TO_AUCTION(
         articleSecondChanceId
       ),
@@ -95,7 +101,12 @@ export const ArticleDetailsActions = ({
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          locale,
+          'errors.server.connection'
+        ),
       });
       setIsLoading(false);
       return false;
@@ -103,7 +114,12 @@ export const ArticleDetailsActions = ({
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        locale,
+        'article.onlineStoreAssignedSuccessfully'
+      ),
     });
     navigateWithAuth('/(tabs)/auctioneer/my-online-store');
     setIsLoading(false);
@@ -113,14 +129,19 @@ export const ArticleDetailsActions = ({
 
   const handleRemoveArticle = async () => {
     setIsLoading(true);
-    const response = await secureDelete<LangMap>({
+    const response = await secureDelete<unknown>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.DELETE(articleSecondChanceId),
     });
 
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          locale,
+          'errors.server.connection'
+        ),
       });
       setIsLoading(false);
       return false;
@@ -128,7 +149,12 @@ export const ArticleDetailsActions = ({
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        locale,
+        'article.onlineStoreDeletedSuccessfully'
+      ),
     });
 
     setIsLoading(false);

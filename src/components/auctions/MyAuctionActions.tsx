@@ -2,13 +2,14 @@ import { AuctionStatus } from '@/constants/auctions';
 import { Translations } from '@/i18n';
 import { View } from 'react-native';
 import { ConfirmModal } from '../modal/ConfirmModal';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 // import { CustomLink } from '../ui/CustomLink';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 export const MyAuctionActions = ({
   auctionId,
@@ -30,18 +31,31 @@ export const MyAuctionActions = ({
 
   const requestReviewFunction = async () => {
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.AUCTIONS.REQUEST_REVIEW(auctionId),
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
       callToast({
         variant: 'success',
-        description: response.success ?? response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'auction.reviewRequestedSuccessfully'
+        ),
       });
       refetch();
     } catch (e: any) {

@@ -1,5 +1,5 @@
 import { isMessageKey, t, type MessageKey } from '@/i18n';
-import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
+import { SUPPORTED_LANGUAGES, type Lang } from '@/i18n/locales';
 import type { LangMap } from '@/types/types';
 
 export type ApiMessageParam = string | number | boolean;
@@ -84,4 +84,41 @@ export function resolveApiMessage(
   return metadata
     ? createLocalizedMessage(metadata.messageCode, metadata.messageParams)
     : getLegacyMessage(payload, field);
+}
+
+/**
+ * Resolves an API message at the UI boundary. New endpoints provide stable
+ * message metadata; released endpoints can still provide their legacy map.
+ */
+export function resolveApiResponseMessage(
+  response: {
+    messageCode?: MessageKey;
+    messageParams?: ApiMessageParams;
+    error?: unknown;
+    success?: unknown;
+    data?: unknown;
+  },
+  field: ApiMessageField,
+  locale: Lang,
+  fallback: MessageKey
+): string {
+  if (response.messageCode) {
+    return String(
+      t(response.messageCode, {
+        ...response.messageParams,
+        locale,
+      })
+    );
+  }
+
+  const legacyMessage =
+    field === 'error' ? response.error : (response.success ?? response.data);
+
+  if (isRecord(legacyMessage) && typeof legacyMessage[locale] === 'string') {
+    return legacyMessage[locale];
+  }
+
+  if (typeof legacyMessage === 'string') return legacyMessage;
+
+  return String(t(fallback, { locale }));
 }

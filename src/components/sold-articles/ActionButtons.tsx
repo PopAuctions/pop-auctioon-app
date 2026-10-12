@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ConfirmModal } from '@/components/modal/ConfirmModal';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface ActionButtonsProps {
   locale: Lang;
@@ -31,12 +32,20 @@ export const ActionButtons = ({
   const handleNotifyAgain = async () => {
     setIsLoading(true);
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS['SOLD-ARTICLES'].NOTIFY_AGAIN(articleId),
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
     } finally {
@@ -47,13 +56,21 @@ export const ActionButtons = ({
   const handleSendToOnlineStore = async () => {
     setIsLoading(true);
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint:
           SECURE_ENDPOINTS['SOLD-ARTICLES'].SEND_TO_ONLINE_STORE(articleId),
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
     } finally {
@@ -64,13 +81,21 @@ export const ActionButtons = ({
   const handleCancelAcquisition = async () => {
     setIsLoading(true);
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint:
           SECURE_ENDPOINTS['SOLD-ARTICLES'].CANCEL_ACQUISITION(articleId),
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
     } finally {

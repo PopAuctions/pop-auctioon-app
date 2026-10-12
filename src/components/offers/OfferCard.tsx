@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import {
   ArticleSecondChanceStatusConst,
-  LangMap,
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
@@ -25,6 +24,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { t, type MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface OfferCardProps {
   offer: MyOffers;
@@ -139,7 +139,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     }
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.USER_ACCEPT_OFFER,
         data: {
           articleOfferId: offer.id,
@@ -149,7 +149,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -158,7 +163,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: response.data,
+          description: resolveApiResponseMessage(
+            response,
+            'success',
+            lang,
+            'offer.counterAcceptedSuccessfully'
+          ),
         });
       }
 
@@ -193,7 +203,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     }
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.USER_COUNTER_OFFER,
         data: {
           articleOfferId: offer.id,
@@ -204,7 +214,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -213,7 +228,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: response.data,
+          description: resolveApiResponseMessage(
+            response,
+            'success',
+            lang,
+            'offer.counterSentSuccessfully'
+          ),
         });
       }
 
@@ -230,7 +250,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     }
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.USER_REJECT_OFFER,
         data: {
           articleOfferId: offer.id,
@@ -240,7 +260,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -249,7 +274,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: response.data,
+          description: resolveApiResponseMessage(
+            response,
+            'success',
+            lang,
+            'offer.counterRejectedSuccessfully'
+          ),
         });
       }
 

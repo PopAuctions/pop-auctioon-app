@@ -8,7 +8,6 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import {
   CustomFullArticleSecondChance,
   Lang,
-  LangMap,
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
@@ -26,6 +25,7 @@ import { getStorePayoutFromBuyerFacingAmount } from '@/utils/getStorePayoutFromB
 import { OFFER_STATUS_COLORS } from '@/constants/myOnlineStore';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface ArticleOffersCardsProps {
   offers: CustomFullArticleSecondChance['ArticleOffer'];
@@ -68,14 +68,19 @@ export function ArticleOffersCards({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.ACCEPT(offerId),
       });
 
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -85,7 +90,12 @@ export function ArticleOffersCards({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'offer.acceptedSuccessfully'
+        ),
       });
 
       return true;
@@ -98,14 +108,19 @@ export function ArticleOffersCards({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.REJECT(offerId),
       });
 
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -115,7 +130,12 @@ export function ArticleOffersCards({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'offer.rejectedSuccessfully'
+        ),
       });
 
       return true;
@@ -131,7 +151,7 @@ export function ArticleOffersCards({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.COUNTER(offerId),
         data: {
           amount,
@@ -141,7 +161,12 @@ export function ArticleOffersCards({
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -153,7 +178,12 @@ export function ArticleOffersCards({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'offer.counterSentSuccessfully'
+        ),
       });
 
       return true;
