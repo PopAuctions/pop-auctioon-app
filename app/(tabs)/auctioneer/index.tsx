@@ -60,7 +60,10 @@ export default function AuctioneerTab() {
   ) {
     return (
       <CustomError
-        customMessage={(errorMessage || storeError)?.[locale]}
+        customMessage={
+          errorMessage?.[locale] ??
+          (storeError ? t(storeError, { locale }) : undefined)
+        }
         refreshRoute='/(tabs)/auctioneer'
       />
     );

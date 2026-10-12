@@ -138,7 +138,9 @@ export default function EditStoreScreen() {
   if (storeFetchStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={storeFetchError?.[locale]}
+        customMessage={
+          storeFetchError ? t(storeFetchError, { locale }) : undefined
+        }
         refreshRoute='/(tabs)/auctioneer/edit'
       />
     );
