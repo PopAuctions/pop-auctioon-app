@@ -333,6 +333,16 @@
   "errors": {
     "unexpected": "Something went wrong",
     "network": "There was a connection problem. Please try again.",
+    "discountCode": {
+      "required": "Discount code is required",
+      "userNotFound": "User not found",
+      "loadFailed": "Error getting discount codes",
+      "notFound": "Discount code not found",
+      "invalidOrExpired": "Discount code invalid or expired",
+      "userLoadFailed": "Error getting user discount codes",
+      "alreadyUsed": "Discount code already used",
+      "validationFailed": "Error validating code"
+    },
     "server": {
       "internal": "Internal server error"
     },

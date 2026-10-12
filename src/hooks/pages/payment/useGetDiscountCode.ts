@@ -3,6 +3,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { REQUEST_STATUS } from '@/constants';
 import type { LangMap, RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 
 /**
  * Backend response for discount code validation
@@ -31,7 +32,9 @@ interface DiscountCodeResponse {
 export const useGetDiscountCode = () => {
   const { secureGet } = useSecureApi();
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | LangMap | null>(
+    null
+  );
   const [discountData, setDiscountData] = useState<{
     code: string;
     amount: number;
@@ -59,7 +62,7 @@ export const useGetDiscountCode = () => {
         });
 
         if (response.error) {
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? response.error);
           setStatus(REQUEST_STATUS.error);
           setDiscountData(null);
           return { isValid: false, data: null };
@@ -67,10 +70,9 @@ export const useGetDiscountCode = () => {
 
         if (!response.data || !response.data.valid) {
           setErrorMessage(
-            response.error || {
-              es: 'Código de descuento inválido',
-              en: 'Invalid discount code',
-            }
+            response.messageCode ??
+              response.error ??
+              'screens.payments.invalidDiscountCode'
           );
           setStatus(REQUEST_STATUS.error);
           setDiscountData(null);
@@ -87,10 +89,7 @@ export const useGetDiscountCode = () => {
         setErrorMessage(null);
         return { isValid: true, data: discountInfo };
       } catch {
-        setErrorMessage({
-          es: 'Error al validar código',
-          en: 'Error validating code',
-        });
+        setErrorMessage('errors.discountCode.validationFailed');
         setStatus(REQUEST_STATUS.error);
         setDiscountData(null);
         return { isValid: false, data: null };
