@@ -117,7 +117,7 @@ export function AssignToAuctionModal({
                   type='body'
                   className='mb-2 rounded-md bg-red-100 p-2 text-sm text-red-700'
                 >
-                  {errorMessage[locale]}
+                  {t(errorMessage, { locale })}
                 </CustomText>
               )}
 

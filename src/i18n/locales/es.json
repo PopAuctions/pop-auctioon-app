@@ -658,9 +658,17 @@
       "imageRemoveFailed": "Error al eliminar la imagen",
       "createUnexpected": "Hubo un error al crear el artículo",
       "imageRequired": "Se requiere al menos una imagen",
-      "updateFailed": "Error al actualizar el artículo"
+      "updateFailed": "Error al actualizar el artículo",
+      "requestArticleIdInvalid": "ID de artículo inválido",
+      "requestBodyInvalid": "El cuerpo de la solicitud no pudo ser procesado",
+      "requestDataInvalid": "Datos inválidos",
+      "requestPriceInvalid": "Precio inválido"
     },
     "auction": {
+      "availableUnauthorized": "No autorizado",
+      "availableLoadFailed": "Error al obtener subastas",
+      "availableDataMissing": "Faltan los datos de subastas disponibles",
+      "availableFetchFailed": "Error al cargar las subastas disponibles",
       "followedListLoadFailed": "Error al obtener las subastas seguidas",
       "followedListUserMissing": "No hay usuario",
       "followStatusUserInvalid": "Usuario inválido",
@@ -768,6 +776,18 @@
       "readFailed": "Error al leer la notificación",
       "deleteFailed": "Error al eliminar la notificación"
     },
+    "pushToken": {
+      "required": "El token de push es requerido",
+      "platformInvalid": "La plataforma debe ser ios o android",
+      "registerFailed": "Error al registrar el token de push",
+      "unregisterFailed": "Error al desactivar el token de push",
+      "unexpected": "Ocurrió un error inesperado",
+      "requestInvalid": "El token es requerido y debe ser un string",
+      "requestFormatInvalid": "Formato de token inválido. Debe comenzar con 'ExponentPushToken['",
+      "userIdRequired": "El ID de usuario es requerido",
+      "listLoadFailed": "Error al obtener los tokens de push",
+      "internal": "Error interno del servidor"
+    },
     "bid": {
       "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar.",
       "invalidAmount": "Cantidad de puja inválida",
@@ -786,6 +806,11 @@
       "openFailed": "No se pudo abrir el documento"
     },
     "user": {
+      "lookupLoadFailed": "Error obteniendo el usuario",
+      "lookupNotFound": "Usuario no encontrado",
+      "listNotFound": "Usuario no encontrado",
+      "listInvalidFilter": "Filtro incorrecto",
+      "listLoadFailed": "Error obteniendo usuarios",
       "notFound": "Usuario no encontrado",
       "noData": "No se recibieron datos del usuario",
       "loadFailed": "Error al cargar datos del usuario",

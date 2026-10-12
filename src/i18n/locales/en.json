@@ -658,9 +658,17 @@
       "imageRemoveFailed": "Error removing image",
       "createUnexpected": "There was an error creating article",
       "imageRequired": "At least one image is required",
-      "updateFailed": "Error updating article"
+      "updateFailed": "Error updating article",
+      "requestArticleIdInvalid": "Invalid articleId",
+      "requestBodyInvalid": "Request body could not be processed",
+      "requestDataInvalid": "Invalid data",
+      "requestPriceInvalid": "Invalid price"
     },
     "auction": {
+      "availableUnauthorized": "Unauthorized",
+      "availableLoadFailed": "Error getting auctions",
+      "availableDataMissing": "Available auctions data is missing",
+      "availableFetchFailed": "Error fetching available auctions data",
       "followedListLoadFailed": "Error getting followed auctions",
       "followedListUserMissing": "No user",
       "followStatusUserInvalid": "Invalid user",
@@ -768,6 +776,18 @@
       "readFailed": "Error reading notification",
       "deleteFailed": "Error deleting notification"
     },
+    "pushToken": {
+      "required": "Expo push token is required",
+      "platformInvalid": "Platform must be ios or android",
+      "registerFailed": "Failed to register push token",
+      "unregisterFailed": "Failed to disable push token",
+      "unexpected": "An unexpected error occurred",
+      "requestInvalid": "Token is required and must be a string",
+      "requestFormatInvalid": "Invalid Expo Push Token format. Must start with 'ExponentPushToken['",
+      "userIdRequired": "User ID is required",
+      "listLoadFailed": "Failed to fetch push tokens",
+      "internal": "Internal server error"
+    },
     "bid": {
       "updateAmountsFailed": "Error updating bidding amounts. Click to retry.",
       "invalidAmount": "Invalid bid amount",
@@ -786,6 +806,11 @@
       "openFailed": "Could not open document"
     },
     "user": {
+      "lookupLoadFailed": "Error getting user",
+      "lookupNotFound": "User not found",
+      "listNotFound": "User not found",
+      "listInvalidFilter": "Bad filter",
+      "listLoadFailed": "Error getting users",
       "notFound": "User not found",
       "noData": "No user data received",
       "loadFailed": "Error loading user data",
