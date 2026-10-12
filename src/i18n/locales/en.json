@@ -714,6 +714,8 @@
     },
     "autoBid": {
       "loadFailed": "Error fetching autoBids made",
+      "dataMissing": "Auto-bid data is missing",
+      "dataLoadFailed": "Error fetching auto-bid data",
       "userMissing": "Missing user",
       "listLoadFailed": "Error fetching auto bids",
       "toggleUserMissing": "Missing user",

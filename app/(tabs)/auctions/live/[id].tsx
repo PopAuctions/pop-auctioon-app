@@ -216,7 +216,7 @@ export default function LiveAuctionScreen() {
           refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
           customMessage={
             errorMessage
-              ? errorMessage[locale]
+              ? t(errorMessage, { locale })
               : t('commonErrors.liveAuctionInfoLoadFailed')
           }
         />

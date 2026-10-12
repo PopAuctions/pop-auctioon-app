@@ -714,6 +714,8 @@
     },
     "autoBid": {
       "loadFailed": "Error al obtener las ofertas realizadas",
+      "dataMissing": "Faltan los datos de puja automática",
+      "dataLoadFailed": "Error al cargar los datos de puja automática",
       "userMissing": "Usuario no encontrado",
       "listLoadFailed": "Error obteniendo pujas automáticas",
       "toggleUserMissing": "Usuario no encontrado",
