@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useSecureApi } from '../api/useSecureApi';
 import { useToast } from '../useToast';
-import { BiddingAmounts, HighestBidderState, LangMap } from '@/types/types';
+import { BiddingAmounts, HighestBidderState } from '@/types/types';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { toTotal } from '@/utils/toTotal';
@@ -12,6 +12,7 @@ import { useTranslation } from '../i18n/useTranslation';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 const maxBidOffset = MAX_BID_OFFSET;
 
@@ -191,7 +192,7 @@ export const useSendBid = ({
         });
       }, 10000);
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
         data: {
           articleId,
@@ -216,7 +217,12 @@ export const useSendBid = ({
 
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return;
@@ -224,7 +230,12 @@ export const useSendBid = ({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          BID_PROCESSING_ERROR
+        ),
       });
 
       setBidAmount('');

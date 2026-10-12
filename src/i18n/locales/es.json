@@ -931,7 +931,8 @@
     "articleChangedSuccessfully": "Artículo cambiado correctamente"
   },
   "autoBid": {
-    "deactivatedSuccessfully": "Puja automática desactivada"
+    "deactivatedSuccessfully": "Puja automática desactivada",
+    "savedSuccessfully": "Puja automática guardada con éxito"
   },
   "otp": {
     "sentSuccessfully": "OTP enviado correctamente",
