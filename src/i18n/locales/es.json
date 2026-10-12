@@ -748,6 +748,12 @@
       "toggleUserMissing": "Usuario no encontrado",
       "toggleFailed": "Error desactivando la puja automática"
     },
+    "payment": {
+      "detailLoadFailed": "Error al cargar la información del pago",
+      "historyLoadFailed": "Error al cargar el historial de pagos",
+      "auctionIdRequired": "ID de subasta requerido",
+      "wonArticlesLoadFailed": "Error al cargar artículos ganados"
+    },
     "offer": {
       "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",
       "invalidNumber": "Ingresa un número válido",

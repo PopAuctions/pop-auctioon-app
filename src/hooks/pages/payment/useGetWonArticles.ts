@@ -9,10 +9,10 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type {
   ActionResponse,
   CountryValue,
-  LangMap,
   RequestStatus,
   UserArticlesWon,
 } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import { REQUEST_STATUS } from '@/constants';
 
 interface UseGetWonArticlesProps {
@@ -26,21 +26,21 @@ interface ArticlesResponse {
 
 export const useGetWonArticles = ({
   auctionId,
-}: UseGetWonArticlesProps): ActionResponse<ArticlesResponse | null> & {
+}: UseGetWonArticlesProps): ActionResponse<
+  ArticlesResponse | null,
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [articles, setArticles] = useState<ArticlesResponse | null>(null);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchWonArticles = useCallback(async (): Promise<void> => {
     if (!auctionId) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        es: 'ID de subasta requerido',
-        en: 'Auction ID required',
-      });
+      setErrorMessage('errors.payment.auctionIdRequired');
       return;
     }
 
@@ -54,7 +54,9 @@ export const useGetWonArticles = ({
 
       if (response.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(response.error);
+        setErrorMessage(
+          response.messageCode ?? 'errors.payment.wonArticlesLoadFailed'
+        );
         return;
       }
 
@@ -62,19 +64,12 @@ export const useGetWonArticles = ({
         setArticles(response.data);
         setStatus(REQUEST_STATUS.success);
       } else {
-        setErrorMessage({
-          es: 'Error al cargar artículos ganados',
-          en: 'Error loading won articles',
-        });
+        setErrorMessage('errors.payment.wonArticlesLoadFailed');
         setArticles(null);
         setStatus(REQUEST_STATUS.error);
       }
     } catch {
-      const errorMsg: LangMap = {
-        es: 'Error al cargar artículos ganados',
-        en: 'Error loading won articles',
-      };
-      setErrorMessage(errorMsg);
+      setErrorMessage('errors.payment.wonArticlesLoadFailed');
       setStatus(REQUEST_STATUS.error);
     }
   }, [secureGet, auctionId]);

@@ -454,7 +454,7 @@ export default function PaymentScreen() {
   if (articlesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={articlesError?.[locale]}
+        customMessage={articlesError ? t(articlesError, { locale }) : undefined}
         refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );

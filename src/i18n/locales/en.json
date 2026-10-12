@@ -748,6 +748,12 @@
       "toggleUserMissing": "Missing user",
       "toggleFailed": "Error deactivating automatic bid"
     },
+    "payment": {
+      "detailLoadFailed": "Error loading payment information",
+      "historyLoadFailed": "Error loading payment history",
+      "auctionIdRequired": "Auction ID required",
+      "wonArticlesLoadFailed": "Error loading won articles"
+    },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",
       "invalidNumber": "Enter a valid number",

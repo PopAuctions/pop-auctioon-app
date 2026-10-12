@@ -11,7 +11,7 @@ import { CustomError } from '@/components/ui/CustomError';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 
 export default function PaymentsHistoryScreen() {
-  const { locale } = useTranslation();
+  const { t, locale } = useTranslation();
   const { refresh } = useLocalSearchParams<{
     refresh?: string;
   }>();
@@ -54,7 +54,7 @@ export default function PaymentsHistoryScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute='/(tabs)/account/payments-history'
       />
     );

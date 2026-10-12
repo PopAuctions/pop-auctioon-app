@@ -57,7 +57,9 @@ export default function PaymentScreen() {
   ) {
     return (
       <CustomError
-        customMessage={(errorMessage ?? commissionError)?.[locale]}
+        customMessage={
+          errorMessage ? t(errorMessage, { locale }) : commissionError?.[locale]
+        }
         refreshRoute={`/(tabs)/account/payment/${id}`}
       />
     );
