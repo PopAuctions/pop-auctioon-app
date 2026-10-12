@@ -13,10 +13,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type * as z from 'zod';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { LangMap } from '@/types/types';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 const RESET_PASSWORD_UNEXPECTED_ERROR =
   'auth.passwordReset.unexpected' as const satisfies MessageKey;
@@ -42,7 +42,7 @@ export default function ResetPasswordScreen() {
     setLoading(true);
 
     try {
-      const response = await protectedPost<LangMap>({
+      const response = await protectedPost<unknown>({
         endpoint: SECURE_ENDPOINTS.NO_AUTH.RESET_PASSWORD,
         data: {
           email: values.email,
@@ -50,13 +50,27 @@ export default function ResetPasswordScreen() {
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
-      const data = response?.data;
-
-      callToast({ variant: 'success', description: data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'resetPassword.resetEmailSent'
+        ),
+      });
     } catch (e: any) {
       sentryErrorReport(e?.message, 'CATCH_RESET_PASSWORD - Unexpected error');
       callToast({
