@@ -503,6 +503,15 @@
     "auth": {
       "userNotAuthenticated": "Usuario no autenticado",
       "notAuthorized": "No autorizado",
+      "loginInvalidCredentials": "Email o contraseña incorrectos",
+      "loginEmailNotConfirmed": "Email no confirmado",
+      "loginTooManyRequests": "Demasiados intentos de inicio de sesión. Por favor, intenta más tarde.",
+      "loginNetwork": "Error de conexión. Por favor, verifica tu internet.",
+      "loginEmailNotVerified": "Correo no verificado. Revisa tu bandeja de entrada.",
+      "loginConfirmationCooldown": "Espera unos momentos antes de solicitar otro correo de confirmación.",
+      "loginAccountDisabled": "Tu cuenta ha sido desactivada. Contacta soporte para más información.",
+      "loginAccountDisabledToast": "Tu cuenta ha sido desactivada. Contacta soporte si crees que es un error.",
+      "loginUnknown": "Error desconocido. Por favor, intenta de nuevo.",
       "signupImageProcessingFailed": "Error al procesar la imagen de perfil",
       "signupFailed": "Error en el registro",
       "signupUnexpected": "Error inesperado durante el registro",
@@ -1023,6 +1032,9 @@
     "authenticationSuccess": "¡Autenticación exitosa!"
   },
   "auth": {
+    "login": {
+      "sessionStarted": "Sesión iniciada"
+    },
     "oauth": {
       "google": {
         "startFailed": "No se pudo iniciar el inicio de sesión con Google. Por favor, inténtelo de nuevo.",

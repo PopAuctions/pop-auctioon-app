@@ -503,6 +503,15 @@
     "auth": {
       "userNotAuthenticated": "User not authenticated",
       "notAuthorized": "Not authorized",
+      "loginInvalidCredentials": "Invalid email or password",
+      "loginEmailNotConfirmed": "Email not confirmed",
+      "loginTooManyRequests": "Too many login attempts. Please try again later.",
+      "loginNetwork": "Connection error. Please check your internet.",
+      "loginEmailNotVerified": "Email not verified. Check your inbox.",
+      "loginConfirmationCooldown": "Wait a few moments before requesting another confirmation email.",
+      "loginAccountDisabled": "Your account has been disabled. Contact support for more information.",
+      "loginAccountDisabledToast": "Your account is deactivated. Please contact support if you think this is a mistake.",
+      "loginUnknown": "Unknown error. Please try again.",
       "signupImageProcessingFailed": "Error processing profile picture",
       "signupFailed": "Registration error",
       "signupUnexpected": "Unexpected error during registration",
@@ -1023,6 +1032,9 @@
     "authenticationSuccess": "Successfully authenticated!"
   },
   "auth": {
+    "login": {
+      "sessionStarted": "Session started"
+    },
     "oauth": {
       "google": {
         "startFailed": "Failed to initiate Google sign-in. Please try again.",
