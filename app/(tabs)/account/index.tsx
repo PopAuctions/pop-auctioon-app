@@ -10,7 +10,7 @@ import { useGetUnreadUserNotifications } from '@/hooks/pages/notifications/useGe
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export default function AccountTab() {
-  const { locale } = useTranslation();
+  const { t, locale } = useTranslation();
   const {
     data: currentUser,
     status,
@@ -51,7 +51,7 @@ export default function AccountTab() {
   if (status === REQUEST_STATUS.error || !currentUser) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute='/(tabs)/account'
       />
     );

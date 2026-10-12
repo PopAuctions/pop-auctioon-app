@@ -12,8 +12,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { createLocalizedMessage } from '@/i18n/api-message';
 import type { MessageKey } from '@/i18n';
+
+const USER_DATA_MISSING_ERROR =
+  'errors.user.noData' as const satisfies MessageKey;
+const USER_LOAD_ERROR = 'errors.user.loadFailed' as const satisfies MessageKey;
 
 type UserApiErrorResponse = {
   status?: number;
@@ -38,14 +41,12 @@ type UserApiErrorResponse = {
  * }
  * ```
  */
-export const useGetCurrentUser = (): ActionResponse<User | null> & {
+export const useGetCurrentUser = (): ActionResponse<User | null, MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { secureGet } = useSecureApi();
@@ -100,7 +101,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
         }
 
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? USER_LOAD_ERROR);
 
         // Si el usuario fue eliminado de la BD, cerrar sesión automáticamente
         const isUserNotFound =
@@ -123,7 +124,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       } else {
         setCurrentUser(null);
         setStatus('error');
-        setErrorMessage(createLocalizedMessage('errors.user.noData'));
+        setErrorMessage(USER_DATA_MISSING_ERROR);
       }
     } catch (error) {
       const errorMsg =
@@ -134,7 +135,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       console.error('ERROR_LOAD_CURRENT_USER_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage(createLocalizedMessage('errors.user.loadFailed'));
+      setErrorMessage(USER_LOAD_ERROR);
     }
   }, [secureGet, handleAuthError]);
 
