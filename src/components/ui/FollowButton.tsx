@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ApiEndpoint, Lang, LangMap, RequestStatus } from '@/types/types';
+import { ApiEndpoint, Lang, RequestStatus } from '@/types/types';
 import { Button, ButtonMode, ButtonSize } from './Button';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
@@ -8,6 +8,7 @@ import { REQUEST_STATUS } from '@/constants';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 import { FontAwesomeIcon } from './FontAwesomeIcon';
 import { t } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface FollowButtonProps {
   mode: ButtonMode;
@@ -50,13 +51,21 @@ export function FollowButton({
     const endpoint = isFollowing ? unfollowEndpoint : followEndpoint;
 
     try {
-      const response = await securePost<LangMap>({ endpoint });
+      const response = await securePost<unknown>({ endpoint });
 
       if (response.error) {
         if (response.status === 401) {
           openSignInAlertModal();
         }
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
+        });
         setStatus(REQUEST_STATUS.error);
         return;
       }
@@ -64,7 +73,15 @@ export function FollowButton({
       setIsFollowing((prev) => !prev);
       setStatus(REQUEST_STATUS.success);
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          lang,
+          'article.followedSuccessfully'
+        ),
+      });
       actionAfterFollow?.();
     } catch (e: any) {
       sentryErrorReport(e?.message, `FOLLOW_BUTTON - ${endpoint}`);

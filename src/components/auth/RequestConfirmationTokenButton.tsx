@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import { useToast } from '@/hooks/useToast';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { t } from '@/i18n';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 const EMAIL_SEND_ERROR =
   'auth.emailConfirmation.sendFailed' as const satisfies MessageKey;
@@ -40,7 +41,7 @@ export function RequestConfirmationTokenButton({
     setCooldown(cooldownAmount);
 
     try {
-      const response = await protectedPost<LangMap>({
+      const response = await protectedPost<unknown>({
         endpoint: SECURE_ENDPOINTS.NO_AUTH.REQUEST_EMAIL_CONFIRMATION_TOKEN,
         data: {
           email: email,
@@ -48,14 +49,28 @@ export function RequestConfirmationTokenButton({
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         setCooldown(10);
         return;
       }
 
-      const data = response.success ?? response.data;
-
-      callToast({ variant: 'success', description: data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'confirmEmail.resendSuccess'
+        ),
+      });
     } catch (error: any) {
       Sentry.captureException(
         new Error(`SEND__EMAIL: ${error?.message ?? 'unknown error'}`)

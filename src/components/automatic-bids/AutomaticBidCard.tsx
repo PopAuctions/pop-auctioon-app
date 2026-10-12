@@ -13,9 +13,10 @@ import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { ARTICLE_BRANDS_LABELS } from '@/constants';
-import { AutoBidArticle, LangMap } from '@/types/types';
+import { AutoBidArticle } from '@/types/types';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 type AutomaticBidCardProps = {
   autoBid: AutoBidArticle;
@@ -93,7 +94,7 @@ export function AutomaticBidCard({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.AUTO_BID.CREATE,
         data: {
           articleId: article.id,
@@ -105,7 +106,12 @@ export function AutomaticBidCard({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'errors.bid.automaticBidFailed'
+        ),
       });
 
       await onRefresh();
@@ -120,7 +126,7 @@ export function AutomaticBidCard({
 
     console.log({ id, isActive });
     try {
-      const response = await securePatch<LangMap>({
+      const response = await securePatch<unknown>({
         endpoint: SECURE_ENDPOINTS.AUTO_BID.DEACTIVATE,
         data: {
           autoBidId: id,
@@ -131,7 +137,12 @@ export function AutomaticBidCard({
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -139,7 +150,12 @@ export function AutomaticBidCard({
 
       callToast({
         variant: 'success',
-        description: response.success ?? response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'autoBid.deactivatedSuccessfully'
+        ),
       });
 
       await onRefresh();

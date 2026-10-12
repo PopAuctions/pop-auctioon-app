@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { Lang, Article, LangMap } from '@/types/types';
+import { Lang, Article } from '@/types/types';
 import { CustomText } from '../ui/CustomText';
 import {
   AMOUNT_PLACEHOLDER,
@@ -18,6 +18,7 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 type MyArticleItemProps = {
   article: Article;
@@ -86,12 +87,20 @@ export function MyArticleItem({
       article.id
     );
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: endpoint,
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
@@ -99,7 +108,12 @@ export function MyArticleItem({
 
       callToast({
         variant: 'success',
-        description: response.success ?? response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'article.removedFromAuctionSuccessfully'
+        ),
       });
     } catch (e: any) {
       sentryErrorReport(
@@ -115,16 +129,32 @@ export function MyArticleItem({
       article.id
     );
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: endpoint,
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'article.featuredStatusUpdatedSuccessfully'
+        ),
+      });
     } catch (e: any) {
       sentryErrorReport(e?.message, `TOGGLE_ARTICLE_FEATURED - ${endpoint}`);
     }

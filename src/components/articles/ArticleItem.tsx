@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { Lang, LangMap, SimpleArticle } from '@/types/types';
+import { Lang, SimpleArticle } from '@/types/types';
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { AMOUNT_PLACEHOLDER, ARTICLE_BRANDS_LABELS } from '@/constants';
@@ -14,6 +14,7 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { t } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 type ArticleItemProps = {
   article: SimpleArticle;
@@ -63,7 +64,7 @@ export function ArticleItem({
   const sendBid = async ({ amount }: { amount: number }) => {
     setIsLoading(true);
 
-    const response = await securePost<LangMap>({
+    const response = await securePost<unknown>({
       endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
       data: {
         articleId,
@@ -77,14 +78,24 @@ export function ArticleItem({
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          lang,
+          'errors.server.connection'
+        ),
       });
       return;
     }
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        lang,
+        'errors.bid.processingFailed'
+      ),
     });
 
     onBidSuccess?.(articleId, price + minBidAmount);
