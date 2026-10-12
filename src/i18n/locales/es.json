@@ -358,6 +358,13 @@
     "server": {
       "internal": "Error interno del servidor"
     },
+    "country": {
+      "listLoadFailed": "Error al cargar los países"
+    },
+    "config": {
+      "appVersionMissing": "Hubo un error obteniendo información",
+      "appVersionLoadFailed": "Error al cargar información"
+    },
     "chat": {
       "invalidAuctionId": "ID de subasta inválido",
       "auctionNotFound": "Chat no encontrado para esta subasta",
@@ -681,6 +688,8 @@
       "myListUserInvalid": "Usuario inválido",
       "myListLoadFailed": "Error al obtener subastas",
       "myDetailLoadFailed": "Error al obtener la subasta",
+      "myArticlesLoadFailed": "Error al obtener los artículos de la subasta",
+      "myArticlesUnexpectedLoadFailed": "Error al cargar los artículos de la subasta",
       "availableDataMissing": "Faltan los datos de subastas disponibles",
       "availableFetchFailed": "Error al cargar las subastas disponibles",
       "followedListLoadFailed": "Error al obtener las subastas seguidas",

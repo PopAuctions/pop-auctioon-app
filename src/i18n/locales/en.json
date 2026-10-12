@@ -358,6 +358,13 @@
     "server": {
       "internal": "Internal server error"
     },
+    "country": {
+      "listLoadFailed": "Error loading countries"
+    },
+    "config": {
+      "appVersionMissing": "There was an error getting data",
+      "appVersionLoadFailed": "Error loading information"
+    },
     "chat": {
       "invalidAuctionId": "Invalid auction ID",
       "auctionNotFound": "Chat not found for this auction",
@@ -681,6 +688,8 @@
       "myListUserInvalid": "Invalid user",
       "myListLoadFailed": "Error fetching auctions",
       "myDetailLoadFailed": "Error getting auction",
+      "myArticlesLoadFailed": "Error getting auction articles",
+      "myArticlesUnexpectedLoadFailed": "Error loading auction articles",
       "availableDataMissing": "Available auctions data is missing",
       "availableFetchFailed": "Error fetching available auctions data",
       "followedListLoadFailed": "Error getting followed auctions",

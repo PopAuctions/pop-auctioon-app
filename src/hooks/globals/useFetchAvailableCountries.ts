@@ -6,19 +6,22 @@ import type {
   Countries,
   CountryObject,
   Lang,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const COUNTRIES_LOAD_ERROR =
+  'errors.country.listLoadFailed' as const satisfies MessageKey;
 
 export const useFetchAvailableCountries = (
   locale: Lang
-): ActionResponse<CountryObject[]> & {
+): ActionResponse<CountryObject[], MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [countries, setCountries] = useState<Countries | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchCountries = useCallback(async () => {
@@ -32,7 +35,7 @@ export const useFetchAvailableCountries = (
       if (response.error) {
         console.error('ERROR_LOAD_COUNTRIES', response.error);
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? COUNTRIES_LOAD_ERROR);
         return;
       }
 
@@ -47,10 +50,7 @@ export const useFetchAvailableCountries = (
       console.error('ERROR_LOAD_COUNTRIES_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage({
-        en: 'Error loading countries',
-        es: 'Error al cargar los países',
-      });
+      setErrorMessage(COUNTRIES_LOAD_ERROR);
     }
   }, [secureGet]);
 

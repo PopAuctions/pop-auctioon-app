@@ -13,6 +13,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import { MyAuctionArticlesState } from './MyAuctionArticlesState';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
+import { t } from '@/i18n';
 
 export const MyAuctionArticles = ({
   lang,
@@ -145,7 +146,9 @@ export const MyAuctionArticles = ({
           <MyAuctionArticlesState
             isLoading={isLoading}
             status={status}
-            errorMessage={errorMessage?.[lang] ?? null}
+            errorMessage={
+              errorMessage ? t(errorMessage, { locale: lang }) : null
+            }
             showNoResults={showNoResults}
             texts={{
               noArticlesFound: texts.noArticlesFoundText,
