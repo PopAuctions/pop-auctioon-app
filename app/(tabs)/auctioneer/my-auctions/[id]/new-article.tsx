@@ -99,7 +99,7 @@ export default function NewAuctionArticleScreen() {
   if (status === REQUEST_STATUS.error || !auction) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/new-article`}
       />
     );

@@ -678,6 +678,9 @@
     "auction": {
       "availableUnauthorized": "No autorizado",
       "availableLoadFailed": "Error al obtener subastas",
+      "myListUserInvalid": "Usuario inválido",
+      "myListLoadFailed": "Error al obtener subastas",
+      "myDetailLoadFailed": "Error al obtener la subasta",
       "availableDataMissing": "Faltan los datos de subastas disponibles",
       "availableFetchFailed": "Error al cargar las subastas disponibles",
       "followedListLoadFailed": "Error al obtener las subastas seguidas",

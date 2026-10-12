@@ -678,6 +678,9 @@
     "auction": {
       "availableUnauthorized": "Unauthorized",
       "availableLoadFailed": "Error getting auctions",
+      "myListUserInvalid": "Invalid user",
+      "myListLoadFailed": "Error fetching auctions",
+      "myDetailLoadFailed": "Error getting auction",
       "availableDataMissing": "Available auctions data is missing",
       "availableFetchFailed": "Error fetching available auctions data",
       "followedListLoadFailed": "Error getting followed auctions",
