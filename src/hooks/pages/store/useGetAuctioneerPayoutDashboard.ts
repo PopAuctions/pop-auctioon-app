@@ -1,70 +1,74 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { AuctioneerPayoutDashboard } from '@/types/payouts';
-import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import type { ActionResponse, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
 
-export const useGetAuctioneerPayoutDashboard =
-  (): ActionResponse<AuctioneerPayoutDashboard | null> => {
-    const [auctions, setAuctions] = useState<AuctioneerPayoutDashboard | null>(
-      null
-    );
-    const [status, setStatus] = useState<RequestStatus>('idle');
-    const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
-    const { secureGet } = useSecureApi();
+const AUCTIONEER_PAYOUT_DASHBOARD_LOAD_FAILED =
+  'errors.auction.auctionsLoadFailed' as const satisfies MessageKey;
 
-    const fetchStorePayoutsDachboard = useCallback(async () => {
-      setStatus('loading');
+export const useGetAuctioneerPayoutDashboard = (): ActionResponse<
+  AuctioneerPayoutDashboard | null,
+  MessageKey
+> => {
+  const [auctions, setAuctions] = useState<AuctioneerPayoutDashboard | null>(
+    null
+  );
+  const [status, setStatus] = useState<RequestStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
+  const { secureGet } = useSecureApi();
 
-      const res = await secureGet<AuctioneerPayoutDashboard>({
-        endpoint: `${SECURE_ENDPOINTS.STORE.PAYOUTS.DASHBOARD}`,
-      });
+  const fetchStorePayoutsDachboard = useCallback(async () => {
+    setStatus('loading');
 
-      if (res.error) {
-        setStatus('error');
-        setErrorMessage(
-          res?.error ??
-            createLocalizedMessage('errors.auction.auctionsLoadFailed')
-        );
-        return {
-          message: createLocalizedMessage('errors.auction.auctionsLoadFailed'),
-        };
-      }
+    const res = await secureGet<AuctioneerPayoutDashboard>({
+      endpoint: `${SECURE_ENDPOINTS.STORE.PAYOUTS.DASHBOARD}`,
+    });
 
-      setAuctions(res.data || null);
-      setStatus('success');
-
+    if (res.error) {
+      setStatus('error');
+      const messageCode =
+        res.messageCode ?? AUCTIONEER_PAYOUT_DASHBOARD_LOAD_FAILED;
+      setErrorMessage(messageCode);
       return {
-        error: null,
-        success: null,
-        res,
+        message: messageCode,
       };
-    }, [secureGet]);
+    }
 
-    const refetchAuctionsMade = useCallback(async () => {
-      const res = await secureGet<AuctioneerPayoutDashboard>({
-        endpoint: `${SECURE_ENDPOINTS.STORE.PAYOUTS.DASHBOARD}`,
-      });
-
-      if (res.error) {
-        return;
-      }
-
-      setAuctions(res.data || null);
-
-      return;
-    }, [secureGet]);
-
-    useEffect(() => {
-      fetchStorePayoutsDachboard();
-    }, [fetchStorePayoutsDachboard]);
+    setAuctions(res.data || null);
+    setStatus('success');
 
     return {
-      data: auctions,
-      status,
-      errorMessage,
-      setErrorMessage,
-      refetch: refetchAuctionsMade,
+      error: null,
+      success: null,
+      res,
     };
+  }, [secureGet]);
+
+  const refetchAuctionsMade = useCallback(async () => {
+    const res = await secureGet<AuctioneerPayoutDashboard>({
+      endpoint: `${SECURE_ENDPOINTS.STORE.PAYOUTS.DASHBOARD}`,
+    });
+
+    if (res.error) {
+      return;
+    }
+
+    setAuctions(res.data || null);
+
+    return;
+  }, [secureGet]);
+
+  useEffect(() => {
+    fetchStorePayoutsDachboard();
+  }, [fetchStorePayoutsDachboard]);
+
+  return {
+    data: auctions,
+    status,
+    errorMessage,
+    setErrorMessage,
+    refetch: refetchAuctionsMade,
   };
+};

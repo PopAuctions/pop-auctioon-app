@@ -1,18 +1,21 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { StorePayoutWithItems } from '@/types/payouts';
-import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import type { ActionResponse, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const STORE_PAYOUT_LOAD_FAILED =
+  'errors.auction.auctionsLoadFailed' as const satisfies MessageKey;
 
 export const useGetStorePayoutById = ({
   payoutId,
 }: {
   payoutId: string;
-}): ActionResponse<StorePayoutWithItems | null> => {
+}): ActionResponse<StorePayoutWithItems | null, MessageKey> => {
   const [auctions, setAuctions] = useState<StorePayoutWithItems | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchStorePayoutsDachboard = useCallback(async () => {
@@ -24,12 +27,10 @@ export const useGetStorePayoutById = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage(
-        res?.error ??
-          createLocalizedMessage('errors.auction.auctionsLoadFailed')
-      );
+      const messageCode = res.messageCode ?? STORE_PAYOUT_LOAD_FAILED;
+      setErrorMessage(messageCode);
       return {
-        message: createLocalizedMessage('errors.auction.auctionsLoadFailed'),
+        message: messageCode,
       };
     }
 

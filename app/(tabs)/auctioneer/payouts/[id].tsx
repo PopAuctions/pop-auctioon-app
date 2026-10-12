@@ -23,7 +23,7 @@ export default function StorePayoutDetailScreen() {
   if (status === REQUEST_STATUS.error || !data) {
     return (
       <CustomError
-        customMessage={errorMessage?.[locale]}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-store/payouts/${payoutId}`}
       />
     );

@@ -1,13 +1,21 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import type { ActionResponse, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
 
-export const useGetMyStoreCommission = (): ActionResponse<number> => {
+const STORE_COMMISSION_FETCH_FAILED =
+  'errors.store.commissionFetchFailed' as const satisfies MessageKey;
+const STORE_COMMISSION_MISSING =
+  'errors.store.commissionMissing' as const satisfies MessageKey;
+
+export const useGetMyStoreCommission = (): ActionResponse<
+  number,
+  MessageKey
+> => {
   const [commission, setCommission] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchStoreCommission = useCallback(async () => {
@@ -19,18 +27,16 @@ export const useGetMyStoreCommission = (): ActionResponse<number> => {
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage(
-        res?.error ??
-          createLocalizedMessage('errors.store.commissionFetchFailed')
-      );
+      const messageCode = res.messageCode ?? STORE_COMMISSION_FETCH_FAILED;
+      setErrorMessage(messageCode);
       return {
-        message: createLocalizedMessage('errors.store.commissionFetchFailed'),
+        message: messageCode,
       };
     }
 
     if (res.data === null || res.data === undefined) {
       setStatus('error');
-      setErrorMessage(createLocalizedMessage('errors.store.commissionMissing'));
+      setErrorMessage(STORE_COMMISSION_MISSING);
       return;
     }
 

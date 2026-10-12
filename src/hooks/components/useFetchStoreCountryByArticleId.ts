@@ -1,22 +1,22 @@
-import {
-  ActionResponse,
-  CountryValue,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import { ActionResponse, CountryValue, RequestStatus } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants/app';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const STORE_COUNTRY_MISSING =
+  'errors.store.countryMissing' as const satisfies MessageKey;
+const STORE_COUNTRY_FETCH_FAILED =
+  'errors.store.countryFetchFailed' as const satisfies MessageKey;
 
 export const useFetchStoreCountryByArticleId = (
   articleId: string
-): ActionResponse<CountryValue | null> => {
+): ActionResponse<CountryValue | null, MessageKey> => {
   const [data, setData] = useState<CountryValue | null>(null);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchStoreCountryByArticleId = useCallback(async () => {
@@ -29,13 +29,13 @@ export const useFetchStoreCountryByArticleId = (
 
       if (response.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? STORE_COUNTRY_FETCH_FAILED);
         return;
       }
 
       if (response.data === null || response.data === undefined) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(createLocalizedMessage('errors.store.countryMissing'));
+        setErrorMessage(STORE_COUNTRY_MISSING);
         return;
       }
 
@@ -51,9 +51,7 @@ export const useFetchStoreCountryByArticleId = (
       );
 
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage(
-        createLocalizedMessage('errors.store.countryFetchFailed')
-      );
+      setErrorMessage(STORE_COUNTRY_FETCH_FAILED);
     }
   }, [secureGet, articleId]);
 
