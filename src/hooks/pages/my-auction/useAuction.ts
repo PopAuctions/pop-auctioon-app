@@ -3,8 +3,8 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import type { LangMap } from '@/types/types';
 import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 import { parseLocalDateTime } from '@/utils/getMinDateToStartAuction';
 import { AuctionFormValues } from '@/utils/schemas/auctionSchemas';
 
@@ -54,7 +54,7 @@ export const useAuction = (): {
         clientStartDate,
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.AUCTIONS.CREATE,
         data: payload,
         options: {
@@ -63,11 +63,27 @@ export const useAuction = (): {
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            AUCTION_CREATION_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          AUCTION_CREATION_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -96,17 +112,33 @@ export const useAuction = (): {
         },
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.AUCTIONS.UPDATE(auctionId),
         data: payload,
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            AUCTION_UPDATE_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          AUCTION_UPDATE_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
