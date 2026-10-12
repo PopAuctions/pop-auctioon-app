@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import type { ActionResponse, RequestStatus } from '@/types/types';
 import type { AuctioneerEditSchema } from '@/utils/schemas';
 import type * as z from 'zod';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const STORE_UPDATE_DATA_ERROR =
+  'errors.store.updateDataFailed' as const satisfies MessageKey;
 
 /**
  * Tipos inferidos de los schemas de edición
@@ -54,11 +57,11 @@ export type UpdateProfileData = AuctioneerEditSchemaType &
  * };
  * ```
  */
-export const useUpdateStore = (): ActionResponse<null> & {
+export const useUpdateStore = (): ActionResponse<null, MessageKey> & {
   updateStore: (data: UpdateProfileData) => Promise<void>;
 } => {
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { securePatch } = useSecureApi();
 
   const updateStore = async (data: UpdateProfileData): Promise<void> => {
@@ -109,7 +112,7 @@ export const useUpdateStore = (): ActionResponse<null> & {
         if (response.error) {
           console.error('ERROR_UPDATE_STORE', response.error);
           setStatus('error');
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? STORE_UPDATE_DATA_ERROR);
           return;
         }
 
@@ -140,7 +143,7 @@ export const useUpdateStore = (): ActionResponse<null> & {
         if (response.error) {
           console.error('ERROR_UPDATE_STORE', response.error);
           setStatus('error');
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? STORE_UPDATE_DATA_ERROR);
           return;
         }
 
@@ -156,7 +159,7 @@ export const useUpdateStore = (): ActionResponse<null> & {
       console.error('ERROR_UPDATE_STORE_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage(createLocalizedMessage('errors.store.updateDataFailed'));
+      setErrorMessage(STORE_UPDATE_DATA_ERROR);
     }
   };
 

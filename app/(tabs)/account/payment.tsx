@@ -463,7 +463,9 @@ export default function PaymentScreen() {
   if (addressesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={addressesError?.[locale]}
+        customMessage={
+          addressesError ? t(addressesError, { locale }) : undefined
+        }
         refreshRoute={`/(tabs)/account/payment?auctionId=${auctionId}`}
       />
     );

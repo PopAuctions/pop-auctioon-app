@@ -1,23 +1,19 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type {
-  ActionResponse,
-  LangMap,
-  RequestStatus,
-  UserAddress,
-} from '@/types/types';
+import type { ActionResponse, RequestStatus, UserAddress } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
 
-export const useGetAddresses = (): ActionResponse<UserAddress[]> & {
+const ADDRESSES_LOAD_ERROR =
+  'errors.address.loadFailed' as const satisfies MessageKey;
+
+export const useGetAddresses = (): ActionResponse<UserAddress[], MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [addresses, setAddresses] = useState<UserAddress[]>([]);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchAddresses = useCallback(async () => {
@@ -31,7 +27,7 @@ export const useGetAddresses = (): ActionResponse<UserAddress[]> & {
       if (response.error) {
         console.error('ERROR_LOAD_ADDRESSES', response.error);
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? ADDRESSES_LOAD_ERROR);
         return;
       }
 
@@ -51,7 +47,7 @@ export const useGetAddresses = (): ActionResponse<UserAddress[]> & {
       console.error('ERROR_LOAD_ADDRESSES_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage(createLocalizedMessage('errors.address.loadFailed'));
+      setErrorMessage(ADDRESSES_LOAD_ERROR);
     }
   }, [secureGet]);
 

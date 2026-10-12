@@ -383,7 +383,9 @@ export default function SinglePaymentScreen() {
   if (addressesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={addressesError?.[locale]}
+        customMessage={
+          addressesError ? t(addressesError, { locale }) : undefined
+        }
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
