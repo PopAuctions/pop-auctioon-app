@@ -343,6 +343,18 @@
       "alreadyUsed": "Código de descuento ya utilizado",
       "validationFailed": "Error al validar código"
     },
+    "mobilePayment": {
+      "redsysSessionUnauthorized": "No autorizado",
+      "redsysSessionInvalidAmount": "Importe inválido",
+      "paymentIntentInvalidAmount": "Monto inválido",
+      "selectedItemsInvalid": "Artículos seleccionados inválidos",
+      "selectedItemsNotNumbers": "Todos los artículos seleccionados deben ser números",
+      "auctionIdRequired": "El ID de la subasta es requerido",
+      "countryAndAddressRequired": "El país y la dirección son requeridos",
+      "articleIdRequired": "El ID del artículo es requerido",
+      "selectionArticleIdInvalid": "El ID del artículo es requerido y debe ser un número",
+      "selectionBooleanInvalid": "isSelected debe ser un booleano"
+    },
     "server": {
       "internal": "Error interno del servidor"
     },

@@ -343,6 +343,18 @@
       "alreadyUsed": "Discount code already used",
       "validationFailed": "Error validating code"
     },
+    "mobilePayment": {
+      "redsysSessionUnauthorized": "Unauthorized",
+      "redsysSessionInvalidAmount": "Invalid amount",
+      "paymentIntentInvalidAmount": "Invalid amount",
+      "selectedItemsInvalid": "Invalid selected items",
+      "selectedItemsNotNumbers": "All selected items must be numbers",
+      "auctionIdRequired": "Auction ID is required",
+      "countryAndAddressRequired": "Country and address are required",
+      "articleIdRequired": "Article ID is required",
+      "selectionArticleIdInvalid": "Article ID is required and must be a number",
+      "selectionBooleanInvalid": "isSelected must be a boolean"
+    },
     "server": {
       "internal": "Internal server error"
     },
