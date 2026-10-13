@@ -632,6 +632,8 @@
       "removeWonEmpty": "There are no articles to remove",
       "removeWonAuctionIdRequired": "Auction ID is required",
       "removeWonAuctionIdInvalid": "Invalid auction ID",
+      "toggleWonUserMissing": "No user found",
+      "toggleWonUpdateFailed": "Error updating article selection",
       "imageOrderUserMissing": "Missing user",
       "imageOrderUserInvalid": "User not valid",
       "imageOrderLoadFailed": "Error updating images order",

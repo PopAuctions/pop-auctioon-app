@@ -632,6 +632,8 @@
       "removeWonEmpty": "No hay artículos para eliminar",
       "removeWonAuctionIdRequired": "El ID de la subasta es requerido",
       "removeWonAuctionIdInvalid": "ID de subasta inválido",
+      "toggleWonUserMissing": "No se encontró ningún usuario",
+      "toggleWonUpdateFailed": "Error al actualizar la selección del artículo",
       "imageOrderUserMissing": "Usuario no encontrado",
       "imageOrderUserInvalid": "Usuario inválido",
       "imageOrderLoadFailed": "Error actualizando el orden de las imagenes",
