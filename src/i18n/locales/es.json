@@ -758,7 +758,10 @@
       "commissionLoadFailed": "Error al cargar la comisión",
       "commissionMissing": "Faltan los datos de comisión",
       "configLoadFailed": "Error al cargar la configuración de pago",
-      "configMissing": "Faltan los datos de configuración de pago"
+      "configMissing": "Faltan los datos de configuración de pago",
+      "recordCreateFailed": "Error al crear el registro de pago",
+      "noResponse": "No se recibió respuesta del servidor",
+      "revertFailed": "Error al revertir el pago"
     },
     "offer": {
       "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",

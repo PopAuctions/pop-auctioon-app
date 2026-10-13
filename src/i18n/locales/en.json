@@ -758,7 +758,10 @@
       "commissionLoadFailed": "Error fetching commission data",
       "commissionMissing": "Commission data is missing",
       "configLoadFailed": "Error fetching payment configuration data",
-      "configMissing": "Payment configuration data is missing"
+      "configMissing": "Payment configuration data is missing",
+      "recordCreateFailed": "Error creating payment record",
+      "noResponse": "No response received from server",
+      "revertFailed": "Error reverting payment"
     },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",
