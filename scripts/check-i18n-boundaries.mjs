@@ -60,7 +60,6 @@ const LEGACY_HOOK_COMPATIBILITY_PATHS = new Set([
   // These hooks only adapt released API/Toast compatibility payloads. They must
   // not be used as examples for new hook contracts.
   'src/hooks/useToast.tsx',
-  'src/hooks/pages/payment/useGetDiscountCode.ts',
   'src/hooks/pages/user/useGetCurrentUser.ts',
 ]);
 

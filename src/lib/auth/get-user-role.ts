@@ -1,6 +1,10 @@
 import { supabase } from '@/utils/supabase/supabase-store';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { UserRoles, AsyncResponse } from '@/types/types';
+import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const ROLE_LOAD_FAILED = 'errors.auth.roleLoadFailed' satisfies MessageKey;
 
 export const getUserRole = async ({
   id,
@@ -21,10 +25,7 @@ export const getUserRole = async ({
     return {
       data: null,
       success: false,
-      error: {
-        en: 'Error getting role',
-        es: 'Error obteniendo el rol',
-      },
+      error: createLocalizedMessage(ROLE_LOAD_FAILED),
     };
   }
 

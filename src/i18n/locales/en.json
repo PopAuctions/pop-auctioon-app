@@ -359,6 +359,11 @@
       "internal": "Internal server error",
       "connection": "Error connecting to server"
     },
+    "request": {
+      "getFailed": "Error getting information",
+      "updateFailed": "Error updating information",
+      "deleteFailed": "Error deleting information"
+    },
     "country": {
       "listLoadFailed": "Error loading countries"
     },
@@ -503,6 +508,8 @@
     "auth": {
       "userNotAuthenticated": "User not authenticated",
       "notAuthorized": "Not authorized",
+      "userLoadFailed": "Error getting user",
+      "roleLoadFailed": "Error getting role",
       "loginInvalidCredentials": "Invalid email or password",
       "loginEmailNotConfirmed": "Email not confirmed",
       "loginTooManyRequests": "Too many login attempts. Please try again later.",

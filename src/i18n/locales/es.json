@@ -359,6 +359,11 @@
       "internal": "Error interno del servidor",
       "connection": "Error al conectar con el servidor"
     },
+    "request": {
+      "getFailed": "Error al obtener información",
+      "updateFailed": "Error al actualizar información",
+      "deleteFailed": "Error al eliminar información"
+    },
     "country": {
       "listLoadFailed": "Error al cargar los países"
     },
@@ -503,6 +508,8 @@
     "auth": {
       "userNotAuthenticated": "Usuario no autenticado",
       "notAuthorized": "No autorizado",
+      "userLoadFailed": "Error obteniendo el usuario",
+      "roleLoadFailed": "Error obteniendo el rol",
       "loginInvalidCredentials": "Email o contraseña incorrectos",
       "loginEmailNotConfirmed": "Email no confirmado",
       "loginTooManyRequests": "Demasiados intentos de inicio de sesión. Por favor, intenta más tarde.",
