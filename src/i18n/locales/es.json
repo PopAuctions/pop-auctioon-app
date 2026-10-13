@@ -761,7 +761,12 @@
       "configMissing": "Faltan los datos de configuración de pago",
       "recordCreateFailed": "Error al crear el registro de pago",
       "noResponse": "No se recibió respuesta del servidor",
-      "revertFailed": "Error al revertir el pago"
+      "revertFailed": "Error al revertir el pago",
+      "redsysSessionCreateFailed": "No se pudo crear la sesión de pago",
+      "redsysPrepareUnexpected": "Error inesperado al preparar el pago",
+      "redsysSessionNotReady": "La sesión de pago no está preparada",
+      "redsysCompletionFailed": "El pago no se pudo completar",
+      "redsysGatewayOpenFailed": "Error inesperado al abrir la pasarela de pago"
     },
     "offer": {
       "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",

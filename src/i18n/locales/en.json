@@ -761,7 +761,12 @@
       "configMissing": "Payment configuration data is missing",
       "recordCreateFailed": "Error creating payment record",
       "noResponse": "No response received from server",
-      "revertFailed": "Error reverting payment"
+      "revertFailed": "Error reverting payment",
+      "redsysSessionCreateFailed": "Could not create payment session",
+      "redsysPrepareUnexpected": "Unexpected error preparing payment",
+      "redsysSessionNotReady": "Payment session is not ready",
+      "redsysCompletionFailed": "Payment could not be completed",
+      "redsysGatewayOpenFailed": "Unexpected error opening payment gateway"
     },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",
