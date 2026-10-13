@@ -4,22 +4,32 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import type {
   ActionResponse,
-  LangMap,
   RequestStatus,
   UserBillingInfo,
 } from '@/types/types';
 import type { BillingSchemaType } from '@/utils/schemas/billingSchemas';
-import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const BILLING_LOAD_FAILED =
+  'errors.billing.loadFailed' as const satisfies MessageKey;
+const BILLING_NO_DATA = 'errors.billing.noData' as const satisfies MessageKey;
+const BILLING_CREATE_UNEXPECTED =
+  'errors.billing.createUnexpected' as const satisfies MessageKey;
+const BILLING_UPDATE_UNEXPECTED =
+  'errors.billing.updateUnexpected' as const satisfies MessageKey;
+const BILLING_DELETE_UNEXPECTED =
+  'errors.billing.deleteUnexpected' as const satisfies MessageKey;
 
 // ==================== GET BILLING ====================
-export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
+export const useGetBilling = (): ActionResponse<
+  UserBillingInfo[],
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [data, setData] = useState<UserBillingInfo[]>([]);
   const [status, setStatus] = useState<RequestStatus>('loading');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchBilling = useCallback(async (): Promise<void> => {
@@ -34,15 +44,14 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
       if (response.error) {
         console.error('ERROR_LOAD_BILLING', response.error);
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? BILLING_LOAD_FAILED);
         return;
       }
 
       if (!response.data) {
         console.error('ERROR_NO_BILLING_DATA_RECEIVED');
-        const message = createLocalizedMessage('errors.billing.noData');
         setStatus('error');
-        setErrorMessage(message);
+        setErrorMessage(BILLING_NO_DATA);
         return;
       }
 
@@ -56,10 +65,8 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
 
       console.error('ERROR_LOAD_BILLING_CATCH', errorMsg);
 
-      const message = createLocalizedMessage('errors.billing.loadFailed');
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(BILLING_LOAD_FAILED);
     }
   }, [secureGet]); // Stable dependency
 
@@ -77,13 +84,11 @@ export const useGetBilling = (): ActionResponse<UserBillingInfo[]> & {
 };
 
 // ==================== CREATE BILLING ====================
-export const useCreateBilling = (): ActionResponse<null> & {
+export const useCreateBilling = (): ActionResponse<null, MessageKey> & {
   createBilling: (data: BillingSchemaType) => Promise<void>;
 } => {
   const [status, setStatus] = useState<RequestStatus>('idle');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { securePost } = useSecureApi();
 
   const createBilling = async (data: BillingSchemaType): Promise<void> => {
@@ -99,7 +104,7 @@ export const useCreateBilling = (): ActionResponse<null> & {
       if (response.error) {
         console.error('ERROR_CREATE_BILLING', response.error);
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? BILLING_CREATE_UNEXPECTED);
         return;
       }
 
@@ -113,10 +118,8 @@ export const useCreateBilling = (): ActionResponse<null> & {
 
       console.error('ERROR_CREATE_BILLING_CATCH', errorMsg);
 
-      const message = createLocalizedMessage('errors.billing.createUnexpected');
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(BILLING_CREATE_UNEXPECTED);
     }
   };
 
@@ -130,13 +133,11 @@ export const useCreateBilling = (): ActionResponse<null> & {
 };
 
 // ==================== UPDATE BILLING ====================
-export const useUpdateBilling = (): ActionResponse<null> & {
+export const useUpdateBilling = (): ActionResponse<null, MessageKey> & {
   updateBilling: (id: string, data: BillingSchemaType) => Promise<void>;
 } => {
   const [status, setStatus] = useState<RequestStatus>('idle');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { securePatch } = useSecureApi();
 
   const updateBilling = async (
@@ -155,7 +156,7 @@ export const useUpdateBilling = (): ActionResponse<null> & {
       if (response.error) {
         console.error('ERROR_UPDATE_BILLING', response.error);
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? BILLING_UPDATE_UNEXPECTED);
         return;
       }
 
@@ -169,10 +170,8 @@ export const useUpdateBilling = (): ActionResponse<null> & {
 
       console.error('ERROR_UPDATE_BILLING_CATCH', errorMsg);
 
-      const message = createLocalizedMessage('errors.billing.updateUnexpected');
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(BILLING_UPDATE_UNEXPECTED);
     }
   };
 
@@ -186,18 +185,16 @@ export const useUpdateBilling = (): ActionResponse<null> & {
 };
 
 // ==================== DELETE BILLING ====================
-export const useDeleteBilling = (): ActionResponse<null> & {
-  deleteBilling: (id: string) => Promise<{ error: LangMap | null }>;
+export const useDeleteBilling = (): ActionResponse<null, MessageKey> & {
+  deleteBilling: (id: string) => Promise<{ error: MessageKey | null }>;
 } => {
   const [status, setStatus] = useState<RequestStatus>('idle');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureDelete } = useSecureApi();
 
   const deleteBilling = async (
     id: string
-  ): Promise<{ error: LangMap | null }> => {
+  ): Promise<{ error: MessageKey | null }> => {
     try {
       setStatus('loading');
       setErrorMessage(null);
@@ -209,8 +206,9 @@ export const useDeleteBilling = (): ActionResponse<null> & {
       if (response.error) {
         console.error('ERROR_DELETE_BILLING', response.error);
         setStatus('error');
-        setErrorMessage(response.error);
-        return { error: response.error };
+        const message = response.messageCode ?? BILLING_DELETE_UNEXPECTED;
+        setErrorMessage(message);
+        return { error: message };
       }
 
       console.log('SUCCESS_DELETE_BILLING');
@@ -224,11 +222,9 @@ export const useDeleteBilling = (): ActionResponse<null> & {
 
       console.error('ERROR_DELETE_BILLING_CATCH', errorMsg);
 
-      const message = createLocalizedMessage('errors.billing.deleteUnexpected');
-
       setStatus('error');
-      setErrorMessage(message);
-      return { error: message };
+      setErrorMessage(BILLING_DELETE_UNEXPECTED);
+      return { error: BILLING_DELETE_UNEXPECTED };
     }
   };
 

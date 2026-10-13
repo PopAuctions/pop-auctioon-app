@@ -11,11 +11,12 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { Button } from '@/components/ui/Button';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import { LangMap } from '@/types/types';
 import type { MessageKey } from '@/i18n';
 
 const SHIPPING_UPDATED =
   'screens.payments.shippingUpdated' as const satisfies MessageKey;
+const SHIPPING_UPDATE_FAILED =
+  'errors.soldArticle.shippingUpdateFailed' as const satisfies MessageKey;
 
 interface PaymentCourierInfo {
   courier?: string | null;
@@ -83,13 +84,16 @@ export function ShippingForm({
         shippingNumber: values.shippingNumber ?? '',
       };
 
-      const response = await securePost<LangMap | null>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.USER.UPDATE_SHIPPING_INFORMATION(articleId),
         data: params,
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: response.messageCode ?? SHIPPING_UPDATE_FAILED,
+        });
         return;
       }
 

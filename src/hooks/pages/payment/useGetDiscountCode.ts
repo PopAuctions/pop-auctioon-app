@@ -2,8 +2,13 @@ import { useState, useCallback } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { REQUEST_STATUS } from '@/constants';
-import type { LangMap, RequestStatus } from '@/types/types';
+import type { RequestStatus } from '@/types/types';
 import type { MessageKey } from '@/i18n';
+
+const DISCOUNT_CODE_INVALID =
+  'screens.payments.invalidDiscountCode' as const satisfies MessageKey;
+const DISCOUNT_CODE_VALIDATION_FAILED =
+  'errors.discountCode.validationFailed' as const satisfies MessageKey;
 
 /**
  * Backend response for discount code validation
@@ -32,9 +37,7 @@ interface DiscountCodeResponse {
 export const useGetDiscountCode = () => {
   const { secureGet } = useSecureApi();
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<MessageKey | LangMap | null>(
-    null
-  );
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const [discountData, setDiscountData] = useState<{
     code: string;
     amount: number;
@@ -62,18 +65,14 @@ export const useGetDiscountCode = () => {
         });
 
         if (response.error) {
-          setErrorMessage(response.messageCode ?? response.error);
+          setErrorMessage(response.messageCode ?? DISCOUNT_CODE_INVALID);
           setStatus(REQUEST_STATUS.error);
           setDiscountData(null);
           return { isValid: false, data: null };
         }
 
         if (!response.data || !response.data.valid) {
-          setErrorMessage(
-            response.messageCode ??
-              response.error ??
-              'screens.payments.invalidDiscountCode'
-          );
+          setErrorMessage(response.messageCode ?? DISCOUNT_CODE_INVALID);
           setStatus(REQUEST_STATUS.error);
           setDiscountData(null);
           return { isValid: false, data: null };
@@ -89,7 +88,7 @@ export const useGetDiscountCode = () => {
         setErrorMessage(null);
         return { isValid: true, data: discountInfo };
       } catch {
-        setErrorMessage('errors.discountCode.validationFailed');
+        setErrorMessage(DISCOUNT_CODE_VALIDATION_FAILED);
         setStatus(REQUEST_STATUS.error);
         setDiscountData(null);
         return { isValid: false, data: null };
