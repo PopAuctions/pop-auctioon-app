@@ -817,7 +817,15 @@
       "minAmount": "The offer amount must be at least %{min}",
       "activeExists": "You already have an active offer for this article",
       "acceptedActiveExists": "You have an active accepted offer that has not expired yet",
-      "formUnexpected": "An unexpected error occurred"
+      "formUnexpected": "An unexpected error occurred",
+      "buyUserMissing": "User not found",
+      "buyArticleLoadFailed": "Error getting article",
+      "buyExpired": "Article not found or your time to buy has expired",
+      "buyInfoInvalid": "Error getting info. Please contact support",
+      "buyArticleUnavailable": "Article already sold or is no longer available",
+      "buyUnauthorized": "You are not the user capable of buying this article",
+      "buyDataMissing": "Article information not found",
+      "buyLoadFailed": "Error loading information"
     },
     "notification": {
       "loadFailed": "Error fetching notifications",

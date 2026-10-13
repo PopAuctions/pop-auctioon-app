@@ -817,7 +817,15 @@
       "minAmount": "El monto de la oferta debe ser al menos %{min}",
       "activeExists": "Ya tienes una oferta activa por este artículo",
       "acceptedActiveExists": "Tienes una oferta aceptada activa que aún no ha expirado",
-      "formUnexpected": "Ha ocurrido un error inesperado"
+      "formUnexpected": "Ha ocurrido un error inesperado",
+      "buyUserMissing": "Usuario no encontrado",
+      "buyArticleLoadFailed": "Error obteniendo el artículo",
+      "buyExpired": "Artículo no encontrado o tu tiempo para comprar ha expirado",
+      "buyInfoInvalid": "Error obteniendo la información. Por favor, contacta a soporte",
+      "buyArticleUnavailable": "Artículo ya fue vendido o no ya no esta disponible",
+      "buyUnauthorized": "No eres el usuario capaz de comprar este artículo",
+      "buyDataMissing": "No se encontró información del artículo",
+      "buyLoadFailed": "Error al cargar información"
     },
     "notification": {
       "loadFailed": "Error al obtener las notificaciones",
