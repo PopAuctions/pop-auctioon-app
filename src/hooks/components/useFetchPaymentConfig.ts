@@ -4,12 +4,12 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
   ActionResponse,
-  LangMap,
   Lang,
   RequestStatus,
   CountryValue,
   PaymentShippingTax,
 } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 
 // Backend response format (diferentes nombres)
 interface BackendPaymentConfig {
@@ -47,7 +47,7 @@ interface PaymentConfigData {
 
 export const useFetchPaymentConfig = (
   locale: Lang
-): ActionResponse<PaymentConfigData> => {
+): ActionResponse<PaymentConfigData, MessageKey> => {
   const [data, setData] = useState<PaymentConfigState>({
     commission: 0,
     shippingTaxes: null,
@@ -57,7 +57,7 @@ export const useFetchPaymentConfig = (
     countriesLabel: {},
   });
   const [status, setStatus] = useState<RequestStatus>('loading');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchPaymentConfig = useCallback(async () => {
@@ -70,16 +70,15 @@ export const useFetchPaymentConfig = (
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(
+          response.messageCode ?? 'errors.payment.configLoadFailed'
+        );
         return;
       }
 
       if (response.data === null || response.data === undefined) {
         setStatus('error');
-        setErrorMessage({
-          en: 'Payment configuration data is missing',
-          es: 'Faltan los datos de configuración de pago',
-        });
+        setErrorMessage('errors.payment.configMissing');
         return;
       }
 
@@ -111,13 +110,8 @@ export const useFetchPaymentConfig = (
         'USE_FETCH_PAYMENT_CONFIG - Unexpected error'
       );
 
-      const message: LangMap = {
-        en: 'Error fetching payment configuration data',
-        es: 'Error al cargar la configuración de pago',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage('errors.payment.configLoadFailed');
     }
   }, [secureGet]);
 

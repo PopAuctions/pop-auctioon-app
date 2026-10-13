@@ -752,7 +752,11 @@
       "detailLoadFailed": "Error loading payment information",
       "historyLoadFailed": "Error loading payment history",
       "auctionIdRequired": "Auction ID required",
-      "wonArticlesLoadFailed": "Error loading won articles"
+      "wonArticlesLoadFailed": "Error loading won articles",
+      "commissionLoadFailed": "Error fetching commission data",
+      "commissionMissing": "Commission data is missing",
+      "configLoadFailed": "Error fetching payment configuration data",
+      "configMissing": "Payment configuration data is missing"
     },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",

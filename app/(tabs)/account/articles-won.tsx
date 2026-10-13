@@ -46,7 +46,11 @@ export default function ArticlesWonScreen() {
     return (
       <CustomError
         customMessage={
-          errorMessage ? t(errorMessage) : commissionsErrorMessage?.[locale]
+          errorMessage
+            ? t(errorMessage)
+            : commissionsErrorMessage
+              ? t(commissionsErrorMessage, { locale })
+              : undefined
         }
         refreshRoute='/(tabs)/account/articles-won'
       />
