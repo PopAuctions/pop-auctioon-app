@@ -768,6 +768,17 @@
       "redsysCompletionFailed": "Payment could not be completed",
       "redsysGatewayOpenFailed": "Unexpected error opening payment gateway"
     },
+    "invoice": {
+      "userMissing": "User not found",
+      "paymentNotFound": "Payment not found. Try again or contact support.",
+      "generateFailed": "Error generating invoice. Try again or contact support.",
+      "billingInfoInvalid": "Invalid billing info",
+      "amountsInvalid": "Payment amounts do not reconcile. Contact support.",
+      "itemsInvalid": "Payment items do not reconcile. Contact support.",
+      "payloadInvalid": "Invalid payload",
+      "loadFailed": "Error loading invoice information",
+      "createFailed": "Error creating invoice information"
+    },
     "offer": {
       "offersMadeLoadFailed": "Error fetching offers made",
       "invalidNumber": "Enter a valid number",

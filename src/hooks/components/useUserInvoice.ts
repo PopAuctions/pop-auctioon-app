@@ -6,7 +6,6 @@ import type {
   ActionResponse,
   GeneratedInvoice,
   Lang,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import type { InvoicePayloadType } from '@/utils/schemas/invoiceSchemas';
@@ -15,18 +14,22 @@ import type { MessageKey } from '@/i18n';
 
 const INVOICE_CREATED_MESSAGE =
   'invoice.createdSuccessfully' as const satisfies MessageKey;
+const INVOICE_LOAD_FAILED =
+  'errors.invoice.loadFailed' as const satisfies MessageKey;
+const INVOICE_CREATE_FAILED =
+  'errors.invoice.createFailed' as const satisfies MessageKey;
 
 // ==================== GET INVOICE ====================
 export const useGetUserInvoice = ({
   paymentID,
 }: {
   paymentID: string;
-}): ActionResponse<GeneratedInvoice | null> & {
+}): ActionResponse<GeneratedInvoice | null, MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [data, setData] = useState<GeneratedInvoice | null>(null);
   const [status, setStatus] = useState<RequestStatus>('loading');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchUserInvoice = useCallback(async (): Promise<void> => {
@@ -40,7 +43,7 @@ export const useGetUserInvoice = ({
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? INVOICE_LOAD_FAILED);
         return;
       }
 
@@ -54,10 +57,7 @@ export const useGetUserInvoice = ({
 
       console.error('ERROR_LOAD_INVOICE_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error loading invoice information',
-        es: 'Error al cargar la información de facturación',
-      };
+      const message = INVOICE_LOAD_FAILED;
 
       setStatus('error');
       setErrorMessage(message);
@@ -84,11 +84,11 @@ export const useCreateUserInvoice = ({
 }: {
   paymentID: string;
   locale: Lang;
-}): ActionResponse<null> & {
+}): ActionResponse<null, MessageKey> & {
   createUserInvoice: (data: InvoicePayloadType) => Promise<void>;
 } => {
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
@@ -104,10 +104,11 @@ export const useCreateUserInvoice = ({
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        const message = response.messageCode ?? INVOICE_CREATE_FAILED;
+        setErrorMessage(message);
         callToast({
           variant: 'error',
-          description: response.error,
+          description: message,
         });
 
         return;
@@ -127,10 +128,7 @@ export const useCreateUserInvoice = ({
 
       console.error('ERROR_CREATE_INVOICE_CATCH', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error creating invoice information',
-        es: 'Error al crear la información de facturación',
-      };
+      const message = INVOICE_CREATE_FAILED;
 
       setStatus('error');
       setErrorMessage(message);

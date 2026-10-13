@@ -768,6 +768,17 @@
       "redsysCompletionFailed": "El pago no se pudo completar",
       "redsysGatewayOpenFailed": "Error inesperado al abrir la pasarela de pago"
     },
+    "invoice": {
+      "userMissing": "Usuario no encontrado",
+      "paymentNotFound": "Pago no encontrado. Intenta de nuevo o contacta con soporte.",
+      "generateFailed": "Error al generar la factura. Intenta de nuevo o contacta con soporte.",
+      "billingInfoInvalid": "Información de facturación inválida",
+      "amountsInvalid": "Los importes del pago no cuadran. Contacta con soporte.",
+      "itemsInvalid": "Los artículos del pago no cuadran. Contacta con soporte.",
+      "payloadInvalid": "Datos enviados no válidos",
+      "loadFailed": "Error al cargar la información de facturación",
+      "createFailed": "Error al crear la información de facturación"
+    },
     "offer": {
       "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",
       "invalidNumber": "Ingresa un número válido",
