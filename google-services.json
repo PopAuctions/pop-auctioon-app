@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "456878019390",
+    "project_id": "pop-auctioon-production",
+    "storage_bucket": "pop-auctioon-production.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456878019390:android:6e4e9740ec2dd724a0926f",
+        "android_client_info": {
+          "package_name": "com.popauctioon.popauctioonapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWtjxgp5Z24F1ycG-DUu_iCHcu6pMBYUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

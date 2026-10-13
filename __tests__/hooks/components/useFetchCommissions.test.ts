@@ -87,7 +87,9 @@ describe('useFetchCommissions', () => {
         expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.errorMessage).toEqual(errorMessage);
+      expect(result.current.errorMessage).toBe(
+        'errors.payment.commissionLoadFailed'
+      );
       expect(result.current.data).toBe(0);
     });
 
@@ -103,10 +105,9 @@ describe('useFetchCommissions', () => {
         expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.errorMessage).toEqual({
-        en: 'Commission data is missing',
-        es: 'Faltan los datos de comisión',
-      });
+      expect(result.current.errorMessage).toBe(
+        'errors.payment.commissionMissing'
+      );
     });
 
     it('should handle undefined data', async () => {
@@ -121,10 +122,9 @@ describe('useFetchCommissions', () => {
         expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.errorMessage).toEqual({
-        en: 'Commission data is missing',
-        es: 'Faltan los datos de comisión',
-      });
+      expect(result.current.errorMessage).toBe(
+        'errors.payment.commissionMissing'
+      );
     });
 
     it('should handle exception during fetch', async () => {
@@ -136,10 +136,9 @@ describe('useFetchCommissions', () => {
         expect(result.current.status).toBe('error');
       });
 
-      expect(result.current.errorMessage).toEqual({
-        en: 'Error fetching commission data',
-        es: 'Error al cargar la comisión',
-      });
+      expect(result.current.errorMessage).toBe(
+        'errors.payment.commissionLoadFailed'
+      );
     });
   });
 

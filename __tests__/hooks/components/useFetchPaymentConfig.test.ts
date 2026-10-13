@@ -183,7 +183,7 @@ describe('useFetchPaymentConfig', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe('errors.payment.configLoadFailed');
     expect(result.current.data).toEqual({
       commission: 0,
       shippingTaxes: null,
@@ -206,10 +206,7 @@ describe('useFetchPaymentConfig', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Payment configuration data is missing',
-      es: 'Faltan los datos de configuración de pago',
-    });
+    expect(result.current.errorMessage).toBe('errors.payment.configMissing');
   });
 
   it('should handle undefined data in response', async () => {
@@ -224,10 +221,7 @@ describe('useFetchPaymentConfig', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Payment configuration data is missing',
-      es: 'Faltan los datos de configuración de pago',
-    });
+    expect(result.current.errorMessage).toBe('errors.payment.configMissing');
   });
 
   it('should handle network/unexpected errors', async () => {
@@ -239,10 +233,7 @@ describe('useFetchPaymentConfig', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error fetching payment configuration data',
-      es: 'Error al cargar la configuración de pago',
-    });
+    expect(result.current.errorMessage).toBe('errors.payment.configLoadFailed');
   });
 
   it('should handle empty countries object', async () => {

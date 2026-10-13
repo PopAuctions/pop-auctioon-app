@@ -19,12 +19,11 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-it('prefers the locally translated success message and logs out', async () => {
-  const success = { en: 'local en', es: 'local es' };
+it('uses the local success message key and logs out', async () => {
   mockSecureDelete.mockResolvedValue({
     data: { en: 'legacy en', es: 'legacy es' },
     error: undefined,
-    success,
+    success: { en: 'legacy en', es: 'legacy es' },
   });
 
   const { result } = renderHook(() => useDeleteAccount('en'));
@@ -37,14 +36,16 @@ it('prefers the locally translated success message and logs out', async () => {
   expect(mockForceLogout).toHaveBeenCalledTimes(1);
   expect(mockCallToast).toHaveBeenCalledWith({
     variant: 'success',
-    description: success,
+    description: 'account.deletedSuccessfully',
   });
-  expect(response).toEqual({ message: success });
+  expect(response).toEqual({ message: 'account.deletedSuccessfully' });
 });
 
-it('keeps API errors unchanged', async () => {
-  const error = { en: 'error en', es: 'error es' };
-  mockSecureDelete.mockResolvedValue({ data: null, error });
+it('uses the fallback error message key when the API omits one', async () => {
+  mockSecureDelete.mockResolvedValue({
+    data: null,
+    error: { en: 'error en', es: 'error es' },
+  });
 
   const { result } = renderHook(() => useDeleteAccount('en'));
   let response;
@@ -56,9 +57,9 @@ it('keeps API errors unchanged', async () => {
   expect(mockForceLogout).not.toHaveBeenCalled();
   expect(mockCallToast).toHaveBeenCalledWith({
     variant: 'error',
-    description: error,
+    description: 'errors.server.connection',
   });
-  expect(response).toEqual({ message: error });
+  expect(response).toEqual({ message: 'errors.server.connection' });
 });
 
 it('builds unexpected-error messages for every supported language', async () => {
@@ -71,7 +72,9 @@ it('builds unexpected-error messages for every supported language', async () => 
     response = await result.current.deleteAccount();
   });
 
-  const toastDescription = mockCallToast.mock.calls[0][0].description;
-  expect(Object.keys(toastDescription).sort()).toEqual(['en', 'es']);
-  expect(Object.keys(response!.message ?? {}).sort()).toEqual(['en', 'es']);
+  expect(mockCallToast).toHaveBeenCalledWith({
+    variant: 'error',
+    description: 'errors.account.deleteUnexpected',
+  });
+  expect(response).toEqual({ message: 'errors.account.deleteRetryLater' });
 });

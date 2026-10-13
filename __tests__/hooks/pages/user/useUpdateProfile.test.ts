@@ -102,7 +102,7 @@ it('keeps API errors unchanged', async () => {
   });
 
   expect(result.current.status).toBe('error');
-  expect(result.current.errorMessage).toBe(error);
+  expect(result.current.errorMessage).toBe('errors.profile.updateUnexpected');
 });
 
 it('builds unexpected profile errors for every supported language', async () => {
@@ -114,8 +114,5 @@ it('builds unexpected profile errors for every supported language', async () => 
   });
 
   await waitFor(() => expect(result.current.status).toBe('error'));
-  expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
-    'en',
-    'es',
-  ]);
+  expect(result.current.errorMessage).toBe('errors.profile.updateUnexpected');
 });

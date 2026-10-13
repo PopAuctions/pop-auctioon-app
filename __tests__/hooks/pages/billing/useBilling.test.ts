@@ -91,7 +91,7 @@ describe('useGetBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(errorMessage);
+    expect(result.current.errorMessage).toBe('errors.billing.loadFailed');
     expect(result.current.data).toEqual([]);
   });
 
@@ -141,10 +141,7 @@ describe('useGetBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
-      'en',
-      'es',
-    ]);
+    expect(result.current.errorMessage).toBe('errors.billing.loadFailed');
   });
 });
 
@@ -199,7 +196,7 @@ describe('useCreateBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(errorMessage);
+    expect(result.current.errorMessage).toBe('errors.billing.createUnexpected');
   });
 
   it('should handle unexpected error gracefully', async () => {
@@ -213,10 +210,7 @@ describe('useCreateBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
-      'en',
-      'es',
-    ]);
+    expect(result.current.errorMessage).toBe('errors.billing.createUnexpected');
   });
 });
 
@@ -272,7 +266,7 @@ describe('useUpdateBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(errorMessage);
+    expect(result.current.errorMessage).toBe('errors.billing.updateUnexpected');
   });
 
   it('should handle unexpected error gracefully', async () => {
@@ -286,10 +280,7 @@ describe('useUpdateBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
-      'en',
-      'es',
-    ]);
+    expect(result.current.errorMessage).toBe('errors.billing.updateUnexpected');
   });
 });
 
@@ -338,7 +329,7 @@ describe('useDeleteBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(errorMessage);
+    expect(result.current.errorMessage).toBe('errors.billing.deleteUnexpected');
   });
 
   it('should handle unexpected error gracefully', async () => {
@@ -352,9 +343,6 @@ describe('useDeleteBilling', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
-      'en',
-      'es',
-    ]);
+    expect(result.current.errorMessage).toBe('errors.billing.deleteUnexpected');
   });
 });

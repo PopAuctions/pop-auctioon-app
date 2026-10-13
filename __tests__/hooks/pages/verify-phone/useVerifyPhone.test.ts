@@ -4,10 +4,6 @@ import { useVerifyPhone } from '@/hooks/pages/verify-phone/useVerifyPhone';
 // Mock dependencies
 const mockSecurePost = jest.fn();
 
-function expectLanguageShape(value: unknown) {
-  expect(Object.keys(value as object).sort()).toEqual(['en', 'es']);
-}
-
 jest.mock('@/hooks/api/useSecureApi', () => ({
   useSecureApi: () => ({
     securePost: mockSecurePost,
@@ -96,7 +92,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual(errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.sendFailed');
       expect(result.current.canResend).toBe(true); // Countdown should NOT start on error
     });
 
@@ -120,7 +116,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expectLanguageShape(result.current.errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.noResponse');
     });
 
     it('should handle unexpected error gracefully', async () => {
@@ -140,7 +136,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expectLanguageShape(result.current.errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.sendFailed');
     });
   });
 
@@ -203,7 +199,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual(errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.verifyFailed');
     });
 
     it('should handle no data response for verification', async () => {
@@ -226,7 +222,9 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expectLanguageShape(result.current.errorMessage);
+      expect(result.current.errorMessage).toBe(
+        'errors.otp.invalidVerificationCode'
+      );
     });
 
     it('should handle unexpected error gracefully during verification', async () => {
@@ -246,7 +244,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expectLanguageShape(result.current.errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.verifyFailed');
     });
   });
 
@@ -473,10 +471,7 @@ describe('useVerifyPhone', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.errorMessage).toEqual({
-          en: 'Error',
-          es: 'Error',
-        });
+        expect(result.current.errorMessage).toBe('errors.otp.sendFailed');
       });
 
       // Second call with success

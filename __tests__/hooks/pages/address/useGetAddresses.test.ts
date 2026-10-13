@@ -70,7 +70,7 @@ describe('useGetAddresses', () => {
     });
 
     expect(result.current.data).toEqual([]);
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe('errors.address.loadFailed');
   });
 
   it('should handle empty array response', async () => {
@@ -158,9 +158,6 @@ describe('useGetAddresses', () => {
     });
 
     expect(result.current.data).toEqual([]);
-    expect(Object.keys(result.current.errorMessage ?? {}).sort()).toEqual([
-      'en',
-      'es',
-    ]);
+    expect(result.current.errorMessage).toBe('errors.address.loadFailed');
   });
 });
