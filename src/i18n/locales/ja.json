@@ -1,25 +1,25 @@
 {
   "common": {
     "actions": {
-      "back": "TODO_TRANSLATE[ja]: Atrás",
-      "cancel": "TODO_TRANSLATE[ja]: Cancelar",
-      "close": "TODO_TRANSLATE[ja]: Cerrar",
-      "confirm": "TODO_TRANSLATE[ja]: Confirmar",
-      "home": "TODO_TRANSLATE[ja]: Ir al inicio",
-      "login": "TODO_TRANSLATE[ja]: Iniciar sesión",
-      "ok": "TODO_TRANSLATE[ja]: Aceptar",
-      "retry": "TODO_TRANSLATE[ja]: Intentar de nuevo",
-      "save": "TODO_TRANSLATE[ja]: Guardar"
+      "back": "戻る",
+      "cancel": "キャンセル",
+      "close": "閉じる",
+      "confirm": "確認する",
+      "home": "ホームへ",
+      "login": "ログイン",
+      "ok": "わかりました",
+      "retry": "再試行",
+      "save": "保存"
     },
     "status": {
-      "loading": "TODO_TRANSLATE[ja]: Cargando..."
+      "loading": "読み込み中..."
     },
     "toast": {
-      "success": "TODO_TRANSLATE[ja]: Éxito",
-      "error": "TODO_TRANSLATE[ja]: Error",
-      "warning": "TODO_TRANSLATE[ja]: Advertencia",
-      "info": "TODO_TRANSLATE[ja]: Información",
-      "loading": "TODO_TRANSLATE[ja]: Cargando..."
+      "success": "成功",
+      "error": "エラー",
+      "warning": "警告",
+      "info": "情報",
+      "loading": "読み込み中..."
     }
   },
   "displayLabels": {
@@ -919,215 +919,215 @@
     }
   },
   "signUp": {
-    "accountCreated": "TODO_TRANSLATE[ja]: Usuario creado"
+    "accountCreated": "アカウントを作成しました"
   },
   "confirmEmail": {
-    "resendSuccess": "TODO_TRANSLATE[ja]: Se ha enviado un correo de confirmación"
+    "resendSuccess": "確認メールが送信されました"
   },
   "resetPassword": {
-    "resetEmailSent": "TODO_TRANSLATE[ja]: Correo de restablecimiento enviado"
+    "resetEmailSent": "パスワード再設定メールを送信しました"
   },
   "addresses": {
-    "createdSuccessfully": "TODO_TRANSLATE[ja]: Dirección creada satisfactoriamente",
-    "updatedSuccessfully": "TODO_TRANSLATE[ja]: Dirección actualizada satisfactoriamente"
+    "createdSuccessfully": "住所を作成しました",
+    "updatedSuccessfully": "住所を更新しました"
   },
   "billing": {
-    "loadedSuccessfully": "TODO_TRANSLATE[ja]: Datos de facturación cargados correctamente",
-    "createdSuccessfully": "TODO_TRANSLATE[ja]: Datos de facturación creados satisfactoriamente",
-    "updatedSuccessfully": "TODO_TRANSLATE[ja]: Datos de facturación actualizados satisfactoriamente",
-    "deletedSuccessfully": "TODO_TRANSLATE[ja]: Dirección de facturación eliminada correctamente"
+    "loadedSuccessfully": "請求情報を読み込みました",
+    "createdSuccessfully": "請求情報を作成しました",
+    "updatedSuccessfully": "請求情報を更新しました",
+    "deletedSuccessfully": "請求先住所を削除しました"
   },
   "profile": {
-    "updatedSuccessfully": "TODO_TRANSLATE[ja]: Usuario actualizado"
+    "updatedSuccessfully": "プロフィールを更新しました"
   },
   "article": {
-    "followedSuccessfully": "TODO_TRANSLATE[ja]: Artículo seguido",
-    "unfollowedSuccessfully": "TODO_TRANSLATE[ja]: Artículo dejado de seguir",
-    "removedFromAuctionSuccessfully": "TODO_TRANSLATE[ja]: Artículo removido exitosamente",
-    "wonArticlesRemovedSuccessfully": "TODO_TRANSLATE[ja]: Artículos eliminados",
-    "imageOrderUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Orden actualizado",
-    "orderUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Orden actualizado",
-    "refreshedSuccessfully": "TODO_TRANSLATE[ja]: Artículo actualizado correctamente",
-    "onlineStoreCreatedSuccessfully": "TODO_TRANSLATE[ja]: Artículo creado con éxito",
-    "onlineStoreDeletedSuccessfully": "TODO_TRANSLATE[ja]: Artículo eliminado con éxito",
-    "onlineStorePriceUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Precio actualizado correctamente",
-    "onlineStoreEnabledSuccessfully": "TODO_TRANSLATE[ja]: Artículo habilitado con éxito",
-    "onlineStoreAssignedSuccessfully": "TODO_TRANSLATE[ja]: Artículo asignado a la subasta",
-    "approvedSuccessfully": "TODO_TRANSLATE[ja]: Artículo aprobado",
-    "changesRequestedSuccessfully": "TODO_TRANSLATE[ja]: Cambios solicitados",
-    "featuredStatusUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Artículo actualizado correctamente"
+    "followedSuccessfully": "商品をフォローしました",
+    "unfollowedSuccessfully": "商品のフォローを解除しました",
+    "removedFromAuctionSuccessfully": "商品をオークションから削除しました",
+    "wonArticlesRemovedSuccessfully": "落札商品を削除しました",
+    "imageOrderUpdatedSuccessfully": "画像の順序を更新しました",
+    "orderUpdatedSuccessfully": "商品の順序を更新しました",
+    "refreshedSuccessfully": "商品を更新しました",
+    "onlineStoreCreatedSuccessfully": "商品を作成しました",
+    "onlineStoreDeletedSuccessfully": "商品を削除しました",
+    "onlineStorePriceUpdatedSuccessfully": "価格が正常に更新されました",
+    "onlineStoreEnabledSuccessfully": "商品を有効にしました",
+    "onlineStoreAssignedSuccessfully": "商品をオークションに割り当てました",
+    "approvedSuccessfully": "商品を承認しました",
+    "changesRequestedSuccessfully": "変更を申請しました",
+    "featuredStatusUpdatedSuccessfully": "おすすめ状態を更新しました"
   },
   "offer": {
-    "madeSuccessfully": "TODO_TRANSLATE[ja]: Oferta realizada con éxito",
-    "acceptedSuccessfully": "TODO_TRANSLATE[ja]: Oferta aceptada correctamente",
-    "rejectedSuccessfully": "TODO_TRANSLATE[ja]: Oferta rechazada correctamente",
-    "counterSentSuccessfully": "TODO_TRANSLATE[ja]: Contraoferta enviada correctamente",
-    "counterAcceptedSuccessfully": "TODO_TRANSLATE[ja]: Contraoferta aceptada correctamente",
-    "counterRejectedSuccessfully": "TODO_TRANSLATE[ja]: Contraoferta rechazada correctamente",
-    "listUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Ofertas actualizadas"
+    "madeSuccessfully": "オファーを送信しました",
+    "acceptedSuccessfully": "オファーを承認しました",
+    "rejectedSuccessfully": "オファーを拒否しました",
+    "counterSentSuccessfully": "カウンターオファーを送信しました",
+    "counterAcceptedSuccessfully": "カウンターオファーを承認しました",
+    "counterRejectedSuccessfully": "カウンターオファーを拒否しました",
+    "listUpdatedSuccessfully": "オファーが更新されました"
   },
   "store": {
-    "updatedSuccessfully": "TODO_TRANSLATE[ja]: Tienda actualizada",
-    "commissionUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Comisión de tienda actualizada correctamente"
+    "updatedSuccessfully": "ストアが更新されました",
+    "commissionUpdatedSuccessfully": "ストア手数料を更新しました"
   },
   "payout": {
-    "createdSuccessfully": "TODO_TRANSLATE[ja]: Pago de tienda creado correctamente.",
-    "itemsUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Pagos actualizados correctamente"
+    "createdSuccessfully": "ストアへの支払いを作成しました",
+    "itemsUpdatedSuccessfully": "精算項目を更新しました"
   },
   "soldArticle": {
-    "acquisitionCancelledSuccessfully": "TODO_TRANSLATE[ja]: Adquisición cancelada con éxito",
-    "sentToOnlineStoreSuccessfully": "TODO_TRANSLATE[ja]: Artículo enviado correctamente a la tienda online",
-    "emailSentSuccessfully": "TODO_TRANSLATE[ja]: Correo enviado correctamente",
-    "grantedSuccessfully": "TODO_TRANSLATE[ja]: Artículo concedido con éxito",
-    "shippingUpdatedSuccessfully": "TODO_TRANSLATE[ja]: Información de envío actualizada con éxito"
+    "acquisitionCancelledSuccessfully": "落札を取り消しました",
+    "sentToOnlineStoreSuccessfully": "商品をオンラインストアへ移しました",
+    "emailSentSuccessfully": "メールを送信しました",
+    "grantedSuccessfully": "商品を付与しました",
+    "shippingUpdatedSuccessfully": "配送情報が正常に更新されました"
   },
   "auction": {
-    "followedSuccessfully": "TODO_TRANSLATE[ja]: Subasta seguida",
-    "unfollowedSuccessfully": "TODO_TRANSLATE[ja]: Subasta dejada de seguir",
-    "finished": "TODO_TRANSLATE[ja]: Subasta finalizada",
-    "reviewRequestedSuccessfully": "TODO_TRANSLATE[ja]: Revisión solicitada con éxito"
+    "followedSuccessfully": "オークションをフォローしました",
+    "unfollowedSuccessfully": "オークションのフォローを解除しました",
+    "finished": "オークション終了",
+    "reviewRequestedSuccessfully": "レビューを依頼しました"
   },
   "liveAuction": {
-    "articleChangedSuccessfully": "TODO_TRANSLATE[ja]: Artículo cambiado correctamente"
+    "articleChangedSuccessfully": "商品を変更しました"
   },
   "autoBid": {
-    "deactivatedSuccessfully": "TODO_TRANSLATE[ja]: Puja automática desactivada",
-    "savedSuccessfully": "TODO_TRANSLATE[ja]: Puja automática guardada con éxito"
+    "deactivatedSuccessfully": "自動入札が無効になりました",
+    "savedSuccessfully": "自動入札が正常に保存されました"
   },
   "otp": {
-    "sentSuccessfully": "TODO_TRANSLATE[ja]: OTP enviado correctamente",
-    "resentSuccessfully": "TODO_TRANSLATE[ja]: OTP reenviado correctamente",
-    "phoneVerifiedSuccessfully": "TODO_TRANSLATE[ja]: Teléfono verificado con éxito"
+    "sentSuccessfully": "OTP が正常に送信されました",
+    "resentSuccessfully": "OTP が正常に再送信されました",
+    "phoneVerifiedSuccessfully": "電話番号を認証しました"
   },
   "account": {
-    "deletedSuccessfully": "TODO_TRANSLATE[ja]: Cuenta eliminada correctamente",
-    "pendingDeletion": "TODO_TRANSLATE[ja]: Tu cuenta fue desactivada. Estamos finalizando la eliminación."
+    "deletedSuccessfully": "アカウントが正常に削除されました",
+    "pendingDeletion": "アカウントを無効化しました。削除処理を完了しています。"
   },
   "errorBoundary": {
-    "title": "TODO_TRANSLATE[ja]: Algo ha ido mal",
-    "description": "TODO_TRANSLATE[ja]: Ha ocurrido un error inesperado. Inténtalo de nuevo.",
-    "retry": "TODO_TRANSLATE[ja]: Intentar de nuevo"
+    "title": "何か問題が発生しました",
+    "description": "予期しないエラーが発生しました。もう一度試してください。",
+    "retry": "もう一度やり直してください"
   },
   "validation": {
-    "required": "TODO_TRANSLATE[ja]: Requerido",
-    "invalidEmail": "TODO_TRANSLATE[ja]: Introduce una dirección de correo válida",
-    "invalidFormat": "TODO_TRANSLATE[ja]: Formato no válido",
-    "minLength": "TODO_TRANSLATE[ja]: Debe contener al menos %{min} caracteres",
-    "maxLength": "TODO_TRANSLATE[ja]: Debe contener como máximo %{max} caracteres",
-    "minValue": "TODO_TRANSLATE[ja]: Debe ser al menos %{min}",
-    "maxValue": "TODO_TRANSLATE[ja]: Debe ser como máximo %{max}",
-    "passwordMismatch": "TODO_TRANSLATE[ja]: Las contraseñas no coinciden",
-    "noSpaces": "TODO_TRANSLATE[ja]: No se permiten espacios",
-    "max25Characters": "TODO_TRANSLATE[ja]: Máximo 25 caracteres",
-    "numbersOnly": "TODO_TRANSLATE[ja]: Debe contener solo números",
-    "minimumStartingPrice": "TODO_TRANSLATE[ja]: El precio inicial mínimo es 1",
-    "estimatedValueMinimum": "TODO_TRANSLATE[ja]: El valor estimado debería de ser al menos 1",
-    "requiredMin5": "TODO_TRANSLATE[ja]: Requerido (Min. 5)",
-    "allMeasurementsOrNone": "TODO_TRANSLATE[ja]: Todas o ninguna de las medidas son requeridas",
-    "nameRequired": "TODO_TRANSLATE[ja]: El nombre es requerido",
-    "validEmailRequired": "TODO_TRANSLATE[ja]: Email válido es requerido",
-    "messageMin10": "TODO_TRANSLATE[ja]: El mensaje debe tener al menos 10 caracteres",
-    "noSpacesAllowed": "TODO_TRANSLATE[ja]: No se permiten espacios",
-    "addressNameRequired": "TODO_TRANSLATE[ja]: Requerido. Usa un nombre para identificar la dirección",
-    "usernameMinLength": "TODO_TRANSLATE[ja]: Requerido (Mín. %{min} caracteres)",
-    "usernameMaxLength": "TODO_TRANSLATE[ja]: Máx. %{max} caracteres",
-    "passwordMinLength": "TODO_TRANSLATE[ja]: Requerido (Mín. %{min} caracteres)",
-    "noSpacesAllowedPeriod": "TODO_TRANSLATE[ja]: No se permiten espacios.",
-    "passwordMismatchPeriod": "TODO_TRANSLATE[ja]: Las contraseñas no coinciden.",
-    "usernameMaxLengthAuctioneer": "TODO_TRANSLATE[ja]: Máx. %{max} caracteres)",
-    "emailRequired": "TODO_TRANSLATE[ja]: Email requerido"
+    "required": "必須",
+    "invalidEmail": "有効なメールアドレスを入力してください",
+    "invalidFormat": "無効な形式",
+    "minLength": "%{min}文字以上で入力してください",
+    "maxLength": "%{max}文字以内で入力してください",
+    "minValue": "%{min}以上で入力してください",
+    "maxValue": "%{max}以下で入力してください",
+    "passwordMismatch": "パスワードが一致しません",
+    "noSpaces": "スペースは使用できません",
+    "max25Characters": "最大25文字",
+    "numbersOnly": "数字のみを含める必要があります",
+    "minimumStartingPrice": "最低開始価格は 1 です",
+    "estimatedValueMinimum": "推定価格は1以上で入力してください",
+    "requiredMin5": "必須（5文字以上）",
+    "allMeasurementsOrNone": "寸法はすべて入力するか、すべて空欄にしてください",
+    "nameRequired": "名前は必須です",
+    "validEmailRequired": "有効なメールアドレスを入力してください",
+    "messageMin10": "メッセージは 10 文字以上である必要があります",
+    "noSpacesAllowed": "スペースは使用できません",
+    "addressNameRequired": "必須。住所を識別する名前を入力してください",
+    "usernameMinLength": "必須（%{min}文字以上）",
+    "usernameMaxLength": "%{max}文字以内",
+    "passwordMinLength": "必須（%{min}文字以上）",
+    "noSpacesAllowedPeriod": "スペースは使用できません。",
+    "passwordMismatchPeriod": "パスワードが一致しません。",
+    "usernameMaxLengthAuctioneer": "%{max}文字以内",
+    "emailRequired": "メールアドレスが必要です"
   },
   "commonActions": {
-    "loading": "TODO_TRANSLATE[ja]: Cargando...",
-    "error": "TODO_TRANSLATE[ja]: Error",
-    "ok": "TODO_TRANSLATE[ja]: OK",
-    "cancel": "TODO_TRANSLATE[ja]: Cancelar",
-    "save": "TODO_TRANSLATE[ja]: Guardar",
-    "edit": "TODO_TRANSLATE[ja]: Editar",
-    "delete": "TODO_TRANSLATE[ja]: Eliminar",
-    "confirm": "TODO_TRANSLATE[ja]: Confirmar",
-    "close": "TODO_TRANSLATE[ja]: Cerrar",
-    "retry": "TODO_TRANSLATE[ja]: Reintentar",
-    "or": "TODO_TRANSLATE[ja]: o"
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "ok": "わかりました",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "edit": "編集",
+    "delete": "削除",
+    "confirm": "確認する",
+    "close": "閉じる",
+    "retry": "再試行",
+    "or": "または"
   },
   "onboarding": {
-    "loading": "TODO_TRANSLATE[ja]: Cargando tutorial...",
-    "errorLoadingTutorial": "TODO_TRANSLATE[ja]: No se pudo cargar el tutorial",
-    "skipHint": "TODO_TRANSLATE[ja]: Omitir el tutorial y continuar a la aplicación",
-    "slidesLabel": "TODO_TRANSLATE[ja]: Diapositivas del tutorial",
-    "chooseLanguage": "TODO_TRANSLATE[ja]: Elige tu idioma",
-    "skip": "TODO_TRANSLATE[ja]: Omitir",
-    "welcome": "TODO_TRANSLATE[ja]: ¡Bienvenido a PopAuctioon!",
-    "description": "TODO_TRANSLATE[ja]: Descubre subastas en vivo y encuentra piezas únicas."
+    "loading": "チュートリアルを読み込んでいます...",
+    "errorLoadingTutorial": "チュートリアルを読み込めませんでした",
+    "skipHint": "チュートリアルをスキップしてアプリに進みます",
+    "slidesLabel": "チュートリアルスライド",
+    "chooseLanguage": "言語を選択してください",
+    "skip": "スキップ",
+    "welcome": "ポップオークションへようこそ！",
+    "description": "ライブオークションを見つけ、特別な商品を探しましょう。"
   },
   "loginPage": {
-    "login": "TODO_TRANSLATE[ja]: Iniciar sesión",
-    "logout": "TODO_TRANSLATE[ja]: Cerrar sesión",
-    "register": "TODO_TRANSLATE[ja]: Regístrate",
-    "user": "TODO_TRANSLATE[ja]: Usuario",
-    "auctionCompany": "TODO_TRANSLATE[ja]: Empresa subastadora",
-    "newAccount": "TODO_TRANSLATE[ja]: Crear cuenta",
-    "email": "TODO_TRANSLATE[ja]: Correo electrónico",
-    "password": "TODO_TRANSLATE[ja]: Contraseña",
-    "confirmPassword": "TODO_TRANSLATE[ja]: Confirmar contraseña",
-    "forgotPassword": "TODO_TRANSLATE[ja]: ¿Olvidaste tu contraseña?",
-    "loginSuccess": "TODO_TRANSLATE[ja]: Sesión iniciada correctamente",
-    "loginError": "TODO_TRANSLATE[ja]: Error al iniciar sesión",
-    "registerSuccess": "TODO_TRANSLATE[ja]: Usuario registrado correctamente",
-    "registerError": "TODO_TRANSLATE[ja]: Error al registrar usuario",
-    "title": "TODO_TRANSLATE[ja]: Iniciar Sesión",
-    "signIn": "TODO_TRANSLATE[ja]: Iniciar Sesión"
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "register": "登録",
+    "user": "ユーザー",
+    "auctionCompany": "出品者",
+    "newAccount": "アカウントを作成する",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "loginSuccess": "ログイン成功",
+    "loginError": "ログインエラー",
+    "registerSuccess": "アカウントを登録しました",
+    "registerError": "登録エラー",
+    "title": "サインイン",
+    "signIn": "サインイン"
   },
   "authCallback": {
-    "authenticationFailed": "TODO_TRANSLATE[ja]: La autenticación ha fallado. Por favor, inténtelo de nuevo.",
-    "authenticationSuccess": "TODO_TRANSLATE[ja]: ¡Autenticación exitosa!"
+    "authenticationFailed": "認証に失敗しました。もう一度試してください。",
+    "authenticationSuccess": "認証に成功しました！"
   },
   "auth": {
     "login": {
-      "sessionStarted": "TODO_TRANSLATE[ja]: Sesión iniciada"
+      "sessionStarted": "セッションが開始されました"
     },
     "oauth": {
       "google": {
-        "startFailed": "TODO_TRANSLATE[ja]: No se pudo iniciar el inicio de sesión con Google. Por favor, inténtelo de nuevo.",
-        "cancelledOrFailed": "TODO_TRANSLATE[ja]: El inicio de sesión con Google fue cancelado o fallido. Por favor, inténtelo de nuevo.",
-        "codeMissing": "TODO_TRANSLATE[ja]: No se pudo obtener el código de autenticación de Google. Por favor, inténtelo de nuevo.",
-        "unexpected": "TODO_TRANSLATE[ja]: Ocurrió un error inesperado durante el inicio de sesión con Google. Por favor, inténtelo de nuevo."
+        "startFailed": "Google サインインを開始できませんでした。もう一度試してください。",
+        "cancelledOrFailed": "Google サインインがキャンセルされたか失敗しました。もう一度試してください。",
+        "codeMissing": "Google から認証コードを取得できませんでした。もう一度試してください。",
+        "unexpected": "Google サインイン中に予期しないエラーが発生しました。もう一度試してください。"
       },
       "apple": {
-        "startFailed": "TODO_TRANSLATE[ja]: No se pudo iniciar el inicio de sesión con Apple. Por favor, inténtelo de nuevo.",
-        "cancelledOrFailed": "TODO_TRANSLATE[ja]: El inicio de sesión con Apple fue cancelado o fallido. Por favor, inténtelo de nuevo.",
-        "codeMissing": "TODO_TRANSLATE[ja]: No se pudo obtener el código de autenticación de Apple. Por favor, inténtelo de nuevo.",
-        "unexpected": "TODO_TRANSLATE[ja]: Ocurrió un error inesperado durante el inicio de sesión con Apple. Por favor, inténtelo de nuevo."
+        "startFailed": "Apple サインインを開始できませんでした。もう一度試してください。",
+        "cancelledOrFailed": "Apple サインインがキャンセルされたか失敗しました。もう一度試してください。",
+        "codeMissing": "Apple から認証コードを取得できませんでした。もう一度試してください。",
+        "unexpected": "Apple サインイン中に予期しないエラーが発生しました。もう一度試してください。"
       }
     },
     "registration": {
-      "acceptTerms": "TODO_TRANSLATE[ja]: Debes aceptar los términos y condiciones",
-      "userCreated": "TODO_TRANSLATE[ja]: Usuario creado. Revisa tu email para confirmar tu cuenta.",
-      "auctioneerCreated": "TODO_TRANSLATE[ja]: Subastador creado. Revisa tu email para confirmar tu cuenta."
+      "acceptTerms": "利用規約に同意する必要があります",
+      "userCreated": "アカウントを作成しました。メールを確認して認証を完了してください。",
+      "auctioneerCreated": "出品者アカウントを作成しました。メールを確認して認証を完了してください。"
     },
     "passwordReset": {
-      "unexpected": "TODO_TRANSLATE[ja]: Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+      "unexpected": "予期しないエラーが発生しました。後でもう一度試してください。"
     },
     "emailConfirmation": {
-      "sendFailed": "TODO_TRANSLATE[ja]: Error enviando correo",
-      "tryAgainIn": "TODO_TRANSLATE[ja]: Intenta de nuevo en"
+      "sendFailed": "メール送信エラー",
+      "tryAgainIn": "後にもう一度お試しください"
     }
   },
   "invoice": {
-    "selectBillingInformation": "TODO_TRANSLATE[ja]: Selecciona una información de facturación.",
-    "downloadFailed": "TODO_TRANSLATE[ja]: Error al descargar la factura. Si el problema persiste, contacta con soporte.",
-    "createdSuccessfully": "TODO_TRANSLATE[ja]: Factura creada con éxito"
+    "selectBillingInformation": "請求情報を選択してください。",
+    "downloadFailed": "請求書のダウンロード中にエラーが発生しました。問題が解決しない場合は、サポートにお問い合わせください。",
+    "createdSuccessfully": "請求書を作成しました"
   },
   "tabsNames": {
-    "home": "TODO_TRANSLATE[ja]: Inicio",
-    "account": "TODO_TRANSLATE[ja]: Cuenta",
-    "login": "TODO_TRANSLATE[ja]: Iniciar Sesión",
-    "auctions": "TODO_TRANSLATE[ja]: Subastas en vivo",
-    "articleDetails": "TODO_TRANSLATE[ja]: Detalles del Artículo",
-    "store": "TODO_TRANSLATE[ja]: Tienda Online",
-    "auctioneer": "TODO_TRANSLATE[ja]: Subastador",
-    "myOnlineStore": "TODO_TRANSLATE[ja]: Mi Tienda Online",
-    "back": "TODO_TRANSLATE[ja]: Atrás"
+    "home": "ホーム",
+    "account": "アカウント",
+    "login": "サインイン",
+    "auctions": "ライブオークション",
+    "articleDetails": "商品詳細",
+    "store": "オンラインストア",
+    "auctioneer": "出品者",
+    "myOnlineStore": "マイオンラインストア",
+    "back": "戻る"
   },
   "screens": {
     "homePage": {
@@ -2041,334 +2041,334 @@
   },
   "components": {
     "shareButton": {
-      "articleTitle": "TODO_TRANSLATE[ja]: ¡Mira este artículo!",
-      "auctionTitle": "TODO_TRANSLATE[ja]: Mira esta subasta en Popauctioon",
-      "liveAuctionTitle": "TODO_TRANSLATE[ja]: Subasta en vivo en PopAuctioon",
-      "error": "TODO_TRANSLATE[ja]: Hubo un error al compartir"
+      "articleTitle": "この商品をチェック！",
+      "auctionTitle": "PopAuctionでこのオークションをチェック",
+      "liveAuctionTitle": "PopAuctionのライブオークション",
+      "error": "共有中にエラーが発生しました"
     },
     "simpleCountdown": {
-      "articleStartSoon": "TODO_TRANSLATE[ja]: Comienza pronto",
-      "auctionStartSoon": "TODO_TRANSLATE[ja]: Comenzará pronto",
-      "completed": "TODO_TRANSLATE[ja]: La subasta ya comenzó"
+      "articleStartSoon": "もうすぐ始まります",
+      "auctionStartSoon": "もうすぐ始まります",
+      "completed": "オークションはすでに開始されています"
     },
     "articleBidsRecord": {
-      "label": "TODO_TRANSLATE[ja]: Historial de pujas",
-      "title": "TODO_TRANSLATE[ja]: Pujas",
-      "initialPrice": "TODO_TRANSLATE[ja]: Precio inicial",
-      "noBidsYet": "TODO_TRANSLATE[ja]: No hay pujas aún."
+      "label": "入札実績",
+      "title": "入札",
+      "initialPrice": "開始価格",
+      "noBidsYet": "まだ入札はありません。"
     },
     "articleLists": {
-      "noMoreArticles": "TODO_TRANSLATE[ja]: No hay más artículos",
-      "noArticlesFound": "TODO_TRANSLATE[ja]: No se han encontrado artículos con los filtros seleccionados"
+      "noMoreArticles": "これ以上商品はありません",
+      "noArticlesFound": "選択した条件に一致する商品がありません"
     },
     "followButton": {
-      "follow": "TODO_TRANSLATE[ja]: Seguir",
-      "unfollow": "TODO_TRANSLATE[ja]: Dejar de seguir",
-      "notAvailable": "TODO_TRANSLATE[ja]: Ya no está disponible"
+      "follow": "フォローする",
+      "unfollow": "フォローを解除する",
+      "notAvailable": "もう利用できません"
     },
     "appVersionGate": {
-      "forceTitle": "TODO_TRANSLATE[ja]: Actualización requerida",
-      "softTitle": "TODO_TRANSLATE[ja]: Actualización disponible",
-      "forceDescription": "TODO_TRANSLATE[ja]: Necesitas actualizar PopAuctioon para seguir usando la app.",
-      "softDescription": "TODO_TRANSLATE[ja]: Hay una nueva versión de PopAuctioon disponible. Puedes actualizar ahora o continuar usando la app.",
-      "updateButton": "TODO_TRANSLATE[ja]: Actualizar app",
-      "continueButton": "TODO_TRANSLATE[ja]: Continuar por ahora"
+      "forceTitle": "アップデートが必要です",
+      "softTitle": "利用可能なアップデート",
+      "forceDescription": "アプリを引き続き使用するには、ポップオークションをアップデートする必要があります。",
+      "softDescription": "新しいバージョンの PopAuction が利用可能です。今すぐ更新することも、アプリを引き続き使用することもできます。",
+      "updateButton": "アプリを更新する",
+      "continueButton": "とりあえず続行"
     },
     "auctionCountdown": {
-      "left": "TODO_TRANSLATE[ja]: Queda:",
-      "enterBefore": "TODO_TRANSLATE[ja]: Empieza a prepararte"
+      "left": "左：",
+      "enterBefore": "オークションの準備をしましょう"
     },
     "dateInput": {
-      "confirm": "TODO_TRANSLATE[ja]: Confirmar",
-      "cancel": "TODO_TRANSLATE[ja]: Cancelar"
+      "confirm": "確認する",
+      "cancel": "キャンセル"
     },
     "filters": {
-      "brand": "TODO_TRANSLATE[ja]: Marca",
-      "price": "TODO_TRANSLATE[ja]: Precio",
-      "model": "TODO_TRANSLATE[ja]: Modelo",
-      "material": "TODO_TRANSLATE[ja]: Material",
-      "color": "TODO_TRANSLATE[ja]: Color",
-      "sort": "TODO_TRANSLATE[ja]: Ordenar por",
-      "activeFilters": "TODO_TRANSLATE[ja]: Filtros activos:",
-      "clearAll": "TODO_TRANSLATE[ja]: Borrar filtros",
-      "filters": "TODO_TRANSLATE[ja]: Filtros",
-      "codeNumber": "TODO_TRANSLATE[ja]: Código",
-      "status": "TODO_TRANSLATE[ja]: Estado",
-      "offersStatus": "TODO_TRANSLATE[ja]: Estado de ofertas",
-      "close": "TODO_TRANSLATE[ja]: Cerrar",
-      "auction": "TODO_TRANSLATE[ja]: Subasta",
-      "myAuctionArticleName": "TODO_TRANSLATE[ja]: Name"
+      "brand": "ブランド",
+      "price": "価格",
+      "model": "モデル",
+      "material": "素材",
+      "color": "色",
+      "sort": "並べ替え",
+      "activeFilters": "適用中のフィルター：",
+      "clearAll": "フィルターをクリアする",
+      "filters": "フィルター",
+      "codeNumber": "コード",
+      "status": "ステータス",
+      "offersStatus": "オファー状況",
+      "close": "閉じる",
+      "auction": "オークション",
+      "myAuctionArticleName": "名前"
     },
     "wonArticles": {
-      "noArticlesToRemove": "TODO_TRANSLATE[ja]: No hay artículos para eliminar",
-      "removeFailed": "TODO_TRANSLATE[ja]: Error al eliminar los artículos",
-      "removedSuccessfully": "TODO_TRANSLATE[ja]: Artículos eliminados correctamente"
+      "noArticlesToRemove": "削除する商品がありません",
+      "removeFailed": "商品の削除中にエラーが発生しました",
+      "removedSuccessfully": "商品を削除しました"
     },
     "notification": {
-      "imageAlt": "TODO_TRANSLATE[ja]: Notification Image",
+      "imageAlt": "お知らせ画像",
       "relativeTime": {
-        "now": "TODO_TRANSLATE[ja]: Ahora mismo",
-        "minutes": "TODO_TRANSLATE[ja]: Hace %{count} min",
-        "hours": "TODO_TRANSLATE[ja]: Hace %{count} h",
-        "days": "TODO_TRANSLATE[ja]: Hace %{count} d"
+        "now": "たった今",
+        "minutes": "%{count} 分前",
+        "hours": "%{count}時間前",
+        "days": "%{count} 日前"
       }
     },
     "offerCards": {
       "common": {
-        "date": "TODO_TRANSLATE[ja]: Fecha",
-        "expiresAt": "TODO_TRANSLATE[ja]: Caduca en",
-        "offerHistory": "TODO_TRANSLATE[ja]: Historial de ofertas",
-        "userAcceptedCounter": "TODO_TRANSLATE[ja]: El usuario ha aceptado tu contraoferta",
-        "waitingForUser": "TODO_TRANSLATE[ja]: Esperando respuesta del usuario"
+        "date": "日付",
+        "expiresAt": "有効期限",
+        "offerHistory": "オファー履歴",
+        "userAcceptedCounter": "ユーザーがカウンターオファーを承認しました",
+        "waitingForUser": "ユーザーの応答を待っています"
       },
       "article": {
-        "offer": "TODO_TRANSLATE[ja]: Oferta actual",
-        "noCommissionedOffer": "TODO_TRANSLATE[ja]: Oferta sin comisión",
-        "noCommissionedOfferTooltip": "TODO_TRANSLATE[ja]: Cantidad que recibirás descontando la comisión de la plataforma."
+        "offer": "現在のオファー",
+        "noCommissionedOffer": "推定受取額",
+        "noCommissionedOfferTooltip": "プラットフォーム手数料を差し引いた後に受け取る金額。"
       },
       "latest": {
-        "offer": "TODO_TRANSLATE[ja]: Oferta",
-        "noCommissionedOffer": "TODO_TRANSLATE[ja]: Monto que recibirás",
-        "noCommissionedOfferTooltip": "TODO_TRANSLATE[ja]: Cantidad que recibirás si aceptas la oferta y el comprador completa el pago."
+        "offer": "オファー",
+        "noCommissionedOffer": "受け取れる金額",
+        "noCommissionedOfferTooltip": "オファーを承認し、購入者が決済を完了した場合の受取額です。"
       }
     },
     "offerCard": {
       "status": {
-        "PENDING": "TODO_TRANSLATE[ja]: Pendiente",
-        "ACCEPTED": "TODO_TRANSLATE[ja]: Aceptado",
-        "REJECTED": "TODO_TRANSLATE[ja]: Rechazado",
-        "COUNTERED": "TODO_TRANSLATE[ja]: Contraoferta",
-        "counterReceived": "TODO_TRANSLATE[ja]: Contraoferta recibida",
-        "pendingFinalApproval": "TODO_TRANSLATE[ja]: Pendiente de aprobación",
-        "counterSent": "TODO_TRANSLATE[ja]: Contraoferta enviada"
+        "PENDING": "保留中",
+        "ACCEPTED": "承認済み",
+        "REJECTED": "拒否済み",
+        "COUNTERED": "カウンターオファーあり",
+        "counterReceived": "カウンターオファーを受け取りました",
+        "pendingFinalApproval": "承認待ち",
+        "counterSent": "カウンターオファーが送信されました"
       },
       "amount": {
-        "current": "TODO_TRANSLATE[ja]: Importe actual",
-        "counter": "TODO_TRANSLATE[ja]: Contraoferta actual",
-        "accepted": "TODO_TRANSLATE[ja]: Importe aceptado"
+        "current": "現在の金額",
+        "counter": "現在のカウンターオファー",
+        "accepted": "承認済み金額"
       },
       "state": {
-        "initialOffer": "TODO_TRANSLATE[ja]: Tu oferta ha sido enviada. Esperando la respuesta de la tienda.",
-        "counterReceived": "TODO_TRANSLATE[ja]: La tienda ha realizado una nueva propuesta.",
-        "waitingForStore": "TODO_TRANSLATE[ja]: Has enviado una contraoferta. Esperando la respuesta de la tienda.",
-        "pendingFinalApproval": "TODO_TRANSLATE[ja]: Has aceptado la contraoferta. La tienda debe confirmar que el artículo sigue disponible antes de proceder con el pago."
+        "initialOffer": "オファーを送信しました。ストアからの返答を待っています。",
+        "counterReceived": "ストアから新しい提案が届きました。",
+        "waitingForStore": "カウンターオファーを送信しました。ストアからの返答を待っています。",
+        "pendingFinalApproval": "カウンターオファーを承認しました。決済に進む前に、ストアが商品の在庫を確認する必要があります。"
       },
       "actions": {
-        "offerHistory": "TODO_TRANSLATE[ja]: Historial de ofertas",
-        "acceptCounter": "TODO_TRANSLATE[ja]: Aceptar contraoferta",
-        "counter": "TODO_TRANSLATE[ja]: Contraofertar",
-        "reject": "TODO_TRANSLATE[ja]: Rechazar"
+        "offerHistory": "オファー履歴",
+        "acceptCounter": "カウンターオファーを承認",
+        "counter": "カウンターオファー",
+        "reject": "拒否する"
       }
     },
     "bid": {
-      "sendBid": "TODO_TRANSLATE[ja]: Enviar puja",
-      "bid": "TODO_TRANSLATE[ja]: Puja",
-      "bidAmount": "TODO_TRANSLATE[ja]: Monto a pujar",
-      "anyBidAmount": "TODO_TRANSLATE[ja]: Aumenta o reduce tu puja",
-      "minBid": "TODO_TRANSLATE[ja]: La puja mínima es de:",
-      "maxBid": "TODO_TRANSLATE[ja]: La puja máxima es de:",
-      "createAutomaticBid": "TODO_TRANSLATE[ja]: Configurar puja automática",
-      "automaticBid": "TODO_TRANSLATE[ja]: puja automática configurada",
-      "automaticBids": "TODO_TRANSLATE[ja]: pujas automáticas configuradas"
+      "sendBid": "入札を送る",
+      "bid": "入札",
+      "bidAmount": "入札金額",
+      "anyBidAmount": "入札額を増減する",
+      "minBid": "最低入札額：",
+      "maxBid": "最高入札額：",
+      "createAutomaticBid": "自動入札を設定する",
+      "automaticBid": "自動入札が設定されています",
+      "automaticBids": "自動入札が設定されています"
     },
     "modals": {
       "signInAlert": {
-        "title": "TODO_TRANSLATE[ja]: Necesitas iniciar sesión para realizar esta acción",
-        "description": "TODO_TRANSLATE[ja]: Inicia sesión o crea una cuenta",
-        "goToSignIn": "TODO_TRANSLATE[ja]: Iniciar sesión",
-        "goToCreateAccount": "TODO_TRANSLATE[ja]: Crear cuenta",
-        "close": "TODO_TRANSLATE[ja]: Cerrar"
+        "title": "このアクションを実行するにはサインインする必要があります",
+        "description": "サインインまたはアカウントを作成する",
+        "goToSignIn": "サインイン",
+        "goToCreateAccount": "アカウントを作成する",
+        "close": "閉じる"
       },
       "wonArticlesAlert": {
-        "title": "TODO_TRANSLATE[ja]: ¡Tienes artículos por pagar!",
-        "description": "TODO_TRANSLATE[ja]: Parece que has ganado algunos artículos. Ve a tu perfil para verlos y completar el pago.",
-        "goToAuction": "TODO_TRANSLATE[ja]: Ir a mis artículos ganados",
-        "close": "TODO_TRANSLATE[ja]: Cerrar"
+        "title": "支払い待ちの商品があります！",
+        "description": "落札した商品があります。プロフィールで確認し、決済を完了してください。",
+        "goToAuction": "落札商品を見る",
+        "close": "閉じる"
       },
       "auctionStarted": {
-        "title": "TODO_TRANSLATE[ja]: ¡Una subasta acaba de comenzar!",
-        "goToAuction": "TODO_TRANSLATE[ja]: Ir a la subasta en vivo",
-        "close": "TODO_TRANSLATE[ja]: Cerrar"
+        "title": "オークションが始まったばかりです！",
+        "goToAuction": "ライブオークションに行く",
+        "close": "閉じる"
       },
       "howAutoLiveWorks": {
-        "title": "TODO_TRANSLATE[ja]: ¡Bienvenido a la subasta automática en vivo!",
+        "title": "ライブオートオークションへようこそ！",
         "description": {
-          "intro": "TODO_TRANSLATE[ja]: ¿Cómo funciona?:"
+          "intro": "仕組み:"
         },
         "behavior": {
-          "duration": "TODO_TRANSLATE[ja]: Cada artículo está en subasta durante 60 segundos.  Una vez que el artículo “entra en vivo”, ¡puedes pujar por él!",
-          "countdown": "TODO_TRANSLATE[ja]: Cuando han transcurrido 45 segundos, comienza la cuenta regresiva.",
-          "reset": "TODO_TRANSLATE[ja]: Si se realiza una puja mientras la cuenta corre, el temporizador se reinicia y vuelve a empezar la cuenta regresiva.",
-          "winner": "TODO_TRANSLATE[ja]: Cuando la cuenta llega a cero, el artículo se adjudica al mejor postor y automáticamente pasamos al siguiente artículo."
+          "duration": "各商品は60秒間オークションに出品されます。商品が表示されたら入札できます。",
+          "countdown": "45 秒が経過すると、カウントダウンが始まります。",
+          "reset": "カウントダウンの実行中に入札が行われると、タイマーがリセットされ、カウントダウンが再開されます。",
+          "winner": "カウントダウンがゼロになると、商品は最高額入札者に落札され、自動的に次の商品へ進みます。"
         },
-        "back": "TODO_TRANSLATE[ja]: Atrás"
+        "back": "戻る"
       },
       "accountDeletion": {
-        "title": "TODO_TRANSLATE[ja]: Eliminar Cuenta",
-        "description": "TODO_TRANSLATE[ja]: ¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.",
-        "importantMessage": "TODO_TRANSLATE[ja]: Esta acción no se puede deshacer."
+        "title": "アカウントの削除",
+        "description": "アカウントを削除してもよろしいですか?これにより、すべてのデータが完全に削除されます。",
+        "importantMessage": "この操作は元に戻すことができません。"
       },
       "auctionArticle": {
-        "removeTitle": "TODO_TRANSLATE[ja]: Eliminar artículo de la subasta",
-        "removeDescription": "TODO_TRANSLATE[ja]: Después de esta acción, no podrás agregar de nuevo este artículo. ¿Estás seguro de que quieres realizar esta acción?",
-        "featureTitle": "TODO_TRANSLATE[ja]: Destacar artículo",
-        "unfeatureTitle": "TODO_TRANSLATE[ja]: Quitar artículo de destacado",
-        "featureDescription": "TODO_TRANSLATE[ja]: ¿Quieres destacar este artículo?",
-        "unfeatureDescription": "TODO_TRANSLATE[ja]: ¿Quieres quitar este artículo de destacado?"
+        "removeTitle": "オークションから商品を削除する",
+        "removeDescription": "この操作後、この商品を再び追加することはできません。実行してもよろしいですか？",
+        "featureTitle": "商品をおすすめに設定",
+        "unfeatureTitle": "おすすめ設定を解除",
+        "featureDescription": "この商品をおすすめに設定しますか？",
+        "unfeatureDescription": "この商品のおすすめ設定を解除しますか？"
       },
       "wonArticles": {
-        "title": "TODO_TRANSLATE[ja]: Eliminar artículos de esta subasta",
-        "description": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres quitar los artículos ganados en esta subasta?",
-        "importantMessage": "TODO_TRANSLATE[ja]: No los podrás recuperar después de eliminarlos"
+        "title": "オークション落札商品の削除",
+        "description": "このオークションで落札した商品を削除してもよろしいですか?",
+        "importantMessage": "削除すると復元できなくなります"
       },
       "auctionReview": {
-        "title": "TODO_TRANSLATE[ja]: Solicitar revisión",
-        "description": "TODO_TRANSLATE[ja]: Después de esta acción, si la subasta es aceptada, ya no podrás modificar la información de subasta ni de sus artículos. ¿Estás seguro de que quieres realizar esta acción?"
+        "title": "レビューのリクエスト",
+        "description": "この操作後、オークションが承認されると、オークション情報や商品を変更できなくなります。実行してもよろしいですか？"
       },
       "automaticBid": {
-        "setTitle": "TODO_TRANSLATE[ja]: Configurar puja automática",
-        "updateTitle": "TODO_TRANSLATE[ja]: Editar puja automática",
-        "description": "TODO_TRANSLATE[ja]: La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.",
-        "extraMessage": "TODO_TRANSLATE[ja]: Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.",
-        "inputLabel": "TODO_TRANSLATE[ja]: Monto máximo",
-        "missingValue": "TODO_TRANSLATE[ja]: Ingresa un valor",
-        "minimumPrice": "TODO_TRANSLATE[ja]: El monto debe ser al menos %{amount}",
-        "noDecimals": "TODO_TRANSLATE[ja]: Solo se permiten múltiplos enteros de 10 €",
-        "multipleOfTen": "TODO_TRANSLATE[ja]: El monto debe ser un múltiplo de 10 €"
+        "setTitle": "自動入札を設定する",
+        "updateTitle": "自動入札を更新する",
+        "description": "この商品の自動入札上限額を設定できます。他のユーザーが入札すると、上限額に達するまでシステムが自動的に入札します。",
+        "extraMessage": "あなたが現在最高額入札者ではない場合、自動入札を設定する際に、システムがあなたの代わりに必要最小限の入札を自動的に行います。",
+        "inputLabel": "上限額",
+        "missingValue": "値を入力してください",
+        "minimumPrice": "金額は%{amount}以上で入力してください",
+        "noDecimals": "€10 の整数倍のみが許可されます",
+        "multipleOfTen": "金額は €10 の倍数である必要があります"
       },
       "onlineStoreArticle": {
-        "removeTitle": "TODO_TRANSLATE[ja]: Eliminar artículo",
-        "removeDescription": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres eliminar este artículo de la tienda online?",
-        "assignTitle": "TODO_TRANSLATE[ja]: Asignar a una subasta",
-        "assignDescription": "TODO_TRANSLATE[ja]: Solo puedes asignar el artículo a una subasta que esté en estado \"Disponible\".",
-        "changePriceTitle": "TODO_TRANSLATE[ja]: Cambiar precio",
-        "changePriceDescription": "TODO_TRANSLATE[ja]: Solo puedes cambiar el precio si el artículo no tiene ofertas.",
-        "priceLabel": "TODO_TRANSLATE[ja]: Precio (€)",
-        "priceInputLabel": "TODO_TRANSLATE[ja]: Precio (€)",
-        "auctionSelectLabel": "TODO_TRANSLATE[ja]: Seleccionar subasta",
-        "commissionedPrice": "TODO_TRANSLATE[ja]: Precio con comisión",
-        "noDecimals": "TODO_TRANSLATE[ja]: No se permiten decimales",
-        "selectCategoryTitle": "TODO_TRANSLATE[ja]: Seleccionar categoría",
-        "selectCategoryDescription": "TODO_TRANSLATE[ja]: Selecciona la categoría del artículo a crear"
+        "removeTitle": "商品を削除",
+        "removeDescription": "この商品をオンラインストアから削除しますか？",
+        "assignTitle": "オークションに割り当てる",
+        "assignDescription": "商品は「利用可能」状態のオークションにのみ割り当てられます。",
+        "changePriceTitle": "価格変更",
+        "changePriceDescription": "価格を変更できるのは、商品にオファーがない場合のみです。",
+        "priceLabel": "価格 (ユーロ)",
+        "priceInputLabel": "価格 (ユーロ)",
+        "auctionSelectLabel": "オークションを選択",
+        "commissionedPrice": "手数料込み価格",
+        "noDecimals": "小数は使用できません",
+        "selectCategoryTitle": "カテゴリを選択",
+        "selectCategoryDescription": "作成する商品のカテゴリを選択してください"
       },
       "offers": {
-        "acceptTitle": "TODO_TRANSLATE[ja]: Aceptar oferta",
-        "acceptDescription": "TODO_TRANSLATE[ja]: Una vez aceptada, el comprador dispondrá de 24 horas para realizar el pago.",
-        "rejectTitle": "TODO_TRANSLATE[ja]: Rechazar oferta",
-        "rejectDescription": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres rechazar esta oferta? Esta acción no se puede deshacer.",
-        "confirmSaleTitle": "TODO_TRANSLATE[ja]: Confirmar venta",
-        "confirmSaleDescription": "TODO_TRANSLATE[ja]: El comprador ha aceptado tu contraoferta de %{amount}. Confirma que el artículo sigue disponible. Después dispondrá de 24 horas para pagar.",
-        "rejectSaleTitle": "TODO_TRANSLATE[ja]: Rechazar venta",
-        "rejectSaleDescription": "TODO_TRANSLATE[ja]: Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación.",
+        "acceptTitle": "オファーを承認",
+        "acceptDescription": "承認後、購入者は24時間以内に決済する必要があります。",
+        "rejectTitle": "オファーを拒否",
+        "rejectDescription": "このオファーを拒否しますか？この操作は元に戻せません。",
+        "confirmSaleTitle": "販売を確認する",
+        "confirmSaleDescription": "購入者が%{amount}のカウンターオファーを承認しました。商品がまだ購入可能であることを確認してください。その後、購入者は24時間以内に決済する必要があります。",
+        "rejectSaleTitle": "販売を拒否",
+        "rejectSaleDescription": "商品を販売できなくなった場合は、この取引を拒否してください。交渉は終了します。",
         "acceptCounter": {
-          "title": "TODO_TRANSLATE[ja]: Aceptar contraoferta",
-          "description": "TODO_TRANSLATE[ja]: Estás aceptando la contraoferta de la tienda. La tienda deberá confirmar que el artículo sigue disponible antes de que puedas realizar el pago.",
-          "amount": "TODO_TRANSLATE[ja]: Importe acordado",
-          "confirm": "TODO_TRANSLATE[ja]: Aceptar contraoferta",
-          "cancel": "TODO_TRANSLATE[ja]: Cancelar"
+          "title": "カウンターオファーを承認",
+          "description": "ストアのカウンターオファーを承認します。決済に進む前に、ストアが商品の在庫を確認する必要があります。",
+          "amount": "合意金額",
+          "confirm": "カウンターオファーを承認",
+          "cancel": "キャンセル"
         },
         "rejectCounter": {
-          "title": "TODO_TRANSLATE[ja]: Rechazar contraoferta",
-          "description": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres rechazar esta contraoferta? La negociación se cerrará y esta acción no se puede deshacer.",
-          "confirm": "TODO_TRANSLATE[ja]: Rechazar contraoferta",
-          "cancel": "TODO_TRANSLATE[ja]: Cancelar"
+          "title": "カウンターオファーを拒否",
+          "description": "このカウンターオファーを拒否しますか？交渉は終了し、この操作は元に戻せません。",
+          "confirm": "カウンターオファーを拒否",
+          "cancel": "キャンセル"
         },
         "userCounter": {
-          "title": "TODO_TRANSLATE[ja]: Realizar contraoferta",
-          "description": "TODO_TRANSLATE[ja]: Introduce el importe que deseas proponer a la tienda.",
-          "currentOffer": "TODO_TRANSLATE[ja]: Oferta actual",
-          "negotiationHistory": "TODO_TRANSLATE[ja]: Historial de negociación",
-          "you": "TODO_TRANSLATE[ja]: Tú",
-          "store": "TODO_TRANSLATE[ja]: Tienda",
-          "label": "TODO_TRANSLATE[ja]: Importe de la contraoferta (€)",
-          "invalidAmount": "TODO_TRANSLATE[ja]: Introduce un importe válido",
-          "sameAmount": "TODO_TRANSLATE[ja]: La contraoferta debe ser diferente al importe actual",
-          "confirm": "TODO_TRANSLATE[ja]: Enviar contraoferta",
-          "cancel": "TODO_TRANSLATE[ja]: Cancelar"
+          "title": "カウンターオファーをする",
+          "description": "ストアに提案する金額を入力します。",
+          "currentOffer": "現在のオファー",
+          "negotiationHistory": "交渉履歴",
+          "you": "あなた",
+          "store": "ストア",
+          "label": "カウンターオファー金額 (€)",
+          "invalidAmount": "有効な金額を入力してください",
+          "sameAmount": "カウンターオファーは現在の金額と異なっていなければなりません",
+          "confirm": "カウンターオファーを送信",
+          "cancel": "キャンセル"
         },
         "storeCounter": {
-          "title": "TODO_TRANSLATE[ja]: Realizar contraoferta",
-          "description": "TODO_TRANSLATE[ja]: Introduce el importe que deseas proponer al comprador.",
-          "currentOffer": "TODO_TRANSLATE[ja]: Oferta actual",
-          "negotiationHistory": "TODO_TRANSLATE[ja]: Historial de negociación",
-          "buyer": "TODO_TRANSLATE[ja]: Comprador",
-          "store": "TODO_TRANSLATE[ja]: Tienda",
-          "label": "TODO_TRANSLATE[ja]: Importe de la contraoferta (€)",
-          "invalidAmount": "TODO_TRANSLATE[ja]: Introduce un importe válido",
-          "sameAmount": "TODO_TRANSLATE[ja]: La contraoferta debe ser diferente al importe actual",
-          "confirm": "TODO_TRANSLATE[ja]: Enviar contraoferta",
-          "cancel": "TODO_TRANSLATE[ja]: Cancelar"
+          "title": "カウンターオファーをする",
+          "description": "購入者に提案したい金額を入力します。",
+          "currentOffer": "現在のオファー",
+          "negotiationHistory": "交渉履歴",
+          "buyer": "購入者",
+          "store": "ストア",
+          "label": "カウンターオファー金額 (€)",
+          "invalidAmount": "有効な金額を入力してください",
+          "sameAmount": "カウンターオファーは現在の金額と異なっていなければなりません",
+          "confirm": "カウンターオファーを送信",
+          "cancel": "キャンセル"
         },
         "history": {
-          "title": "TODO_TRANSLATE[ja]: Historial de ofertas",
-          "you": "TODO_TRANSLATE[ja]: Tú",
-          "buyer": "TODO_TRANSLATE[ja]: Comprador",
-          "store": "TODO_TRANSLATE[ja]: Tienda"
+          "title": "オファー履歴",
+          "you": "あなた",
+          "buyer": "購入者",
+          "store": "ストア"
         }
       },
       "soldArticle": {
-        "importantMessage": "TODO_TRANSLATE[ja]: No podrás revertir esta acción.",
-        "notifyAgainTitle": "TODO_TRANSLATE[ja]: Notificar de nuevo",
-        "notifyAgainDescription": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres notificar de nuevo al usuario? Se le enviará un correo electrónico con las instrucciones para completar el pago.",
-        "sendToOnlineStoreTitle": "TODO_TRANSLATE[ja]: Enviar a tienda online",
-        "sendToOnlineStoreDescription": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres enviar el artículo a la tienda en linea? El usuario ya no podrá hacer el pago por este artículo y deberas activar el artículo manualmente en tus artículos de la tienda online",
-        "cancelAcquisitionTitle": "TODO_TRANSLATE[ja]: Cancelar adquisición",
-        "cancelAcquisitionDescription": "TODO_TRANSLATE[ja]: ¿Estás seguro de que quieres cancelar la adquisición? El usuario ya no podrá hacer el pago por este artículo y no podrás gestionar más este artículo.",
-        "grantSecondTitle": "TODO_TRANSLATE[ja]: Otorgar a segundo mayor postor",
-        "grantSecondDescription": "TODO_TRANSLATE[ja]: ¿Está seguro de que desea otorgar el artículo al segundo mayor postor?"
+        "importantMessage": "この操作を元に戻すことはできません。",
+        "notifyAgainTitle": "再度通知する",
+        "notifyAgainDescription": "ユーザーにもう一度通知しますか？決済手順を記載したメールが送信されます。",
+        "sendToOnlineStoreTitle": "オンラインストアに送る",
+        "sendToOnlineStoreDescription": "この商品をオンラインストアへ移しますか？ユーザーはこの商品の決済ができなくなり、オンラインストアの商品一覧から手動で有効にする必要があります。",
+        "cancelAcquisitionTitle": "落札を取り消す",
+        "cancelAcquisitionDescription": "落札を取り消しますか？ユーザーはこの商品の決済ができなくなり、出品者もこの商品を管理できなくなります。",
+        "grantSecondTitle": "2番目の最高額入札者に落札権を付与",
+        "grantSecondDescription": "この商品を2番目の最高額入札者に付与しますか？"
       }
     }
   },
   "globals": {
-    "back": "TODO_TRANSLATE[ja]: Volver",
-    "refreshPage": "TODO_TRANSLATE[ja]: Refrescar página",
-    "goToHome": "TODO_TRANSLATE[ja]: Ir a la página principal"
+    "back": "戻る",
+    "refreshPage": "ページを更新",
+    "goToHome": "メインページに移動"
   },
   "commonErrors": {
-    "networkError": "TODO_TRANSLATE[ja]: Error de conexión a internet",
-    "applicationError": "TODO_TRANSLATE[ja]: Ocurrió un error al cargar la aplicación",
-    "defaultMessage": "TODO_TRANSLATE[ja]: Si crees que esto es un error, por favor contacta con soporte.",
-    "tryAgain": "TODO_TRANSLATE[ja]: Intentar de nuevo",
-    "generic": "TODO_TRANSLATE[ja]: Algo salió mal",
-    "loadFailedTitle": "TODO_TRANSLATE[ja]: Error al cargar",
-    "loadFailedMessage": "TODO_TRANSLATE[ja]: No se pudo cargar la información. Por favor, intenta de nuevo.",
-    "retryButton": "TODO_TRANSLATE[ja]: Reintentar",
-    "missingAuctionId": "TODO_TRANSLATE[ja]: No se proporcionó el ID de la subasta",
-    "auctionIdRequired": "TODO_TRANSLATE[ja]: ID de subasta requerido",
-    "articleIdRequired": "TODO_TRANSLATE[ja]: ID de artículo requerido",
-    "inactiveAuctioneerAccount": "TODO_TRANSLATE[ja]: Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.",
-    "permissionDenied": "TODO_TRANSLATE[ja]: Permiso denegado",
-    "auctionsLoadFailed": "TODO_TRANSLATE[ja]: No se pudieron cargar las subastas.",
-    "invalidAuctionId": "TODO_TRANSLATE[ja]: ID de subasta inválido",
-    "liveAuctionInfoLoadFailed": "TODO_TRANSLATE[ja]: Hubo un error al cargar la información",
-    "liveAuctionStreamLoadFailed": "TODO_TRANSLATE[ja]: Error al cargar el stream de la subasta",
-    "emailMissing": "TODO_TRANSLATE[ja]: Falta el correo electrónico.",
-    "invalidLoginCredentials": "TODO_TRANSLATE[ja]: Credenciales de acceso inválidas",
-    "emailNotConfirmed": "TODO_TRANSLATE[ja]: Email no confirmado",
-    "userNotFound": "TODO_TRANSLATE[ja]: Usuario no encontrado",
-    "tooManyRequests": "TODO_TRANSLATE[ja]: Demasiados intentos de inicio de sesión. Por favor, intenta más tarde."
+    "networkError": "インターネット接続エラー",
+    "applicationError": "アプリケーションのロード中にエラーが発生しました",
+    "defaultMessage": "誤りと思われる場合はサポートへお問い合わせください。",
+    "tryAgain": "もう一度お試しください",
+    "generic": "何か問題が発生しました",
+    "loadFailedTitle": "読み込みエラー",
+    "loadFailedMessage": "情報を読み込めませんでした。もう一度試してください。",
+    "retryButton": "リトライ",
+    "missingAuctionId": "オークションIDが提供されていませんでした",
+    "auctionIdRequired": "オークションIDが必要です",
+    "articleIdRequired": "商品IDが必要です",
+    "inactiveAuctioneerAccount": "アカウントはまだ有効化されていません。有効化を待つか、サポートへお問い合わせください。",
+    "permissionDenied": "権限がありません",
+    "auctionsLoadFailed": "オークションの読み込みに失敗しました。",
+    "invalidAuctionId": "オークションIDが無効です",
+    "liveAuctionInfoLoadFailed": "情報の読み込み中にエラーが発生しました",
+    "liveAuctionStreamLoadFailed": "オークション ストリームの読み込みエラー",
+    "emailMissing": "メールアドレスがありません。",
+    "invalidLoginCredentials": "メールアドレスまたはパスワードが正しくありません",
+    "emailNotConfirmed": "メールが確認されていません",
+    "userNotFound": "ユーザーが見つかりません",
+    "tooManyRequests": "ログイン試行が多すぎます。後でもう一度試してください。"
   },
   "errorLoading": {
-    "title": "TODO_TRANSLATE[ja]: Error de Carga",
-    "fontError": "TODO_TRANSLATE[ja]: Error al cargar la información de la app. Por favor, reinicia la aplicación."
+    "title": "読み込みエラー",
+    "fontError": "アプリ情報の読み込みエラー。アプリを再起動してください。"
   },
   "chat": {
-    "title": "TODO_TRANSLATE[ja]: Chat en vivo",
-    "placeholder": "TODO_TRANSLATE[ja]: Escribe un mensaje...",
-    "connecting": "TODO_TRANSLATE[ja]: Conectando al chat...",
-    "disconnected": "TODO_TRANSLATE[ja]: Desconectado...",
-    "errorRetry": "TODO_TRANSLATE[ja]: Intenta recargar la pantalla",
-    "noMessages": "TODO_TRANSLATE[ja]: Aún no hay mensajes",
-    "loginToChat": "TODO_TRANSLATE[ja]: Inicia sesión para participar en el chat",
-    "sendError": "TODO_TRANSLATE[ja]: No se pudo enviar el mensaje",
-    "connectionError": "TODO_TRANSLATE[ja]: Error al conectar con el chat",
-    "connectionFailed": "TODO_TRANSLATE[ja]: Error al conectar con el chat",
-    "send": "TODO_TRANSLATE[ja]: Enviar"
+    "title": "ライブチャット",
+    "placeholder": "メッセージを入力してください...",
+    "connecting": "チャットに接続しています...",
+    "disconnected": "切断されました...",
+    "errorRetry": "画面を再読み込みしてください",
+    "noMessages": "まだメッセージはありません",
+    "loginToChat": "チャットに参加するにはログインしてください",
+    "sendError": "メッセージを送信できませんでした",
+    "connectionError": "チャットへの接続エラー",
+    "connectionFailed": "チャットに接続できませんでした",
+    "send": "送信"
   },
   "notFound": {
-    "title": "TODO_TRANSLATE[ja]: Página no encontrada",
-    "pageNotFound": "TODO_TRANSLATE[ja]: ¡Ups! Esta página no existe",
-    "description": "TODO_TRANSLATE[ja]: La página que buscas no está disponible o ha sido movida",
-    "goHome": "TODO_TRANSLATE[ja]: Ir al inicio"
+    "title": "ページが見つかりません",
+    "pageNotFound": "おっと！このページは存在しません",
+    "description": "お探しのページは利用できないか、移動されました",
+    "goHome": "ホームへ"
   }
 }
