@@ -506,6 +506,11 @@
       "missingParameters": "Faltan parámetros"
     },
     "auth": {
+      "accountDisabled": "Cuenta desactivada",
+      "invalidSession": "Sesión inválida",
+      "userMissing": "Usuario faltante",
+      "userInvalidOrMissing": "Usuario inválido o faltante",
+      "auctioneerAccountInactive": "Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.",
       "userNotAuthenticated": "Usuario no autenticado",
       "notAuthorized": "No autorizado",
       "userLoadFailed": "Error obteniendo el usuario",

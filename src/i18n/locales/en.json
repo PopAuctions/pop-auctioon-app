@@ -506,6 +506,11 @@
       "missingParameters": "Missing parameters"
     },
     "auth": {
+      "accountDisabled": "Account disabled",
+      "invalidSession": "Invalid session",
+      "userMissing": "Missing user",
+      "userInvalidOrMissing": "Invalid or missing user",
+      "auctioneerAccountInactive": "Your account is not yet active. Wait for activation or contact support for more information.",
       "userNotAuthenticated": "User not authenticated",
       "notAuthorized": "Not authorized",
       "userLoadFailed": "Error getting user",
