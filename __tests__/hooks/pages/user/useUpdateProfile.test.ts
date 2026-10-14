@@ -2,12 +2,18 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { useUpdateProfile } from '@/hooks/pages/user/useUpdateProfile';
 
 const mockSecurePost = jest.fn();
+const mockBase64 = jest.fn();
 
 jest.mock('@/hooks/api/useSecureApi', () => ({
   useSecureApi: () => ({ securePost: mockSecurePost }),
 }));
 jest.mock('@/lib/error/sentry-error-report', () => ({
   sentryErrorReport: jest.fn(),
+}));
+jest.mock('expo-file-system', () => ({
+  File: jest.fn().mockImplementation((uri: string) => ({
+    base64: () => mockBase64(uri),
+  })),
 }));
 
 const profile = {
@@ -22,6 +28,7 @@ const profile = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockBase64.mockResolvedValue('encoded-profile-picture');
 });
 
 it('preserves the JSON profile-update request and success state', async () => {
@@ -72,7 +79,7 @@ it('does not upload the existing remote profile picture again', async () => {
   expect(result.current.status).toBe('success');
 });
 
-it('keeps using multipart data when a new local profile picture is selected', async () => {
+it('sends a new local profile picture in the JSON upload format', async () => {
   mockSecurePost.mockResolvedValue({ data: {}, error: undefined });
   const { result } = renderHook(() => useUpdateProfile());
 
@@ -86,9 +93,23 @@ it('keeps using multipart data when a new local profile picture is selected', as
 
   expect(mockSecurePost).toHaveBeenCalledWith({
     endpoint: expect.any(String),
-    data: expect.any(FormData),
+    data: {
+      username: profile.username,
+      name: profile.name,
+      lastName: profile.lastName,
+      phoneNumber: profile.phoneNumber,
+      oldProfilePicture: 'https://example.com/current-profile.webp',
+      oldPhoneNumber: profile.oldPhoneNumber,
+      profilePicture: {
+        src: 'file:///cache/new-profile.webp',
+        name: 'profile.webp',
+        type: 'image/webp',
+        arrayBuffer: 'encoded-profile-picture',
+      },
+    },
     options: { timeout: 30000 },
   });
+  expect(mockBase64).toHaveBeenCalledWith('file:///cache/new-profile.webp');
   expect(result.current.status).toBe('success');
 });
 

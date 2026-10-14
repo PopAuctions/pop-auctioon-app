@@ -2,13 +2,32 @@ import { useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type { ActionResponse, RequestStatus } from '@/types/types';
+import type {
+  ActionResponse,
+  RequestStatus,
+  UploadFile,
+} from '@/types/types';
 import type { UserEditSchema } from '@/utils/schemas';
 import type * as z from 'zod';
 import type { MessageKey } from '@/i18n';
+import { File } from 'expo-file-system';
 
 const PROFILE_UPDATE_UNEXPECTED_ERROR =
   'errors.profile.updateUnexpected' as const satisfies MessageKey;
+
+const createProfilePictureUpload = async (uri: string): Promise<UploadFile> => {
+  const file = new File(uri);
+  const arrayBuffer = await file.base64();
+  const extension = uri.split('.').at(-1)?.toLowerCase() || 'webp';
+  const mimeExtension = extension === 'jpg' ? 'jpeg' : extension;
+
+  return {
+    src: uri,
+    name: `profile.${extension}`,
+    type: `image/${mimeExtension}`,
+    arrayBuffer,
+  };
+};
 
 /**
  * Tipos inferidos de los schemas de edición
@@ -34,7 +53,7 @@ export type UpdateProfileData = UserEditSchemaType & UpdateProfileExtraData;
  *
  * Maneja automáticamente:
  * - Envío como JSON cuando no hay imagen
- * - Envío como FormData cuando hay imagen (más eficiente para archivos)
+ * - Conversión de una imagen nueva al formato de upload aceptado por la API
  * - Timeout extendido para uploads de imágenes
  *
  * @returns {ActionResponse<null>} Estado de la operación y función updateProfile
@@ -77,32 +96,21 @@ export const useUpdateProfile = (): ActionResponse<null, MessageKey> & {
         data.profilePicture !== data.oldProfilePicture;
 
       if (hasNewImage) {
-        // CASO 1: Con imagen - usar FormData
-        const formData = new FormData();
-
-        // Campos básicos (USER)
-        formData.append('username', data.username);
-        formData.append('name', data.name);
-        formData.append('lastName', data.lastName);
-        formData.append('phoneNumber', data.phoneNumber || '');
-        formData.append('oldProfilePicture', data.oldProfilePicture);
-        formData.append('oldPhoneNumber', data.oldPhoneNumber);
-
-        // Agregar archivo de imagen
-        if (data.profilePicture) {
-          const uriParts = data.profilePicture.split('.');
-          const fileType = uriParts[uriParts.length - 1];
-
-          formData.append('profilePicture', {
-            uri: data.profilePicture,
-            name: `profile.${fileType}`,
-            type: `image/${fileType}`,
-          } as any);
-        }
+        const profilePicture = await createProfilePictureUpload(
+          data.profilePicture as string
+        );
 
         const response = await securePost({
           endpoint: SECURE_ENDPOINTS.USER.EDIT_INFO,
-          data: formData,
+          data: {
+            username: data.username,
+            name: data.name,
+            lastName: data.lastName,
+            phoneNumber: data.phoneNumber || '',
+            oldProfilePicture: data.oldProfilePicture,
+            oldPhoneNumber: data.oldPhoneNumber,
+            profilePicture,
+          },
           options: {
             timeout: 30000, // 30 segundos para uploads
           },
