@@ -25,13 +25,16 @@ describe('app locale registry', () => {
   it('keeps the existing platform locale conventions', () => {
     expect(LOCALE_CONFIG.es.intlLocale).toBe('es-ES');
     expect(LOCALE_CONFIG.en.intlLocale).toBe('en-US');
+    expect(LOCALE_CONFIG.ja.intlLocale).toBe('ja-JP');
     expect(LOCALE_CONFIG.es.currencyLocale).toBe('es-ES');
     expect(LOCALE_CONFIG.en.currencyLocale).toBe('en-IE');
+    expect(LOCALE_CONFIG.ja.currencyLocale).toBe('ja-JP');
   });
 
   it('validates locale values', () => {
     expect(isLang('es')).toBe(true);
     expect(isLang('en')).toBe(true);
+    expect(isLang('ja')).toBe(true);
     expect(isLang('fr')).toBe(false);
     expect(isLang(undefined)).toBe(false);
   });
@@ -39,6 +42,7 @@ describe('app locale registry', () => {
   it('resolves untrusted locale values to a supported language', () => {
     expect(resolveLang('en')).toBe('en');
     expect(resolveLang('es')).toBe('es');
+    expect(resolveLang('ja')).toBe('ja');
     expect(resolveLang('it')).toBe(DEFAULT_LANG);
     expect(resolveLang(null)).toBe(DEFAULT_LANG);
   });

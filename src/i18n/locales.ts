@@ -13,6 +13,13 @@ export const LOCALE_CONFIG = {
     intlLocale: 'en-US',
     currencyLocale: 'en-IE',
   },
+  ja: {
+    label: '日本語',
+    shortLabel: 'Ja',
+    flag: '🇯🇵',
+    intlLocale: 'ja-JP',
+    currencyLocale: 'ja-JP',
+  },
 } as const;
 
 export type Lang = keyof typeof LOCALE_CONFIG;
