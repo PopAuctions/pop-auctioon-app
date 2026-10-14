@@ -8,6 +8,7 @@ let mockI18nLocale = 'es';
 
 // Mock de los módulos de i18n
 jest.mock('@/i18n', () => {
+  const { SUPPORTED_LANGUAGES } = jest.requireActual('@/i18n/locales');
   const mockTranslate = jest.fn((key: string) => {
     // Importar traducciones reales dentro del mock
     const mockEsTranslations = require('@/i18n/locales/es.json');
@@ -41,7 +42,7 @@ jest.mock('@/i18n', () => {
     changeLocale: jest.fn((newLocale: string) => {
       mockI18nLocale = newLocale;
     }),
-    getAvailableLocales: jest.fn(() => ['es', 'en']),
+    getAvailableLocales: jest.fn(() => [...SUPPORTED_LANGUAGES]),
   };
 });
 

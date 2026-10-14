@@ -10,7 +10,6 @@ import {
 describe('app locale registry', () => {
   it('derives supported languages from the registry', () => {
     expect(SUPPORTED_LANGUAGES).toEqual(Object.keys(LOCALE_CONFIG));
-    expect(SUPPORTED_LANGUAGES).toEqual(['es', 'en']);
     expect(DEFAULT_LANG).toBe('es');
   });
 

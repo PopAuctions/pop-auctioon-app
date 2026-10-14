@@ -1,4 +1,7 @@
 import { getApiMessageMetadata, resolveApiMessage } from '@/i18n/api-message';
+import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
+
+const supportedLanguageKeys = [...SUPPORTED_LANGUAGES].sort();
 
 describe('API message compatibility', () => {
   it('accepts known codes and defaults missing parameters to an empty object', () => {
@@ -53,7 +56,7 @@ describe('API message compatibility', () => {
       { success: { en: 'legacy-en', es: 'legacy-es' }, messageCode },
       'success'
     );
-    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
   });
 
   it('uses the legacy map when the message code is unknown', () => {
@@ -81,7 +84,7 @@ describe('API message compatibility', () => {
       'error'
     );
 
-    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
   });
 
   it.each([
@@ -100,7 +103,7 @@ describe('API message compatibility', () => {
         'error'
       );
 
-      expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+      expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
     }
   );
 
@@ -166,7 +169,7 @@ describe('API message compatibility', () => {
       'error'
     );
 
-    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
   });
 
   it.each([
@@ -228,7 +231,7 @@ describe('API message compatibility', () => {
       'error'
     );
 
-    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
   });
 
   it.each([
@@ -288,7 +291,7 @@ describe('API message compatibility', () => {
       'error'
     );
 
-    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
   });
 
   it.each([
@@ -308,7 +311,7 @@ describe('API message compatibility', () => {
         'error'
       );
 
-      expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+      expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
     }
   );
 
@@ -330,7 +333,7 @@ describe('API message compatibility', () => {
   it('keeps legacy string errors compatible with every supported locale', () => {
     const resolved = resolveApiMessage({ error: 'legacy' }, 'error');
 
-    expect(Object.keys(resolved ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
     expect(new Set(Object.values(resolved ?? {}))).toEqual(new Set(['legacy']));
   });
 

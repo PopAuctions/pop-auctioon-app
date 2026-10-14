@@ -1,7 +1,7 @@
 import Toast from 'react-native-toast-message';
 import type { Lang, LangMap } from '@/types/types';
 import { type ToastVariant } from '@/providers/ToastProvider';
-import { t } from '@/i18n';
+import { isMessageKey, t } from '@/i18n';
 import type { MessageKey } from '@/i18n';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
@@ -16,7 +16,8 @@ export type ToastMessageDescriptor = {
 };
 
 /** @deprecated Remove after legacy mobile API responses use error codes. */
-export type LegacyToastDescription = LangMap;
+export type LegacyToastDescription = Readonly<{ en: string; es: string }> &
+  Partial<LangMap>;
 
 export type ToastDescription =
   string | ToastMessageDescriptor | LegacyToastDescription;
@@ -66,8 +67,11 @@ export function useToast(lang: Lang) {
     let text2: string | undefined;
     if (description) {
       if (typeof description === 'string') {
-        // Translation key string - translate it
-        text2 = t(description as any, { locale: lang });
+        // Message keys are translated here. Strings already resolved at an API
+        // or hook boundary must be displayed without translating them twice.
+        text2 = isMessageKey(description)
+          ? t(description, { locale: lang })
+          : description;
       } else if ('code' in description) {
         text2 = t(description.code, {
           ...description.params,
@@ -75,7 +79,7 @@ export function useToast(lang: Lang) {
         });
       } else {
         // Temporary adapter for legacy bilingual API responses.
-        text2 = description[lang];
+        text2 = description[lang] ?? t('errors.unexpected', { locale: lang });
       }
     }
 

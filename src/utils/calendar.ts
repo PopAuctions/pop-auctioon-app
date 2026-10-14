@@ -42,7 +42,7 @@ export function getCalendarMonths(): Map<string, CalendarMonthEntry> {
 /**
  * Obtiene el nombre del mes actual en el idioma especificado
  *
- * @param locale - 'es' | 'en'
+ * @param locale - Supported application locale
  * @returns Nombre del mes actual
  */
 export function getCurrentMonthName(locale: Lang = DEFAULT_LANG): string {
@@ -56,7 +56,7 @@ export function getCurrentMonthName(locale: Lang = DEFAULT_LANG): string {
  * Obtiene el nombre del mes traducido para un número de mes específico
  *
  * @param monthNumber - Número del mes (1-12) como string o number
- * @param locale - Idioma para la traducción ('es' | 'en')
+ * @param locale - Idioma soportado para la traducción
  * @returns Nombre del mes traducido
  */
 export function getMonthName(
@@ -107,7 +107,7 @@ export function formatCalendarDate(
  * Ejemplo: "October 8, 2025 at 6:43 AM"
  *
  * @param dateString - Fecha en formato string ISO
- * @param lang - Idioma ('es' | 'en')
+ * @param lang - Idioma soportado por la aplicación
  * @returns Fecha formateada con hora
  */
 export function formatPaymentDate(

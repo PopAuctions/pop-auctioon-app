@@ -19,6 +19,7 @@ import { ToastVariant } from '@/providers/ToastProvider';
 import { AppState, AppStateStatus } from 'react-native';
 import { t, type MessageKey } from '@/i18n';
 import { resolveApiResponseMessage } from '@/i18n/api-message';
+import type { Lang } from '@/i18n/locales';
 
 type LoginError =
   | 'INVALID_CREDENTIALS'
@@ -136,7 +137,7 @@ const getErrorCode = (error: {
   return 'NETWORK_ERROR';
 };
 
-const getErrorMessage = (errorCode: LoginError, locale: 'en' | 'es') =>
+const getErrorMessage = (errorCode: LoginError, locale: Lang) =>
   errorCode ? String(t(AUTH_MESSAGES[errorCode], { locale })) : '';
 
 const EMAIL_CONFIRM_COOLDOWN_MS = 120_000;
@@ -228,7 +229,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sendConfirmInFlightRef.current[key] = false;
       }
     },
-    [protectedPost]
+    [locale, protectedPost]
   );
 
   const resetAuthState = useCallback(() => {

@@ -1,5 +1,8 @@
 import { renderHook } from '@testing-library/react-native';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
+import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
+
+const supportedLanguageKeys = [...SUPPORTED_LANGUAGES].sort();
 
 // Mock all dependencies first
 global.fetch = jest.fn();
@@ -265,7 +268,9 @@ describe('useSecureApi - Simple Tests', () => {
 
     expect(response.status).toBe(400);
     expect(response.data).toBeNull();
-    expect(Object.keys(response.error ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(response.error ?? {}).sort()).toEqual(
+      supportedLanguageKeys
+    );
     expect(Object.values(response.error ?? {})).toEqual(
       expect.arrayContaining([expect.stringContaining('3')])
     );
@@ -299,7 +304,9 @@ describe('useSecureApi - Simple Tests', () => {
     expect(response.status).toBe(200);
     expect(response.data).toEqual(payload.data);
     expect(response.error).toBeUndefined();
-    expect(Object.keys(response.success ?? {}).sort()).toEqual(['en', 'es']);
+    expect(Object.keys(response.success ?? {}).sort()).toEqual(
+      supportedLanguageKeys
+    );
     expect(response.success).not.toEqual(payload.success);
     expect(response.messageCode).toBe(payload.messageCode);
     expect(response.messageParams).toEqual({});
