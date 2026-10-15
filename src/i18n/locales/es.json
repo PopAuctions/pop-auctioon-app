@@ -1037,6 +1037,26 @@
     "usernameMaxLengthAuctioneer": "Máx. %{max} caracteres)",
     "emailRequired": "Email requerido"
   },
+  "commonUi": {
+    "total": "Total",
+    "minimum": "Mín.",
+    "maximum": "Máx.",
+    "accessibility": {
+      "previousAuction": "Subasta anterior",
+      "previousAuctionHint": "Navega a la subasta anterior del carrusel",
+      "nextAuction": "Siguiente subasta",
+      "nextAuctionHint": "Navega a la siguiente subasta del carrusel",
+      "previousArticlePage": "Página anterior de artículos",
+      "previousArticlePageHint": "Navega a la página anterior del carrusel",
+      "nextArticlePage": "Siguiente página de artículos",
+      "nextArticlePageHint": "Navega a la siguiente página del carrusel",
+      "pageOf": "Página %{page} de %{total}",
+      "decreaseBidByTen": "Reducir la puja en 10",
+      "increaseBidByTen": "Aumentar la puja en 10",
+      "articleImage": "Imagen del artículo",
+      "userImage": "Imagen del usuario"
+    }
+  },
   "commonActions": {
     "loading": "Cargando...",
     "error": "Error",

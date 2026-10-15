@@ -10,6 +10,7 @@ import {
 import type { Auction, Lang } from '@/types/types';
 import { AuctionsSliderItem } from './AuctionsSliderItem';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 const ITEMS_GAP = 32;
 
@@ -20,6 +21,7 @@ export const AuctionsSlider = ({
   auctions: Auction[];
   locale: Lang;
 }) => {
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList<Auction>>(null);
   const [page, setPage] = useState(0);
@@ -75,8 +77,12 @@ export const AuctionsSlider = ({
           }}
           disabled={page <= 0}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
-          accessibilityLabel='Previous auction'
-          accessibilityHint='Navigates to the previous auction in the slider'
+          accessibilityLabel={t('commonUi.accessibility.previousAuction', {
+            locale,
+          })}
+          accessibilityHint={t('commonUi.accessibility.previousAuctionHint', {
+            locale,
+          })}
         >
           <FontAwesomeIcon
             variant='bold'
@@ -99,7 +105,11 @@ export const AuctionsSlider = ({
                   : 'h-2 w-2 rounded-full bg-neutral-600'
               }
               accessibilityRole='progressbar'
-              accessibilityLabel={`Page ${page + 1} of ${auctions.length}`}
+              accessibilityLabel={t('commonUi.accessibility.pageOf', {
+                locale,
+                page: page + 1,
+                total: auctions.length,
+              })}
             />
           ))}
         </View>
@@ -110,8 +120,12 @@ export const AuctionsSlider = ({
           }}
           disabled={page >= auctions.length - 1}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
-          accessibilityLabel='Next auction'
-          accessibilityHint='Navigates to the next auction in the slider'
+          accessibilityLabel={t('commonUi.accessibility.nextAuction', {
+            locale,
+          })}
+          accessibilityHint={t('commonUi.accessibility.nextAuctionHint', {
+            locale,
+          })}
         >
           <FontAwesomeIcon
             variant='bold'

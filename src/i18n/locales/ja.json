@@ -1037,6 +1037,26 @@
     "usernameMaxLengthAuctioneer": "%{max}文字以内",
     "emailRequired": "メールアドレスが必要です"
   },
+  "commonUi": {
+    "total": "合計",
+    "minimum": "最小",
+    "maximum": "最大",
+    "accessibility": {
+      "previousAuction": "前のオークション",
+      "previousAuctionHint": "スライダー内の前のオークションに移動します",
+      "nextAuction": "次のオークション",
+      "nextAuctionHint": "スライダー内の次のオークションに移動します",
+      "previousArticlePage": "前の商品ページ",
+      "previousArticlePageHint": "スライダー内の前のページに移動します",
+      "nextArticlePage": "次の商品ページ",
+      "nextArticlePageHint": "スライダー内の次のページに移動します",
+      "pageOf": "%{total}ページ中%{page}ページ",
+      "decreaseBidByTen": "入札額を10下げる",
+      "increaseBidByTen": "入札額を10上げる",
+      "articleImage": "商品の画像",
+      "userImage": "ユーザー画像"
+    }
+  },
   "commonActions": {
     "loading": "読み込み中...",
     "error": "エラー",
