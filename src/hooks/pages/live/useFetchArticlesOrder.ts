@@ -4,20 +4,17 @@ import type {
   ActionResponse,
   CustomArticleLiveAuto,
   Lang,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useToast } from '@/hooks/useToast';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { t } from '@/i18n';
+import type { MessageKey } from '@/i18n';
 
-const TEXTS = {
-  es: {
-    retry: 'Reintentar',
-  },
-  en: {
-    retry: 'Retry',
-  },
-};
+const ARTICLES_LOAD_ERROR =
+  'errors.live.articlesLoadFailed' as const satisfies MessageKey;
+const ARTICLES_LOAD_RETRY_ERROR =
+  'errors.live.articlesLoadRetry' as const satisfies MessageKey;
 
 export const useFetchArticlesOrder = ({
   articlesOrderKey,
@@ -25,10 +22,10 @@ export const useFetchArticlesOrder = ({
 }: {
   articlesOrderKey: string;
   locale: Lang;
-}): ActionResponse<CustomArticleLiveAuto[]> => {
+}): ActionResponse<CustomArticleLiveAuto[], MessageKey> => {
   const [articles, setArticles] = useState<CustomArticleLiveAuto[]>([]);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
   const { callToast } = useToast(locale);
   const fetchedKeyRef = useRef<string | null>(null);
@@ -43,24 +40,15 @@ export const useFetchArticlesOrder = ({
     if (res.error) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Error fetching articles information. Click to retry.',
-          es: 'Error al obtener los artículos. Haz clic para reintentar.',
-        },
-        actionLabel: TEXTS[locale].retry,
+        description: ARTICLES_LOAD_RETRY_ERROR,
+        actionLabel: t('commonErrors.retryButton', { locale }),
         onAction: fetchArticlesOrder,
         durationMs: 7000,
       });
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching articles information.',
-        es: 'Error al obtener los artículos.',
-      });
+      setErrorMessage(ARTICLES_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching articles information.',
-          es: 'Error al obtener los artículos.',
-        },
+        message: ARTICLES_LOAD_ERROR,
       };
     }
 

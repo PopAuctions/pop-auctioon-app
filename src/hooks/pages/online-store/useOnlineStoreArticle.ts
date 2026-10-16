@@ -3,11 +3,9 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import type {
-  AnyArticleFormValues,
-  AuctionCategories,
-  LangMap,
-} from '@/types/types';
+import type { MessageKey } from '@/i18n';
+import type { AnyArticleFormValues, AuctionCategories } from '@/types/types';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface FunctionResponse {
   status: 'success' | 'error';
@@ -31,6 +29,13 @@ interface EditArticleImagesOrderArgs {
   articleId: number;
   newOrder: string[];
 }
+
+const CREATE_ERROR =
+  'errors.onlineStoreArticle.createFailed' satisfies MessageKey;
+const UPDATE_ERROR =
+  'errors.onlineStoreArticle.updateFailed' satisfies MessageKey;
+const IMAGE_ORDER_ERROR =
+  'errors.onlineStoreArticle.imageUpdateFailed' satisfies MessageKey;
 
 export const useOnlineStoreArticle = (): {
   createArticle: (args: CreateArticleArgs) => Promise<FunctionResponse>;
@@ -57,7 +62,7 @@ export const useOnlineStoreArticle = (): {
         category,
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.NEW_ARTICLE,
         data: payload,
         options: {
@@ -66,11 +71,27 @@ export const useOnlineStoreArticle = (): {
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            CREATE_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          CREATE_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -81,12 +102,7 @@ export const useOnlineStoreArticle = (): {
 
       console.error('ERROR_CREATE_ONLINE_STORE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error creating article',
-        es: 'Error al crear el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: CREATE_ERROR });
       return { status: 'error' };
     }
   };
@@ -108,7 +124,7 @@ export const useOnlineStoreArticle = (): {
         },
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.EDIT_ARTICLE(articleId),
         data: {
           ...payload,
@@ -116,11 +132,27 @@ export const useOnlineStoreArticle = (): {
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            UPDATE_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          UPDATE_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -131,12 +163,7 @@ export const useOnlineStoreArticle = (): {
 
       console.error('ERROR_EDIT_ONLINE_STORE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating article',
-        es: 'Error al actualizar el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: UPDATE_ERROR });
       return { status: 'error' };
     }
   };
@@ -146,7 +173,7 @@ export const useOnlineStoreArticle = (): {
     newOrder,
   }: EditArticleImagesOrderArgs): Promise<FunctionResponse> => {
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint:
           SECURE_ENDPOINTS.MY_ONLINE_STORE.EDIT_ARTICLE_IMAGES_ORDER(articleId),
         data: {
@@ -155,11 +182,27 @@ export const useOnlineStoreArticle = (): {
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            IMAGE_ORDER_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          IMAGE_ORDER_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -170,12 +213,7 @@ export const useOnlineStoreArticle = (): {
 
       console.error('ERROR_EDIT_IMAGES_ORDER_ONLINE_STORE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating article images order',
-        es: 'Error al actualizar el orden de las imágenes del artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: IMAGE_ORDER_ERROR });
       return { status: 'error' };
     }
   };

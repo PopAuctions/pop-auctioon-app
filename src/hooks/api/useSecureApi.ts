@@ -8,10 +8,28 @@ import {
 } from '@/config/api-config';
 import { ApiEndpoint, LangMap } from '@/types/types';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import {
+  createLocalizedMessage,
+  getApiMessageMetadata,
+  resolveApiMessage,
+  type ApiMessageMetadata,
+} from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const REQUEST_GET_FAILED = 'errors.request.getFailed' satisfies MessageKey;
+const REQUEST_UPDATE_FAILED =
+  'errors.request.updateFailed' satisfies MessageKey;
+const REQUEST_DELETE_FAILED =
+  'errors.request.deleteFailed' satisfies MessageKey;
+const SERVER_CONNECTION_FAILED =
+  'errors.server.connection' satisfies MessageKey;
 
 interface ApiResponse<T = any> {
   data: T;
   error: LangMap;
+  success: LangMap;
+  messageCode: ApiMessageMetadata['messageCode'];
+  messageParams: ApiMessageMetadata['messageParams'];
   responseText: string;
   status: number;
   contentType: string;
@@ -92,29 +110,11 @@ export const useSecureApi = () => {
           // We’ll use this clone for text/json parsing when needed
           const responseClone = response.clone();
 
-          // Helper to build a default LangMap error
-          const defaultError: LangMap = {
-            es: 'Error al obtener información',
-            en: 'Error getting information',
-          };
+          // Keep the released LangMap shape, deriving it from the locale registry.
+          const defaultError = createLocalizedMessage(REQUEST_GET_FAILED);
 
           const getErrorMessage = (data: unknown): LangMap => {
-            if (data && typeof data === 'object' && 'error' in data) {
-              const anyData = data as any;
-
-              if (anyData.error && typeof anyData.error === 'object') {
-                return anyData.error as LangMap;
-              }
-
-              if (typeof anyData.error === 'string') {
-                return {
-                  en: anyData.error,
-                  es: anyData.error,
-                };
-              }
-            }
-
-            return defaultError;
+            return resolveApiMessage(data, 'error') ?? defaultError;
           };
 
           // 🔹 BINARY / NON-JSON MODE (parseJson === false)
@@ -138,10 +138,12 @@ export const useSecureApi = () => {
             // ❌ Error: try to parse JSON error, then text
             let errorMessage = defaultError;
             let responseText = '';
+            let messageMetadata: ApiMessageMetadata | undefined;
 
             try {
               const maybeJson = await responseClone.json();
               errorMessage = getErrorMessage(maybeJson);
+              messageMetadata = getApiMessageMetadata(maybeJson);
             } catch {
               try {
                 const textResponse = await responseClone.text();
@@ -161,6 +163,7 @@ export const useSecureApi = () => {
               error: errorMessage,
               responseText,
               contentType,
+              ...(messageMetadata ?? {}),
               ...(includeHeaders ? { headers: response.headers } : {}),
             };
           }
@@ -183,6 +186,11 @@ export const useSecureApi = () => {
             };
           }
 
+          const messageMetadata = getApiMessageMetadata(responseData);
+          const successMessage = response.ok
+            ? resolveApiMessage(responseData, 'success')
+            : undefined;
+
           return {
             // Si responseData tiene .data, usarlo; si no, usar responseData completo
             data: (responseData.data === undefined
@@ -190,6 +198,8 @@ export const useSecureApi = () => {
               : responseData.data) as T | undefined,
             status: response.status,
             error: response.ok ? undefined : getErrorMessage(responseData),
+            ...(successMessage ? { success: successMessage } : {}),
+            ...(messageMetadata ?? {}),
             ...(includeHeaders ? { headers: response.headers } : {}),
           };
         } catch {
@@ -211,10 +221,7 @@ export const useSecureApi = () => {
 
       return {
         status: 0,
-        error: {
-          es: 'Error al conectar con el servidor',
-          en: 'Error connecting to server',
-        },
+        error: createLocalizedMessage(SERVER_CONNECTION_FAILED),
       };
     },
     []
@@ -252,10 +259,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - protectedGet failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al obtener información',
-            en: 'Error getting information',
-          },
+          error: createLocalizedMessage(REQUEST_GET_FAILED),
         };
       }
     },
@@ -289,10 +293,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - protectedPost failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al obtener información',
-            en: 'Error getting information',
-          },
+          error: createLocalizedMessage(REQUEST_GET_FAILED),
         };
       }
     },
@@ -326,10 +327,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - protectedPatch failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al actualizar información',
-            en: 'Error updating information',
-          },
+          error: createLocalizedMessage(REQUEST_UPDATE_FAILED),
         };
       }
     },
@@ -360,10 +358,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - protectedDelete failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al eliminar información',
-            en: 'Error deleting information',
-          },
+          error: createLocalizedMessage(REQUEST_DELETE_FAILED),
         };
       }
     },
@@ -404,10 +399,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - secureGet failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al obtener información',
-            en: 'Error getting information',
-          },
+          error: createLocalizedMessage(REQUEST_GET_FAILED),
         };
       }
     },
@@ -454,10 +446,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - securePost failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al obtener información',
-            en: 'Error getting information',
-          },
+          error: createLocalizedMessage(REQUEST_GET_FAILED),
         };
       }
     },
@@ -504,10 +493,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - securePatch failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al actualizar información',
-            en: 'Error updating information',
-          },
+          error: createLocalizedMessage(REQUEST_UPDATE_FAILED),
         };
       }
     },
@@ -538,10 +524,7 @@ export const useSecureApi = () => {
         sentryErrorReport(error, `${endpoint} - secureDelete failed`);
         return {
           status: 400,
-          error: {
-            es: 'Error al eliminar información',
-            en: 'Error deleting information',
-          },
+          error: createLocalizedMessage(REQUEST_DELETE_FAILED),
         };
       }
     },

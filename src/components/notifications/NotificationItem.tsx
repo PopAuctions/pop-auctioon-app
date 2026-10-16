@@ -2,9 +2,10 @@ import { Pressable, View } from 'react-native';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomText } from '@/components/ui/CustomText';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
+import { t } from '@/i18n';
 import { DisplayedNotification, Lang } from '@/types/types';
 
-const formatRelativeDate = (dateString: string, locale: string) => {
+const formatRelativeDate = (dateString: string, locale: string, lang: Lang) => {
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -13,11 +14,23 @@ const formatRelativeDate = (dateString: string, locale: string) => {
   const hours = Math.floor(diffMs / (1000 * 60 * 60));
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (minutes < 1) return locale === 'es' ? 'Ahora mismo' : 'Just now';
+  if (minutes < 1)
+    return t('components.notification.relativeTime.now', { locale: lang });
   if (minutes < 60)
-    return locale === 'es' ? `Hace ${minutes} min` : `${minutes} min ago`;
-  if (hours < 24) return locale === 'es' ? `Hace ${hours} h` : `${hours} h ago`;
-  if (days < 7) return locale === 'es' ? `Hace ${days} d` : `${days} d ago`;
+    return t('components.notification.relativeTime.minutes', {
+      locale: lang,
+      count: minutes,
+    });
+  if (hours < 24)
+    return t('components.notification.relativeTime.hours', {
+      locale: lang,
+      count: hours,
+    });
+  if (days < 7)
+    return t('components.notification.relativeTime.days', {
+      locale: lang,
+      count: days,
+    });
 
   return date.toLocaleDateString(locale);
 };
@@ -33,6 +46,7 @@ export const NotificationItem = ({
   locale: string;
   onPress: (notification: DisplayedNotification) => void;
 }) => {
+  const texts = t('components.notification', { locale: lang });
   const title = notification.title[lang] ?? notification.title.en ?? '';
   const description =
     notification.description?.[lang] ?? notification.description?.en ?? null;
@@ -48,7 +62,7 @@ export const NotificationItem = ({
     >
       {notification.image ? (
         <CustomImage
-          alt='Notification Image'
+          alt={texts.imageAlt}
           src={notification.image}
           className='mr-3 h-16 w-16 rounded-xl'
           resizeMode='cover'
@@ -90,7 +104,7 @@ export const NotificationItem = ({
           type='bodysmall'
           className='text-slate-900'
         >
-          {formatRelativeDate(notification.createdAt, locale)}
+          {formatRelativeDate(notification.createdAt, locale, lang)}
         </CustomText>
       </View>
     </Pressable>

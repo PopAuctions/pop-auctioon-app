@@ -16,3 +16,14 @@ export type PathValue<
   : K extends keyof T
     ? T[K]
     : never;
+
+export type StringPath<T, P extends string = ''> = T extends string
+  ? P
+  : T extends object
+    ? {
+        [K in keyof T & string]: StringPath<
+          T[K],
+          P extends '' ? K : `${P}.${K}`
+        >;
+      }[keyof T & string]
+    : never;

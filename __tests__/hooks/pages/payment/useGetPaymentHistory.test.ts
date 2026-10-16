@@ -100,7 +100,9 @@ describe('useGetPaymentHistory', () => {
     });
 
     expect(result.current.data).toEqual([]);
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe(
+      'errors.payment.historyLoadFailed'
+    );
   });
 
   it('should handle empty array response', async () => {
@@ -160,10 +162,9 @@ describe('useGetPaymentHistory', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error loading payment history',
-      es: 'Error al cargar el historial de pagos',
-    });
+    expect(result.current.errorMessage).toBe(
+      'errors.payment.historyLoadFailed'
+    );
   });
 
   it('should update status to loading during fetch', async () => {

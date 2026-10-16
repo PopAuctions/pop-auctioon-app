@@ -15,7 +15,6 @@ import { SelectField } from '@/components/fields/SelectField';
 import { Button } from '@/components/ui/Button';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import { COUNTRIES_MAP_LABEL } from '@/constants/payment';
 import type { CountryValue, UserAddress } from '@/types/types';
 
 interface AddressSelectorProps {
@@ -35,6 +34,7 @@ export const AddressSelector = memo(function AddressSelector({
 }: AddressSelectorProps) {
   const { t, locale } = useTranslation();
   const paymentTranslations = t('screens.payment');
+  const countryLabels = t('displayLabels.country', { locale });
 
   return (
     <View className='mb-6'>
@@ -113,11 +113,7 @@ export const AddressSelector = memo(function AddressSelector({
             >
               {paymentTranslations.country}:
             </CustomText>{' '}
-            {
-              COUNTRIES_MAP_LABEL[locale][
-                selectedAddress.country as CountryValue
-              ]
-            }
+            {countryLabels[selectedAddress.country as CountryValue]}
           </CustomText>
           <CustomText
             type='bodysmall'

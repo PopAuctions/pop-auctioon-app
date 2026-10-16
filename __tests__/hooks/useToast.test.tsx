@@ -2,6 +2,7 @@ import { renderHook, act } from '@testing-library/react-native';
 import { useToast } from '@/hooks/useToast';
 import Toast from 'react-native-toast-message';
 import { triggerHaptic } from '@/utils/triggerHaptic';
+import type { Lang } from '@/i18n/locales';
 
 // Mock dependencies
 jest.mock('react-native-toast-message', () => ({
@@ -13,36 +14,53 @@ jest.mock('@/utils/triggerHaptic', () => ({
   triggerHaptic: jest.fn(),
 }));
 
-// Mock ToastProvider constants
-jest.mock('@/providers/ToastProvider', () => ({
-  TOAST_TEXTS: {
-    es: {
-      success: 'Éxito',
-      error: 'Error',
-      warning: 'Advertencia',
-      info: 'Información',
-    },
-    en: {
-      success: 'Success',
-      error: 'Error',
-      warning: 'Warning',
-      info: 'Information',
-    },
-  },
-}));
-
 // Mock i18n
 jest.mock('@/i18n', () => ({
-  t: jest.fn((key: string) => {
-    const translations: Record<string, string> = {
-      'screens.editProfile.updateSuccess': 'Profile updated successfully',
-      'screens.addresses.success': 'Address saved successfully',
-      'screens.billingInfo.deleteSuccess': 'Billing information deleted',
-      'screens.verifyPhone.codeSentSuccess': 'Code sent successfully',
-      'screens.editProfile.compressionError': 'Failed to compress image',
-    };
-    return translations[key] || key;
-  }),
+  isMessageKey: jest.fn(
+    (value: unknown) =>
+      typeof value === 'string' &&
+      (value.startsWith('common.') ||
+        value.startsWith('errors.') ||
+        value.startsWith('screens.'))
+  ),
+  t: jest.fn(
+    (
+      key: string,
+      options?: Record<string, string | number | boolean | undefined>
+    ) => {
+      const translations: Record<string, string> = {
+        'screens.editProfile.updateSuccess': 'Profile updated successfully',
+        'screens.addresses.success': 'Address saved successfully',
+        'screens.billingInfo.deleteSuccess': 'Billing information deleted',
+        'screens.verifyPhone.codeSentSuccess': 'Code sent successfully',
+        'screens.editProfile.compressionError': 'Failed to compress image',
+        'errors.network': `Network failed for ${String(options?.operation ?? '{operation}')}`,
+        'errors.unexpected': 'Unexpected error',
+      };
+
+      const toastTitles = {
+        es: {
+          'common.toast.success': 'Éxito',
+          'common.toast.error': 'Error',
+          'common.toast.warning': 'Advertencia',
+          'common.toast.info': 'Información',
+        },
+        en: {
+          'common.toast.success': 'Success',
+          'common.toast.error': 'Error',
+          'common.toast.warning': 'Warning',
+          'common.toast.info': 'Info',
+        },
+      };
+
+      const locale = options?.locale === 'es' ? 'es' : 'en';
+      const toastTitle = toastTitles[locale][key];
+
+      if (toastTitle) return toastTitle;
+
+      return translations[key] || key;
+    }
+  ),
 }));
 
 beforeEach(() => {
@@ -238,6 +256,51 @@ describe('useToast', () => {
       );
     });
 
+    it('should display an already resolved message without translating it again', () => {
+      const { result } = renderHook(() => useToast('es'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: 'Mensaje ya traducido',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({ text2: 'Mensaje ya traducido' })
+      );
+    });
+
+    it('should translate a message key for the current locale', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'success',
+          description: 'screens.editProfile.updateSuccess',
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({ text2: 'Profile updated successfully' })
+      );
+    });
+
+    it('should fall back safely when a legacy map lacks the current locale', () => {
+      const { result } = renderHook(() => useToast('ja' as Lang));
+
+      act(() => {
+        result.current.callToast({
+          variant: 'error',
+          description: { es: 'Error heredado', en: 'Legacy error' },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({ text2: 'Unexpected error' })
+      );
+    });
+
     it('should handle haptics failure gracefully', () => {
       (triggerHaptic as jest.Mock).mockImplementationOnce(() => {
         // Haptic fails silently in the implementation
@@ -406,7 +469,7 @@ describe('useToast', () => {
 
     it('should handle locale change between renders', () => {
       const { result, rerender } = renderHook(({ lang }) => useToast(lang), {
-        initialProps: { lang: 'es' as 'es' | 'en' },
+        initialProps: { lang: 'es' as Lang },
       });
 
       act(() => {
@@ -666,6 +729,26 @@ describe('useToast', () => {
   });
 
   describe('Translation key support', () => {
+    it('should translate an error code with parameters', () => {
+      const { result } = renderHook(() => useToast('en'));
+
+      act(() => {
+        result.current.toast.error({
+          description: {
+            code: 'errors.network',
+            params: { operation: 'checkout' },
+          },
+        });
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text1: 'Error',
+          text2: 'Network failed for checkout',
+        })
+      );
+    });
+
     it('should accept translation key as string and translate it', () => {
       const { result } = renderHook(() => useToast('en'));
 
@@ -930,7 +1013,7 @@ describe('useToast', () => {
       );
     });
 
-    it('should handle empty object as LangMap', () => {
+    it('should fall back when a legacy message has no supported locale', () => {
       const { result } = renderHook(() => useToast('es'));
 
       act(() => {
@@ -942,7 +1025,7 @@ describe('useToast', () => {
 
       expect(Toast.show).toHaveBeenCalledWith(
         expect.objectContaining({
-          text2: undefined,
+          text2: 'Unexpected error',
         })
       );
     });
@@ -966,7 +1049,7 @@ describe('useToast', () => {
 
     it('should use correct language from LangMap when locale changes', () => {
       const { result, rerender } = renderHook(({ lang }) => useToast(lang), {
-        initialProps: { lang: 'es' as 'es' | 'en' },
+        initialProps: { lang: 'es' as Lang },
       });
 
       const message = { es: 'Mensaje español', en: 'English message' };

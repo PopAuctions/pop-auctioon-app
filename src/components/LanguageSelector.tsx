@@ -7,14 +7,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { LOCALE_CONFIG, SUPPORTED_LANGUAGES } from '@/i18n/locales';
 
 export default function LanguageSelector() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
-
-  const languages = [
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-  ];
 
   return (
     <View style={styles.container}>
@@ -29,31 +25,31 @@ export default function LanguageSelector() {
         )}
       </View>
       <View style={styles.languageList}>
-        {languages.map((language) => (
+        {SUPPORTED_LANGUAGES.map((language) => (
           <TouchableOpacity
-            key={language.code}
+            key={language}
             style={[
               styles.languageItem,
-              locale === language.code && styles.selectedLanguage,
+              locale === language && styles.selectedLanguage,
               isPending && styles.disabledLanguageItem,
             ]}
-            onPress={() => changeLanguage(language.code as 'es' | 'en')}
+            onPress={() => changeLanguage(language)}
             disabled={isPending}
           >
-            <Text style={styles.flag}>{language.flag}</Text>
+            <Text style={styles.flag}>{LOCALE_CONFIG[language].flag}</Text>
             <Text
               style={[
                 styles.languageName,
-                locale === language.code && styles.selectedLanguageName,
+                locale === language && styles.selectedLanguageName,
                 isPending && styles.disabledText,
               ]}
             >
-              {language.name}
+              {LOCALE_CONFIG[language].label}
             </Text>
-            {locale === language.code && !isPending && (
+            {locale === language && !isPending && (
               <Text style={styles.checkmark}>✓</Text>
             )}
-            {isPending && locale === language.code && (
+            {isPending && locale === language && (
               <ActivityIndicator
                 size='small'
                 color='#2196f3'

@@ -13,21 +13,7 @@ import {
   ContactUsSchema,
   type ContactUsSchemaType,
 } from '@/utils/schemas/contact-us-schema';
-import { Lang } from '@/types/types';
-
-// Helper function to safely parse bilingual error messages
-const parseErrorMessage = (
-  message: string | undefined,
-  locale: Lang
-): string => {
-  if (!message) return '';
-  try {
-    const parsed = JSON.parse(message);
-    return parsed[locale] || message;
-  } catch {
-    return message;
-  }
-};
+import { getErrorMessage } from '@/utils/form-errors';
 
 export function ContactUsContent() {
   const { t, locale } = useTranslation();
@@ -135,7 +121,7 @@ export function ContactUsContent() {
               type='error'
               className='mt-1'
             >
-              {parseErrorMessage(errors.name.message, locale)}
+              {getErrorMessage(errors.name.message, locale)}
             </CustomText>
           )}
         </View>
@@ -167,7 +153,7 @@ export function ContactUsContent() {
               type='error'
               className='mt-1'
             >
-              {parseErrorMessage(errors.email.message, locale)}
+              {getErrorMessage(errors.email.message, locale)}
             </CustomText>
           )}
         </View>
@@ -223,7 +209,7 @@ export function ContactUsContent() {
               type='error'
               className='mt-1'
             >
-              {parseErrorMessage(errors.message.message, locale)}
+              {getErrorMessage(errors.message.message, locale)}
             </CustomText>
           )}
         </View>

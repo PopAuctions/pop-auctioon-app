@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { supabase } from '@/utils/supabase/supabase-store';
 import type { Session } from '@supabase/supabase-js';
-import type { LangMap, UserRoles } from '@/types/types';
+import type { UserRoles } from '@/types/types';
 import { getUserRole } from '@/lib/auth/get-user-role';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
@@ -17,6 +17,9 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { ToastVariant } from '@/providers/ToastProvider';
 import { AppState, AppStateStatus } from 'react-native';
+import { t, type MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
+import type { Lang } from '@/i18n/locales';
 
 type LoginError =
   | 'INVALID_CREDENTIALS'
@@ -30,7 +33,7 @@ type LoginError =
   | 'EMAIL_NOT_VERIFIED'
   | null;
 
-type SignInResult = { success: boolean; message: LangMap; type?: ToastVariant };
+type SignInResult = { success: boolean; message: string; type?: ToastVariant };
 
 export type AuthState =
   | { state: 'loading' }
@@ -50,10 +53,21 @@ type AuthContextType = {
   }) => Promise<SignInResult>;
 };
 
-const ACCOUNT_DISABLED_MESSAGE: LangMap = {
-  en: 'Your account is deactivated. Please contact support if you think this is a mistake.',
-  es: 'Tu cuenta está desactivada. Contacta soporte si crees que es un error.',
-};
+const AUTH_MESSAGES = {
+  INVALID_CREDENTIALS: 'errors.auth.loginInvalidCredentials',
+  EMAIL_NOT_CONFIRMED: 'errors.auth.loginEmailNotConfirmed',
+  USER_NOT_FOUND: 'errors.auth.loginInvalidCredentials',
+  TOO_MANY_REQUESTS: 'errors.auth.loginTooManyRequests',
+  NETWORK_ERROR: 'errors.auth.loginNetwork',
+  EMAIL_NOT_VERIFIED: 'errors.auth.loginEmailNotVerified',
+  TOO_MANY_EMAIL_REQUESTS: 'errors.auth.loginConfirmationCooldown',
+  ACCOUNT_DISABLED: 'errors.auth.loginAccountDisabled',
+  UNKNOWN_ERROR: 'errors.auth.loginUnknown',
+} as const satisfies Record<Exclude<LoginError, null>, MessageKey>;
+const ACCOUNT_DISABLED_TOAST =
+  'errors.auth.loginAccountDisabledToast' as const satisfies MessageKey;
+const SESSION_STARTED =
+  'auth.login.sessionStarted' as const satisfies MessageKey;
 
 const AuthContext = createContext<AuthContextType>({
   isLoading: false,
@@ -63,7 +77,7 @@ const AuthContext = createContext<AuthContextType>({
   forceLogout: async () => {},
   signInWithPassword: async () => ({
     success: false,
-    message: { es: '', en: '' },
+    message: '',
     type: undefined,
   }),
 });
@@ -123,48 +137,8 @@ const getErrorCode = (error: {
   return 'NETWORK_ERROR';
 };
 
-const getErrorMessage = (errorCode: LoginError): LangMap => {
-  const errorMessages: Record<Exclude<LoginError, null>, LangMap> = {
-    INVALID_CREDENTIALS: {
-      es: 'Email o contraseña incorrectos',
-      en: 'Invalid email or password',
-    },
-    EMAIL_NOT_CONFIRMED: {
-      es: 'Email no confirmado',
-      en: 'Email not confirmed',
-    },
-    USER_NOT_FOUND: {
-      es: 'Email o contraseña incorrectos',
-      en: 'Invalid email or password',
-    },
-    TOO_MANY_REQUESTS: {
-      es: 'Demasiados intentos de inicio de sesión. Por favor, intenta más tarde.',
-      en: 'Too many login attempts. Please try again later.',
-    },
-    NETWORK_ERROR: {
-      es: 'Error de conexión. Por favor, verifica tu internet.',
-      en: 'Connection error. Please check your internet.',
-    },
-    EMAIL_NOT_VERIFIED: {
-      es: 'Correo no verificado. Revisa tu bandeja de entrada.',
-      en: 'Email not verified. Check your inbox.',
-    },
-    TOO_MANY_EMAIL_REQUESTS: {
-      en: 'Wait a few moments before requesting another confirmation email.',
-      es: 'Espera unos momentos antes de solicitar otro correo de confirmación.',
-    },
-    ACCOUNT_DISABLED: {
-      es: 'Tu cuenta ha sido desactivada. Contacta soporte para más información.',
-      en: 'Your account has been disabled. Contact support for more information.',
-    },
-    UNKNOWN_ERROR: {
-      es: 'Error desconocido. Por favor, intenta de nuevo.',
-      en: 'Unknown error. Please try again.',
-    },
-  };
-
-  return errorCode ? errorMessages[errorCode] : { es: '', en: '' };
-};
+const getErrorMessage = (errorCode: LoginError, locale: Lang) =>
+  errorCode ? String(t(AUTH_MESSAGES[errorCode], { locale })) : '';
 
 const EMAIL_CONFIRM_COOLDOWN_MS = 120_000;
 
@@ -229,7 +203,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       sendConfirmInFlightRef.current[key] = true;
 
       try {
-        const response = await protectedPost<LangMap>({
+        const response = await protectedPost<unknown>({
           endpoint: SECURE_ENDPOINTS.NO_AUTH.REQUEST_EMAIL_CONFIRMATION_TOKEN,
           data: { email: key },
         });
@@ -237,7 +211,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.error) {
           callToastRef.current({
             variant: 'error',
-            description: response.error,
+            description: resolveApiResponseMessage(
+              response,
+              'error',
+              locale,
+              'errors.server.connection'
+            ),
           });
           return null;
         }
@@ -250,7 +229,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sendConfirmInFlightRef.current[key] = false;
       }
     },
-    [protectedPost]
+    [locale, protectedPost]
   );
 
   const resetAuthState = useCallback(() => {
@@ -311,7 +290,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       callToastRef.current({
         variant: 'error',
-        description: ACCOUNT_DISABLED_MESSAGE,
+        description: ACCOUNT_DISABLED_TOAST,
       });
     }
 
@@ -345,14 +324,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (error) {
           const code = getErrorCode(error);
-          return { success: false, message: getErrorMessage(code) };
+          return { success: false, message: getErrorMessage(code, locale) };
         }
 
         const session = data.session ?? null;
         if (!session) {
           return {
             success: false,
-            message: getErrorMessage('UNKNOWN_ERROR'),
+            message: getErrorMessage('UNKNOWN_ERROR', locale),
           };
         }
 
@@ -365,7 +344,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAuth({ state: 'unauthenticated' });
           return {
             success: false,
-            message: getErrorMessage(result ?? 'EMAIL_NOT_VERIFIED'),
+            message: getErrorMessage(result ?? 'EMAIL_NOT_VERIFIED', locale),
             type: result === 'TOO_MANY_EMAIL_REQUESTS' ? 'warning' : 'error',
           };
         }
@@ -384,7 +363,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             await logoutBecauseDisabled();
             return {
               success: false,
-              message: getErrorMessage('ACCOUNT_DISABLED'),
+              message: getErrorMessage('ACCOUNT_DISABLED', locale),
               type: 'error',
             };
           }
@@ -399,21 +378,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await forceLogout();
           return {
             success: false,
-            message: getErrorMessage('UNKNOWN_ERROR'),
+            message: getErrorMessage('UNKNOWN_ERROR', locale),
             type: 'error',
           };
         }
 
         return {
           success: true,
-          message: { es: 'Sesión iniciada', en: 'Session started' },
+          message: String(t(SESSION_STARTED, { locale })),
         };
       } finally {
         setManualSignInLoading(false);
         isManualSignInRef.current = false;
       }
     },
-    [sendEmailConfirmation, logoutBecauseDisabled, forceLogout]
+    [sendEmailConfirmation, logoutBecauseDisabled, forceLogout, locale]
   );
 
   const setAuthenticatedWithRole = useCallback(

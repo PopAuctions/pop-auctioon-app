@@ -8,7 +8,8 @@ import {
   getCurrentLocale,
   getManualLanguageFlag,
 } from '@/i18n';
-import { Lang, User } from '@/types/types';
+import { isLang } from '@/i18n/locales';
+import { type User } from '@/types/types';
 
 type UserWithLanguage = User & { language?: string };
 
@@ -51,7 +52,7 @@ export function LanguageSyncEffect() {
 
         if (hasManualChange) {
           // Local value wins — push it to DB so all surfaces stay in sync
-          const localLocale = getCurrentLocale() as Lang;
+          const localLocale = getCurrentLocale();
 
           const patchResponse = await securePatch<{ success: boolean }>({
             endpoint: SECURE_ENDPOINTS.USER.UPDATE_LANGUAGE,
@@ -85,8 +86,8 @@ export function LanguageSyncEffect() {
 
           const dbLanguage = response.data.language;
 
-          if (dbLanguage === 'es' || dbLanguage === 'en') {
-            syncLanguageFromDb(dbLanguage as Lang);
+          if (isLang(dbLanguage)) {
+            syncLanguageFromDb(dbLanguage);
           }
         }
 

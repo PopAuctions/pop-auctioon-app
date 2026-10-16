@@ -158,7 +158,7 @@ describe('useSignup', () => {
       const response = await result.current.signup(signupData, 'USER', 'en');
 
       expect(response.success).toBe(false);
-      expect(response.error).toEqual(errorMessage);
+      expect(response.error).toBe('errors.server.connection');
     });
 
     it('should handle backend validation error (400)', async () => {
@@ -185,7 +185,7 @@ describe('useSignup', () => {
       const response = await result.current.signup(signupData, 'USER', 'en');
 
       expect(response.success).toBe(false);
-      expect(response.error).toEqual(errorMessage);
+      expect(response.error).toBe('errors.server.connection');
     });
 
     it('should handle image conversion error', async () => {
@@ -211,10 +211,7 @@ describe('useSignup', () => {
       const response = await result.current.signup(signupData, 'USER', 'en');
 
       expect(response.success).toBe(false);
-      expect(response.error).toEqual({
-        es: 'Error al procesar la imagen de perfil',
-        en: 'Error processing profile picture',
-      });
+      expect(response.error).toBe('errors.auth.signupImageProcessingFailed');
       expect(Sentry.captureException).toHaveBeenCalled();
     });
 
@@ -238,10 +235,7 @@ describe('useSignup', () => {
       const response = await result.current.signup(signupData, 'USER', 'en');
 
       expect(response.success).toBe(false);
-      expect(response.error).toEqual({
-        es: 'Error de conexión. Por favor, verifica tu internet.',
-        en: 'Connection error. Please check your internet.',
-      });
+      expect(response.error).toBe('errors.auth.signupNetwork');
       expect(Sentry.captureException).toHaveBeenCalledWith(
         'SIGNUP_ERROR: Network timeout'
       );
@@ -270,10 +264,7 @@ describe('useSignup', () => {
       const response = await result.current.signup(signupData, 'USER', 'en');
 
       expect(response.success).toBe(false);
-      expect(response.error).toEqual({
-        es: 'Error inesperado durante el registro',
-        en: 'Unexpected error during registration',
-      });
+      expect(response.error).toBe('errors.auth.signupUnexpected');
     });
   });
 

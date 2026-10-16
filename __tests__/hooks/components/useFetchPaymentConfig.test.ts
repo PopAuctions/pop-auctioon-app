@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type { CountryValue } from '@/types/types';
+import type { CountryValue, Lang } from '@/types/types';
 
 jest.mock(
   '@/utils/supabase/supabase-store',
@@ -74,26 +74,17 @@ describe('useFetchPaymentConfig', () => {
     },
     taxPercentage: 21,
     taxPercentageArticles: 21,
-    countries: {
-      es: ['SPAIN', 'FRANCE'],
-      en: ['SPAIN', 'FRANCE'],
-    },
-    countriesLabel: {
-      es: {
-        SPAIN: 'España',
-        FRANCE: 'Francia',
-      },
-      en: {
-        SPAIN: 'Spain',
-        FRANCE: 'France',
-      },
+    countries: ['SPAIN', 'FRANCE'],
+    countryLabels: {
+      SPAIN: 'Spain',
+      FRANCE: 'France',
     },
   };
 
   it('should start with loading status', () => {
     mockSecureGet.mockImplementation(() => new Promise(() => {})); // Never resolves
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     expect(result.current.status).toBe('loading');
     expect(result.current.data).toEqual({
@@ -101,8 +92,8 @@ describe('useFetchPaymentConfig', () => {
       shippingTaxes: null,
       taxPercentage: 0,
       taxPercentageArticles: 0,
-      countries: {},
-      countriesLabel: {},
+      countries: [],
+      countryLabels: {},
     });
     expect(result.current.errorMessage).toBeNull();
   });
@@ -113,7 +104,7 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -133,18 +124,17 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
     });
 
     // Check that transformation worked correctly
-    expect(result.current.data.countries.es).toEqual(['SPAIN', 'FRANCE']);
-    expect(result.current.data.countries.en).toEqual(['SPAIN', 'FRANCE']);
+    expect(result.current.data.countries).toEqual(['SPAIN', 'FRANCE']);
 
     // Ensure it's not the original object format
-    expect(result.current.data.countries.es).not.toContainEqual({
+    expect(result.current.data.countries).not.toContainEqual({
       label: expect.any(String),
       value: expect.any(String),
     });
@@ -167,7 +157,7 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -187,20 +177,20 @@ describe('useFetchPaymentConfig', () => {
       error: mockError,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe('errors.payment.configLoadFailed');
     expect(result.current.data).toEqual({
       commission: 0,
       shippingTaxes: null,
       taxPercentage: 0,
       taxPercentageArticles: 0,
-      countries: {},
-      countriesLabel: {},
+      countries: [],
+      countryLabels: {},
     });
   });
 
@@ -210,16 +200,13 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Payment configuration data is missing',
-      es: 'Faltan los datos de configuración de pago',
-    });
+    expect(result.current.errorMessage).toBe('errors.payment.configMissing');
   });
 
   it('should handle undefined data in response', async () => {
@@ -228,31 +215,25 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Payment configuration data is missing',
-      es: 'Faltan los datos de configuración de pago',
-    });
+    expect(result.current.errorMessage).toBe('errors.payment.configMissing');
   });
 
   it('should handle network/unexpected errors', async () => {
     mockSecureGet.mockRejectedValueOnce(new Error('Network error'));
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error fetching payment configuration data',
-      es: 'Error al cargar la configuración de pago',
-    });
+    expect(result.current.errorMessage).toBe('errors.payment.configLoadFailed');
   });
 
   it('should handle empty countries object', async () => {
@@ -267,14 +248,14 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
     });
 
-    expect(result.current.data.countries).toEqual({});
-    expect(result.current.data.countriesLabel).toEqual({});
+    expect(result.current.data.countries).toEqual([]);
+    expect(result.current.data.countryLabels).toEqual({});
   });
 
   it('should handle multiple locales in countries', async () => {
@@ -297,17 +278,23 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result, rerender } = renderHook(
+      ({ locale }: { locale: Lang }) => useFetchPaymentConfig(locale),
+      { initialProps: { locale: 'en' as Lang } }
+    );
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
     });
 
-    expect(result.current.data.countries).toEqual({
-      es: ['SPAIN'],
-      en: ['SPAIN'],
-      fr: ['SPAIN'],
-    });
+    expect(result.current.data.countries).toEqual(['SPAIN']);
+    expect(result.current.data.countryLabels).toEqual({ SPAIN: 'Spain' });
+
+    rerender({ locale: 'es' });
+
+    expect(result.current.data.countries).toEqual(['SPAIN']);
+    expect(result.current.data.countryLabels).toEqual({ SPAIN: 'España' });
+    expect(mockSecureGet).toHaveBeenCalledTimes(1);
   });
 
   it('should preserve all shipping tax countries', async () => {
@@ -330,7 +317,7 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -356,7 +343,7 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(result.current.status).toBe('success');
@@ -371,7 +358,7 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    renderHook(() => useFetchPaymentConfig());
+    renderHook(() => useFetchPaymentConfig('en'));
 
     await waitFor(() => {
       expect(mockSecureGet).toHaveBeenCalledTimes(1);
@@ -384,7 +371,7 @@ describe('useFetchPaymentConfig', () => {
       error: null,
     });
 
-    const { result } = renderHook(() => useFetchPaymentConfig());
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
 
     expect(result.current.setErrorMessage).toBeInstanceOf(Function);
   });

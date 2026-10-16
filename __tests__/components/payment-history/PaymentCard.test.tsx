@@ -21,6 +21,14 @@ jest.mock('@/components/ui/CustomLink', () => {
 jest.mock('@/hooks/i18n/useTranslation', () => ({
   useTranslation: () => ({
     t: (key: string) => {
+      if (key === 'displayLabels.paymentStatus') {
+        return {
+          PENDING: 'Processing',
+          APPROVED: 'Paid',
+          REJECTED: 'Rejected',
+        };
+      }
+
       const translations: Record<string, string> = {
         'screens.paymentsHistory.onlineStore': 'Online Store',
         'screens.paymentsHistory.totalAmount': 'Total',

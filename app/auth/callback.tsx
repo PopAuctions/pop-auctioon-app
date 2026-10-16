@@ -4,9 +4,14 @@ import { supabase } from '@/utils/supabase/supabase-store';
 import { Loading } from '@/components/ui/Loading';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useToast } from '@/hooks/useToast';
+import type { MessageKey } from '@/i18n';
 
 const SUCCESS_REDIRECT_URL = '/(tabs)/home';
 const FAILURE_REDIRECT_URL = '/(tabs)/auth/login';
+const AUTHENTICATION_FAILED =
+  'authCallback.authenticationFailed' as const satisfies MessageKey;
+const AUTHENTICATION_SUCCESS =
+  'authCallback.authenticationSuccess' as const satisfies MessageKey;
 
 export default function AuthCallbackScreen() {
   const { locale } = useTranslation();
@@ -25,10 +30,7 @@ export default function AuthCallbackScreen() {
         if (error || !code) {
           callToast({
             variant: 'error',
-            description: {
-              en: 'Authentication failed. Please try again.',
-              es: 'La autenticación ha fallado. Por favor, inténtelo de nuevo.',
-            },
+            description: AUTHENTICATION_FAILED,
           });
           router.replace(FAILURE_REDIRECT_URL);
 
@@ -45,10 +47,7 @@ export default function AuthCallbackScreen() {
             if (event === 'SIGNED_IN' && session) {
               callToast({
                 variant: 'success',
-                description: {
-                  en: 'Successfully authenticated!',
-                  es: '¡Autenticación exitosa!',
-                },
+                description: AUTHENTICATION_SUCCESS,
               });
               router.replace(SUCCESS_REDIRECT_URL);
             }
@@ -63,10 +62,7 @@ export default function AuthCallbackScreen() {
           sub.subscription.unsubscribe();
           callToast({
             variant: 'error',
-            description: {
-              en: 'Authentication failed. Please try again.',
-              es: 'La autenticación ha fallado. Por favor, inténtelo de nuevo.',
-            },
+            description: AUTHENTICATION_FAILED,
           });
 
           router.replace(FAILURE_REDIRECT_URL);
@@ -78,19 +74,13 @@ export default function AuthCallbackScreen() {
         if (data.session) {
           callToast({
             variant: 'success',
-            description: {
-              en: 'Successfully authenticated!',
-              es: '¡Autenticación exitosa!',
-            },
+            description: AUTHENTICATION_SUCCESS,
           });
           router.replace(SUCCESS_REDIRECT_URL);
         } else {
           callToast({
             variant: 'error',
-            description: {
-              en: 'Authentication failed. Please try again.',
-              es: 'La autenticación ha fallado. Por favor, inténtelo de nuevo.',
-            },
+            description: AUTHENTICATION_FAILED,
           });
 
           router.replace(FAILURE_REDIRECT_URL);
@@ -101,10 +91,7 @@ export default function AuthCallbackScreen() {
         // console.log('callback error:', e);
         callToast({
           variant: 'error',
-          description: {
-            en: 'Authentication failed. Please try again.',
-            es: 'La autenticación ha fallado. Por favor, inténtelo de nuevo.',
-          },
+          description: AUTHENTICATION_FAILED,
         });
         router.replace(FAILURE_REDIRECT_URL);
       }

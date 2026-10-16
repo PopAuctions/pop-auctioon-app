@@ -8,6 +8,7 @@ import {
   type Lang,
   type MyOfferProposal,
 } from '@/types/types';
+import { t } from '@/i18n';
 
 type OfferHistoryPerspective = 'user' | 'store';
 
@@ -19,21 +20,6 @@ interface OfferHistoryModalProps {
   perspective?: OfferHistoryPerspective;
 }
 
-const TEXTS = {
-  es: {
-    title: 'Historial de ofertas',
-    you: 'Tú',
-    buyer: 'Comprador',
-    store: 'Tienda',
-  },
-  en: {
-    title: 'Offer history',
-    you: 'You',
-    buyer: 'Buyer',
-    store: 'Store',
-  },
-} satisfies Record<Lang, Record<string, string>>;
-
 export function OfferHistoryModal({
   visible,
   onClose,
@@ -41,7 +27,7 @@ export function OfferHistoryModal({
   locale,
   perspective = 'user',
 }: OfferHistoryModalProps) {
-  const texts = TEXTS[locale];
+  const texts = t('components.modals.offers.history', { locale });
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
 
   const sortedProposals = useMemo(

@@ -77,7 +77,7 @@ describe('useCreateAddress', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe('errors.address.createUnexpected');
   });
 
   it('should handle unexpected error gracefully', async () => {
@@ -93,10 +93,7 @@ describe('useCreateAddress', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      en: 'Error creating address',
-      es: 'Error al crear la dirección',
-    });
+    expect(result.current.errorMessage).toBe('errors.address.createUnexpected');
   });
 
   it('should update status to loading during creation', async () => {

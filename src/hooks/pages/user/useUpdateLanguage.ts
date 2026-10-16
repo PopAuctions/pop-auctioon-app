@@ -2,8 +2,12 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { REQUEST_STATUS } from '@/constants';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
-import { Lang, LangMap, RequestStatus } from '@/types/types';
+import { Lang, RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import { useState } from 'react';
+
+const LANGUAGE_UPDATE_ERROR =
+  'errors.user.languageUpdateFailed' as const satisfies MessageKey;
 
 /**
  * Hook para actualizar el idioma preferido del usuario en la BD.
@@ -49,14 +53,10 @@ export const useUpdateLanguage = (
 
       setStatus(REQUEST_STATUS.success);
     } catch (error) {
-      const errorMsg: LangMap = {
-        en: 'Error updating language preference',
-        es: 'Error al actualizar el idioma',
-      };
       console.error('ERROR_UPDATE_LANGUAGE_CATCH', error);
       callToast({
         variant: 'error',
-        description: errorMsg,
+        description: LANGUAGE_UPDATE_ERROR,
       });
       setStatus(REQUEST_STATUS.error);
     } finally {

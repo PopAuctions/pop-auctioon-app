@@ -108,7 +108,7 @@ export default function EditProfileScreen() {
   if (fetchStatus === REQUEST_STATUS.error || !currentUserData) {
     return (
       <CustomError
-        customMessage={fetchError}
+        customMessage={fetchError ? t(fetchError, { locale }) : undefined}
         refreshRoute='/(tabs)/account/edit-profile'
       />
     );

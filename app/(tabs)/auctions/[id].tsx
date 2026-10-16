@@ -2,17 +2,13 @@ import { View, Pressable } from 'react-native';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { CustomText } from '@/components/ui/CustomText';
-import {
-  AUCTION_MODE_LABEL,
-  AuctionStatus,
-  LIVE_URL,
-} from '@/constants/auctions';
+import { AuctionStatus, LIVE_URL } from '@/constants/auctions';
 import { useGetLiveAuction } from '@/hooks/pages/auction/useGetLiveAuction';
-import { COUNTRIES_MAP_LABEL, REQUEST_STATUS } from '@/constants';
+import { REQUEST_STATUS } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomLink } from '@/components/ui/CustomLink';
 import { HowAutoLiveWorksModal } from '@/components/modal/HowAutoLiveWorks';
-import { AuctionMode, Lang } from '@/types/types';
+import { AuctionMode, type CountryValue } from '@/types/types';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { AuctionDisplayDateTime } from '@/components/auctions/AuctionDisplayDateTime';
 import { MINUTES_BEFORE_ENTERING } from '@/constants/autoLiveAuction';
@@ -49,6 +45,9 @@ export default function AuctionDetailScreen() {
   const { data: userArticlesFollowed } = useGetArticlesUserFollows();
   const liveAuction = liveAuctionData?.auction;
   const auctionLang = t('screens.auction');
+  const shareButtonTexts = t('components.shareButton');
+  const auctionModeLabels = t('displayLabels.auctionMode', { locale });
+  const countryLabels = t('displayLabels.country', { locale });
 
   if (status === REQUEST_STATUS.idle || status === REQUEST_STATUS.loading) {
     return <Loading locale={locale} />;
@@ -57,7 +56,7 @@ export default function AuctionDetailScreen() {
   if (status === REQUEST_STATUS.error || !liveAuction) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute={`/(tabs)/auctions/${id}`}
       />
     );
@@ -72,10 +71,7 @@ export default function AuctionDetailScreen() {
     auction.status === AuctionStatus.PARTIALLY_AVAILABLE_CHANGES_MADE;
 
   const filtersKey = `${brand ?? ''}${price ?? ''}`;
-  const country =
-    COUNTRIES_MAP_LABEL[locale][
-      auction.country as keyof (typeof COUNTRIES_MAP_LABEL)[Lang]
-    ];
+  const country = countryLabels[auction.country as CountryValue];
   const formattedCountry = country.includes('-')
     ? country.split('-')[0].trim()
     : country;
@@ -98,7 +94,7 @@ export default function AuctionDetailScreen() {
                         type='h4'
                         className='text-cinnabar underline'
                       >
-                        {AUCTION_MODE_LABEL[locale][auctionMode]}
+                        {auctionModeLabels[auctionMode]}
                       </CustomText>
                       <FontAwesomeIcon
                         name='info-circle'
@@ -113,7 +109,7 @@ export default function AuctionDetailScreen() {
                   type='h4'
                   className='text-base text-cinnabar'
                 >
-                  {AUCTION_MODE_LABEL[locale][auctionMode]}
+                  {auctionModeLabels[auctionMode]}
                 </CustomText>
               )}
             </View>
@@ -213,10 +209,7 @@ export default function AuctionDetailScreen() {
                 lang={locale}
                 className='w-1/2'
                 mode='secondary'
-                title={{
-                  es: 'Mira esta subasta en Popauctioon',
-                  en: 'Check out this auction on Popauction',
-                }}
+                title={shareButtonTexts.auctionTitle}
               >
                 {auctionLang.share}
               </ShareButton>

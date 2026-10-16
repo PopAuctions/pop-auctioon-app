@@ -11,7 +11,7 @@
 import { useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type { LangMap } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 
 interface ToggleArticleSelectionParams {
   articleId: number;
@@ -20,13 +20,13 @@ interface ToggleArticleSelectionParams {
 
 interface ToggleArticleSelectionResult {
   success: boolean;
-  error: LangMap | null;
+  error: MessageKey | null;
 }
 
 export const useToggleArticleSelection = () => {
   const { securePost } = useSecureApi();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<LangMap | null>(null);
+  const [error, setError] = useState<MessageKey | null>(null);
 
   /**
    * Toggle selección de artículo (DRAFT <-> NOT_PAID)
@@ -49,18 +49,17 @@ export const useToggleArticleSelection = () => {
       });
 
       if (response.error) {
-        setError(response.error);
-        return { success: false, error: response.error };
+        const messageKey =
+          response.messageCode ?? 'errors.article.toggleWonUpdateFailed';
+        setError(messageKey);
+        return { success: false, error: messageKey };
       }
 
       return { success: true, error: null };
     } catch {
-      const errorMessage: LangMap = {
-        es: 'Error al actualizar la selección del artículo',
-        en: 'Error updating article selection',
-      };
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
+      const messageKey = 'errors.article.toggleWonUpdateFailed';
+      setError(messageKey);
+      return { success: false, error: messageKey };
     } finally {
       setIsLoading(false);
     }

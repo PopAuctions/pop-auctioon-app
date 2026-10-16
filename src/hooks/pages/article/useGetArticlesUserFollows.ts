@@ -1,12 +1,19 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import { ActionResponse, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
 
-export const useGetArticlesUserFollows = (): ActionResponse<number[]> => {
+const USER_FOLLOW_INFO_LOAD_ERROR =
+  'errors.article.userFollowInfoLoadFailed' as const satisfies MessageKey;
+
+export const useGetArticlesUserFollows = (): ActionResponse<
+  number[],
+  MessageKey
+> => {
   const [followedArticles, setFollowedArticles] = useState<number[]>([]);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const getUserFollows = useCallback(async () => {
@@ -19,12 +26,9 @@ export const useGetArticlesUserFollows = (): ActionResponse<number[]> => {
       if (res.error) {
         setStatus('error');
         setFollowedArticles([]);
-        setErrorMessage(res.error);
+        setErrorMessage(res.messageCode ?? USER_FOLLOW_INFO_LOAD_ERROR);
         return {
-          message: {
-            en: 'Error fetching user information',
-            es: 'Error al obtener la información del usuario',
-          },
+          message: USER_FOLLOW_INFO_LOAD_ERROR,
         };
       }
 
@@ -49,10 +53,7 @@ export const useGetArticlesUserFollows = (): ActionResponse<number[]> => {
       console.error('Unexpected error fetching articles:', errorMessage);
 
       return {
-        message: {
-          en: 'Error fetching user information',
-          es: 'Error al obtener la información del usuario',
-        },
+        message: USER_FOLLOW_INFO_LOAD_ERROR,
       };
     }
   }, [secureGet]);

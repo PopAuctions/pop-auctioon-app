@@ -22,7 +22,7 @@ export * from './onboarding';
 // Códigos de error
 
 // Meses y calendario
-export { MONTHS } from './months';
+export * from './months';
 
 // Países y pagos
 export * from './payment';

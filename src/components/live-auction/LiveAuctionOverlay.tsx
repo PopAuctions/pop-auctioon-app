@@ -83,6 +83,7 @@ export const LiveAuctionOverlay = ({
   refetch,
 }: OverlayProps) => {
   const { t, locale } = useTranslation();
+  const shareButtonTexts = t('components.shareButton');
   const deviceType = useDeviceType();
   const { data: commissionData, status: commissionStatus } =
     useFetchCommissions();
@@ -217,10 +218,7 @@ export const LiveAuctionOverlay = ({
                 mode='empty'
                 className='items-center justify-center'
                 lang={locale}
-                title={{
-                  es: 'Subasta en vivo en PopAuctioon',
-                  en: 'Live auction on PopAuctioon',
-                }}
+                title={shareButtonTexts.liveAuctionTitle}
               >
                 <View
                   style={{

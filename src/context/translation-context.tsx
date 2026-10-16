@@ -13,7 +13,7 @@ import {
   saveLanguagePreference,
   setManualLanguageFlag,
 } from '@/i18n';
-import { Lang } from '@/types/types';
+import { DEFAULT_LANG, type Lang } from '@/i18n/locales';
 
 type TranslationContextType = {
   locale: Lang;
@@ -27,7 +27,7 @@ type TranslationContextType = {
 };
 
 const TranslationContext = createContext<TranslationContextType>({
-  locale: 'es',
+  locale: DEFAULT_LANG,
   changeLanguage: () => {},
   syncLanguageFromDb: () => {},
   isPending: false,

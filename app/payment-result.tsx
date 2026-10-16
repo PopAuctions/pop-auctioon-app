@@ -52,7 +52,8 @@ export default function PaymentResultScreen() {
   }>();
   const router = useRouter();
   const { navigateWithAuth } = useAuthNavigation();
-  const { locale, t } = useTranslation();
+  const { t } = useTranslation();
+  const paymentResultTranslations = t('screens.paymentResult');
   const { secureGet } = useSecureApi();
   const [context, setContext] = useState<PaymentResultContext | null>(null);
   const [isReady, setIsReady] = useState(false);
@@ -202,18 +203,7 @@ export default function PaymentResultScreen() {
       return {
         icon: 'check-circle',
         iconColor: '#16a34a' as const,
-        title: {
-          es: 'Pago aprobado',
-          en: 'Payment approved',
-        },
-        description: {
-          es: 'El pago fue autorizado. Puedes revisar el detalle en tu historial de pagos.',
-          en: 'The payment was authorized. You can review the details in your payment history.',
-        },
-        primaryLabel: {
-          es: 'Ir a historial',
-          en: 'Go to history',
-        },
+        statusKey: 'approved' as const,
       };
     }
 
@@ -221,38 +211,17 @@ export default function PaymentResultScreen() {
       return {
         icon: 'clock',
         iconColor: '#d97706' as const,
-        title: {
-          es: 'Confirmando pago',
-          en: 'Confirming payment',
-        },
-        description: {
-          es: 'Estamos confirmando el resultado final del pago. Una vez autorizado, lo verás reflejado en tu historial en breve.',
-          en: 'We are confirming the final payment result. Once authorized, it will appear in your payment history shortly.',
-        },
-        primaryLabel: {
-          es: 'Ir a historial',
-          en: 'Go to history',
-        },
+        statusKey: 'pending' as const,
       };
     }
 
     return {
       icon: 'times-circle',
       iconColor: '#d75639' as const,
-      title: {
-        es: 'Pago rechazado',
-        en: 'Payment rejected',
-      },
-      description: {
-        es: 'Pago rechazado. Puedes volver e intentarlo otra vez.',
-        en: 'Payment rejected. You can go back and try again.',
-      },
-      primaryLabel: {
-        es: 'Intentar de nuevo',
-        en: 'Try again',
-      },
+      statusKey: 'rejected' as const,
     };
   }, [isApproved, isPending]);
+  const statusCopy = paymentResultTranslations[copy.statusKey];
 
   const handlePrimaryAction = () => {
     if (isApproved || isPending) {
@@ -302,9 +271,7 @@ export default function PaymentResultScreen() {
             type='body'
             className='text-gray-600 text-center'
           >
-            {locale === 'es'
-              ? 'Cargando resultado del pago...'
-              : 'Loading payment result...'}
+            {paymentResultTranslations.loading}
           </CustomText>
         </View>
       </SafeAreaView>
@@ -333,7 +300,7 @@ export default function PaymentResultScreen() {
               type='h2'
               className='text-center text-cinnabar'
             >
-              {copy.title[locale]}
+              {statusCopy.title}
             </CustomText>
           </View>
 
@@ -341,7 +308,7 @@ export default function PaymentResultScreen() {
             type='body'
             className='text-gray-700 mb-4 text-center'
           >
-            {copy.description[locale]}
+            {statusCopy.description}
           </CustomText>
 
           {typeof context?.paymentIntent === 'string' &&
@@ -351,7 +318,7 @@ export default function PaymentResultScreen() {
                   type='bodysmall'
                   className='text-gray-500 text-center'
                 >
-                  {locale === 'es' ? 'Orden de pago' : 'Payment order'}
+                  {paymentResultTranslations.paymentOrder}
                 </CustomText>
                 <CustomText
                   type='bold'
@@ -367,14 +334,14 @@ export default function PaymentResultScreen() {
             onPress={handlePrimaryAction}
             className='mb-3'
           >
-            {copy.primaryLabel[locale]}
+            {statusCopy.primaryAction}
           </Button>
 
           <Button
             mode='secondary'
             onPress={handleSecondaryAction}
           >
-            {locale === 'es' ? 'Ir a cuenta' : 'Go to account'}
+            {paymentResultTranslations.goToAccount}
           </Button>
 
           {isApproved && (

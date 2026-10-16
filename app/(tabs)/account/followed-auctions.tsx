@@ -22,7 +22,9 @@ export default function FollowedAuctionsScreen() {
   if (status === REQUEST_STATUS.error || auctions === null) {
     return (
       <View className='flex-1 items-center justify-center'>
-        <CustomText type='h2'>{errorMessage?.[locale]}</CustomText>
+        <CustomText type='h2'>
+          {errorMessage ? t(errorMessage) : undefined}
+        </CustomText>
       </View>
     );
   }

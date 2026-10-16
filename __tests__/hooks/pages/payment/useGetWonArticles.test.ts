@@ -120,10 +120,9 @@ describe('useGetWonArticles', () => {
     });
 
     expect(result.current.data).toBeNull();
-    expect(result.current.errorMessage).toEqual({
-      es: 'Error al cargar artículos ganados',
-      en: 'Error loading won articles',
-    });
+    expect(result.current.errorMessage).toBe(
+      'errors.payment.wonArticlesLoadFailed'
+    );
   });
 
   it('should handle missing auctionId', async () => {
@@ -133,10 +132,9 @@ describe('useGetWonArticles', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      es: 'ID de subasta requerido',
-      en: 'Auction ID required',
-    });
+    expect(result.current.errorMessage).toBe(
+      'errors.payment.auctionIdRequired'
+    );
     expect(mockSecureGet).not.toHaveBeenCalled();
   });
 
@@ -159,7 +157,9 @@ describe('useGetWonArticles', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe(
+      'errors.payment.wonArticlesLoadFailed'
+    );
     expect(result.current.data).toBeNull();
   });
 
@@ -174,10 +174,9 @@ describe('useGetWonArticles', () => {
       expect(result.current.status).toBe('error');
     });
 
-    expect(result.current.errorMessage).toEqual({
-      es: 'Error al cargar artículos ganados',
-      en: 'Error loading won articles',
-    });
+    expect(result.current.errorMessage).toBe(
+      'errors.payment.wonArticlesLoadFailed'
+    );
   });
 
   it('should support refetch functionality', async () => {

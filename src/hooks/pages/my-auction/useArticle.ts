@@ -3,7 +3,14 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
-import type { AnyArticleFormValues, LangMap } from '@/types/types';
+import type { AnyArticleFormValues } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
+
+const ARTICLE_CREATION_ERROR =
+  'errors.article.creationFailed' as const satisfies MessageKey;
+const ARTICLE_UPDATE_ERROR =
+  'errors.article.updateFailed' as const satisfies MessageKey;
 
 interface FunctionResponse {
   status: 'success' | 'error';
@@ -57,7 +64,7 @@ export const useArticle = ({
         },
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.ARTICLES.NEW_ARTICLE(auctionId),
         data: payload,
         options: {
@@ -66,11 +73,27 @@ export const useArticle = ({
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            ARTICLE_CREATION_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          ARTICLE_CREATION_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -78,12 +101,7 @@ export const useArticle = ({
 
       console.error('ERROR_CREATE_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error creating article',
-        es: 'Error al crear el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: ARTICLE_CREATION_ERROR });
       return { status: 'error' };
     }
   };
@@ -106,17 +124,33 @@ export const useArticle = ({
         },
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.ARTICLES.EDIT_ARTICLE(auctionId, articleId),
         data: payload,
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            ARTICLE_UPDATE_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          ARTICLE_UPDATE_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -124,12 +158,7 @@ export const useArticle = ({
 
       console.error('ERROR_EDIT_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating article',
-        es: 'Error al actualizar el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: ARTICLE_UPDATE_ERROR });
       return { status: 'error' };
     }
   };
@@ -144,7 +173,7 @@ export const useArticle = ({
         newOrder,
       };
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.ARTICLES.EDIT_ARTICLE_IMAGES_ORDER(
           auctionId,
           articleId
@@ -153,11 +182,27 @@ export const useArticle = ({
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            ARTICLE_UPDATE_ERROR
+          ),
+        });
         return { status: 'error' };
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          ARTICLE_UPDATE_ERROR
+        ),
+      });
       return { status: 'success' };
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
@@ -168,12 +213,7 @@ export const useArticle = ({
 
       console.error('ERROR_EDIT_IMAGES_ORDER_ARTICLE_CATCH', msg);
 
-      const message: LangMap = {
-        en: 'Error updating article',
-        es: 'Error al actualizar el artículo',
-      };
-
-      callToast({ variant: 'error', description: message });
+      callToast({ variant: 'error', description: ARTICLE_UPDATE_ERROR });
       return { status: 'error' };
     }
   };

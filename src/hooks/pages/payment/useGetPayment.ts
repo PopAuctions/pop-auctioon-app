@@ -1,21 +1,17 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import type {
-  ActionResponse,
-  LangMap,
-  RequestStatus,
-  UserPayment,
-} from '@/types/types';
+import type { ActionResponse, RequestStatus, UserPayment } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import { useCallback, useEffect, useState } from 'react';
 
 export const useGetPayment = ({
   paymentId,
 }: {
   paymentId: string;
-}): ActionResponse<UserPayment | null> => {
+}): ActionResponse<UserPayment | null, MessageKey> => {
   const [payment, setPayment] = useState<UserPayment | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchPayment = useCallback(async () => {
@@ -27,9 +23,9 @@ export const useGetPayment = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage(res.error);
+      setErrorMessage(res.messageCode ?? 'errors.payment.detailLoadFailed');
       return {
-        message: res.error,
+        message: res.messageCode ?? 'errors.payment.detailLoadFailed',
       };
     }
 

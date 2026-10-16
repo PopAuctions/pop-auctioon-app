@@ -4,34 +4,29 @@ import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
-import { Lang } from '@/types/types';
-import { AUCTION_CATEGORIES_LANG } from '@/constants/auctions';
+import { SELECTABLE_AUCTION_CATEGORIES } from '@/constants/auctions';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface SelectCategoryModalProps {
   children: ReactNode;
-  title: { en: string; es: string };
-  description: { en: string; es: string };
-  locale: Lang;
+  title: string;
+  description: string;
 }
-
-const TEXTS = {
-  es: {
-    confirm: 'Confirmar',
-    cancel: 'Cancelar',
-  },
-  en: {
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-  },
-} as const;
 
 export function SelectCategoryModal({
   children,
   title,
   description,
-  locale,
 }: SelectCategoryModalProps) {
+  const { locale, t } = useTranslation();
+  const categoryLabels = t('displayLabels.auctionCategorySelection', {
+    locale,
+  });
+  const categoryOptions = SELECTABLE_AUCTION_CATEGORIES.map((value) => ({
+    value,
+    label: categoryLabels[value],
+  }));
   const [visible, setVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { navigateWithAuth } = useAuthNavigation();
@@ -82,7 +77,7 @@ export function SelectCategoryModal({
           <View className='flex-1 items-center justify-center px-6'>
             <View className='w-full max-w-[420px] rounded-xl bg-white p-4 shadow-lg'>
               <View className='flex flex-row justify-between'>
-                <CustomText type='h4'>{title[locale]}</CustomText>
+                <CustomText type='h4'>{title}</CustomText>
                 <Pressable
                   onPress={closeModal}
                   hitSlop={16}
@@ -101,7 +96,7 @@ export function SelectCategoryModal({
                 type='body'
                 className='text-sm text-neutral-600'
               >
-                {description[locale]}
+                {description}
               </CustomText>
 
               {/* Form */}
@@ -110,7 +105,7 @@ export function SelectCategoryModal({
                   <SelectField
                     name='selected-category'
                     value={selectedCategory}
-                    options={AUCTION_CATEGORIES_LANG[locale]}
+                    options={categoryOptions}
                     onChange={handleChange}
                     formField={true}
                     isSearchable={true}
@@ -126,7 +121,7 @@ export function SelectCategoryModal({
                   onPress={handleConfirm}
                   disabled={!selectedCategory}
                 >
-                  {TEXTS[locale].confirm}
+                  {t('common.actions.confirm')}
                 </Button>
 
                 <Button
@@ -134,7 +129,7 @@ export function SelectCategoryModal({
                   className='flex-1'
                   onPress={closeModal}
                 >
-                  {TEXTS[locale].cancel}
+                  {t('common.actions.cancel')}
                 </Button>
               </View>
             </View>

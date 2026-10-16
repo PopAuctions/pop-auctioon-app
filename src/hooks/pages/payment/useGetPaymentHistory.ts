@@ -1,23 +1,22 @@
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type {
-  ActionResponse,
-  LangMap,
-  RequestStatus,
-  UserPayment,
-} from '@/types/types';
+import type { ActionResponse, RequestStatus, UserPayment } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import { useCallback, useEffect, useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 
 /**
  * Hook para obtener el historial de pagos del usuario
  */
-export const useGetPaymentHistory = (): ActionResponse<UserPayment[]> & {
+export const useGetPaymentHistory = (): ActionResponse<
+  UserPayment[],
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [payments, setPayments] = useState<UserPayment[]>([]);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchPaymentHistory = useCallback(async () => {
@@ -30,7 +29,9 @@ export const useGetPaymentHistory = (): ActionResponse<UserPayment[]> & {
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(
+          response.messageCode ?? 'errors.payment.historyLoadFailed'
+        );
         return;
       }
 
@@ -50,10 +51,7 @@ export const useGetPaymentHistory = (): ActionResponse<UserPayment[]> & {
       console.error('ERROR_LOAD_PAYMENT_HISTORY_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage({
-        en: 'Error loading payment history',
-        es: 'Error al cargar el historial de pagos',
-      });
+      setErrorMessage('errors.payment.historyLoadFailed');
     }
   }, [secureGet]);
 

@@ -17,14 +17,11 @@ import { useArticleForm } from '@/hooks/components/useArticleForm';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { getErrorMessage } from '@/utils/form-errors';
 import { supabase } from '@/utils/supabase/supabase-store';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
 import {
   AMOUNT_PLACEHOLDER,
   ARTICLE_IMAGES_MAX,
-  ARTICLE_STATE,
-  ARTICLE_STATE_DESCRIPTION,
-  ARTICLE_STATE_LABELS,
+  ARTICLE_STATE_VALUES,
   REQUEST_STATUS,
 } from '@/constants';
 import {
@@ -43,6 +40,14 @@ export default function NewOnlineStoreArticleScreen() {
     category?: AuctionCategories;
   }>();
   const { t, locale } = useTranslation();
+  const articleSpecificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
+  const articleStateOptions = ARTICLE_STATE_VALUES.map((value) => ({
+    value,
+    label: articleSpecificationLabels.state[value],
+  }));
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
 
@@ -99,7 +104,7 @@ export default function NewOnlineStoreArticleScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute='/(tabs)/auctioneer/my-online-store/articles/new'
       />
     );
@@ -109,23 +114,25 @@ export default function NewOnlineStoreArticleScreen() {
 
   const tooltipContent = (
     <View className='gap-2'>
-      {Object.entries(ARTICLE_STATE_DESCRIPTION[locale]).map(([key, value]) => {
-        const label =
-          ARTICLE_STATE_LABELS[locale][
-            key as keyof (typeof ARTICLE_STATE_LABELS)['en']
-          ];
+      {Object.entries(articleSpecificationLabels.stateDescription).map(
+        ([key, value]) => {
+          const label =
+            articleSpecificationLabels.state[
+              key as keyof typeof articleSpecificationLabels.state
+            ];
 
-        return (
-          <CustomText
-            key={key}
-            type='body'
-            className='text-sm text-black/70'
-          >
-            <Text className='font-bold text-black'>{label}</Text>
-            {`: ${value}`}
-          </CustomText>
-        );
-      })}
+          return (
+            <CustomText
+              key={key}
+              type='body'
+              className='text-sm text-black/70'
+            >
+              <Text className='font-bold text-black'>{label}</Text>
+              {`: ${value}`}
+            </CustomText>
+          );
+        }
+      )}
     </View>
   );
 
@@ -135,8 +142,8 @@ export default function NewOnlineStoreArticleScreen() {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe subir al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `You must upload at least ${ARTICLE_IMAGES_MIN} images.`,
+          code: 'errors.articleImages.minimumUploadRequired',
+          params: { min: ARTICLE_IMAGES_MIN },
         },
       });
       setIsUploadingArticle(false);
@@ -178,7 +185,7 @@ export default function NewOnlineStoreArticleScreen() {
               type='subtitle'
               className='mb-4 text-center text-3xl text-cinnabar'
             >
-              {AUCTION_CATEGORIES_LABEL[locale][category as AuctionCategories]}
+              {auctionCategoryLabels[category as AuctionCategories]}
             </CustomText>
 
             {/* Info: category / required fields */}
@@ -239,7 +246,7 @@ export default function NewOnlineStoreArticleScreen() {
                 <SelectField
                   name='state'
                   value={value ?? null}
-                  options={ARTICLE_STATE[locale]}
+                  options={articleStateOptions}
                   placeholder={t('screens.newArticle.state')}
                   isSearchable={true}
                   isDisabled={isLoading}

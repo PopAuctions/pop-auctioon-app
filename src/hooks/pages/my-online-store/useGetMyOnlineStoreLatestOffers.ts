@@ -3,21 +3,28 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   ArticleSecondChanceWithOffers,
-  LangMap,
   RefetchReturn,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const OFFERS_LOAD_ERROR =
+  'errors.offer.latestAppLoadFailed' as const satisfies MessageKey;
+const OFFERS_REFRESH_ERROR =
+  'errors.offer.latestRefreshFailed' as const satisfies MessageKey;
+const OFFERS_UPDATED =
+  'offer.listUpdatedSuccessfully' as const satisfies MessageKey;
 
 export const useGetMyOnlineStoreLatestOffers = (): Omit<
-  ActionResponse<ArticleSecondChanceWithOffers[]>,
+  ActionResponse<ArticleSecondChanceWithOffers[], MessageKey>,
   'refetch'
 > & {
-  refetch: () => RefetchReturn;
+  refetch: () => RefetchReturn<MessageKey>;
 } => {
   const [article, setArticle] = useState<ArticleSecondChanceWithOffers[]>([]);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchArticle = useCallback(async () => {
@@ -30,29 +37,17 @@ export const useGetMyOnlineStoreLatestOffers = (): Omit<
     if (res.error) {
       console.log(res.error);
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching offers',
-        es: 'Error al obtener las ofertas',
-      });
+      setErrorMessage(OFFERS_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching offers',
-          es: 'Error al obtener las ofertas',
-        },
+        message: OFFERS_LOAD_ERROR,
       };
     }
 
     if (!res.data) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching offers',
-        es: 'Error al obtener las ofertas',
-      });
+      setErrorMessage(OFFERS_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching offers',
-          es: 'Error al obtener las ofertas',
-        },
+        message: OFFERS_LOAD_ERROR,
       };
     }
 
@@ -73,20 +68,14 @@ export const useGetMyOnlineStoreLatestOffers = (): Omit<
 
     if (res.error || !res.data) {
       return {
-        message: {
-          en: 'Error fetching offers',
-          es: 'Error al actualizar las ofertas',
-        },
+        message: OFFERS_REFRESH_ERROR,
       };
     }
 
     setArticle(res.data);
 
     return {
-      message: {
-        es: 'Ofertas actualizadas',
-        en: 'Offers updated',
-      },
+      message: OFFERS_UPDATED,
     };
   };
 

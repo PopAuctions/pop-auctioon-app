@@ -1,6 +1,7 @@
 import { View, Text, Modal, Pressable } from 'react-native';
 import { FontAwesomeIcon } from '../ui/FontAwesomeIcon';
 import { Divider } from '../ui/Divider';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type PriceBreakdownModalProps = {
   visible: boolean;
@@ -23,6 +24,8 @@ export function PriceBreakdownModal({
   commissionFeeFormatted,
   commissionedPriceFormatted,
 }: PriceBreakdownModalProps) {
+  const { t } = useTranslation();
+
   return (
     <Modal
       animationType='fade'
@@ -66,7 +69,9 @@ export function PriceBreakdownModal({
             <Divider className='my-2' />
 
             <View className='flex-row justify-between'>
-              <Text className='mr-2 text-sm font-bold'>Total:</Text>
+              <Text className='mr-2 text-sm font-bold'>
+                {t('commonUi.total')}:
+              </Text>
               <Text className='text-sm font-bold'>
                 {commissionedPriceFormatted}
               </Text>

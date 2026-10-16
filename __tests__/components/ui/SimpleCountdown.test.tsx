@@ -7,8 +7,7 @@ describe('SimpleCountdown', () => {
     const { getByText } = render(
       <SimpleCountdown
         dateString={new Date(Date.now() - 10000).toISOString()}
-        locale='en'
-        texts={{ completed: { en: 'Done', es: 'Hecho' } }}
+        texts={{ completed: 'Done', startSoon: 'Starting soon' }}
       />
     );
     expect(getByText('Done')).toBeTruthy();
@@ -18,8 +17,7 @@ describe('SimpleCountdown', () => {
     const { getByText } = render(
       <SimpleCountdown
         dateString={new Date(Date.now() + 60000).toISOString()}
-        locale='en'
-        texts={{ completed: { en: 'Done', es: 'Hecho' } }}
+        texts={{ completed: 'Done', startSoon: 'Starting soon' }}
       />
     );
     // Should show s for seconds

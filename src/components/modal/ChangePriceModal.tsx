@@ -5,37 +5,21 @@ import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
-import { Lang } from '@/types/types';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type ChangePriceModalProps = {
   visible: boolean;
   onClose: () => void;
   onConfirm: (value: string) => Promise<boolean>;
-  title: { en: string; es: string };
-  description: { en: string; es: string };
+  title: string;
+  description: string;
   defaultValue?: string;
-  label: { en: string; es: string };
+  label: string;
   id: string;
-  locale: Lang;
   commissionValue: number | null;
-  inputPlaceholder?: { en: string; es: string };
+  inputPlaceholder?: string;
   helperText?: string;
 };
-
-const TEXTS = {
-  es: {
-    confirm: 'Confirmar',
-    cancel: 'Cancelar',
-    commissionedPrice: 'Precio con comisión',
-    noDecimals: 'No se permiten decimales',
-  },
-  en: {
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-    commissionedPrice: 'Commissioned Price',
-    noDecimals: 'No decimals allowed',
-  },
-} as const;
 
 export function ChangePriceModal({
   visible,
@@ -46,11 +30,12 @@ export function ChangePriceModal({
   defaultValue,
   label,
   id,
-  locale,
   commissionValue,
   inputPlaceholder,
   helperText,
 }: ChangePriceModalProps) {
+  const { locale, t } = useTranslation();
+  const texts = t('components.modals.onlineStoreArticle');
   const [inputValue, setInputValue] = useState(defaultValue ?? '');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -98,7 +83,7 @@ export function ChangePriceModal({
         <View className='flex-1 items-center justify-center px-6'>
           <View className='w-full max-w-[420px] rounded-xl bg-white p-4 shadow-lg'>
             <View className='flex flex-row justify-between'>
-              <CustomText type='h4'>{title[locale]}</CustomText>
+              <CustomText type='h4'>{title}</CustomText>
               <Pressable
                 onPress={onClose}
                 hitSlop={16}
@@ -117,17 +102,17 @@ export function ChangePriceModal({
               type='body'
               className='text-sm text-neutral-600'
             >
-              {description[locale]}
+              {description}
             </CustomText>
 
             {/* Form */}
             <View className='mt-4'>
-              <CustomText type='body'>{label[locale]}</CustomText>
+              <CustomText type='body'>{label}</CustomText>
 
               <TextInput
                 value={inputValue}
                 onChangeText={handleChange}
-                placeholder={inputPlaceholder ? inputPlaceholder[locale] : ''}
+                placeholder={inputPlaceholder ?? ''}
                 keyboardType='number-pad'
                 inputMode='numeric'
                 className='w-full rounded-xl border border-neutral-300 px-4 py-3 text-base'
@@ -138,7 +123,7 @@ export function ChangePriceModal({
                   type='body'
                   className='text-xs text-neutral-500'
                 >
-                  {TEXTS[locale].noDecimals}
+                  {texts.noDecimals}
                 </CustomText>
               )}
             </View>
@@ -149,7 +134,7 @@ export function ChangePriceModal({
                 type='body'
                 className='text-sm'
               >
-                {TEXTS[locale].commissionedPrice}:
+                {texts.commissionedPrice}:
               </CustomText>
               <CustomText
                 type='body'
@@ -168,7 +153,7 @@ export function ChangePriceModal({
                 disabled={isLoading}
                 isLoading={isLoading}
               >
-                {TEXTS[locale].confirm}
+                {t('common.actions.confirm')}
               </Button>
 
               <Button
@@ -177,7 +162,7 @@ export function ChangePriceModal({
                 onPress={onClose}
                 disabled={isLoading}
               >
-                {TEXTS[locale].cancel}
+                {t('common.actions.cancel')}
               </Button>
             </View>
           </View>

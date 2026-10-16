@@ -2,7 +2,8 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import { RequestStatus, LangMap } from '@/types/types';
+import { RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 
 interface UseVerifyPhoneReturn {
   // Actions
@@ -14,7 +15,7 @@ interface UseVerifyPhoneReturn {
 
   // Single status for all operations
   status: RequestStatus;
-  errorMessage: LangMap | null;
+  errorMessage: MessageKey | null;
 
   // Resend countdown
   canResend: boolean;
@@ -23,13 +24,21 @@ interface UseVerifyPhoneReturn {
 }
 
 const RESEND_COOLDOWN_SECONDS = 30;
+const OTP_NO_RESPONSE_ERROR =
+  'errors.otp.noResponse' as const satisfies MessageKey;
+const OTP_SEND_FAILED_ERROR =
+  'errors.otp.sendFailed' as const satisfies MessageKey;
+const OTP_INVALID_VERIFICATION_CODE_ERROR =
+  'errors.otp.invalidVerificationCode' as const satisfies MessageKey;
+const OTP_VERIFY_FAILED_ERROR =
+  'errors.otp.verifyFailed' as const satisfies MessageKey;
 
 export const useVerifyPhone = (): UseVerifyPhoneReturn => {
   const { securePost } = useSecureApi();
 
   // Single status for all operations (like useBilling)
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
 
   // Resend countdown
   const [canResend, setCanResend] = useState(true);
@@ -91,7 +100,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
 
         if (response.error) {
           setStatus('error');
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? OTP_SEND_FAILED_ERROR);
           return { success: false };
         }
 
@@ -102,12 +111,8 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         }
 
         // No data received
-        const noDataError = {
-          en: 'No response from server',
-          es: 'Sin respuesta del servidor',
-        };
         setStatus('error');
-        setErrorMessage(noDataError);
+        setErrorMessage(OTP_NO_RESPONSE_ERROR);
         return { success: false };
       } catch (error) {
         const errorMsg =
@@ -118,12 +123,8 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
           'USE_VERIFY_PHONE - Unexpected error sending OTP'
         );
 
-        const catchError = {
-          en: 'Failed to send verification code',
-          es: 'Error al enviar código de verificación',
-        };
         setStatus('error');
-        setErrorMessage(catchError);
+        setErrorMessage(OTP_SEND_FAILED_ERROR);
         return { success: false };
       }
     },
@@ -149,7 +150,7 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
 
         if (response.error) {
           setStatus('error');
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? OTP_VERIFY_FAILED_ERROR);
           return { success: false };
         }
 
@@ -159,12 +160,8 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
         }
 
         // No data received
-        const invalidCodeError = {
-          en: 'Invalid verification code',
-          es: 'Código de verificación inválido',
-        };
         setStatus('error');
-        setErrorMessage(invalidCodeError);
+        setErrorMessage(OTP_INVALID_VERIFICATION_CODE_ERROR);
         return { success: false };
       } catch (error) {
         const errorMsg =
@@ -175,12 +172,8 @@ export const useVerifyPhone = (): UseVerifyPhoneReturn => {
           'USE_VERIFY_PHONE - Unexpected error verifying OTP'
         );
 
-        const verifyError = {
-          en: 'Failed to verify code',
-          es: 'Error al verificar código',
-        };
         setStatus('error');
-        setErrorMessage(verifyError);
+        setErrorMessage(OTP_VERIFY_FAILED_ERROR);
         return { success: false };
       }
     },

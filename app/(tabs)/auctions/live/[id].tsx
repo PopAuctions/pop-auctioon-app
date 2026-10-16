@@ -25,7 +25,7 @@ const STREAM_BASE_URL = process.env.EXPO_PUBLIC_STREAM_URL;
 
 export default function LiveAuctionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   useHideTabs();
@@ -190,10 +190,7 @@ export default function LiveAuctionScreen() {
       >
         <CustomError
           refreshRoute={`/(tabs)/auctions`}
-          customMessage={{
-            es: 'ID de subasta inválido',
-            en: 'Invalid auction ID',
-          }}
+          customMessage={t('commonErrors.invalidAuctionId')}
         />
       </View>
     );
@@ -218,10 +215,9 @@ export default function LiveAuctionScreen() {
         <CustomError
           refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
           customMessage={
-            errorMessage ?? {
-              es: 'Hubo un error al cargar la información',
-              en: 'There was an error loading information',
-            }
+            errorMessage
+              ? t(errorMessage, { locale })
+              : t('commonErrors.liveAuctionInfoLoadFailed')
           }
         />
       </View>
@@ -242,10 +238,7 @@ export default function LiveAuctionScreen() {
       >
         <CustomError
           refreshRoute={`/(tabs)/auctions/live/${auctionId}`}
-          customMessage={{
-            es: 'Error al cargar el stream de la subasta',
-            en: 'Error loading auction stream',
-          }}
+          customMessage={t('commonErrors.liveAuctionStreamLoadFailed')}
         />
       </View>
     );
@@ -278,14 +271,8 @@ export default function LiveAuctionScreen() {
               locale={locale}
               customMessage={
                 showLoading
-                  ? {
-                      es: 'Cargando información de la subasta...',
-                      en: 'Loading auction info...',
-                    }
-                  : {
-                      es: 'Cargando stream de la subasta...',
-                      en: 'Loading auction stream...',
-                    }
+                  ? t('screens.liveAuction.loadingInfo')
+                  : t('screens.liveAuction.loadingStream')
               }
             />
           </View>

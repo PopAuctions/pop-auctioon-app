@@ -1,4 +1,1062 @@
 {
+  "common": {
+    "actions": {
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "confirm": "Confirmar",
+      "home": "Ir al inicio",
+      "login": "Iniciar sesión",
+      "ok": "Aceptar",
+      "retry": "Intentar de nuevo",
+      "save": "Guardar"
+    },
+    "status": {
+      "loading": "Cargando..."
+    },
+    "toast": {
+      "success": "Éxito",
+      "error": "Error",
+      "warning": "Advertencia",
+      "info": "Información",
+      "loading": "Cargando..."
+    }
+  },
+  "displayLabels": {
+    "auctionMode": {
+      "AUTOMATIC": "Subasta automática",
+      "LIVE": "Subasta en vivo"
+    },
+    "auctionStatus": {
+      "NOT_AVAILABLE": "No disponible",
+      "NEED_CHANGES": "Necesita cambios",
+      "CHANGES_MADE": "Cambios realizados",
+      "PARTIALLY_AVAILABLE": "Parcialmente disponible",
+      "PARTIALLY_AVAILABLE_CHANGES_MADE": "Parcialmente disponible | Cambios realizados",
+      "AVAILABLE": "Disponible",
+      "IN_REVIEW": "En revisión",
+      "LIVE": "En vivo",
+      "FINISHED": "Finalizada",
+      "WAITING_MIN_ARTICLES_AMOUNT": "Esperando cantidad mínima de artículos correctos"
+    },
+    "auctionCategory": {
+      "BAGS": "Bolsos",
+      "JEWERLY": "Joyas",
+      "WATCHES": "Relojes",
+      "ART": "Arte",
+      "ALL": "Todas"
+    },
+    "calendarMonth": {
+      "0": "Hoy",
+      "1": "Enero",
+      "2": "Febrero",
+      "3": "Marzo",
+      "4": "Abril",
+      "5": "Mayo",
+      "6": "Junio",
+      "7": "Julio",
+      "8": "Agosto",
+      "9": "Septiembre",
+      "10": "Octubre",
+      "11": "Noviembre",
+      "12": "Diciembre"
+    },
+    "country": {
+      "ANDORRA": "Andorra",
+      "AUSTRIA": "Austria",
+      "BELGIUM": "Bélgica",
+      "BULGARIA": "Bulgaria",
+      "CROATIA": "Croacia",
+      "CYPRUS": "Chipre",
+      "CZECH_REPUBLIC": "República Checa",
+      "DENMARK": "Dinamarca",
+      "SPAIN": "España - Península e Islas Baleares",
+      "ESTONIA": "Estonia",
+      "FINLAND": "Finlandia",
+      "FRANCE": "Francia",
+      "GERMANY": "Alemania",
+      "GREECE": "Grecia",
+      "HUNGARY": "Hungría",
+      "IRELAND": "Irlanda",
+      "ITALY": "Italia",
+      "LATVIA": "Letonia",
+      "LITHUANIA": "Lituania",
+      "LUXEMBOURG": "Luxemburgo",
+      "MALTA": "Malta",
+      "NETHERLANDS": "Países Bajos",
+      "POLAND": "Polonia",
+      "PORTUGAL": "Portugal",
+      "ROMANIA": "Rumania",
+      "SLOVAKIA": "Eslovaquia",
+      "SLOVENIA": "Eslovenia",
+      "SWEDEN": "Suecia"
+    },
+    "invoiceFileName": {
+      "COMMISSION_INVOICE": "fatura-comisión",
+      "LIQUIDATION_INVOICE": "factura-liquidación"
+    },
+    "paymentStatus": {
+      "PENDING": "Procesando",
+      "APPROVED": "Pagado",
+      "REJECTED": "Rechazado"
+    },
+    "articleStatus": {
+      "NOT_PUBLISHED": "No publicado",
+      "NEED_CHANGES": "Necesita cambios",
+      "CHANGES_MADE": "Cambios realizados",
+      "APPROVED": "Aprobado",
+      "PUBLISHED": "Publicado"
+    },
+    "onlineStoreArticleStatus": {
+      "NOT_AVAILABLE": "No disponible",
+      "AVAILABLE": "Disponible",
+      "SOLD": "Vendido"
+    },
+    "offerStatus": {
+      "PENDING": "Pendiente",
+      "ACCEPTED": "Aceptada",
+      "REJECTED": "Rechazada",
+      "COUNTERED": "Contraoferta"
+    },
+    "saleType": {
+      "AUCTION": "Subasta",
+      "ONLINE_STORE": "Tienda online"
+    },
+    "payoutMethod": {
+      "CASH": "Efectivo",
+      "BANK_TRANSFER": "Transferencia bancaria",
+      "PAYPAL": "PayPal",
+      "STRIPE": "Stripe"
+    },
+    "payoutStatus": {
+      "PAID": "Pagado",
+      "CANCELLED": "Cancelado"
+    },
+    "sortBy": {
+      "NEWEST": "Más reciente",
+      "OLDEST": "Más antiguo",
+      "HIGHER_PRICE": "Mayor precio",
+      "LOWER_PRICE": "Menor precio"
+    },
+    "paidFilter": {
+      "ALL": "Todos",
+      "NOT_PAID": "No pagados",
+      "PAID_NOT_SHIPPED": "Pagados pero no enviados",
+      "PAID_SHIPPED": "Pagados y enviados"
+    },
+    "offersFilter": {
+      "ALL": "Todos",
+      "WITH_ACCEPTED_OFFERS": "Con ofertas aceptadas",
+      "WITH_PENDING_OFFERS": "Con ofertas pendientes",
+      "WITHOUT_OFFERS": "Sin ofertas"
+    },
+    "auctionCategorySelection": {
+      "BAGS": "Bolsos",
+      "JEWERLY": "Joyería",
+      "WATCHES": "Relojes",
+      "ART": "Arte"
+    },
+    "articleSpecification": {
+      "state": {
+        "NEVER_WORN_WITH_TAG": "Nunca Usado con Etiqueta",
+        "NEVER_WORN": "Nunca Usado",
+        "VERY_GOOD_CONDITION": "Muy Buen Estado",
+        "GOOD_CONDITION": "Buen Estado",
+        "FAIR_CONDITION": "Estado Aceptable"
+      },
+      "stateDescription": {
+        "NEVER_WORN_WITH_TAG": "Como nuevo, con la etiqueta original aún adherida y sin signos de uso, daño o modificaciones.",
+        "NEVER_WORN": "En estado impecable, sin señales de desgaste, daños o alteraciones.",
+        "VERY_GOOD_CONDITION": "Ligeramente usado, bien conservado, sin rasgaduras, bolitas o decoloración.",
+        "GOOD_CONDITION": "Usado moderadamente, aún en buen estado pero puede mostrar un ligero desgaste del tejido o pequeñas imperfecciones.",
+        "FAIR_CONDITION": "Muy usado, con defectos visibles y signos evidentes de uso frecuente."
+      },
+      "smell": {
+        "TOBACCO": "Tabaco",
+        "PERFUME": "Perfume",
+        "HUMIDITY": "Humedad",
+        "NO_SMELL": "Sin olor",
+        "OTHER": "Otro"
+      },
+      "movement": {
+        "AUTOMATIC": "Automático",
+        "QUARTZ": "Cuarzo",
+        "MANUAL_WINDING": "Cuerda manual",
+        "SMART_WATCH": "Reloj inteligente",
+        "SOLAR": "Solar",
+        "OTHER": "Otro"
+      },
+      "artType": {
+        "OTHER": "Otro",
+        "ANTIQUE": "Antigüedad",
+        "CERAMIC": "Cerámica",
+        "COLLECTIBLE": "Coleccionable",
+        "DRAWING": "Dibujo",
+        "FURNITURE": "Mueble",
+        "GLASS_ART": "Arte en vidrio",
+        "METAL_ART": "Arte en metal",
+        "PAINTING": "Pintura",
+        "SCULPTURE": "Escultura",
+        "WOOD_ART": "Arte en madera"
+      },
+      "color": {
+        "MULTICOLOUR": "Multicolor",
+        "OTHER": "Otro",
+        "BEIGE": "Beige",
+        "BLACK": "Negro",
+        "BLUE": "Azul",
+        "BROWN": "Marrón",
+        "BURGUNDY": "Burdeos",
+        "CAMEL": "Camel",
+        "CHARCOAL": "Carbón",
+        "ECRU": "Crudo",
+        "GOLD": "Dorado",
+        "GREEN": "Verde",
+        "GREY": "Gris",
+        "KHAKI": "Caqui",
+        "METALLIC": "Metálico",
+        "NAVY": "Azul Marino",
+        "ORANGE": "Naranja",
+        "PINK": "Rosa",
+        "PURPLE": "Morado",
+        "RED": "Rojo",
+        "SILVER": "Plateado",
+        "TURQUOISE": "Turquesa",
+        "WHITE": "Blanco",
+        "YELLOW": "Amarillo"
+      },
+      "boxMaterial": {
+        "STEEL": "Acero",
+        "STEEL_AND_GOLD": "Acero y oro",
+        "ALUMINUM": "Aluminio",
+        "GOLD_PLATED": "Bañado o chapado en oro",
+        "BRASS": "Latón",
+        "BRONZE": "Bronce",
+        "CARBON": "Carbono",
+        "CERAMIC": "Cerámica",
+        "SAPPHIRE_CRYSTAL": "Cristal de zafiro",
+        "PALLADIUM": "Paladio",
+        "PLASTIC": "Plástico",
+        "PLATINUM": "Platino",
+        "SILVER": "Plata",
+        "TANTALUM": "Tántalo",
+        "TITANIUM": "Titanio",
+        "TUNGSTEN": "Tungsteno",
+        "RED_GOLD": "Oro rojo",
+        "ROSE_GOLD": "Oro rosa",
+        "ROSE_GOLD_AND_STEEL": "Oro rosa y acero",
+        "WHITE_GOLD": "Oro blanco",
+        "WHITE_GOLD_AND_STEEL": "Oro blanco y acero",
+        "YELLOW_GOLD": "Oro amarillo",
+        "YELLOW_GOLD_AND_STEEL": "Oro amarillo y acero",
+        "UNSPECIFIED": "Sin especificar"
+      },
+      "material": {
+        "CASHMERE": "Cachemira",
+        "CANVAS": "Lona",
+        "CLOTH": "Tela",
+        "COTTON": "Algodón",
+        "COTTON_ELASTHANE": "Algodón - elastano",
+        "CRYSTAL": "Cristal",
+        "DENIM_JEANS": "Denim - Jeans",
+        "EXOTIC_LEATHERS": "Cueros exóticos",
+        "FAUX_FUR": "Piel sintética",
+        "FUR": "Piel",
+        "GLASS": "Vidrio",
+        "GLITTER": "Purpurina",
+        "GOLD_PLATED": "Chapado en oro",
+        "LACE": "Encaje",
+        "LEATHER": "Cuero",
+        "LINEN": "Lino",
+        "LYCRA": "Lycra",
+        "METAL": "Metal",
+        "NOT_SPECIFIED": "No especificado",
+        "OTHER": "Otro",
+        "PATENT_LEATHER": "Cuero charolado",
+        "PEARL": "Perla",
+        "PINK_GOLD": "Oro rosa",
+        "PLASTIC": "Plástico",
+        "POLYAMIDE": "Poliamida",
+        "POLYESTER": "Poliéster",
+        "PONY_STYLE_CALFSKIN": "Piel de ternero estilo pony",
+        "RUBBER": "Caucho",
+        "SILK": "Seda",
+        "SILVER": "Plata",
+        "SILVER_PLATED": "Chapado en plata",
+        "SPANDEX": "Spandex",
+        "SPONGE": "Esponja",
+        "STEEL": "Acero",
+        "SUEDE": "Gamuza",
+        "SYNTHETIC": "Sintético",
+        "TWEED": "Tweed",
+        "VEGAN_LEATHER": "Cuero vegano",
+        "VELVET": "Terciopelo",
+        "VINYL": "Vinilo",
+        "VISCOSE": "Viscosa",
+        "WHITE_GOLD": "Oro blanco",
+        "WICKER": "Mimbre",
+        "WOOL": "Lana",
+        "YELLOW_GOLD": "Oro amarillo"
+      },
+      "strapMaterial": {
+        "STEEL": "Acero",
+        "STEEL_AND_GOLD": "Acero y oro",
+        "ALUMINUM": "Aluminio",
+        "GOLD_PLATED": "Bañado o chapado en oro",
+        "RUBBER": "Caucho",
+        "CERAMIC": "Cerámica",
+        "BRASS": "Latón",
+        "YELLOW_GOLD": "Oro amarillo",
+        "WHITE_GOLD": "Oro blanco",
+        "RED_GOLD": "Oro rojo",
+        "ROSE_GOLD": "Oro rosa",
+        "LEATHER": "Piel",
+        "ALLIGATOR_LEATHER": "Piel de aligátor",
+        "OSTRICH_LEATHER": "Piel de avestruz",
+        "LIZARD_LEATHER": "Piel de lagarto",
+        "SNAKE_LEATHER": "Piel de serpiente",
+        "SHARK_LEATHER": "Piel de tiburon",
+        "COW_LEATHER": "Piel de vaca",
+        "PLASTIC": "Plástico",
+        "SILVER": "Plata",
+        "PLATINUM": "Platino",
+        "SATIN": "Satén",
+        "SILICONE": "Silicona",
+        "TEXTILE": "Textil",
+        "TITANIUM": "Titanio",
+        "UNSPECIFIED": "Sin especificar",
+        "SAPPHIRE_CRYSTAL": "Cristal de zafiro",
+        "ROSE_GOLD_AND_STEEL": "Oro rosa y acero"
+      }
+    }
+  },
+  "errors": {
+    "unexpected": "Algo ha ido mal",
+    "network": "Ha habido un problema de conexión. Inténtalo de nuevo.",
+    "discountCode": {
+      "required": "El código de descuento es requerido",
+      "userNotFound": "Usuario no encontrado",
+      "loadFailed": "Error obteniendo códigos de descuento",
+      "notFound": "Código de descuento no existe",
+      "invalidOrExpired": "Código de descuento inválido o caducado",
+      "userLoadFailed": "Error obteniendo códigos de descuento del usuario",
+      "alreadyUsed": "Código de descuento ya utilizado",
+      "validationFailed": "Error al validar código"
+    },
+    "mobilePayment": {
+      "redsysSessionUnauthorized": "No autorizado",
+      "redsysSessionInvalidAmount": "Importe inválido",
+      "paymentIntentInvalidAmount": "Monto inválido",
+      "selectedItemsInvalid": "Artículos seleccionados inválidos",
+      "selectedItemsNotNumbers": "Todos los artículos seleccionados deben ser números",
+      "auctionIdRequired": "El ID de la subasta es requerido",
+      "countryAndAddressRequired": "El país y la dirección son requeridos",
+      "articleIdRequired": "El ID del artículo es requerido",
+      "selectionArticleIdInvalid": "El ID del artículo es requerido y debe ser un número",
+      "selectionBooleanInvalid": "isSelected debe ser un booleano"
+    },
+    "server": {
+      "internal": "Error interno del servidor",
+      "connection": "Error al conectar con el servidor"
+    },
+    "request": {
+      "getFailed": "Error al obtener información",
+      "updateFailed": "Error al actualizar información",
+      "deleteFailed": "Error al eliminar información"
+    },
+    "country": {
+      "listLoadFailed": "Error al cargar los países"
+    },
+    "config": {
+      "appVersionMissing": "Hubo un error obteniendo información",
+      "appVersionLoadFailed": "Error al cargar información"
+    },
+    "chat": {
+      "invalidAuctionId": "ID de subasta inválido",
+      "auctionNotFound": "Chat no encontrado para esta subasta",
+      "noData": "No se recibieron datos del servidor",
+      "invalidTokenFormat": "Formato de token inválido recibido",
+      "initializationFailed": "Error al inicializar el chat",
+      "sendFailed": "No se pudo enviar el mensaje"
+    },
+    "legal": {
+      "contentMissing": "Faltan los datos del contenido legal",
+      "contentLoadFailed": "Error al cargar el contenido legal"
+    },
+    "info": {
+      "contentMissing": "Faltan los datos del contenido informativo",
+      "contentLoadFailed": "Error al cargar el contenido informativo"
+    },
+    "contact": {
+      "requiredFields": "Faltan campos requeridos",
+      "emailSendFailed": "Error al enviar el correo",
+      "nameRequired": "El nombre es requerido",
+      "emailRequired": "El email es requerido",
+      "messageRequired": "El mensaje es requerido",
+      "maxImages": "Máximo 5 imágenes permitidas",
+      "invalidImageFormat": "Formato de imagen inválido. Cada imagen debe tener: src, name, type y arrayBuffer"
+    },
+    "store": {
+      "notAuthorized": "No autorizado",
+      "permissionDenied": "Permiso denegado",
+      "userInvalid": "Usuario inválido",
+      "userNotFound": "Usuario no encontrado",
+      "auctioneerInactive": "Subastador aún no activo",
+      "fieldsInvalid": "Campos inválidos",
+      "socialUrlInvalid": "URL de Red Social inválida",
+      "webUrlInvalid": "URL de Página Web inválida",
+      "updateFailed": "Error actualizando información de la tienda",
+      "imageUploadFailed": "Error subiendo imagen",
+      "userLoadFailed": "Error obteniendo el usuario",
+      "notFound": "Tienda no encontrada",
+      "loadFailed": "Error obteniendo la tienda",
+      "dataLoadFailed": "Error obteniendo información",
+      "countryLoadFailed": "Error obteniendo el país de la tienda",
+      "articleIdRequired": "Se requiere articleId",
+      "articleIdInvalid": "articleId inválido",
+      "commissionLoadFailed": "Error obteniendo la comisión de la tienda",
+      "commissionInvalid": "Porcentaje de comisión inválido",
+      "commissionUpdateFailed": "Error actualizando la comisión de la tienda",
+      "countryMissing": "Faltan los datos del país de la tienda",
+      "countryFetchFailed": "Error al cargar los datos del país de la tienda",
+      "userDataLoadFailed": "Error al cargar datos del usuario",
+      "userDataRefreshFailed": "No se pudieron actualizar los datos del usuario",
+      "commissionFetchFailed": "Error al obtener la comisión",
+      "commissionMissing": "Faltan los datos de comisión",
+      "updateDataFailed": "Error al actualizar"
+    },
+    "payout": {
+      "permissionDenied": "Permiso denegado",
+      "storeNotFound": "Tienda no encontrada",
+      "dashboardLoadFailed": "Error cargando la información de pagos",
+      "loadFailed": "Error obteniendo el pago de tienda",
+      "listLoadFailed": "Error obteniendo los pagos de la tienda",
+      "settlementItemsLoadFailed": "Error obteniendo los pagos de tiendas",
+      "historyLoadFailed": "Error obteniendo el historial de pagos de tiendas",
+      "storeItemsLoadFailed": "Error obteniendo los pagos de la tienda",
+      "storeShippingItemsLoadFailed": "Error obteniendo los pagos de envío de la tienda",
+      "noItemsSelected": "No se seleccionaron pagos",
+      "selectedItemsValidationFailed": "Error validando los pagos seleccionados",
+      "selectedArticlesNotFound": "Algunos artículos seleccionados no fueron encontrados.",
+      "selectedItemsNotFound": "Algunos pagos seleccionados no fueron encontrados.",
+      "mixedStores": "Los artículos seleccionados deben pertenecer a la misma tienda.",
+      "mixedSaleTypes": "Los artículos de subasta y tienda online no se pueden pagar en la misma liquidación.",
+      "paymentDateInvalid": "Fecha de pago inválida",
+      "paymentDateFuture": "La fecha de pago no puede estar en el futuro",
+      "shippingValidationFailed": "Error validando los pagos de envío seleccionados",
+      "itemsNotPayable": "Algunos pagos seleccionados aún no se pueden pagar.",
+      "liquidationNumberCreateFailed": "Error creando el número de liquidación",
+      "commissionNumberCreateFailed": "Error creando el número de factura de comisión",
+      "createFailed": "Error creando el pago de tienda",
+      "createdItemsUpdateFailed": "El pago de tienda fue creado, pero no se pudieron actualizar los pagos seleccionados.",
+      "createdShippingUpdateFailed": "El pago de tienda fue creado, pero no se pudieron actualizar los pagos de envío.",
+      "invalidCurrentStatus": "Algunos pagos seleccionados no se pueden actualizar por su estado actual.",
+      "payableDatePending": "Algunos pagos seleccionados no se pueden marcar como pagados porque aún no ha llegado su fecha de pago.",
+      "itemsUpdateFailed": "Error actualizando los pagos",
+      "commissionInvoiceLoadFailed": "Error obteniendo la factura de comisión",
+      "commissionInvoiceMissing": "Faltan datos de la factura de comisión",
+      "liquidationLoadFailed": "Error obteniendo el documento de liquidación",
+      "liquidationMissing": "Faltan datos del documento de liquidación",
+      "idInvalid": "id inválido",
+      "invoiceNotFound": "Factura no encontrada"
+    },
+    "soldArticle": {
+      "userInvalid": "Usuario inválido",
+      "notFound": "No se encontró el artículo",
+      "loadFailed": "Error al obtener el artículo",
+      "listLoadFailed": "Error obteniendo los artículos",
+      "auctionIdInvalid": "ID de subasta inválido",
+      "articleIdInvalid": "ID de artículo inválido",
+      "requestBodyInvalid": "El cuerpo de la solicitud no pudo ser procesado",
+      "dataInvalid": "Datos inválidos",
+      "acquisitionCancelFailed": "Error al cancelar la adquisición",
+      "acquisitionNotFound": "No se encontró la adquisición",
+      "ownerMismatch": "Usuario inválido. No eres el propietario de este artículo",
+      "alreadyPaid": "Este artículo ya está pagado. Recarga la página o contacta con soporte si es necesario",
+      "cancelTooEarly": "Solo puedes cancelar la adquisición %{days} días después de que el usuario adquirió el artículo",
+      "sendStoreFailed": "Error al enviar el artículo a la tienda online",
+      "sendStoreTooEarly": "Solo puedes enviar el artículo a la tienda online %{days} días después de que el usuario adquirió el artículo",
+      "notifyEmailFailed": "Error al enviar el correo",
+      "notSold": "El artículo no ha sido vendido",
+      "priceInvalid": "Precio de venta inválido",
+      "notifyNotNeeded": "No es necesario notificar. Si crees que debería ser necesario contacta con soporte.",
+      "grantFailed": "Error al conceder el artículo",
+      "alreadyGranted": "Este artículo ya ha sido concedido al segundo mayor postor",
+      "grantTooEarly": "Solo puedes conceder el artículo al siguiente usuario %{days} días después de que el usuario original adquirió el artículo",
+      "notEnoughBids": "Error al conceder el artículo. No se encontraron suficientes pujas",
+      "firstUserInvalid": "Usuario inválido.",
+      "secondBidderInvalid": "Postor secundario inválido.",
+      "shippingNotAuthorized": "No autorizado",
+      "shippingInfoInvalid": "Información de envío inválida",
+      "shippingUpdateFailed": "Error actualizando la información de envío"
+    },
+    "file": {
+      "invalidProfilePicture": "Formato de foto de perfil inválido. Debe tener: src, name, type y arrayBuffer",
+      "imageTooHeavy": "La imagen es demasiado pesada",
+      "uploadFailed": "Error subiendo imagen"
+    },
+    "validation": {
+      "invalidRoleMobile": "Rol inválido.",
+      "invalidLanguage": "Idioma inválido.",
+      "invalidFieldsMobile": "Campos inválidos. Por favor, asegúrate de tener la última versión de la aplicación.",
+      "invalidFieldsGeneric": "Campos inválidos",
+      "invalidFieldsProfile": "Campos inválidos",
+      "languageRequired": "El campo language es requerido y debe ser una cadena de texto",
+      "unsupportedLanguage": "Idioma no soportado.",
+      "missingParameters": "Faltan parámetros"
+    },
+    "auth": {
+      "accountDisabled": "Cuenta desactivada",
+      "invalidSession": "Sesión inválida",
+      "userMissing": "Usuario faltante",
+      "userInvalidOrMissing": "Usuario inválido o faltante",
+      "auctioneerAccountInactive": "Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.",
+      "userNotAuthenticated": "Usuario no autenticado",
+      "notAuthorized": "No autorizado",
+      "userLoadFailed": "Error obteniendo el usuario",
+      "roleLoadFailed": "Error obteniendo el rol",
+      "loginInvalidCredentials": "Email o contraseña incorrectos",
+      "loginEmailNotConfirmed": "Email no confirmado",
+      "loginTooManyRequests": "Demasiados intentos de inicio de sesión. Por favor, intenta más tarde.",
+      "loginNetwork": "Error de conexión. Por favor, verifica tu internet.",
+      "loginEmailNotVerified": "Correo no verificado. Revisa tu bandeja de entrada.",
+      "loginConfirmationCooldown": "Espera unos momentos antes de solicitar otro correo de confirmación.",
+      "loginAccountDisabled": "Tu cuenta ha sido desactivada. Contacta soporte para más información.",
+      "loginAccountDisabledToast": "Tu cuenta ha sido desactivada. Contacta soporte si crees que es un error.",
+      "loginUnknown": "Error desconocido. Por favor, intenta de nuevo.",
+      "signupImageProcessingFailed": "Error al procesar la imagen de perfil",
+      "signupFailed": "Error en el registro",
+      "signupUnexpected": "Error inesperado durante el registro",
+      "signupNetwork": "Error de conexión. Por favor, verifica tu internet."
+    },
+    "account": {
+      "invalidUser": "Usuario inválido",
+      "deleteFailed": "No se pudo eliminar tu cuenta. Inténtalo de nuevo.",
+      "deleteUnexpected": "Ocurrió un error al eliminar su cuenta.",
+      "deleteRetryLater": "No se pudo eliminar la cuenta. Por favor, inténtelo de nuevo más tarde."
+    },
+    "address": {
+      "fetchFailed": "Error obteniendo direcciones",
+      "loadFailed": "Error al cargar las direcciones",
+      "createFailed": "Error creando la dirección. Por favor, inténtalo de nuevo.",
+      "createUnexpected": "Error al crear la dirección",
+      "updateFailed": "Error actualizando la dirección. Por favor intenta de nuevo."
+    },
+    "billing": {
+      "idRequired": "ID de facturación requerido",
+      "retrieveFailed": "Error al obtener los datos de facturación",
+      "noData": "No se recibieron datos de facturación",
+      "loadFailed": "Error al cargar la información de facturación",
+      "createFailed": "Error creando datos de factuación",
+      "createUnexpected": "Error al crear la información de facturación",
+      "updateFailed": "Error actualizando datos de factuación",
+      "updateUnexpected": "Error al actualizar la información de facturación",
+      "deleteFailed": "Error eliminando dirección de facturación",
+      "deleteUnexpected": "Error al eliminar la información de facturación"
+    },
+    "profile": {
+      "updateFailed": "Error actualizando información de usuario",
+      "updateUnexpected": "Error al actualizar el perfil",
+      "webUpdateUnexpected": "Error actualizando usuario",
+      "imageProcessingFailed": "Hubo un problema procesando la imagen"
+    },
+    "otp": {
+      "authRequired": "Debes iniciar sesión para solicitar un OTP",
+      "invalidPhoneNumber": "Formato de número de teléfono inválido",
+      "attemptCheckFailed": "Error verificando intentos anteriores de OTP",
+      "cooldown": "Debes esperar {seconds} segundos antes de solicitar otro OTP",
+      "hourlyLimit": "Has alcanzado el límite de OTP por hora",
+      "resendTrackingFailed": "Error registrando el reenvío del OTP",
+      "smsResendFailed": "Error reenviando el SMS",
+      "generationFailed": "Error generando OTP",
+      "smsSendFailed": "Error enviando el SMS",
+      "notFound": "El OTP no existe o ha expirado",
+      "alreadyUsed": "Este código ya fue utilizado",
+      "expired": "Este código ha expirado",
+      "incorrect": "El código ingresado es incorrecto",
+      "updateFailed": "Error actualizando OTP",
+      "userUpdateFailed": "Error actualizando el número de teléfono del usuario",
+      "deleteFailed": "Error eliminando OTP",
+      "phoneRequired": "Número de teléfono requerido",
+      "codeRequired": "Código OTP requerido",
+      "noResponse": "Sin respuesta del servidor",
+      "sendFailed": "Error al enviar código de verificación",
+      "invalidVerificationCode": "Código de verificación inválido",
+      "verifyFailed": "Error al verificar código"
+    },
+    "article": {
+      "followedListLoadFailed": "Error al obtener los artículos seguidos",
+      "followedListUserMissing": "No hay usuario",
+      "followIdsUserInvalid": "Usuario inválido",
+      "followStatusUserInvalid": "Usuario inválido",
+      "followStatusLoadFailed": "Error al obtener el artículo",
+      "neighboursLoadFailed": "Error obteniendo los artículos vecinos",
+      "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
+      "followedArticlesLoadFailed": "Error al obtener los artículos seguidos",
+      "loadFailed": "Error al obtener el artículo",
+      "bidsLoadFailed": "Error al obtener las pujas del artículo",
+      "autoBidsLoadFailed": "Error obteniendo las pujas automáticas",
+      "liveListLoadFailed": "Error al obtener los artículos",
+      "liveListNotFound": "Error al obtener el artículo",
+      "pageInfoLoadFailed": "Error al obtener información de la página",
+      "updatedBiddingAmountsLoadFailed": "Error al obtener actualizar los montos de puja",
+      "featuredArticlesLoadFailed": "Error al obtener los artículos destacados",
+      "mostViewedArticlesLoadFailed": "Error al obtener los artículos más vistos",
+      "newestDiscoveryLoadFailed": "Error al obtener artículos más recientes",
+      "newestArticlesLoadFailed": "Error al obtener los artículos más recientes",
+      "onlineStoreListLoadFailed": "Error al obtener los artículos",
+      "onlineStoreDetailQueryFailed": "Error al obtener el artículos",
+      "onlineStoreDetailNotFound": "Artículo no encontrado o ya no se encuentra disponible",
+      "onlineStoreDetailLoadFailed": "Error al obtener el artículo",
+      "myOnlineStoreDetailUserInvalid": "Usuario inválido",
+      "myOnlineStoreDetailArticleInvalid": "Artículo inválido",
+      "myOnlineStoreDetailLoadFailed": "Error al obtener el artículo",
+      "myOnlineStoreDetailNotFound": "Artículo no encontrado o no tienes acceso a él",
+      "reviewCommentsMissing": "Falta uno o ambos comentarios",
+      "reviewUserInvalid": "Usuario inválido",
+      "reviewUpdateFailed": "Error al actualizar el artículo",
+      "reviewMissingChanges": "El artículo necesita cambios",
+      "reviewAlreadyApproved": "El artículo ya ha sido aprobado",
+      "featuredUnauthorized": "No autorizado",
+      "featuredUpdateFailed": "Error al actualizar el artículo",
+      "featuredNotFound": "Artículo no encontrado",
+      "featuredOwnerMismatch": "No eres el propietario de este artículo",
+      "featuredUnavailable": "El artículo debe estar disponible y no vendido para cambiar el estado de destacado",
+      "featuredLimitReached": "Solo puedes destacar hasta 3 artículos",
+      "articlesLoadFailed": "Error al obtener los artículos",
+      "noArticlesWon": "No hay artículos ganados",
+      "commentsLoadFailed": "Error al obtener comentarios",
+      "commentsAuthRequired": "Usuario no autenticado",
+      "commentsUserInvalid": "Usuario inválido",
+      "followUserMissing": "Usuario no encontrado",
+      "followFailed": "Error al seguir el artículo",
+      "followUnavailable": "El artículo ya no esta disponible para seguir",
+      "alreadyFollowed": "Artículo ya seguido",
+      "unfollowUserMissing": "No hay usuario",
+      "unfollowFailed": "Error al dejar de seguir el artículo",
+      "removeUserInvalid": "Usuario inválido",
+      "removeAuctionNotFound": "Subasta no encontrada",
+      "removeUnavailable": "Ya no se pueden remover artículos",
+      "removeFailed": "No se pudo sacar el artículo de la subasta",
+      "removeSold": "No se pudo sacar el artículo de la subasta porque ya fue vendido",
+      "removeWonUserMissing": "No hay usuario",
+      "removeWonFailed": "Error al eliminar los artículos ganados",
+      "removeWonEmpty": "No hay artículos para eliminar",
+      "removeWonAuctionIdRequired": "El ID de la subasta es requerido",
+      "removeWonAuctionIdInvalid": "ID de subasta inválido",
+      "toggleWonUserMissing": "No se encontró ningún usuario",
+      "toggleWonUpdateFailed": "Error al actualizar la selección del artículo",
+      "imageOrderUserMissing": "Usuario no encontrado",
+      "imageOrderUserInvalid": "Usuario inválido",
+      "imageOrderLoadFailed": "Error actualizando el orden de las imagenes",
+      "imageOrderEditUnavailable": "No se puede editar el orden de las imagenes",
+      "imageOrderUpdateFailed": "Error actualizando el orden de las imágenes",
+      "imageOrderSaveUnexpected": "Ocurrió un error al guardar el orden. Por favor, inténtelo de nuevo.",
+      "imageOrderContainerUnavailable": "Hubo un error",
+      "orderUserInvalid": "Usuario inválido",
+      "orderUpdateFailed": "Error actualizando el orden de los articulos",
+      "orderEditUnavailable": "No se puede editar el orden de los articulos",
+      "creationFailed": "Error al crear el artículo",
+      "updateFailed": "Error al actualizar el artículo"
+    },
+    "onlineStoreArticle": {
+      "userInvalid": "Usuario inválido",
+      "ownerMismatch": "Usuario inválido. No eres el propietario de este artículo",
+      "createCategoryInvalid": "Categoría inválida",
+      "createFieldsInvalid": "Campos inválidos",
+      "createMaxImages": "No se pueden subir más de %{max} imágenes",
+      "createMinImages": "Se requiere un mínimo de %{min} imágenes",
+      "formMinImages": "Se requieren al menos %{min} imágenes",
+      "createFailed": "Error al crear el artículo",
+      "listLoadFailed": "Error al obtener los artículos",
+      "imageUserMissing": "Usuario no encontrado",
+      "imageLoadFailed": "Error actualizando el orden de las imagenes",
+      "imageNotFound": "Artículo no encontrado",
+      "imageSold": "No se pueden actualizar las imágenes de artículos vendidos",
+      "imageUpdateFailed": "Error al actualizar el orden de las imágenes del artículo",
+      "ownershipUserMissing": "Usuario no encontrado",
+      "ownershipRequestFailed": "No se pudo procesar la solicitud",
+      "ownershipNotFound": "Artículo no encontrado",
+      "layoutLoadFailed": "Error al obtener el artículo",
+      "layoutNotFound": "Artículo no encontrada",
+      "deleteFailed": "Error al borrar el artículo",
+      "deleteSold": "Este artículo ya está vendido. Contacta con soporte",
+      "priceUpdateFailed": "Error al actualizar el precio",
+      "priceActiveOffers": "Hay ofertas activas que no han expirado aún",
+      "pricePendingOffers": "Hay ofertas pendientes que debes rechazar antes de cambiar el precio",
+      "priceStatusInvalid": "No se puede cambiar el precio en este estado",
+      "enableFailed": "Error al habilitar el artículo",
+      "alreadyAvailable": "El artículo ya está disponible",
+      "assignAuctionIdInvalid": "ID de subasta inválido. Por favor, contacta con soporte si el problema persiste.",
+      "assignEstimatedPriceInvalid": "Precio estimado inválido. Ingresa un número válido.",
+      "assignStartingPriceInvalid": "Precio inicial inválido. Ingresa un número válido.",
+      "assignFailed": "Error al asignar el artículo a la subasta",
+      "assignSold": "El artículo ya está vendido",
+      "assignActiveOffer": "El artículo tiene una oferta activa aceptada",
+      "assignAuctionNotFound": "Error al asignar el artículo a la subasta, subasta no encontrada",
+      "assignAuctionOwnerMismatch": "Usuario inválido. No eres el propietario de esta subasta",
+      "assignTooLate": "Quedan menos de %{days} días para que inicie la subasta, ya no puedes agregar artículos",
+      "assignAlreadyAssigned": "Artículo ya asignado a la subasta",
+      "assignCategoryMismatch": "La categoría del artículo no coincide con la categoría de la subasta",
+      "noImageSelected": "No se seleccionó ninguna imagen",
+      "imageMaximum": "Máximo de %{max} imágenes",
+      "imageUploadFailed": "Hubo un problema subiendo una o más imágenes",
+      "modelRequired": "Por favor introduce el modelo del artículo antes de subir las imágenes",
+      "imageRemoveFailed": "Error al eliminar la imagen",
+      "createUnexpected": "Hubo un error al crear el artículo",
+      "imageRequired": "Se requiere al menos una imagen",
+      "updateFailed": "Error al actualizar el artículo",
+      "requestArticleIdInvalid": "ID de artículo inválido",
+      "requestBodyInvalid": "El cuerpo de la solicitud no pudo ser procesado",
+      "requestDataInvalid": "Datos inválidos",
+      "requestPriceInvalid": "Precio inválido"
+    },
+    "auction": {
+      "availableUnauthorized": "No autorizado",
+      "availableLoadFailed": "Error al obtener subastas",
+      "myListUserInvalid": "Usuario inválido",
+      "myListLoadFailed": "Error al obtener subastas",
+      "myDetailLoadFailed": "Error al obtener la subasta",
+      "myArticlesLoadFailed": "Error al obtener los artículos de la subasta",
+      "myArticlesUnexpectedLoadFailed": "Error al cargar los artículos de la subasta",
+      "availableDataMissing": "Faltan los datos de subastas disponibles",
+      "availableFetchFailed": "Error al cargar las subastas disponibles",
+      "followedListLoadFailed": "Error al obtener las subastas seguidas",
+      "followedListUserMissing": "No hay usuario",
+      "followStatusUserInvalid": "Usuario inválido",
+      "followStatusLoadFailed": "Error al obtener la información del usuario",
+      "idRequired": "Falta auctionId",
+      "userFollowInfoLoadFailed": "Error al obtener la información del usuario",
+      "followedAuctionsLoadFailed": "Error al obtener las subastas seguidas",
+      "upcomingAuctionsLoadFailed": "Error al obtener las subastas próximas",
+      "upcomingLoadFailed": "Error al obtener las subastas próximas",
+      "calendarLoadFailed": "Error al obtener las subastas del mes",
+      "liveNotFound": "Subasta no encontrada",
+      "liveFinished": "La subasta ha finalizado",
+      "notLive": "La subasta aún no está en vivo",
+      "followUserMissing": "No hay usuario",
+      "followFailed": "Error al seguir la subasta",
+      "followUnavailable": "La subasta ya no esta disponible para seguir",
+      "unfollowUserMissing": "No hay usuario",
+      "unfollowFailed": "Error al dejar de seguir el artículo",
+      "reviewRequestInvalidData": "Datos de solicitud inválidos",
+      "reviewRequestUserMissing": "Usuario no encontrado",
+      "reviewRequestForbidden": "Permiso denegado",
+      "reviewRequestProcessFailed": "No se pudo procesar la solicitud",
+      "reviewRequestChangesMissing": "Faltan cambios en la subasta",
+      "reviewRequestNotAllowed": "Acción no permitida",
+      "reviewRequestArticlesLoadFailed": "Problema al recuperar los datos",
+      "reviewRequestMinArticles": "Se requiere un mínimo de %{min} artículos para continuar",
+      "reviewRequestArticleChangesMissing": "Faltan cambios en algunos artículos",
+      "reviewRequestUpdateFailed": "Error al actualizar",
+      "auctionsLoadFailed": "Error al obtener subastas",
+      "creationFailed": "Error al crear la subasta",
+      "updateFailed": "Error al actualizar la subasta"
+    },
+    "autoBid": {
+      "loadFailed": "Error al obtener las ofertas realizadas",
+      "dataMissing": "Faltan los datos de puja automática",
+      "dataLoadFailed": "Error al cargar los datos de puja automática",
+      "userMissing": "Usuario no encontrado",
+      "listLoadFailed": "Error obteniendo pujas automáticas",
+      "toggleUserMissing": "Usuario no encontrado",
+      "toggleFailed": "Error desactivando la puja automática"
+    },
+    "payment": {
+      "detailLoadFailed": "Error al cargar la información del pago",
+      "historyLoadFailed": "Error al cargar el historial de pagos",
+      "auctionIdRequired": "ID de subasta requerido",
+      "wonArticlesLoadFailed": "Error al cargar artículos ganados",
+      "commissionLoadFailed": "Error al cargar la comisión",
+      "commissionMissing": "Faltan los datos de comisión",
+      "configLoadFailed": "Error al cargar la configuración de pago",
+      "configMissing": "Faltan los datos de configuración de pago",
+      "recordCreateFailed": "Error al crear el registro de pago",
+      "noResponse": "No se recibió respuesta del servidor",
+      "revertFailed": "Error al revertir el pago",
+      "redsysSessionCreateFailed": "No se pudo crear la sesión de pago",
+      "redsysPrepareUnexpected": "Error inesperado al preparar el pago",
+      "redsysSessionNotReady": "La sesión de pago no está preparada",
+      "redsysCompletionFailed": "El pago no se pudo completar",
+      "redsysGatewayOpenFailed": "Error inesperado al abrir la pasarela de pago"
+    },
+    "invoice": {
+      "userMissing": "Usuario no encontrado",
+      "paymentNotFound": "Pago no encontrado. Intenta de nuevo o contacta con soporte.",
+      "generateFailed": "Error al generar la factura. Intenta de nuevo o contacta con soporte.",
+      "billingInfoInvalid": "Información de facturación inválida",
+      "amountsInvalid": "Los importes del pago no cuadran. Contacta con soporte.",
+      "itemsInvalid": "Los artículos del pago no cuadran. Contacta con soporte.",
+      "payloadInvalid": "Datos enviados no válidos",
+      "loadFailed": "Error al cargar la información de facturación",
+      "createFailed": "Error al crear la información de facturación"
+    },
+    "offer": {
+      "offersMadeLoadFailed": "Error al obtener las ofertas realizadas",
+      "invalidNumber": "Ingresa un número válido",
+      "counterAmountUnchanged": "La contraoferta debe ser diferente al importe actual",
+      "unauthorized": "No autorizado",
+      "invalid": "Oferta inválida",
+      "notFound": "Oferta no encontrada",
+      "articleUnavailable": "El artículo ya no está disponible",
+      "articleUnavailableNoArticle": "El artículo ya no está disponible",
+      "inactive": "Esta oferta ya no está activa",
+      "unavailable": "Esta oferta ya no se encuentra disponible",
+      "negotiationInactive": "Esta negociación ya no está activa",
+      "negotiationUnavailable": "Esta negociación ya no se encuentra disponible",
+      "negotiationUnavailableShort": "Esta negociación ya no está disponible",
+      "alreadyUpdated": "Esta oferta ya se ha actualizado. Actualiza la página e inténtalo de nuevo.",
+      "alreadyUpdatedStore": "Esta oferta ya ha sido actualizada. Actualiza la página e inténtalo de nuevo.",
+      "acceptFailed": "Error aceptando la oferta",
+      "notReadyAccept": "Esta oferta no está lista para ser aceptada",
+      "counterAcceptFailed": "Error aceptando la contraoferta",
+      "noCounterAccept": "No hay ninguna contraoferta para aceptar. Contacta con soporte si crees que esto es un error.",
+      "counterNotFoundSupport": "No se encontró la contraoferta. Contacta con soporte si crees que esto es un error.",
+      "counterUnavailableSupport": "Esta contraoferta ya no está disponible. Contacta con soporte si crees que esto es un error.",
+      "counterInfoInvalid": "La información de la contraoferta no es válida",
+      "counterLoadFailed": "Error obteniendo la contraoferta",
+      "noCounterResponse": "No hay ninguna contraoferta a la que responder",
+      "currentCounterNotFound": "No se ha podido encontrar la contraoferta actual",
+      "waitStore": "Debes esperar a que la tienda responda",
+      "userCounterSame": "Tu contraoferta debe ser diferente de la oferta actual",
+      "userCounterSendFailed": "Error enviando la contraoferta",
+      "storeCounterLoadFailed": "Ha ocurrido un error al obtener la oferta",
+      "currentProposalNotFound": "No se ha podido encontrar la propuesta actual",
+      "waitBuyer": "Debes esperar a que el comprador responda",
+      "storeCounterSame": "La contraoferta debe ser diferente de la oferta actual",
+      "storeCounterSendFailed": "Ha ocurrido un error al enviar la contraoferta",
+      "rejectFailed": "Error al rechazar la oferta",
+      "notReadyReject": "Esta oferta no está lista para ser rechazada",
+      "counterRejectFailed": "Error rechazando la contraoferta",
+      "noCounterReject": "No hay ninguna contraoferta para rechazar",
+      "counterNotFound": "No se encontró la contraoferta",
+      "counterUnavailable": "Esta contraoferta ya no está disponible",
+      "myListUserMissing": "Falta el usuario",
+      "myListLoadFailed": "Ha ocurrido un error al obtener tus ofertas",
+      "latestListUserInvalid": "Usuario inválido",
+      "latestListLoadFailed": "Error al obtener los artículos",
+      "latestAppLoadFailed": "Error al obtener las ofertas",
+      "latestRefreshFailed": "Error al actualizar las ofertas",
+      "makeAuthRequired": "Debes iniciar sesión para hacer una oferta por el artículo",
+      "reviewAccount": "Tu cuenta es una cuenta de revisor. No puedes realizar esta acción.",
+      "phoneRequired": "Debes validar tu número de teléfono para poder pujar",
+      "articleIdInvalid": "El ID del artículo no es válido",
+      "amountInvalid": "El monto de la oferta no es válido",
+      "makeFailed": "Ha ocurrido un error al hacer la oferta",
+      "makeArticleUnavailable": "Artículo no encontrado o ya no está disponible",
+      "ownArticle": "No puedes hacer una oferta en tu propio artículo",
+      "minAmount": "El monto de la oferta debe ser al menos %{min}",
+      "activeExists": "Ya tienes una oferta activa por este artículo",
+      "acceptedActiveExists": "Tienes una oferta aceptada activa que aún no ha expirado",
+      "formUnexpected": "Ha ocurrido un error inesperado",
+      "buyUserMissing": "Usuario no encontrado",
+      "buyArticleLoadFailed": "Error obteniendo el artículo",
+      "buyExpired": "Artículo no encontrado o tu tiempo para comprar ha expirado",
+      "buyInfoInvalid": "Error obteniendo la información. Por favor, contacta a soporte",
+      "buyArticleUnavailable": "Artículo ya fue vendido o no ya no esta disponible",
+      "buyUnauthorized": "No eres el usuario capaz de comprar este artículo",
+      "buyDataMissing": "No se encontró información del artículo",
+      "buyLoadFailed": "Error al cargar información"
+    },
+    "notification": {
+      "loadFailed": "Error al obtener las notificaciones",
+      "none": "No hay notificaciones",
+      "noUnread": "No hay notificaciones sin leer",
+      "markAllReadFailed": "Hubo un error marcando como leídas las notificaciones",
+      "idInvalid": "ID de notificación inválido",
+      "readFailed": "Error al leer la notificación",
+      "deleteFailed": "Error al eliminar la notificación"
+    },
+    "pushToken": {
+      "required": "El token de push es requerido",
+      "platformInvalid": "La plataforma debe ser ios o android",
+      "registerFailed": "Error al registrar el token de push",
+      "unregisterFailed": "Error al desactivar el token de push",
+      "unexpected": "Ocurrió un error inesperado",
+      "requestInvalid": "El token es requerido y debe ser un string",
+      "requestFormatInvalid": "Formato de token inválido. Debe comenzar con 'ExponentPushToken['",
+      "userIdRequired": "El ID de usuario es requerido",
+      "listLoadFailed": "Error al obtener los tokens de push",
+      "internal": "Error interno del servidor"
+    },
+    "bid": {
+      "updateAmountsFailed": "Error al actualizar los montos de la puja. Haz clic para reintentar.",
+      "invalidAmount": "Cantidad de puja inválida",
+      "minimumAmount": "La puja mínima es de: %{amount}",
+      "maximumAmount": "La puja máxima es de: %{amount}",
+      "requestTimeout": "La solicitud de puja agotó el tiempo. Por favor, inténtalo de nuevo.",
+      "processingFailed": "La puja no pudo ser procesada",
+      "automaticBidFailed": "La puja automática no pudo ser configurada"
+    },
+    "live": {
+      "articlesLoadFailed": "Error al obtener los artículos.",
+      "articlesLoadRetry": "Error al obtener los artículos. Haz clic para reintentar.",
+      "currentArticleLoadFailed": "Error al obtener el artículo."
+    },
+    "document": {
+      "openFailed": "No se pudo abrir el documento"
+    },
+    "user": {
+      "lookupLoadFailed": "Error obteniendo el usuario",
+      "lookupNotFound": "Usuario no encontrado",
+      "listNotFound": "Usuario no encontrado",
+      "listInvalidFilter": "Filtro incorrecto",
+      "listLoadFailed": "Error obteniendo usuarios",
+      "notFound": "Usuario no encontrado",
+      "noData": "No se recibieron datos del usuario",
+      "loadFailed": "Error al cargar datos del usuario",
+      "refreshFailed": "No se pudieron actualizar los datos del usuario",
+      "languageUpdateFailed": "Error al actualizar el idioma"
+    },
+    "articleImages": {
+      "noChanges": "No hay cambios para guardar",
+      "minimumRequired": "Debes agregar al menos %{min} imágenes.",
+      "minimumUploadRequired": "Debe subir al menos %{min} imágenes.",
+      "minimumExistingRequired": "Debe haber al menos %{min} imágenes.",
+      "uploadFailedPlural": "Hubo un error al subir las imágenes.",
+      "uploadFailedSingular": "Hubo un error subiendo la imagen.",
+      "stillCompressing": "Las imágenes aún se están comprimiendo. Por favor espera un momento e intenta de nuevo."
+    }
+  },
+  "signUp": {
+    "accountCreated": "Usuario creado"
+  },
+  "confirmEmail": {
+    "resendSuccess": "Se ha enviado un correo de confirmación"
+  },
+  "resetPassword": {
+    "resetEmailSent": "Correo de restablecimiento enviado"
+  },
+  "addresses": {
+    "createdSuccessfully": "Dirección creada satisfactoriamente",
+    "updatedSuccessfully": "Dirección actualizada satisfactoriamente"
+  },
+  "billing": {
+    "loadedSuccessfully": "Datos de facturación cargados correctamente",
+    "createdSuccessfully": "Datos de facturación creados satisfactoriamente",
+    "updatedSuccessfully": "Datos de facturación actualizados satisfactoriamente",
+    "deletedSuccessfully": "Dirección de facturación eliminada correctamente"
+  },
+  "profile": {
+    "updatedSuccessfully": "Usuario actualizado"
+  },
+  "article": {
+    "followedSuccessfully": "Artículo seguido",
+    "unfollowedSuccessfully": "Artículo dejado de seguir",
+    "removedFromAuctionSuccessfully": "Artículo removido exitosamente",
+    "wonArticlesRemovedSuccessfully": "Artículos eliminados",
+    "imageOrderUpdatedSuccessfully": "Orden actualizado",
+    "orderUpdatedSuccessfully": "Orden actualizado",
+    "refreshedSuccessfully": "Artículo actualizado correctamente",
+    "onlineStoreCreatedSuccessfully": "Artículo creado con éxito",
+    "onlineStoreDeletedSuccessfully": "Artículo eliminado con éxito",
+    "onlineStorePriceUpdatedSuccessfully": "Precio actualizado correctamente",
+    "onlineStoreEnabledSuccessfully": "Artículo habilitado con éxito",
+    "onlineStoreAssignedSuccessfully": "Artículo asignado a la subasta",
+    "approvedSuccessfully": "Artículo aprobado",
+    "changesRequestedSuccessfully": "Cambios solicitados",
+    "featuredStatusUpdatedSuccessfully": "Artículo actualizado correctamente"
+  },
+  "offer": {
+    "madeSuccessfully": "Oferta realizada con éxito",
+    "acceptedSuccessfully": "Oferta aceptada correctamente",
+    "rejectedSuccessfully": "Oferta rechazada correctamente",
+    "counterSentSuccessfully": "Contraoferta enviada correctamente",
+    "counterAcceptedSuccessfully": "Contraoferta aceptada correctamente",
+    "counterRejectedSuccessfully": "Contraoferta rechazada correctamente",
+    "listUpdatedSuccessfully": "Ofertas actualizadas"
+  },
+  "store": {
+    "updatedSuccessfully": "Tienda actualizada",
+    "commissionUpdatedSuccessfully": "Comisión de tienda actualizada correctamente"
+  },
+  "payout": {
+    "createdSuccessfully": "Pago de tienda creado correctamente.",
+    "itemsUpdatedSuccessfully": "Pagos actualizados correctamente"
+  },
+  "soldArticle": {
+    "acquisitionCancelledSuccessfully": "Adquisición cancelada con éxito",
+    "sentToOnlineStoreSuccessfully": "Artículo enviado correctamente a la tienda online",
+    "emailSentSuccessfully": "Correo enviado correctamente",
+    "grantedSuccessfully": "Artículo concedido con éxito",
+    "shippingUpdatedSuccessfully": "Información de envío actualizada con éxito"
+  },
+  "auction": {
+    "followedSuccessfully": "Subasta seguida",
+    "unfollowedSuccessfully": "Subasta dejada de seguir",
+    "finished": "Subasta finalizada",
+    "reviewRequestedSuccessfully": "Revisión solicitada con éxito"
+  },
+  "liveAuction": {
+    "articleChangedSuccessfully": "Artículo cambiado correctamente"
+  },
+  "autoBid": {
+    "deactivatedSuccessfully": "Puja automática desactivada",
+    "savedSuccessfully": "Puja automática guardada con éxito"
+  },
+  "otp": {
+    "sentSuccessfully": "OTP enviado correctamente",
+    "resentSuccessfully": "OTP reenviado correctamente",
+    "phoneVerifiedSuccessfully": "Teléfono verificado con éxito"
+  },
+  "account": {
+    "deletedSuccessfully": "Cuenta eliminada correctamente",
+    "pendingDeletion": "Tu cuenta fue desactivada. Estamos finalizando la eliminación."
+  },
+  "errorBoundary": {
+    "title": "Algo ha ido mal",
+    "description": "Ha ocurrido un error inesperado. Inténtalo de nuevo.",
+    "retry": "Intentar de nuevo"
+  },
+  "validation": {
+    "required": "Requerido",
+    "invalidEmail": "Introduce una dirección de correo válida",
+    "invalidFormat": "Formato no válido",
+    "minLength": "Debe contener al menos %{min} caracteres",
+    "maxLength": "Debe contener como máximo %{max} caracteres",
+    "minValue": "Debe ser al menos %{min}",
+    "maxValue": "Debe ser como máximo %{max}",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "noSpaces": "No se permiten espacios",
+    "max25Characters": "Máximo 25 caracteres",
+    "numbersOnly": "Debe contener solo números",
+    "minimumStartingPrice": "El precio inicial mínimo es 1",
+    "estimatedValueMinimum": "El valor estimado debería de ser al menos 1",
+    "requiredMin5": "Requerido (Min. 5)",
+    "allMeasurementsOrNone": "Todas o ninguna de las medidas son requeridas",
+    "nameRequired": "El nombre es requerido",
+    "validEmailRequired": "Email válido es requerido",
+    "messageMin10": "El mensaje debe tener al menos 10 caracteres",
+    "noSpacesAllowed": "No se permiten espacios",
+    "addressNameRequired": "Requerido. Usa un nombre para identificar la dirección",
+    "usernameMinLength": "Requerido (Mín. %{min} caracteres)",
+    "usernameMaxLength": "Máx. %{max} caracteres",
+    "passwordMinLength": "Requerido (Mín. %{min} caracteres)",
+    "noSpacesAllowedPeriod": "No se permiten espacios.",
+    "passwordMismatchPeriod": "Las contraseñas no coinciden.",
+    "usernameMaxLengthAuctioneer": "Máx. %{max} caracteres)",
+    "emailRequired": "Email requerido"
+  },
+  "commonUi": {
+    "total": "Total",
+    "minimum": "Mín.",
+    "maximum": "Máx.",
+    "accessibility": {
+      "previousAuction": "Subasta anterior",
+      "previousAuctionHint": "Navega a la subasta anterior del carrusel",
+      "nextAuction": "Siguiente subasta",
+      "nextAuctionHint": "Navega a la siguiente subasta del carrusel",
+      "previousArticlePage": "Página anterior de artículos",
+      "previousArticlePageHint": "Navega a la página anterior del carrusel",
+      "nextArticlePage": "Siguiente página de artículos",
+      "nextArticlePageHint": "Navega a la siguiente página del carrusel",
+      "pageOf": "Página %{page} de %{total}",
+      "decreaseBidByTen": "Reducir la puja en 10",
+      "increaseBidByTen": "Aumentar la puja en 10",
+      "articleImage": "Imagen del artículo",
+      "userImage": "Imagen del usuario"
+    }
+  },
   "commonActions": {
     "loading": "Cargando...",
     "error": "Error",
@@ -13,9 +1071,14 @@
     "or": "o"
   },
   "onboarding": {
+    "loading": "Cargando tutorial...",
     "errorLoadingTutorial": "No se pudo cargar el tutorial",
     "skipHint": "Omitir el tutorial y continuar a la aplicación",
-    "slidesLabel": "Diapositivas del tutorial"
+    "slidesLabel": "Diapositivas del tutorial",
+    "chooseLanguage": "Elige tu idioma",
+    "skip": "Omitir",
+    "welcome": "¡Bienvenido a PopAuctioon!",
+    "description": "Descubre subastas en vivo y encuentra piezas únicas."
   },
   "loginPage": {
     "login": "Iniciar sesión",
@@ -34,6 +1097,46 @@
     "registerError": "Error al registrar usuario",
     "title": "Iniciar Sesión",
     "signIn": "Iniciar Sesión"
+  },
+  "authCallback": {
+    "authenticationFailed": "La autenticación ha fallado. Por favor, inténtelo de nuevo.",
+    "authenticationSuccess": "¡Autenticación exitosa!"
+  },
+  "auth": {
+    "login": {
+      "sessionStarted": "Sesión iniciada"
+    },
+    "oauth": {
+      "google": {
+        "startFailed": "No se pudo iniciar el inicio de sesión con Google. Por favor, inténtelo de nuevo.",
+        "cancelledOrFailed": "El inicio de sesión con Google fue cancelado o fallido. Por favor, inténtelo de nuevo.",
+        "codeMissing": "No se pudo obtener el código de autenticación de Google. Por favor, inténtelo de nuevo.",
+        "unexpected": "Ocurrió un error inesperado durante el inicio de sesión con Google. Por favor, inténtelo de nuevo."
+      },
+      "apple": {
+        "startFailed": "No se pudo iniciar el inicio de sesión con Apple. Por favor, inténtelo de nuevo.",
+        "cancelledOrFailed": "El inicio de sesión con Apple fue cancelado o fallido. Por favor, inténtelo de nuevo.",
+        "codeMissing": "No se pudo obtener el código de autenticación de Apple. Por favor, inténtelo de nuevo.",
+        "unexpected": "Ocurrió un error inesperado durante el inicio de sesión con Apple. Por favor, inténtelo de nuevo."
+      }
+    },
+    "registration": {
+      "acceptTerms": "Debes aceptar los términos y condiciones",
+      "userCreated": "Usuario creado. Revisa tu email para confirmar tu cuenta.",
+      "auctioneerCreated": "Subastador creado. Revisa tu email para confirmar tu cuenta."
+    },
+    "passwordReset": {
+      "unexpected": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+    },
+    "emailConfirmation": {
+      "sendFailed": "Error enviando correo",
+      "tryAgainIn": "Intenta de nuevo en"
+    }
+  },
+  "invoice": {
+    "selectBillingInformation": "Selecciona una información de facturación.",
+    "downloadFailed": "Error al descargar la factura. Si el problema persiste, contacta con soporte.",
+    "createdSuccessfully": "Factura creada con éxito"
   },
   "tabsNames": {
     "home": "Inicio",
@@ -124,7 +1227,9 @@
       "auctionNotFound": "Subasta no encontrada o ya no se encuentra disponible",
       "noArticlesFound": "No se encontraron artículos",
       "specialMessage": "Para esta subasta, no se pagará comisión para ninguno de los artículos",
-      "noFollowedAuctions": "No tienes subastas seguidas"
+      "noFollowedAuctions": "No tienes subastas seguidas",
+      "followedSuccessfully": "Subasta seguida",
+      "unfollowedSuccessfully": "Subasta dejada de seguir"
     },
     "article": {
       "title": "Subasta ",
@@ -167,7 +1272,9 @@
       "articleNotFound": "Artículo no encontrado",
       "bidsHistory": "Historial de pujas",
       "comments": "Comentarios",
-      "noFollowedArticles": "No tienes artículos seguidos"
+      "noFollowedArticles": "No tienes artículos seguidos",
+      "followedSuccessfully": "Artículo seguido",
+      "unfollowedSuccessfully": "Artículo dejado de seguir"
     },
     "store": {
       "title": "Tienda Online",
@@ -320,7 +1427,10 @@
       "newArticle": "Nuevo artículo",
       "noArticles": "Aún no hay artículos",
       "noResults": "No se encontraron resultados",
+      "noArticlesFoundWithFilters": "No se han encontrado artículos con los filtros seleccionados",
+      "articlesFetchError": "Ocurrió un error al obtener los artículos",
       "rearrangeArticles": "Reordenar artículos",
+      "reorderBlockedByFilters": "No puedes reordenar los artículos mientras tienes filtros activos.",
       "delete": "Eliminar",
       "remove": "Sacar de la subasta",
       "orderImages": "Reordenar imágenes",
@@ -353,7 +1463,7 @@
         },
         "tooltip": {
           "category": {
-            "main": "Elige la categoría que mejor corresponda a tu subasta.",
+            "main": "Elige la categoría que mejor corresponda a la subasta.",
             "strong": "Esto no podrá cambiarse después."
           }
         }
@@ -537,6 +1647,7 @@
       "imageTooLargeMessage": "La imagen seleccionada es mayor a 1MB. Se comprimirá automáticamente.",
       "compressionError": "Error al comprimir la imagen. Por favor intenta con otra.",
       "compressingImages": "Comprimiendo imágenes...",
+      "updateSuccess": "Perfil actualizado correctamente",
       "updateSuccessStore": "Información actualizada exitosamente",
       "updateError": "Error al actualizar el perfil",
       "loadError": "Error al cargar datos del usuario",
@@ -597,11 +1708,38 @@
       "applyCoupon": "Aplicar",
       "couponApplied": "Código aplicado",
       "invalidCoupon": "Código inválido",
+      "discountApplied": "Código aplicado: %{amount} de descuento",
+      "discountRemoved": "Descuento removido",
+      "selectShippingAddress": "Selecciona una dirección de envío",
+      "paymentSessionPreparationFailed": "Error al preparar el pago con el monto actualizado",
+      "paymentRecordCreationFailed": "Error al crear el registro de pago",
+      "unexpectedProcessingError": "Error inesperado al procesar el pago",
+      "invalidDiscountAmount": "Este código de descuento no se puede aplicar a los artículos seleccionados. Ponte en contacto con soporte.",
       "paymentAlert": "Por favor, asegúrate de que la información de tus direcciones y perfil sea correcta antes de continuar con el pago.",
       "cannotDeselectLastItem": "No puedes deseleccionar el último artículo",
       "summary": "Resumen",
       "paymentData": "Datos de pago",
       "processing": "Procesando..."
+    },
+    "paymentResult": {
+      "loading": "Cargando resultado del pago...",
+      "paymentOrder": "Orden de pago",
+      "goToAccount": "Ir a cuenta",
+      "approved": {
+        "title": "Pago aprobado",
+        "description": "El pago fue autorizado. Puedes revisar el detalle en tu historial de pagos.",
+        "primaryAction": "Ir a historial"
+      },
+      "pending": {
+        "title": "Confirmando pago",
+        "description": "Estamos confirmando el resultado final del pago. Una vez autorizado, lo verás reflejado en tu historial en breve.",
+        "primaryAction": "Ir a historial"
+      },
+      "rejected": {
+        "title": "Pago rechazado",
+        "description": "Pago rechazado. Puedes volver e intentarlo otra vez.",
+        "primaryAction": "Intentar de nuevo"
+      }
     },
     "resetPassword": {
       "title": "Restablecer contraseña",
@@ -783,6 +1921,7 @@
       "paymentNeedsConfirmation": "El pago necesita confirmación.",
       "newAddressText": "+",
       "trackingNumber": "Número de seguimiento",
+      "shippingUpdated": "Información de envío actualizada correctamente.",
       "primaryAddress": "Establecer como dirección principal",
       "paymentAlertTitle": "¡Atención!",
       "paymentAlertMessage": "Por favor, asegúrate de que la información de tus direcciones y perfil sea correcta antes de continuar con el pago.",
@@ -834,6 +1973,7 @@
       "currentBid": "Puja actual",
       "configuredAmount": "Monto configurado",
       "minBid": "La puja mínima es",
+      "minimumBid": "La puja mínima es %{amount}",
       "edit": "Editar",
       "active": "Activa",
       "unactive": "Inactiva",
@@ -899,6 +2039,8 @@
       "errorMessage": "Ocurrió un error al enviar el mensaje. Por favor, intenta de nuevo."
     },
     "liveAuction": {
+      "loadingInfo": "Cargando información de la subasta...",
+      "loadingStream": "Cargando stream de la subasta...",
       "articles": "Artículos",
       "currentBid": "Puja Actual",
       "liveNow": "En vivo",
@@ -918,6 +2060,126 @@
     }
   },
   "components": {
+    "shareButton": {
+      "articleTitle": "¡Mira este artículo!",
+      "auctionTitle": "Mira esta subasta en Popauctioon",
+      "liveAuctionTitle": "Subasta en vivo en PopAuctioon",
+      "error": "Hubo un error al compartir"
+    },
+    "simpleCountdown": {
+      "articleStartSoon": "Comienza pronto",
+      "auctionStartSoon": "Comenzará pronto",
+      "completed": "La subasta ya comenzó"
+    },
+    "articleBidsRecord": {
+      "label": "Historial de pujas",
+      "title": "Pujas",
+      "initialPrice": "Precio inicial",
+      "noBidsYet": "No hay pujas aún."
+    },
+    "articleLists": {
+      "noMoreArticles": "No hay más artículos",
+      "noArticlesFound": "No se han encontrado artículos con los filtros seleccionados"
+    },
+    "followButton": {
+      "follow": "Seguir",
+      "unfollow": "Dejar de seguir",
+      "notAvailable": "Ya no está disponible"
+    },
+    "appVersionGate": {
+      "forceTitle": "Actualización requerida",
+      "softTitle": "Actualización disponible",
+      "forceDescription": "Necesitas actualizar PopAuctioon para seguir usando la app.",
+      "softDescription": "Hay una nueva versión de PopAuctioon disponible. Puedes actualizar ahora o continuar usando la app.",
+      "updateButton": "Actualizar app",
+      "continueButton": "Continuar por ahora"
+    },
+    "auctionCountdown": {
+      "left": "Queda:",
+      "enterBefore": "Empieza a prepararte"
+    },
+    "dateInput": {
+      "confirm": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "filters": {
+      "brand": "Marca",
+      "price": "Precio",
+      "model": "Modelo",
+      "material": "Material",
+      "color": "Color",
+      "sort": "Ordenar por",
+      "activeFilters": "Filtros activos:",
+      "clearAll": "Borrar filtros",
+      "filters": "Filtros",
+      "codeNumber": "Código",
+      "status": "Estado",
+      "offersStatus": "Estado de ofertas",
+      "close": "Cerrar",
+      "auction": "Subasta",
+      "myAuctionArticleName": "Name"
+    },
+    "wonArticles": {
+      "noArticlesToRemove": "No hay artículos para eliminar",
+      "removeFailed": "Error al eliminar los artículos",
+      "removedSuccessfully": "Artículos eliminados correctamente"
+    },
+    "notification": {
+      "imageAlt": "Notification Image",
+      "relativeTime": {
+        "now": "Ahora mismo",
+        "minutes": "Hace %{count} min",
+        "hours": "Hace %{count} h",
+        "days": "Hace %{count} d"
+      }
+    },
+    "offerCards": {
+      "common": {
+        "date": "Fecha",
+        "expiresAt": "Caduca en",
+        "offerHistory": "Historial de ofertas",
+        "userAcceptedCounter": "El usuario ha aceptado tu contraoferta",
+        "waitingForUser": "Esperando respuesta del usuario"
+      },
+      "article": {
+        "offer": "Oferta actual",
+        "noCommissionedOffer": "Oferta sin comisión",
+        "noCommissionedOfferTooltip": "Cantidad que recibirás descontando la comisión de la plataforma."
+      },
+      "latest": {
+        "offer": "Oferta",
+        "noCommissionedOffer": "Monto que recibirás",
+        "noCommissionedOfferTooltip": "Cantidad que recibirás si aceptas la oferta y el comprador completa el pago."
+      }
+    },
+    "offerCard": {
+      "status": {
+        "PENDING": "Pendiente",
+        "ACCEPTED": "Aceptado",
+        "REJECTED": "Rechazado",
+        "COUNTERED": "Contraoferta",
+        "counterReceived": "Contraoferta recibida",
+        "pendingFinalApproval": "Pendiente de aprobación",
+        "counterSent": "Contraoferta enviada"
+      },
+      "amount": {
+        "current": "Importe actual",
+        "counter": "Contraoferta actual",
+        "accepted": "Importe aceptado"
+      },
+      "state": {
+        "initialOffer": "Tu oferta ha sido enviada. Esperando la respuesta de la tienda.",
+        "counterReceived": "La tienda ha realizado una nueva propuesta.",
+        "waitingForStore": "Has enviado una contraoferta. Esperando la respuesta de la tienda.",
+        "pendingFinalApproval": "Has aceptado la contraoferta. La tienda debe confirmar que el artículo sigue disponible antes de proceder con el pago."
+      },
+      "actions": {
+        "offerHistory": "Historial de ofertas",
+        "acceptCounter": "Aceptar contraoferta",
+        "counter": "Contraofertar",
+        "reject": "Rechazar"
+      }
+    },
     "bid": {
       "sendBid": "Enviar puja",
       "bid": "Puja",
@@ -928,6 +2190,153 @@
       "createAutomaticBid": "Configurar puja automática",
       "automaticBid": "puja automática configurada",
       "automaticBids": "pujas automáticas configuradas"
+    },
+    "modals": {
+      "signInAlert": {
+        "title": "Necesitas iniciar sesión para realizar esta acción",
+        "description": "Inicia sesión o crea una cuenta",
+        "goToSignIn": "Iniciar sesión",
+        "goToCreateAccount": "Crear cuenta",
+        "close": "Cerrar"
+      },
+      "wonArticlesAlert": {
+        "title": "¡Tienes artículos por pagar!",
+        "description": "Parece que has ganado algunos artículos. Ve a tu perfil para verlos y completar el pago.",
+        "goToAuction": "Ir a mis artículos ganados",
+        "close": "Cerrar"
+      },
+      "auctionStarted": {
+        "title": "¡Una subasta acaba de comenzar!",
+        "goToAuction": "Ir a la subasta en vivo",
+        "close": "Cerrar"
+      },
+      "howAutoLiveWorks": {
+        "title": "¡Bienvenido a la subasta automática en vivo!",
+        "description": {
+          "intro": "¿Cómo funciona?:"
+        },
+        "behavior": {
+          "duration": "Cada artículo está en subasta durante 60 segundos.  Una vez que el artículo “entra en vivo”, ¡puedes pujar por él!",
+          "countdown": "Cuando han transcurrido 45 segundos, comienza la cuenta regresiva.",
+          "reset": "Si se realiza una puja mientras la cuenta corre, el temporizador se reinicia y vuelve a empezar la cuenta regresiva.",
+          "winner": "Cuando la cuenta llega a cero, el artículo se adjudica al mejor postor y automáticamente pasamos al siguiente artículo."
+        },
+        "back": "Atrás"
+      },
+      "accountDeletion": {
+        "title": "Eliminar Cuenta",
+        "description": "¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.",
+        "importantMessage": "Esta acción no se puede deshacer."
+      },
+      "auctionArticle": {
+        "removeTitle": "Eliminar artículo de la subasta",
+        "removeDescription": "Después de esta acción, no podrás agregar de nuevo este artículo. ¿Estás seguro de que quieres realizar esta acción?",
+        "featureTitle": "Destacar artículo",
+        "unfeatureTitle": "Quitar artículo de destacado",
+        "featureDescription": "¿Quieres destacar este artículo?",
+        "unfeatureDescription": "¿Quieres quitar este artículo de destacado?"
+      },
+      "wonArticles": {
+        "title": "Eliminar artículos de esta subasta",
+        "description": "¿Estás seguro de que quieres quitar los artículos ganados en esta subasta?",
+        "importantMessage": "No los podrás recuperar después de eliminarlos"
+      },
+      "auctionReview": {
+        "title": "Solicitar revisión",
+        "description": "Después de esta acción, si la subasta es aceptada, ya no podrás modificar la información de subasta ni de sus artículos. ¿Estás seguro de que quieres realizar esta acción?"
+      },
+      "automaticBid": {
+        "setTitle": "Configurar puja automática",
+        "updateTitle": "Editar puja automática",
+        "description": "La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.",
+        "extraMessage": "Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.",
+        "inputLabel": "Monto máximo",
+        "missingValue": "Ingresa un valor",
+        "minimumPrice": "El monto debe ser al menos %{amount}",
+        "noDecimals": "Solo se permiten múltiplos enteros de 10 €",
+        "multipleOfTen": "El monto debe ser un múltiplo de 10 €"
+      },
+      "onlineStoreArticle": {
+        "removeTitle": "Eliminar artículo",
+        "removeDescription": "¿Estás seguro de que quieres eliminar este artículo de la tienda online?",
+        "assignTitle": "Asignar a una subasta",
+        "assignDescription": "Solo puedes asignar el artículo a una subasta que esté en estado \"Disponible\".",
+        "changePriceTitle": "Cambiar precio",
+        "changePriceDescription": "Solo puedes cambiar el precio si el artículo no tiene ofertas.",
+        "priceLabel": "Precio (€)",
+        "priceInputLabel": "Precio (€)",
+        "auctionSelectLabel": "Seleccionar subasta",
+        "commissionedPrice": "Precio con comisión",
+        "noDecimals": "No se permiten decimales",
+        "selectCategoryTitle": "Seleccionar categoría",
+        "selectCategoryDescription": "Selecciona la categoría del artículo a crear"
+      },
+      "offers": {
+        "acceptTitle": "Aceptar oferta",
+        "acceptDescription": "Una vez aceptada, el comprador dispondrá de 24 horas para realizar el pago.",
+        "rejectTitle": "Rechazar oferta",
+        "rejectDescription": "¿Estás seguro de que quieres rechazar esta oferta? Esta acción no se puede deshacer.",
+        "confirmSaleTitle": "Confirmar venta",
+        "confirmSaleDescription": "El comprador ha aceptado tu contraoferta de %{amount}. Confirma que el artículo sigue disponible. Después dispondrá de 24 horas para pagar.",
+        "rejectSaleTitle": "Rechazar venta",
+        "rejectSaleDescription": "Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación.",
+        "acceptCounter": {
+          "title": "Aceptar contraoferta",
+          "description": "Estás aceptando la contraoferta de la tienda. La tienda deberá confirmar que el artículo sigue disponible antes de que puedas realizar el pago.",
+          "amount": "Importe acordado",
+          "confirm": "Aceptar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "rejectCounter": {
+          "title": "Rechazar contraoferta",
+          "description": "¿Estás seguro de que quieres rechazar esta contraoferta? La negociación se cerrará y esta acción no se puede deshacer.",
+          "confirm": "Rechazar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "userCounter": {
+          "title": "Realizar contraoferta",
+          "description": "Introduce el importe que deseas proponer a la tienda.",
+          "currentOffer": "Oferta actual",
+          "negotiationHistory": "Historial de negociación",
+          "you": "Tú",
+          "store": "Tienda",
+          "label": "Importe de la contraoferta (€)",
+          "invalidAmount": "Introduce un importe válido",
+          "sameAmount": "La contraoferta debe ser diferente al importe actual",
+          "confirm": "Enviar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "storeCounter": {
+          "title": "Realizar contraoferta",
+          "description": "Introduce el importe que deseas proponer al comprador.",
+          "currentOffer": "Oferta actual",
+          "negotiationHistory": "Historial de negociación",
+          "buyer": "Comprador",
+          "store": "Tienda",
+          "label": "Importe de la contraoferta (€)",
+          "invalidAmount": "Introduce un importe válido",
+          "sameAmount": "La contraoferta debe ser diferente al importe actual",
+          "confirm": "Enviar contraoferta",
+          "cancel": "Cancelar"
+        },
+        "history": {
+          "title": "Historial de ofertas",
+          "you": "Tú",
+          "buyer": "Comprador",
+          "store": "Tienda"
+        }
+      },
+      "soldArticle": {
+        "importantMessage": "No podrás revertir esta acción.",
+        "notifyAgainTitle": "Notificar de nuevo",
+        "notifyAgainDescription": "¿Estás seguro de que quieres notificar de nuevo al usuario? Se le enviará un correo electrónico con las instrucciones para completar el pago.",
+        "sendToOnlineStoreTitle": "Enviar a tienda online",
+        "sendToOnlineStoreDescription": "¿Estás seguro de que quieres enviar el artículo a la tienda en linea? El usuario ya no podrá hacer el pago por este artículo y deberas activar el artículo manualmente en tus artículos de la tienda online",
+        "cancelAcquisitionTitle": "Cancelar adquisición",
+        "cancelAcquisitionDescription": "¿Estás seguro de que quieres cancelar la adquisición? El usuario ya no podrá hacer el pago por este artículo y no podrás gestionar más este artículo.",
+        "grantSecondTitle": "Otorgar a segundo mayor postor",
+        "grantSecondDescription": "¿Está seguro de que desea otorgar el artículo al segundo mayor postor?"
+      }
     }
   },
   "globals": {
@@ -945,6 +2354,15 @@
     "loadFailedMessage": "No se pudo cargar la información. Por favor, intenta de nuevo.",
     "retryButton": "Reintentar",
     "missingAuctionId": "No se proporcionó el ID de la subasta",
+    "auctionIdRequired": "ID de subasta requerido",
+    "articleIdRequired": "ID de artículo requerido",
+    "inactiveAuctioneerAccount": "Tu cuenta aún no está activa. Espera a que la activemos o contacta con soporte para más información.",
+    "permissionDenied": "Permiso denegado",
+    "auctionsLoadFailed": "No se pudieron cargar las subastas.",
+    "invalidAuctionId": "ID de subasta inválido",
+    "liveAuctionInfoLoadFailed": "Hubo un error al cargar la información",
+    "liveAuctionStreamLoadFailed": "Error al cargar el stream de la subasta",
+    "emailMissing": "Falta el correo electrónico.",
     "invalidLoginCredentials": "Credenciales de acceso inválidas",
     "emailNotConfirmed": "Email no confirmado",
     "userNotFound": "Usuario no encontrado",
@@ -964,6 +2382,7 @@
     "loginToChat": "Inicia sesión para participar en el chat",
     "sendError": "No se pudo enviar el mensaje",
     "connectionError": "Error al conectar con el chat",
+    "connectionFailed": "Error al conectar con el chat",
     "send": "Enviar"
   },
   "notFound": {

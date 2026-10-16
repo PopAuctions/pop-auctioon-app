@@ -1,6 +1,10 @@
 import { supabase } from '@/utils/supabase/supabase-store';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { User, AsyncResponse } from '@/types/types';
+import { createLocalizedMessage } from '@/i18n/api-message';
+import type { MessageKey } from '@/i18n';
+
+const USER_LOAD_FAILED = 'errors.auth.userLoadFailed' satisfies MessageKey;
 
 export const getUser = async ({
   id,
@@ -18,10 +22,7 @@ export const getUser = async ({
     return {
       data: null,
       success: false,
-      error: {
-        en: 'Error getting user',
-        es: 'Error obteniendo el usuario',
-      },
+      error: createLocalizedMessage(USER_LOAD_FAILED),
     };
   }
 

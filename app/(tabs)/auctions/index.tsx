@@ -43,10 +43,7 @@ export default function IndexScreen() {
   if (status === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={{
-          es: 'No se pudieron cargar las subastas.',
-          en: 'Failed to load auctions.',
-        }}
+        customMessage={t('commonErrors.auctionsLoadFailed')}
         refreshRoute='/(tabs)/auctions'
       />
     );

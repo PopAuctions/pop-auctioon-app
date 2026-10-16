@@ -15,6 +15,7 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetSoldArticle } from '@/hooks/pages/article/useGetSoldArticle';
 import { REQUEST_STATUS } from '@/constants';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function SoldArticleScreen() {
   const { t, locale } = useTranslation();
@@ -30,7 +31,7 @@ export default function SoldArticleScreen() {
   if (status === REQUEST_STATUS.error || !data?.article) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute={`/(tabs)/auctioneer/sold-articles/${id}`}
       />
     );
@@ -42,7 +43,7 @@ export default function SoldArticleScreen() {
   const payment = article?.payment;
   const userAddress = payment?.UserAddress;
   const user = payment?.User ?? article?.User;
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
   const paymentCourierInfo = {
     courier: payment?.shippingCourier,
     trackingNumber: payment?.shippingNumber,

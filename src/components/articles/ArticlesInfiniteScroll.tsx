@@ -16,18 +16,9 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useLocalSearchParams } from 'expo-router';
 import { useFetchCommissions } from '@/hooks/components/useFetchCommissions';
 import { REQUEST_STATUS } from '@/constants';
+import { t } from '@/i18n';
 
 const ITEMS_PER_PAGE = 4;
-const TEXTS = {
-  noMoreArticles: {
-    en: 'No more articles',
-    es: 'No hay más artículos',
-  },
-  noArticlesFound: {
-    en: 'No articles found with the selected filters',
-    es: 'No se han encontrado artículos con los filtros seleccionados',
-  },
-};
 
 export const ArticlesInfiniteScroll = ({
   lang,
@@ -100,6 +91,12 @@ export const ArticlesInfiniteScroll = ({
   const filtersActive = Boolean(brand || price);
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
   const effectiveOrder = filtersActive ? undefined : order;
+  const noMoreArticlesText = t('components.articleLists.noMoreArticles', {
+    locale: lang,
+  });
+  const noArticlesFoundText = t('components.articleLists.noArticlesFound', {
+    locale: lang,
+  });
 
   const orderedArticles = useMemo(() => {
     if (!effectiveOrder || effectiveOrder.length === 0) return articles;
@@ -198,7 +195,7 @@ export const ArticlesInfiniteScroll = ({
             type='body'
             className='text-center text-cinnabar'
           >
-            {TEXTS.noArticlesFound[lang]}
+            {noArticlesFoundText}
           </CustomText>
         </View>
       );
@@ -211,13 +208,21 @@ export const ArticlesInfiniteScroll = ({
             type='body'
             className='text-center text-cinnabar'
           >
-            {TEXTS.noMoreArticles[lang]}
+            {noMoreArticlesText}
           </CustomText>
         </View>
       );
     }
     return null;
-  }, [isLoading, hasMore, lang, locale, filtersActive, articles.length]);
+  }, [
+    isLoading,
+    hasMore,
+    noArticlesFoundText,
+    noMoreArticlesText,
+    locale,
+    filtersActive,
+    articles.length,
+  ]);
 
   return (
     <FlatList

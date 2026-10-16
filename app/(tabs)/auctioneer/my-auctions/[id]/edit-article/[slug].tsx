@@ -19,14 +19,11 @@ import {
 } from '@/types/types';
 import {
   ARTICLE_IMAGES_MAX,
-  ARTICLE_STATE,
-  ARTICLE_STATE_DESCRIPTION,
-  ARTICLE_STATE_LABELS,
+  ARTICLE_STATE_VALUES,
   REQUEST_STATUS,
 } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
@@ -50,6 +47,14 @@ export default function EditAuctionArticleScreen() {
   const articleId = params.slug;
 
   const { t, locale } = useTranslation();
+  const articleSpecificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
+  const articleStateOptions = ARTICLE_STATE_VALUES.map((value) => ({
+    value,
+    label: articleSpecificationLabels.state[value],
+  }));
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isSavingArticle, setIsSavingArticle] = useState(false);
   const hasHydratedForm = useRef(false);
@@ -138,7 +143,7 @@ export default function EditAuctionArticleScreen() {
   if (status === REQUEST_STATUS.error || !article) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/edit-article/${articleId}`}
       />
     );
@@ -146,23 +151,25 @@ export default function EditAuctionArticleScreen() {
 
   const tooltipContent = (
     <View className='gap-2'>
-      {Object.entries(ARTICLE_STATE_DESCRIPTION[locale]).map(([key, value]) => {
-        const label =
-          ARTICLE_STATE_LABELS[locale][
-            key as keyof (typeof ARTICLE_STATE_LABELS)['en']
-          ];
+      {Object.entries(articleSpecificationLabels.stateDescription).map(
+        ([key, value]) => {
+          const label =
+            articleSpecificationLabels.state[
+              key as keyof typeof articleSpecificationLabels.state
+            ];
 
-        return (
-          <CustomText
-            key={key}
-            type='body'
-            className='text-sm text-black/70'
-          >
-            <Text className='font-bold text-black'>{label}</Text>
-            {`: ${value}`}
-          </CustomText>
-        );
-      })}
+          return (
+            <CustomText
+              key={key}
+              type='body'
+              className='text-sm text-black/70'
+            >
+              <Text className='font-bold text-black'>{label}</Text>
+              {`: ${value}`}
+            </CustomText>
+          );
+        }
+      )}
     </View>
   );
 
@@ -173,8 +180,8 @@ export default function EditAuctionArticleScreen() {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe haber al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `There must be at least ${ARTICLE_IMAGES_MIN} images.`,
+          code: 'errors.articleImages.minimumExistingRequired',
+          params: { min: ARTICLE_IMAGES_MIN },
         },
       });
 
@@ -218,11 +225,7 @@ export default function EditAuctionArticleScreen() {
             type='subtitle'
             className='mb-4 text-center text-3xl text-cinnabar'
           >
-            {
-              AUCTION_CATEGORIES_LABEL[locale][
-                auctionCategory as AuctionCategories
-              ]
-            }
+            {auctionCategoryLabels[auctionCategory as AuctionCategories]}
           </CustomText>
 
           {comments && comments?.length > 0 && (
@@ -284,7 +287,7 @@ export default function EditAuctionArticleScreen() {
                 <SelectField
                   name='state'
                   value={value ?? null}
-                  options={ARTICLE_STATE[locale]}
+                  options={articleStateOptions}
                   placeholder={t('screens.newArticle.state')}
                   isSearchable={true}
                   isDisabled={isLoading}

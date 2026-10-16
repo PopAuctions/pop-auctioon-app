@@ -26,7 +26,11 @@ import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticleP
 import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import { useFetchStoreCountryByArticleId } from '@/hooks/components/useFetchStoreCountryByArticleId';
 import { isValidPayableAmount } from '@/utils/is-valid-payable-amount';
-import { INVALID_DISCOUNT_AMOUNT_ERROR } from '@/constants/payment-errors';
+import {
+  INVALID_DISCOUNT_AMOUNT_ERROR,
+  PAYMENT_TOAST_KEYS,
+} from '@/constants/payment-errors';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -62,7 +66,7 @@ export default function SinglePaymentScreen() {
 
   // Payment config
   const { data: paymentConfig, status: commissionStatus } =
-    useFetchPaymentConfig();
+    useFetchPaymentConfig(locale);
   const {
     data: storeCountry,
     errorMessage: storeCountryError,
@@ -91,7 +95,7 @@ export default function SinglePaymentScreen() {
   const paymentTranslations = t('screens.payment');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const userLimitTimeDate = new Date(buyData?.userLimitTime ?? '');
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
 
   const article = buyData?.article ?? null;
 
@@ -172,8 +176,8 @@ export default function SinglePaymentScreen() {
       callToast({
         variant: 'success',
         description: {
-          es: `Código aplicado: ${formatter.format(result.data.amount)} de descuento`,
-          en: `Code applied: ${formatter.format(result.data.amount)} discount`,
+          code: PAYMENT_TOAST_KEYS.discountApplied,
+          params: { amount: formatter.format(result.data.amount) },
         },
       });
     } else {
@@ -207,10 +211,7 @@ export default function SinglePaymentScreen() {
     setAppliedDiscount(null);
     callToast({
       variant: 'info',
-      description: {
-        es: 'Descuento removido',
-        en: 'Discount removed',
-      },
+      description: PAYMENT_TOAST_KEYS.discountRemoved,
     });
   }, [callToast]);
 
@@ -219,10 +220,7 @@ export default function SinglePaymentScreen() {
     if (!article?.id) {
       callToast({
         variant: 'warning',
-        description: {
-          es: paymentTranslations.noPendingItems,
-          en: paymentTranslations.noPendingItems,
-        },
+        description: PAYMENT_TOAST_KEYS.noPendingItems,
       });
       return;
     }
@@ -230,10 +228,7 @@ export default function SinglePaymentScreen() {
     if (!selectedAddressId || !selectedAddress) {
       callToast({
         variant: 'warning',
-        description: {
-          es: 'Selecciona una dirección de envío',
-          en: 'Select a shipping address',
-        },
+        description: PAYMENT_TOAST_KEYS.selectShippingAddress,
       });
       return;
     }
@@ -259,10 +254,7 @@ export default function SinglePaymentScreen() {
       if (!redsysOrderId) {
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al preparar el pago con el monto actualizado',
-            en: 'Error preparing payment session',
-          },
+          description: PAYMENT_TOAST_KEYS.paymentSessionPreparationFailed,
         });
         return;
       }
@@ -280,10 +272,9 @@ export default function SinglePaymentScreen() {
       if (createPaymentError || !userPaymentId) {
         callToast({
           variant: 'error',
-          description: createPaymentError || {
-            es: 'Error al crear el registro de pago',
-            en: 'Error creating payment record',
-          },
+          description:
+            createPaymentError ||
+            PAYMENT_TOAST_KEYS.paymentRecordCreationFailed,
         });
         return;
       }
@@ -322,10 +313,7 @@ export default function SinglePaymentScreen() {
       console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
       callToast({
         variant: 'error',
-        description: {
-          es: 'Error inesperado al procesar el pago',
-          en: 'Unexpected error processing payment',
-        },
+        description: PAYMENT_TOAST_KEYS.unexpectedProcessingError,
       });
     } finally {
       setIsSubmittingPayment(false);
@@ -342,7 +330,6 @@ export default function SinglePaymentScreen() {
     rejectPayment,
     openPaymentBrowser,
     callToast,
-    paymentTranslations,
     router,
   ]);
 
@@ -355,10 +342,7 @@ export default function SinglePaymentScreen() {
   if (!articleId) {
     return (
       <CustomError
-        customMessage={{
-          es: 'ID de artículo requerido',
-          en: 'Article ID required',
-        }}
+        customMessage={t('commonErrors.articleIdRequired')}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -379,7 +363,7 @@ export default function SinglePaymentScreen() {
   if (articleStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={articleError}
+        customMessage={articleError ? t(articleError, { locale }) : undefined}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -388,7 +372,9 @@ export default function SinglePaymentScreen() {
   if (storeCountryStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={storeCountryError}
+        customMessage={
+          storeCountryError ? t(storeCountryError, { locale }) : undefined
+        }
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -397,7 +383,9 @@ export default function SinglePaymentScreen() {
   if (addressesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={addressesError}
+        customMessage={
+          addressesError ? t(addressesError, { locale }) : undefined
+        }
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -547,7 +535,7 @@ export default function SinglePaymentScreen() {
           refetchAddresses();
         }}
         countries={isCommissionReady ? paymentConfig.countries : null}
-        countriesLabel={isCommissionReady ? paymentConfig.countriesLabel : null}
+        countryLabels={isCommissionReady ? paymentConfig.countryLabels : null}
       />
     </SafeAreaView>
   );

@@ -4,10 +4,13 @@ import {
   ActionResponse,
   Article,
   AuctionCategories,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLE_LOAD_ERROR =
+  'errors.article.loadFailed' as const satisfies MessageKey;
 
 interface ArticleWithAuction extends Article {
   Auction: {
@@ -31,10 +34,10 @@ export const useGetArticle = ({
   getStatus?: boolean;
   publishedArticle?: boolean;
   getAuctionData?: boolean;
-}): ActionResponse<ArticleWithAuction | null> => {
+}): ActionResponse<ArticleWithAuction | null, MessageKey> => {
   const [article, setArticle] = useState<ArticleWithAuction | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchArticle = useCallback(async () => {
@@ -54,15 +57,9 @@ export const useGetArticle = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching article',
-        es: 'Error al obtener el artículo',
-      });
+      setErrorMessage(ARTICLE_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching article',
-          es: 'Error al obtener el artículo',
-        },
+        message: ARTICLE_LOAD_ERROR,
       };
     }
 
@@ -99,10 +96,7 @@ export const useGetArticle = ({
 
     if (res.error) {
       return {
-        message: {
-          en: 'Error fetching article',
-          es: 'Error al obtener el artículo',
-        },
+        message: ARTICLE_LOAD_ERROR,
       };
     }
 

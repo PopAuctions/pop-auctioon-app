@@ -8,34 +8,11 @@ import { AssignToAuctionModal } from '@/components/modal/AssignToAuctionModal';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import {
-  ArticleSecondChanceStatus,
-  Lang,
-  LangMap,
-  RefetchReturn,
-} from '@/types/types';
+import { ArticleSecondChanceStatus, Lang, RefetchReturn } from '@/types/types';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-
-const DESCRIPTIONS = {
-  es: {
-    remove:
-      'Si el artículo ya no está disponible, por favor elimínalo de la tienda.',
-    changePrice:
-      'Cambia el precio del artículo siempre y cuando no tenga ninguna oferta.',
-    noDecimalsText: 'El precio no puede tener decimales.',
-    assignToAuction:
-      'Puedes asignar el artículo a una subasta que esté en estado "Disponible".',
-  },
-  en: {
-    remove:
-      'If the article is no longer available, please remove it from the store.',
-    changePrice:
-      'Change the price of the article as long as it does not have any offers.',
-    noDecimalsText: 'The price cannot have decimals.',
-    assignToAuction:
-      'You can assign the article to an auction that is in "Available" status.',
-  },
-};
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 export const ArticleDetailsActions = ({
   TEXTS: { assignToAuction, remove, changePrice, orderImages, editImages },
@@ -58,8 +35,10 @@ export const ArticleDetailsActions = ({
   locale: Lang;
   currentStatus: ArticleSecondChanceStatus;
   commissionValue: number | null;
-  refetch: () => RefetchReturn;
+  refetch: () => RefetchReturn<MessageKey>;
 }) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.onlineStoreArticle', { locale });
   const [isChangePriceModalOpen, setChangePriceModalOpen] = useState(false);
   const [isAssignToAuctionModalOpen, setAssignToAuctionModalOpen] =
     useState(false);
@@ -70,7 +49,7 @@ export const ArticleDetailsActions = ({
 
   const handlePriceChange = async (newPrice: string) => {
     setIsLoading(true);
-    const response = await securePatch<LangMap>({
+    const response = await securePatch<unknown>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.UPDATE_PRICE(
         articleSecondChanceId
       ),
@@ -82,7 +61,12 @@ export const ArticleDetailsActions = ({
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          locale,
+          'errors.server.connection'
+        ),
       });
       setIsLoading(false);
       return false;
@@ -90,7 +74,12 @@ export const ArticleDetailsActions = ({
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        locale,
+        'article.onlineStorePriceUpdatedSuccessfully'
+      ),
     });
     refetch();
     setIsLoading(false);
@@ -99,7 +88,7 @@ export const ArticleDetailsActions = ({
 
   const handleAssignToAuction = async (auctionId: string, price: string) => {
     setIsLoading(true);
-    const response = await securePost<LangMap>({
+    const response = await securePost<unknown>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.CHAGE_TO_AUCTION(
         articleSecondChanceId
       ),
@@ -112,7 +101,12 @@ export const ArticleDetailsActions = ({
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          locale,
+          'errors.server.connection'
+        ),
       });
       setIsLoading(false);
       return false;
@@ -120,7 +114,12 @@ export const ArticleDetailsActions = ({
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        locale,
+        'article.onlineStoreAssignedSuccessfully'
+      ),
     });
     navigateWithAuth('/(tabs)/auctioneer/my-online-store');
     setIsLoading(false);
@@ -130,14 +129,19 @@ export const ArticleDetailsActions = ({
 
   const handleRemoveArticle = async () => {
     setIsLoading(true);
-    const response = await secureDelete<LangMap>({
+    const response = await secureDelete<unknown>({
       endpoint: SECURE_ENDPOINTS.MY_ONLINE_STORE.DELETE(articleSecondChanceId),
     });
 
     if (response.error) {
       callToast({
         variant: 'error',
-        description: response.error,
+        description: resolveApiResponseMessage(
+          response,
+          'error',
+          locale,
+          'errors.server.connection'
+        ),
       });
       setIsLoading(false);
       return false;
@@ -145,7 +149,12 @@ export const ArticleDetailsActions = ({
 
     callToast({
       variant: 'success',
-      description: response.data,
+      description: resolveApiResponseMessage(
+        response,
+        'success',
+        locale,
+        'article.onlineStoreDeletedSuccessfully'
+      ),
     });
 
     setIsLoading(false);
@@ -202,13 +211,9 @@ export const ArticleDetailsActions = ({
           <ConfirmModal
             mode='primary'
             onConfirm={handleRemoveArticle}
-            title={{ es: 'Eliminar artículo', en: 'Remove article' }}
+            title={modalTexts.removeTitle}
             isDisabled={isLoading}
-            description={{
-              es: '¿Estás seguro de que quieres eliminar este artículo de la tienda online?',
-              en: 'Are you sure you want to remove this article from the online store?',
-            }}
-            locale={locale}
+            description={modalTexts.removeDescription}
           >
             {remove}
           </ConfirmModal>
@@ -220,32 +225,21 @@ export const ArticleDetailsActions = ({
         visible={isAssignToAuctionModalOpen}
         onClose={() => setAssignToAuctionModalOpen(false)}
         onConfirm={handleAssignToAuction}
-        title={{ es: 'Asignar a una subasta', en: 'Assign to auction' }}
-        description={{
-          en: 'You can only assign the article to an auction that is in "Available" status.',
-          es: 'Solo puedes asignar el artículo a una subasta que esté en estado "Disponible".',
-        }}
-        locale={locale}
+        title={modalTexts.assignTitle}
+        description={modalTexts.assignDescription}
         defaultValue={currentPrice.toString()}
-        helperText={DESCRIPTIONS[locale].noDecimalsText}
+        helperText={modalTexts.noDecimals}
       />
       <ChangePriceModal
         id='price'
         visible={isChangePriceModalOpen}
         onClose={() => setChangePriceModalOpen(false)}
         onConfirm={handlePriceChange}
-        title={{ es: 'Cambiar precio', en: 'Change price' }}
-        description={{
-          es: 'Solo puedes cambiar el precio si el artículo no tiene ofertas.',
-          en: 'You can only change the price if the article has no offers.',
-        }}
-        label={{
-          es: 'Precio (€)',
-          en: 'Price (€)',
-        }}
-        locale={locale}
+        title={modalTexts.changePriceTitle}
+        description={modalTexts.changePriceDescription}
+        label={modalTexts.priceLabel}
         defaultValue={currentPrice.toString()}
-        helperText={DESCRIPTIONS[locale].noDecimalsText}
+        helperText={modalTexts.noDecimals}
         commissionValue={commissionValue}
       />
     </>

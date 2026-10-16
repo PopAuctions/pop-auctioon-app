@@ -1,22 +1,17 @@
-import { Lang, LangMap } from '@/types/types';
+import { type Lang } from '@/types/types';
 import { View } from '../Themed';
 import { CustomText } from './CustomText';
 import { ActivityIndicator } from 'react-native';
-
-const TEXTS = {
-  loading: {
-    en: 'Loading...',
-    es: 'Cargando...',
-  },
-};
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 export const Loading = ({
-  locale,
   customMessage,
 }: {
-  locale: Lang;
-  customMessage?: LangMap;
+  locale?: Lang;
+  customMessage?: string;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <View className='flex-1 items-center justify-center'>
       <ActivityIndicator
@@ -27,7 +22,7 @@ export const Loading = ({
         type='body'
         className='mt-4 text-center text-black'
       >
-        {customMessage?.[locale] ?? TEXTS.loading[locale]}
+        {customMessage ?? t('common.status.loading')}
       </CustomText>
     </View>
   );

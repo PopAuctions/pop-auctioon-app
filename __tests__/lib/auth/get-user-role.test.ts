@@ -1,4 +1,5 @@
 import { getUserRole } from '@/lib/auth/get-user-role';
+import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
 import type { UserRoles, AsyncResponse } from '@/types/types';
 import { supabase } from '@/utils/supabase/supabase-store';
 import * as sentryErrorReport from '@/lib/error/sentry-error-report';
@@ -13,6 +14,16 @@ jest.mock('@/utils/supabase/supabase-store', () => ({
 jest.mock('@/lib/error/sentry-error-report', () => ({
   sentryErrorReport: jest.fn(),
 }));
+
+const expectLocalizedMessage = (message: unknown) => {
+  expect(message).toEqual(expect.any(Object));
+  expect(Object.keys(message as Record<string, unknown>).sort()).toEqual(
+    [...SUPPORTED_LANGUAGES].sort()
+  );
+  expect(Object.values(message as Record<string, unknown>)).toEqual(
+    expect.arrayContaining([expect.any(String)])
+  );
+};
 
 describe('getUserRole', () => {
   const accessToken = 'test-access-token';
@@ -88,10 +99,7 @@ describe('getUserRole', () => {
       const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result.data).toBeNull();
-      expect(result.error).toEqual({
-        en: 'Error getting role',
-        es: 'Error obteniendo el rol',
-      });
+      expectLocalizedMessage(result.error);
       expect(mockSentryErrorReport).toHaveBeenCalledWith(
         error,
         'GET_ROLE - user-123'
@@ -104,10 +112,7 @@ describe('getUserRole', () => {
       const result = await getUserRole({ id: 'user-123', accessToken });
 
       expect(result.data).toBeNull();
-      expect(result.error).toEqual({
-        en: 'Error getting role',
-        es: 'Error obteniendo el rol',
-      });
+      expectLocalizedMessage(result.error);
     });
 
     it('should report null data to Sentry', async () => {

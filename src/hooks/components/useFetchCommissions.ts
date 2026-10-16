@@ -1,15 +1,16 @@
-import { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import { ActionResponse, RequestStatus } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import type { MessageKey } from '@/i18n';
 
 // Este hook solo trae el valor de comisión (número)
 // Para payment checkout completo con impuestos, shipping, etc, usar useFetchPaymentConfig
-export const useFetchCommissions = (): ActionResponse<number> => {
+export const useFetchCommissions = (): ActionResponse<number, MessageKey> => {
   const [data, setData] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>('loading');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchCommission = useCallback(async () => {
@@ -22,16 +23,15 @@ export const useFetchCommissions = (): ActionResponse<number> => {
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(
+          response.messageCode ?? 'errors.payment.commissionLoadFailed'
+        );
         return;
       }
 
       if (response.data === null || response.data === undefined) {
         setStatus('error');
-        setErrorMessage({
-          en: 'Commission data is missing',
-          es: 'Faltan los datos de comisión',
-        });
+        setErrorMessage('errors.payment.commissionMissing');
         return;
       }
 
@@ -43,13 +43,8 @@ export const useFetchCommissions = (): ActionResponse<number> => {
 
       sentryErrorReport(errorMsg, 'USE_FETCH_COMMISSION - Unexpected error');
 
-      const message: LangMap = {
-        en: 'Error fetching commission data',
-        es: 'Error al cargar la comisión',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage('errors.payment.commissionLoadFailed');
     }
   }, [protectedGet]);
 

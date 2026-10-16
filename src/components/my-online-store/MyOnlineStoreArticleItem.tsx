@@ -11,10 +11,10 @@ import {
   AMOUNT_PLACEHOLDER,
   ARTICLE_BRANDS_LABELS,
   ArticleSecondChanceStatusConst,
-  ONLINE_STORE_ARTICLE_STATUS_LABELS,
 } from '@/constants';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
+import { t } from '@/i18n';
 
 type MyOnlineStoreArticleItemProps = {
   onlineStoreArticle: CustomArticleSecondChance;
@@ -42,6 +42,9 @@ export function MyOnlineStoreArticleItem({
   const articleOffers = onlineStoreArticle?.ArticleOffer?.length ?? 0;
   const isSold =
     onlineStoreArticle.status === ArticleSecondChanceStatusConst.SOLD;
+  const articleStatusLabels = t('displayLabels.onlineStoreArticleStatus', {
+    locale: lang,
+  });
 
   const commissionedPrice = useMemo(
     () => getArticleCommissionedPrice(price, commissionValue ?? 0),
@@ -92,7 +95,7 @@ export function MyOnlineStoreArticleItem({
               className='text-start text-cinnabar'
             >
               {
-                ONLINE_STORE_ARTICLE_STATUS_LABELS[lang][
+                articleStatusLabels[
                   onlineStoreArticle.status as ArticleSecondChanceStatus
                 ]
               }

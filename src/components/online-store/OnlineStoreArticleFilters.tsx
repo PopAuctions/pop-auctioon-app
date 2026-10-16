@@ -5,45 +5,40 @@ import { Lang } from '@/types/types';
 import { FilterField } from '../fields/FilterField';
 import {
   ARTICLE_BRANDS,
+  ARTICLE_COLOR_VALUES,
+  ARTICLE_MATERIAL_FILTER_VALUES,
   ARTICLE_PRICE_FILTER_LIST,
-  SORT_BY,
-  ARTICLE_COLORS_FILTER_LIST,
-  ARTICLE_MATERIALS_FILTER_LIST,
+  SORT_BY_VALUES,
 } from '@/constants';
 import { Button } from '../ui/Button';
 import { Filters } from '@/app/(tabs)/online-store';
 import { ArticlesSuggestionField } from '@/components/fields/ArticlesSuggestionField';
+import { t } from '@/i18n';
 
 interface Props {
   locale: Lang;
 }
 
-const FILTER_LABELS = {
-  es: {
-    brand: 'Marca',
-    price: 'Precio',
-    model: 'Modelo',
-    material: 'Material',
-    color: 'Color',
-    sort: 'Ordenar por',
-    activeFilters: 'Filtros activos:',
-    clearAll: 'Borrar filtros',
-  },
-  en: {
-    brand: 'Brand',
-    price: 'Price',
-    model: 'Model',
-    material: 'Material',
-    color: 'Color',
-    sort: 'Sort by',
-    activeFilters: 'Active filters:',
-    clearAll: 'Clear filters',
-  },
-};
-
 export function OnlineStoreArticleFilters({ locale }: Props) {
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
+  const labels = t('components.filters', { locale });
+  const specificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
+  const sortLabels = t('displayLabels.sortBy', { locale });
+  const sortOptions = SORT_BY_VALUES.map((value) => ({
+    value,
+    label: sortLabels[value],
+  }));
+  const materialOptions = ARTICLE_MATERIAL_FILTER_VALUES.map((value) => ({
+    value,
+    label: specificationLabels.material[value],
+  }));
+  const colorOptions = ARTICLE_COLOR_VALUES.map((value) => ({
+    value,
+    label: specificationLabels.color[value],
+  }));
 
   const getParam = (v: unknown): string => {
     if (Array.isArray(v)) return v[0] ?? '';
@@ -55,7 +50,7 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
   const modelValue = getParam(searchParams.model);
   const colorValue = getParam(searchParams.color);
   const materialValue = getParam(searchParams.material);
-  const sortValue = getParam(searchParams.sortBy) || SORT_BY[locale][0].value;
+  const sortValue = getParam(searchParams.sortBy) || sortOptions[0].value;
 
   const clearAllFilters = () => {
     router.setParams({
@@ -75,8 +70,6 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
     materialValue,
   ].filter((v) => v !== '');
   const activeFiltersCount = activeFilters.length;
-  const labels = FILTER_LABELS[locale];
-
   return (
     <>
       <ScrollView
@@ -91,7 +84,7 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
           label={labels.sort}
           type='select'
           value={sortValue}
-          options={SORT_BY[locale]}
+          options={sortOptions}
           isClearable={false}
         />
 
@@ -124,7 +117,7 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
           type='select'
           isSearchable
           value={materialValue}
-          options={ARTICLE_MATERIALS_FILTER_LIST[locale]}
+          options={materialOptions}
           isClearable={true}
         />
 
@@ -147,7 +140,7 @@ export function OnlineStoreArticleFilters({ locale }: Props) {
           type='select'
           isSearchable
           value={colorValue}
-          options={ARTICLE_COLORS_FILTER_LIST[locale]}
+          options={colorOptions}
           isClearable={true}
         />
       </ScrollView>

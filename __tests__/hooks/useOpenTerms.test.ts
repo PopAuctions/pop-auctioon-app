@@ -59,10 +59,7 @@ describe('useOpenTerms', () => {
       expect(Linking.openURL).not.toHaveBeenCalled();
       expect(mockCallToast).toHaveBeenCalledWith({
         variant: 'error',
-        description: {
-          es: 'No se pudo abrir el documento',
-          en: 'Could not open document',
-        },
+        description: 'errors.document.openFailed',
       });
     });
   });

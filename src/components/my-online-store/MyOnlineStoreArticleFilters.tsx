@@ -5,14 +5,15 @@ import { Lang } from '@/types/types';
 import { FilterField } from '@/components/fields/FilterField';
 import {
   ARTICLE_BRANDS,
-  OFFERS_OPTIONS,
-  ONLINE_STORE_ARTICLE_STATUS,
+  OFFERS_OPTION_VALUE_ORDER,
+  ONLINE_STORE_ARTICLE_STATUS_VALUES,
 } from '@/constants';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { Filters } from '@/app/(tabs)/auctioneer/my-online-store';
 import { SelectCategoryModal } from '../modal/SelectCategoryModal';
 import { CustomLink } from '../ui/CustomLink';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface Props {
   locale: Lang;
@@ -22,34 +23,24 @@ interface Props {
   };
 }
 
-const FILTER_LABELS = {
-  es: {
-    filters: 'Filtros',
-    brand: 'Marca',
-    model: 'Modelo',
-    codeNumber: 'Código',
-    status: 'Estado',
-    offersStatus: 'Estado de ofertas',
-    activeFilters: 'Filtros activos:',
-    clearAll: 'Borrar filtros',
-    apply: 'Aplicar',
-    close: 'Cerrar',
-  },
-  en: {
-    filters: 'Filters',
-    brand: 'Brand',
-    model: 'Model',
-    codeNumber: 'Code',
-    status: 'Status',
-    offersStatus: 'Offers status',
-    activeFilters: 'Active filters:',
-    apply: 'Apply',
-    clearAll: 'Clear filters',
-    close: 'Close',
-  },
-};
-
 export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.onlineStoreArticle', { locale });
+  const labels = t('components.filters', { locale });
+  const offerFilterLabels = t('displayLabels.offersFilter', { locale });
+  const articleStatusLabels = t('displayLabels.onlineStoreArticleStatus', {
+    locale,
+  });
+  const offerFilterOptions = OFFERS_OPTION_VALUE_ORDER.map((value) => ({
+    value,
+    label: offerFilterLabels[value],
+  }));
+  const articleStatusOptions = ONLINE_STORE_ARTICLE_STATUS_VALUES.map(
+    (value) => ({
+      value,
+      label: articleStatusLabels[value],
+    })
+  );
   const params = useLocalSearchParams();
   const searchParams = params as Filters;
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
@@ -84,8 +75,6 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
     offersStatusValue,
   ].filter((v) => v !== '');
   const activeFiltersCount = activeFilters.length;
-  const labels = FILTER_LABELS[locale];
-
   return (
     <>
       {/* Top bar: Filters button + Sort select */}
@@ -102,12 +91,8 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
 
         <View className='flex flex-row gap-2'>
           <SelectCategoryModal
-            title={{ es: 'Seleccionar categoría', en: 'Select category' }}
-            description={{
-              es: 'Selecciona la categoría del artículo a crear',
-              en: 'Select the category of the article to create',
-            }}
-            locale={locale}
+            title={modalTexts.selectCategoryTitle}
+            description={modalTexts.selectCategoryDescription}
           >
             {texts.newArticle}
           </SelectCategoryModal>
@@ -182,7 +167,7 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
                   label={labels.offersStatus}
                   type='select'
                   value={offersStatusValue}
-                  options={OFFERS_OPTIONS[locale]}
+                  options={offerFilterOptions}
                   isClearable={true}
                 />
 
@@ -206,7 +191,7 @@ export function MyOnlineStoreArticleFilters({ locale, texts }: Props) {
                   type='select'
                   value={statusValue}
                   isSearchable
-                  options={ONLINE_STORE_ARTICLE_STATUS[locale]}
+                  options={articleStatusOptions}
                   isClearable={true}
                 />
 

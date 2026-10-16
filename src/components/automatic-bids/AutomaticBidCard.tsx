@@ -13,9 +13,10 @@ import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { ARTICLE_BRANDS_LABELS } from '@/constants';
-import { AutoBidArticle, LangMap } from '@/types/types';
+import { AutoBidArticle } from '@/types/types';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 type AutomaticBidCardProps = {
   autoBid: AutoBidArticle;
@@ -45,6 +46,7 @@ export function AutomaticBidCard({
   const { securePost, securePatch } = useSecureApi();
 
   const texts = t('screens.autoBids');
+  const modalTexts = t('components.modals.automaticBid');
 
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
 
@@ -78,11 +80,12 @@ export function AutomaticBidCard({
 
   const handleUpdateAutomaticBid = async (amount: string) => {
     if (Number(amount) < computedMinBid) {
-      const message = texts.minBid + ' ' + formatter.format(computedMinBid);
-
       callToast({
         variant: 'error',
-        description: { es: message, en: message },
+        description: {
+          code: 'screens.autoBids.minimumBid',
+          params: { amount: formatter.format(computedMinBid) },
+        },
       });
 
       return false;
@@ -91,7 +94,7 @@ export function AutomaticBidCard({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.AUTO_BID.CREATE,
         data: {
           articleId: article.id,
@@ -103,7 +106,12 @@ export function AutomaticBidCard({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'errors.bid.automaticBidFailed'
+        ),
       });
 
       await onRefresh();
@@ -118,7 +126,7 @@ export function AutomaticBidCard({
 
     console.log({ id, isActive });
     try {
-      const response = await securePatch<LangMap>({
+      const response = await securePatch<unknown>({
         endpoint: SECURE_ENDPOINTS.AUTO_BID.DEACTIVATE,
         data: {
           autoBidId: id,
@@ -129,7 +137,12 @@ export function AutomaticBidCard({
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -137,7 +150,12 @@ export function AutomaticBidCard({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'autoBid.deactivatedSuccessfully'
+        ),
       });
 
       await onRefresh();
@@ -217,29 +235,10 @@ export function AutomaticBidCard({
             mode='secondary'
             onConfirm={handleToggleAutomaticBid}
             isDisabled={isLoading}
-            title={
-              isActive
-                ? {
-                    es: texts.deactivateTitle,
-                    en: texts.deactivateTitle,
-                  }
-                : {
-                    es: texts.activateTitle,
-                    en: texts.activateTitle,
-                  }
-            }
+            title={isActive ? texts.deactivateTitle : texts.activateTitle}
             description={
-              isActive
-                ? {
-                    es: texts.deactivateDescription,
-                    en: texts.deactivateDescription,
-                  }
-                : {
-                    es: texts.activateDescription,
-                    en: texts.activateDescription,
-                  }
+              isActive ? texts.deactivateDescription : texts.activateDescription
             }
-            locale={locale}
           >
             {isActive ? texts.deactivate : texts.activate}
           </ConfirmModal>
@@ -248,18 +247,9 @@ export function AutomaticBidCard({
             visible={automaticBidModalVisible}
             onClose={() => setAutomaticBidModalVisible(false)}
             onConfirm={handleUpdateAutomaticBid}
-            title={{
-              es: 'Editar puja automática',
-              en: 'Update automatic bid',
-            }}
-            description={{
-              es: 'La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.',
-              en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
-            }}
-            extraMessage={{
-              es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
-              en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
-            }}
+            title={modalTexts.updateTitle}
+            description={modalTexts.description}
+            extraMessage={modalTexts.extraMessage}
             defaultValue={String(maxAmountWithCommission)}
             minAmount={computedMinBid}
           />

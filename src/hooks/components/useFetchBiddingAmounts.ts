@@ -1,22 +1,15 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import {
-  ActionResponse,
-  BiddingAmounts,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import { ActionResponse, BiddingAmounts, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 import { useToast } from '../useToast';
 import { useTranslation } from '../i18n/useTranslation';
+import { t } from '@/i18n';
+import type { MessageKey } from '@/i18n';
 
-const TEXTS = {
-  es: {
-    retry: 'Reintentar',
-  },
-  en: {
-    retry: 'Retry',
-  },
-};
+const PAGE_INFO_LOAD_ERROR =
+  'errors.article.pageInfoLoadFailed' as const satisfies MessageKey;
+const BIDDING_AMOUNTS_UPDATE_ERROR =
+  'errors.bid.updateAmountsFailed' as const satisfies MessageKey;
 
 export const useFetchBiddingAmounts = ({
   articleId,
@@ -26,13 +19,13 @@ export const useFetchBiddingAmounts = ({
   articleId: number | null;
   currentPrice: number | null;
   startingPrice: number | null;
-}): Omit<ActionResponse<BiddingAmounts | null>, 'refetch'> & {
+}): Omit<ActionResponse<BiddingAmounts | null, MessageKey>, 'refetch'> & {
   refetch: (localCurrentPrice: number) => Promise<void>;
 } => {
   const { locale } = useTranslation();
   const [data, setData] = useState<BiddingAmounts | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
   const { callToast } = useToast(locale);
 
@@ -52,15 +45,9 @@ export const useFetchBiddingAmounts = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching page info',
-        es: 'Error al obtener información de la página',
-      });
+      setErrorMessage(PAGE_INFO_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching page info',
-          es: 'Error al obtener información de la página',
-        },
+        message: PAGE_INFO_LOAD_ERROR,
       };
     }
 
@@ -95,18 +82,12 @@ export const useFetchBiddingAmounts = ({
       if (res.error) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Error updating bidding amounts. Click to retry.',
-            es: 'Error al actualizar los montos de la puja. Haz clic para reintentar.',
-          },
-          actionLabel: TEXTS[locale].retry,
+          description: BIDDING_AMOUNTS_UPDATE_ERROR,
+          actionLabel: t('commonErrors.retryButton', { locale }),
           onAction: () => refetchData(localCurrentPrice),
           durationMs: 7000,
         });
-        setErrorMessage({
-          en: 'Error fetching page info',
-          es: 'Error al obtener información de la página',
-        });
+        setErrorMessage(PAGE_INFO_LOAD_ERROR);
         return;
       }
 
