@@ -243,6 +243,7 @@ const CustomBidModal = ({
     cancel: string;
   };
 }) => {
+  const { t } = useTranslation();
   const numericBidAmount = bidAmount === '' ? null : Number(bidAmount);
 
   const isLow = numericBidAmount !== null && numericBidAmount < computedMinBid;
@@ -294,7 +295,7 @@ const CustomBidModal = ({
                 type='bodysmall'
                 className='text-sm text-red-500'
               >
-                Max: {formatter.format(computedMaxBid)}
+                {t('commonUi.maximum')}: {formatter.format(computedMaxBid)}
               </CustomText>
             ) : (
               <CustomText
@@ -303,7 +304,7 @@ const CustomBidModal = ({
                   isLow ? 'text-red-500' : 'text-neutral-500'
                 }`}
               >
-                Min: {formatter.format(computedMinBid)}
+                {t('commonUi.minimum')}: {formatter.format(computedMinBid)}
               </CustomText>
             )}
 

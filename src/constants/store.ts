@@ -25,6 +25,13 @@ export const STORE_SETTLEMENT_STATUS_FILTERS_MAP: Record<
     PROBLEM: 'Discrepancia',
     ALL: 'Todos',
   },
+  ja: {
+    PENDING: '保留中',
+    PAID: '支払い済み',
+    CANCELLED: 'キャンセル済み',
+    PROBLEM: '不一致',
+    ALL: 'すべて',
+  },
 };
 
 export const PAYOUT_METHOD_OPTIONS: Record<
@@ -40,6 +47,12 @@ export const PAYOUT_METHOD_OPTIONS: Record<
   en: [
     { value: 'CASH', label: 'Cash' },
     { value: 'BANK_TRANSFER', label: 'Bank transfer' },
+    { value: 'STRIPE', label: 'Stripe' },
+    { value: 'PAYPAL', label: 'PayPal' },
+  ],
+  ja: [
+    { value: 'CASH', label: '現金' },
+    { value: 'BANK_TRANSFER', label: '銀行振込' },
     { value: 'STRIPE', label: 'Stripe' },
     { value: 'PAYPAL', label: 'PayPal' },
   ],

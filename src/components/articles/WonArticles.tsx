@@ -52,6 +52,9 @@ export const WonArticles = ({
   const { callToast } = useToast(lang);
   const { securePost } = useSecureApi();
   const formatter = euroFormatter(lang);
+  const articleImage = t('commonUi.accessibility.articleImage', {
+    locale: lang,
+  });
 
   const handleRemoveArticles = async (auctionId: string) => {
     setIsRemoving((prev) => ({ ...prev, [auctionId]: true }));
@@ -175,7 +178,11 @@ export const WonArticles = ({
             <WonArticleItem
               key={article.id.toString()}
               article={article}
-              texts={{ winningBid, view }}
+              texts={{
+                winningBid,
+                view,
+                articleImage,
+              }}
               commissionValue={commissionValue}
               formatter={formatter}
             />
@@ -192,14 +199,14 @@ export const WonArticles = ({
 
 type WonArticleItemProps = {
   article: CustomArticle;
-  texts: { winningBid: string; view: string };
+  texts: { winningBid: string; view: string; articleImage: string };
   commissionValue: number;
   formatter: Intl.NumberFormat;
 };
 
 export const WonArticleItem = ({
   article,
-  texts: { winningBid, view },
+  texts: { winningBid, view, articleImage },
   commissionValue,
   formatter,
 }: WonArticleItemProps) => {
@@ -218,7 +225,7 @@ export const WonArticleItem = ({
         <View className='w-full overflow-hidden rounded-xl'>
           <CustomImage
             src={imageSrc}
-            alt='Article Image'
+            alt={articleImage}
             className='aspect-square w-full'
             resizeMode='cover'
           />

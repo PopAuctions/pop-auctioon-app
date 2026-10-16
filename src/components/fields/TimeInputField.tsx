@@ -12,6 +12,7 @@ import DateTimePicker, {
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type TimeInputFieldProps<T extends FieldValues> = {
   control: Control<T>;
@@ -43,6 +44,7 @@ export function TimeInputField<T extends FieldValues>({
   disabled = false,
   title,
 }: TimeInputFieldProps<T>) {
+  const { t } = useTranslation();
   const defaultClassNames = useDefaultClassNames();
   const [isOpen, setIsOpen] = useState(false);
   const [draftTime, setDraftTime] = useState<Date | null>(null);
@@ -145,7 +147,7 @@ export function TimeInputField<T extends FieldValues>({
                         mode='secondary'
                         onPress={handleCancel}
                       >
-                        Cancel
+                        {t('commonActions.cancel')}
                       </Button>
                     </View>
 
@@ -154,7 +156,7 @@ export function TimeInputField<T extends FieldValues>({
                         mode='primary'
                         onPress={handleConfirm}
                       >
-                        Confirm
+                        {t('commonActions.confirm')}
                       </Button>
                     </View>
                   </View>

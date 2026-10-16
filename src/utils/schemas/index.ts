@@ -296,17 +296,41 @@ export const UserEditSchema = z
   );
 
 export const AuctioneerEditSchema = z.object({
-  legalName: z.string().min(1, { message: 'Required' }),
-  name: z.string().min(1, { message: 'Required' }),
-  phoneNumber: z.string().min(5, { message: 'Required' }),
-  address: z.string().min(1, { message: 'Required' }),
-  town: z.string().min(1, { message: 'Required' }),
-  province: z.string().min(1, { message: 'Required' }),
-  country: z.string().min(1, { message: 'Required' }),
-  postalCode: z.string().min(1, { message: 'Required' }),
-  webPage: z.string().url().min(1, { message: 'Required' }),
-  socialMedia: z.string().url().min(1, { message: 'Required' }),
-  cif: z.string().min(1, { message: 'Required' }),
+  legalName: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  name: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  phoneNumber: z.string().min(5, {
+    message: createValidationMessage('validation.required'),
+  }),
+  address: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  town: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  province: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  country: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  postalCode: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
+  webPage: z
+    .string()
+    .url({ message: createValidationMessage('validation.invalidFormat') })
+    .min(1, { message: createValidationMessage('validation.required') }),
+  socialMedia: z
+    .string()
+    .url({ message: createValidationMessage('validation.invalidFormat') })
+    .min(1, { message: createValidationMessage('validation.required') }),
+  cif: z.string().min(1, {
+    message: createValidationMessage('validation.required'),
+  }),
   logo: z.string().optional(),
 });
 

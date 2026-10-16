@@ -125,95 +125,53 @@ export interface BlogArticleJsonArray {
 }
 
 // Legal Content Types
-export type CookiesPolicyData = {
-  es: {
+type CookiesPolicyContent = {
+  title: string;
+  description: string;
+  whatAreCookies: {
     title: string;
-    description: string;
-    whatAreCookies: {
-      title: string;
-      content: string;
-    };
-    cookiesTypes: {
-      title: string;
-      types: {
-        name: string;
-        description: string;
-      }[];
-    };
-    thirdPartyCookies: {
-      title: string;
-      content: string;
-    };
-    manageCookies: {
-      title: string;
-      content: string;
-      browsers: {
-        name: string;
-        url: string;
-      }[];
-      note: string;
-    };
-    updates: {
-      title: string;
-      content: string;
-    };
+    content: string;
   };
-  en: {
+  cookiesTypes: {
     title: string;
-    description: string;
-    whatAreCookies: {
-      title: string;
-      content: string;
-    };
-    cookiesTypes: {
-      title: string;
-      types: {
-        name: string;
-        description: string;
-      }[];
-    };
-    thirdPartyCookies: {
-      title: string;
-      content: string;
-    };
-    manageCookies: {
-      title: string;
-      content: string;
-      browsers: {
-        name: string;
-        url: string;
-      }[];
-      note: string;
-    };
-    updates: {
-      title: string;
-      content: string;
-    };
+    types: {
+      name: string;
+      description: string;
+    }[];
+  };
+  thirdPartyCookies: {
+    title: string;
+    content: string;
+  };
+  manageCookies: {
+    title: string;
+    content: string;
+    browsers: {
+      name: string;
+      url: string;
+    }[];
+    note: string;
+  };
+  updates: {
+    title: string;
+    content: string;
   };
 };
 
-export type PrivacyPolicyData = {
-  es: {
+export type CookiesPolicyData = Record<Lang, CookiesPolicyContent>;
+
+type PrivacyPolicyContent = {
+  title: string;
+  sections: {
     title: string;
-    sections: {
-      title: string;
-      content: {
-        subtitle?: string;
-        content: string[];
-      }[];
+    content: {
+      subtitle?: string;
+      content: string[];
     }[];
-  };
-  en: {
-    title: string;
-    sections: {
-      title: string;
-      content: {
-        subtitle?: string;
-        content: string[];
-      }[];
-    }[];
-  };
+  }[];
 };
+
+export type PrivacyPolicyData = Record<Lang, PrivacyPolicyContent>;
 
 export type TermsAndConditionsData = {
   pdfUrl: string;
@@ -226,62 +184,34 @@ export type LegalContentData = {
 };
 
 // Info Content Types
-export type AboutUsData = {
-  es: {
-    text: string;
-  };
-  en: {
-    text: string;
+export type AboutUsData = Record<Lang, { text: string }>;
+
+type HowItWorksContent = {
+  intro: string;
+  sections: {
+    title: string;
+    content: {
+      text?: string;
+      children?: string[];
+    }[];
+  }[];
+  outro: {
+    title: string;
+    content: string;
   };
 };
 
-export type HowItWorksData = {
-  es: {
-    intro: string;
-    sections: {
-      title: string;
-      content: {
-        text?: string;
-        children?: string[];
-      }[];
-    }[];
-    outro: {
-      title: string;
-      content: string;
-    };
-  };
-  en: {
-    intro: string;
-    sections: {
-      title: string;
-      content: {
-        text?: string;
-        children?: string[];
-      }[];
-    }[];
-    outro: {
-      title: string;
-      content: string;
-    };
-  };
-};
+export type HowItWorksData = Record<Lang, HowItWorksContent>;
 
-export type FAQsData = {
-  es: {
-    subtitle: string;
-    questions: {
-      question: string;
-      answer: string;
-    }[];
+type FAQsContent = {
+  subtitle: string;
+  questions: {
+    question: string;
+    answer: string;
   }[];
-  en: {
-    subtitle: string;
-    questions: {
-      question: string;
-      answer: string;
-    }[];
-  }[];
-};
+}[];
+
+export type FAQsData = Record<Lang, FAQsContent>;
 
 export type InfoContentData = {
   aboutUs: AboutUsData;
@@ -507,11 +437,7 @@ export type OnboardingVideo = {
   title: LangMap;
   description: LangMap;
   videoUrl: string;
-  videos: {
-    es: string;
-    en: string;
-    it: string;
-  };
+  videos: Record<'es' | 'en' | 'it', string> & Partial<Record<Lang, string>>;
   bgColor: string;
 };
 
@@ -574,10 +500,8 @@ export interface ArticleStatusType {
   PUBLISHED: 'PUBLISHED';
 }
 
-export interface Comment {
-  es: string;
-  en: string;
-}
+export type Comment = Record<'es' | 'en', string> &
+  Partial<Record<Lang, string>>;
 
 export interface HamburgerMenuItem {
   path: string;

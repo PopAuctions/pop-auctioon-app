@@ -19,6 +19,7 @@ import { useOnboardingData } from '@/hooks/pages/onboarding/useOnboardingData';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
 import { useEffect, useState } from 'react';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
+import { getOnboardingVideoUrl } from '@/utils/getOnboardingVideoUrl';
 
 type OnboardingStep = 'language' | 'video';
 type OnboardingVideoLang = Lang | 'it';
@@ -79,9 +80,10 @@ export default function OnboardingScreen() {
           }),
         };
 
-  const selectedVideoUrl = selectedLang
-    ? videosData?.videos[selectedLang]
-    : null;
+  const selectedVideoUrl =
+    selectedLang && videosData
+      ? getOnboardingVideoUrl(videosData, selectedLang)
+      : null;
 
   const handleSelectLanguage = async (lang: OnboardingVideoLang) => {
     await triggerHaptic('selection');

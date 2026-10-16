@@ -23,22 +23,39 @@ describe('app locale registry', () => {
   });
 
   it('keeps the existing platform locale conventions', () => {
-    expect(LOCALE_CONFIG.es.intlLocale).toBe('es-ES');
-    expect(LOCALE_CONFIG.en.intlLocale).toBe('en-US');
-    expect(LOCALE_CONFIG.es.currencyLocale).toBe('es-ES');
-    expect(LOCALE_CONFIG.en.currencyLocale).toBe('en-IE');
+    for (const lang of SUPPORTED_LANGUAGES) {
+      const config = LOCALE_CONFIG[lang];
+
+      expect(Object.keys(config).sort()).toEqual([
+        'currencyLocale',
+        'flag',
+        'intlLocale',
+        'label',
+        'shortLabel',
+      ]);
+      expect(Intl.DateTimeFormat.supportedLocalesOf(config.intlLocale)).toEqual(
+        [config.intlLocale]
+      );
+      expect(
+        Intl.NumberFormat.supportedLocalesOf(config.currencyLocale)
+      ).toEqual([config.currencyLocale]);
+    }
   });
 
-  it('validates locale values', () => {
-    expect(isLang('es')).toBe(true);
-    expect(isLang('en')).toBe(true);
+  it.each(SUPPORTED_LANGUAGES)('validates the registered %s locale', (lang) => {
+    expect(isLang(lang)).toBe(true);
+  });
+
+  it('rejects unsupported locale values', () => {
     expect(isLang('fr')).toBe(false);
     expect(isLang(undefined)).toBe(false);
   });
 
-  it('resolves untrusted locale values to a supported language', () => {
-    expect(resolveLang('en')).toBe('en');
-    expect(resolveLang('es')).toBe('es');
+  it.each(SUPPORTED_LANGUAGES)('resolves the registered %s locale', (lang) => {
+    expect(resolveLang(lang)).toBe(lang);
+  });
+
+  it('resolves unsupported locale values to the default', () => {
     expect(resolveLang('it')).toBe(DEFAULT_LANG);
     expect(resolveLang(null)).toBe(DEFAULT_LANG);
   });

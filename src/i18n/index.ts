@@ -9,6 +9,7 @@ import {
 // Import translation files
 import es from './locales/es.json';
 import en from './locales/en.json';
+import localeJa from './locales/ja.json';
 // i18n:add:translation-import
 import { Path, PathValue, StringPath } from '@/types/i18n';
 import {
@@ -25,6 +26,7 @@ import type { DisplayLabelDictionary } from './display-labels';
 const translations = {
   es,
   en,
+  ja: localeJa,
   // i18n:add:translation-map
 } as const satisfies Record<Lang, { displayLabels: DisplayLabelDictionary }>;
 

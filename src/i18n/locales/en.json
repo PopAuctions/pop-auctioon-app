@@ -1037,6 +1037,26 @@
     "usernameMaxLengthAuctioneer": "Max. %{max} characters",
     "emailRequired": "Email required"
   },
+  "commonUi": {
+    "total": "Total",
+    "minimum": "Min",
+    "maximum": "Max",
+    "accessibility": {
+      "previousAuction": "Previous auction",
+      "previousAuctionHint": "Navigates to the previous auction in the slider",
+      "nextAuction": "Next auction",
+      "nextAuctionHint": "Navigates to the next auction in the slider",
+      "previousArticlePage": "Previous article page",
+      "previousArticlePageHint": "Navigates to the previous page in the slider",
+      "nextArticlePage": "Next article page",
+      "nextArticlePageHint": "Navigates to the next page in the slider",
+      "pageOf": "Page %{page} of %{total}",
+      "decreaseBidByTen": "Decrease bid by 10",
+      "increaseBidByTen": "Increase bid by 10",
+      "articleImage": "Article image",
+      "userImage": "User image"
+    }
+  },
   "commonActions": {
     "loading": "Loading...",
     "error": "Error",
