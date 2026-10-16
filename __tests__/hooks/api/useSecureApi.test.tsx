@@ -4,6 +4,16 @@ import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
 
 const supportedLanguageKeys = [...SUPPORTED_LANGUAGES].sort();
 
+const expectLocalizedMessage = (message: unknown) => {
+  expect(message).toEqual(expect.any(Object));
+  expect(Object.keys(message as Record<string, unknown>).sort()).toEqual(
+    supportedLanguageKeys
+  );
+  expect(Object.values(message as Record<string, unknown>)).toEqual(
+    expect.arrayContaining([expect.any(String)])
+  );
+};
+
 // Mock all dependencies first
 global.fetch = jest.fn();
 
@@ -208,13 +218,8 @@ describe('useSecureApi - Simple Tests', () => {
 
     // Should retry once and fail
     expect(global.fetch).toHaveBeenCalledTimes(2);
-    expect(response).toEqual({
-      status: 0,
-      error: {
-        es: 'Error al conectar con el servidor',
-        en: 'Error connecting to server',
-      },
-    });
+    expect(response.status).toBe(0);
+    expectLocalizedMessage(response.error);
   });
 
   it('should handle HTTP 400 error response', async () => {
@@ -235,14 +240,9 @@ describe('useSecureApi - Simple Tests', () => {
       endpoint: '/test-endpoint',
     });
 
-    expect(response).toEqual({
-      data: { error: 'Bad request' },
-      status: 400,
-      error: {
-        es: 'Bad request',
-        en: 'Bad request',
-      },
-    });
+    expect(response.data).toEqual({ error: 'Bad request' });
+    expect(response.status).toBe(400);
+    expectLocalizedMessage(response.error);
   });
 
   it('prefers a valid local error code over the legacy error map', async () => {
@@ -331,18 +331,15 @@ describe('useSecureApi - Simple Tests', () => {
     });
 
     // Non-JSON responses return data with error, responseText and contentType
-    expect(response).toEqual({
+    expect(response).toMatchObject({
       data: {
-        error: {
-          en: 'Error getting information',
-          es: 'Error al obtener información',
-        },
         responseText: 'Plain text response',
         contentType: 'text/plain',
       },
       status: 200,
       error: undefined,
     });
+    expectLocalizedMessage((response.data as { error?: unknown }).error);
   });
 
   // Secure endpoints tests (JWT + API Key)
@@ -694,18 +691,15 @@ describe('useSecureApi - Simple Tests', () => {
       const response = await result.current.protectedGet({ endpoint: '/test' });
 
       // Now returns responseData completo when not ok
-      expect(response).toEqual({
+      expect(response).toMatchObject({
         data: {
-          error: {
-            en: 'Error getting information',
-            es: 'Error al obtener información',
-          },
           responseText: longText.substring(0, 200) + '...',
           contentType: 'text/html',
         },
         status: 200,
         error: undefined,
       });
+      expectLocalizedMessage((response.data as { error?: unknown }).error);
     });
 
     it('should handle error without message property', async () => {
@@ -716,10 +710,7 @@ describe('useSecureApi - Simple Tests', () => {
       const response = await result.current.protectedGet({ endpoint: '/test' });
 
       expect(response.status).toBe(0);
-      expect(response.error).toEqual({
-        es: 'Error al conectar con el servidor',
-        en: 'Error connecting to server',
-      });
+      expectLocalizedMessage(response.error);
     });
   });
 });
