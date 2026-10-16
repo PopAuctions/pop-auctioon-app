@@ -2,11 +2,7 @@ import { useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type {
-  ActionResponse,
-  RequestStatus,
-  UploadFile,
-} from '@/types/types';
+import type { ActionResponse, RequestStatus, UploadFile } from '@/types/types';
 import type { UserEditSchema } from '@/utils/schemas';
 import type * as z from 'zod';
 import type { MessageKey } from '@/i18n';
