@@ -37,9 +37,7 @@
         "expo-build-properties",
         {
           "android": {
-            "usesCleartextTraffic": true,
-            "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true
+            "usesCleartextTraffic": true
           }
         }
       ],
