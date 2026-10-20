@@ -25,10 +25,16 @@ interface CreateArticlesPaymentParams {
   country: string;
   userAddressId: string;
   discount?: { code: string; amount: number } | null;
+  confirmedPendingAttemptIds?: number[];
 }
 
 interface CreateArticlesPaymentResponse {
   userPaymentId: number;
+}
+
+interface PaymentAttemptRecoveryData {
+  recoverableArticleIds: number[];
+  recoverablePendingAttemptIds: number[];
 }
 
 interface RejectArticlesPaymentParams {
@@ -79,6 +85,39 @@ export const useArticlesPayment = () => {
     }
   };
 
+  const checkPaymentAttemptRecovery = async ({
+    auctionId,
+    articleIds,
+  }: {
+    auctionId: string;
+    articleIds: number[];
+  }): Promise<{
+    data: PaymentAttemptRecoveryData | null;
+    error: MessageKey | null;
+  }> => {
+    try {
+      const response = await securePost<PaymentAttemptRecoveryData>({
+        endpoint: SECURE_ENDPOINTS.PAYMENT.CHECK_PAYMENT_ATTEMPT_RECOVERY,
+        data: { auctionId, articleIds },
+      });
+
+      if (response.error || !response.data) {
+        return {
+          data: null,
+          error: response.messageCode ?? PAYMENT_RECORD_CREATE_FAILED,
+        };
+      }
+
+      return { data: response.data, error: null };
+    } catch (error) {
+      console.error(
+        '[useArticlesPayment] Failed to check payment attempt recovery:',
+        error
+      );
+      return { data: null, error: PAYMENT_RECORD_CREATE_FAILED };
+    }
+  };
+
   const rejectPayment = async (
     params: RejectArticlesPaymentParams
   ): Promise<{ success: boolean; error: MessageKey | null }> => {
@@ -114,6 +153,7 @@ export const useArticlesPayment = () => {
 
   return {
     createPayment,
+    checkPaymentAttemptRecovery,
     rejectPayment,
     status,
     errorMessage,

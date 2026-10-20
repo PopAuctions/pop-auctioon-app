@@ -37,7 +37,9 @@
         "expo-build-properties",
         {
           "android": {
-            "usesCleartextTraffic": true
+            "usesCleartextTraffic": true,
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
           }
         }
       ],
@@ -71,7 +73,11 @@
       [
         "expo-localization",
         {
-          "supportedLocales": ["es", "en", "ja"]
+          "supportedLocales": [
+            "es",
+            "en",
+            "ja"
+          ]
         }
       ],
       [

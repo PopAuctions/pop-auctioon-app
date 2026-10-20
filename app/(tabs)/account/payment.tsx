@@ -29,6 +29,7 @@ import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { PaymentCheckoutSummary } from '@/components/payment/PaymentCheckoutSummary';
 import { AddressSelector } from '@/components/payment/AddressSelector';
 import { PaymentArticlesList } from '@/components/payment/PaymentArticlesList';
+import { PaymentAttemptRecoveryModal } from '@/components/payment/PaymentAttemptRecoveryModal';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
@@ -79,7 +80,8 @@ export default function PaymentScreen() {
     openPaymentBrowser,
     isLoading: paymentLoading,
   } = useRedsysPayment({ type: `auction_${auctionId}` });
-  const { createPayment, rejectPayment } = useArticlesPayment();
+  const { createPayment, checkPaymentAttemptRecovery, rejectPayment } =
+    useArticlesPayment();
 
   // Hook para toggle de selección de artículos (sincronizar con backend)
   const {
@@ -109,6 +111,10 @@ export default function PaymentScreen() {
   const [discountCode, setDiscountCode] = useState('');
   const [isSubmittingPayment, setIsSubmittingPayment] =
     useState<boolean>(false);
+  const [paymentAttemptRecovery, setPaymentAttemptRecovery] = useState<{
+    recoverableArticleIds: number[];
+    recoverablePendingAttemptIds: number[];
+  } | null>(null);
   const [appliedDiscount, setAppliedDiscount] = useState<{
     code: string;
     amount: number;
@@ -311,7 +317,107 @@ export default function PaymentScreen() {
     });
   }, [callToast]);
 
-  // Manejar el pago (flujo completo idéntico a web)
+  const createPaymentAndOpenRedsys = useCallback(
+    async (confirmedPendingAttemptIds?: number[]) => {
+      if (!selectedAddress || !selectedAddressId) {
+        return;
+      }
+
+      try {
+        setIsSubmittingPayment(true);
+
+        const redsysOrderId = await initializePaymentSession(
+          paymentDetails.total,
+          selectedArticleIds
+        );
+
+        if (!redsysOrderId) {
+          callToast({
+            variant: 'error',
+            description: PAYMENT_TOAST_KEYS.paymentSessionPreparationFailed,
+          });
+          return;
+        }
+
+        const { userPaymentId, error: createPaymentError } =
+          await createPayment({
+            auctionId: auctionId || '',
+            articlesIds: selectedArticleIds,
+            clientTotalAmount: paymentDetails.total,
+            clientIntent: redsysOrderId,
+            country: selectedAddress.country,
+            userAddressId: selectedAddressId,
+            discount: appliedDiscount,
+            confirmedPendingAttemptIds,
+          });
+
+        if (createPaymentError || !userPaymentId) {
+          callToast({
+            variant: 'error',
+            description:
+              createPaymentError ||
+              PAYMENT_TOAST_KEYS.paymentRecordCreationFailed,
+          });
+          return;
+        }
+
+        await savePaymentResultContext({
+          flow: 'auction',
+          retryRoute: `/(tabs)/account/payment?auctionId=${auctionId}`,
+          paymentId: userPaymentId,
+          paymentIntent: redsysOrderId,
+        });
+
+        const browserResult = await openPaymentBrowser();
+
+        if (!browserResult.success) {
+          const shouldRejectPayment =
+            browserResult.type === 'cancel' ||
+            (browserResult.type === 'error' && browserResult.status === 'ko');
+
+          if (shouldRejectPayment) {
+            await rejectPayment({
+              userPaymentId,
+              errorCode: browserResult.error?.code,
+              errorDescription: browserResult.error?.message,
+            });
+
+            router.replace('/payment-result?status=ko');
+            return;
+          }
+
+          router.replace('/payment-result?status=pending');
+          return;
+        }
+
+        return;
+      } catch (error: any) {
+        console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
+        callToast({
+          variant: 'error',
+          description: PAYMENT_TOAST_KEYS.unexpectedProcessingError,
+        });
+      } finally {
+        setIsSubmittingPayment(false);
+      }
+    },
+    [
+      selectedArticleIds,
+      selectedAddressId,
+      selectedAddress,
+      paymentDetails.total,
+      auctionId,
+      appliedDiscount,
+      initializePaymentSession,
+      createPayment,
+      rejectPayment,
+      openPaymentBrowser,
+      callToast,
+      router,
+    ]
+  );
+
+  // Check for stale local payment attempts before creating a new Redsys session.
   const handlePayment = useCallback(async () => {
     if (selectedArticleIds.length === 0) {
       callToast({
@@ -337,95 +443,47 @@ export default function PaymentScreen() {
       return;
     }
 
-    try {
-      setIsSubmittingPayment(true);
+    const recoveryCheck = await checkPaymentAttemptRecovery({
+      auctionId: auctionId || '',
+      articleIds: selectedArticleIds,
+    });
 
-      const redsysOrderId = await initializePaymentSession(
-        paymentDetails.total,
-        selectedArticleIds
-      );
-
-      if (!redsysOrderId) {
-        callToast({
-          variant: 'error',
-          description: PAYMENT_TOAST_KEYS.paymentSessionPreparationFailed,
-        });
-        return;
-      }
-
-      const { userPaymentId, error: createPaymentError } = await createPayment({
-        auctionId: auctionId || '',
-        articlesIds: selectedArticleIds,
-        clientTotalAmount: paymentDetails.total,
-        clientIntent: redsysOrderId,
-        country: selectedAddress.country,
-        userAddressId: selectedAddressId,
-        discount: appliedDiscount,
-      });
-
-      if (createPaymentError || !userPaymentId) {
-        callToast({
-          variant: 'error',
-          description:
-            createPaymentError ||
-            PAYMENT_TOAST_KEYS.paymentRecordCreationFailed,
-        });
-        return;
-      }
-
-      await savePaymentResultContext({
-        flow: 'auction',
-        retryRoute: `/(tabs)/account/payment?auctionId=${auctionId}`,
-        paymentId: userPaymentId,
-        paymentIntent: redsysOrderId,
-      });
-
-      const browserResult = await openPaymentBrowser();
-
-      if (!browserResult.success) {
-        const shouldRejectPayment =
-          browserResult.type === 'cancel' ||
-          (browserResult.type === 'error' && browserResult.status === 'ko');
-
-        if (shouldRejectPayment) {
-          await rejectPayment({
-            userPaymentId,
-            errorCode: browserResult.error?.code,
-            errorDescription: browserResult.error?.message,
-          });
-
-          router.replace('/payment-result?status=ko');
-          return;
-        }
-
-        router.replace('/payment-result?status=pending');
-        return;
-      }
-
-      return;
-    } catch (error: any) {
-      console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
+    if (recoveryCheck.error || !recoveryCheck.data) {
       callToast({
         variant: 'error',
-        description: PAYMENT_TOAST_KEYS.unexpectedProcessingError,
+        description:
+          recoveryCheck.error || PAYMENT_TOAST_KEYS.unexpectedProcessingError,
       });
-    } finally {
-      setIsSubmittingPayment(false);
+      return;
     }
+
+    if (recoveryCheck.data.recoverablePendingAttemptIds.length > 0) {
+      setPaymentAttemptRecovery(recoveryCheck.data);
+      return;
+    }
+
+    await createPaymentAndOpenRedsys();
   }, [
-    selectedArticleIds,
-    selectedAddressId,
-    selectedAddress,
-    paymentDetails.total,
     auctionId,
-    appliedDiscount,
-    initializePaymentSession,
-    createPayment,
-    rejectPayment,
-    openPaymentBrowser,
     callToast,
-    router,
+    checkPaymentAttemptRecovery,
+    createPaymentAndOpenRedsys,
+    paymentDetails.total,
+    selectedAddress,
+    selectedAddressId,
+    selectedArticleIds,
   ]);
+
+  const handleConfirmPaymentAttemptRecovery = useCallback(() => {
+    if (!paymentAttemptRecovery) {
+      return;
+    }
+
+    const confirmedPendingAttemptIds =
+      paymentAttemptRecovery.recoverablePendingAttemptIds;
+    setPaymentAttemptRecovery(null);
+    void createPaymentAndOpenRedsys(confirmedPendingAttemptIds);
+  }, [createPaymentAndOpenRedsys, paymentAttemptRecovery]);
 
   useFocusEffect(
     useCallback(() => {
@@ -597,6 +655,18 @@ export default function PaymentScreen() {
         }}
         countries={isCommissionReady ? paymentConfig.countries : null}
         countryLabels={isCommissionReady ? paymentConfig.countryLabels : null}
+      />
+
+      <PaymentAttemptRecoveryModal
+        visible={paymentAttemptRecovery !== null}
+        articleTitles={articles
+          .filter((article) =>
+            paymentAttemptRecovery?.recoverableArticleIds.includes(article.id)
+          )
+          .map((article) => article.title)}
+        isSubmitting={isSubmittingPayment}
+        onCancel={() => setPaymentAttemptRecovery(null)}
+        onConfirm={handleConfirmPaymentAttemptRecovery}
       />
     </SafeAreaView>
   );
