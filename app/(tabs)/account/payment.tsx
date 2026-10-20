@@ -17,6 +17,7 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetWonArticles } from '@/hooks/pages/payment/useGetWonArticles';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useRedsysPayment } from '@/hooks/payment/useRedsysPayment';
+import { usePaymentSubmission } from '@/hooks/payment/usePaymentSubmission';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { useArticlesPayment } from '@/hooks/pages/payment/useArticlesPayment';
@@ -109,8 +110,7 @@ export default function PaymentScreen() {
   );
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
-  const [isSubmittingPayment, setIsSubmittingPayment] =
-    useState<boolean>(false);
+  const { isSubmittingPayment, runPaymentSubmission } = usePaymentSubmission();
   const [paymentAttemptRecovery, setPaymentAttemptRecovery] = useState<{
     recoverableArticleIds: number[];
     recoverablePendingAttemptIds: number[];
@@ -324,8 +324,6 @@ export default function PaymentScreen() {
       }
 
       try {
-        setIsSubmittingPayment(true);
-
         const redsysOrderId = await initializePaymentSession(
           paymentDetails.total,
           selectedArticleIds
@@ -397,8 +395,6 @@ export default function PaymentScreen() {
           variant: 'error',
           description: PAYMENT_TOAST_KEYS.unexpectedProcessingError,
         });
-      } finally {
-        setIsSubmittingPayment(false);
       }
     },
     [
@@ -443,32 +439,35 @@ export default function PaymentScreen() {
       return;
     }
 
-    const recoveryCheck = await checkPaymentAttemptRecovery({
-      auctionId: auctionId || '',
-      articleIds: selectedArticleIds,
-    });
-
-    if (recoveryCheck.error || !recoveryCheck.data) {
-      callToast({
-        variant: 'error',
-        description:
-          recoveryCheck.error || PAYMENT_TOAST_KEYS.unexpectedProcessingError,
+    await runPaymentSubmission(async () => {
+      const recoveryCheck = await checkPaymentAttemptRecovery({
+        auctionId: auctionId || '',
+        articleIds: selectedArticleIds,
       });
-      return;
-    }
 
-    if (recoveryCheck.data.recoverablePendingAttemptIds.length > 0) {
-      setPaymentAttemptRecovery(recoveryCheck.data);
-      return;
-    }
+      if (recoveryCheck.error || !recoveryCheck.data) {
+        callToast({
+          variant: 'error',
+          description:
+            recoveryCheck.error || PAYMENT_TOAST_KEYS.unexpectedProcessingError,
+        });
+        return;
+      }
 
-    await createPaymentAndOpenRedsys();
+      if (recoveryCheck.data.recoverablePendingAttemptIds.length > 0) {
+        setPaymentAttemptRecovery(recoveryCheck.data);
+        return;
+      }
+
+      await createPaymentAndOpenRedsys();
+    });
   }, [
     auctionId,
     callToast,
     checkPaymentAttemptRecovery,
     createPaymentAndOpenRedsys,
     paymentDetails.total,
+    runPaymentSubmission,
     selectedAddress,
     selectedAddressId,
     selectedArticleIds,
@@ -481,9 +480,15 @@ export default function PaymentScreen() {
 
     const confirmedPendingAttemptIds =
       paymentAttemptRecovery.recoverablePendingAttemptIds;
-    setPaymentAttemptRecovery(null);
-    void createPaymentAndOpenRedsys(confirmedPendingAttemptIds);
-  }, [createPaymentAndOpenRedsys, paymentAttemptRecovery]);
+    void runPaymentSubmission(async () => {
+      setPaymentAttemptRecovery(null);
+      await createPaymentAndOpenRedsys(confirmedPendingAttemptIds);
+    });
+  }, [
+    createPaymentAndOpenRedsys,
+    paymentAttemptRecovery,
+    runPaymentSubmission,
+  ]);
 
   useFocusEffect(
     useCallback(() => {
