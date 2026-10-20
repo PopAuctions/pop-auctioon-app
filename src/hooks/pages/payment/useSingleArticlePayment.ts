@@ -18,6 +18,7 @@ interface CreateArticlePaymentParams {
   country: string;
   userAddressId: string;
   discount?: { code: string; amount: number } | null;
+  confirmedPendingAttemptIds?: number[];
 }
 
 interface CreateArticlePaymentResponse {

@@ -89,7 +89,7 @@ export const useArticlesPayment = () => {
     auctionId,
     articleIds,
   }: {
-    auctionId: string;
+    auctionId: string | null;
     articleIds: number[];
   }): Promise<{
     data: PaymentAttemptRecoveryData | null;
