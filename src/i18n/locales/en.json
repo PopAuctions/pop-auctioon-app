@@ -772,6 +772,7 @@
       "configLoadFailed": "Error fetching payment configuration data",
       "configMissing": "Payment configuration data is missing",
       "recordCreateFailed": "Error creating payment record",
+      "confirmationPending": "You have already opened a payment session for one or more of these articles. If you opened it recently, wait 5 minutes before trying again.",
       "noResponse": "No response received from server",
       "revertFailed": "Error reverting payment",
       "redsysSessionCreateFailed": "Could not create payment session",
@@ -1719,7 +1720,12 @@
       "cannotDeselectLastItem": "You cannot deselect the last item",
       "summary": "Summary",
       "paymentData": "Payment data",
-      "processing": "Processing..."
+      "processing": "Processing...",
+      "paymentRecoveryTitle": "You have an unfinished payment process",
+      "paymentRecoveryArticleIntro": "This process includes:",
+      "paymentRecoveryDescription": "We have not received payment confirmation. If you continue, we will close that process in PopAuctioon and create a new one for the articles you have selected now.",
+      "paymentRecoveryWarning": "If you still have an earlier payment page open, close it and do not complete the payment there.",
+      "paymentRecoveryConfirm": "Create new payment"
     },
     "paymentResult": {
       "loading": "Loading payment result...",

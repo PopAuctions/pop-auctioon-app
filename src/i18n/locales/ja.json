@@ -772,6 +772,7 @@
       "configLoadFailed": "決済設定の取得中にエラーが発生しました",
       "configMissing": "決済設定がありません",
       "recordCreateFailed": "決済記録の作成中にエラーが発生しました",
+      "confirmationPending": "これらの商品のいずれかについて、すでに決済画面を開いています。最近開いた場合は、5分待ってからもう一度お試しください。",
       "noResponse": "サーバーから応答がありません",
       "revertFailed": "決済の取り消し中にエラーが発生しました",
       "redsysSessionCreateFailed": "決済セッションを作成できませんでした",
@@ -1719,7 +1720,12 @@
       "cannotDeselectLastItem": "最後の商品は選択解除できません",
       "summary": "概要",
       "paymentData": "決済情報",
-      "processing": "処理中..."
+      "processing": "処理中...",
+      "paymentRecoveryTitle": "未完了の決済手続きがあります",
+      "paymentRecoveryArticleIntro": "この手続きには以下の商品が含まれています：",
+      "paymentRecoveryDescription": "決済の確認を受け取っていません。続行すると、PopAuctioon上のこの手続きを終了し、現在選択している商品で新しい手続きを作成します。",
+      "paymentRecoveryWarning": "以前の決済ページを開いたままにしている場合は、そのページを閉じ、そこで決済を完了しないでください。",
+      "paymentRecoveryConfirm": "新しい決済を作成"
     },
     "paymentResult": {
       "loading": "決済結果を読み込み中...",

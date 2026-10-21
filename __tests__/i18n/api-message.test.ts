@@ -4,6 +4,23 @@ import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
 const supportedLanguageKeys = [...SUPPORTED_LANGUAGES].sort();
 
 describe('API message compatibility', () => {
+  it('recognizes and translates the pending payment-session error', () => {
+    const messageCode = 'errors.payment.confirmationPending';
+    expect(getApiMessageMetadata({ messageCode })).toEqual({
+      messageCode,
+      messageParams: {},
+    });
+
+    const resolved = resolveApiMessage(
+      { error: { en: 'legacy-en', es: 'legacy-es' }, messageCode },
+      'error'
+    );
+    expect(Object.keys(resolved ?? {}).sort()).toEqual(supportedLanguageKeys);
+    expect(resolved?.en).toContain('5 minutes');
+    expect(resolved?.es).toContain('5 minutos');
+    expect(resolved?.ja).toContain('5分');
+  });
+
   it('accepts known codes and defaults missing parameters to an empty object', () => {
     expect(
       getApiMessageMetadata({

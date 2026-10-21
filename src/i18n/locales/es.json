@@ -772,6 +772,7 @@
       "configLoadFailed": "Error al cargar la configuración de pago",
       "configMissing": "Faltan los datos de configuración de pago",
       "recordCreateFailed": "Error al crear el registro de pago",
+      "confirmationPending": "Ya abriste una sesión de pago para alguno de estos artículos. Si la abriste hace poco, espera 5 minutos antes de volver a intentarlo.",
       "noResponse": "No se recibió respuesta del servidor",
       "revertFailed": "Error al revertir el pago",
       "redsysSessionCreateFailed": "No se pudo crear la sesión de pago",
@@ -1719,7 +1720,12 @@
       "cannotDeselectLastItem": "No puedes deseleccionar el último artículo",
       "summary": "Resumen",
       "paymentData": "Datos de pago",
-      "processing": "Procesando..."
+      "processing": "Procesando...",
+      "paymentRecoveryTitle": "Tienes un proceso de pago sin finalizar",
+      "paymentRecoveryArticleIntro": "Este proceso incluye:",
+      "paymentRecoveryDescription": "No hemos recibido una confirmación de pago. Si continúas, cerraremos ese proceso en PopAuctioon y crearemos uno nuevo para los artículos seleccionados ahora.",
+      "paymentRecoveryWarning": "Si todavía tienes abierta una página de pago anterior, ciérrala y no completes el pago desde ella.",
+      "paymentRecoveryConfirm": "Crear nuevo pago"
     },
     "paymentResult": {
       "loading": "Cargando resultado del pago...",
