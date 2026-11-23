@@ -48,7 +48,24 @@ describe('useFetchCommissions', () => {
       expect(result.current.data).toEqual({ commission: 12.5 });
       expect(result.current.errorMessage).toBeNull();
       expect(mockProtectedGet).toHaveBeenCalledWith({
-        endpoint: PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS,
+        endpoint: `${PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS}?saleType=auction`,
+      });
+    });
+
+    it('requests the online-store commission explicitly', async () => {
+      mockProtectedGet.mockResolvedValue({
+        data: mockBackendResponse,
+        error: null,
+      });
+
+      const { result } = renderHook(() => useFetchCommissions('online-store'));
+
+      await waitFor(() => {
+        expect(result.current.status).toBe('success');
+      });
+
+      expect(mockProtectedGet).toHaveBeenCalledWith({
+        endpoint: `${PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS}?saleType=online-store`,
       });
     });
 

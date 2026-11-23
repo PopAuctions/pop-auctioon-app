@@ -38,7 +38,7 @@ export const MyOnlineStoreArticlesInfiniteScroll = ({
 
   const { fetchArticles } = useFetchMyOnlineStoreArticlesInfinite();
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommissions();
+    useFetchCommissions('online-store');
 
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
   const [error, setError] = useState<MessageKey | null>(null);
