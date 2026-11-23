@@ -26,9 +26,7 @@ describe('useFetchCommissions', () => {
     });
   });
 
-  const mockBackendResponse = {
-    commission: 12.5,
-  };
+  const mockBackendResponse = 12.5;
 
   describe('Success Cases', () => {
     it('should fetch commission successfully', async () => {
@@ -45,7 +43,7 @@ describe('useFetchCommissions', () => {
         expect(result.current.status).toBe('success');
       });
 
-      expect(result.current.data).toEqual({ commission: 12.5 });
+      expect(result.current.data).toBe(mockBackendResponse);
       expect(result.current.errorMessage).toBeNull();
       expect(mockProtectedGet).toHaveBeenCalledWith({
         endpoint: `${PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS}?saleType=auction`,
@@ -67,6 +65,7 @@ describe('useFetchCommissions', () => {
       expect(mockProtectedGet).toHaveBeenCalledWith({
         endpoint: `${PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS}?saleType=online-store`,
       });
+      expect(result.current.data).toBe(mockBackendResponse);
     });
 
     it('should provide refetch function', async () => {
