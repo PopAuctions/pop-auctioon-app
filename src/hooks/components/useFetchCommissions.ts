@@ -7,7 +7,11 @@ import type { MessageKey } from '@/i18n';
 
 // Este hook solo trae el valor de comisión (número)
 // Para payment checkout completo con impuestos, shipping, etc, usar useFetchPaymentConfig
-export const useFetchCommissions = (): ActionResponse<number, MessageKey> => {
+export type CommissionSaleType = 'auction' | 'online-store';
+
+export const useFetchCommissions = (
+  saleType: CommissionSaleType = 'auction'
+): ActionResponse<number, MessageKey> => {
   const [data, setData] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
@@ -18,7 +22,7 @@ export const useFetchCommissions = (): ActionResponse<number, MessageKey> => {
       setStatus('loading');
 
       const response = await protectedGet<number>({
-        endpoint: PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS,
+        endpoint: `${PROTECTED_ENDPOINTS.PAYMENT.COMMISSIONS}?saleType=${saleType}`,
       });
 
       if (response.error) {
@@ -46,7 +50,7 @@ export const useFetchCommissions = (): ActionResponse<number, MessageKey> => {
       setStatus('error');
       setErrorMessage('errors.payment.commissionLoadFailed');
     }
-  }, [protectedGet]);
+  }, [protectedGet, saleType]);
 
   useEffect(() => {
     fetchCommission();

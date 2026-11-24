@@ -22,6 +22,8 @@ interface BackendPaymentConfig {
       LABEL: string;
     };
   };
+  auctionCommissionsValue?: BackendPaymentConfig['commissionsValue'];
+  onlineStoreCommissionsValue?: BackendPaymentConfig['commissionsValue'];
   countries: Record<string, { label: string; value: CountryValue }[]>;
   countriesLabel: Record<string, Record<CountryValue, string>>;
 }
@@ -29,6 +31,7 @@ interface BackendPaymentConfig {
 // Frontend format (nuestro hook retorna esto)
 interface PaymentConfigState {
   commission: number;
+  onlineStoreCommission: number;
   shippingTaxes: PaymentShippingTax | null;
   taxPercentage: number;
   taxPercentageArticles: number;
@@ -38,6 +41,7 @@ interface PaymentConfigState {
 
 interface PaymentConfigData {
   commission: number;
+  onlineStoreCommission: number;
   shippingTaxes: PaymentShippingTax | null;
   taxPercentage: number;
   taxPercentageArticles: number;
@@ -50,6 +54,7 @@ export const useFetchPaymentConfig = (
 ): ActionResponse<PaymentConfigData, MessageKey> => {
   const [data, setData] = useState<PaymentConfigState>({
     commission: 0,
+    onlineStoreCommission: 0,
     shippingTaxes: null,
     taxPercentage: 0,
     taxPercentageArticles: 0,
@@ -84,7 +89,12 @@ export const useFetchPaymentConfig = (
 
       // Transform backend data to frontend format
       const transformedData: PaymentConfigState = {
-        commission: response.data.commissionsValue.STANDARD.PERCENTAGE,
+        commission:
+          response.data.auctionCommissionsValue?.STANDARD.PERCENTAGE ??
+          response.data.commissionsValue.STANDARD.PERCENTAGE,
+        onlineStoreCommission:
+          response.data.onlineStoreCommissionsValue?.STANDARD.PERCENTAGE ??
+          response.data.commissionsValue.STANDARD.PERCENTAGE,
         shippingTaxes: response.data.taxForShipping,
         taxPercentage: response.data.taxPercentageArticles,
         taxPercentageArticles: response.data.taxPercentageArticles || 0,
@@ -122,6 +132,7 @@ export const useFetchPaymentConfig = (
   const localizedData = useMemo<PaymentConfigData>(
     () => ({
       commission: data.commission,
+      onlineStoreCommission: data.onlineStoreCommission,
       shippingTaxes: data.shippingTaxes,
       taxPercentage: data.taxPercentage,
       taxPercentageArticles: data.taxPercentageArticles,

@@ -66,6 +66,7 @@ describe('useFetchPaymentConfig', () => {
 
   const expectedTransformedData = {
     commission: 12.5,
+    onlineStoreCommission: 12.5,
     shippingTaxes: {
       SPAIN: 10,
       FRANCE: 15,
@@ -89,6 +90,7 @@ describe('useFetchPaymentConfig', () => {
     expect(result.current.status).toBe('loading');
     expect(result.current.data).toEqual({
       commission: 0,
+      onlineStoreCommission: 0,
       shippingTaxes: null,
       taxPercentage: 0,
       taxPercentageArticles: 0,
@@ -164,6 +166,39 @@ describe('useFetchPaymentConfig', () => {
     });
 
     expect(result.current.data.commission).toBe(15.75);
+    expect(result.current.data.onlineStoreCommission).toBe(15.75);
+  });
+
+  it('should keep auction and online-store commissions separate', async () => {
+    mockSecureGet.mockResolvedValueOnce({
+      data: {
+        ...mockBackendResponse,
+        auctionCommissionsValue: {
+          STANDARD: {
+            PERCENTAGE: 8,
+            THRESHOLD: null,
+            LABEL: 'Auction',
+          },
+        },
+        onlineStoreCommissionsValue: {
+          STANDARD: {
+            PERCENTAGE: 11,
+            THRESHOLD: null,
+            LABEL: 'Online store',
+          },
+        },
+      },
+      error: null,
+    });
+
+    const { result } = renderHook(() => useFetchPaymentConfig('en'));
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('success');
+    });
+
+    expect(result.current.data.commission).toBe(8);
+    expect(result.current.data.onlineStoreCommission).toBe(11);
   });
 
   it('should handle API error response', async () => {
@@ -186,6 +221,7 @@ describe('useFetchPaymentConfig', () => {
     expect(result.current.errorMessage).toBe('errors.payment.configLoadFailed');
     expect(result.current.data).toEqual({
       commission: 0,
+      onlineStoreCommission: 0,
       shippingTaxes: null,
       taxPercentage: 0,
       taxPercentageArticles: 0,

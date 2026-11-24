@@ -135,7 +135,7 @@ export default function SinglePaymentScreen() {
     return calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
-      commissionPercentage: paymentConfig.commission || 0,
+      commissionPercentage: paymentConfig.onlineStoreCommission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
       taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       auctionCountry: storeCountry,

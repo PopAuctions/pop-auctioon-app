@@ -34,7 +34,7 @@ export default function MyOnlineStoreArticleDetailsScreen() {
     useGetMyStoreCommission();
 
   const { data: commissionAmount, status: commissionStatus } =
-    useFetchCommissions();
+    useFetchCommissions('online-store');
 
   if (
     status === REQUEST_STATUS.idle ||

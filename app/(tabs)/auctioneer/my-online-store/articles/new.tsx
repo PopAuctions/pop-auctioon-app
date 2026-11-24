@@ -74,7 +74,7 @@ export default function NewOnlineStoreArticleScreen() {
     data: commissionValue = 0,
     status,
     errorMessage,
-  } = useFetchCommissions();
+  } = useFetchCommissions('online-store');
 
   const category = categoryParam
     ? AuctionCategoriesConst[categoryParam]
