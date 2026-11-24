@@ -12,14 +12,11 @@ import { useArticleForm } from '@/hooks/components/useArticleForm';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
 import {
   ARTICLE_IMAGES_MAX,
-  ARTICLE_STATE,
-  ARTICLE_STATE_DESCRIPTION,
-  ARTICLE_STATE_LABELS,
+  ARTICLE_STATE_VALUES,
   REQUEST_STATUS,
 } from '@/constants';
 import { Loading } from '@/components/ui/Loading';
 import { CustomError } from '@/components/ui/CustomError';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { supabase } from '@/utils/supabase/supabase-store';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { ARTICLE_IMAGES_MIN } from '@/constants/files';
@@ -30,12 +27,24 @@ import { SelectField } from '@/components/fields/SelectField';
 import { useArticle } from '@/hooks/pages/my-auction/useArticle';
 import { useState } from 'react';
 import { useGetMyAuction } from '@/hooks/pages/auction/useGetMyAuction';
+import type { MessageKey } from '@/i18n';
+
+const IMAGES_STILL_COMPRESSING =
+  'errors.articleImages.stillCompressing' as const satisfies MessageKey;
 
 export default function NewAuctionArticleScreen() {
   const params = useLocalSearchParams<{
     id: string;
   }>();
   const { t, locale } = useTranslation();
+  const articleSpecificationLabels = t('displayLabels.articleSpecification', {
+    locale,
+  });
+  const articleStateOptions = ARTICLE_STATE_VALUES.map((value) => ({
+    value,
+    label: articleSpecificationLabels.state[value],
+  }));
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
   const { callToast } = useToast(locale);
   const [isUploadingArticle, setIsUploadingArticle] = useState(false);
   const [isCompressingImages, setIsCompressingImages] = useState(false);
@@ -90,7 +99,7 @@ export default function NewAuctionArticleScreen() {
   if (status === REQUEST_STATUS.error || !auction) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute={`/(tabs)/auctioneer/my-auctions/${auctionId}/new-article`}
       />
     );
@@ -98,23 +107,25 @@ export default function NewAuctionArticleScreen() {
 
   const tooltipContent = (
     <View className='gap-2'>
-      {Object.entries(ARTICLE_STATE_DESCRIPTION[locale]).map(([key, value]) => {
-        const label =
-          ARTICLE_STATE_LABELS[locale][
-            key as keyof (typeof ARTICLE_STATE_LABELS)['en']
-          ];
+      {Object.entries(articleSpecificationLabels.stateDescription).map(
+        ([key, value]) => {
+          const label =
+            articleSpecificationLabels.state[
+              key as keyof typeof articleSpecificationLabels.state
+            ];
 
-        return (
-          <CustomText
-            key={key}
-            type='body'
-            className='text-sm text-black/70'
-          >
-            <Text className='font-bold text-black'>{label}</Text>
-            {`: ${value}`}
-          </CustomText>
-        );
-      })}
+          return (
+            <CustomText
+              key={key}
+              type='body'
+              className='text-sm text-black/70'
+            >
+              <Text className='font-bold text-black'>{label}</Text>
+              {`: ${value}`}
+            </CustomText>
+          );
+        }
+      )}
     </View>
   );
 
@@ -122,10 +133,7 @@ export default function NewAuctionArticleScreen() {
     if (isCompressingImages) {
       callToast({
         variant: 'error',
-        description: {
-          en: `Images are still being compressed. Please wait a moment and try again.`,
-          es: `Las imágenes aún se están comprimiendo. Por favor espera un momento e intenta de nuevo.`,
-        },
+        description: IMAGES_STILL_COMPRESSING,
       });
       return;
     }
@@ -135,8 +143,8 @@ export default function NewAuctionArticleScreen() {
       callToast({
         variant: 'error',
         description: {
-          es: `Debe subir al menos ${ARTICLE_IMAGES_MIN} imágenes.`,
-          en: `You must upload at least ${ARTICLE_IMAGES_MIN} images.`,
+          code: 'errors.articleImages.minimumUploadRequired',
+          params: { min: ARTICLE_IMAGES_MIN },
         },
       });
       setIsUploadingArticle(false);
@@ -179,11 +187,7 @@ export default function NewAuctionArticleScreen() {
                 type='subtitle'
                 className='mb-4 text-center text-3xl text-cinnabar'
               >
-                {
-                  AUCTION_CATEGORIES_LABEL[locale][
-                    auctionCategory as AuctionCategories
-                  ]
-                }
+                {auctionCategoryLabels[auctionCategory as AuctionCategories]}
               </CustomText>
 
               {/* Info: category / required fields */}
@@ -244,7 +248,7 @@ export default function NewAuctionArticleScreen() {
                   <SelectField
                     name='state'
                     value={value ?? null}
-                    options={ARTICLE_STATE[locale]}
+                    options={articleStateOptions}
                     placeholder={t('screens.newArticle.state')}
                     isSearchable={true}
                     isDisabled={isLoading}

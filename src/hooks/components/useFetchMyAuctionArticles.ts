@@ -1,14 +1,15 @@
-import {
-  ActionResponse,
-  LangMap,
-  RequestStatus,
-  type Article,
-} from '@/types/types';
+import { ActionResponse, RequestStatus, type Article } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants';
+import type { MessageKey } from '@/i18n';
+
+const MY_AUCTION_ARTICLES_LOAD_ERROR =
+  'errors.auction.myArticlesLoadFailed' as const satisfies MessageKey;
+const MY_AUCTION_ARTICLES_UNEXPECTED_LOAD_ERROR =
+  'errors.auction.myArticlesUnexpectedLoadFailed' as const satisfies MessageKey;
 
 export const useFetchMyAuctionArticles = ({
   auctionId,
@@ -16,12 +17,12 @@ export const useFetchMyAuctionArticles = ({
 }: {
   auctionId: string;
   name?: string;
-}): ActionResponse<Article[]> & {
+}): ActionResponse<Article[], MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [data, setData] = useState<Article[]>([]);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchArticles = useCallback(async () => {
@@ -40,7 +41,7 @@ export const useFetchMyAuctionArticles = ({
 
       if (response.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? MY_AUCTION_ARTICLES_LOAD_ERROR);
         return;
       }
 
@@ -57,13 +58,8 @@ export const useFetchMyAuctionArticles = ({
 
       console.error('ERROR_USE_FETCH_MY_AUCTION_ARTICLES', errorMsg);
 
-      const message: LangMap = {
-        en: 'Error loading auction articles',
-        es: 'Error al cargar los artículos de la subasta',
-      };
-
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage(message);
+      setErrorMessage(MY_AUCTION_ARTICLES_UNEXPECTED_LOAD_ERROR);
     }
   }, [protectedGet, auctionId, name]);
 

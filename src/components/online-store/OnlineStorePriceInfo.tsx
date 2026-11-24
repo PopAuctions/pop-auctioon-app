@@ -24,7 +24,7 @@ export function OnlineStorePriceInfo({
   texts,
 }: OnlineStorePriceInfoProps) {
   const { data: commissionData, status: commissionStatus } =
-    useFetchCommissions();
+    useFetchCommissions('online-store');
   const isCommissionReady = commissionStatus === REQUEST_STATUS.success;
 
   const formatter = useMemo(() => euroFormatter(lang), [lang]);

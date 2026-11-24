@@ -8,6 +8,7 @@ import { Loading } from '../ui/Loading';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { CustomImage } from '../ui/CustomImage';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type ArticleBidsRecordModalProps = {
   visible: boolean;
@@ -34,6 +35,7 @@ export const ArticleBidsRecordModal = ({
   isLoading,
   commissionValue,
 }: ArticleBidsRecordModalProps) => {
+  const { t } = useTranslation();
   const formatter = useMemo(() => euroFormatter(lang), [lang]);
 
   const commissionedPrice = ceilToNearestTen(
@@ -133,7 +135,9 @@ export const ArticleBidsRecordModal = ({
                           {profilePicture ? (
                             <CustomImage
                               src={profilePicture}
-                              alt='User image'
+                              alt={t('commonUi.accessibility.userImage', {
+                                locale: lang,
+                              })}
                               className='h-10 w-10 rounded-full'
                             />
                           ) : (

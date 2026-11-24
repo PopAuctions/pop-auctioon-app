@@ -1,27 +1,15 @@
-import { Lang, LangMap } from '@/types/types';
 import React, { useState, type ReactNode } from 'react';
 import { Modal, View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button, ButtonMode } from '@/components/ui/Button';
-
-const TEXTS = {
-  es: {
-    confirm: 'Confirmar',
-    cancel: 'Cancelar',
-  },
-  en: {
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-  },
-};
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 interface ConfirmModalProps<TConfirmResult = void> {
   children: ReactNode;
   onConfirm: () => TConfirmResult | Promise<TConfirmResult>;
-  title: LangMap;
-  description: LangMap;
-  locale: Lang;
-  importantMessage?: LangMap;
+  title: string;
+  description: string;
+  importantMessage?: string;
   mode: ButtonMode;
   isDisabled?: boolean;
 }
@@ -31,11 +19,11 @@ export function ConfirmModal<TConfirmResult = void>({
   onConfirm,
   title,
   description,
-  locale,
   importantMessage,
   mode,
   isDisabled = false,
 }: ConfirmModalProps<TConfirmResult>) {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
@@ -83,15 +71,15 @@ export function ConfirmModal<TConfirmResult = void>({
                 type='h3'
                 className='mb-2'
               >
-                {title[locale]}
+                {title}
               </CustomText>
-              <CustomText type='body'>{description[locale]}</CustomText>
+              <CustomText type='body'>{description}</CustomText>
               {importantMessage && (
                 <CustomText
                   type='body'
                   className='text-sm text-cinnabar'
                 >
-                  {importantMessage[locale]}
+                  {importantMessage}
                 </CustomText>
               )}
             </View>
@@ -105,7 +93,7 @@ export function ConfirmModal<TConfirmResult = void>({
                 disabled={confirming}
                 isLoading={confirming}
               >
-                {TEXTS[locale].confirm}
+                {t('common.actions.confirm')}
               </Button>
 
               <Button
@@ -114,7 +102,7 @@ export function ConfirmModal<TConfirmResult = void>({
                 onPress={closeModal}
                 disabled={confirming}
               >
-                {TEXTS[locale].cancel}
+                {t('common.actions.cancel')}
               </Button>
             </View>
           </View>

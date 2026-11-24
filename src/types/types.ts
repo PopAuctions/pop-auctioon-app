@@ -1,8 +1,10 @@
 import { OFFERS_OPTIONS_VALUES, type WonArticleStatus } from '@/constants';
+import { type MessageKey } from '@/i18n';
+import { type Lang } from '@/i18n/locales';
 import { type Database } from '@/types/supabase';
 import { type ArticleFormValues } from '@/utils/schemas/articleSchemas';
 
-export type Lang = 'es' | 'en';
+export type { Lang } from '@/i18n/locales';
 
 export type UserRoles = 'USER' | 'AUCTIONEER' | 'HOST_AUCTIONEER';
 
@@ -123,95 +125,53 @@ export interface BlogArticleJsonArray {
 }
 
 // Legal Content Types
-export type CookiesPolicyData = {
-  es: {
+type CookiesPolicyContent = {
+  title: string;
+  description: string;
+  whatAreCookies: {
     title: string;
-    description: string;
-    whatAreCookies: {
-      title: string;
-      content: string;
-    };
-    cookiesTypes: {
-      title: string;
-      types: {
-        name: string;
-        description: string;
-      }[];
-    };
-    thirdPartyCookies: {
-      title: string;
-      content: string;
-    };
-    manageCookies: {
-      title: string;
-      content: string;
-      browsers: {
-        name: string;
-        url: string;
-      }[];
-      note: string;
-    };
-    updates: {
-      title: string;
-      content: string;
-    };
+    content: string;
   };
-  en: {
+  cookiesTypes: {
     title: string;
-    description: string;
-    whatAreCookies: {
-      title: string;
-      content: string;
-    };
-    cookiesTypes: {
-      title: string;
-      types: {
-        name: string;
-        description: string;
-      }[];
-    };
-    thirdPartyCookies: {
-      title: string;
-      content: string;
-    };
-    manageCookies: {
-      title: string;
-      content: string;
-      browsers: {
-        name: string;
-        url: string;
-      }[];
-      note: string;
-    };
-    updates: {
-      title: string;
-      content: string;
-    };
+    types: {
+      name: string;
+      description: string;
+    }[];
+  };
+  thirdPartyCookies: {
+    title: string;
+    content: string;
+  };
+  manageCookies: {
+    title: string;
+    content: string;
+    browsers: {
+      name: string;
+      url: string;
+    }[];
+    note: string;
+  };
+  updates: {
+    title: string;
+    content: string;
   };
 };
 
-export type PrivacyPolicyData = {
-  es: {
+export type CookiesPolicyData = Record<Lang, CookiesPolicyContent>;
+
+type PrivacyPolicyContent = {
+  title: string;
+  sections: {
     title: string;
-    sections: {
-      title: string;
-      content: {
-        subtitle?: string;
-        content: string[];
-      }[];
+    content: {
+      subtitle?: string;
+      content: string[];
     }[];
-  };
-  en: {
-    title: string;
-    sections: {
-      title: string;
-      content: {
-        subtitle?: string;
-        content: string[];
-      }[];
-    }[];
-  };
+  }[];
 };
+
+export type PrivacyPolicyData = Record<Lang, PrivacyPolicyContent>;
 
 export type TermsAndConditionsData = {
   pdfUrl: string;
@@ -224,62 +184,34 @@ export type LegalContentData = {
 };
 
 // Info Content Types
-export type AboutUsData = {
-  es: {
-    text: string;
-  };
-  en: {
-    text: string;
+export type AboutUsData = Record<Lang, { text: string }>;
+
+type HowItWorksContent = {
+  intro: string;
+  sections: {
+    title: string;
+    content: {
+      text?: string;
+      children?: string[];
+    }[];
+  }[];
+  outro: {
+    title: string;
+    content: string;
   };
 };
 
-export type HowItWorksData = {
-  es: {
-    intro: string;
-    sections: {
-      title: string;
-      content: {
-        text?: string;
-        children?: string[];
-      }[];
-    }[];
-    outro: {
-      title: string;
-      content: string;
-    };
-  };
-  en: {
-    intro: string;
-    sections: {
-      title: string;
-      content: {
-        text?: string;
-        children?: string[];
-      }[];
-    }[];
-    outro: {
-      title: string;
-      content: string;
-    };
-  };
-};
+export type HowItWorksData = Record<Lang, HowItWorksContent>;
 
-export type FAQsData = {
-  es: {
-    subtitle: string;
-    questions: {
-      question: string;
-      answer: string;
-    }[];
+type FAQsContent = {
+  subtitle: string;
+  questions: {
+    question: string;
+    answer: string;
   }[];
-  en: {
-    subtitle: string;
-    questions: {
-      question: string;
-      answer: string;
-    }[];
-  }[];
-};
+}[];
+
+export type FAQsData = Record<Lang, FAQsContent>;
 
 export type InfoContentData = {
   aboutUs: AboutUsData;
@@ -505,11 +437,7 @@ export type OnboardingVideo = {
   title: LangMap;
   description: LangMap;
   videoUrl: string;
-  videos: {
-    es: string;
-    en: string;
-    it: string;
-  };
+  videos: Record<'es' | 'en' | 'it', string> & Partial<Record<Lang, string>>;
   bgColor: string;
 };
 
@@ -518,12 +446,12 @@ export type OnboardingVideo = {
  * Includes React state setters and refetch capabilities
  * Use for: useGetLiveAuction, useGetAuctions, etc.
  */
-export interface ActionResponse<TData = unknown> {
+export interface ActionResponse<TData = unknown, TErrorMessage = LangMap> {
   data: TData;
   status: RequestStatus;
-  refetch?: () => RefetchReturn;
-  errorMessage: LangMap | null;
-  setErrorMessage: React.Dispatch<React.SetStateAction<LangMap | null>>;
+  refetch?: () => RefetchReturn<TErrorMessage>;
+  errorMessage: TErrorMessage | null;
+  setErrorMessage: React.Dispatch<React.SetStateAction<TErrorMessage | null>>;
 }
 
 /**
@@ -537,7 +465,9 @@ export interface AsyncResponse<TData = unknown> {
   success: boolean;
 }
 
-export type RefetchReturn = Promise<{ message?: LangMap } | void>;
+export type RefetchReturn<TMessage = LangMap> = Promise<{
+  message?: TMessage;
+} | void>;
 
 export type VerificationToken =
   Database['public']['Tables']['VerificationToken']['Row'];
@@ -570,18 +500,8 @@ export interface ArticleStatusType {
   PUBLISHED: 'PUBLISHED';
 }
 
-export type CalendarMonths = Record<string, MonthEntry>;
-
-export interface MonthEntry {
-  es: string;
-  en: string;
-  value: string | number;
-}
-
-export interface Comment {
-  es: string;
-  en: string;
-}
+export type Comment = Record<'es' | 'en', string> &
+  Partial<Record<Lang, string>>;
 
 export interface HamburgerMenuItem {
   path: string;
@@ -704,21 +624,6 @@ export const OfferProposalStatusConst: Record<OfferProposalStatus, string> = {
 
 export type OfferProposalStatus =
   Database['public']['Enums']['OfferProposalStatus'];
-
-export const OfferStatusLabels: Record<Lang, Record<OfferStatus, string>> = {
-  en: {
-    PENDING: 'Pending',
-    ACCEPTED: 'Accepted',
-    REJECTED: 'Rejected',
-    COUNTERED: 'Countered',
-  },
-  es: {
-    PENDING: 'Pendiente',
-    ACCEPTED: 'Aceptado',
-    REJECTED: 'Rechazado',
-    COUNTERED: 'Contraoferta',
-  },
-} as const;
 
 export type MyOfferProposal = Pick<
   ArticleOfferProposal,
@@ -999,10 +904,10 @@ export interface UseSignupReturn {
   ) => Promise<{
     success: boolean;
     email?: string;
-    error?: LangMap;
+    error?: MessageKey;
   }>;
   isLoading: boolean;
-  errorMessage: LangMap | null;
+  errorMessage: MessageKey | null;
 }
 
 export enum NotificationEventType {

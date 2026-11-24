@@ -9,7 +9,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Lang } from '@/types/types';
 import { CustomText } from '@/components/ui/CustomText';
 
 export type ToastVariant = 'success' | 'error' | 'warning' | 'info';
@@ -24,16 +23,6 @@ interface ToastComponentProps {
   text2?: string;
   props?: ToastActionProps;
 }
-
-export const TOAST_TEXTS: Record<Lang, Record<ToastVariant, string>> = {
-  en: { success: 'Success', error: 'Error', warning: 'Warning', info: 'Info' },
-  es: {
-    success: 'Éxito',
-    error: 'Error',
-    warning: 'Advertencia',
-    info: 'Información',
-  },
-};
 
 const ICONS: Record<ToastVariant, ImageSourcePropType> = {
   success: require('../../assets/icons/toast/success.webp'),

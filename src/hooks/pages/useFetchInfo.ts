@@ -1,13 +1,14 @@
-import {
-  ActionResponse,
-  LangMap,
-  RequestStatus,
-  InfoContentData,
-} from '@/types/types';
+import { ActionResponse, RequestStatus, InfoContentData } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import type { MessageKey } from '@/i18n';
+
+const INFO_CONTENT_MISSING_ERROR =
+  'errors.info.contentMissing' as const satisfies MessageKey;
+const INFO_CONTENT_LOAD_ERROR =
+  'errors.info.contentLoadFailed' as const satisfies MessageKey;
 
 /**
  * Hook para obtener todo el contenido informativo de la app:
@@ -15,10 +16,13 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
  * - How It Works (Cómo funciona)
  * - FAQs (Preguntas frecuentes)
  */
-export const useFetchInfo = (): ActionResponse<InfoContentData | null> => {
+export const useFetchInfo = (): ActionResponse<
+  InfoContentData | null,
+  MessageKey
+> => {
   const [data, setData] = useState<InfoContentData | null>(null);
   const [status, setStatus] = useState<RequestStatus>('loading');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchInfo = useCallback(async () => {
@@ -31,16 +35,13 @@ export const useFetchInfo = (): ActionResponse<InfoContentData | null> => {
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? INFO_CONTENT_LOAD_ERROR);
         return;
       }
 
       if (!response.data) {
         setStatus('error');
-        setErrorMessage({
-          en: 'Info content data is missing',
-          es: 'Faltan los datos del contenido informativo',
-        });
+        setErrorMessage(INFO_CONTENT_MISSING_ERROR);
         return;
       }
 
@@ -52,13 +53,8 @@ export const useFetchInfo = (): ActionResponse<InfoContentData | null> => {
 
       sentryErrorReport(errorMsg, 'USE_FETCH_INFO - Unexpected error');
 
-      const message: LangMap = {
-        en: 'Error fetching info content',
-        es: 'Error al cargar el contenido informativo',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(INFO_CONTENT_LOAD_ERROR);
     }
   }, [protectedGet]);
 

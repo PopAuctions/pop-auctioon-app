@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { CustomText } from '../ui/CustomText';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 type BidAmountStepperProps = {
   value: string;
@@ -20,6 +21,7 @@ export const BidAmountStepper = ({
   onDecrease,
   onIncrease,
 }: BidAmountStepperProps) => {
+  const { t } = useTranslation();
   const decreaseDisabled = disabled || !canDecrease;
   const increaseDisabled = disabled || !canIncrease;
 
@@ -27,7 +29,7 @@ export const BidAmountStepper = ({
     <View className='mt-2 flex-row items-center gap-2'>
       <Pressable
         accessibilityRole='button'
-        accessibilityLabel='Decrease bid by 10'
+        accessibilityLabel={t('commonUi.accessibility.decreaseBidByTen')}
         disabled={decreaseDisabled}
         onPress={onDecrease}
         className={`h-10 w-10 items-center justify-center rounded-md border border-neutral-300 bg-white ${
@@ -53,7 +55,7 @@ export const BidAmountStepper = ({
 
       <Pressable
         accessibilityRole='button'
-        accessibilityLabel='Increase bid by 10'
+        accessibilityLabel={t('commonUi.accessibility.increaseBidByTen')}
         disabled={increaseDisabled}
         onPress={onIncrease}
         className={`h-10 w-10 items-center justify-center rounded-md border border-neutral-300 bg-white ${

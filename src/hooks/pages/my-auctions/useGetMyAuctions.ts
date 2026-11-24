@@ -1,21 +1,23 @@
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import type {
-  ActionResponse,
-  Auction,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import type { ActionResponse, Auction, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const MY_AUCTIONS_LOAD_ERROR =
+  'errors.auction.myListLoadFailed' as const satisfies MessageKey;
 
 export const useGetMyAuctions = ({
   getFinished = false,
-}: { getFinished?: boolean } = {}): ActionResponse<Auction[] | null> & {
+}: { getFinished?: boolean } = {}): ActionResponse<
+  Auction[] | null,
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [auctions, setAuctions] = useState<Auction[] | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchAuctionsMade = useCallback(async () => {
@@ -27,17 +29,9 @@ export const useGetMyAuctions = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage(
-        res?.error ?? {
-          en: 'Error fetching auctions',
-          es: 'Error al obtener subastas',
-        }
-      );
+      setErrorMessage(res.messageCode ?? MY_AUCTIONS_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching auctions',
-          es: 'Error al obtener subastas',
-        },
+        message: res.messageCode ?? MY_AUCTIONS_LOAD_ERROR,
       };
     }
 

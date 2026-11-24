@@ -80,6 +80,7 @@ describe('ArticleSpecificationsSection', () => {
     );
     expect(getByText('Test Article')).toBeTruthy();
     expect(getByText('Test Brand')).toBeTruthy();
+    expect(getByText('Good Condition')).toBeTruthy();
   });
 
   it('renders measures when provided', () => {
@@ -93,5 +94,53 @@ describe('ArticleSpecificationsSection', () => {
     );
     // Measures formatted as "10x20x30cm" (no spaces)
     expect(getByText('10x20x30cm')).toBeTruthy();
+  });
+
+  it('renders localized color and box-material labels', () => {
+    const { getByText } = render(
+      <ArticleSpecificationsSection
+        article={{
+          ...mockArticle,
+          color: 'BLUE',
+          boxMaterial: 'STEEL',
+          strapMaterial: 'LEATHER',
+        }}
+        articleLang={mockArticleLang as any}
+        lang='en'
+        articleCategory='WATCH'
+      />
+    );
+
+    expect(getByText('Blue')).toBeTruthy();
+    expect(getByText('Steel')).toBeTruthy();
+    expect(getByText('Leather')).toBeTruthy();
+  });
+
+  it('preserves missing detail labels from the previous maps', () => {
+    const canvasArticle = render(
+      <ArticleSpecificationsSection
+        article={{
+          ...mockArticle,
+          material: 'CANVAS',
+        }}
+        articleLang={mockArticleLang as any}
+        lang='en'
+        articleCategory='BAG'
+      />
+    );
+    const rubberStrapArticle = render(
+      <ArticleSpecificationsSection
+        article={{
+          ...mockArticle,
+          strapMaterial: 'RUBBER',
+        }}
+        articleLang={mockArticleLang as any}
+        lang='en'
+        articleCategory='WATCH'
+      />
+    );
+
+    expect(canvasArticle.queryByText('Canvas')).toBeNull();
+    expect(rubberStrapArticle.queryByText('Rubber')).toBeNull();
   });
 });

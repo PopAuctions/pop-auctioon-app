@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import type { Lang } from '@/types/types';
+import { t } from '@/i18n';
 
 interface RejectCounterOfferModalProps {
   visible: boolean;
@@ -12,23 +13,6 @@ interface RejectCounterOfferModalProps {
   locale: Lang;
 }
 
-const TEXTS = {
-  es: {
-    title: 'Rechazar contraoferta',
-    description:
-      '¿Estás seguro de que quieres rechazar esta contraoferta? La negociación se cerrará y esta acción no se puede deshacer.',
-    confirm: 'Rechazar contraoferta',
-    cancel: 'Cancelar',
-  },
-  en: {
-    title: 'Reject counter-offer',
-    description:
-      'Are you sure you want to reject this counter-offer? The negotiation will be closed and this action cannot be undone.',
-    confirm: 'Reject counter-offer',
-    cancel: 'Cancel',
-  },
-} satisfies Record<Lang, Record<string, string>>;
-
 export function RejectCounterOfferModal({
   visible,
   onClose,
@@ -36,7 +20,7 @@ export function RejectCounterOfferModal({
   locale,
 }: RejectCounterOfferModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const texts = TEXTS[locale];
+  const texts = t('components.modals.offers.rejectCounter', { locale });
 
   const handleConfirm = async () => {
     setIsLoading(true);

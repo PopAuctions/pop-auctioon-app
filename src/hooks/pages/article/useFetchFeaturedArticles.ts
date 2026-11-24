@@ -1,17 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 import { REQUEST_STATUS } from '@/constants';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import {
-  ActionResponse,
-  SimpleArticle,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import { ActionResponse, SimpleArticle, RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 
-export const useFetchFeaturedArticles = (): ActionResponse<SimpleArticle[]> => {
+const FEATURED_ARTICLES_LOAD_ERROR =
+  'errors.article.featuredArticlesLoadFailed' as const satisfies MessageKey;
+
+export const useFetchFeaturedArticles = (): ActionResponse<
+  SimpleArticle[],
+  MessageKey
+> => {
   const [articles, setArticles] = useState<SimpleArticle[]>([]);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchFeaturedArticles = useCallback(async () => {
@@ -22,15 +24,9 @@ export const useFetchFeaturedArticles = (): ActionResponse<SimpleArticle[]> => {
 
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching featured articles',
-        es: 'Error al obtener los artículos destacados',
-      });
+      setErrorMessage(FEATURED_ARTICLES_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching featured articles',
-          es: 'Error al obtener los artículos destacados',
-        },
+        message: FEATURED_ARTICLES_LOAD_ERROR,
       };
     }
 

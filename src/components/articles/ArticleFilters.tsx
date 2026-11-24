@@ -4,24 +4,15 @@ import { useLocalSearchParams } from 'expo-router';
 import { Lang } from '@/types/types';
 import { FilterField } from '../fields/FilterField';
 import { ARTICLE_BRANDS, ARTICLE_PRICE_FILTER_LIST } from '@/constants';
+import { t } from '@/i18n';
 
 interface Props {
   locale: Lang;
 }
 
-const FILTER_LABELS = {
-  es: {
-    brand: 'Marca',
-    price: 'Precio',
-  },
-  en: {
-    brand: 'Brand',
-    price: 'Price',
-  },
-};
-
 export function ArticleFilters({ locale }: Props) {
   const searchParams = useLocalSearchParams();
+  const labels = t('components.filters', { locale });
 
   const getParam = (v: unknown): string => {
     if (Array.isArray(v)) return v[0] ?? '';
@@ -39,7 +30,7 @@ export function ArticleFilters({ locale }: Props) {
         className='w-1/2'
         key={`${activeFilters.join('-')}-brand`}
         id='brand'
-        label={FILTER_LABELS[locale].brand}
+        label={labels.brand}
         type='select'
         value={brandValue}
         isSearchable
@@ -50,7 +41,7 @@ export function ArticleFilters({ locale }: Props) {
         className='w-1/2'
         key={`${activeFilters.join('-')}-price`}
         id='price'
-        label={FILTER_LABELS[locale].price}
+        label={labels.price}
         type='select'
         value={priceValue}
         options={ARTICLE_PRICE_FILTER_LIST}

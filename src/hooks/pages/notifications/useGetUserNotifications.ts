@@ -4,20 +4,26 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   DisplayedNotification,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 import { normalizeNotificationsData } from '@/utils/notifications/normalize-notifications-data';
+import type { MessageKey } from '@/i18n';
+
+const NOTIFICATIONS_LOAD_ERROR =
+  'errors.notification.loadFailed' as const satisfies MessageKey;
+const NO_NOTIFICATIONS_MESSAGE =
+  'errors.notification.none' as const satisfies MessageKey;
 
 export const useGetUserNotifications = (): ActionResponse<
-  DisplayedNotification[]
+  DisplayedNotification[],
+  MessageKey
 > => {
   const [notifications, setNotifications] = useState<DisplayedNotification[]>(
     []
   );
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchUserNotifications = useCallback(async () => {
@@ -29,16 +35,10 @@ export const useGetUserNotifications = (): ActionResponse<
 
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching notifications',
-        es: 'Error al obtener las notificaciones',
-      });
+      setErrorMessage(NOTIFICATIONS_LOAD_ERROR);
       setNotifications([]);
       return {
-        message: {
-          en: 'Error fetching notifications',
-          es: 'Error al obtener las notificaciones',
-        },
+        message: NOTIFICATIONS_LOAD_ERROR,
       };
     }
 
@@ -47,10 +47,7 @@ export const useGetUserNotifications = (): ActionResponse<
       setStatus(REQUEST_STATUS.error);
       setNotifications([]);
       return {
-        message: {
-          en: 'No notifications',
-          es: 'No hay notificaciones',
-        },
+        message: NO_NOTIFICATIONS_MESSAGE,
       };
     }
 
@@ -70,16 +67,10 @@ export const useGetUserNotifications = (): ActionResponse<
     });
 
     if (res.error) {
-      setErrorMessage({
-        en: 'Error fetching notifications',
-        es: 'Error al obtener las notificaciones',
-      });
+      setErrorMessage(NOTIFICATIONS_LOAD_ERROR);
       setNotifications([]);
       return {
-        message: {
-          en: 'Error fetching notifications',
-          es: 'Error al obtener las notificaciones',
-        },
+        message: NOTIFICATIONS_LOAD_ERROR,
       };
     }
 
@@ -87,10 +78,7 @@ export const useGetUserNotifications = (): ActionResponse<
     if (!notifications) {
       setNotifications([]);
       return {
-        message: {
-          en: 'No notifications',
-          es: 'No hay notificaciones',
-        },
+        message: NO_NOTIFICATIONS_MESSAGE,
       };
     }
 

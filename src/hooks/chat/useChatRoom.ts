@@ -11,8 +11,16 @@ import {
 } from 'amazon-ivs-chat-messaging';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
-import type { LangMap, RequestStatus } from '@/types/types';
+import type { RequestStatus } from '@/types/types';
 import * as Sentry from '@sentry/react-native';
+import type { MessageKey } from '@/i18n';
+
+const CHAT_NO_DATA_ERROR = 'errors.chat.noData' as const satisfies MessageKey;
+const CHAT_INVALID_TOKEN_ERROR =
+  'errors.chat.invalidTokenFormat' as const satisfies MessageKey;
+const CHAT_INITIALIZATION_ERROR =
+  'errors.chat.initializationFailed' as const satisfies MessageKey;
+const NETWORK_ERROR = 'errors.server.connection' as const satisfies MessageKey;
 
 interface UseChatRoomProps {
   auctionId: string;
@@ -35,7 +43,7 @@ export const useChatRoom = ({
   const [connectionState, setConnectionState] =
     useState<ConnectionState>('disconnected');
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedPost } = useSecureApi();
   const isInitializing = useRef(false);
 
@@ -61,7 +69,7 @@ export const useChatRoom = ({
 
         if (response.error) {
           setStatus('error');
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? NETWORK_ERROR);
           Sentry.captureException(
             `CHAT_TOKEN_ERROR: ${JSON.stringify(response.error)} | auctionId: ${auctionId}`
           );
@@ -70,12 +78,8 @@ export const useChatRoom = ({
 
         // Verificar si la respuesta tiene la estructura esperada
         if (!response.data) {
-          const message: LangMap = {
-            en: 'No data received from server',
-            es: 'No se recibieron datos del servidor',
-          };
           setStatus('error');
-          setErrorMessage(message);
+          setErrorMessage(CHAT_NO_DATA_ERROR);
           return;
         }
 
@@ -99,12 +103,8 @@ export const useChatRoom = ({
           // Si data es un objeto con token
           chatToken = (response.data as any).token;
         } else {
-          const message: LangMap = {
-            en: 'Invalid token format received',
-            es: 'Formato de token inválido recibido',
-          };
           setStatus('error');
-          setErrorMessage(message);
+          setErrorMessage(CHAT_INVALID_TOKEN_ERROR);
           return;
         }
 
@@ -172,12 +172,8 @@ export const useChatRoom = ({
           chatRoom.disconnect();
         };
       } catch (error: any) {
-        const message: LangMap = {
-          en: 'Error initializing chat',
-          es: 'Error al inicializar el chat',
-        };
         setStatus('error');
-        setErrorMessage(message);
+        setErrorMessage(CHAT_INITIALIZATION_ERROR);
         Sentry.captureException(
           `CHAT_INIT_ERROR: ${error?.message ?? 'Unknown'} | auctionId: ${auctionId}`
         );

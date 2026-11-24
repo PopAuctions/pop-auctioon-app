@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { CustomText } from '@/components/ui/CustomText';
 import { Button } from '@/components/ui/Button';
 import type { Lang } from '@/types/types';
+import { t } from '@/i18n';
 
 interface AcceptCounterOfferModalProps {
   visible: boolean;
@@ -13,25 +14,6 @@ interface AcceptCounterOfferModalProps {
   amount: string;
 }
 
-const TEXTS = {
-  es: {
-    title: 'Aceptar contraoferta',
-    description:
-      'Estás aceptando la contraoferta de la tienda. La tienda deberá confirmar que el artículo sigue disponible antes de que puedas realizar el pago.',
-    amount: 'Importe acordado',
-    confirm: 'Aceptar contraoferta',
-    cancel: 'Cancelar',
-  },
-  en: {
-    title: 'Accept counter-offer',
-    description:
-      'You are accepting the store’s counter-offer. The store must confirm that the article is still available before you can proceed with payment.',
-    amount: 'Agreed amount',
-    confirm: 'Accept counter-offer',
-    cancel: 'Cancel',
-  },
-} satisfies Record<Lang, Record<string, string>>;
-
 export function AcceptCounterOfferModal({
   visible,
   onClose,
@@ -40,7 +22,7 @@ export function AcceptCounterOfferModal({
   amount,
 }: AcceptCounterOfferModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const texts = TEXTS[locale];
+  const texts = t('components.modals.offers.acceptCounter', { locale });
 
   const handleConfirm = async () => {
     setIsLoading(true);

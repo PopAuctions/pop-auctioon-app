@@ -3,24 +3,32 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   CustomFullArticleSecondChance,
-  LangMap,
   RefetchReturn,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLE_LOAD_ERROR =
+  'errors.article.loadFailed' as const satisfies MessageKey;
+const ARTICLE_REFRESHED =
+  'article.refreshedSuccessfully' as const satisfies MessageKey;
 
 export const useGetMyOnlineStoreArticle = ({
   articleId,
 }: {
   articleId: number;
-}): Omit<ActionResponse<CustomFullArticleSecondChance | null>, 'refetch'> & {
-  refetch: () => RefetchReturn;
+}): Omit<
+  ActionResponse<CustomFullArticleSecondChance | null, MessageKey>,
+  'refetch'
+> & {
+  refetch: () => RefetchReturn<MessageKey>;
 } => {
   const [article, setArticle] = useState<CustomFullArticleSecondChance | null>(
     null
   );
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchArticle = useCallback(async () => {
@@ -31,15 +39,9 @@ export const useGetMyOnlineStoreArticle = ({
     });
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching article',
-        es: 'Error al obtener el artículo',
-      });
+      setErrorMessage(ARTICLE_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching article',
-          es: 'Error al obtener el artículo',
-        },
+        message: ARTICLE_LOAD_ERROR,
       };
     }
 
@@ -60,20 +62,14 @@ export const useGetMyOnlineStoreArticle = ({
 
     if (res.error) {
       return {
-        message: {
-          en: 'Error fetching article',
-          es: 'Error al obtener el artículo',
-        },
+        message: ARTICLE_LOAD_ERROR,
       };
     }
 
     setArticle(res.data || null);
 
     return {
-      message: {
-        es: 'Artículo actualizado correctamente',
-        en: 'Article updated successfully',
-      },
+      message: ARTICLE_REFRESHED,
     };
   };
 

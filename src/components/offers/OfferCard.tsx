@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import {
   ArticleSecondChanceStatusConst,
-  LangMap,
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
-  OfferStatusLabels,
   type Lang,
   type MyOffers,
 } from '@/types/types';
@@ -25,6 +23,8 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { useToast } from '@/hooks/useToast';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
+import { t, type MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface OfferCardProps {
   offer: MyOffers;
@@ -36,73 +36,10 @@ interface OfferCardProps {
   };
 }
 
-const OFFER_CARD_STATUS_LABELS = {
-  counterReceived: {
-    es: 'Contraoferta recibida',
-    en: 'Counter-offer received',
-  },
-  pendingFinalApproval: {
-    es: 'Pendiente de aprobación',
-    en: 'Pending approval',
-  },
-  counterSent: {
-    es: 'Contraoferta enviada',
-    en: 'Counter-offer sent',
-  },
-} satisfies Record<string, Record<Lang, string>>;
-
-const OFFER_CARD_AMOUNT_LABELS = {
-  current: {
-    es: 'Importe actual',
-    en: 'Current amount',
-  },
-  counter: {
-    es: 'Contraoferta actual',
-    en: 'Current counter-offer',
-  },
-  accepted: {
-    es: 'Importe aceptado',
-    en: 'Accepted amount',
-  },
-} satisfies Record<string, Record<Lang, string>>;
-
-const OFFER_CARD_STATE_MESSAGES = {
-  initialOffer: {
-    es: 'Tu oferta ha sido enviada. Esperando la respuesta de la tienda.',
-    en: 'Your offer has been sent. Waiting for the store to respond.',
-  },
-  counterReceived: {
-    es: 'La tienda ha realizado una nueva propuesta.',
-    en: 'The store has made a new proposal.',
-  },
-  waitingForStore: {
-    es: 'Has enviado una contraoferta. Esperando la respuesta de la tienda.',
-    en: 'You sent a counter-offer. Waiting for the store to respond.',
-  },
-  pendingFinalApproval: {
-    es: 'Has aceptado la contraoferta. La tienda debe confirmar que el artículo sigue disponible antes de proceder con el pago.',
-    en: 'You accepted the counter-offer. The store must confirm that the article is still available before proceeding with payment.',
-  },
-} satisfies Record<string, Record<Lang, string>>;
-
-const OFFER_CARD_ACTION_LABELS = {
-  offerHistory: {
-    es: 'Historial de ofertas',
-    en: 'Offer history',
-  },
-  acceptCounter: {
-    es: 'Aceptar contraoferta',
-    en: 'Accept counter-offer',
-  },
-  counter: {
-    es: 'Contraofertar',
-    en: 'Counter',
-  },
-  reject: {
-    es: 'Rechazar',
-    en: 'Reject',
-  },
-} satisfies Record<string, Record<Lang, string>>;
+const INVALID_OFFER_AMOUNT =
+  'errors.offer.invalidNumber' as const satisfies MessageKey;
+const UNCHANGED_COUNTER_OFFER =
+  'errors.offer.counterAmountUnchanged' as const satisfies MessageKey;
 
 export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   const [acceptModalVisible, setAcceptModalVisible] = useState(false);
@@ -111,6 +48,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const { securePost } = useSecureApi();
   const { callToast } = useToast(lang);
+  const offerCardTexts = t('components.offerCard', { locale: lang });
 
   const formatter = euroFormatter(lang);
 
@@ -165,17 +103,17 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   const statusVariant =
     status === OfferStatusConst.ACCEPTED ? 'default' : 'secondary';
 
-  let displayStatus = OfferStatusLabels[lang][status];
+  let displayStatus = offerCardTexts.status[status];
 
   if (isCounterReceived) {
-    displayStatus = OFFER_CARD_STATUS_LABELS.counterReceived[lang];
+    displayStatus = offerCardTexts.status.counterReceived;
   } else if (isPendingFinalApproval) {
-    displayStatus = OFFER_CARD_STATUS_LABELS.pendingFinalApproval[lang];
+    displayStatus = offerCardTexts.status.pendingFinalApproval;
   } else if (isWaitingForStore) {
-    displayStatus = OFFER_CARD_STATUS_LABELS.counterSent[lang];
+    displayStatus = offerCardTexts.status.counterSent;
   }
 
-  let amountLabelKey: keyof typeof OFFER_CARD_AMOUNT_LABELS = 'current';
+  let amountLabelKey: keyof typeof offerCardTexts.amount = 'current';
 
   if (isCounterReceived) {
     amountLabelKey = 'counter';
@@ -186,13 +124,13 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
   let stateMessage: string | null = null;
 
   if (isInitialOffer) {
-    stateMessage = OFFER_CARD_STATE_MESSAGES.initialOffer[lang];
+    stateMessage = offerCardTexts.state.initialOffer;
   } else if (isCounterReceived) {
-    stateMessage = OFFER_CARD_STATE_MESSAGES.counterReceived[lang];
+    stateMessage = offerCardTexts.state.counterReceived;
   } else if (isWaitingForStore) {
-    stateMessage = OFFER_CARD_STATE_MESSAGES.waitingForStore[lang];
+    stateMessage = offerCardTexts.state.waitingForStore;
   } else if (isPendingFinalApproval) {
-    stateMessage = OFFER_CARD_STATE_MESSAGES.pendingFinalApproval[lang];
+    stateMessage = offerCardTexts.state.pendingFinalApproval;
   }
 
   const handleAcceptCounterOffer = async (): Promise<boolean> => {
@@ -201,7 +139,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     }
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.USER_ACCEPT_OFFER,
         data: {
           articleOfferId: offer.id,
@@ -211,7 +149,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -220,7 +163,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: response.data,
+          description: resolveApiResponseMessage(
+            response,
+            'success',
+            lang,
+            'offer.counterAcceptedSuccessfully'
+          ),
         });
       }
 
@@ -239,10 +187,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     if (!Number.isSafeInteger(amount) || amount <= 0) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Ingresa un número válido',
-          en: 'Enter a valid number',
-        },
+        description: INVALID_OFFER_AMOUNT,
       });
 
       return false;
@@ -251,17 +196,14 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     if (amount === currentPendingProposal.amount) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'La contraoferta debe ser diferente al importe actual',
-          en: 'The counter-offer must be different from the current amount',
-        },
+        description: UNCHANGED_COUNTER_OFFER,
       });
 
       return false;
     }
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.USER_COUNTER_OFFER,
         data: {
           articleOfferId: offer.id,
@@ -272,7 +214,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -281,7 +228,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: response.data,
+          description: resolveApiResponseMessage(
+            response,
+            'success',
+            lang,
+            'offer.counterSentSuccessfully'
+          ),
         });
       }
 
@@ -298,7 +250,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
     }
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.USER_REJECT_OFFER,
         data: {
           articleOfferId: offer.id,
@@ -308,7 +260,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -317,7 +274,12 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
       if (response.data) {
         callToast({
           variant: 'success',
-          description: response.data,
+          description: resolveApiResponseMessage(
+            response,
+            'success',
+            lang,
+            'offer.counterRejectedSuccessfully'
+          ),
         });
       }
 
@@ -382,7 +344,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
                   type='body'
                   className='text-sm text-neutral-500'
                 >
-                  {OFFER_CARD_AMOUNT_LABELS[amountLabelKey][lang]}
+                  {offerCardTexts.amount[amountLabelKey]}
                 </CustomText>
               </View>
             </View>
@@ -414,7 +376,7 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
                 type='body'
                 className='flex-1 text-sm text-neutral-500'
               >
-                {OFFER_CARD_ACTION_LABELS.offerHistory[lang]}
+                {offerCardTexts.actions.offerHistory}
               </CustomText>
 
               <Pressable
@@ -440,21 +402,21 @@ export const OfferCard = ({ offer, lang, texts }: OfferCardProps) => {
               mode='primary'
               onPress={() => setAcceptModalVisible(true)}
             >
-              {OFFER_CARD_ACTION_LABELS.acceptCounter[lang]}
+              {offerCardTexts.actions.acceptCounter}
             </Button>
 
             <Button
               mode='secondary'
               onPress={() => setCounterModalVisible(true)}
             >
-              {OFFER_CARD_ACTION_LABELS.counter[lang]}
+              {offerCardTexts.actions.counter}
             </Button>
 
             <Button
               mode='secondary'
               onPress={() => setRejectModalVisible(true)}
             >
-              {OFFER_CARD_ACTION_LABELS.reject[lang]}
+              {offerCardTexts.actions.reject}
             </Button>
           </View>
         )}

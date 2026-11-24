@@ -20,10 +20,7 @@ export default function ConfirmEmailScreen() {
   if (!email) {
     return (
       <CustomError
-        customMessage={{
-          es: 'Falta el correo electrónico.',
-          en: 'Email is missing.',
-        }}
+        customMessage={t('commonErrors.emailMissing')}
         refreshRoute='/(tabs)/auth/confirm-email'
       />
     );

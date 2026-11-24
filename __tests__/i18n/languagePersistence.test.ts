@@ -8,6 +8,7 @@ import {
 } from '@/i18n';
 import { LANGUAGE_STORAGE_KEY } from '@/constants/locales';
 import { Lang } from '@/types/types';
+import { SUPPORTED_LANGUAGES } from '@/i18n/locales';
 
 describe('Language Persistence - i18n utilities', () => {
   beforeEach(() => {
@@ -160,7 +161,7 @@ describe('Language Persistence - i18n utilities', () => {
   describe('getCurrentLocale', () => {
     it('should return a valid Lang type', () => {
       const locale = getCurrentLocale();
-      expect(['es', 'en']).toContain(locale);
+      expect(SUPPORTED_LANGUAGES).toContain(locale);
     });
 
     it('should reflect the current locale', () => {
@@ -177,21 +178,20 @@ describe('Language Persistence - i18n utilities', () => {
       const locales = getAvailableLocales();
 
       expect(Array.isArray(locales)).toBe(true);
-      expect(locales).toHaveLength(2);
+      expect(locales).toHaveLength(SUPPORTED_LANGUAGES.length);
     });
 
-    it('should include Spanish and English', () => {
+    it('should include every supported locale', () => {
       const locales = getAvailableLocales();
 
-      expect(locales).toContain('es');
-      expect(locales).toContain('en');
+      expect(locales).toEqual(SUPPORTED_LANGUAGES);
     });
 
     it('should return only supported languages', () => {
       const locales = getAvailableLocales();
 
       locales.forEach((locale) => {
-        expect(['es', 'en']).toContain(locale);
+        expect(SUPPORTED_LANGUAGES).toContain(locale);
       });
     });
   });
@@ -261,7 +261,7 @@ describe('Language Persistence - i18n utilities', () => {
   describe('Type Safety', () => {
     it('should only accept valid Lang types for saveLanguagePreference', async () => {
       // TypeScript should prevent invalid values
-      const validLanguages: Lang[] = ['es', 'en'];
+      const validLanguages: Lang[] = [...SUPPORTED_LANGUAGES];
 
       for (const lang of validLanguages) {
         await expect(saveLanguagePreference(lang)).resolves.toBeUndefined();
@@ -274,7 +274,7 @@ describe('Language Persistence - i18n utilities', () => {
       const result = await loadLanguagePreference();
 
       if (result !== null) {
-        const validLanguages: Lang[] = ['es', 'en'];
+        const validLanguages: Lang[] = [...SUPPORTED_LANGUAGES];
         expect(validLanguages).toContain(result);
       }
     });

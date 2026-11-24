@@ -6,7 +6,9 @@
 import { useState, useCallback } from 'react';
 import { ChatRoom, SendMessageRequest } from 'amazon-ivs-chat-messaging';
 import * as Sentry from '@sentry/react-native';
-import type { LangMap } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+
+const CHAT_SEND_FAILED = 'errors.chat.sendFailed' as const satisfies MessageKey;
 
 interface UseSendMessageProps {
   room: ChatRoom | null;
@@ -20,7 +22,7 @@ export const useSendMessage = ({
   profilePicture = '',
 }: UseSendMessageProps) => {
   const [isSending, setIsSending] = useState(false);
-  const [sendError, setSendError] = useState<LangMap | null>(null);
+  const [sendError, setSendError] = useState<MessageKey | null>(null);
 
   const sendMessage = useCallback(
     async (message: string): Promise<boolean> => {
@@ -43,11 +45,7 @@ export const useSendMessage = ({
 
         return true;
       } catch (error: any) {
-        const errorMessage: LangMap = {
-          es: 'No se pudo enviar el mensaje',
-          en: 'Could not send message',
-        };
-        setSendError(errorMessage);
+        setSendError(CHAT_SEND_FAILED);
 
         Sentry.captureException(
           `CHAT_SEND_ERROR: ${error?.message ?? 'Unknown'}`

@@ -9,19 +9,18 @@ import { PayoutInfoRow } from './PayoutInfoRow';
 import { CustomImage } from '../ui/CustomImage';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import {
-  SALE_TYPE_MAP,
-  STORE_INVOICE_TYPES,
-  STORE_INVOICE_TYPES_LABEL,
-  STORE_PAYOUT_METHOD_MAP,
-  STORE_PAYOUT_STATUS_MAP,
-} from '@/constants/store';
+import { STORE_INVOICE_TYPES } from '@/constants/store';
 import { StoreInvoiceTypes, StorePayoutWithItems } from '@/types/payouts';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useToast } from '@/hooks/useToast';
 import { Button } from '../ui/Button';
 import { getFileNameFromContentDisposition } from '@/utils/getFileNameFromContentDisposition';
+import { LOCALE_CONFIG } from '@/i18n/locales';
+import type { MessageKey } from '@/i18n';
+
+const INVOICE_DOWNLOAD_FAILED =
+  'invoice.downloadFailed' as const satisfies MessageKey;
 
 export function StorePayoutDetail({
   payout,
@@ -36,8 +35,12 @@ export function StorePayoutDetail({
   const { callToast } = useToast(locale);
 
   const texts = t('screens.storeSettlements');
+  const saleTypeLabels = t('displayLabels.saleType', { locale });
+  const payoutMethodLabels = t('displayLabels.payoutMethod', { locale });
+  const payoutStatusLabels = t('displayLabels.payoutStatus', { locale });
+  const invoiceFileNames = t('displayLabels.invoiceFileName', { locale });
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
   const payoutId = payout.id;
 
   const items = payout.StoreSettlementItem ?? [];
@@ -78,10 +81,7 @@ export function StorePayoutDetail({
         setDownloading(null);
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
-            en: 'Error downloading the invoice. If the problem persists, contact support.',
-          },
+          description: INVOICE_DOWNLOAD_FAILED,
           durationMs: 5000,
         });
         return;
@@ -90,15 +90,14 @@ export function StorePayoutDetail({
       const fileName =
         response.headers?.get('x-file-name') ??
         response.headers?.get('content-disposition') ??
-        `${STORE_INVOICE_TYPES_LABEL[mode]}`;
+        invoiceFileNames[mode];
 
       const arrayBuffer = response.data as ArrayBuffer;
       const uint8Array = new Uint8Array(arrayBuffer);
       const file = new File(
         Paths.document,
         `${
-          getFileNameFromContentDisposition(fileName) ??
-          STORE_INVOICE_TYPES_LABEL[mode][locale]
+          getFileNameFromContentDisposition(fileName) ?? invoiceFileNames[mode]
         }.pdf`
       );
 
@@ -115,10 +114,7 @@ export function StorePayoutDetail({
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
-          en: 'Error downloading the invoice. If the problem persists, contact support.',
-        },
+        description: INVOICE_DOWNLOAD_FAILED,
         durationMs: 5000,
       });
     } finally {
@@ -131,7 +127,7 @@ export function StorePayoutDetail({
       <View className='gap-3'>
         <PayoutSummaryCard
           label={texts.method}
-          value={STORE_PAYOUT_METHOD_MAP[locale][payout.method]}
+          value={payoutMethodLabels[payout.method]}
         />
         <View className='flex flex-row gap-3'>
           <PayoutSummaryCard
@@ -140,7 +136,7 @@ export function StorePayoutDetail({
           />
           <PayoutSummaryCard
             label={texts.status}
-            value={STORE_PAYOUT_STATUS_MAP[locale][payout.status]}
+            value={payoutStatusLabels[payout.status]}
           />
         </View>
       </View>
@@ -259,7 +255,7 @@ export function StorePayoutDetail({
                   type='bodysmall'
                   className='text-gray'
                 >
-                  {SALE_TYPE_MAP[locale][item.saleType]}
+                  {saleTypeLabels[item.saleType]}
                 </CustomText>
               </View>
             </View>

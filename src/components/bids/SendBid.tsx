@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import type { BiddingAmounts, HighestBidderState } from '@/types/types';
-import type { Translations } from '@/i18n';
+import type { MessageKey, Translations } from '@/i18n';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
 import { toTotal } from '@/utils/toTotal';
@@ -14,6 +14,8 @@ import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { useUpsertAutoBid } from '@/hooks/pages/auto-bid/useUpsertAutoBid';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 import { BidAmountStepper } from './BidAmountStepper';
+const AUTOMATIC_BID_ERROR =
+  'errors.bid.automaticBidFailed' as const satisfies MessageKey;
 
 type DictionaryTypeBid = Translations['es']['components']['bid'];
 
@@ -35,7 +37,8 @@ export function SendBid({
   autoBidsAmount,
 }: SendBidProps) {
   const { upsertAutoBid } = useUpsertAutoBid();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
+  const modalTexts = t('components.modals.automaticBid');
   const [automaticBidModalVisible, setAutomaticBidModalVisible] =
     useState(false);
   const [isAutomaticBidPending, setIsAutomaticBidPending] = useState(false);
@@ -79,11 +82,12 @@ export function SendBid({
 
   const createAutomaticBid = async (amount: string) => {
     if (Number(amount) < computedMinBid) {
-      const message = bidLang.minBid + ' ' + formatter.format(computedMinBid);
-
       callToast({
         variant: 'error',
-        description: { es: message, en: message },
+        description: {
+          code: 'errors.bid.minimumAmount',
+          params: { amount: formatter.format(computedMinBid) },
+        },
       });
 
       return false;
@@ -106,10 +110,7 @@ export function SendBid({
     } catch (e) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'The automatic bid could not be set',
-          es: 'La puja automática no pudo ser configurada',
-        },
+        description: AUTOMATIC_BID_ERROR,
       });
 
       sentryErrorReport(
@@ -257,18 +258,9 @@ export function SendBid({
         visible={automaticBidModalVisible}
         onClose={() => setAutomaticBidModalVisible(false)}
         onConfirm={createAutomaticBid}
-        title={{
-          es: 'Configurar puja automática',
-          en: 'Set automatic bid',
-        }}
-        description={{
-          es: 'La puja automática te permite establecer un monto máximo para este artículo. Si otros usuarios pujan, el sistema pujará automáticamente por ti hasta alcanzar ese monto máximo.',
-          en: 'Automatic bidding lets you set a maximum amount for this item. If other users place bids, the system will automatically bid on your behalf until your maximum amount is reached.',
-        }}
-        extraMessage={{
-          es: 'Si aún no eres el mejor postor, el sistema realizará automáticamente la puja mínima necesaria por ti al configurar la puja automática.',
-          en: 'If you are not currently the highest bidder, the system will automatically place the minimum required bid on your behalf when configuring the automatic bid.',
-        }}
+        title={modalTexts.setTitle}
+        description={modalTexts.description}
+        extraMessage={modalTexts.extraMessage}
         minAmount={computedMinBid}
       />
       {autoBidsAmount !== undefined && autoBidsAmount > 0 && (

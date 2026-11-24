@@ -1,13 +1,19 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import type { ActionResponse, RequestStatus } from '@/types/types';
 import { REQUEST_STATUS } from '@/constants';
+import type { MessageKey } from '@/i18n';
 
-export const useFetchAppVersion = (): ActionResponse<number> => {
+const APP_VERSION_DATA_MISSING_ERROR =
+  'errors.config.appVersionMissing' as const satisfies MessageKey;
+const APP_VERSION_LOAD_ERROR =
+  'errors.config.appVersionLoadFailed' as const satisfies MessageKey;
+
+export const useFetchAppVersion = (): ActionResponse<number, MessageKey> => {
   const [data, setData] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchAppVersion = useCallback(async (): Promise<void> => {
@@ -20,27 +26,20 @@ export const useFetchAppVersion = (): ActionResponse<number> => {
 
       if (response.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(response.error || 'There was an error getting data');
+        setErrorMessage(response.messageCode ?? APP_VERSION_DATA_MISSING_ERROR);
         return;
       }
 
       if (!response.data) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage({
-          es: 'Hubo un error obteniendo información',
-          en: 'There was an error getting data',
-        });
+        setErrorMessage(APP_VERSION_DATA_MISSING_ERROR);
         return;
       }
 
       setData(response.data);
       setStatus(REQUEST_STATUS.success);
     } catch {
-      const errorMsg: LangMap = {
-        es: 'Error al cargar información',
-        en: 'Error loading information',
-      };
-      setErrorMessage(errorMsg);
+      setErrorMessage(APP_VERSION_LOAD_ERROR);
       setStatus(REQUEST_STATUS.error);
     }
   }, [protectedGet]);

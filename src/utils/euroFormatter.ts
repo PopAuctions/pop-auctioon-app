@@ -1,12 +1,10 @@
-import { Lang } from '@/types/types';
+import { LOCALE_CONFIG, type Lang } from '@/i18n/locales';
 
 export function euroFormatter(
   lang: Lang,
   digits: number = 0
 ): Intl.NumberFormat {
-  const locale = lang === 'es' ? 'es-ES' : 'en-IE';
-
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(LOCALE_CONFIG[lang].currencyLocale, {
     style: 'currency',
     currency: 'EUR',
     currencyDisplay: 'symbol',

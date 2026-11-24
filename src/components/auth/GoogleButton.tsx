@@ -6,6 +6,16 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { ProviderButton } from './ProviderButton';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
+import type { MessageKey } from '@/i18n';
+
+const GOOGLE_SIGN_IN_START_ERROR =
+  'auth.oauth.google.startFailed' as const satisfies MessageKey;
+const GOOGLE_SIGN_IN_CANCELLED_ERROR =
+  'auth.oauth.google.cancelledOrFailed' as const satisfies MessageKey;
+const GOOGLE_SIGN_IN_CODE_ERROR =
+  'auth.oauth.google.codeMissing' as const satisfies MessageKey;
+const GOOGLE_SIGN_IN_UNEXPECTED_ERROR =
+  'auth.oauth.google.unexpected' as const satisfies MessageKey;
 
 export const GoogleButton = ({
   buttonText,
@@ -34,20 +44,14 @@ export const GoogleButton = ({
       if (error) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to initiate Google sign-in. Please try again.',
-            es: 'No se pudo iniciar el inicio de sesión con Google. Por favor, inténtelo de nuevo.',
-          },
+          description: GOOGLE_SIGN_IN_START_ERROR,
         });
         return;
       }
       if (!data.url) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to initiate Google sign-in. Please try again.',
-            es: 'No se pudo iniciar el inicio de sesión con Google. Por favor, inténtelo de nuevo.',
-          },
+          description: GOOGLE_SIGN_IN_START_ERROR,
         });
         return;
       }
@@ -57,10 +61,7 @@ export const GoogleButton = ({
       if (res.type !== 'success') {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Google sign-in was cancelled or failed. Please try again.',
-            es: 'El inicio de sesión con Google fue cancelado o fallido. Por favor, inténtelo de nuevo.',
-          },
+          description: GOOGLE_SIGN_IN_CANCELLED_ERROR,
         });
         return;
       }
@@ -71,10 +72,7 @@ export const GoogleButton = ({
       if (typeof code !== 'string') {
         callToast({
           variant: 'error',
-          description: {
-            en: 'Failed to retrieve authentication code from Google. Please try again.',
-            es: 'No se pudo obtener el código de autenticación de Google. Por favor, inténtelo de nuevo.',
-          },
+          description: GOOGLE_SIGN_IN_CODE_ERROR,
         });
         return;
       }
@@ -83,10 +81,7 @@ export const GoogleButton = ({
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          en: 'An unexpected error occurred during Google sign-in. Please try again.',
-          es: 'Ocurrió un error inesperado durante el inicio de sesión con Google. Por favor, inténtelo de nuevo.',
-        },
+        description: GOOGLE_SIGN_IN_UNEXPECTED_ERROR,
       });
     } finally {
       oauthInFlightRef.current = false;

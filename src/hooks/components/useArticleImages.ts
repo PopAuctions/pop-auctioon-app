@@ -3,7 +3,11 @@ import { File } from 'expo-file-system';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/react-native';
 import { base64ToArrayBuffer } from '@/utils/base64ToArrayBuffer';
-import { LangMap } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+import type { ToastDescription } from '@/hooks/useToast';
+
+const IMAGE_UPLOAD_ERROR =
+  'errors.articleImages.uploadFailedPlural' as const satisfies MessageKey;
 
 interface UseArticleImagesParams {
   supabase: SupabaseClient;
@@ -12,7 +16,7 @@ interface UseArticleImagesParams {
   minImages: number;
   callToast: (args: {
     variant: 'error' | 'success';
-    description: LangMap;
+    description: ToastDescription;
   }) => void;
 }
 
@@ -78,8 +82,8 @@ export function useArticleImages({
       callToast({
         variant: 'error',
         description: {
-          es: `Debes agregar al menos ${minImages} imágenes.`,
-          en: `You must add at least ${minImages} images.`,
+          code: 'errors.articleImages.minimumRequired',
+          params: { min: minImages },
         },
       });
       return false;
@@ -156,10 +160,7 @@ export function useArticleImages({
 
       callToast({
         variant: 'error',
-        description: {
-          es: 'Hubo un error al subir las imágenes.',
-          en: 'There was an error uploading the images.',
-        },
+        description: IMAGE_UPLOAD_ERROR,
       });
 
       return [];

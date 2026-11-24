@@ -3,7 +3,8 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Sentry from '@sentry/react-native';
 import { API_CONFIG, SECURE_ENDPOINTS } from '@/config/api-config';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import type { LangMap, RequestStatus } from '@/types/types';
+import type { RequestStatus } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import {
   parseRedsysReturnUrl,
   type RedsysPaymentBrowserResult,
@@ -23,12 +24,22 @@ interface UseRedsysPaymentReturn {
   openPaymentBrowser: () => Promise<RedsysPaymentBrowserResult>;
   isLoading: boolean;
   status: RequestStatus;
-  errorMessage: LangMap | null;
+  errorMessage: MessageKey | null;
   clearError: () => void;
   redsysOrderId: string | null;
 }
 
 const REDSYS_REDIRECT_URL = 'popauctioonapp://';
+const REDSYS_SESSION_CREATE_FAILED =
+  'errors.payment.redsysSessionCreateFailed' as const satisfies MessageKey;
+const REDSYS_PREPARE_UNEXPECTED =
+  'errors.payment.redsysPrepareUnexpected' as const satisfies MessageKey;
+const REDSYS_SESSION_NOT_READY =
+  'errors.payment.redsysSessionNotReady' as const satisfies MessageKey;
+const REDSYS_COMPLETION_FAILED =
+  'errors.payment.redsysCompletionFailed' as const satisfies MessageKey;
+const REDSYS_GATEWAY_OPEN_FAILED =
+  'errors.payment.redsysGatewayOpenFailed' as const satisfies MessageKey;
 
 const buildLaunchUrl = (launchUrl: string): string => {
   if (/^https?:\/\//i.test(launchUrl)) {
@@ -56,7 +67,7 @@ export const useRedsysPayment = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const launchUrlRef = useRef<string | null>(null);
   const redsysOrderIdRef = useRef<string | null>(null);
 
@@ -77,17 +88,14 @@ export const useRedsysPayment = ({
         });
 
         if (response.error) {
-          setErrorMessage(response.error);
+          setErrorMessage(response.messageCode ?? REDSYS_SESSION_CREATE_FAILED);
           setStatus('error');
           setIsLoading(false);
           return null;
         }
 
         if (!response.data?.launchUrl || !response.data.redsysOrder) {
-          const errorMsg: LangMap = {
-            es: 'No se pudo crear la sesión de pago',
-            en: 'Could not create payment session',
-          };
+          const errorMsg = REDSYS_SESSION_CREATE_FAILED;
           setErrorMessage(errorMsg);
           setStatus('error');
           setIsLoading(false);
@@ -101,10 +109,7 @@ export const useRedsysPayment = ({
 
         return response.data.redsysOrder;
       } catch (error: any) {
-        const errorMsg: LangMap = {
-          es: 'Error inesperado al preparar el pago',
-          en: 'Unexpected error preparing payment',
-        };
+        const errorMsg = REDSYS_PREPARE_UNEXPECTED;
         setErrorMessage(errorMsg);
         setStatus('error');
         setIsLoading(false);
@@ -120,10 +125,7 @@ export const useRedsysPayment = ({
 
   const openPaymentBrowser = useCallback(async () => {
     if (!launchUrlRef.current) {
-      const errorMsg: LangMap = {
-        es: 'La sesión de pago no está preparada',
-        en: 'Payment session is not ready',
-      };
+      const errorMsg = REDSYS_SESSION_NOT_READY;
       setErrorMessage(errorMsg);
       setStatus('error');
 
@@ -177,10 +179,7 @@ export const useRedsysPayment = ({
                 message: 'Payment flow was cancelled by the user',
               };
 
-        setErrorMessage({
-          es: 'El pago no se pudo completar',
-          en: 'Payment could not be completed',
-        });
+        setErrorMessage(REDSYS_COMPLETION_FAILED);
         setStatus('error');
 
         Sentry.captureException(
@@ -193,10 +192,7 @@ export const useRedsysPayment = ({
       setIsLoading(false);
       return parsedResult;
     } catch (error: any) {
-      const errorMsg: LangMap = {
-        es: 'Error inesperado al abrir la pasarela de pago',
-        en: 'Unexpected error opening payment gateway',
-      };
+      const errorMsg = REDSYS_GATEWAY_OPEN_FAILED;
       setErrorMessage(errorMsg);
       setStatus('error');
       setIsLoading(false);

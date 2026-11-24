@@ -7,19 +7,18 @@ import { Loading } from '@/components/ui/Loading';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
-import { LANGUAGE_OPTIONS } from '@/constants/app';
-import { Lang } from '@/types/types';
+import { DEFAULT_LANG, LANGUAGE_OPTIONS, type Lang } from '@/i18n/locales';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 
 export default function SettingsScreen() {
   const { t, locale, changeLanguage, isPending } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+  const [selectedLanguage, setSelectedLanguage] = useState<Lang>(locale);
   const { resetOnboarding } = useOnboarding();
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
-      changeLanguage(selectedLanguage as Lang);
+      changeLanguage(selectedLanguage);
       triggerHaptic('success', {
         throttleMs: 120,
       });
@@ -37,10 +36,7 @@ export default function SettingsScreen() {
         <View className='absolute inset-0 z-10 items-center justify-center bg-white/80'>
           <Loading
             locale={locale}
-            customMessage={{
-              es: 'Cambiando idioma...',
-              en: 'Changing language...',
-            }}
+            customMessage={t('screens.account.changingLanguage')}
           />
         </View>
       )}
@@ -63,7 +59,9 @@ export default function SettingsScreen() {
                 options={LANGUAGE_OPTIONS}
                 placeholder={t('screens.account.selectLanguage')}
                 formField={true}
-                onChange={(value) => setSelectedLanguage(value || 'es')}
+                onChange={(value) =>
+                  setSelectedLanguage((value || DEFAULT_LANG) as Lang)
+                }
                 isDisabled={isPending}
               />
             </View>

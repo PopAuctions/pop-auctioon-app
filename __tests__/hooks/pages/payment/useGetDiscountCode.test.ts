@@ -89,14 +89,10 @@ describe('useGetDiscountCode', () => {
   });
 
   it('should handle invalid discount code from API error', async () => {
-    const mockError = {
-      es: 'Código inválido',
-      en: 'Invalid code',
-    };
-
     mockSecureGet.mockResolvedValueOnce({
       data: null,
-      error: mockError,
+      error: { es: 'Código inválido', en: 'Invalid code' },
+      messageCode: 'errors.discountCode.notFound',
     });
 
     const { result } = renderHook(() => useGetDiscountCode());
@@ -114,7 +110,7 @@ describe('useGetDiscountCode', () => {
 
     expect(result.current.status).toBe(REQUEST_STATUS.error);
     expect(result.current.discountData).toBeNull();
-    expect(result.current.errorMessage).toEqual(mockError);
+    expect(result.current.errorMessage).toBe('errors.discountCode.notFound');
   });
 
   it('should handle invalid discount code from response data', async () => {
@@ -138,10 +134,9 @@ describe('useGetDiscountCode', () => {
 
     expect(result.current.status).toBe(REQUEST_STATUS.error);
     expect(result.current.discountData).toBeNull();
-    expect(result.current.errorMessage).toEqual({
-      es: 'Código de descuento inválido',
-      en: 'Invalid discount code',
-    });
+    expect(result.current.errorMessage).toBe(
+      'screens.payments.invalidDiscountCode'
+    );
   });
 
   it('should handle network/unexpected errors', async () => {
@@ -161,10 +156,9 @@ describe('useGetDiscountCode', () => {
     });
 
     expect(result.current.status).toBe(REQUEST_STATUS.error);
-    expect(result.current.errorMessage).toEqual({
-      es: 'Error al validar código',
-      en: 'Error validating code',
-    });
+    expect(result.current.errorMessage).toBe(
+      'errors.discountCode.validationFailed'
+    );
   });
 
   it('should clear discount data and reset state', () => {

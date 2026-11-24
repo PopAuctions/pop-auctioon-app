@@ -1,16 +1,22 @@
-import { ActionResponse, LangMap, RequestStatus } from '@/types/types';
+import { ActionResponse, RequestStatus } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants';
+import type { MessageKey } from '@/i18n';
+
+const AUTO_BID_DATA_MISSING_ERROR =
+  'errors.autoBid.dataMissing' as const satisfies MessageKey;
+const AUTO_BID_DATA_LOAD_ERROR =
+  'errors.autoBid.dataLoadFailed' as const satisfies MessageKey;
 
 export const useFetchAutoBidsAmount = (
   articleId: string
-): ActionResponse<number> => {
+): ActionResponse<number, MessageKey> => {
   const [data, setData] = useState<number>(0);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.loading);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchAutoBidsAmount = useCallback(async () => {
@@ -23,16 +29,13 @@ export const useFetchAutoBidsAmount = (
 
       if (response.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? AUTO_BID_DATA_LOAD_ERROR);
         return;
       }
 
       if (response.data === null || response.data === undefined) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage({
-          en: 'Auto-bid data is missing',
-          es: 'Faltan los datos de puja automática',
-        });
+        setErrorMessage(AUTO_BID_DATA_MISSING_ERROR);
         return;
       }
 
@@ -44,13 +47,8 @@ export const useFetchAutoBidsAmount = (
 
       sentryErrorReport(errorMsg, 'USE_FETCH_AUTO_BIDS - Unexpected error');
 
-      const message: LangMap = {
-        en: 'Error fetching auto-bid data',
-        es: 'Error al cargar los datos de puja automática',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage(AUTO_BID_DATA_LOAD_ERROR);
     }
   }, [protectedGet, articleId]);
 

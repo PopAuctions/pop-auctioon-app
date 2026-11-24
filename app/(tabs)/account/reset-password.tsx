@@ -13,9 +13,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type * as z from 'zod';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
-import { LangMap } from '@/types/types';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
+
+const RESET_PASSWORD_UNEXPECTED_ERROR =
+  'auth.passwordReset.unexpected' as const satisfies MessageKey;
 
 export default function ResetPasswordScreen() {
   const { t, locale } = useTranslation();
@@ -38,29 +42,40 @@ export default function ResetPasswordScreen() {
     setLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.USER.RESET_PASSWORD,
         data: {
           email: values.email,
         },
       });
 
-      const data = response?.data;
-
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
-      callToast({ variant: 'success', description: data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'resetPassword.resetEmailSent'
+        ),
+      });
     } catch (e: any) {
       sentryErrorReport(e?.message, 'CATCH_RESET_PASSWORD - Unexpected error');
       callToast({
         variant: 'error',
-        description: {
-          en: 'An unexpected error occurred. Please try again later.',
-          es: 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.',
-        },
+        description: RESET_PASSWORD_UNEXPECTED_ERROR,
       });
     } finally {
       setLoading(false);

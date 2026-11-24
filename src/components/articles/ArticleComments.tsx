@@ -2,6 +2,7 @@ import { Comment } from '@/types/types';
 import { View } from 'react-native';
 import { CustomText } from '../ui/CustomText';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { getLocalizedComment } from '@/utils/getLocalizedComment';
 
 export const ArticleComments = ({ comments }: { comments: Comment[] }) => {
   const { t, locale } = useTranslation();
@@ -23,7 +24,7 @@ export const ArticleComments = ({ comments }: { comments: Comment[] }) => {
               type='body'
               className='font-bold text-[#f00]'
             >
-              {comments[comments.length - 1][locale]}
+              {getLocalizedComment(comments[comments.length - 1], locale)}
             </CustomText>
           </CustomText>
 
@@ -54,7 +55,7 @@ export const ArticleComments = ({ comments }: { comments: Comment[] }) => {
                       type='body'
                       className='flex-1'
                     >
-                      {comment[locale]}
+                      {getLocalizedComment(comment, locale)}
                     </CustomText>
                   </View>
                 ))}

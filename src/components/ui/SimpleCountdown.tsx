@@ -2,19 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { DHMS, diffToDHMS } from '@/utils/diffToDHMS';
 import { CustomText } from './CustomText';
-import { Lang, LangMap } from '@/types/types';
 import { AuctionStatus } from '@/constants/auctions';
 
 export function SimpleCountdown({
   dateString,
   auctionStatus,
-  locale,
   texts,
 }: {
   dateString: string | Date;
   auctionStatus?: AuctionStatus;
-  locale: Lang;
-  texts: { completed: LangMap; startSoon: LangMap };
+  texts: { completed: string; startSoon: string };
 }) {
   const targetDate = useMemo(
     () => new Date(new Date(dateString).toISOString()),
@@ -56,7 +53,7 @@ export function SimpleCountdown({
           type='bodysmall'
           className='text-xl text-cinnabar'
         >
-          {texts.startSoon[locale]}
+          {texts.startSoon}
         </CustomText>
       );
     }
@@ -66,7 +63,7 @@ export function SimpleCountdown({
         type='bodysmall'
         className='text-xl text-cinnabar'
       >
-        {texts.completed[locale]}
+        {texts.completed}
       </CustomText>
     );
   }

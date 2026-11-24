@@ -11,15 +11,16 @@ import { useSecureApi } from '../api/useSecureApi';
 import { PROTECTED_ENDPOINTS } from '@/config/api-config';
 import type {
   Lang,
-  LangMap,
   UserRoles,
-  SignupResponse,
   UseSignupReturn,
   UploadFile,
   SignupData,
 } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 import * as Sentry from '@sentry/react-native';
 import { File } from 'expo-file-system';
+
+const NETWORK_ERROR = 'errors.server.connection' as const satisfies MessageKey;
 
 /**
  * Convierte una URI de imagen local a un objeto UploadFile con base64
@@ -51,19 +52,11 @@ const convertImageToUploadFile = async (
 
 export const useSignup = (): UseSignupReturn => {
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedPost } = useSecureApi();
 
   const signup = useCallback(
-    async (
-      data: SignupData,
-      role: UserRoles,
-      lang: Lang
-    ): Promise<{
-      success: boolean;
-      email?: string;
-      error?: LangMap;
-    }> => {
+    async (data: SignupData, role: UserRoles, lang: Lang) => {
       setIsLoading(true);
       setErrorMessage(null);
 
@@ -77,10 +70,8 @@ export const useSignup = (): UseSignupReturn => {
           );
 
           if (!uploadFile) {
-            const imageError: LangMap = {
-              es: 'Error al procesar la imagen de perfil',
-              en: 'Error processing profile picture',
-            };
+            const imageError =
+              'errors.auth.signupImageProcessingFailed' as const satisfies MessageKey;
             setErrorMessage(imageError);
             return {
               success: false,
@@ -111,10 +102,11 @@ export const useSignup = (): UseSignupReturn => {
 
         // Si hay error del API (network, timeout, etc.) - useSecureApi lo detecta
         if (response.error) {
-          setErrorMessage(response.error);
+          const errorMessage = response.messageCode ?? NETWORK_ERROR;
+          setErrorMessage(errorMessage);
           return {
             success: false,
-            error: response.error,
+            error: errorMessage,
           };
         }
 
@@ -122,7 +114,7 @@ export const useSignup = (): UseSignupReturn => {
         // Backend devuelve toda la respuesta en response.data:
         // { error: null, success: { en: "...", es: "..." }, data: { email: "..." } }
         if (response.status === 201 && response.data) {
-          const fullResponse = response.data as SignupResponse;
+          const fullResponse = response.data as { data?: { email?: string } };
 
           // Verificar si hay email en la estructura anidada
           if (fullResponse.data?.email) {
@@ -143,10 +135,9 @@ export const useSignup = (): UseSignupReturn => {
 
         // Status 400+ = error del backend
         if (response.status && response.status >= 400) {
-          const errorMsg = response.error || {
-            es: 'Error en el registro',
-            en: 'Registration error',
-          };
+          const errorMsg =
+            response.messageCode ??
+            ('errors.auth.signupFailed' as const satisfies MessageKey);
           setErrorMessage(errorMsg);
           return {
             success: false,
@@ -155,10 +146,8 @@ export const useSignup = (): UseSignupReturn => {
         }
 
         // Caso inesperado
-        const fallbackError: LangMap = {
-          es: 'Error inesperado durante el registro',
-          en: 'Unexpected error during registration',
-        };
+        const fallbackError =
+          'errors.auth.signupUnexpected' as const satisfies MessageKey;
         setErrorMessage(fallbackError);
         return {
           success: false,
@@ -169,10 +158,8 @@ export const useSignup = (): UseSignupReturn => {
           `SIGNUP_ERROR: ${error?.message ?? 'Unknown error'}`
         );
 
-        const networkError: LangMap = {
-          es: 'Error de conexión. Por favor, verifica tu internet.',
-          en: 'Connection error. Please check your internet.',
-        };
+        const networkError =
+          'errors.auth.signupNetwork' as const satisfies MessageKey;
         setErrorMessage(networkError);
 
         return {

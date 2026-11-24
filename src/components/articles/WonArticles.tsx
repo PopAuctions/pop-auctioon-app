@@ -11,6 +11,15 @@ import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
+
+const NO_ARTICLES_TO_REMOVE =
+  'components.wonArticles.noArticlesToRemove' as const satisfies MessageKey;
+const REMOVE_ARTICLES_FAILED =
+  'components.wonArticles.removeFailed' as const satisfies MessageKey;
+const ARTICLES_REMOVED =
+  'components.wonArticles.removedSuccessfully' as const satisfies MessageKey;
 
 type WonArticlesProps = {
   wonArticles: Record<string, AuctionUserWonArticles>;
@@ -35,12 +44,17 @@ export const WonArticles = ({
   texts: { winningBid, payArticles, view, noArticlesWon, removeArticles },
   refetchArticles,
 }: WonArticlesProps) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.wonArticles', { locale: lang });
   const [isRemoving, setIsRemoving] = useState<Record<string, boolean> | null>(
     null
   );
   const { callToast } = useToast(lang);
   const { securePost } = useSecureApi();
   const formatter = euroFormatter(lang);
+  const articleImage = t('commonUi.accessibility.articleImage', {
+    locale: lang,
+  });
 
   const handleRemoveArticles = async (auctionId: string) => {
     setIsRemoving((prev) => ({ ...prev, [auctionId]: true }));
@@ -52,10 +66,7 @@ export const WonArticles = ({
       if (articlesId.length === 0) {
         callToast({
           variant: 'error',
-          description: {
-            es: 'No hay artículos para eliminar',
-            en: 'There are no articles to remove',
-          },
+          description: NO_ARTICLES_TO_REMOVE,
         });
         return;
       }
@@ -70,20 +81,14 @@ export const WonArticles = ({
       if (response.error) {
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al eliminar los artículos',
-            en: 'Error removing articles',
-          },
+          description: REMOVE_ARTICLES_FAILED,
         });
         return;
       }
 
       callToast({
         variant: 'success',
-        description: {
-          es: 'Artículos eliminados correctamente',
-          en: 'Articles removed successfully',
-        },
+        description: ARTICLES_REMOVED,
       });
 
       refetchArticles?.();
@@ -154,19 +159,9 @@ export const WonArticles = ({
                   await handleRemoveArticles(section.auctionId);
                 }}
                 isDisabled={isRemoving?.[section.auctionId]}
-                title={{
-                  es: 'Eliminar artículos de esta subasta',
-                  en: 'Remove auction won articles',
-                }}
-                description={{
-                  es: '¿Estás seguro de que quieres quitar los artículos ganados en esta subasta?',
-                  en: 'Are you sure you want to remove the won articles in this auction?',
-                }}
-                importantMessage={{
-                  es: 'No los podrás recuperar después de eliminarlos',
-                  en: 'You will not be able to recover them after removing',
-                }}
-                locale={lang}
+                title={modalTexts.title}
+                description={modalTexts.description}
+                importantMessage={modalTexts.importantMessage}
               >
                 {removeArticles}
               </ConfirmModal>
@@ -183,7 +178,11 @@ export const WonArticles = ({
             <WonArticleItem
               key={article.id.toString()}
               article={article}
-              texts={{ winningBid, view }}
+              texts={{
+                winningBid,
+                view,
+                articleImage,
+              }}
               commissionValue={commissionValue}
               formatter={formatter}
             />
@@ -200,14 +199,14 @@ export const WonArticles = ({
 
 type WonArticleItemProps = {
   article: CustomArticle;
-  texts: { winningBid: string; view: string };
+  texts: { winningBid: string; view: string; articleImage: string };
   commissionValue: number;
   formatter: Intl.NumberFormat;
 };
 
 export const WonArticleItem = ({
   article,
-  texts: { winningBid, view },
+  texts: { winningBid, view, articleImage },
   commissionValue,
   formatter,
 }: WonArticleItemProps) => {
@@ -226,7 +225,7 @@ export const WonArticleItem = ({
         <View className='w-full overflow-hidden rounded-xl'>
           <CustomImage
             src={imageSrc}
-            alt='Article Image'
+            alt={articleImage}
             className='aspect-square w-full'
             resizeMode='cover'
           />

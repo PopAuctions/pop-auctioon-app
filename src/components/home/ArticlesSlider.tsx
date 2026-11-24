@@ -10,6 +10,7 @@ import {
 import type { SimpleArticle, Lang } from '@/types/types';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { ArticleSliderItem } from '../articles/ArticleSliderItem';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
 
 const ITEMS_GAP = 8;
 
@@ -26,6 +27,7 @@ export const ArticlesSlider = ({
   commissionValue: number | null;
   texts: { currentBid: string };
 }) => {
+  const { t } = useTranslation();
   const listRef = useRef<FlatList<SimpleArticle[]>>(null);
   const [page, setPage] = useState(0);
   const [pageWidth, setPageWidth] = useState(0);
@@ -129,8 +131,13 @@ export const ArticlesSlider = ({
           onPress={() => scrollToPage(page - 1)}
           disabled={page <= 0}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
-          accessibilityLabel='Previous article page'
-          accessibilityHint='Navigates to the previous page in the slider'
+          accessibilityLabel={t('commonUi.accessibility.previousArticlePage', {
+            locale: lang,
+          })}
+          accessibilityHint={t(
+            'commonUi.accessibility.previousArticlePageHint',
+            { locale: lang }
+          )}
         >
           <FontAwesomeIcon
             variant='bold'
@@ -153,7 +160,11 @@ export const ArticlesSlider = ({
                   : 'h-2 w-2 rounded-full bg-neutral-600'
               }
               accessibilityRole='progressbar'
-              accessibilityLabel={`Page ${page + 1} of ${pages.length}`}
+              accessibilityLabel={t('commonUi.accessibility.pageOf', {
+                locale: lang,
+                page: page + 1,
+                total: pages.length,
+              })}
             />
           ))}
         </View>
@@ -162,8 +173,12 @@ export const ArticlesSlider = ({
           onPress={() => scrollToPage(page + 1)}
           disabled={page >= pages.length - 1}
           className='h-10 w-10 items-center justify-center rounded-full disabled:opacity-50'
-          accessibilityLabel='Next article page'
-          accessibilityHint='Navigates to the next page in the slider'
+          accessibilityLabel={t('commonUi.accessibility.nextArticlePage', {
+            locale: lang,
+          })}
+          accessibilityHint={t('commonUi.accessibility.nextArticlePageHint', {
+            locale: lang,
+          })}
         >
           <FontAwesomeIcon
             variant='bold'

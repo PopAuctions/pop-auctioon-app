@@ -114,11 +114,6 @@ describe('Constants barrel exports', () => {
   });
 
   describe('Article Related Constants', () => {
-    it('should export article state labels', () => {
-      expect(Constants.ARTICLE_STATE_LABELS).toBeDefined();
-      expect(typeof Constants.ARTICLE_STATE_LABELS).toBe('object');
-    });
-
     it('should export brand information', () => {
       expect(Constants.ARTICLE_BRANDS_LABELS).toBeDefined();
       expect(typeof Constants.ARTICLE_BRANDS_LABELS).toBe('object');
@@ -129,14 +124,74 @@ describe('Constants barrel exports', () => {
       expect(typeof Constants.ARTICLE_CATEGORIES_FILTER_LIST).toBe('object');
     });
 
-    it('should export article colors', () => {
-      expect(Constants.ARTICLE_COLORS_LABELS).toBeDefined();
-      expect(typeof Constants.ARTICLE_COLORS_LABELS).toBe('object');
+    it('should export canonical article color values', () => {
+      expect(Constants.ARTICLE_COLOR_VALUES).toHaveLength(24);
+      expect(Constants.ARTICLE_COLOR_VALUES[0]).toBe('MULTICOLOUR');
     });
 
-    it('should export article materials', () => {
-      expect(Constants.ARTICLE_MATERIALS_LABELS).toBeDefined();
-      expect(typeof Constants.ARTICLE_MATERIALS_LABELS).toBe('object');
+    it('should preserve article option value order', () => {
+      expect(Constants.ARTICLE_STATE_VALUES).toEqual([
+        'NEVER_WORN_WITH_TAG',
+        'NEVER_WORN',
+        'VERY_GOOD_CONDITION',
+        'GOOD_CONDITION',
+        'FAIR_CONDITION',
+      ]);
+      expect(Constants.ARTICLE_SMELL_VALUES).toEqual([
+        'TOBACCO',
+        'PERFUME',
+        'HUMIDITY',
+        'OTHER',
+        'NO_SMELL',
+      ]);
+      expect(Constants.WATCH_MOVEMENT_VALUES).toEqual([
+        'AUTOMATIC',
+        'QUARTZ',
+        'MANUAL_WINDING',
+        'SMART_WATCH',
+        'SOLAR',
+        'OTHER',
+      ]);
+      expect(Constants.ART_TYPE_VALUES).toEqual([
+        'OTHER',
+        'ANTIQUE',
+        'CERAMIC',
+        'COLLECTIBLE',
+        'DRAWING',
+        'FURNITURE',
+        'GLASS_ART',
+        'METAL_ART',
+        'PAINTING',
+        'SCULPTURE',
+        'WOOD_ART',
+      ]);
+    });
+
+    it('should preserve article-material values and detail availability', () => {
+      expect(Constants.ARTICLE_MATERIAL_VALUES).toHaveLength(45);
+      expect(Constants.ARTICLE_MATERIAL_VALUES[0]).toBe('CASHMERE');
+      expect(Constants.ARTICLE_MATERIAL_VALUES.at(-1)).toBe('YELLOW_GOLD');
+      expect(Constants.ARTICLE_MATERIAL_FILTER_VALUES).toHaveLength(44);
+      expect(Constants.ARTICLE_MATERIAL_FILTER_VALUES).not.toContain('CANVAS');
+      expect(Constants.hasArticleMaterialDisplayLabel('LEATHER')).toBe(true);
+      expect(Constants.hasArticleMaterialDisplayLabel('CANVAS')).toBe(false);
+    });
+
+    it('should preserve localized strap-material availability and order', () => {
+      expect(Constants.getStrapMaterialValues('en')).toHaveLength(27);
+      expect(Constants.getStrapMaterialValues('en')[0]).toBe('ALUMINUM');
+      expect(Constants.getStrapMaterialValues('en')).not.toContain('RUBBER');
+      expect(Constants.getStrapMaterialValues('es')).toHaveLength(26);
+      expect(Constants.getStrapMaterialValues('es')[0]).toBe('STEEL');
+      expect(Constants.getStrapMaterialValues('es')).toContain('RUBBER');
+      expect(Constants.getStrapMaterialValues('es')).not.toContain(
+        'SAPPHIRE_CRYSTAL'
+      );
+    });
+
+    it('should preserve localized box-material option order', () => {
+      expect(Constants.getBoxMaterialValues('en')[0]).toBe('ALUMINUM');
+      expect(Constants.getBoxMaterialValues('es')[0]).toBe('STEEL');
     });
   });
 
@@ -153,15 +208,15 @@ describe('Constants barrel exports', () => {
   });
 
   describe('Time and Calendar Constants', () => {
-    it('should export month definitions', () => {
-      expect(Constants.MONTHS).toBeDefined();
-      expect(typeof Constants.MONTHS).toBe('object');
+    it('should export canonical calendar month values', () => {
+      expect(Constants.CALENDAR_MONTH_VALUES).toBeDefined();
+      expect(typeof Constants.CALENDAR_MONTH_VALUES).toBe('object');
     });
 
-    it('should have correct month structure', () => {
-      expect(Constants.MONTHS['0']).toBeDefined();
-      expect(Constants.MONTHS['0'].es).toBe('Hoy');
-      expect(Constants.MONTHS['0'].en).toBe('Today');
+    it('should preserve calendar month values', () => {
+      expect(Constants.CALENDAR_MONTH_VALUES['0']).toBe(0);
+      expect(Constants.CALENDAR_MONTH_VALUES['1']).toBe(1);
+      expect(Constants.CALENDAR_MONTH_VALUES['12']).toBe(12);
     });
   });
 
@@ -175,7 +230,7 @@ describe('Constants barrel exports', () => {
       // Check for core categories
       expect(exportedKeys.includes('Colors')).toBeTruthy();
       expect(exportedKeys.includes('LANGUAGE_STORAGE_KEY')).toBeTruthy();
-      expect(exportedKeys.includes('MONTHS')).toBeTruthy();
+      expect(exportedKeys.includes('CALENDAR_MONTH_VALUES')).toBeTruthy();
       expect(
         exportedKeys.includes('GLOBAL_REGISTER_DEFAULT_VALUES')
       ).toBeTruthy();
@@ -194,9 +249,8 @@ describe('Constants barrel exports', () => {
       expect(() => Constants.LOCALE_PATTERN).not.toThrow();
       expect(() => Constants.GLOBAL_REGISTER_DEFAULT_VALUES).not.toThrow();
       expect(() => Constants.Colors).not.toThrow();
-      expect(() => Constants.ARTICLE_STATE_LABELS).not.toThrow();
       expect(() => Constants.LANGUAGE_STORAGE_KEY).not.toThrow();
-      expect(() => Constants.MONTHS).not.toThrow();
+      expect(() => Constants.CALENDAR_MONTH_VALUES).not.toThrow();
     });
 
     // Test each export line specifically to ensure branch coverage
@@ -212,7 +266,6 @@ describe('Constants barrel exports', () => {
     });
 
     it('should handle export * from articles module', () => {
-      expect(Constants.ARTICLE_STATE_LABELS).toBeDefined();
       expect(Constants.ARTICLE_BRANDS_LABELS).toBeDefined();
       expect(Constants.ARTICLE_CATEGORIES_FILTER_LIST).toBeDefined();
     });
@@ -221,9 +274,11 @@ describe('Constants barrel exports', () => {
       expect(Constants.LANGUAGE_STORAGE_KEY).toBeDefined();
     });
 
-    it('should handle named export from months module', () => {
-      expect(Constants.MONTHS).toBeDefined();
-      expect(typeof Constants.MONTHS).toBe('object');
+    it('should handle exports from months module', () => {
+      expect(Constants.CALENDAR_MONTH_VALUES).toBeDefined();
+      expect(typeof Constants.CALENDAR_MONTH_VALUES).toBe('object');
+      expect(Constants.isCalendarMonthKey('12')).toBe(true);
+      expect(Constants.isCalendarMonthKey('13')).toBe(false);
     });
 
     it('should handle default export as Colors', () => {

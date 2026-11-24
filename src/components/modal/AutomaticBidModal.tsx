@@ -10,32 +10,13 @@ type AutomaticBidModalProps = {
   visible: boolean;
   onClose: () => void;
   onConfirm: (maxBidAmount: string) => Promise<boolean> | boolean;
-  title: { en: string; es: string };
-  description: { en: string; es: string };
-  extraMessage: { en: string; es: string };
+  title: string;
+  description: string;
+  extraMessage: string;
   defaultValue?: string;
   minAmount: number;
   helperText?: string;
 };
-
-const TEXTS = {
-  es: {
-    confirm: 'Confirmar',
-    cancel: 'Cancelar',
-    inputLabel: 'Monto máximo',
-    missingValue: 'Ingresa un valor',
-    minimumPrice: (amount: string) => `El monto debe ser al menos ${amount}`,
-    noDecimals: 'No se permiten decimales',
-  },
-  en: {
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-    inputLabel: 'Maximum amount',
-    missingValue: 'Please enter a value',
-    minimumPrice: (amount: string) => `The amount must be at least ${amount}`,
-    noDecimals: 'Decimals are not allowed',
-  },
-} as const;
 
 export function AutomaticBidModal({
   visible,
@@ -48,7 +29,8 @@ export function AutomaticBidModal({
   minAmount,
   helperText,
 }: AutomaticBidModalProps) {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
+  const texts = t('components.modals.automaticBid');
   const [inputValue, setInputValue] = useState(defaultValue ?? '');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,12 +46,23 @@ export function AutomaticBidModal({
 
   const handleConfirm = async () => {
     if (!inputValue) {
-      setError(TEXTS[locale].missingValue);
+      setError(texts.missingValue);
       return;
     }
 
-    if (Number(inputValue) < minAmount) {
-      setError(TEXTS[locale].minimumPrice(formatter.format(minAmount)));
+    const numericInput = Number(inputValue);
+
+    if (numericInput < minAmount) {
+      setError(
+        t('components.modals.automaticBid.minimumPrice', {
+          amount: formatter.format(minAmount),
+        })
+      );
+      return;
+    }
+
+    if (numericInput % 10 !== 0) {
+      setError(texts.multipleOfTen);
       return;
     }
 
@@ -110,7 +103,7 @@ export function AutomaticBidModal({
                 type='h4'
                 className='flex-1'
               >
-                {title[locale]}
+                {title}
               </CustomText>
 
               <Pressable
@@ -131,25 +124,23 @@ export function AutomaticBidModal({
               type='body'
               className='text-md mt-2 text-slate-800'
             >
-              {description[locale]}
+              {description}
             </CustomText>
 
             <CustomText
               type='body'
               className='mt-2 text-sm font-bold text-black'
             >
-              {extraMessage[locale]}
+              {extraMessage}
             </CustomText>
 
             <View className='mt-4'>
-              <CustomText type='body'>
-                {`${TEXTS[locale].inputLabel} (€)`}
-              </CustomText>
+              <CustomText type='body'>{`${texts.inputLabel} (€)`}</CustomText>
 
               <TextInput
                 value={inputValue}
                 onChangeText={handleChange}
-                placeholder={TEXTS[locale].inputLabel}
+                placeholder={texts.inputLabel}
                 keyboardType='number-pad'
                 inputMode='numeric'
                 editable={!isLoading}
@@ -160,7 +151,7 @@ export function AutomaticBidModal({
                 type='body'
                 className='mt-1 text-xs text-neutral-500'
               >
-                {helperText || TEXTS[locale].noDecimals}
+                {helperText || texts.noDecimals}
               </CustomText>
 
               {!!error && (
@@ -181,7 +172,7 @@ export function AutomaticBidModal({
                 disabled={isLoading}
                 isLoading={isLoading}
               >
-                {TEXTS[locale].confirm}
+                {t('common.actions.confirm')}
               </Button>
 
               <Button
@@ -190,7 +181,7 @@ export function AutomaticBidModal({
                 onPress={onClose}
                 disabled={isLoading}
               >
-                {TEXTS[locale].cancel}
+                {t('common.actions.cancel')}
               </Button>
             </View>
           </View>

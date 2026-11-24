@@ -8,6 +8,7 @@ import { CustomImage } from '@/components/ui/CustomImage';
 import { SimpleCountdown } from '@/components/ui/SimpleCountdown';
 import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import { t } from '@/i18n';
 
 type ArticleItemProps = {
   article: SimpleArticle;
@@ -26,6 +27,7 @@ export function ArticleSliderItem({
   lang,
   commissionValue,
 }: ArticleItemProps) {
+  const countdownTexts = t('components.simpleCountdown', { locale: lang });
   const articleId = article.id;
   const price = article.ArticleBid.currentValue;
 
@@ -61,13 +63,9 @@ export function ArticleSliderItem({
           {article.whenInAuction && (
             <SimpleCountdown
               dateString={article.whenInAuction}
-              locale={lang}
               texts={{
-                startSoon: { en: 'Starting soon', es: 'Comienza pronto' },
-                completed: {
-                  en: 'Auction already started',
-                  es: 'La subasta ya comenzó',
-                },
+                startSoon: countdownTexts.articleStartSoon,
+                completed: countdownTexts.completed,
               }}
             />
           )}

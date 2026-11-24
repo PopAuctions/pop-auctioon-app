@@ -220,7 +220,7 @@ export function VerifyPhoneWizard({
               type='error'
               className='text-center'
             >
-              {errorMessage[locale]}
+              {t(errorMessage, { locale })}
             </CustomText>
           )}
 
@@ -258,7 +258,7 @@ export function VerifyPhoneWizard({
               type='error'
               className='text-center'
             >
-              {errorMessage[locale]}
+              {t(errorMessage, { locale })}
             </CustomText>
           )}
 

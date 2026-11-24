@@ -21,7 +21,7 @@ export default function MyStorePayoutsScreen() {
   if (status === REQUEST_STATUS.error || !data) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage, { locale }) : undefined}
         refreshRoute='/(tabs)/auctioneer/my-store/payouts'
       />
     );

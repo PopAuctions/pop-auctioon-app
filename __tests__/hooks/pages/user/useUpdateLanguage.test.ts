@@ -168,10 +168,7 @@ describe('useUpdateLanguage', () => {
 
       expect(mockCallToast).toHaveBeenCalledWith({
         variant: 'error',
-        description: {
-          en: 'Error updating language preference',
-          es: 'Error al actualizar el idioma',
-        },
+        description: 'errors.user.languageUpdateFailed',
       });
     });
 

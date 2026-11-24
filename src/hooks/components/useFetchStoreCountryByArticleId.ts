@@ -1,21 +1,22 @@
-import {
-  ActionResponse,
-  CountryValue,
-  LangMap,
-  RequestStatus,
-} from '@/types/types';
+import { ActionResponse, CountryValue, RequestStatus } from '@/types/types';
 import { useSecureApi } from '../api/useSecureApi';
 import { useCallback, useEffect, useState } from 'react';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { REQUEST_STATUS } from '@/constants/app';
+import type { MessageKey } from '@/i18n';
+
+const STORE_COUNTRY_MISSING =
+  'errors.store.countryMissing' as const satisfies MessageKey;
+const STORE_COUNTRY_FETCH_FAILED =
+  'errors.store.countryFetchFailed' as const satisfies MessageKey;
 
 export const useFetchStoreCountryByArticleId = (
   articleId: string
-): ActionResponse<CountryValue | null> => {
+): ActionResponse<CountryValue | null, MessageKey> => {
   const [data, setData] = useState<CountryValue | null>(null);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchStoreCountryByArticleId = useCallback(async () => {
@@ -28,16 +29,13 @@ export const useFetchStoreCountryByArticleId = (
 
       if (response.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? STORE_COUNTRY_FETCH_FAILED);
         return;
       }
 
       if (response.data === null || response.data === undefined) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage({
-          en: 'Store country data is missing',
-          es: 'Faltan los datos del país de la tienda',
-        });
+        setErrorMessage(STORE_COUNTRY_MISSING);
         return;
       }
 
@@ -52,13 +50,8 @@ export const useFetchStoreCountryByArticleId = (
         'USE_FETCH_STORE_COUNTRY_BY_ARTICLE_ID - Unexpected error'
       );
 
-      const message: LangMap = {
-        en: 'Error fetching store country data',
-        es: 'Error al cargar los datos del país de la tienda',
-      };
-
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage(message);
+      setErrorMessage(STORE_COUNTRY_FETCH_FAILED);
     }
   }, [secureGet, articleId]);
 

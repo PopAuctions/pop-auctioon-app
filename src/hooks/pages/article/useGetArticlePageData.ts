@@ -2,11 +2,16 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   BiddingAmounts,
-  LangMap,
   RefetchReturn,
   RequestStatus,
 } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
+
+const ARTICLE_PAGE_INFO_LOAD_ERROR =
+  'errors.article.pageInfoLoadFailed' as const satisfies MessageKey;
+const BIDDING_AMOUNTS_LOAD_ERROR =
+  'errors.article.updatedBiddingAmountsLoadFailed' as const satisfies MessageKey;
 
 interface UserFollow {
   error: null | string;
@@ -30,12 +35,12 @@ export const useGetArticlePageData = ({
   auctionId: number;
   currentPrice: number;
   startingPrice: number;
-}): Omit<ActionResponse<ArticlePageData | null>, 'refetch'> & {
-  refetch: (currentPrice: number) => RefetchReturn;
+}): Omit<ActionResponse<ArticlePageData | null, MessageKey>, 'refetch'> & {
+  refetch: (currentPrice: number) => RefetchReturn<MessageKey>;
 } => {
   const [data, setData] = useState<ArticlePageData | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchData = useCallback(async () => {
@@ -54,15 +59,9 @@ export const useGetArticlePageData = ({
 
     if (res.error) {
       setStatus('error');
-      setErrorMessage({
-        en: 'Error fetching page info',
-        es: 'Error al obtener información de la página',
-      });
+      setErrorMessage(ARTICLE_PAGE_INFO_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching page info',
-          es: 'Error al obtener información de la página',
-        },
+        message: ARTICLE_PAGE_INFO_LOAD_ERROR,
       };
     }
 
@@ -95,15 +94,9 @@ export const useGetArticlePageData = ({
     });
 
     if (res.error) {
-      setErrorMessage({
-        en: 'Error fetching updated bidding amounts',
-        es: 'Error al obtener actualizar los montos de puja',
-      });
+      setErrorMessage(BIDDING_AMOUNTS_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching updated bidding amounts',
-          es: 'Error al obtener actualizar los montos de puja',
-        },
+        message: BIDDING_AMOUNTS_LOAD_ERROR,
       };
     }
 

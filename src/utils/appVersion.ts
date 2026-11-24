@@ -6,6 +6,14 @@ export function getVersionUpdateType(
 ): VersionUpdateType {
   if (!localVersion || !serverVersion) return 'none';
 
+  const versionPattern = /^\d+\.\d+\.\d+$/;
+  if (
+    !versionPattern.test(localVersion) ||
+    !versionPattern.test(serverVersion)
+  ) {
+    return 'none';
+  }
+
   const [localMajor, localMinor, localPatch] = localVersion
     .split('.')
     .map(Number);
@@ -13,11 +21,13 @@ export function getVersionUpdateType(
     .split('.')
     .map(Number);
 
-  if (localMajor !== serverMajor) return 'force';
-
-  if (localMinor !== serverMinor || localPatch !== serverPatch) {
-    return 'soft';
+  if (serverMajor !== localMajor) {
+    return serverMajor > localMajor ? 'force' : 'none';
   }
 
-  return 'none';
+  if (serverMinor !== localMinor) {
+    return serverMinor > localMinor ? 'soft' : 'none';
+  }
+
+  return serverPatch > localPatch ? 'soft' : 'none';
 }

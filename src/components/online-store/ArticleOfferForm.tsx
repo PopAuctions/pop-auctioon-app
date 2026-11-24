@@ -8,12 +8,17 @@ import { useToast } from '@/hooks/useToast';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { CustomText } from '../ui/CustomText';
 import { Button } from '../ui/Button';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 import { Input } from '../ui/Input';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { parseNumber } from '@/utils/parse-number';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
+import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
+
+const INVALID_OFFER_AMOUNT =
+  'errors.offer.invalidNumber' as const satisfies MessageKey;
 
 type ArticleOfferFormProps = {
   texts: { minOffer: string; submit: string; penalty: string };
@@ -49,17 +54,14 @@ export function ArticleOfferForm({
     if (Number.isNaN(parsed) || parsed <= 0) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Ingresa un número válido',
-          en: 'Enter a valid number',
-        },
+        description: INVALID_OFFER_AMOUNT,
       });
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.CREATE,
         data: {
           onlineStoreArticleId,
@@ -67,17 +69,31 @@ export function ArticleOfferForm({
         },
       });
 
-      const data = response?.data;
-
       if (response.error) {
         if (response.status === 401) {
           openSignInAlertModal();
         }
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            lang,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
-      callToast({ variant: 'success', description: data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          lang,
+          'offer.madeSuccessfully'
+        ),
+      });
       setAmount('');
     } catch (e: any) {
       console.log(e?.message);

@@ -5,30 +5,14 @@ import { Button } from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 import { useAuthNavigation } from '@/hooks/auth/useAuthNavigation';
-
-const TEXTS = {
-  es: {
-    title: 'Necesitas iniciar sesión para realizar esta acción',
-    description: 'Inicia sesión o crea una cuenta',
-    goToSignIn: 'Iniciar sesión',
-    goToCreateAccount: 'Crear cuenta',
-    close: 'Cerrar',
-  },
-  en: {
-    title: 'You need to be signed in to perform this action',
-    description: 'Sign in or create an account',
-    goToSignIn: 'Sign in',
-    goToCreateAccount: 'Create account',
-    close: 'Close',
-  },
-};
+import { t } from '@/i18n';
 
 export function SignInAlertModal() {
   const { locale } = useTranslation();
   const { isSignInAlertModalOpen, closeSignInAlertModal } =
     useSignInAlertModal();
   const { navigateWithAuth } = useAuthNavigation();
-  const texts = TEXTS[locale];
+  const texts = t('components.modals.signInAlert', { locale });
 
   const handleGoToSignIn = () => {
     closeSignInAlertModal();

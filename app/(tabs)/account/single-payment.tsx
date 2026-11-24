@@ -1,9 +1,10 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useGetAddresses } from '@/hooks/pages/address/useGetAddresses';
 import { useRedsysPayment } from '@/hooks/payment/useRedsysPayment';
+import { usePaymentSubmission } from '@/hooks/payment/usePaymentSubmission';
 import { useFetchPaymentConfig } from '@/hooks/components/useFetchPaymentConfig';
 import { useGetDiscountCode } from '@/hooks/pages/payment/useGetDiscountCode';
 import { Loading } from '@/components/ui/Loading';
@@ -14,6 +15,7 @@ import { AddressFormModal } from '@/components/addresses/AddressFormModal';
 import { PaymentCheckoutSummary } from '@/components/payment/PaymentCheckoutSummary';
 import { AddressSelector } from '@/components/payment/AddressSelector';
 import { PaymentArticlesList } from '@/components/payment/PaymentArticlesList';
+import { PaymentAttemptRecoveryModal } from '@/components/payment/PaymentAttemptRecoveryModal';
 import { FontAwesomeIcon } from '@/components/ui/FontAwesomeIcon';
 import { REQUEST_STATUS } from '@/constants';
 import { useToast } from '@/hooks/useToast';
@@ -23,8 +25,15 @@ import { euroFormatter } from '@/utils/euroFormatter';
 import type { CountryValue } from '@/types/types';
 import { useFetchBuyArticle } from '@/hooks/pages/article/useFetchBuyArticle';
 import { useSingleArticlePayment } from '@/hooks/pages/payment/useSingleArticlePayment';
+import { useArticlesPayment } from '@/hooks/pages/payment/useArticlesPayment';
 import { savePaymentResultContext } from '@/utils/payments/payment-result-context';
 import { useFetchStoreCountryByArticleId } from '@/hooks/components/useFetchStoreCountryByArticleId';
+import { isValidPayableAmount } from '@/utils/is-valid-payable-amount';
+import {
+  INVALID_DISCOUNT_AMOUNT_ERROR,
+  PAYMENT_TOAST_KEYS,
+} from '@/constants/payment-errors';
+import { LOCALE_CONFIG } from '@/i18n/locales';
 
 export default function SinglePaymentScreen() {
   const { locale, t } = useTranslation();
@@ -57,10 +66,11 @@ export default function SinglePaymentScreen() {
   } = useRedsysPayment({ type: 'online_store' });
 
   const { createPayment, rejectPayment } = useSingleArticlePayment();
+  const { checkPaymentAttemptRecovery } = useArticlesPayment();
 
   // Payment config
   const { data: paymentConfig, status: commissionStatus } =
-    useFetchPaymentConfig();
+    useFetchPaymentConfig(locale);
   const {
     data: storeCountry,
     errorMessage: storeCountryError,
@@ -73,8 +83,9 @@ export default function SinglePaymentScreen() {
   );
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
-  const [isSubmittingPayment, setIsSubmittingPayment] =
-    useState<boolean>(false);
+  const { isSubmittingPayment, runPaymentSubmission } = usePaymentSubmission();
+  const [recoverablePendingAttemptIds, setRecoverablePendingAttemptIds] =
+    useState<number[] | null>(null);
   const [appliedDiscount, setAppliedDiscount] = useState<{
     code: string;
     amount: number;
@@ -89,7 +100,7 @@ export default function SinglePaymentScreen() {
   const paymentTranslations = t('screens.payment');
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
   const userLimitTimeDate = new Date(buyData?.userLimitTime ?? '');
-  const dateLang = locale === 'en' ? 'en-US' : 'es-ES';
+  const dateLang = LOCALE_CONFIG[locale].intlLocale;
 
   const article = buyData?.article ?? null;
 
@@ -124,7 +135,7 @@ export default function SinglePaymentScreen() {
     return calculatePaymentDetails({
       articlesAmount: subtotal,
       selectedCountry: selectedAddress?.country as CountryValue | null,
-      commissionPercentage: paymentConfig.commission || 0,
+      commissionPercentage: paymentConfig.onlineStoreCommission || 0,
       shippingTaxes: paymentConfig.shippingTaxes,
       taxPercentageArticles: paymentConfig.taxPercentageArticles || 0,
       auctionCountry: storeCountry,
@@ -151,6 +162,17 @@ export default function SinglePaymentScreen() {
     const result = await validateCode(discountCode);
 
     if (result.isValid && result.data) {
+      const discountedTotal =
+        paymentDetails.subtotal + paymentDetails.shipping - result.data.amount;
+
+      if (!isValidPayableAmount(discountedTotal)) {
+        callToast({
+          variant: 'error',
+          description: INVALID_DISCOUNT_AMOUNT_ERROR,
+        });
+        return;
+      }
+
       setAppliedDiscount({
         code: result.data.code,
         amount: result.data.amount,
@@ -159,8 +181,8 @@ export default function SinglePaymentScreen() {
       callToast({
         variant: 'success',
         description: {
-          es: `Código aplicado: ${formatter.format(result.data.amount)} de descuento`,
-          en: `Code applied: ${formatter.format(result.data.amount)} discount`,
+          code: PAYMENT_TOAST_KEYS.discountApplied,
+          params: { amount: formatter.format(result.data.amount) },
         },
       });
     } else {
@@ -170,141 +192,193 @@ export default function SinglePaymentScreen() {
           discountErrorMessage || 'screens.payments.invalidDiscountCode',
       });
     }
-  }, [discountCode, validateCode, discountErrorMessage, callToast, formatter]);
+  }, [
+    discountCode,
+    validateCode,
+    discountErrorMessage,
+    callToast,
+    formatter,
+    paymentDetails.subtotal,
+    paymentDetails.shipping,
+  ]);
+
+  useEffect(() => {
+    if (appliedDiscount && !isValidPayableAmount(paymentDetails.total)) {
+      setAppliedDiscount(null);
+      callToast({
+        variant: 'error',
+        description: INVALID_DISCOUNT_AMOUNT_ERROR,
+      });
+    }
+  }, [appliedDiscount, paymentDetails.total, callToast]);
 
   const handleRemoveDiscount = useCallback(() => {
     setAppliedDiscount(null);
     callToast({
       variant: 'info',
-      description: {
-        es: 'Descuento removido',
-        en: 'Discount removed',
-      },
+      description: PAYMENT_TOAST_KEYS.discountRemoved,
     });
   }, [callToast]);
 
-  // Payment flow
+  const createPaymentAndOpenRedsys = useCallback(
+    async (confirmedPendingAttemptIds?: number[]) => {
+      if (!selectedAddressId || !selectedAddress) return;
+      try {
+        // 1) Re-init with final amount
+
+        const redsysOrderId = await initializePaymentSession(
+          paymentDetails.total,
+          [Number(articleId)]
+        );
+
+        if (!redsysOrderId) {
+          callToast({
+            variant: 'error',
+            description: PAYMENT_TOAST_KEYS.paymentSessionPreparationFailed,
+          });
+          return;
+        }
+
+        // 2) Create DB record
+        const { userPaymentId, error: createPaymentError } =
+          await createPayment({
+            articleId: articleId,
+            clientTotalAmount: paymentDetails.total,
+            clientIntent: redsysOrderId,
+            country: selectedAddress.country,
+            userAddressId: selectedAddressId,
+            discount: appliedDiscount,
+            confirmedPendingAttemptIds,
+          });
+
+        if (createPaymentError || !userPaymentId) {
+          callToast({
+            variant: 'error',
+            description:
+              createPaymentError ||
+              PAYMENT_TOAST_KEYS.paymentRecordCreationFailed,
+          });
+          return;
+        }
+
+        await savePaymentResultContext({
+          flow: 'single',
+          retryRoute: `/(tabs)/account/single-payment?articleId=${articleId}`,
+          paymentId: userPaymentId,
+          paymentIntent: redsysOrderId,
+        });
+
+        const browserResult = await openPaymentBrowser();
+
+        if (!browserResult.success) {
+          const shouldRejectPayment =
+            browserResult.type === 'cancel' ||
+            (browserResult.type === 'error' && browserResult.status === 'ko');
+
+          if (shouldRejectPayment) {
+            await rejectPayment({
+              userPaymentId,
+              errorCode: browserResult.error?.code,
+              errorDescription: browserResult.error?.message,
+            });
+
+            router.replace('/payment-result?status=ko');
+            return;
+          }
+
+          router.replace('/payment-result?status=pending');
+          return;
+        }
+
+        return;
+      } catch (error: any) {
+        console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
+        callToast({
+          variant: 'error',
+          description: PAYMENT_TOAST_KEYS.unexpectedProcessingError,
+        });
+      }
+    },
+    [
+      articleId,
+      selectedAddressId,
+      selectedAddress,
+      paymentDetails.total,
+      appliedDiscount,
+      initializePaymentSession,
+      createPayment,
+      rejectPayment,
+      openPaymentBrowser,
+      callToast,
+      router,
+    ]
+  );
+
   const handlePayment = useCallback(async () => {
     if (!article?.id) {
       callToast({
         variant: 'warning',
-        description: {
-          es: paymentTranslations.noPendingItems,
-          en: paymentTranslations.noPendingItems,
-        },
+        description: PAYMENT_TOAST_KEYS.noPendingItems,
       });
       return;
     }
-
     if (!selectedAddressId || !selectedAddress) {
       callToast({
         variant: 'warning',
-        description: {
-          es: 'Selecciona una dirección de envío',
-          en: 'Select a shipping address',
-        },
+        description: PAYMENT_TOAST_KEYS.selectShippingAddress,
       });
       return;
     }
-
-    try {
-      setIsSubmittingPayment(true);
-
-      // 1) Re-init with final amount
-
-      const redsysOrderId = await initializePaymentSession(
-        paymentDetails.total,
-        [Number(articleId)]
-      );
-
-      if (!redsysOrderId) {
-        callToast({
-          variant: 'error',
-          description: {
-            es: 'Error al preparar el pago con el monto actualizado',
-            en: 'Error preparing payment session',
-          },
-        });
-        return;
-      }
-
-      // 2) Create DB record
-      const { userPaymentId, error: createPaymentError } = await createPayment({
-        articleId: articleId,
-        clientTotalAmount: paymentDetails.total,
-        clientIntent: redsysOrderId,
-        country: selectedAddress.country,
-        userAddressId: selectedAddressId,
-        discount: appliedDiscount,
-      });
-
-      if (createPaymentError || !userPaymentId) {
-        callToast({
-          variant: 'error',
-          description: createPaymentError || {
-            es: 'Error al crear el registro de pago',
-            en: 'Error creating payment record',
-          },
-        });
-        return;
-      }
-
-      await savePaymentResultContext({
-        flow: 'single',
-        retryRoute: `/(tabs)/account/single-payment?articleId=${articleId}`,
-        paymentId: userPaymentId,
-        paymentIntent: redsysOrderId,
-      });
-
-      const browserResult = await openPaymentBrowser();
-
-      if (!browserResult.success) {
-        const shouldRejectPayment =
-          browserResult.type === 'cancel' ||
-          (browserResult.type === 'error' && browserResult.status === 'ko');
-
-        if (shouldRejectPayment) {
-          await rejectPayment({
-            userPaymentId,
-            errorCode: browserResult.error?.code,
-            errorDescription: browserResult.error?.message,
-          });
-
-          router.replace('/payment-result?status=ko');
-          return;
-        }
-
-        router.replace('/payment-result?status=pending');
-        return;
-      }
-
-      return;
-    } catch (error: any) {
-      console.error('❌ [PAYMENT] Unexpected error in payment flow:', error);
+    if (!isValidPayableAmount(paymentDetails.total)) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Error inesperado al procesar el pago',
-          en: 'Unexpected error processing payment',
-        },
+        description: INVALID_DISCOUNT_AMOUNT_ERROR,
       });
-    } finally {
-      setIsSubmittingPayment(false);
+      return;
     }
+
+    await runPaymentSubmission(async () => {
+      const recoveryCheck = await checkPaymentAttemptRecovery({
+        auctionId: null,
+        articleIds: [article.id],
+      });
+      if (recoveryCheck.error || !recoveryCheck.data) {
+        callToast({
+          variant: 'error',
+          description:
+            recoveryCheck.error || PAYMENT_TOAST_KEYS.unexpectedProcessingError,
+        });
+        return;
+      }
+      if (recoveryCheck.data.recoverablePendingAttemptIds.length > 0) {
+        setRecoverablePendingAttemptIds(
+          recoveryCheck.data.recoverablePendingAttemptIds
+        );
+        return;
+      }
+      await createPaymentAndOpenRedsys();
+    });
   }, [
     article?.id,
-    articleId,
+    callToast,
     selectedAddressId,
     selectedAddress,
     paymentDetails.total,
-    appliedDiscount,
-    initializePaymentSession,
-    createPayment,
-    rejectPayment,
-    openPaymentBrowser,
-    callToast,
-    paymentTranslations,
-    router,
+    runPaymentSubmission,
+    checkPaymentAttemptRecovery,
+    createPaymentAndOpenRedsys,
+  ]);
+
+  const handleConfirmRecovery = useCallback(() => {
+    if (!recoverablePendingAttemptIds) return;
+    void runPaymentSubmission(async () => {
+      setRecoverablePendingAttemptIds(null);
+      await createPaymentAndOpenRedsys(recoverablePendingAttemptIds);
+    });
+  }, [
+    recoverablePendingAttemptIds,
+    runPaymentSubmission,
+    createPaymentAndOpenRedsys,
   ]);
 
   useFocusEffect(
@@ -316,10 +390,7 @@ export default function SinglePaymentScreen() {
   if (!articleId) {
     return (
       <CustomError
-        customMessage={{
-          es: 'ID de artículo requerido',
-          en: 'Article ID required',
-        }}
+        customMessage={t('commonErrors.articleIdRequired')}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -340,7 +411,7 @@ export default function SinglePaymentScreen() {
   if (articleStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={articleError}
+        customMessage={articleError ? t(articleError, { locale }) : undefined}
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -349,7 +420,9 @@ export default function SinglePaymentScreen() {
   if (storeCountryStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={storeCountryError}
+        customMessage={
+          storeCountryError ? t(storeCountryError, { locale }) : undefined
+        }
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -358,7 +431,9 @@ export default function SinglePaymentScreen() {
   if (addressesStatus === REQUEST_STATUS.error) {
     return (
       <CustomError
-        customMessage={addressesError}
+        customMessage={
+          addressesError ? t(addressesError, { locale }) : undefined
+        }
         refreshRoute={`/(tabs)/account/single-payment?articleId=${articleId}`}
       />
     );
@@ -471,7 +546,11 @@ export default function SinglePaymentScreen() {
           onDiscountCodeChange={setDiscountCode}
           onApplyDiscount={handleApplyDiscount}
           onRemoveDiscount={handleRemoveDiscount}
-          isValidatingDiscount={isValidatingDiscount}
+          isValidatingDiscount={
+            isValidatingDiscount ||
+            !isCommissionReady ||
+            !paymentConfig.shippingTaxes
+          }
         />
 
         {/* Pay button */}
@@ -482,7 +561,8 @@ export default function SinglePaymentScreen() {
             !article?.id ||
             !selectedAddress ||
             paymentLoading ||
-            isSubmittingPayment
+            isSubmittingPayment ||
+            !isValidPayableAmount(paymentDetails.total)
           }
           isLoading={paymentLoading || isSubmittingPayment}
           className='mb-6'
@@ -503,7 +583,14 @@ export default function SinglePaymentScreen() {
           refetchAddresses();
         }}
         countries={isCommissionReady ? paymentConfig.countries : null}
-        countriesLabel={isCommissionReady ? paymentConfig.countriesLabel : null}
+        countryLabels={isCommissionReady ? paymentConfig.countryLabels : null}
+      />
+      <PaymentAttemptRecoveryModal
+        visible={recoverablePendingAttemptIds !== null}
+        articleTitles={article ? [article.title] : []}
+        isSubmitting={isSubmittingPayment}
+        onCancel={() => setRecoverablePendingAttemptIds(null)}
+        onConfirm={handleConfirmRecovery}
       />
     </SafeAreaView>
   );

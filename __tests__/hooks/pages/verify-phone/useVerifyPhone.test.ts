@@ -92,7 +92,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual(errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.sendFailed');
       expect(result.current.canResend).toBe(true); // Countdown should NOT start on error
     });
 
@@ -116,10 +116,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'No response from server',
-        es: 'Sin respuesta del servidor',
-      });
+      expect(result.current.errorMessage).toBe('errors.otp.noResponse');
     });
 
     it('should handle unexpected error gracefully', async () => {
@@ -139,10 +136,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(sendResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'Failed to send verification code',
-        es: 'Error al enviar código de verificación',
-      });
+      expect(result.current.errorMessage).toBe('errors.otp.sendFailed');
     });
   });
 
@@ -205,7 +199,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual(errorMessage);
+      expect(result.current.errorMessage).toBe('errors.otp.verifyFailed');
     });
 
     it('should handle no data response for verification', async () => {
@@ -228,10 +222,9 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'Invalid verification code',
-        es: 'Código de verificación inválido',
-      });
+      expect(result.current.errorMessage).toBe(
+        'errors.otp.invalidVerificationCode'
+      );
     });
 
     it('should handle unexpected error gracefully during verification', async () => {
@@ -251,10 +244,7 @@ describe('useVerifyPhone', () => {
       });
 
       expect(verifyResult.success).toBe(false);
-      expect(result.current.errorMessage).toEqual({
-        en: 'Failed to verify code',
-        es: 'Error al verificar código',
-      });
+      expect(result.current.errorMessage).toBe('errors.otp.verifyFailed');
     });
   });
 
@@ -481,10 +471,7 @@ describe('useVerifyPhone', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.errorMessage).toEqual({
-          en: 'Error',
-          es: 'Error',
-        });
+        expect(result.current.errorMessage).toBe('errors.otp.sendFailed');
       });
 
       // Second call with success

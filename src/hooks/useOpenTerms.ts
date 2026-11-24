@@ -2,6 +2,10 @@ import * as Linking from 'expo-linking';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { useFetchLegalContent } from '@/hooks/pages/useFetchLegalContent';
+import type { MessageKey } from '@/i18n';
+
+const DOCUMENT_OPEN_ERROR =
+  'errors.document.openFailed' as const satisfies MessageKey;
 
 /**
  * Hook to handle opening terms and conditions PDF
@@ -26,10 +30,7 @@ export const useOpenTerms = () => {
     } else {
       callToast({
         variant: 'error',
-        description: {
-          es: 'No se pudo abrir el documento',
-          en: 'Could not open document',
-        },
+        description: DOCUMENT_OPEN_ERROR,
       });
     }
   };

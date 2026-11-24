@@ -3,13 +3,11 @@ import { Pressable, View } from 'react-native';
 import { CustomText } from '@/components/ui/CustomText';
 import { Divider } from '@/components/ui/Divider';
 import { Tooltip } from '@/components/ui/Tooltip';
-import { OFFER_STATUS_LABELS } from '@/constants';
 import { formatDate } from '@/utils/formatDate';
 import { euroFormatter } from '@/utils/euroFormatter';
 import {
   CustomFullArticleSecondChance,
   Lang,
-  LangMap,
   OfferActorConst,
   OfferProposalStatusConst,
   OfferStatusConst,
@@ -25,6 +23,9 @@ import { StoreCounterOfferModal } from '../modal/StoreCounterOfferModal';
 import { OfferHistoryModal } from '../modal/OfferHistoryModal';
 import { getStorePayoutFromBuyerFacingAmount } from '@/utils/getStorePayoutFromBuyerFacingAmount';
 import { OFFER_STATUS_COLORS } from '@/constants/myOnlineStore';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 interface ArticleOffersCardsProps {
   offers: CustomFullArticleSecondChance['ArticleOffer'];
@@ -37,37 +38,8 @@ interface ArticleOffersCardsProps {
   };
   userCommissionValue: number;
   storeCommissionValue: number;
-  refetch: () => RefetchReturn;
+  refetch: () => RefetchReturn<MessageKey>;
 }
-
-const TEXTS = {
-  es: {
-    status: 'Estado',
-    offer: 'Oferta actual',
-    noCommissionedOffer: 'Oferta sin comisión',
-    noCommissionedOfferTooltip:
-      'Cantidad que recibirás descontando la comisión de la plataforma.',
-    date: 'Fecha',
-    expiresAt: 'Caduca en',
-    actions: 'Acciones',
-    waitingForUser: 'Esperando respuesta del usuario',
-    userAcceptedCounter: 'El usuario ha aceptado tu contraoferta',
-    offerHistory: 'Historial de ofertas',
-  },
-  en: {
-    status: 'Status',
-    offer: 'Current offer',
-    noCommissionedOffer: 'No commissioned offer',
-    noCommissionedOfferTooltip:
-      'Amount you will receive after deducting the platform commission.',
-    date: 'Date',
-    expiresAt: 'Expires at',
-    actions: 'Actions',
-    waitingForUser: 'Waiting for user response',
-    userAcceptedCounter: 'The user accepted your counter-offer',
-    offerHistory: 'Offer history',
-  },
-} satisfies Record<Lang, Record<string, string>>;
 
 export function ArticleOffersCards({
   offers,
@@ -77,6 +49,8 @@ export function ArticleOffersCards({
   storeCommissionValue,
   refetch,
 }: ArticleOffersCardsProps) {
+  const { t: translate } = useTranslation();
+  const modalTexts = translate('components.modals.offers', { locale });
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
@@ -85,20 +59,28 @@ export function ArticleOffersCards({
   const [historyOfferId, setHistoryOfferId] = useState<number | null>(null);
 
   const formatter = useMemo(() => euroFormatter(locale, 2), [locale]);
-  const t = TEXTS[locale];
+  const offerCardTexts = translate('components.offerCards', { locale });
+  const commonTexts = offerCardTexts.common;
+  const cardTexts = offerCardTexts.article;
+  const offerStatusLabels = translate('displayLabels.offerStatus', { locale });
 
   const handleAcceptOffer = async (offerId: number): Promise<boolean> => {
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.ACCEPT(offerId),
       });
 
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -108,7 +90,12 @@ export function ArticleOffersCards({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'offer.acceptedSuccessfully'
+        ),
       });
 
       return true;
@@ -121,14 +108,19 @@ export function ArticleOffersCards({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.REJECT(offerId),
       });
 
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -138,7 +130,12 @@ export function ArticleOffersCards({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'offer.rejectedSuccessfully'
+        ),
       });
 
       return true;
@@ -154,7 +151,7 @@ export function ArticleOffersCards({
     setIsLoading(true);
 
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.OFFERS.COUNTER(offerId),
         data: {
           amount,
@@ -164,7 +161,12 @@ export function ArticleOffersCards({
       if (response.error) {
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return false;
@@ -176,7 +178,12 @@ export function ArticleOffersCards({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'offer.counterSentSuccessfully'
+        ),
       });
 
       return true;
@@ -248,7 +255,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-xs font-semibold'
                 >
-                  {OFFER_STATUS_LABELS[locale][offer.status]}
+                  {offerStatusLabels[offer.status]}
                 </CustomText>
               </View>
 
@@ -264,7 +271,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-xs text-neutral-500'
                 >
-                  {t.offer}
+                  {cardTexts.offer}
                 </CustomText>
               </View>
             </View>
@@ -278,10 +285,10 @@ export function ArticleOffersCards({
                     type='body'
                     className='text-sm text-neutral-600'
                   >
-                    {t.noCommissionedOffer}
+                    {cardTexts.noCommissionedOffer}
                   </CustomText>
 
-                  <Tooltip content={t.noCommissionedOfferTooltip} />
+                  <Tooltip content={cardTexts.noCommissionedOfferTooltip} />
                 </View>
 
                 <CustomText
@@ -297,7 +304,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-sm text-neutral-600'
                 >
-                  {t.date}
+                  {commonTexts.date}
                 </CustomText>
 
                 <CustomText
@@ -313,7 +320,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-sm text-neutral-600'
                 >
-                  {t.expiresAt}
+                  {commonTexts.expiresAt}
                 </CustomText>
 
                 <CustomText
@@ -332,7 +339,7 @@ export function ArticleOffersCards({
                 type='body'
                 className='text-sm text-neutral-500'
               >
-                {t.offerHistory}
+                {commonTexts.offerHistory}
               </CustomText>
 
               <Pressable
@@ -359,15 +366,8 @@ export function ArticleOffersCards({
                       await handleAcceptOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Accept offer',
-                      es: 'Aceptar oferta',
-                    }}
-                    description={{
-                      en: 'Once accepted, the buyer will have 24 hours to complete the payment.',
-                      es: 'Una vez aceptada, el comprador dispondrá de 24 horas para realizar el pago.',
-                    }}
-                    locale={locale}
+                    title={modalTexts.acceptTitle}
+                    description={modalTexts.acceptDescription}
                   >
                     {texts.accept}
                   </ConfirmModal>
@@ -386,15 +386,8 @@ export function ArticleOffersCards({
                       await handleRejectOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Reject offer',
-                      es: 'Rechazar oferta',
-                    }}
-                    description={{
-                      en: 'Are you sure you want to reject this offer? This action cannot be undone.',
-                      es: '¿Estás seguro de que quieres rechazar esta oferta? Esta acción no se puede deshacer.',
-                    }}
-                    locale={locale}
+                    title={modalTexts.rejectTitle}
+                    description={modalTexts.rejectDescription}
                   >
                     {texts.reject}
                   </ConfirmModal>
@@ -409,7 +402,7 @@ export function ArticleOffersCards({
                     type='body'
                     className='text-sm text-neutral-600'
                   >
-                    {t.userAcceptedCounter}
+                    {commonTexts.userAcceptedCounter}
                   </CustomText>
 
                   <ConfirmModal
@@ -418,19 +411,14 @@ export function ArticleOffersCards({
                       await handleAcceptOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Confirm sale',
-                      es: 'Confirmar venta',
-                    }}
-                    description={{
-                      en: `The buyer accepted your counter-offer of ${formatter.format(
-                        acceptedByUserProposal.amount
-                      )}. Confirm that the article is still available. The buyer will then have 24 hours to pay.`,
-                      es: `El comprador ha aceptado tu contraoferta de ${formatter.format(
-                        acceptedByUserProposal.amount
-                      )}. Confirma que el artículo sigue disponible. Después dispondrá de 24 horas para pagar.`,
-                    }}
-                    locale={locale}
+                    title={modalTexts.confirmSaleTitle}
+                    description={translate(
+                      'components.modals.offers.confirmSaleDescription',
+                      {
+                        locale,
+                        amount: formatter.format(acceptedByUserProposal.amount),
+                      }
+                    )}
                   >
                     {texts.accept}
                   </ConfirmModal>
@@ -441,15 +429,8 @@ export function ArticleOffersCards({
                       await handleRejectOffer(offer.id);
                     }}
                     isDisabled={isLoading}
-                    title={{
-                      en: 'Reject sale',
-                      es: 'Rechazar venta',
-                    }}
-                    description={{
-                      en: 'Reject this agreement if the article is no longer available. This will close the negotiation.',
-                      es: 'Rechaza este acuerdo si el artículo ya no está disponible. Esto cerrará la negociación.',
-                    }}
-                    locale={locale}
+                    title={modalTexts.rejectSaleTitle}
+                    description={modalTexts.rejectSaleDescription}
                   >
                     {texts.reject}
                   </ConfirmModal>
@@ -463,7 +444,7 @@ export function ArticleOffersCards({
                   type='body'
                   className='text-sm text-neutral-500'
                 >
-                  {t.waitingForUser}
+                  {commonTexts.waitingForUser}
                 </CustomText>
               </>
             ) : null}

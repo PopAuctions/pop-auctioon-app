@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import {
   ActionResponse,
-  LangMap,
+  Lang,
   RequestStatus,
   CountryValue,
   PaymentShippingTax,
 } from '@/types/types';
+import type { MessageKey } from '@/i18n';
 
 // Backend response format (diferentes nombres)
 interface BackendPaymentConfig {
@@ -21,13 +22,16 @@ interface BackendPaymentConfig {
       LABEL: string;
     };
   };
+  auctionCommissionsValue?: BackendPaymentConfig['commissionsValue'];
+  onlineStoreCommissionsValue?: BackendPaymentConfig['commissionsValue'];
   countries: Record<string, { label: string; value: CountryValue }[]>;
   countriesLabel: Record<string, Record<CountryValue, string>>;
 }
 
 // Frontend format (nuestro hook retorna esto)
-interface PaymentConfigData {
+interface PaymentConfigState {
   commission: number;
+  onlineStoreCommission: number;
   shippingTaxes: PaymentShippingTax | null;
   taxPercentage: number;
   taxPercentageArticles: number;
@@ -35,9 +39,22 @@ interface PaymentConfigData {
   countriesLabel: Record<string, Record<CountryValue, string>>;
 }
 
-export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
-  const [data, setData] = useState<PaymentConfigData>({
+interface PaymentConfigData {
+  commission: number;
+  onlineStoreCommission: number;
+  shippingTaxes: PaymentShippingTax | null;
+  taxPercentage: number;
+  taxPercentageArticles: number;
+  countries: CountryValue[];
+  countryLabels: Partial<Record<CountryValue, string>>;
+}
+
+export const useFetchPaymentConfig = (
+  locale: Lang
+): ActionResponse<PaymentConfigData, MessageKey> => {
+  const [data, setData] = useState<PaymentConfigState>({
     commission: 0,
+    onlineStoreCommission: 0,
     shippingTaxes: null,
     taxPercentage: 0,
     taxPercentageArticles: 0,
@@ -45,7 +62,7 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
     countriesLabel: {},
   });
   const [status, setStatus] = useState<RequestStatus>('loading');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchPaymentConfig = useCallback(async () => {
@@ -58,22 +75,26 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(
+          response.messageCode ?? 'errors.payment.configLoadFailed'
+        );
         return;
       }
 
       if (response.data === null || response.data === undefined) {
         setStatus('error');
-        setErrorMessage({
-          en: 'Payment configuration data is missing',
-          es: 'Faltan los datos de configuración de pago',
-        });
+        setErrorMessage('errors.payment.configMissing');
         return;
       }
 
       // Transform backend data to frontend format
-      const transformedData: PaymentConfigData = {
-        commission: response.data.commissionsValue.STANDARD.PERCENTAGE,
+      const transformedData: PaymentConfigState = {
+        commission:
+          response.data.auctionCommissionsValue?.STANDARD.PERCENTAGE ??
+          response.data.commissionsValue.STANDARD.PERCENTAGE,
+        onlineStoreCommission:
+          response.data.onlineStoreCommissionsValue?.STANDARD.PERCENTAGE ??
+          response.data.commissionsValue.STANDARD.PERCENTAGE,
         shippingTaxes: response.data.taxForShipping,
         taxPercentage: response.data.taxPercentageArticles,
         taxPercentageArticles: response.data.taxPercentageArticles || 0,
@@ -99,21 +120,30 @@ export const useFetchPaymentConfig = (): ActionResponse<PaymentConfigData> => {
         'USE_FETCH_PAYMENT_CONFIG - Unexpected error'
       );
 
-      const message: LangMap = {
-        en: 'Error fetching payment configuration data',
-        es: 'Error al cargar la configuración de pago',
-      };
-
       setStatus('error');
-      setErrorMessage(message);
+      setErrorMessage('errors.payment.configLoadFailed');
     }
   }, [secureGet]);
 
   useEffect(() => {
     fetchPaymentConfig();
   }, [fetchPaymentConfig]);
+
+  const localizedData = useMemo<PaymentConfigData>(
+    () => ({
+      commission: data.commission,
+      onlineStoreCommission: data.onlineStoreCommission,
+      shippingTaxes: data.shippingTaxes,
+      taxPercentage: data.taxPercentage,
+      taxPercentageArticles: data.taxPercentageArticles,
+      countries: data.countries[locale] ?? [],
+      countryLabels: data.countriesLabel[locale] ?? {},
+    }),
+    [data, locale]
+  );
+
   return {
-    data,
+    data: localizedData,
     status,
     errorMessage,
     setErrorMessage,

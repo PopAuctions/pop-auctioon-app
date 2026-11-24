@@ -4,16 +4,20 @@ import { useSecureApi } from '@/hooks/api/useSecureApi';
 import {
   ActionResponse,
   CustomArticleSecondChance,
-  LangMap,
   RequestStatus,
 } from '@/types/types';
+import type { MessageKey } from '@/i18n';
+
+const NEWEST_ARTICLES_LOAD_ERROR =
+  'errors.article.newestArticlesLoadFailed' as const satisfies MessageKey;
 
 export const useFetchNewestArticlesOnlineStore = (): ActionResponse<
-  CustomArticleSecondChance[]
+  CustomArticleSecondChance[],
+  MessageKey
 > => {
   const [articles, setArticles] = useState<CustomArticleSecondChance[]>([]);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { protectedGet } = useSecureApi();
 
   const fetchNewestArticles = useCallback(async () => {
@@ -24,15 +28,9 @@ export const useFetchNewestArticlesOnlineStore = (): ActionResponse<
 
     if (res.error) {
       setStatus(REQUEST_STATUS.error);
-      setErrorMessage({
-        en: 'Error fetching newest articles',
-        es: 'Error al obtener los artículos más recientes',
-      });
+      setErrorMessage(NEWEST_ARTICLES_LOAD_ERROR);
       return {
-        message: {
-          en: 'Error fetching newest articles',
-          es: 'Error al obtener los artículos más recientes',
-        },
+        message: NEWEST_ARTICLES_LOAD_ERROR,
       };
     }
 

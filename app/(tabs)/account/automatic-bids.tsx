@@ -40,7 +40,7 @@ export default function AutomaticBidsScreen() {
   ) {
     return (
       <CustomError
-        customMessage={errorMessage}
+        customMessage={errorMessage ? t(errorMessage) : undefined}
         refreshRoute='/(tabs)/account/automatic-bids'
       />
     );

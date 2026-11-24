@@ -11,7 +11,6 @@ import { SelectField } from '@/components/fields/SelectField';
 import { getErrorMessage } from '@/utils/form-errors';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { AuctionCategories, AuctionCategoriesConst } from '@/types/types';
-import { AUCTION_CATEGORIES_LABEL } from '@/constants/auctions';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { supabase } from '@/utils/supabase/supabase-store';
@@ -24,22 +23,18 @@ import { getMinDateToStartAuction } from '@/utils/getMinDateToStartAuction';
 import { useArticleImages } from '@/hooks/components/useArticleImages';
 import { useFetchAvailableCountries } from '@/hooks/globals/useFetchAvailableCountries';
 import { REQUEST_STATUS } from '@/constants';
+import type { MessageKey } from '@/i18n';
 
-const TOOLTIP_MESSAGE = {
-  en: {
-    main: 'Choose the category that best matches the auction.',
-    strong: 'This cannot be changed later.',
-  },
-  es: {
-    main: 'Elige la categoría que mejor corresponda a la subasta.',
-    strong: 'Esto no podrá cambiarse después.',
-  },
-};
+const AUCTION_IMAGE_UPLOAD_ERROR =
+  'errors.articleImages.uploadFailedSingular' as const satisfies MessageKey;
 
 export default function MyANewAuctionScreen() {
   const { t, locale } = useTranslation();
   const { callToast } = useToast(locale);
   const [isUploadingAuction, setIsUploadingAuction] = useState(false);
+  const tooltipTexts = t('screens.myAuction.newAuction.tooltip.category');
+  const createAuctionError = t('screens.myAuction.newAuction.errors.generic');
+  const auctionCategoryLabels = t('displayLabels.auctionCategory', { locale });
 
   const { createAuction } = useAuction();
 
@@ -59,7 +54,7 @@ export default function MyANewAuctionScreen() {
   });
 
   const { data: countries, status: countriesStatus } =
-    useFetchAvailableCountries();
+    useFetchAvailableCountries(locale);
 
   const {
     control,
@@ -78,13 +73,13 @@ export default function MyANewAuctionScreen() {
         type='body'
         className='text-sm text-black/70'
       >
-        {TOOLTIP_MESSAGE[locale].main}
+        {tooltipTexts.main}
       </CustomText>
       <CustomText
         type='body'
         className='text-sm text-black/70'
       >
-        {TOOLTIP_MESSAGE[locale].strong}
+        {tooltipTexts.strong}
       </CustomText>
     </View>
   );
@@ -104,10 +99,7 @@ export default function MyANewAuctionScreen() {
       if (!imageUrl) {
         callToast({
           variant: 'error',
-          description: {
-            en: 'There was an error uploading the image.',
-            es: 'Hubo un error subiendo la imagen.',
-          },
+          description: AUCTION_IMAGE_UPLOAD_ERROR,
         });
         setIsUploadingAuction(false);
         return;
@@ -127,10 +119,7 @@ export default function MyANewAuctionScreen() {
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          en: 'There was an error creating the auction.',
-          es: 'Hubo un error al crear la subasta.',
-        },
+        description: createAuctionError,
       });
     } finally {
       setIsUploadingAuction(false);
@@ -214,7 +203,7 @@ export default function MyANewAuctionScreen() {
                   <SelectField
                     name='country'
                     value={value ?? null}
-                    options={countries?.[locale] ?? []}
+                    options={countries ?? []}
                     placeholder={t('screens.myAuction.newAuction.country')}
                     isSearchable={true}
                     isDisabled={isLoading}
@@ -256,9 +245,7 @@ export default function MyANewAuctionScreen() {
                     options={Object.entries(AuctionCategoriesConst).map(
                       ([, category]) => ({
                         label:
-                          AUCTION_CATEGORIES_LABEL[locale][
-                            category as AuctionCategories
-                          ],
+                          auctionCategoryLabels[category as AuctionCategories],
                         value: category,
                       })
                     )}

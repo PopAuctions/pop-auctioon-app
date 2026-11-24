@@ -2,12 +2,14 @@ import { AuctionStatus } from '@/constants/auctions';
 import { Translations } from '@/i18n';
 import { View } from 'react-native';
 import { ConfirmModal } from '../modal/ConfirmModal';
-import { Lang, LangMap } from '@/types/types';
+import { Lang } from '@/types/types';
 // import { CustomLink } from '../ui/CustomLink';
 import { useToast } from '@/hooks/useToast';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
+import { useTranslation } from '@/hooks/i18n/useTranslation';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 export const MyAuctionActions = ({
   auctionId,
@@ -22,21 +24,39 @@ export const MyAuctionActions = ({
   locale: Lang;
   refetch: () => void;
 }) => {
+  const { t } = useTranslation();
+  const modalTexts = t('components.modals.auctionReview', { locale });
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
   const requestReviewFunction = async () => {
     try {
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.AUCTIONS.REQUEST_REVIEW(auctionId),
       });
 
       if (response.error) {
-        callToast({ variant: 'error', description: response.error });
+        callToast({
+          variant: 'error',
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
+        });
         return;
       }
 
-      callToast({ variant: 'success', description: response.data });
+      callToast({
+        variant: 'success',
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          'auction.reviewRequestedSuccessfully'
+        ),
+      });
       refetch();
     } catch (e: any) {
       sentryErrorReport(e?.message, `REQUEST_REVIEW`);
@@ -63,16 +83,9 @@ export const MyAuctionActions = ({
         auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE ||
         auctionStatus === AuctionStatus.WAITING_MIN_ARTICLES_AMOUNT) && (
         <ConfirmModal
-          locale={locale}
           mode='primary'
-          title={{
-            es: 'Solicitar revisión',
-            en: 'Request review',
-          }}
-          description={{
-            es: 'Después de esta acción, si la subasta es aceptada, ya no podrás modificar la información de subasta ni de sus artículos. ¿Estás seguro de que quieres realizar esta acción?',
-            en: 'After this action, if the auction is accepted, you will no longer be able to modify the auction information or its articles. Are you sure you want to perform this action?',
-          }}
+          title={modalTexts.title}
+          description={modalTexts.description}
           onConfirm={requestReviewFunction}
         >
           {auctionStatus === AuctionStatus.PARTIALLY_AVAILABLE

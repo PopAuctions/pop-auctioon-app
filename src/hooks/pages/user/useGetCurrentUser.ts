@@ -12,6 +12,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
+
+const USER_DATA_MISSING_ERROR =
+  'errors.user.noData' as const satisfies MessageKey;
+const USER_LOAD_ERROR = 'errors.user.loadFailed' as const satisfies MessageKey;
+
+type UserApiErrorResponse = {
+  status?: number;
+  error?: LangMap;
+  messageCode?: MessageKey;
+};
 
 /**
  * Hook para obtener los datos del usuario actual autenticado
@@ -30,20 +41,18 @@ import { useTranslation } from '@/hooks/i18n/useTranslation';
  * }
  * ```
  */
-export const useGetCurrentUser = (): ActionResponse<User | null> & {
+export const useGetCurrentUser = (): ActionResponse<User | null, MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  // errorMessage contiene el mensaje localizado (en/es) listo para mostrar en toast/UI
-  // Por ahora solo se usa en logs, pero está preparado para el sistema de toast futuro
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { secureGet } = useSecureApi();
   const { auth, forceLogout } = useAuth();
 
-  const isAuthError = (response: { status?: number; error?: LangMap }) => {
+  const isAuthError = (response: UserApiErrorResponse) => {
     if (!response.error) {
       return false;
     }
@@ -64,7 +73,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
   };
 
   const handleAuthError = useCallback(
-    async (response: { status?: number; error?: LangMap }) => {
+    async (response: UserApiErrorResponse) => {
       if (!isAuthError(response)) {
         return false;
       }
@@ -92,10 +101,11 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
         }
 
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? USER_LOAD_ERROR);
 
         // Si el usuario fue eliminado de la BD, cerrar sesión automáticamente
         const isUserNotFound =
+          response.messageCode === 'errors.user.notFound' ||
           response.error.en?.toLowerCase().includes('user not found') ||
           response.error.es?.toLowerCase().includes('usuario no encontrado') ||
           response.error.en?.toLowerCase().includes('not found');
@@ -114,10 +124,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       } else {
         setCurrentUser(null);
         setStatus('error');
-        setErrorMessage({
-          en: 'No user data received',
-          es: 'No se recibieron datos del usuario',
-        });
+        setErrorMessage(USER_DATA_MISSING_ERROR);
       }
     } catch (error) {
       const errorMsg =
@@ -128,10 +135,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
       console.error('ERROR_LOAD_CURRENT_USER_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage({
-        en: 'Error loading user data',
-        es: 'Error al cargar datos del usuario',
-      });
+      setErrorMessage(USER_LOAD_ERROR);
     }
   }, [secureGet, handleAuthError]);
 
@@ -147,10 +151,7 @@ export const useGetCurrentUser = (): ActionResponse<User | null> & {
 
       callToast({
         variant: 'error',
-        description: {
-          en: 'Could not update user data',
-          es: 'No se pudieron actualizar los datos del usuario',
-        },
+        description: 'errors.user.refreshFailed',
       });
       return;
     }

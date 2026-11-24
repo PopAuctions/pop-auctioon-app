@@ -59,11 +59,6 @@ export const REQUEST_STATUS = {
 
 export const AMOUNT_PLACEHOLDER = '--.-- €';
 
-export const LANGUAGE_OPTIONS = [
-  { label: 'Español', value: 'es' },
-  { label: 'English', value: 'en' },
-];
-
 export const REQUEST_EMAIL_COOLDOWN = 60; // 1 minute
 
 export const APP_STORE_URLS = {

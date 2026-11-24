@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { CustomText } from '@/components/ui/CustomText';
 import { GeneratedInvoice, Lang, UserBillingInfo } from '@/types/types';
 import { SelectField } from '../fields/SelectField';
-import { Translations } from '@/i18n';
+import type { MessageKey, Translations } from '@/i18n';
 import { BillingFormModal } from '../billing-info/BillingFormModal';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
@@ -13,6 +13,11 @@ import * as Sharing from 'expo-sharing';
 import { useCreateUserInvoice } from '@/hooks/components/useUserInvoice';
 import { useToast } from '@/hooks/useToast';
 import { REQUEST_STATUS } from '@/constants';
+
+const BILLING_INFORMATION_REQUIRED =
+  'invoice.selectBillingInformation' as const satisfies MessageKey;
+const INVOICE_DOWNLOAD_ERROR =
+  'invoice.downloadFailed' as const satisfies MessageKey;
 
 interface BillingOption {
   value: string;
@@ -100,10 +105,7 @@ export function UserInvoice({
     if (!selectedBillingInfo) {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Selecciona una información de facturación.',
-          en: 'Select a billing information.',
-        },
+        description: BILLING_INFORMATION_REQUIRED,
       });
       return;
     }
@@ -137,10 +139,7 @@ export function UserInvoice({
         setDownloading(false);
         callToast({
           variant: 'error',
-          description: {
-            es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
-            en: 'Error downloading the invoice. If the problem persists, contact support.',
-          },
+          description: INVOICE_DOWNLOAD_ERROR,
           durationMs: 5000,
         });
         return;
@@ -163,10 +162,7 @@ export function UserInvoice({
     } catch {
       callToast({
         variant: 'error',
-        description: {
-          es: 'Error al descargar la factura. Si el problema persiste, contacta con soporte.',
-          en: 'Error downloading the invoice. If the problem persists, contact support.',
-        },
+        description: INVOICE_DOWNLOAD_ERROR,
         durationMs: 5000,
       });
     } finally {

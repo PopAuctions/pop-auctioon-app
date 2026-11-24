@@ -1,22 +1,24 @@
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
 import { SECURE_ENDPOINTS } from '@/config/api-config';
-import type {
-  ActionResponse,
-  LangMap,
-  RequestStatus,
-  Store,
-} from '@/types/types';
+import type { ActionResponse, RequestStatus, Store } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
+import type { MessageKey } from '@/i18n';
 
-export const useFetchUserStore = (): ActionResponse<Store | null> & {
+const USER_STORE_LOAD_ERROR =
+  'errors.store.userDataLoadFailed' as const satisfies MessageKey;
+
+export const useFetchUserStore = (): ActionResponse<
+  Store | null,
+  MessageKey
+> & {
   refetch: () => Promise<void>;
 } => {
   const [userStore, setUserStore] = useState<Store | null>(null);
   const [status, setStatus] = useState<RequestStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { locale } = useTranslation();
   const { callToast } = useToast(locale);
   const { secureGet } = useSecureApi();
@@ -31,7 +33,7 @@ export const useFetchUserStore = (): ActionResponse<Store | null> & {
 
       if (response.error) {
         setStatus('error');
-        setErrorMessage(response.error);
+        setErrorMessage(response.messageCode ?? USER_STORE_LOAD_ERROR);
 
         return;
       }
@@ -47,10 +49,7 @@ export const useFetchUserStore = (): ActionResponse<Store | null> & {
       console.error('ERROR_LOAD_CURRENT_USER_CATCH', errorMsg);
 
       setStatus('error');
-      setErrorMessage({
-        en: 'Error loading user data',
-        es: 'Error al cargar datos del usuario',
-      });
+      setErrorMessage(USER_STORE_LOAD_ERROR);
     }
   }, [secureGet]);
 
@@ -62,10 +61,7 @@ export const useFetchUserStore = (): ActionResponse<Store | null> & {
     if (response.error) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Could not update user data',
-          es: 'No se pudieron actualizar los datos del usuario',
-        },
+        description: { code: 'errors.store.userDataRefreshFailed' },
       });
       return;
     }

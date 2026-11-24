@@ -3,7 +3,6 @@ import { CustomText } from '@/components/ui/CustomText';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { useTranslation } from '@/hooks/i18n/useTranslation';
 import { formatPaymentDate } from '@/utils/calendar';
-import { UserPaymentStatusLabels } from '@/constants/payment';
 import type { UserPayment } from '@/types/types';
 import { CustomLink } from '../ui/CustomLink';
 import { euroFormatter } from '@/utils/euroFormatter';
@@ -15,6 +14,7 @@ interface PaymentCardProps {
 export function PaymentCard({ payment }: PaymentCardProps) {
   const { t, locale } = useTranslation();
   const formatter = euroFormatter(locale, 2);
+  const paymentStatusLabels = t('displayLabels.paymentStatus', { locale });
 
   return (
     <View className='my-3 mb-4 flex-row overflow-hidden rounded-3xl bg-white p-2 shadow-sm'>
@@ -40,9 +40,9 @@ export function PaymentCard({ payment }: PaymentCardProps) {
             type='body'
             className='font-semibold text-cinnabar'
           >
-            {UserPaymentStatusLabels[
-              payment.status as keyof typeof UserPaymentStatusLabels
-            ]?.[locale] || payment.status}
+            {paymentStatusLabels[
+              payment.status as keyof typeof paymentStatusLabels
+            ] || payment.status}
           </CustomText>
 
           {/* Fecha y hora */}

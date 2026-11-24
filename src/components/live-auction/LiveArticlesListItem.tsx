@@ -4,6 +4,7 @@ import { getArticleCommissionedPrice } from '@/utils/getArticleCommissionedPrice
 import { CustomText } from '@/components/ui/CustomText';
 import { CustomImage } from '@/components/ui/CustomImage';
 import { CustomArticleLiveAuto } from '@/types/types';
+import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
 
 type Props = {
   article: CustomArticleLiveAuto;
@@ -24,7 +25,7 @@ export const LiveArticlesListItem = ({
 }: Props) => {
   const price = article.ArticleBid.currentValue;
   const commissionedPrice = useMemo(
-    () => getArticleCommissionedPrice(price, commissionValue),
+    () => ceilToNearestTen(getArticleCommissionedPrice(price, commissionValue)),
     [price, commissionValue]
   );
 

@@ -215,7 +215,7 @@ describe('VerifyPhoneWizard', () => {
 
     it('should show toast error when OTP send fails', async () => {
       mockSendOtp.mockResolvedValue({ success: false });
-      mockErrorMessage = { en: 'Send failed', es: 'Envío fallido' };
+      mockErrorMessage = 'errors.otp.sendFailed';
 
       const { getByText, getByTestId } = render(
         <VerifyPhoneWizard {...defaultProps} />
@@ -481,18 +481,12 @@ describe('VerifyPhoneWizard', () => {
 
   describe('Toast Integration', () => {
     it('should show toast when errorMessage changes from hook', async () => {
-      mockErrorMessage = {
-        en: 'Invalid phone number',
-        es: 'Número de teléfono inválido',
-      };
+      mockErrorMessage = 'errors.otp.sendFailed';
 
       render(<VerifyPhoneWizard {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockToast.error).toHaveBeenCalledWith({
-          en: 'Invalid phone number',
-          es: 'Número de teléfono inválido',
-        });
+        expect(mockToast.error).toHaveBeenCalledWith('errors.otp.sendFailed');
       });
     });
   });

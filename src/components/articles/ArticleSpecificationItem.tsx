@@ -4,7 +4,7 @@ import { Divider } from '../ui/Divider';
 
 export type ArticleSpecificationItemProps = {
   label: string;
-  value: string;
+  value: string | undefined;
   tooltip?: React.ReactNode;
   showDivider?: boolean;
 };

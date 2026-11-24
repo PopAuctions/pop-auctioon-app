@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useSecureApi } from '../api/useSecureApi';
 import { useToast } from '../useToast';
-import { BiddingAmounts, HighestBidderState, LangMap } from '@/types/types';
+import { BiddingAmounts, HighestBidderState } from '@/types/types';
 import { euroFormatter } from '@/utils/euroFormatter';
 import { useHighestBidderContext } from '@/context/highest-bidder-context';
 import { toTotal } from '@/utils/toTotal';
@@ -11,10 +11,18 @@ import { SECURE_ENDPOINTS } from '@/config/api-config';
 import { useTranslation } from '../i18n/useTranslation';
 import { useSignInAlertModal } from '@/context/sign-in-modal-context';
 import { ceilToNearestTen } from '@/utils/ceilToNearestTen';
+import type { MessageKey } from '@/i18n';
+import { resolveApiResponseMessage } from '@/i18n/api-message';
 
 const maxBidOffset = MAX_BID_OFFSET;
 
 const BID_STEP = 10;
+const INVALID_BID_AMOUNT =
+  'errors.bid.invalidAmount' as const satisfies MessageKey;
+const BID_REQUEST_TIMEOUT =
+  'errors.bid.requestTimeout' as const satisfies MessageKey;
+const BID_PROCESSING_ERROR =
+  'errors.bid.processingFailed' as const satisfies MessageKey;
 
 export const useSendBid = ({
   biddingAmounts,
@@ -31,13 +39,11 @@ export const useSendBid = ({
   const [isPending, setIsPending] = useState(false);
   const [bidAmount, setBidAmount] = useState<string>('');
 
-  const { t, locale } = useTranslation();
+  const { locale } = useTranslation();
   const { securePost } = useSecureApi();
   const { callToast } = useToast(locale);
 
   const formatter = useMemo(() => euroFormatter(locale), [locale]);
-  const bidLocale = t('components.bid');
-
   const {
     minBid = 0,
     tenPercent = 0,
@@ -140,23 +146,18 @@ export const useSendBid = ({
     ) {
       callToast({
         variant: 'error',
-        description: {
-          en: 'Invalid bid amount',
-          es: 'Cantidad de puja inválida',
-        },
+        description: INVALID_BID_AMOUNT,
       });
 
       return;
     }
 
     if (amount < computedMinBid) {
-      const message = bidLocale.minBid + ' ' + formatter.format(computedMinBid);
-
       callToast({
         variant: 'error',
         description: {
-          es: message,
-          en: message,
+          code: 'errors.bid.minimumAmount',
+          params: { amount: formatter.format(computedMinBid) },
         },
       });
 
@@ -164,13 +165,11 @@ export const useSendBid = ({
     }
 
     if (amount > computedMaxBid) {
-      const message = bidLocale.maxBid + ' ' + formatter.format(computedMaxBid);
-
       callToast({
         variant: 'error',
         description: {
-          es: message,
-          en: message,
+          code: 'errors.bid.maximumAmount',
+          params: { amount: formatter.format(computedMaxBid) },
         },
       });
 
@@ -189,14 +188,11 @@ export const useSendBid = ({
 
         callToast({
           variant: 'error',
-          description: {
-            en: 'Bid request timed out. Please try again.',
-            es: 'La solicitud de puja agotó el tiempo. Por favor, inténtalo de nuevo.',
-          },
+          description: BID_REQUEST_TIMEOUT,
         });
       }, 10000);
 
-      const response = await securePost<LangMap>({
+      const response = await securePost<unknown>({
         endpoint: SECURE_ENDPOINTS.BIDS.CREATE,
         data: {
           articleId,
@@ -221,7 +217,12 @@ export const useSendBid = ({
 
         callToast({
           variant: 'error',
-          description: response.error,
+          description: resolveApiResponseMessage(
+            response,
+            'error',
+            locale,
+            'errors.server.connection'
+          ),
         });
 
         return;
@@ -229,7 +230,12 @@ export const useSendBid = ({
 
       callToast({
         variant: 'success',
-        description: response.data,
+        description: resolveApiResponseMessage(
+          response,
+          'success',
+          locale,
+          BID_PROCESSING_ERROR
+        ),
       });
 
       setBidAmount('');
@@ -246,10 +252,7 @@ export const useSendBid = ({
 
       callToast({
         variant: 'error',
-        description: {
-          en: 'The bid could not be processed',
-          es: 'La puja no pudo ser procesada',
-        },
+        description: BID_PROCESSING_ERROR,
       });
     } finally {
       if (timeoutHandle) {

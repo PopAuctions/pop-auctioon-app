@@ -1,7 +1,6 @@
 import {
   Lang,
   StorePayoutMethod,
-  StorePayoutMethodType,
   StorePayoutStatusType,
   StoreSettlementSaleTypeType,
   StoreSettlementStatusFilter,
@@ -26,19 +25,12 @@ export const STORE_SETTLEMENT_STATUS_FILTERS_MAP: Record<
     PROBLEM: 'Discrepancia',
     ALL: 'Todos',
   },
-};
-
-export const SALE_TYPE_MAP: Record<
-  Lang,
-  Record<StoreSettlementSaleTypeType, string>
-> = {
-  es: {
-    AUCTION: 'Subasta',
-    ONLINE_STORE: 'Tienda online',
-  },
-  en: {
-    AUCTION: 'Auction',
-    ONLINE_STORE: 'Online store',
+  ja: {
+    PENDING: '保留中',
+    PAID: '支払い済み',
+    CANCELLED: 'キャンセル済み',
+    PROBLEM: '不一致',
+    ALL: 'すべて',
   },
 };
 
@@ -58,38 +50,12 @@ export const PAYOUT_METHOD_OPTIONS: Record<
     { value: 'STRIPE', label: 'Stripe' },
     { value: 'PAYPAL', label: 'PayPal' },
   ],
-};
-
-export const STORE_PAYOUT_METHOD_MAP: Record<
-  Lang,
-  Record<StorePayoutMethodType, string>
-> = {
-  en: {
-    CASH: 'Cash',
-    BANK_TRANSFER: 'Bank transfer',
-    PAYPAL: 'PayPal',
-    STRIPE: 'Stripe',
-  },
-  es: {
-    CASH: 'Efectivo',
-    BANK_TRANSFER: 'Transferencia bancaria',
-    PAYPAL: 'PayPal',
-    STRIPE: 'Stripe',
-  },
-};
-
-export const STORE_PAYOUT_STATUS_MAP: Record<
-  Lang,
-  Record<StorePayoutStatusType, string>
-> = {
-  en: {
-    PAID: 'Paid',
-    CANCELLED: 'Cancelled',
-  },
-  es: {
-    PAID: 'Pagado',
-    CANCELLED: 'Cancelado',
-  },
+  ja: [
+    { value: 'CASH', label: '現金' },
+    { value: 'BANK_TRANSFER', label: '銀行振込' },
+    { value: 'STRIPE', label: 'Stripe' },
+    { value: 'PAYPAL', label: 'PayPal' },
+  ],
 };
 
 export const StoreSettlementStatus: Record<
@@ -121,15 +87,4 @@ export const StoreSettlementSaleType: Record<
 export const STORE_INVOICE_TYPES = {
   COMMISSION_INVOICE: 'COMMISSION_INVOICE',
   LIQUIDATION_INVOICE: 'LIQUIDATION_INVOICE',
-};
-
-export const STORE_INVOICE_TYPES_LABEL = {
-  COMMISSION_INVOICE: {
-    es: 'fatura-comisión',
-    en: 'commission-invoice',
-  },
-  LIQUIDATION_INVOICE: {
-    es: 'factura-liquidación',
-    en: 'liquidation-invoice',
-  },
 };

@@ -2,24 +2,30 @@ import { REQUEST_STATUS } from '@/constants';
 import { AuctionStatus } from '@/constants/auctions';
 import { useSecureApi } from '@/hooks/api/useSecureApi';
 import { sentryErrorReport } from '@/lib/error/sentry-error-report';
-import { ActionResponse, LangMap, Auction, RequestStatus } from '@/types/types';
+import { ActionResponse, Auction, RequestStatus } from '@/types/types';
 import { useCallback, useEffect, useState } from 'react';
+import type { MessageKey } from '@/i18n';
 
 interface FetchLiveAuctionResponse {
   auction: Auction | null;
   status: AuctionStatus | null;
 }
 
+const MY_AUCTION_LOAD_ERROR =
+  'errors.auction.myDetailLoadFailed' as const satisfies MessageKey;
+const AUCTION_NOT_FOUND_ERROR =
+  'errors.auction.liveNotFound' as const satisfies MessageKey;
+
 export const useGetMyAuction = ({
   auctionId,
 }: {
   auctionId: string;
-}): ActionResponse<FetchLiveAuctionResponse | null> & {
+}): ActionResponse<FetchLiveAuctionResponse | null, MessageKey> & {
   refetch: () => Promise<void>;
 } => {
   const [auction, setAuction] = useState<FetchLiveAuctionResponse | null>(null);
   const [status, setStatus] = useState<RequestStatus>(REQUEST_STATUS.idle);
-  const [errorMessage, setErrorMessage] = useState<LangMap | null>(null);
+  const [errorMessage, setErrorMessage] = useState<MessageKey | null>(null);
   const { secureGet } = useSecureApi();
 
   const fetchMyAuction = useCallback(async () => {
@@ -32,23 +38,17 @@ export const useGetMyAuction = ({
 
       if (res.error) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(res.error);
+        setErrorMessage(res.messageCode ?? MY_AUCTION_LOAD_ERROR);
         return {
-          message: res.error,
+          message: res.messageCode ?? MY_AUCTION_LOAD_ERROR,
         };
       }
 
       if (!res.data) {
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage({
-          en: 'Auction not found',
-          es: 'Subasta no encontrada',
-        });
+        setErrorMessage(AUCTION_NOT_FOUND_ERROR);
         return {
-          message: {
-            en: 'Auction not found',
-            es: 'Subasta no encontrada',
-          },
+          message: AUCTION_NOT_FOUND_ERROR,
         };
       }
       const liveAuction = res.data;
@@ -73,10 +73,7 @@ export const useGetMyAuction = ({
       console.error('Unexpected error fetching auctions:', errorMessage);
 
       return {
-        message: {
-          en: 'Error fetching auction',
-          es: 'Error al obtener la subasta',
-        },
+        message: MY_AUCTION_LOAD_ERROR,
       };
     }
   }, [auctionId, secureGet]);
@@ -91,15 +88,12 @@ export const useGetMyAuction = ({
       if (res.error) {
         setAuction(liveAuction ?? null);
         setStatus(REQUEST_STATUS.error);
-        setErrorMessage(res.error);
+        setErrorMessage(res.messageCode ?? MY_AUCTION_LOAD_ERROR);
         return;
       }
 
       if (!liveAuction) {
-        setErrorMessage({
-          en: 'Auction not found',
-          es: 'Subasta no encontrada',
-        });
+        setErrorMessage(AUCTION_NOT_FOUND_ERROR);
         return;
       }
 

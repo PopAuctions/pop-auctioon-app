@@ -1,6 +1,5 @@
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
-import { Lang } from '@/types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   LANGUAGE_STORAGE_KEY,
@@ -10,20 +9,30 @@ import {
 // Import translation files
 import es from './locales/es.json';
 import en from './locales/en.json';
-import { Path, PathValue } from '@/types/i18n';
-
-export type Translations = {
-  es: typeof es;
-  en: typeof en;
-};
-
-export type Dictionary = Translations['es'];
+import localeJa from './locales/ja.json';
+// i18n:add:translation-import
+import { Path, PathValue, StringPath } from '@/types/i18n';
+import {
+  DEFAULT_LANG,
+  SUPPORTED_LANGUAGES,
+  isLang,
+  resolveLang,
+  type Lang,
+} from './locales';
+import { reportMissingMessage } from './report-missing-message';
+import type { DisplayLabelDictionary } from './display-labels';
 
 // Set the key-value pairs for the different languages you want to support.
 const translations = {
   es,
   en,
-} as const satisfies Translations;
+  ja: localeJa,
+  // i18n:add:translation-map
+} as const satisfies Record<Lang, { displayLabels: DisplayLabelDictionary }>;
+
+export type Translations = typeof translations;
+export type Dictionary = Translations[typeof DEFAULT_LANG];
+export type MessageKey = StringPath<Dictionary>;
 
 // Create the i18n instance
 const i18n = new I18n(translations);
@@ -34,13 +43,10 @@ const i18n = new I18n(translations);
 // 3. Default to Spanish
 const getInitialLocale = (): Lang => {
   // This will be updated asynchronously, but we need a sync default
-  const deviceLanguage = getLocales()[0]?.languageCode ?? 'es';
+  const deviceLanguage = getLocales()[0]?.languageCode;
 
   // Return device language if supported, otherwise default to Spanish
-  if (deviceLanguage === 'en' || deviceLanguage === 'es') {
-    return deviceLanguage as Lang;
-  }
-  return 'es';
+  return resolveLang(deviceLanguage);
 };
 
 // Set initial locale (will be updated by TranslationProvider if user has saved preference)
@@ -48,12 +54,12 @@ i18n.locale = getInitialLocale();
 
 // When a value is missing from a language it'll fall back to Spanish (default language)
 i18n.enableFallback = true;
-i18n.defaultLocale = 'es';
+i18n.defaultLocale = DEFAULT_LANG;
 
 export default i18n;
 
 // Helper function to get current locale
-export const getCurrentLocale = () => i18n.locale as Lang;
+export const getCurrentLocale = (): Lang => resolveLang(i18n.locale);
 
 // Helper function to save language preference to AsyncStorage
 export const saveLanguagePreference = async (locale: Lang): Promise<void> => {
@@ -68,10 +74,7 @@ export const saveLanguagePreference = async (locale: Lang): Promise<void> => {
 export const loadLanguagePreference = async (): Promise<Lang | null> => {
   try {
     const savedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (savedLanguage === 'es' || savedLanguage === 'en') {
-      return savedLanguage as Lang;
-    }
-    return null;
+    return isLang(savedLanguage) ? savedLanguage : null;
   } catch (error) {
     console.error('Error loading language preference:', error);
     return null;
@@ -122,11 +125,61 @@ export const getManualLanguageFlag = async (): Promise<boolean> => {
 };
 
 // Helper function to get available locales
-export const getAvailableLocales = (): Lang[] => ['es', 'en'];
+export const getAvailableLocales = (): Lang[] => [...SUPPORTED_LANGUAGES];
+
+function getTranslationValue(dictionary: object, key: string): unknown {
+  let value: unknown = dictionary;
+
+  for (const segment of key.split('.')) {
+    if (
+      !segment ||
+      typeof value !== 'object' ||
+      value === null ||
+      Array.isArray(value) ||
+      !Object.prototype.hasOwnProperty.call(value, segment)
+    ) {
+      return undefined;
+    }
+
+    value = (value as Record<string, unknown>)[segment];
+  }
+
+  return value;
+}
+
+export function isMessageKey(value: unknown): value is MessageKey {
+  return (
+    typeof value === 'string' &&
+    typeof getTranslationValue(translations[DEFAULT_LANG], value) === 'string'
+  );
+}
 
 export function t<K extends Path<Dictionary>>(
   key: K,
   options?: any
 ): PathValue<Dictionary, K> {
+  const keyString = key as string;
+  const locale = resolveLang(options?.locale ?? i18n.locale);
+  const requestedValue = getTranslationValue(translations[locale], keyString);
+
+  if (requestedValue === undefined || requestedValue === null) {
+    const defaultValue = getTranslationValue(
+      translations[DEFAULT_LANG],
+      keyString
+    );
+    const fallback =
+      locale !== DEFAULT_LANG &&
+      defaultValue !== undefined &&
+      defaultValue !== null
+        ? 'default-locale'
+        : 'generic-error';
+
+    reportMissingMessage({ fallback, key: keyString, locale });
+
+    if (fallback === 'generic-error') {
+      return translations[locale].errors.unexpected as PathValue<Dictionary, K>;
+    }
+  }
+
   return i18n.t(key as string, options) as PathValue<Dictionary, K>;
 }

@@ -7,8 +7,8 @@ import { Loading } from '@/components/ui/Loading';
 import { Button } from '@/components/ui/Button';
 import { SelectField } from '@/components/fields/SelectField';
 import { Divider } from '@/components/ui/Divider';
-import { LANGUAGE_OPTIONS, REQUEST_STATUS } from '@/constants/app';
-import { Lang } from '@/types/types';
+import { REQUEST_STATUS } from '@/constants/app';
+import { DEFAULT_LANG, LANGUAGE_OPTIONS, type Lang } from '@/i18n/locales';
 import { useOnboarding } from '@/hooks/pages/onboarding/useOnboarding';
 import { triggerHaptic } from '@/utils/triggerHaptic';
 import { ConfirmModal } from '@/components/modal/ConfirmModal';
@@ -20,11 +20,11 @@ export default function SettingsScreen() {
   const { resetOnboarding } = useOnboarding();
   const { deleteAccount, status: deleteStatus } = useDeleteAccount(locale);
   const { updateLanguage } = useUpdateLanguage(locale);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+  const [selectedLanguage, setSelectedLanguage] = useState<Lang>(locale);
 
   const handleApplyLanguage = () => {
     if (selectedLanguage !== locale) {
-      const newLang = selectedLanguage as Lang;
+      const newLang = selectedLanguage;
       changeLanguage(newLang);
       // Persist to DB so push notifications use the correct language
       updateLanguage(newLang);
@@ -45,10 +45,7 @@ export default function SettingsScreen() {
         <View className='absolute inset-0 z-10 items-center justify-center bg-white/80'>
           <Loading
             locale={locale}
-            customMessage={{
-              es: 'Cambiando idioma...',
-              en: 'Changing language...',
-            }}
+            customMessage={t('screens.account.changingLanguage')}
           />
         </View>
       )}
@@ -71,7 +68,9 @@ export default function SettingsScreen() {
                 options={LANGUAGE_OPTIONS}
                 placeholder={t('screens.account.selectLanguage')}
                 formField={true}
-                onChange={(value) => setSelectedLanguage(value || 'es')}
+                onChange={(value) =>
+                  setSelectedLanguage((value || DEFAULT_LANG) as Lang)
+                }
                 isDisabled={isPending}
               />
             </View>
@@ -148,16 +147,11 @@ export default function SettingsScreen() {
               mode='primary'
               onConfirm={deleteAccount}
               isDisabled={deleteStatus === REQUEST_STATUS.loading}
-              title={{ en: 'Delete Account', es: 'Eliminar Cuenta' }}
-              description={{
-                en: 'Are you sure you want to delete your account? This will permanently delete all your data.',
-                es: '¿Estás seguro de que deseas eliminar tu cuenta? Esto eliminará permanentemente todos tus datos.',
-              }}
-              importantMessage={{
-                en: 'This action cannot be undone.',
-                es: 'Esta acción no se puede deshacer.',
-              }}
-              locale={locale}
+              title={t('components.modals.accountDeletion.title')}
+              description={t('components.modals.accountDeletion.description')}
+              importantMessage={t(
+                'components.modals.accountDeletion.importantMessage'
+              )}
             >
               {t('screens.account.delete')}
             </ConfirmModal>

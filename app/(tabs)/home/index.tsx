@@ -39,7 +39,10 @@ export default function HomeScreen() {
     data: newestArticlesOnlineStore,
     status: newestArticlesOnlineStoreStatus,
   } = useFetchNewestArticlesOnlineStore();
-  const { data: commission, status: commissionsStatus } = useFetchCommissions();
+  const { data: auctionCommission, status: auctionCommissionStatus } =
+    useFetchCommissions();
+  const { data: onlineStoreCommission, status: onlineStoreCommissionStatus } =
+    useFetchCommissions('online-store');
   const { data: unreadNotifications, refetch } =
     useGetUnreadUserNotifications();
   const { data: currentUser } = useGetCurrentUser();
@@ -112,7 +115,9 @@ export default function HomeScreen() {
           <ArticlesSection
             lang={locale}
             commissionValue={
-              commissionsStatus === REQUEST_STATUS.success ? commission : null
+              auctionCommissionStatus === REQUEST_STATUS.success
+                ? auctionCommission
+                : null
             }
             texts={{
               featuredArticlesText: t('screens.homePage.featuredArticles'),
@@ -148,7 +153,9 @@ export default function HomeScreen() {
             <OnlineStoreArticlesSection
               lang={locale}
               commissionValue={
-                commissionsStatus === REQUEST_STATUS.success ? commission : null
+                onlineStoreCommissionStatus === REQUEST_STATUS.success
+                  ? onlineStoreCommission
+                  : null
               }
               texts={{
                 onlineStoreTitle: t('screens.homePage.onlineStoreTitle'),
