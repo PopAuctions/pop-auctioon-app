@@ -26,7 +26,7 @@ export function getVersionUpdateType(
   }
 
   if (serverMinor !== localMinor) {
-    return serverMinor > localMinor ? 'soft' : 'none';
+    return serverMinor > localMinor ? 'force' : 'none';
   }
 
   return serverPatch > localPatch ? 'soft' : 'none';
